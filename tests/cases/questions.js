@@ -79,8 +79,40 @@ module.exports = ({ test, FF, ctx, assert }) => {
     assert.deepStrictEqual(ng, []);
   });
 
-  test('AI が作成した問題はすべて reviewed: false（true は人が検証済みのものだけ）', () => {
-    // 検証済みにした問題はここで数を確認する。現時点では 0 問。
-    assert.strictEqual(bank.filter(q => q.reviewed === true).length, 0);
+  // ---- 漢字の読みの問題で答えが見えないこと ----
+  // 答えの漢字は {漢字|} と書き、辞書の自動ふりがなから外す。
+  const noRubyTargets = s => Array.from(s.matchAll(/\{([^{}|]+)\|\}/g), m => m[1]);
+  const readingQuestions = bank.filter(q => q.unit === 'kanji_read' || noRubyTargets(q.question).length > 0);
+
+  test('漢字の読み（kanji_read）の問題は、答えの漢字を {漢字|} で書いている', () => {
+    const ng = Array.from(bank.filter(q => q.unit === 'kanji_read' && noRubyTargets(q.question).length === 0), q => q.id);
+    assert.deepStrictEqual(ng, []);
+  });
+
+  test('ふりがな辞書に答えの語を足しても、読みの問題の問題文・選択肢・ヒントに答えの読みが出ない', () => {
+    // 最悪の場合：答えの語がすべて辞書に登録された状態で確かめる
+    const dict = Object.assign({}, FF.FURIGANA);
+    readingQuestions.forEach(q => noRubyTargets(q.question).forEach(w => { dict[w] = q.answer; }));
+    const kana = s => FF.answer.toHiragana(FF.answer.normalize(s));
+    const ng = [];
+    readingQuestions.forEach(q => {
+      const targets = noRubyTargets(q.question);
+      const readings = [q.answer].concat(q.acceptedAnswers || []).map(kana);
+      [q.question].concat(q.hints, q.choices || []).forEach(s => {
+        FF.util.parseRichText(FF.util.autoRubyMarkup(s, dict)).forEach(t => {
+          if (t.ruby === undefined) return;
+          if (targets.some(w => t.ruby.indexOf(w) >= 0 || w.indexOf(t.ruby) >= 0) && readings.indexOf(kana(t.rt)) >= 0) {
+            ng.push(`${q.id}: {${t.ruby}|${t.rt}} ← ${s.slice(0, 30)}`);
+          }
+        });
+      });
+    });
+    assert.ok(readingQuestions.length >= 24, `読みの問題が ${readingQuestions.length} 問しか見つからない`);
+    assert.deepStrictEqual(ng, []);
+  });
+
+  test('人が内容を確認した問題（reviewed: true）は 2026-09-26 に確認した360問だけ（新しく AI が作った問題は false）', () => {
+    // 確認済みの問題を増やしたら、この数も更新する
+    assert.strictEqual(bank.filter(q => q.reviewed === true).length, 360);
   });
 };

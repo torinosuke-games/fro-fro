@@ -32,6 +32,15 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.deepStrictEqual(tokens, [{ text: '中央炉' }, { ruby: '隊長', rt: 'たいちょう' }, { text: '、' }, { ruby: '雪', rt: 'ゆき' }]);
   });
 
+  test('{漢字|}（読みが空）はふりがなを付けず、辞書にある語でも自動で付かない', () => {
+    const dict = { '雪': 'ゆき', '中央炉': 'ちゅうおうろ' };
+    const markup = U.autoRubyMarkup('「{雪|}が ふる。」の「{雪|}」と 雪', dict);
+    assert.deepStrictEqual(plain(U.parseRichText(markup)), [
+      { text: '「雪が ふる。」の「雪」と ' }, { ruby: '雪', rt: 'ゆき' }
+    ]);
+    assert.strictEqual(U.plainText('{中央炉|}'), '中央炉');
+  });
+
   test('画面の文言・名称に読みのない漢字がない', () => {
     const strings = allStrings(FF.texts)
       .concat(FF.defs.SUBJECTS.map(s => s.name), FF.defs.SUBJECTS.flatMap(s => (s.nameByGrade || []).map(n => n.name)))

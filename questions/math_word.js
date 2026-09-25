@@ -1,5 +1,5 @@
 // 問題データ：算数・数学（文章題）（SPEC 10.1 の構造。フェーズ7で追加する）
-// AI が作成した問題は reviewed: false にする。
+// AI が作成した問題は reviewed: false にする。人が内容を確認したら true にする（ここまでの問題は 2026-09-26 に確認済み）。
 // 各学年：基礎（4択）1問・標準（自由入力）2問・発展（自由入力）1問。
 // 昇格試験は標準の自由入力から文章題を1問まで使う（js/exam.js）。
 window.QUESTION_BANK = window.QUESTION_BANK || [];
@@ -14,7 +14,7 @@ window.QUESTION_BANK.push(
     answer: '7ほん',
     hints: ['「ぜんぶで」は たしざんの ことば。', '3と 4を あわせよう。'],
     explanation: '3＋4＝7 なので、たきぎは ぜんぶで 7ほんです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g1_addsub_002', subject: 'math', gradeLevel: 1, unit: 'addsub',
@@ -23,7 +23,7 @@ window.QUESTION_BANK.push(
     answer: '5', acceptedAnswers: ['5こ'], validationMode: 'number',
     hints: ['「のこりは」は ひきざんの ことば。', '8から 3を ひこう。'],
     explanation: '8−3＝5 なので、のこりの ゆきだるまは 5こです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g1_addsub_003', subject: 'math', gradeLevel: 1, unit: 'addsub',
@@ -32,7 +32,7 @@ window.QUESTION_BANK.push(
     answer: '15', acceptedAnswers: ['15わ'], validationMode: 'number',
     hints: ['「みんなで」は たしざんの ことば。', '9に 1を たすと 10。6を 1と 5に わけて かんがえよう。'],
     explanation: '9＋6＝15 なので、ペンギンは みんなで 15わです。（9に 1を たして 10、のこりの 5を たして 15）',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g1_addsub_004', subject: 'math', gradeLevel: 1, unit: 'addsub',
@@ -41,7 +41,7 @@ window.QUESTION_BANK.push(
     answer: '5', acceptedAnswers: ['5こ'], validationMode: 'number',
     hints: ['7にんが 1こずつ かぶると、ぼうしは 7こ つかう。', 'ぼうしの かずから、つかった かずを ひこう。'],
     explanation: '7にんで 7こ つかうので、12−7＝5。ぼうしは 5こ あまります。',
-    reviewed: false
+    reviewed: true
   },
 
   // ===== Lv2（小学2年）：かけ算・3けたの計算・長さ =====
@@ -53,7 +53,7 @@ window.QUESTION_BANK.push(
     answer: '20こ',
     hints: ['「5こずつ」が 4ふくろ ぶん あるよ。', '5×4 を かんがえよう。'],
     explanation: '1ふくろ 5こが 4ふくろ ぶんなので、5×4＝20。あめは 20こです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g2_multiply_002', subject: 'math', gradeLevel: 2, unit: 'multiply',
@@ -62,7 +62,7 @@ window.QUESTION_BANK.push(
     answer: '42', acceptedAnswers: ['42こ'], validationMode: 'number',
     hints: ['1だんに 6こずつ、それが 7だん ぶん。', '6の だんの 九九を つかおう。'],
     explanation: '6こずつ 7だん ぶんなので、6×7＝42。かんづめは ぜんぶで 42こです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g2_addsub3_001', subject: 'math', gradeLevel: 2, unit: 'addsub3',
@@ -71,7 +71,7 @@ window.QUESTION_BANK.push(
     answer: '83', acceptedAnswers: ['83こ'], validationMode: 'number',
     hints: ['「のこりは」は ひきざん。128−45 を ひっさんで しよう。', 'いちのくらいの 8−5、じゅうのくらいの 2−4 は ひけないので、ひゃくのくらいから 1 かりよう。'],
     explanation: '128−45＝83 なので、のこりの いしは 83こです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g2_length_001', subject: 'math', gradeLevel: 2, unit: 'length',
@@ -80,7 +80,7 @@ window.QUESTION_BANK.push(
     answer: '205', acceptedAnswers: ['205cm', '2m5cm'], validationMode: 'number',
     hints: ['1m は 100cm。', '1m20cm を cmだけで あらわすと なんcm かな。'],
     explanation: '1m20cm＝120cm です。120＋85＝205 なので、あわせて 205cm（2m5cm）です。',
-    reviewed: false
+    reviewed: true
   },
 
   // ===== Lv3（小学3年）：わり算・お金 =====
@@ -92,7 +92,7 @@ window.QUESTION_BANK.push(
     answer: '6{個|こ}',
     hints: ['{同|おな}じ {数|かず}ずつ {分|わ}けるときは わり{算|ざん}。', '24÷4 を {考|かんが}えよう。4の {段|だん}の 九九で {答|こた}えが 24に なるのは？'],
     explanation: '24÷4＝6 なので、ひとり{分|ぶん}は 6{個|こ}です。（4×6＝24 で たしかめられます）',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g3_division_002', subject: 'math', gradeLevel: 3, unit: 'division',
@@ -101,7 +101,7 @@ window.QUESTION_BANK.push(
     answer: '7', acceptedAnswers: ['7たば'], validationMode: 'number',
     hints: ['29÷4 を {考|かんが}えよう。', '4×7＝28、4×8＝32。29を こえないのは どちら？'],
     explanation: '29÷4＝7 あまり 1 です。4{本|ほん}の たばは 7たば できて、1{本|ぽん} あまります。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g3_money_001', subject: 'math', gradeLevel: 3, unit: 'money',
@@ -110,7 +110,7 @@ window.QUESTION_BANK.push(
     answer: '460', acceptedAnswers: ['460円'], validationMode: 'number',
     hints: ['まず、ノート 3さつの {代金|だいきん}を {求|もと}めよう。', '180×3 を {計算|けいさん}してから、1000から ひこう。'],
     explanation: 'ノートの {代金|だいきん}は 180×3＝540{円|えん}。おつりは 1000−540＝460{円|えん}です。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g3_division_003', subject: 'math', gradeLevel: 3, unit: 'division',
@@ -119,7 +119,7 @@ window.QUESTION_BANK.push(
     answer: '9', acceptedAnswers: ['9台'], validationMode: 'number',
     hints: ['50÷6 を {計算|けいさん}しよう。', 'あまりの {人|ひと}も {乗|の}らないと いけないよ。'],
     explanation: '50÷6＝8 あまり 2 です。8{台|だい}では ふたり {乗|の}れないので、もう1{台|だい} いります。8＋1＝9{台|だい}です。',
-    reviewed: false
+    reviewed: true
   },
 
   // ===== Lv4（小学4年）：面積・小数・わり算 =====
@@ -131,7 +131,7 @@ window.QUESTION_BANK.push(
     answer: '96m²',
     hints: ['{長方形|ちょうほうけい}の {面積|めんせき}＝たて×よこ', '8×12 を {計算|けいさん}しよう。'],
     explanation: '{長方形|ちょうほうけい}の {面積|めんせき}は たて×よこ なので、8×12＝96。96m²です。（40m は まわりの {長|なが}さです）',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g4_decimal_001', subject: 'math', gradeLevel: 4, unit: 'decimal',
@@ -140,7 +140,7 @@ window.QUESTION_BANK.push(
     answer: '12', acceptedAnswers: ['12L'], validationMode: 'number',
     hints: ['2.4Lが 5つ {分|ぶん}なので かけ{算|ざん}。', '24×5 を {計算|けいさん}して、{小数点|しょうすうてん}の {位置|いち}を {考|かんが}えよう。'],
     explanation: '2.4×5＝12.0 なので、{灯油|とうゆ}は {全部|ぜんぶ}で 12Lです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g4_division_001', subject: 'math', gradeLevel: 4, unit: 'division',
@@ -149,7 +149,7 @@ window.QUESTION_BANK.push(
     answer: '17', acceptedAnswers: ['17箱'], validationMode: 'number',
     hints: ['135÷8 を {筆算|ひっさん}で {計算|けいさん}しよう。', 'あまった {缶詰|かんづめ}を {入|い}れる {箱|はこ}も {必要|ひつよう}だよ。'],
     explanation: '135÷8＝16 あまり 7 です。あまりの 7{個|こ}を {入|い}れる {箱|はこ}が もう1つ いるので、16＋1＝17{箱|はこ}です。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g4_area_002', subject: 'math', gradeLevel: 4, unit: 'area',
@@ -158,7 +158,7 @@ window.QUESTION_BANK.push(
     answer: '360', acceptedAnswers: ['360m2', '360m²'], validationMode: 'number',
     hints: ['まず {土地|とち} {全体|ぜんたい}の {面積|めんせき}を {求|もと}めよう。', '{全体|ぜんたい}から {小屋|こや}の {面積|めんせき}を ひこう。'],
     explanation: '{土地|とち}は 20×20＝400m²、{小屋|こや}は 5×8＝40m²。400−40＝360m²です。',
-    reviewed: false
+    reviewed: true
   },
 
   // ===== Lv5（小学5年）：平均・割合・速さ・体積 =====
@@ -170,7 +170,7 @@ window.QUESTION_BANK.push(
     answer: '12{匹|ひき}',
     hints: ['{平均|へいきん}＝{合計|ごうけい}÷{個数|こすう}', 'まず {3日間|みっかかん}の {合計|ごうけい}を {求|もと}めよう。'],
     explanation: '{合計|ごうけい}は 12＋15＋9＝36{匹|ひき}。36÷3＝12 なので、{平均|へいきん}は 12{匹|ひき}です。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g5_percent_001', subject: 'math', gradeLevel: 5, unit: 'percent',
@@ -179,7 +179,7 @@ window.QUESTION_BANK.push(
     answer: '75', acceptedAnswers: ['75%'], validationMode: 'number',
     hints: ['{割合|わりあい}＝くらべる{量|りょう}÷もとにする{量|りょう}', 'もとにする{量|りょう}は {定員|ていいん}の 40{人|にん}。{割合|わりあい}に 100を かけると ％に なるよ。'],
     explanation: '30÷40＝0.75。0.75×100＝75 なので、75％です。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g5_speed_001', subject: 'math', gradeLevel: 5, unit: 'speed',
@@ -188,7 +188,7 @@ window.QUESTION_BANK.push(
     answer: '18', acceptedAnswers: ['18km', '時速18km'], validationMode: 'number',
     hints: ['{時速|じそく}は 1{時間|じかん}あたりに {進|すす}む {道|みち}のり。', '{速|はや}さ＝{道|みち}のり÷{時間|じかん}'],
     explanation: '36÷2＝18 なので、{時速|じそく}18kmです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g5_volume_001', subject: 'math', gradeLevel: 5, unit: 'volume',
@@ -197,7 +197,7 @@ window.QUESTION_BANK.push(
     answer: '30', acceptedAnswers: ['30L'], validationMode: 'number',
     hints: ['{水|みず}の {部分|ぶぶん}は たて50cm、よこ30cm、{高|たか}さ20cmの {直方体|ちょくほうたい}。', '1L＝1000cm³ だよ。'],
     explanation: '{水|みず}の {体積|たいせき}は 50×30×20＝30000cm³。1L＝1000cm³ なので、30000÷1000＝30Lです。',
-    reviewed: false
+    reviewed: true
   },
 
   // ===== Lv6（小学6年）：比・分数・円の面積・比例 =====
@@ -209,7 +209,7 @@ window.QUESTION_BANK.push(
     answer: '10{個|こ}',
     hints: ['3：2＝15：□ と {考|かんが}えよう。', '3を {何倍|なんばい}すると 15に なるかな。'],
     explanation: '3×5＝15 なので、2も 5{倍|ばい}して 2×5＝10。{石材|せきざい}は 10{個|こ}です。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g6_fraction_001', subject: 'math', gradeLevel: 6, unit: 'fraction',
@@ -218,7 +218,7 @@ window.QUESTION_BANK.push(
     answer: '1/6', acceptedAnswers: ['1/6kg'], validationMode: 'exact',
     hints: ['{同|おな}じ {重|おも}さずつ {分|わ}けるので わり{算|ざん}。2/3÷4', '{分数|ぶんすう}÷{整数|せいすう}は、{分母|ぶんぼ}に その {整数|せいすう}を かけるよ。'],
     explanation: '2/3÷4＝2/(3×4)＝2/12＝1/6 なので、ひとり{分|ぶん}は 1/6kgです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g6_circle_001', subject: 'math', gradeLevel: 6, unit: 'circle',
@@ -227,7 +227,7 @@ window.QUESTION_BANK.push(
     answer: '78.5', acceptedAnswers: ['78.5m2', '78.5m²'], validationMode: 'number',
     hints: ['{円|えん}の {面積|めんせき}＝{半径|はんけい}×{半径|はんけい}×{円周率|えんしゅうりつ}', '5×5×3.14 を {計算|けいさん}しよう。'],
     explanation: '5×5×3.14＝25×3.14＝78.5 なので、78.5m²です。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g6_proportion_001', subject: 'math', gradeLevel: 6, unit: 'proportion',
@@ -236,7 +236,7 @@ window.QUESTION_BANK.push(
     answer: '11.25', acceptedAnswers: ['11.25m'], validationMode: 'number',
     hints: ['ロープの {重|おも}さは {長|なが}さに {比例|ひれい}するよ。', 'まず 1mあたりの {重|おも}さを {求|もと}めよう。'],
     explanation: '1mあたりの {重|おも}さは 120÷3＝40g。450÷40＝11.25 なので、11.25mです。',
-    reviewed: false
+    reviewed: true
   },
 
   // ===== Lv7（中学1年）：正負の数・一次方程式 =====
@@ -248,7 +248,7 @@ window.QUESTION_BANK.push(
     answer: '11℃',
     hints: ['{差|さ}は（{昼|ひる}の {気温|きおん}）−（{朝|あさ}の {気温|きおん}）で {求|もと}める。', '3−(−8) は 3＋8 と {同|おな}じ。'],
     explanation: '3−(−8)＝3＋8＝11 なので、{昼|ひる}は {朝|あさ}より 11℃{高|たか}いです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g7_equation_001', subject: 'math', gradeLevel: 7, unit: 'equation',
@@ -257,7 +257,7 @@ window.QUESTION_BANK.push(
     answer: '10', acceptedAnswers: ['10個'], validationMode: 'number',
     hints: ['1{日|にち}に {集|あつ}めた {数|かず}を x{個|こ}とすると、7{日|にち}で 7x{個|こ}。', '20＋7x＝90 を {解|と}こう。'],
     explanation: '20＋7x＝90 より 7x＝70、x＝10。1{日|にち}に 10{個|こ}ずつ {集|あつ}めました。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g7_equation_002', subject: 'math', gradeLevel: 7, unit: 'equation',
@@ -266,7 +266,7 @@ window.QUESTION_BANK.push(
     answer: '13', acceptedAnswers: ['13人'], validationMode: 'number',
     hints: ['{人数|にんずう}を x{人|にん}として、{缶詰|かんづめ}の {数|かず}を 2{通|とお}りの {式|しき}で {表|あらわ}そう。', '3x＋8 と 4x−5 は どちらも {缶詰|かんづめ}の {数|かず}。'],
     explanation: '{人数|にんずう}を x{人|にん}とすると、3x＋8＝4x−5。これを {解|と}くと x＝13。{人数|にんずう}は 13{人|にん}です。（{缶詰|かんづめ}は 3×13＋8＝47{個|こ}）',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g7_equation_003', subject: 'math', gradeLevel: 7, unit: 'equation',
@@ -275,7 +275,7 @@ window.QUESTION_BANK.push(
     answer: '1800', acceptedAnswers: ['1800m'], validationMode: 'number',
     hints: ['{道|みち}のりを xmとすると、かかる {時間|じかん}は x/60{分|ふん} と x/90{分|ふん}。', 'x/60 − x/90 ＝ 10 を {解|と}こう。{両辺|りょうへん}に 180を かけると {分母|ぶんぼ}が なくなるよ。'],
     explanation: '{道|みち}のりを xmとすると、x/60 − x/90 ＝ 10。{両辺|りょうへん}に 180を かけて 3x − 2x ＝ 1800、x ＝ 1800。{道|みち}のりは 1800mです。',
-    reviewed: false
+    reviewed: true
   },
 
   // ===== Lv8（中学2年）：確率・連立方程式・一次関数 =====
@@ -287,7 +287,7 @@ window.QUESTION_BANK.push(
     answer: '1/6',
     hints: ['{目|め}の {出方|でかた}は {全部|ぜんぶ}で 6×6＝36{通|とお}り。', '{和|わ}が 7に なる {組|く}み{合|あ}わせを (1,6)、(2,5)… と {書|か}き{出|だ}そう。'],
     explanation: '{和|わ}が 7に なるのは (1,6)(2,5)(3,4)(4,3)(5,2)(6,1) の 6{通|とお}り。6/36＝1/6 です。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g8_simultaneous_001', subject: 'math', gradeLevel: 8, unit: 'simultaneous',
@@ -296,7 +296,7 @@ window.QUESTION_BANK.push(
     answer: '4', acceptedAnswers: ['4個'], validationMode: 'number',
     hints: ['パンを x{個|こ}、おにぎりを y{個|こ}として、{個数|こすう}の {式|しき}と {代金|だいきん}の {式|しき}を つくろう。', 'x＋y＝10、100x＋150y＝1200'],
     explanation: 'x＋y＝10、100x＋150y＝1200。1つ{目|め}の {式|しき}を 100{倍|ばい}して ひくと 50y＝200、y＝4。おにぎりは 4{個|こ}です。（パンは 6{個|こ}）',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g8_linear_001', subject: 'math', gradeLevel: 8, unit: 'linear',
@@ -305,7 +305,7 @@ window.QUESTION_BANK.push(
     answer: '10', acceptedAnswers: ['10時間', '10時間後'], validationMode: 'number',
     hints: ['x{時間後|じかんご}の {残|のこ}りを yLとすると、y＝60−4x。', 'y＝20 を {代入|だいにゅう}しよう。'],
     explanation: 'y＝60−4x に y＝20 を {代入|だいにゅう}すると 20＝60−4x、4x＝40、x＝10。10{時間後|じかんご}です。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g8_simultaneous_002', subject: 'math', gradeLevel: 8, unit: 'simultaneous',
@@ -314,7 +314,7 @@ window.QUESTION_BANK.push(
     answer: '47', validationMode: 'number',
     hints: ['{十|じゅう}の{位|くらい}を x、{一|いち}の{位|くらい}を y とすると、もとの {数|かず}は 10x＋y。', '{入|い}れかえた {数|かず}は 10y＋x。x＋y＝11 と (10y＋x)−(10x＋y)＝27 を {解|と}こう。'],
     explanation: 'x＋y＝11、9y−9x＝27 より y−x＝3。2つの {式|しき}から x＝4、y＝7。もとの {数|かず}は 47です。（74−47＝27）',
-    reviewed: false
+    reviewed: true
   },
 
   // ===== Lv9（中学3年）：三平方の定理・二次方程式・相似・関数 y＝ax² =====
@@ -326,7 +326,7 @@ window.QUESTION_BANK.push(
     answer: '10m',
     hints: ['{三平方|さんへいほう}の{定理|ていり}：a²＋b²＝c²（cは {斜辺|しゃへん}）', '6²＋8² を {計算|けいさん}しよう。'],
     explanation: '6²＋8²＝36＋64＝100。c²＝100、c＞0 なので c＝10。{斜辺|しゃへん}は 10mです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g9_quadratic_001', subject: 'math', gradeLevel: 9, unit: 'quadratic',
@@ -335,7 +335,7 @@ window.QUESTION_BANK.push(
     answer: '5', acceptedAnswers: ['5m'], validationMode: 'number',
     hints: ['もとの 1{辺|ぺん}を xmとすると、{広|ひろ}げたあとの 1{辺|ぺん}は (x＋3)m。', '(x＋3)²＝64 を {解|と}こう。{長|なが}さは {正|せい}の {数|かず}だよ。'],
     explanation: '(x＋3)²＝64 より x＋3＝±8、x＝5 または x＝−11。{長|なが}さは {正|せい}なので x＝5。もとの 1{辺|ぺん}は 5mです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g9_similarity_001', subject: 'math', gradeLevel: 9, unit: 'similarity',
@@ -344,7 +344,7 @@ window.QUESTION_BANK.push(
     answer: '8', acceptedAnswers: ['8m'], validationMode: 'number',
     hints: ['{棒|ぼう}と {影|かげ}、{塔|とう}と {影|かげ}で できる {三角形|さんかくけい}は {相似|そうじ}。', '2：1.5＝x：6 を {解|と}こう。'],
     explanation: '{相似|そうじ}な {三角形|さんかくけい}なので 2：1.5＝x：6。1.5x＝12、x＝8。{見張|みは}り{塔|とう}の {高|たか}さは 8mです。',
-    reviewed: false
+    reviewed: true
   },
   {
     id: 'math_g9_function_001', subject: 'math', gradeLevel: 9, unit: 'function',
@@ -353,6 +353,6 @@ window.QUESTION_BANK.push(
     answer: '3', acceptedAnswers: ['3秒'], validationMode: 'number',
     hints: ['y＝45 を {代入|だいにゅう}しよう。', '5x²＝45 から x²＝9。{時間|じかん}は {正|せい}の {数|かず}だよ。'],
     explanation: '45＝5x² より x²＝9、x＝±3。x＞0 なので x＝3。3{秒|びょう}かかります。',
-    reviewed: false
+    reviewed: true
   }
 );

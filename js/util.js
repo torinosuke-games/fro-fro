@@ -23,11 +23,12 @@
   // 表示用テキストをトークンに分解する。
   //   {name} などの変数 → vars の値をそのまま文字として挿入（記法として解釈しない）
   //   {漢字|かんじ}      → ふりがな
+  //   {漢字|}            → ふりがなを付けない（辞書の自動付与からも外す。漢字の読みを問う問題の答えなど）
   // 戻り値：[{ text: "..." } | { ruby: "漢字", rt: "かんじ" }]
   function parseRichText(template, vars) {
     vars = vars || {};
     var tokens = [];
-    var re = /\{([^{}|]+)\|([^{}]+)\}|\{([A-Za-z_][A-Za-z0-9_]*)\}/g;
+    var re = /\{([^{}|]+)\|([^{}]*)\}|\{([A-Za-z_][A-Za-z0-9_]*)\}/g;
     var last = 0, m;
     function pushText(t) {
       if (!t) return;
@@ -37,7 +38,10 @@
     }
     while ((m = re.exec(template)) !== null) {
       pushText(template.slice(last, m.index));
-      if (m[1] !== undefined) tokens.push({ ruby: m[1], rt: m[2] });
+      if (m[1] !== undefined) {
+        if (m[2] === '') pushText(m[1]);
+        else tokens.push({ ruby: m[1], rt: m[2] });
+      }
       else if (Object.prototype.hasOwnProperty.call(vars, m[3])) pushText(String(vars[m[3]]));
       else pushText(m[0]);
       last = re.lastIndex;
