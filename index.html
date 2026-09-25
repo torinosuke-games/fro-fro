@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070b11">
+  <title>FROZEN FRONTIER</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="snowfall far" aria-hidden="true"></div>
+  <div class="snowfall" aria-hidden="true"></div>
+  <div id="app">
+    <header id="hud" class="hud" hidden></header>
+    <main id="screen"></main>
+  </div>
+  <nav id="nav" class="tabs" hidden></nav>
+  <noscript>このゲームを遊ぶには JavaScript を有効にしてください。</noscript>
+
+  <!-- 読み込み順はここが唯一の定義（tests/lib/loader.js もここから読み取る）。ES Modules・fetch は使わない。 -->
+  <!-- データ・ロジック -->
+  <script src="js/config.js"></script>
+  <script src="js/clock.js"></script>
+  <script src="js/balance.js"></script>
+  <script src="js/defs.js"></script>
+  <script src="js/texts.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tickets.js"></script>
+  <script src="js/rewards.js"></script>
+  <script src="js/buildings.js"></script>
+  <script src="js/answer.js"></script>
+  <script src="js/generators.js"></script>
+  <!-- 問題データ -->
+  <script src="questions/math_word.js"></script>
+  <script src="questions/japanese.js"></script>
+  <script src="questions/science.js"></script>
+  <script src="questions/social.js"></script>
+  <script src="questions/english.js"></script>
+  <script src="js/learning.js"></script>
+  <script src="js/exam.js"></script>
+  <script src="js/simulator.js"></script>
+  <!-- 画面 -->
+  <script src="js/ui/core.js"></script>
+  <script src="js/svg/buildings.js"></script>
+  <script src="js/svg/scene.js"></script>
+  <script src="js/ui/title.js"></script>
+  <script src="js/ui/base.js"></script>
+  <script src="js/ui/study.js"></script>
+  <script src="js/ui/quiz.js"></script>
+  <script src="js/ui/exam.js"></script>
+  <script src="js/ui/records.js"></script>
+  <script src="js/ui/settings.js"></script>
+  <script src="js/debug.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

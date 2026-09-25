@@ -53,6 +53,56 @@
     }).join('');
   }
 
+  // ---- 辞書によるふりがなの自動付与 ----
+  // 文中の語を辞書から探し、{漢字|よみ} の記法に置き換えた文字列を返す。
+  // {name} や既に書かれた {漢字|よみ} の中身には手を付けない（プレイヤー名は変数として後から入るので対象外）。
+  var dictCache = { dict: null, byFirst: null };
+  function indexDict(dict) {
+    if (dictCache.dict === dict) return dictCache.byFirst;
+    var byFirst = {};
+    Object.keys(dict).sort(function (a, b) { return b.length - a.length; }).forEach(function (k) {
+      (byFirst[k.charAt(0)] = byFirst[k.charAt(0)] || []).push(k);
+    });
+    dictCache = { dict: dict, byFirst: byFirst };
+    return byFirst;
+  }
+  function autoRubyMarkup(template, dict) {
+    dict = dict || FF.FURIGANA || {};
+    var byFirst = indexDict(dict);
+    return String(template).split(/(\{[^{}]*\})/).map(function (seg, idx) {
+      if (idx % 2 === 1) return seg;
+      var out = '', i = 0;
+      while (i < seg.length) {
+        var cands = byFirst[seg.charAt(i)], hit = null;
+        if (cands) {
+          for (var c = 0; c < cands.length; c++) {
+            if (seg.substr(i, cands[c].length) === cands[c]) { hit = cands[c]; break; }
+          }
+        }
+        if (hit) {
+          var v = dict[hit];
+          out += v.indexOf('{') >= 0 ? v : '{' + hit + '|' + v + '}';
+          i += hit.length;
+        } else {
+          out += seg.charAt(i);
+          i++;
+        }
+      }
+      return out;
+    }).join('');
+  }
+
+  // ふりがなのない漢字が残っていないか（テスト用）。残っている漢字の配列を返す。
+  function bareKanji(template, vars, dict) {
+    var found = [];
+    parseRichText(autoRubyMarkup(template, dict), vars || {}).forEach(function (t) {
+      if (t.text === undefined) return;
+      var m = t.text.match(/[々一-鿿]+/g);
+      if (m) found = found.concat(m);
+    });
+    return found;
+  }
+
   // シード付き乱数（mulberry32）。0以上1未満を返す関数を返す。
   function makeRng(seed) {
     var a = seed >>> 0;
@@ -95,6 +145,8 @@
     normalizeName: normalizeName,
     parseRichText: parseRichText,
     plainText: plainText,
+    autoRubyMarkup: autoRubyMarkup,
+    bareKanji: bareKanji,
     makeRng: makeRng,
     shuffle: shuffle,
     localDayNumber: localDayNumber,

@@ -122,6 +122,16 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(E.isExamAvailable(L.createBank([]), 'social', 5), false);
   });
 
+  test('途中でやめた試験（全問に答えていない）は不合格として扱う', () => {
+    const st = E.startExam(mathBank, newState(), 'math', 4, T0, FF.util.makeRng(2));
+    let exam = st.exam;
+    exam = E.answerExam(exam, exam.items[0].question.answer).exam;
+    const r = E.finishExam(newState(), exam, T0);
+    assert.strictEqual(r.passed, false);
+    assert.strictEqual(r.state.learning.unlocked.math, 2);
+    assert.strictEqual(E.canTakeExam(r.state, 'math', 4, T0 + MIN).reason, 'cooldown');
+  });
+
   test('試験中の空欄は回答として数えない', () => {
     const st = E.startExam(mathBank, newState(), 'math', 3, T0, FF.util.makeRng(1));
     const r = E.answerExam(st.exam, '');
