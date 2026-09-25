@@ -237,14 +237,19 @@
     return g({}, parts);
   }
 
-  // ---- 見張り塔（v0.1 は予告のみ） ----
+  // ---- 見張り塔（中央炉 Lv3 で完成し、探索の入口になる。v0.2） ----
   function watchtower(furnaceLevel) {
     var parts = [snowMound(18)];
     var dash = { fill: 'none', stroke: '#8ea2b4', 'stroke-width': 1, 'stroke-dasharray': '3 3', opacity: 0.7 };
     if (furnaceLevel >= 3) {
-      // 予定地：足場だけが組まれている
-      parts.push(path('M-10 0 L-6 -48 M10 0 L6 -48 M-9 -12 H9 M-8 -24 H8 M-7 -36 H7 M-9 -12 L8 -24 M-8 -24 L7 -36', 'none', { stroke: C.woodLight, 'stroke-width': 1.4 }));
-      parts.push(path('M-12 -48 H12 L0 -60 Z', 'none', dash));
+      // 完成した見張り塔：木の脚、見張り台、灯り、旗
+      parts.push(path('M-10 0 L-6 -44 M10 0 L6 -44 M-9 -12 H9 M-8 -24 H8 M-7 -36 H7 M-9 -12 L8 -24 M-8 -24 L7 -36', 'none', { stroke: C.woodLight, 'stroke-width': 1.6 }));
+      parts.push(rect(-11, -52, 22, 9, C.wood));
+      parts.push(win(-6, -50, 12, 5, true));
+      parts.push(path('M-13 -52 H13 L0 -63 Z', C.metal));
+      parts.push(path('M-13 -52 H13 L10 -55 H-10 Z', '#eef6ff', { opacity: 0.85 }));
+      parts.push(path('M0 -63 V-74', 'none', { stroke: '#c9d7e3', 'stroke-width': 1 }));
+      parts.push(path('M0 -74 L9 -71 L0 -68 Z', C.ember || '#ff8a3d', { class: 'flicker' }));
     } else {
       parts.push(path('M-10 0 L-6 -48 H6 L10 0 Z M-12 -48 H12 L0 -60 Z', 'none', dash));
     }

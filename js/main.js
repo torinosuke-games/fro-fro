@@ -13,6 +13,7 @@
     studySel: null,    // 学習の選択（資源・教科・学年・難易度・形式）
     studyTab: 'learn',
     examRun: null,
+    exploreSession: null,   // 探索の出題（画面の一時状態。保存しない）
     leaveGuard: null,
     saveWarned: false,
 
@@ -44,6 +45,7 @@
       app.session = null;
       app.studySel = null;
       app.examRun = null;
+      app.exploreSession = null;
       app.leaveGuard = null;
       app.state = FF.exam.applyFuriganaAuto(FF.state.createDefaultState(app.now()));
       app.save();

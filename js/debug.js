@@ -111,6 +111,46 @@
       U.toast('実力診断を未受験に戻した');
     }
 
+    // ---- 探索（v0.2） ----
+    main.appendChild(U.el('div', { class: 'panel stack' }, [
+      U.el('h3', { text: '探索（テスト用）' }),
+      U.el('div', { class: 'small muted', text: '雪原は中央炉 Lv3、凍結森林は雪原 100% かつ中央炉 Lv4 で開く。進めると宝箱・できごとの報酬も入る。' }),
+      U.el('div', { class: 'grid2' }, [
+        U.el('button', { class: 'btn small', text: '中央炉を Lv3 にする', on: { click: function () { setFurnace(3); } } }),
+        U.el('button', { class: 'btn small', text: '中央炉を Lv4 にする', on: { click: function () { setFurnace(4); } } }),
+        U.el('button', { class: 'btn small', text: '雪原を1地点進める', on: { click: function () { exAdvance('snowfield', 1); } } }),
+        U.el('button', { class: 'btn small', text: '雪原を終点の1つ手前まで', on: { click: function () { exAdvance('snowfield', 'last'); } } }),
+        U.el('button', { class: 'btn small', text: '凍結森林を1地点進める', on: { click: function () { exAdvance('forest', 1); } } }),
+        U.el('button', { class: 'btn small', text: '凍結森林を終点の1つ手前まで', on: { click: function () { exAdvance('forest', 'last'); } } }),
+        U.el('button', { class: 'btn small ghost', text: '探索を最初からにする', on: { click: exReset } })
+      ])
+    ]));
+    // 中央炉とほかの建物をそのレベルまで上げる（資源は使わない）
+    function setFurnace(level) {
+      var s = FF.util.clone(app.state);
+      FF.defs.BUILDINGS.forEach(function (d) { if (s.buildings[d.id].level < level) s.buildings[d.id].level = level; });
+      s = FF.buildings.normalizeBuildings(s, app.now());
+      app.commit(s);
+      U.toast('中央炉などを Lv' + level + ' にした');
+    }
+    function exAdvance(regionId, n) {
+      var s = app.state, X = FF.exploration;
+      if (!X.isRegionUnlocked(s, regionId)) { U.toast('その地域はまだ開いていない'); return; }
+      var goal = n === 'last' ? X.lastIndex(regionId) - 1 : X.regionState(s, regionId).position + n;
+      while (X.regionState(s, regionId).position < goal && !X.isComplete(s, regionId)) s = X.advance(s, regionId, app.now(), Math.random).state;
+      app.exploreSession = null;
+      app.commit(s);
+      U.toast(regionId + '：' + X.progressPercent(s, regionId) + '%');
+    }
+    function exReset() {
+      var s = FF.util.clone(app.state);
+      s.exploration = FF.state.defaultExploration();
+      s.flags.unlockNoticesSeen = s.flags.unlockNoticesSeen.filter(function (id) { return id.indexOf('explore_') !== 0; });
+      app.exploreSession = null;
+      app.commit(s);
+      U.toast('探索を最初からにした（宝箱で得た資源・チケットはそのまま）');
+    }
+
     // ---- リセット ----
     main.appendChild(U.el('div', { class: 'panel stack' }, [
       U.el('h3', { text: '全データをリセットする' }),

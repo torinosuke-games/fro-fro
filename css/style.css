@@ -347,3 +347,68 @@ ruby rt { font-size: 0.5em; color: #b7c9d8; letter-spacing: 0; }
   .res-chip { font-size: 12px; }
   nav.tabs button { font-size: 10px; }
 }
+
+/* ---- 探索（v0.2） ---- */
+.region-card {
+  display: block; width: 100%; text-align: left; margin-bottom: 10px; padding: 14px;
+  border: 1px solid var(--edge-strong); border-radius: var(--radius); cursor: pointer;
+  background: linear-gradient(135deg, rgba(40,64,88,0.85), rgba(12,20,30,0.92));
+}
+.region-card.region-forest { background: linear-gradient(135deg, rgba(24,58,54,0.88), rgba(8,18,20,0.94)); }
+.region-card.locked { opacity: 0.55; cursor: default; }
+.region-card.done { border-color: rgba(127,224,166,0.55); }
+.region-card .row { margin-top: 6px; }
+.rg-name { font-size: 18px; font-weight: 900; letter-spacing: 0.06em; }
+.rg-en { font-size: 11px; letter-spacing: 0.25em; color: var(--muted); }
+.rg-title { margin: 0; font-size: 20px; letter-spacing: 0.06em; }
+.pct { font-size: 13px; font-weight: 800; color: var(--ice); white-space: nowrap; }
+.xp-bar { flex: 1; min-width: 80px; height: 6px; margin: 6px 0; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.xp-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--ice-deep), var(--ice)); }
+.xp-head { margin-bottom: 6px; }
+.xp-intro { margin-top: 4px; }
+.good-text { color: var(--good); }
+.arrival .good-text { margin-top: 12px; }
+
+.xp-map-wrap { border: 1px solid var(--edge-strong); border-radius: var(--radius); overflow: hidden; margin: 10px 0 4px; }
+.xp-map { display: block; width: 100%; height: auto; }
+.map-snowfield .map-bg { fill: #1c2c3c; }
+.map-snowfield .drift { fill: rgba(230,241,250,0.10); }
+.map-forest .map-bg { fill: #0f2124; }
+.map-forest .tree { fill: rgba(170,215,205,0.10); }
+.xp-map .trail { stroke: rgba(200,220,235,0.35); stroke-width: 0.9; stroke-dasharray: 1.6 1.6; }
+.xp-map .trail.done { stroke: var(--ice); stroke-dasharray: none; stroke-width: 1.1; }
+.xp-map .trail.enemy-link { stroke: rgba(160,200,230,0.3); stroke-width: 0.5; stroke-dasharray: 0.6 1.2; }
+.xp-map .node { cursor: pointer; }
+.xp-map .node:focus { outline: none; }
+.xp-map .node:focus .disc { stroke: #fff; stroke-width: 0.9; }
+.xp-map .disc { fill: #1a2735; stroke: rgba(200,220,235,0.45); stroke-width: 0.6; }
+.xp-map .ico { fill: none; stroke: #e4edf5; stroke-width: 0.6; }
+.xp-map .ico.fill { fill: #e4edf5; stroke: none; }
+.xp-map .ico.chest { fill: #8a6240; stroke: #d9b36c; stroke-width: 0.4; }
+.xp-map .ico.chest.opened { fill: #ffd166; }
+.xp-map .st-reached .disc { fill: #24506f; stroke: var(--ice); }
+.xp-map .st-current .disc { fill: #5a3419; stroke: var(--ember); stroke-width: 0.9; }
+.xp-map .st-next .disc { fill: rgba(143,211,255,0.14); stroke: var(--ice); stroke-dasharray: 1 0.8; }
+.xp-map .st-ahead { opacity: 0.5; }
+.xp-map .st-locked .disc { fill: #122130; stroke: rgba(160,200,230,0.35); }
+.xp-map .ice-shell { fill: rgba(143,211,255,0.18); stroke: #9fd4f7; stroke-width: 0.45; }
+.xp-map .ico.q { fill: #cfe9ff; stroke: none; font-size: 4.2px; font-weight: 900; }
+.xp-map .you { fill: var(--ember); }
+.xp-map .pulse { fill: none; stroke: var(--ice); stroke-width: 0.5; animation: xp-pulse 1.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes xp-pulse { from { opacity: 0.9; transform: scale(0.7); } to { opacity: 0; transform: scale(1.4); } }
+
+.arrival { border-color: rgba(255,209,102,0.45); }
+.event-box { border-left: 3px solid var(--warn); padding: 6px 10px; background: rgba(255,209,102,0.06); }
+.event-box .choices { margin-top: 8px; }
+.cost.reward .item { color: var(--good); }
+.chest-row { display: flex; align-items: center; gap: 12px; }
+.chest-art { width: 72px; height: auto; flex: none; }
+.chest-art .chest-glow { fill: rgba(255,209,102,0.22); }
+.chest-art .chest-lid { transform-box: fill-box; transform-origin: 100% 100%; transform: rotate(-28deg) translate(-2px, -3px); }
+.chest-art.animate .chest-lid { animation: chest-open 0.9s ease-out both; }
+.chest-art.animate .chest-glow { animation: chest-glow 1.4s ease-out both; }
+@keyframes chest-open { from { transform: none; } 60% { transform: rotate(-34deg) translate(-2px, -4px); } to { transform: rotate(-28deg) translate(-2px, -3px); } }
+@keyframes chest-glow { from { opacity: 0; } 40% { opacity: 1; } to { opacity: 0.8; } }
+@media (prefers-reduced-motion: reduce) {
+  .xp-map .pulse, .chest-art.animate .chest-lid, .chest-art.animate .chest-glow { animation: none; }
+}

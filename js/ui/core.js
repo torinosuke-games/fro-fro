@@ -138,19 +138,20 @@
     var max = FF.balance.TICKET_MAX;
     hud.appendChild(el('div', { class: 'hud-tickets' }, [
       el('span', {}, [R('span', '', T('tickets')), ' ', el('span', { class: 'count', text: t.count + ' / ' + max })]),
-      el('span', { class: 'ticket-bar' }, el('i', { style: { width: (t.count / max * 100) + '%' } })),
+      el('span', { class: 'ticket-bar' }, el('i', { style: { width: Math.min(100, t.count / max * 100) + '%' } })),
       el('span', { class: 'timer' }, next === null ? R('span', '', T('ticketsFull')) : [R('span', '', T('ticketsNext')), ' ' + FF.util.formatCountdown(next)])
     ]));
   }
 
   // ---- ナビ ----
   var NAV = [
-    { id: 'base', icon: '🏠' }, { id: 'explore', icon: '🗺️', locked: true }, { id: 'battle', icon: '⚔️', locked: true },
+    { id: 'base', icon: '🏠' }, { id: 'explore', icon: '🗺️', locked: function (s) { return !FF.exploration.isExploreOpen(s); }, lockedText: 'explore.navLocked' }, { id: 'battle', icon: '⚔️', locked: true },
     { id: 'allies', icon: '👥', locked: true }, { id: 'study', icon: '📖' }, { id: 'settings', icon: '⚙️' }
   ];
   function navGroup(screen) {
     if (screen === 'exam' || screen === 'diagnosis' || screen === 'quiz') return 'study';
     if (screen === 'debug') return 'settings';
+    if (screen === 'exploreQuiz') return 'explore';
     return screen;
   }
   function renderNav() {
@@ -160,10 +161,12 @@
     clear(nav);
     var active = navGroup(FF.app.screen);
     nav.appendChild(el('div', { class: 'inner' }, NAV.map(function (n) {
+      // locked は true か、状態から決める関数（探索は中央炉 Lv3 で開く）
+      var locked = typeof n.locked === 'function' ? n.locked(FF.app.state) : !!n.locked;
       return el('button', {
-        class: (n.id === active ? 'active' : '') + (n.locked ? ' locked' : ''),
-        attrs: { 'aria-label': plain(T('nav.' + n.id)), 'aria-disabled': n.locked ? 'true' : null, 'aria-current': n.id === active ? 'page' : null },
-        on: { click: function () { if (n.locked) toast(T('navLocked')); else show(n.id); } }
+        class: (n.id === active ? 'active' : '') + (locked ? ' locked' : ''),
+        attrs: { 'aria-label': plain(T('nav.' + n.id)), 'aria-disabled': locked ? 'true' : null, 'aria-current': n.id === active ? 'page' : null },
+        on: { click: function () { if (locked) toast(T(n.lockedText || 'navLocked')); else show(n.id); } }
       }, [el('span', { class: 'ico', text: n.icon }), R('span', '', T('nav.' + n.id))]);
     })));
   }

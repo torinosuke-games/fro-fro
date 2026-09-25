@@ -49,7 +49,9 @@
   function openBuilding(id) {
     var app = FF.app, s = app.state;
     if (id === 'watchtower') {
-      U.modal({ title: U.T('teaser.watchtower'), body: s.buildings.furnace.level >= 3 ? U.T('teaser.watchtowerSoon') : U.T('teaser.watchtowerLocked') });
+      // v0.2：完成した見張り塔は探索の入口
+      if (FF.exploration.isExploreOpen(s)) { U.show('explore'); return; }
+      U.modal({ title: U.T('teaser.watchtower'), body: U.T('teaser.watchtowerLocked') });
       return;
     }
     var bld = s.buildings[id], name = U.buildingName(id);
@@ -88,11 +90,12 @@
     U.rerender();
   }
 
-  // 解放のお知らせを1つずつ出す
+  // 解放のお知らせを1つずつ出す。中央炉のお知らせのあとに、探索の地域のお知らせ（v0.2）
   function showUnlockNotices() {
     var app = FF.app;
     var list = B.pendingUnlockNotices(app.state);
-    if (!list.length || document.querySelector('.overlay')) return;
+    if (document.querySelector('.overlay')) return;
+    if (!list.length) { if (U.showExploreNotices) U.showExploreNotices(); return; }
     var u = list[0];
     U.modal({
       title: U.T('unlockTitle'),
@@ -100,7 +103,10 @@
       vars: { name: app.state.player.name },
       buttons: [{
         label: U.T('ok'), class: 'primary', onClick: function () {
-          app.commit(B.markUnlockNoticeSeen(app.state, u.id));
+          var st = B.markUnlockNoticeSeen(app.state, u.id);
+          // 見張り塔のお知らせは「雪原に出られる」も伝えるので、雪原のお知らせは重ねて出さない
+          if (u.id === 'watchtower') st = B.markUnlockNoticeSeen(st, 'explore_snowfield');
+          app.commit(st);
           setTimeout(showUnlockNotices, 50);
         }
       }]
