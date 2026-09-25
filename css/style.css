@@ -365,6 +365,8 @@ ruby rt { font-size: 0.5em; color: #b7c9d8; letter-spacing: 0; }
 .xp-bar { flex: 1; min-width: 80px; height: 6px; margin: 6px 0; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; }
 .xp-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--ice-deep), var(--ice)); }
 .xp-head { margin-bottom: 6px; }
+.xp-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 12px; font-size: 13px; color: var(--muted); }
+.xp-legend span { white-space: nowrap; }
 .xp-intro { margin-top: 4px; }
 .good-text { color: var(--good); }
 .arrival .good-text { margin-top: 12px; }
@@ -379,6 +381,7 @@ ruby rt { font-size: 0.5em; color: #b7c9d8; letter-spacing: 0; }
 .xp-map .trail.done { stroke: var(--ice); stroke-dasharray: none; stroke-width: 1.1; }
 .xp-map .trail.enemy-link { stroke: rgba(160,200,230,0.3); stroke-width: 0.5; stroke-dasharray: 0.6 1.2; }
 .xp-map .node { cursor: pointer; }
+.xp-map .hit { fill: transparent; pointer-events: all; }
 .xp-map .node:focus { outline: none; }
 .xp-map .node:focus .disc { stroke: #fff; stroke-width: 0.9; }
 .xp-map .disc { fill: #1a2735; stroke: rgba(200,220,235,0.45); stroke-width: 0.6; }

@@ -53,6 +53,20 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     }
   });
 
+  // 地図で押せる範囲（js/ui/exploration.js の HIT_R = 7.6。幅 320px の画面で直径 44px 以上）が重ならず、地図からはみ出さない
+  test('地図の地点どうしは、押せる範囲が重ならない距離にあり、地図の中に収まる', () => {
+    const HIT_R = 7.6;
+    for (const r of FF.defs.REGIONS) {
+      for (const n of r.nodes) {
+        assert.ok(n.x - HIT_R >= 0 && n.x + HIT_R <= 100 && n.y - HIT_R >= 0 && n.y + HIT_R <= 104, n.id + ' が地図の端に近すぎる');
+      }
+      for (let i = 0; i < r.nodes.length; i++) for (let j = i + 1; j < r.nodes.length; j++) {
+        const a = r.nodes[i], b = r.nodes[j];
+        assert.ok(Math.hypot(a.x - b.x, a.y - b.y) >= 2 * HIT_R, a.id + ' と ' + b.id + ' が近すぎる');
+      }
+    }
+  });
+
   test('地点・宝箱・イベントの ID が重複せず、参照先がそろっている', () => {
     const nodeIds = FF.defs.REGIONS.flatMap(r => r.nodes.map(n => n.id));
     assert.strictEqual(new Set(nodeIds).size, nodeIds.length);

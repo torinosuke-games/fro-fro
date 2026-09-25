@@ -10,6 +10,8 @@
 
   function regionName(r) { return U.rich(r.name); }
 
+  var HIT_R = 7.6;   // 地図の座標（幅 100）での半径。地点どうしは中心が 19 以上離れているので重ならない
+
   // ---- 報酬の表示（資源とチケット） ----
   function rewardView(reward) {
     if (!reward) return null;
@@ -179,6 +181,8 @@
         class: 'node kind-' + n.kind + ' st-' + status, transform: 'translate(' + n.x + ',' + n.y + ')',
         tabindex: 0, role: 'button', 'aria-label': FF.util.plainText(n.name)
       });
+      // 押せる範囲（見た目の円より大きい透明な円）。幅 320px の画面でも直径 44px 以上になる大きさ
+      g.appendChild(s('circle', { class: 'hit', r: HIT_R }));
       if (status === 'next') g.appendChild(s('circle', { class: 'pulse', r: 6.5 }));
       g.appendChild(s('circle', { class: 'disc', r: 4.4 }));
       if (n.kind === 'start') g.appendChild(s('path', { class: 'ico', d: 'M-1.2 2.2 V-2.4 L2 -1.3 L-1.2 -0.2' }));
@@ -254,7 +258,8 @@
     ]));
 
     main.appendChild(mapView(regionId, function (n) { openNode(regionId, n); }));
-    main.appendChild(U.R('div', 'small muted center', U.T('explore.legend')));
+    // 凡例は項目ごとに折り返す（狭い画面で「近づけない場所」が途中で切れないように）
+    main.appendChild(U.el('div', { class: 'xp-legend' }, U.T('explore.legend').split('　').map(function (item) { return U.el('span', {}, U.rich(item)); })));
 
     var info = U.el('div', { class: 'panel stack' });
     if (done) {
