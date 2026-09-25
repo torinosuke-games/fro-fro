@@ -22,7 +22,12 @@
       try { store.setItem(key + '.broken', text); } catch (e) { /* 退避できなくても続行する */ }
       return { state: FF.state.createDefaultState(now), status: 'error', error: r.error };
     }
-    return { state: r.state, status: r.migratedFrom < FF.config.SAVE_VERSION ? 'migrated' : 'loaded' };
+    if (r.migratedFrom < FF.config.SAVE_VERSION) {
+      // 移行したデータは、すぐに最新版（integrity 付き）で保存し直す
+      try { store.setItem(key, r.saveText); } catch (e) { /* 保存できなくても続行する（次の自動保存で付く） */ }
+      return { state: r.state, status: 'migrated' };
+    }
+    return { state: r.state, status: 'loaded' };
   }
 
   // 成功したら true

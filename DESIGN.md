@@ -782,3 +782,4 @@ v0.1 の画面側で変える箇所：ナビの「探索」のロックを「探
 - 保存・書き出し：`FF.state.serialize` が本体の指紋を `integrity` として末尾に付ける。
 - 起動時の読み込み・インポート：`FF.state.parseSave` が、`integrity` があれば検証する。一致しなければ読み込まない（既存の「形式が正しくない」／起動時は既存の壊れたデータと同じ扱い）。`integrity` がなければ旧形式として読み込み、次の保存で付く。
 - 判断した点は `CLAUDE.md` の 81〜85。
+- saveVersion 3（`INTEGRITY_REQUIRED_FROM`）以降のセーブは `integrity` が必須（ない・一致しないと拒否）。2 以下は `integrity` がなければ旧形式として読み込み、移行の最後に計算した `integrity` 付き・saveVersion 3 の文字列（`migrate` の `saveText`）ですぐに保存し直す。判断した点は `CLAUDE.md` の 86〜88。

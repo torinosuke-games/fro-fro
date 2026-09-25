@@ -6,7 +6,8 @@
   FF.config = {
     TITLE: 'FROZEN FRONTIER',
     SAVE_KEY: 'frozenFrontier.save',
-    SAVE_VERSION: 2,             // 1：v0.1、2：v0.2（探索の記録を追加）
+    SAVE_VERSION: 3,             // 1：v0.1、2：v0.2（探索の記録を追加）、3：integrity（改ざん検出の指紋）が必須
+    INTEGRITY_REQUIRED_FROM: 3,  // この版以降のセーブは integrity がない・一致しないと読み込まない
     DEFAULT_PLAYER_NAME: 'プレイヤー',
     NAME_MAX_LENGTH: 12
   };

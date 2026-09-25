@@ -182,12 +182,122 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(FF.storage.load(T0, ls).status, 'migrated');
   });
 
+  // v0.2 のときの保存（saveVersion 2・integrity なし）
+  const v02text = s => JSON.stringify(Object.assign({}, plain(s), { saveVersion: 2 }));
+
   test('integrity のない v0.2 形式（saveVersion 2）のセーブも、そのまま読み込める', () => {
     const s = played();
-    const v02 = JSON.stringify(s);   // v0.2 のときの保存（integrity なし）
-    const r = S.parseSave(v02, T0);
+    const r = S.parseSave(v02text(s), T0);
     assert.strictEqual(r.ok, true);
+    assert.strictEqual(r.migratedFrom, 2);
     assert.deepStrictEqual(plain(r.state), plain(s));
+  });
+
+  // ---- saveVersion 3：integrity が必須 ----
+  test('saveVersion が 3（integrity が必須になる版）は config で決まっている', () => {
+    assert.strictEqual(FF.config.SAVE_VERSION, 3);
+    assert.strictEqual(FF.config.INTEGRITY_REQUIRED_FROM, 3);
+    assert.strictEqual(typeof S.MIGRATIONS[2], 'function');
+  });
+
+  test('saveVersion 3 で integrity がないデータは拒否される（integrity を消して書き換えてもすり抜けない）', () => {
+    const text = S.serialize(played());
+    const noField = JSON.parse(text);
+    delete noField.integrity;
+    assert.strictEqual(noField.saveVersion, 3);
+    // integrity を消しただけ／消して数値も書き換えた、のどちらも拒否
+    for (const bad of [JSON.stringify(noField), JSON.stringify(noField).replace('"wood":1234', '"wood":999999')]) {
+      const r = S.parseSave(bad, T0);
+      assert.strictEqual(r.ok, false);
+      assert.strictEqual(r.reason, 'integrity');
+      const ls = fakeStorage();
+      ls.setItem(FF.config.SAVE_KEY, bad);
+      const loaded = FF.storage.load(T0, ls);
+      assert.strictEqual(loaded.status, 'error');
+      assert.strictEqual(loaded.state.resources.wood, 0);
+      assert.strictEqual(ls.getItem(FF.config.SAVE_KEY + '.broken'), bad);
+    }
+  });
+
+  test('saveVersion 3 で integrity が一致しない・文字列でないデータは拒否される', () => {
+    const raw = JSON.parse(S.serialize(played()));
+    for (const v of ['0123456789abcd', '', 123, null]) {
+      const r = S.parseSave(JSON.stringify(Object.assign({}, raw, { integrity: v })), T0);
+      assert.strictEqual(r.ok, false, JSON.stringify(v));
+      assert.strictEqual(r.reason, 'integrity', JSON.stringify(v));
+    }
+  });
+
+  test('saveVersion 2 以下で integrity がないデータは、これまで通り読み込める（後方互換）', () => {
+    const cases = [
+      ['v0（saveVersion なし）', fixture('save_v0.json'), 0],
+      ['v1', fixture('save_v1.json'), 1],
+      ['v2', v02text(played()), 2]
+    ];
+    for (const [label, text, from] of cases) {
+      assert.ok(!('integrity' in JSON.parse(text)), label + '（前提）');
+      const r = S.parseSave(text, T0);
+      assert.strictEqual(r.ok, true, label + ': ' + r.error);
+      assert.strictEqual(r.migratedFrom, from, label);
+      const ls = fakeStorage();
+      ls.setItem(FF.config.SAVE_KEY, text);
+      assert.strictEqual(FF.storage.load(T0, ls).status, 'migrated', label);
+    }
+  });
+
+  test('saveVersion 2 でも integrity があれば検証する（前の版で付いた指紋は通り、書き換えは拒否）', () => {
+    const body = Object.assign({}, plain(played()), { saveVersion: 2 });
+    const signed = JSON.stringify(Object.assign({}, body, { integrity: I.sign(body) }));
+    assert.strictEqual(S.parseSave(signed, T0).ok, true);
+    const r = S.parseSave(signed.replace('"wood":1234', '"wood":999999'), T0);
+    assert.strictEqual(r.ok, false);
+    assert.strictEqual(r.reason, 'integrity');
+  });
+
+  test('今の版より新しいセーブは、integrity より先に「新しいバージョン」として扱う', () => {
+    const s = Object.assign({}, plain(played()), { saveVersion: FF.config.SAVE_VERSION + 1 });
+    const r = S.parseSave(JSON.stringify(s), T0);
+    assert.strictEqual(r.ok, false);
+    assert.ok(/新しいバージョン/.test(r.error));
+  });
+
+  test('移行の結果（saveText）は saveVersion 3 で、正しい integrity が付いている', () => {
+    for (const text of [fixture('save_v0.json'), fixture('save_v1.json'), v02text(played())]) {
+      const r = S.parseSave(text, T0);
+      const saved = JSON.parse(r.saveText);
+      assert.strictEqual(saved.saveVersion, 3);
+      assert.strictEqual(I.verify(saved), true);
+      assert.strictEqual(r.saveText, S.serialize(r.state), '移行後の状態そのものの指紋');
+    }
+  });
+
+  test('旧バージョンから読み込むと、すぐに saveVersion 3・正しい integrity で保存し直され、次からは移行なしで読める', () => {
+    for (const text of [fixture('save_v0.json'), fixture('save_v1.json'), v02text(played())]) {
+      const ls = fakeStorage();
+      ls.setItem(FF.config.SAVE_KEY, text);
+      const first = FF.storage.load(T0, ls);
+      assert.strictEqual(first.status, 'migrated');
+      const stored = JSON.parse(ls.getItem(FF.config.SAVE_KEY));
+      assert.strictEqual(stored.saveVersion, 3);
+      assert.strictEqual(I.verify(stored), true);
+      const second = FF.storage.load(T0, ls);
+      assert.strictEqual(second.status, 'loaded');
+      assert.deepStrictEqual(plain(second.state), plain(first.state));
+    }
+  });
+
+  test('旧バージョンから読み込んで保存し直すと、saveVersion が 3 になり、正しい integrity が付く', () => {
+    for (const text of [fixture('save_v0.json'), fixture('save_v1.json'), v02text(played())]) {
+      const r = S.parseSave(text, T0);
+      const ls = fakeStorage();
+      FF.storage.save(r.state, ls);
+      const saved = JSON.parse(ls.getItem(FF.config.SAVE_KEY));
+      assert.strictEqual(saved.saveVersion, 3);
+      assert.strictEqual(I.verify(saved), true);
+      // integrity を消すと、もう読み込めない
+      delete saved.integrity;
+      assert.strictEqual(S.parseSave(JSON.stringify(saved), T0).ok, false);
+    }
   });
 
   test('読み込めたデータを保存し直すと、正しい integrity が付く', () => {

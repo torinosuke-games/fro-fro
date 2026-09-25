@@ -93,6 +93,11 @@
       var v2 = Object.assign({}, old);
       if (!util.isPlainObject(v2.exploration)) v2.exploration = defaultExploration();
       return v2;
+    },
+    // v2 → v3：構造は変えない。v3 の意味は「integrity が必須になった」ことだけ。
+    // integrity は移行の最後（補完・整合のあと）に、その時点の内容から計算する（migrate の saveText）。
+    2: function (old) {
+      return Object.assign({}, old);
     }
   };
 
@@ -112,7 +117,8 @@
     return defaults;
   }
 
-  // 保存データ（オブジェクト）を最新版にする。{ ok, state, migratedFrom, error }
+  // 保存データ（オブジェクト）を最新版にする。{ ok, state, migratedFrom, saveText, error }
+  // saveText：最新版の状態を保存する文字列（integrity 付き）。移行したデータは必ずこの形で保存し直す。
   function migrate(data, now, cfg) {
     cfg = cfg || FF.config;
     if (!util.isPlainObject(data)) return { ok: false, error: FORMAT_ERROR };
@@ -135,7 +141,7 @@
     // 探索の整合（位置を順路の範囲に収める、定義にない宝箱・イベントを捨てる など）
     if (FF.exploration && FF.exploration.normalizeExploration) state = FF.exploration.normalizeExploration(state);
     state.player.name = util.normalizeName(state.player.name, cfg);
-    return { ok: true, state: state, migratedFrom: from };
+    return { ok: true, state: state, migratedFrom: from, saveText: serialize(state) };
   }
 
   // 保存用の文字列（エクスポートにもそのまま使う）。
@@ -147,8 +153,9 @@
   }
 
   // 保存用の文字列 → 最新版の状態。インポートでも同じ関数を使う。
-  // integrity があるのに本体と合わない（書き換えられた疑い）ときは読み込まない。
-  // integrity がない（この仕組みより前の v0.1・v0.2 のセーブ）ときは、そのまま読み込む。次の保存で付く。
+  // - saveVersion が INTEGRITY_REQUIRED_FROM（3）以降：integrity がない・一致しないときは読み込まない（書き換えられた疑い）。
+  // - それより前（v0.1・v0.2 のセーブ）：integrity がなければそのまま読み込む（後方互換）。あれば検証する。
+  // - 今の版より新しいセーブは、migrate の「新しいバージョン」の表示に任せる。
   function parseSave(text, now, cfg) {
     var data;
     try {
@@ -156,7 +163,10 @@
     } catch (e) {
       return { ok: false, error: 'JSON として読み取れませんでした。コピーした内容をすべて貼り付けてください。' };
     }
-    if (FF.integrity.hasField(data)) {
+    cfg = cfg || FF.config;
+    var v = util.isPlainObject(data) && typeof data.saveVersion === 'number' ? data.saveVersion : 0;
+    var required = v >= cfg.INTEGRITY_REQUIRED_FROM && v <= cfg.SAVE_VERSION;
+    if (util.isPlainObject(data) && (required || FF.integrity.hasField(data))) {
       // 表示は既存の「形式が正しくない」と同じにする（新しい文言は作らない）
       if (!FF.integrity.verify(data)) return { ok: false, error: FORMAT_ERROR, reason: 'integrity' };
       data = FF.integrity.withoutField(data);
