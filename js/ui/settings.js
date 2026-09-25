@@ -51,6 +51,27 @@
       ])
     ]));
 
+    // 画面の明るさ（昼／夜テーマ。SPEC_theme.md）
+    var mode = FF.theme.normalizeMode(s.settings.themeMode);
+    function setThemeMode(m) {
+      var ns = Object.assign({}, app.state, { settings: Object.assign({}, app.state.settings, { themeMode: m }) });
+      app.commit(ns);
+      U.rerender();
+    }
+    main.appendChild(U.el('div', { class: 'panel stack' }, [
+      U.el('div', { class: 'row between' }, [
+        U.R('h3', '', U.T('theme')),
+        U.el('div', { class: 'switch', attrs: { role: 'group' } }, FF.theme.MODES.map(function (m) {
+          return U.el('button', {
+            class: mode === m ? 'on' : '', rich: U.T('themeModes.' + m),
+            attrs: { 'aria-pressed': mode === m ? 'true' : 'false' },
+            on: { click: function () { setThemeMode(m); } }
+          });
+        }))
+      ]),
+      U.R('div', 'small muted', U.T('themeNote'))
+    ]));
+
     // エクスポート
     var out = U.el('textarea', { attrs: { readonly: true, 'aria-label': FF.util.plainText(U.T('exportTitle')) }, value: FF.state.serialize(app.state) });
     main.appendChild(U.el('div', { class: 'panel stack' }, [

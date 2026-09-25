@@ -111,6 +111,33 @@
       U.toast('実力診断を未受験に戻した');
     }
 
+    // ---- 昼／夜テーマの確認（SPEC_theme.md） ----
+    // 「自動」の判定に使う時刻（時）だけを指定する。保存はしない。FF.clock とは別（テーマは端末の時計で決まるため）
+    var themeInfo = U.el('div', { class: 'small muted' });
+    function refreshTheme() {
+      var o = app.themeHourOverride;
+      themeInfo.textContent = '設定：' + FF.theme.normalizeMode(app.state.settings.themeMode) + '　確認用の時刻：' + (o == null ? '端末の時計' : o + '時') +
+        '　→ 基地の画面は ' + FF.theme.resolve(app.state.settings.themeMode, (function () { var d = new Date(); if (o != null) d.setHours(o, 0, 0, 0); return d; })());
+    }
+    refreshTheme();
+    function setMode(m) {
+      var s = FF.util.clone(app.state);
+      s.settings.themeMode = m;
+      app.commit(s);
+      refreshTheme();
+    }
+    main.appendChild(U.el('div', { class: 'panel stack' }, [
+      U.el('h3', { text: '昼／夜テーマの確認' }),
+      themeInfo,
+      U.el('div', { class: 'grid3' }, [['夜', 'night'], ['昼', 'day'], ['自動', 'auto']].map(function (b) {
+        return U.el('button', { class: 'btn small', text: '設定を「' + b[0] + '」に', on: { click: function () { setMode(b[1]); } } });
+      })),
+      U.el('div', { class: 'small muted', text: '「自動」のときの時刻（基地の画面で確かめる）' }),
+      U.el('div', { class: 'grid3' }, [5, 6, 12, 17, 18, 21].map(function (h) {
+        return U.el('button', { class: 'btn small', text: h + '時', on: { click: function () { app.themeHourOverride = h; refreshTheme(); U.toast('確認用の時刻を ' + h + '時 にした'); } } });
+      }).concat([U.el('button', { class: 'btn small ghost', text: '端末の時計に戻す', on: { click: function () { app.themeHourOverride = null; refreshTheme(); } } })]))
+    ]));
+
     // ---- 探索（v0.2） ----
     main.appendChild(U.el('div', { class: 'panel stack' }, [
       U.el('h3', { text: '探索（テスト用）' }),

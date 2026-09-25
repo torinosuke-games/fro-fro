@@ -125,7 +125,7 @@
     ]);
     main.appendChild(head);
 
-    main.appendChild(U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding)));
+    main.appendChild(U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding, FF.app.theme)));
 
     collectBar = U.el('div', { class: 'panel collect-bar' });
     main.appendChild(collectBar);

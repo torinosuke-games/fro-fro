@@ -171,6 +171,26 @@
     })));
   }
 
+  // ---- 昼／夜テーマ（SPEC_theme.md） ----
+  // 今は基地の画面だけが昼の見た目を持つ。ほかの画面を表示しているときは常に夜。
+  var THEMED_SCREENS = ['base'];
+  // 「自動」の判定に使う時刻：実際の端末の時計（FF.clock は使わない）。デバッグ画面で時だけ指定できる
+  function themeNow() {
+    var d = new Date();
+    if (FF.app.themeHourOverride != null) d.setHours(FF.app.themeHourOverride, 0, 0, 0);
+    return d;
+  }
+  function currentTheme() {
+    if (!FF.app.state || THEMED_SCREENS.indexOf(FF.app.screen) < 0) return 'night';
+    return FF.theme.resolve(FF.app.state.settings.themeMode, themeNow());
+  }
+  function applyTheme() {
+    var t = currentTheme();
+    FF.app.theme = t;
+    if (doc.documentElement.getAttribute('data-theme') !== t) doc.documentElement.setAttribute('data-theme', t);
+    return t;
+  }
+
   // ---- 画面の切り替え ----
   var screens = {};
   function show(name, params) {
@@ -182,6 +202,7 @@
     root.scrollTo(0, 0);
   }
   function rerender() {
+    applyTheme();
     var main = doc.getElementById('screen');
     clear(main);
     var sc = screens[FF.app.screen];
@@ -190,6 +211,8 @@
     renderNav();
   }
   function tick() {
+    // 「自動」で昼と夜の境目をまたいだら描き直す
+    if (currentTheme() !== FF.app.theme) { rerender(); return; }
     renderHud();
     var sc = screens[FF.app.screen];
     if (sc && sc.onTick) sc.onTick();
@@ -199,6 +222,7 @@
     el: el, svg: svg, clear: clear, rich: rich, R: R, plain: plain, T: T, fmt: fmt,
     resDef: resDef, buildingName: buildingName, nameOf: nameOf, costView: costView,
     toast: toast, modal: modal, renderHud: renderHud, renderNav: renderNav,
-    screens: screens, show: show, rerender: rerender, tick: tick
+    screens: screens, show: show, rerender: rerender, tick: tick,
+    currentTheme: currentTheme, applyTheme: applyTheme
   };
 })(this);

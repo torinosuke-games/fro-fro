@@ -30,7 +30,7 @@ module.exports = ({ test, FF, assert, plain }) => {
     s.learning.stats.math = { 3: { attempts: 4, correct: 3, choice: { attempts: 1, correct: 1 }, input: { attempts: 3, correct: 2 }, hintsUsed: 1, recent: [1, 0, 1, 1] } };
     s.learning.correctLog = { q1: [T0] };
     s.learning.history.push({ at: T0, qid: 'q1', correct: true });
-    s.settings = { furigana: false, furiganaAuto: false };
+    s.settings = { furigana: false, furiganaAuto: false, themeMode: 'day' };
     s.flags.introSeen = true;
     return s;
   }
@@ -116,9 +116,11 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.deepStrictEqual(plain(s.exploration), plain(S.defaultExploration()));
     for (const regionId of ['snowfield', 'forest']) assert.strictEqual(s.exploration.regions[regionId].position, 0);
     // v0.1 の部分はそのまま
-    for (const k of ['player', 'resources', 'buildings', 'tickets', 'learning', 'settings', 'flags']) {
+    for (const k of ['player', 'resources', 'buildings', 'tickets', 'learning', 'flags']) {
       assert.deepStrictEqual(plain(s[k]), src[k], k);
     }
+    // 設定は元のまま、あとから足した項目（テーマ）だけ初期値で補われる
+    assert.deepStrictEqual(plain(s.settings), Object.assign({}, src.settings, { themeMode: 'night' }));
     // 中央炉 Lv3 のセーブなので、読み込んだ時点で雪原が開いている
     assert.strictEqual(FF.exploration.isRegionUnlocked(s, 'snowfield'), true);
   });

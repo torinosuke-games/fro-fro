@@ -21,7 +21,70 @@
   --radius: 6px;
   --nav-h: 64px;
   --font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+  /* 以下は昼／夜テーマ（SPEC_theme.md）のために変数にしたもの。値はこれまで直接書いていたものと同じ */
+  --body-grad: radial-gradient(ellipse at 50% -10%, #1b2a3b 0%, var(--bg-1) 45%, var(--bg-0) 100%);
+  --hud-bg: linear-gradient(180deg, rgba(6, 10, 16, 0.96), rgba(8, 13, 20, 0.88));
+  --track: rgba(255,255,255,0.07);
+  --nav-bg: linear-gradient(180deg, rgba(12, 19, 28, 0.96), rgba(5, 8, 12, 0.99));
+  --panel-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 6px 18px rgba(0,0,0,0.35);
+  --btn-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 0 rgba(0,0,0,0.4);
+  --badge-bg: rgba(143,211,255,0.08);
+  --scene-bg: #0a121c;
+  --scene-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  --label-bg: rgba(5, 9, 14, 0.78);
+  --label-edge: rgba(150,196,228,0.3);
+  --label-text: #dbe7f1;
+  --card-bg: rgba(18, 29, 42, 0.86);
+  --chip-bg: rgba(255,255,255,0.05);
+  --overlay-bg: rgba(0, 0, 0, 0.62);
+  --modal-shadow: 0 10px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06);
+  --toast-bg: rgba(8, 14, 22, 0.96);
+  --toast-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  --rt: #b7c9d8;
 }
+
+/* 昼のテーマ（SPEC_theme.md）。今は基地の画面を表示しているときだけ <html data-theme="day"> になる */
+:root[data-theme="day"] {
+  --bg-0: #cfe3f2;
+  --bg-1: #e8f3fb;
+  --panel: rgba(255, 255, 255, 0.88);
+  --panel-strong: rgba(250, 253, 255, 0.97);
+  --edge: rgba(44, 86, 122, 0.22);
+  --edge-strong: rgba(44, 86, 122, 0.42);
+  --text: #13202c;
+  --muted: #4a5f72;
+  --faint: #8196a8;
+  --ice: #1f6fa3;
+  --ice-deep: #155580;
+  --ember: #d4600f;
+  --ember-deep: #c2541a;
+  --good: #1f8a4c;
+  --bad: #c62f2f;
+  --warn: #9a6200;
+  --metal: linear-gradient(180deg, #f6f9fc 0%, #dae5ef 100%);
+  --body-grad: radial-gradient(ellipse at 50% -10%, #ffffff 0%, var(--bg-1) 45%, var(--bg-0) 100%);
+  --hud-bg: linear-gradient(180deg, rgba(243, 249, 254, 0.97), rgba(228, 239, 249, 0.93));
+  --track: rgba(20, 60, 100, 0.12);
+  --nav-bg: linear-gradient(180deg, rgba(247, 251, 254, 0.97), rgba(224, 236, 246, 0.99));
+  --panel-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 14px rgba(30,70,110,0.12);
+  --btn-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 0 rgba(30,70,110,0.18);
+  --badge-bg: rgba(31,111,163,0.08);
+  --scene-bg: #cfe6f7;
+  --scene-shadow: 0 6px 18px rgba(30,70,110,0.18);
+  --label-bg: rgba(255, 255, 255, 0.88);
+  --label-edge: rgba(44,86,122,0.35);
+  --label-text: #1b2b3a;
+  --card-bg: rgba(255, 255, 255, 0.84);
+  --chip-bg: rgba(20,60,100,0.05);
+  --overlay-bg: rgba(20, 40, 60, 0.45);
+  --modal-shadow: 0 10px 40px rgba(20,50,80,0.3), inset 0 1px 0 rgba(255,255,255,0.8);
+  --toast-bg: rgba(255, 255, 255, 0.97);
+  --toast-shadow: 0 6px 20px rgba(20,50,80,0.25);
+  --rt: #4f6b82;
+}
+/* 昼は降る雪を少し灰色にして、明るい背景でも見えるようにする */
+:root[data-theme="day"] .snowfall { filter: invert(0.45); opacity: 0.35; }
+:root[data-theme="day"] .snowfall.far { opacity: 0.2; }
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -30,7 +93,7 @@ html { background: var(--bg-0); }
 body {
   font-family: var(--font);
   color: var(--text);
-  background: radial-gradient(ellipse at 50% -10%, #1b2a3b 0%, var(--bg-1) 45%, var(--bg-0) 100%) fixed;
+  background: var(--body-grad) fixed;
   -webkit-tap-highlight-color: transparent;
   line-height: 1.6;
   font-size: 15px;
@@ -65,7 +128,7 @@ main#screen { flex: 1; padding: 12px 14px 24px; }
 /* ヘッダー：資源とチケット */
 .hud {
   position: sticky; top: 0; z-index: 5;
-  background: linear-gradient(180deg, rgba(6, 10, 16, 0.96), rgba(8, 13, 20, 0.88));
+  background: var(--hud-bg);
   border-bottom: 1px solid var(--edge);
   padding: 8px 12px calc(8px) 12px;
   padding-top: calc(8px + env(safe-area-inset-top, 0px));
@@ -85,7 +148,7 @@ main#screen { flex: 1; padding: 12px 14px 24px; }
 }
 .hud-tickets .count { color: var(--ice); font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; }
 .hud-tickets .timer { font-variant-numeric: tabular-nums; }
-.ticket-bar { flex: 1; height: 4px; margin: 0 10px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+.ticket-bar { flex: 1; height: 4px; margin: 0 10px; background: var(--track); border-radius: 2px; overflow: hidden; }
 .ticket-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--ice-deep), var(--ice)); }
 
 /* ナビ */
@@ -93,7 +156,7 @@ nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
   height: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  background: linear-gradient(180deg, rgba(12, 19, 28, 0.96), rgba(5, 8, 12, 0.99));
+  background: var(--nav-bg);
   border-top: 1px solid var(--edge-strong);
   display: flex; justify-content: center;
 }
@@ -117,7 +180,7 @@ nav.tabs button.locked::after { content: "🔒"; position: absolute; top: 4px; r
 .panel {
   background: var(--panel); border: 1px solid var(--edge); border-radius: var(--radius);
   padding: 12px 14px; margin: 0 0 12px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 6px 18px rgba(0,0,0,0.35);
+  box-shadow: var(--panel-shadow);
 }
 .panel.strong { background: var(--panel-strong); }
 .panel h2, .panel h3 { margin: 0 0 8px; letter-spacing: 0.04em; }
@@ -144,7 +207,7 @@ h3 { font-size: 15px; color: var(--ice); }
   min-height: 44px; padding: 8px 16px; cursor: pointer;
   border-radius: 4px; border: 1px solid var(--edge-strong);
   background: var(--metal); color: var(--text); font-weight: 700; letter-spacing: 0.04em;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 0 rgba(0,0,0,0.4);
+  box-shadow: var(--btn-shadow);
   transition: transform 0.05s, filter 0.15s;
 }
 .btn:hover { filter: brightness(1.12); }
@@ -177,7 +240,7 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick .tag { font-size: 11px; color: var(--warn); }
 .badge {
   display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 10px;
-  border: 1px solid var(--edge-strong); color: var(--ice); background: rgba(143,211,255,0.08);
+  border: 1px solid var(--edge-strong); color: var(--ice); background: var(--badge-bg);
 }
 .badge.ember { color: var(--ember); border-color: rgba(255,138,61,0.5); background: rgba(255,138,61,0.08); }
 .badge.lock { color: var(--faint); }
@@ -189,15 +252,15 @@ h3 { font-size: 15px; color: var(--ice); }
 .greeting { color: var(--muted); font-size: 13px; margin-top: 2px; }
 .scene {
   position: relative; border: 1px solid var(--edge); border-radius: var(--radius); overflow: hidden;
-  background: #0a121c; margin-bottom: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  background: var(--scene-bg); margin-bottom: 12px; box-shadow: var(--scene-shadow);
 }
 .scene svg { display: block; width: 100%; height: auto; }
 .scene .bld { cursor: pointer; }
 .scene .bld:focus { outline: none; }
 .scene .bld:focus-visible .hit, .scene .bld:hover .hit { stroke: var(--ice); stroke-opacity: 0.8; }
 .scene .hit { fill: transparent; stroke: transparent; stroke-width: 1.5; stroke-dasharray: 4 3; }
-.scene .label-bg { fill: rgba(5, 9, 14, 0.78); stroke: rgba(150,196,228,0.3); }
-.scene .label { fill: #dbe7f1; font-size: 10px; font-weight: 700; font-family: var(--font); }
+.scene .label-bg { fill: var(--label-bg); stroke: var(--label-edge); }
+.scene .label { fill: var(--label-text); font-size: 10px; font-weight: 700; font-family: var(--font); }
 .scene .label.lv { fill: var(--ember); }
 .smoke { animation: smoke 5s ease-in infinite; transform-box: fill-box; transform-origin: center; }
 .smoke.d2 { animation-delay: 1.6s; }
@@ -211,7 +274,7 @@ h3 { font-size: 15px; color: var(--ice); }
 .bld-list { display: grid; gap: 8px; }
 .bld-card {
   display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center;
-  background: rgba(18, 29, 42, 0.86); border: 1px solid var(--edge); border-radius: 5px; padding: 10px 12px;
+  background: var(--card-bg); border: 1px solid var(--edge); border-radius: 5px; padding: 10px 12px;
   cursor: pointer; text-align: left; width: 100%;
 }
 .bld-card:hover { border-color: var(--ice); }
@@ -222,7 +285,7 @@ h3 { font-size: 15px; color: var(--ice); }
 .bld-card .ready { color: var(--good); font-size: 12px; }
 
 .cost { display: flex; flex-wrap: wrap; gap: 6px; }
-.cost .item { background: rgba(255,255,255,0.05); border: 1px solid var(--edge); border-radius: 4px; padding: 2px 8px; font-variant-numeric: tabular-nums; }
+.cost .item { background: var(--chip-bg); border: 1px solid var(--edge); border-radius: 4px; padding: 2px 8px; font-variant-numeric: tabular-nums; }
 .cost .item.short { border-color: var(--bad); color: var(--bad); }
 
 .collect-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
@@ -311,7 +374,7 @@ textarea { min-height: 110px; font-family: ui-monospace, Consolas, monospace; fo
 
 /* モーダル・トースト */
 .overlay {
-  position: fixed; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.62);
+  position: fixed; inset: 0; z-index: 20; background: var(--overlay-bg);
   display: flex; align-items: flex-end; justify-content: center; padding: 12px;
   padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
 }
@@ -319,7 +382,7 @@ textarea { min-height: 110px; font-family: ui-monospace, Consolas, monospace; fo
 .modal {
   width: 100%; max-width: 480px; max-height: 88vh; overflow: auto;
   background: var(--panel-strong); border: 1px solid var(--edge-strong); border-radius: 8px; padding: 16px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06);
+  box-shadow: var(--modal-shadow);
   animation: fadein 0.2s ease both;
 }
 .modal h2 { margin: 0 0 10px; }
@@ -327,12 +390,12 @@ textarea { min-height: 110px; font-family: ui-monospace, Consolas, monospace; fo
 .modal .actions .btn { flex: 1; }
 .toast {
   position: fixed; left: 50%; top: calc(96px + env(safe-area-inset-top, 0px)); transform: translateX(-50%);
-  z-index: 30; max-width: 90%; background: rgba(8, 14, 22, 0.96); border: 1px solid var(--edge-strong);
-  border-radius: 6px; padding: 10px 14px; font-size: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  z-index: 30; max-width: 90%; background: var(--toast-bg); border: 1px solid var(--edge-strong);
+  border-radius: 6px; padding: 10px 14px; font-size: 14px; box-shadow: var(--toast-shadow);
   animation: fadein 0.2s ease both;
 }
 
-ruby rt { font-size: 0.5em; color: #b7c9d8; letter-spacing: 0; }
+ruby rt { font-size: 0.5em; color: var(--rt); letter-spacing: 0; }
 
 /* デバッグ */
 .debug-flag {

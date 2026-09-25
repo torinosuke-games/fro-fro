@@ -1,6 +1,6 @@
 # CLAUDE.md（開発メモ）
 
-仕様は `SPEC.md`（v0.1）と `SPEC_v0.2.md`（v0.2 探索マップ、矛盾したらこちらが優先）、`SPEC_save_integrity.md`（セーブデータの改ざん検出）、設計は `DESIGN.md`（v0.2 は末尾の第12章）を参照。
+仕様は `SPEC.md`（v0.1）と `SPEC_v0.2.md`（v0.2 探索マップ、矛盾したらこちらが優先）、`SPEC_save_integrity.md`（セーブデータの改ざん検出）、`SPEC_theme.md`（昼／夜テーマ）、設計は `DESIGN.md`（v0.2 は末尾の第12章）を参照。
 
 ## 進捗
 
@@ -19,6 +19,7 @@
 - v0.2-4（探索マップの画面）：承認済み（`js/ui/exploration.js`。ヘッドレス Chrome で地域の選択〜雪原 100%〜凍結森林の解放まで通しで操作して確認。幅 375px・320px で地図の全地点を座標でクリックして確認し、地点の押せる範囲を直径 44px 以上に広げた。設定のふりがなのオン・オフが探索の全画面（導入文・地点の記録・出題文・ヒント・解説・宝箱）に反映されることも確認。手動確認の項目は v0.2-5 で `tests/MANUAL.md` に追加する）
 - v0.2-5（手動確認の項目と完成報告）：承認済み（v0.2 完成。完成報告 `REPORT_v0.2.md`。`tests/MANUAL.md` に第11章（探索）29項目を追加し、v0.1 の 2-12・9-3 を更新。自動テスト 278件すべて成功）
 - セーブデータの改ざん検出（`SPEC_save_integrity.md`、1回の作業）：承認済み（`js/integrity.js`、`tests/cases/integrity.js`。saveVersion 3 で `integrity` を必須にし、`integrity` を消して書き換えるすり抜けを塞いだ。自動テスト 303件すべて成功。ヘッドレス Chrome で書き換えたデータ・`integrity` を消したデータの拒否と、旧形式の読み込みを確認。`tests/MANUAL.md` 第12章 6項目）
+- 昼／夜テーマ（`SPEC_theme.md`）：**基地の画面だけの試作**を提示中（`js/theme.js`、`tests/cases/theme.js`。夜は変更前とピクセル単位で同じことをヘッドレス Chrome で確認。自動テスト 317件すべて成功。ほかの画面は確認を取ってから広げる）
 
 ## フェーズ7の進め方（SPEC 10・21.5）
 
@@ -57,7 +58,7 @@
 
 - `index.html` … 開くだけで動く（`file://`）。`<script>` の読み込み順はここが唯一の定義
 - `js/` ゲーム本体（ロジック層は純粋関数、画面は `js/ui/`・`js/svg/`・`js/debug.js`・`js/main.js`、localStorage は `js/storage.js` のみ）
-  - 作成済み：`config.js`、`clock.js`、`balance.js`、`defs.js`、`util.js`、`integrity.js`（セーブデータの指紋。cyrb53、キーを並べ替えた JSON から計算）、`state.js`（初期状態・移行・インポート検証・保存文字列への指紋の付与と検証）、`storage.js`、`tickets.js`、`rewards.js`、`buildings.js`（コスト・強化・中央炉の上限・解放・生産と受け取り・読み込み時の整合）、`answer.js`（判定）、`generators.js`（算数の自動生成）、`learning.js`（索引・出題・回答・学習記録）、`exam.js`（昇格試験・実力診断・ふりがなの自動設定）、`exploration.js`（v0.2 探索：解放・進行・出題の選択・宝箱・イベント・読み込み時の整合。地域の定義は `defs.js` の `REGIONS`・`EXPLORE_EVENTS`、数値は `balance.js` の `EXPLORE`）、`simulator.js`、`texts.js`（文言とふりがな辞書）
+  - 作成済み：`config.js`、`clock.js`、`balance.js`、`defs.js`、`util.js`、`integrity.js`（セーブデータの指紋。cyrb53、キーを並べ替えた JSON から計算）、`theme.js`（昼／夜テーマの判定。`resolve(mode, now)`）、`state.js`（初期状態・移行・インポート検証・保存文字列への指紋の付与と検証）、`storage.js`、`tickets.js`、`rewards.js`、`buildings.js`（コスト・強化・中央炉の上限・解放・生産と受け取り・読み込み時の整合）、`answer.js`（判定）、`generators.js`（算数の自動生成）、`learning.js`（索引・出題・回答・学習記録）、`exam.js`（昇格試験・実力診断・ふりがなの自動設定）、`exploration.js`（v0.2 探索：解放・進行・出題の選択・宝箱・イベント・読み込み時の整合。地域の定義は `defs.js` の `REGIONS`・`EXPLORE_EVENTS`、数値は `balance.js` の `EXPLORE`）、`simulator.js`、`texts.js`（文言とふりがな辞書）
   - 画面：`ui/core.js`（DOM 部品・ふりがな・ヘッダー・ナビ・画面切替）、`ui/title.js`、`ui/base.js`、`ui/study.js`、`ui/quiz.js`、`ui/exam.js`、`ui/records.js`、`ui/settings.js`、`ui/exploration.js`（v0.2 探索：地域の選択・ルートの地図・出題・宝箱とできごと・解放のお知らせ）、`svg/buildings.js`、`svg/scene.js`、`debug.js`（`?debug=1`）、`main.js`（起動・自動保存）
 - `questions/` 問題データ（`window.QUESTION_BANK.push(...)`）。フェーズ7で作成（算数の文章題は各学年4問、ほかの4教科は各学年9問）
 - `tests/` テスト（`index.html` からは読み込まない）。`tests/lib/loader.js` が vm で読み込む（読み込み順は index.html の `<script>` から読み取る。画面のファイルは読み込まない）
@@ -152,3 +153,14 @@
 86. saveVersion 3 の意味は「`integrity` が必須になった」ことだけで、状態の構造は変えていない（`MIGRATIONS[2]` は何も変えずに版だけ上げる）。必須になる版は `config.js` の `INTEGRITY_REQUIRED_FROM`（3）。読み込みの判定：saveVersion 3 以降（今の版まで）は `integrity` がない・一致しない・文字列でないと拒否。2 以下は `integrity` がなければそのまま読み込む（v0.1・v0.2 の後方互換）が、あれば検証する（saveVersion 2 に `integrity` を付けていた期間のセーブのため）。今の版より新しいセーブは、`integrity` より先に既存の「新しいバージョンのゲームで作られています」として扱う。
 87. 移行で付ける `integrity` は、移行の最後（不足項目の補完・建物と探索の整合のあと）に、その時点の内容（saveVersion 3）から計算する（`migrate` の戻り値 `saveText`）。移行の途中で付けると、後の整合で中身が変わって一致しなくなるため。起動時の読み込みで移行が起きたら、`storage.load` がすぐに `saveText` を localStorage に書き戻す（移行後の保存データは必ず saveVersion 3・正しい `integrity` 付き）。インポートは、確定したときの保存で付く。
 88. 残る限界：saveVersion を 2 以下に書き換えたうえで `integrity` を消す（または v0 の平らな形式で作る）と、旧形式として読み込まれる。v0.1・v0.2 の既存のセーブを読み込める後方互換を保つ限り、本物の旧形式のセーブと区別できないため（仕様0章の前提どおり、手軽な書き換えを防ぐことが目的）。
+
+### 昼／夜テーマ（SPEC_theme.md）で判断した点
+
+89. 今は基地の画面を表示しているときだけ `<html data-theme>` に昼を付け、ほかの画面では常に夜にする（仕様2章「他の画面は夜のまま」）。ヘッダー・ナビ・パネル・ボタン・モーダルは共通の部品なので、基地の画面にいる間だけ昼の色になる。対象の画面は `ui/core.js` の `THEMED_SCREENS`（今は `['base']`）で、ほかの画面に広げるときはここに足す。
+90. CSS は、基地の画面の部品で直接書いていた色（全体の背景・ヘッダー・ナビ・パネルとボタンの影・バッジ・風景の枠と名札・建物カード・資源の表示・モーダル・トースト・ふりがな）を、まったく同じ値の変数（19個）にして `:root` に置き、昼の値を `:root[data-theme="day"]` に書いた。既存の色の変数（`--panel` など）も昼の値で上書きする。
+91. SVG の建物は、関数の中に直接書いていた色（テント・炉の口・ドーム・赤い灯りなど 23 個）も表 `PALETTES` にまとめた。建物の関数は `(レベル, テーマ)` を受け取り、描いている間だけその表を使う（`themed`）。背景は夜に星とオーロラ、昼に太陽と雲を描く。
+92. 夜の見た目が変わっていないことは、ヘッドレス Chrome で「動きを減らす」（アニメーションを止める）にして基地の画面を撮り、変更前のコードの画像とピクセル単位で比べて確認した（幅 420px・1280px × 中央炉 Lv1・3・5、初期状態と設定「夜」の両方で差 0）。基地以外の画面（学習・記録・探索・地図）も、設定「昼」のときを含めて差 0。
+93. 「自動」の時刻は端末の `new Date()`（仕様1.2）。デバッグ画面に確認用の時刻（時）を指定する操作を足した（`app.themeHourOverride`、保存しない）。基地の画面を表示したまま境目の時刻をまたいだら、1秒ごとの更新で描き直す。
+94. `settings.themeMode` は初期値 `'night'`。旧いセーブ・知らない値は、移行の中で `'night'` に補う（saveVersion は上げない）。補うのは移行の最後の `integrity`（`saveText`）の計算より前。
+95. 昼は、背景を流れる雪を少し灰色にして薄くした（白い雪が明るい背景で見えなくなるため）。ブラウザの `theme-color`（アドレスバーの色）は夜のまま。
+96. 昼の配色でも、色だけに頼る表示は増やしていない（足りない資源は赤い枠と文字に「資源が足りない」の文言、強化できる建物は「▲ 強化する」）。

@@ -783,3 +783,12 @@ v0.1 の画面側で変える箇所：ナビの「探索」のロックを「探
 - 起動時の読み込み・インポート：`FF.state.parseSave` が、`integrity` があれば検証する。一致しなければ読み込まない（既存の「形式が正しくない」／起動時は既存の壊れたデータと同じ扱い）。`integrity` がなければ旧形式として読み込み、次の保存で付く。
 - 判断した点は `CLAUDE.md` の 81〜85。
 - saveVersion 3（`INTEGRITY_REQUIRED_FROM`）以降のセーブは `integrity` が必須（ない・一致しないと拒否）。2 以下は `integrity` がなければ旧形式として読み込み、移行の最後に計算した `integrity` 付き・saveVersion 3 の文字列（`migrate` の `saveText`）ですぐに保存し直す。判断した点は `CLAUDE.md` の 86〜88。
+
+---
+
+# 昼／夜テーマ（SPEC_theme.md、基地の画面の試作）
+
+- `js/theme.js`（純粋関数）：`resolve(mode, now)` → `'day'` | `'night'`。自動は `config.DAY_HOURS`（6 時以上 18 時未満）を昼とする。`now` は画面側が端末の `new Date()` を渡す。
+- 画面：`ui/core.js` が、`THEMED_SCREENS`（今は基地だけ）を表示している間だけ `<html data-theme="day">` にする。CSS は `:root`（夜）と `:root[data-theme="day"]`（昼）の変数。SVG は `svgScene.PALETTES`・`svgBuildings.PALETTES` の夜・昼の表を、描くたびにテーマで選ぶ。
+- 設定：`settings.themeMode`（初期値 `'night'`）。設定画面に［夜］［昼］［自動］。
+- 判断した点は `CLAUDE.md` の 89〜96。

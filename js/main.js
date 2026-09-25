@@ -13,7 +13,9 @@
     studySel: null,    // 学習の選択（資源・教科・学年・難易度・形式）
     studyTab: 'learn',
     examRun: null,
-    exploreSession: null,   // 探索の出題（画面の一時状態。保存しない）
+    exploreSession: null,
+    theme: 'night',          // いま画面に使っているテーマ（'night' | 'day'）
+    themeHourOverride: null, // デバッグ画面：テーマ「自動」の確認用の時刻（時）。保存しない   // 探索の出題（画面の一時状態。保存しない）
     leaveGuard: null,
     saveWarned: false,
 
