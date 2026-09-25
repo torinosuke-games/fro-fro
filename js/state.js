@@ -4,6 +4,8 @@
   var FF = root.FF = root.FF || {};
   var util = FF.util;
 
+  var FORMAT_ERROR = 'セーブデータの形式が正しくありません。';
+
   function mapIds(list, fn) {
     var out = {};
     list.forEach(function (item) { out[item.id] = fn(item); });
@@ -113,7 +115,7 @@
   // 保存データ（オブジェクト）を最新版にする。{ ok, state, migratedFrom, error }
   function migrate(data, now, cfg) {
     cfg = cfg || FF.config;
-    if (!util.isPlainObject(data)) return { ok: false, error: 'セーブデータの形式が正しくありません。' };
+    if (!util.isPlainObject(data)) return { ok: false, error: FORMAT_ERROR };
     var v = typeof data.saveVersion === 'number' ? data.saveVersion : 0;
     if (v > cfg.SAVE_VERSION) {
       return { ok: false, error: 'このセーブデータは新しいバージョンのゲームで作られています。' };
@@ -136,18 +138,28 @@
     return { ok: true, state: state, migratedFrom: from };
   }
 
-  // 保存用の文字列（エクスポートにもそのまま使う）
+  // 保存用の文字列（エクスポートにもそのまま使う）。
+  // 本体から計算した指紋 integrity を末尾に付ける（SPEC_save_integrity.md）。
   function serialize(state) {
-    return JSON.stringify(state);
+    var body = FF.integrity.withoutField(state);
+    body[FF.integrity.FIELD] = FF.integrity.sign(body);
+    return JSON.stringify(body);
   }
 
   // 保存用の文字列 → 最新版の状態。インポートでも同じ関数を使う。
+  // integrity があるのに本体と合わない（書き換えられた疑い）ときは読み込まない。
+  // integrity がない（この仕組みより前の v0.1・v0.2 のセーブ）ときは、そのまま読み込む。次の保存で付く。
   function parseSave(text, now, cfg) {
     var data;
     try {
       data = JSON.parse(String(text).trim());
     } catch (e) {
       return { ok: false, error: 'JSON として読み取れませんでした。コピーした内容をすべて貼り付けてください。' };
+    }
+    if (FF.integrity.hasField(data)) {
+      // 表示は既存の「形式が正しくない」と同じにする（新しい文言は作らない）
+      if (!FF.integrity.verify(data)) return { ok: false, error: FORMAT_ERROR, reason: 'integrity' };
+      data = FF.integrity.withoutField(data);
     }
     return migrate(data, now, cfg);
   }

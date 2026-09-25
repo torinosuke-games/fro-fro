@@ -1,6 +1,6 @@
 # CLAUDE.md（開発メモ）
 
-仕様は `SPEC.md`（v0.1）と `SPEC_v0.2.md`（v0.2 探索マップ、矛盾したらこちらが優先）、設計は `DESIGN.md`（v0.2 は末尾の第12章）を参照。
+仕様は `SPEC.md`（v0.1）と `SPEC_v0.2.md`（v0.2 探索マップ、矛盾したらこちらが優先）、`SPEC_save_integrity.md`（セーブデータの改ざん検出）、設計は `DESIGN.md`（v0.2 は末尾の第12章）を参照。
 
 ## 進捗
 
@@ -18,6 +18,7 @@
 - v0.2-3（探索を含めたバランス確認）：承認済み（`node tests/simulate.js` に探索の表を追加。探索ありでも9マスすべて目標内。探索による短縮は全施設Lv5で −0.2〜−1.8%、探索の時間を0とみなしても −2.5%。中央炉Lv2・Lv3は変化なし。自動テスト 277件すべて成功）
 - v0.2-4（探索マップの画面）：承認済み（`js/ui/exploration.js`。ヘッドレス Chrome で地域の選択〜雪原 100%〜凍結森林の解放まで通しで操作して確認。幅 375px・320px で地図の全地点を座標でクリックして確認し、地点の押せる範囲を直径 44px 以上に広げた。設定のふりがなのオン・オフが探索の全画面（導入文・地点の記録・出題文・ヒント・解説・宝箱）に反映されることも確認。手動確認の項目は v0.2-5 で `tests/MANUAL.md` に追加する）
 - v0.2-5（手動確認の項目と完成報告）：承認済み（v0.2 完成。完成報告 `REPORT_v0.2.md`。`tests/MANUAL.md` に第11章（探索）29項目を追加し、v0.1 の 2-12・9-3 を更新。自動テスト 278件すべて成功）
+- セーブデータの改ざん検出（`SPEC_save_integrity.md`、1回の作業）：提示中（`js/integrity.js`、`tests/cases/integrity.js`。自動テスト 294件すべて成功。ヘッドレス Chrome で書き換えたデータの拒否・旧形式の読み込みを確認。`tests/MANUAL.md` 第12章 5項目）
 
 ## フェーズ7の進め方（SPEC 10・21.5）
 
@@ -56,7 +57,7 @@
 
 - `index.html` … 開くだけで動く（`file://`）。`<script>` の読み込み順はここが唯一の定義
 - `js/` ゲーム本体（ロジック層は純粋関数、画面は `js/ui/`・`js/svg/`・`js/debug.js`・`js/main.js`、localStorage は `js/storage.js` のみ）
-  - 作成済み：`config.js`、`clock.js`、`balance.js`、`defs.js`、`util.js`、`state.js`（初期状態・移行・インポート検証）、`storage.js`、`tickets.js`、`rewards.js`、`buildings.js`（コスト・強化・中央炉の上限・解放・生産と受け取り・読み込み時の整合）、`answer.js`（判定）、`generators.js`（算数の自動生成）、`learning.js`（索引・出題・回答・学習記録）、`exam.js`（昇格試験・実力診断・ふりがなの自動設定）、`exploration.js`（v0.2 探索：解放・進行・出題の選択・宝箱・イベント・読み込み時の整合。地域の定義は `defs.js` の `REGIONS`・`EXPLORE_EVENTS`、数値は `balance.js` の `EXPLORE`）、`simulator.js`、`texts.js`（文言とふりがな辞書）
+  - 作成済み：`config.js`、`clock.js`、`balance.js`、`defs.js`、`util.js`、`integrity.js`（セーブデータの指紋。cyrb53、キーを並べ替えた JSON から計算）、`state.js`（初期状態・移行・インポート検証・保存文字列への指紋の付与と検証）、`storage.js`、`tickets.js`、`rewards.js`、`buildings.js`（コスト・強化・中央炉の上限・解放・生産と受け取り・読み込み時の整合）、`answer.js`（判定）、`generators.js`（算数の自動生成）、`learning.js`（索引・出題・回答・学習記録）、`exam.js`（昇格試験・実力診断・ふりがなの自動設定）、`exploration.js`（v0.2 探索：解放・進行・出題の選択・宝箱・イベント・読み込み時の整合。地域の定義は `defs.js` の `REGIONS`・`EXPLORE_EVENTS`、数値は `balance.js` の `EXPLORE`）、`simulator.js`、`texts.js`（文言とふりがな辞書）
   - 画面：`ui/core.js`（DOM 部品・ふりがな・ヘッダー・ナビ・画面切替）、`ui/title.js`、`ui/base.js`、`ui/study.js`、`ui/quiz.js`、`ui/exam.js`、`ui/records.js`、`ui/settings.js`、`ui/exploration.js`（v0.2 探索：地域の選択・ルートの地図・出題・宝箱とできごと・解放のお知らせ）、`svg/buildings.js`、`svg/scene.js`、`debug.js`（`?debug=1`）、`main.js`（起動・自動保存）
 - `questions/` 問題データ（`window.QUESTION_BANK.push(...)`）。フェーズ7で作成（算数の文章題は各学年4問、ほかの4教科は各学年9問）
 - `tests/` テスト（`index.html` からは読み込まない）。`tests/lib/loader.js` が vm で読み込む（読み込み順は index.html の `<script>` から読み取る。画面のファイルは読み込まない）
@@ -140,3 +141,11 @@
 78. 宝箱のチケットで 20 枚を超えたとき、ヘッダーは「23 / 20」と表示し、バーは満タンで止める。
 79. デバッグ画面に探索の操作を足した（中央炉などを Lv3・Lv4 にする、1地点進める、終点の1つ手前まで進める、探索を最初からにする）。
 80. 探索の地図の地点は、見た目の円（幅 320px で直径 26px）より大きい透明な円を押せる範囲にした（半径 7.6、幅 320px で直径 44px）。地点どうしの中心は 19 以上離し、押せる範囲が重ならないことを自動テストで確かめる。凡例は項目ごとに折り返す。
+
+### セーブデータの改ざん検出（SPEC_save_integrity.md）で判断した点
+
+81. 指紋の付与と検証は `state.js` の `serialize`（保存・書き出し）と `parseSave`（起動時の読み込み・インポート）に組み込んだ。仕様3章は `storage.js` を挙げているが、書き出しとインポートは `storage.js` を通らないため、4つの経路がすべて通るこの2つの関数にした（`storage.js` は変更なし）。
+82. 指紋は、キーを並べ替えた JSON から計算する（キーの並びに左右されない）。仕様2章の「キーの並びを変えずに stringify」の目的（改ざんがなければ往復で必ず一致する）を、並びに依存しない形でより確実に満たすため。計算の前に JSON を1回通すので、保存される JSON と同じ値の扱いになる。前後の空白や整形（インデント）は中身が同じなら通る。
+83. 不一致のときの表示は既存のものに合流させた。インポートは「セーブデータの形式が正しくありません。」、起動時は既存の壊れたデータと同じ扱い（元の文字列をそのまま `.broken` に退避し、「読み込めなかったため、新しく始めた」を出して新しい状態で始める）。新しい文言は作っていない。
+84. `integrity` が文字列でない（数値など）場合も不一致として扱う。
+85. saveVersion は上げない（`integrity` は本体の外側の項目で、状態の構造は変わらない）。読み込んだ状態には `integrity` を残さない。既知の限界：`integrity` を消してから書き換えたデータは、後方互換のため「旧形式」として読み込まれる（仕様0章の前提どおり、手軽な書き換えを防ぐことが目的）。
