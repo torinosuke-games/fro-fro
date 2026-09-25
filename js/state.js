@@ -10,6 +10,19 @@
     return out;
   }
 
+  // 探索の初期状態（v0.2）。地域は defs.js の REGIONS から作る
+  function defaultRegionState() {
+    return { position: 0, progress: 0, missedHere: false, openedChests: [], events: {}, completedAt: null };
+  }
+  function defaultExploration() {
+    return {
+      regions: mapIds(FF.defs.REGIONS, defaultRegionState),
+      lastEventId: null,
+      recentQuestionIds: [],
+      stats: { answered: 0, correct: 0 }
+    };
+  }
+
   // 新規ゲームの状態
   function createDefaultState(now, b, cfg) {
     b = b || FF.balance;
@@ -39,6 +52,7 @@
         correctLog: {},
         history: []
       },
+      exploration: defaultExploration(),
       settings: { furigana: true, furiganaAuto: true },
       flags: { introSeen: false, diagnosisOffered: false, unlockNoticesSeen: [] }
     };
@@ -71,6 +85,12 @@
         v1.settings.furiganaAuto = false;
       }
       return v1;
+    },
+    // v1（v0.1）→ v2（v0.2）：探索の記録を空の状態で追加する
+    1: function (old) {
+      var v2 = Object.assign({}, old);
+      if (!util.isPlainObject(v2.exploration)) v2.exploration = defaultExploration();
+      return v2;
     }
   };
 
@@ -110,6 +130,8 @@
     state.saveVersion = cfg.SAVE_VERSION;
     // 建物のレベルの整合（中央炉を超えるレベル、解放済みなのに Lv0 など）
     if (FF.buildings && FF.buildings.normalizeBuildings) state = FF.buildings.normalizeBuildings(state, now);
+    // 探索の整合（位置を順路の範囲に収める、定義にない宝箱・イベントを捨てる など）
+    if (FF.exploration && FF.exploration.normalizeExploration) state = FF.exploration.normalizeExploration(state);
     state.player.name = util.normalizeName(state.player.name, cfg);
     return { ok: true, state: state, migratedFrom: from };
   }
@@ -144,6 +166,8 @@
 
   FF.state = {
     MIGRATIONS: MIGRATIONS,
+    defaultRegionState: defaultRegionState,
+    defaultExploration: defaultExploration,
     createDefaultState: createDefaultState,
     fillDefaults: fillDefaults,
     migrate: migrate,

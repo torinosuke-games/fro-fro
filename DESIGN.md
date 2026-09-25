@@ -643,19 +643,20 @@ SPEC_v0.2 には解放条件が書かれていないため、次のように決�
 
 ```text
 FF.defs.REGIONS = [
-  { id: 'snowfield', name: '雪原', nameEn: 'SNOWFIELD', grades: [1, 4],
+  { id: 'snowfield', name: '雪原', nameEn: 'SNOWFIELD', grades: [1, 4], requires: null,
+    events: ['sf_ev_crate', 'sf_ev_rivets', …],   // この地域のイベント地点で抽選する候補
     intro: '…', completeText: '…',
     nodes: [
       { id: 'sf_01', kind: 'start',  name: '基地の門',       x: 12, y: 15, next: 'sf_02', text: '…' },
       { id: 'sf_02', kind: 'normal', name: '風の丘',         x: 37, y: 15, next: 'sf_03', text: '…' },
-      { id: 'sf_03', kind: 'event',  name: '古い道しるべ',   …, events: ['sf_ev_crate', …] },
+      { id: 'sf_03', kind: 'event',  name: '古い道しるべ',   … },          // イベントは地域の events から抽選
       { id: 'sf_04', kind: 'chest',  name: '雪にうもれた小屋', …, chest: 'sf_chest_1' },
       …
       { id: 'sf_10', kind: 'chest',  name: '雪原の果ての石塔', …, next: null, chest: 'sf_chest_3' },
       // v0.3 で戦闘を実装したら reachable を true にする
       { id: 'sf_enemy_fangs', kind: 'enemy', name: '氷牙のむれ', x: …, y: …, adjacent: 'sf_07', reachable: false, text: '…' }
     ] },
-  { id: 'forest', name: '凍結森林', nameEn: 'FROZEN FOREST', grades: [3, 6], … }
+  { id: 'forest', name: '凍結森林', nameEn: 'FROZEN FOREST', grades: [3, 6], requires: 'snowfield', … }
 ]
 FF.defs.EXPLORE_EVENTS = {
   sf_ev_crate:   { region: 'snowfield', type: 'resource', text: '…' },

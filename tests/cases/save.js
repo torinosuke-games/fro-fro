@@ -105,6 +105,30 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.ok(s.learning.totalEarned && s.learning.totalEarned.wood === 0);
   });
 
+  test('v0.1 形式（saveVersion 1）のデータを移行すると、探索の記録が初期状態で入り、ほかは変わらない', () => {
+    const text = fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'save_v1.json'), 'utf8');
+    const src = JSON.parse(text);
+    const r = S.parseSave(text, T0 + 1234);
+    assert.strictEqual(r.ok, true);
+    assert.strictEqual(r.migratedFrom, 1);
+    const s = r.state;
+    assert.strictEqual(s.saveVersion, FF.config.SAVE_VERSION);
+    assert.deepStrictEqual(plain(s.exploration), plain(S.defaultExploration()));
+    for (const regionId of ['snowfield', 'forest']) assert.strictEqual(s.exploration.regions[regionId].position, 0);
+    // v0.1 の部分はそのまま
+    for (const k of ['player', 'resources', 'buildings', 'tickets', 'learning', 'settings', 'flags']) {
+      assert.deepStrictEqual(plain(s[k]), src[k], k);
+    }
+    // 中央炉 Lv3 のセーブなので、読み込んだ時点で雪原が開いている
+    assert.strictEqual(FF.exploration.isRegionUnlocked(s, 'snowfield'), true);
+  });
+
+  test('v0 形式のデータも、探索の記録まで移行される', () => {
+    const text = fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'save_v0.json'), 'utf8');
+    const s = S.parseSave(text, T0).state;
+    assert.deepStrictEqual(plain(s.exploration), plain(S.defaultExploration()));
+  });
+
   test('移行したデータを保存し直すと、次からは移行なしで読める', () => {
     const ls = fakeStorage();
     ls.setItem(FF.config.SAVE_KEY, fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'save_v0.json'), 'utf8'));

@@ -1,0 +1,116 @@
+{
+  "saveVersion": 1,
+  "createdAt": 1790000000000,
+  "updatedAt": 1790000000000,
+  "player": {
+    "name": "ゆきねこ"
+  },
+  "resources": {
+    "wood": 1200,
+    "iron": 300,
+    "stone": 800,
+    "food": 150
+  },
+  "buildings": {
+    "furnace": {
+      "level": 3
+    },
+    "housing": {
+      "level": 1
+    },
+    "lumber": {
+      "level": 2,
+      "lastCollectedAt": 1790000000000
+    },
+    "mine": {
+      "level": 1,
+      "lastCollectedAt": 1790000000000
+    },
+    "quarry": {
+      "level": 1,
+      "lastCollectedAt": 1790000000000
+    },
+    "foodhall": {
+      "level": 1,
+      "lastCollectedAt": 1790000000000
+    }
+  },
+  "tickets": {
+    "count": 14,
+    "lastRecoveredAt": 1790000000000
+  },
+  "learning": {
+    "unlocked": {
+      "math": 5,
+      "japanese": 2,
+      "science": 2,
+      "social": 2,
+      "english": 2
+    },
+    "examCooldownUntil": {
+      "math": 0,
+      "japanese": 0,
+      "science": 0,
+      "social": 0,
+      "english": 0
+    },
+    "examHistory": [],
+    "diagnosis": {
+      "math": null,
+      "japanese": null,
+      "science": null,
+      "social": null,
+      "english": null
+    },
+    "stats": {
+      "math": {
+        "5": {
+          "attempts": 3,
+          "correct": 2,
+          "choice": {
+            "attempts": 1,
+            "correct": 1
+          },
+          "input": {
+            "attempts": 2,
+            "correct": 1
+          },
+          "hintsUsed": 0,
+          "recent": [
+            1,
+            0,
+            1
+          ]
+        }
+      }
+    },
+    "streak": {
+      "current": 0,
+      "best": 0
+    },
+    "totalEarned": {
+      "wood": 0,
+      "iron": 0,
+      "stone": 0,
+      "food": 0
+    },
+    "correctLog": {
+      "math_g5_word_001": [
+        1790000000000
+      ]
+    },
+    "history": []
+  },
+  "settings": {
+    "furigana": true,
+    "furiganaAuto": true
+  },
+  "flags": {
+    "introSeen": true,
+    "diagnosisOffered": true,
+    "unlockNoticesSeen": [
+      "quarry",
+      "watchtower"
+    ]
+  }
+}

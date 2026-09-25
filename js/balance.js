@@ -75,6 +75,36 @@
 
     INITIAL_RESOURCES: { wood: 0, iron: 0, stone: 0, food: 0 },
 
+    // ---- 探索（v0.2、SPEC_v0.2） ----
+    EXPLORE: {
+      CORRECT_PER_NODE: 1,                           // 1地点進むのに必要な正解数（SPEC_v0.2 3.1）
+      UNLOCK_FURNACE_LEVEL: { snowfield: 3, forest: 4 },
+      CHOICE_SHARE: 0.5,                             // 4択を出す割合（まちがえた地点では自由入力だけ）
+      GRADE_WEIGHT: { inRange: 3, outOfRange: 1 },   // 推奨学年の範囲内・範囲外の重み
+      DIFFICULTY_WEIGHT: {
+        snowfield: { basic: 0.6, standard: 0.4 },
+        forest: { standard: 0.6, advanced: 0.4 }
+      },
+      AVOID_RECENT: 20,                              // 探索で直近に出した問題を何問ぶん避けるか
+      // 宝箱の中身（固定・1個につき1回）。tickets はチケットの枚数、それ以外は資源
+      CHESTS: {
+        sf_chest_1: { wood: 120, stone: 80 },
+        sf_chest_2: { tickets: 1, iron: 80 },
+        sf_chest_3: { tickets: 2, food: 150, wood: 100 },
+        fr_chest_1: { wood: 150, iron: 150 },
+        fr_chest_2: { tickets: 1, stone: 200 },
+        fr_chest_3: { tickets: 1, food: 200, iron: 100 },
+        fr_chest_4: { tickets: 2, wood: 250, stone: 200 }
+      },
+      // 資源イベントの量（宝箱よりずっと少なく）
+      EVENT_REWARDS: {
+        sf_ev_crate: { wood: 30 },
+        sf_ev_rivets: { iron: 20 },
+        fr_ev_firewood: { wood: 40 },
+        fr_ev_nuts: { food: 40 }
+      }
+    },
+
     // ---- 検証の基準（SPEC 9.4）：分 ----
     TARGETS: {
       furnace2: { lv1: 5, lv5: 4, lv9: 3 },
