@@ -18,7 +18,7 @@
 - v0.2-3（探索を含めたバランス確認）：承認済み（`node tests/simulate.js` に探索の表を追加。探索ありでも9マスすべて目標内。探索による短縮は全施設Lv5で −0.2〜−1.8%、探索の時間を0とみなしても −2.5%。中央炉Lv2・Lv3は変化なし。自動テスト 277件すべて成功）
 - v0.2-4（探索マップの画面）：承認済み（`js/ui/exploration.js`。ヘッドレス Chrome で地域の選択〜雪原 100%〜凍結森林の解放まで通しで操作して確認。幅 375px・320px で地図の全地点を座標でクリックして確認し、地点の押せる範囲を直径 44px 以上に広げた。設定のふりがなのオン・オフが探索の全画面（導入文・地点の記録・出題文・ヒント・解説・宝箱）に反映されることも確認。手動確認の項目は v0.2-5 で `tests/MANUAL.md` に追加する）
 - v0.2-5（手動確認の項目と完成報告）：承認済み（v0.2 完成。完成報告 `REPORT_v0.2.md`。`tests/MANUAL.md` に第11章（探索）29項目を追加し、v0.1 の 2-12・9-3 を更新。自動テスト 278件すべて成功）
-- セーブデータの改ざん検出（`SPEC_save_integrity.md`、1回の作業）：提示中（`js/integrity.js`、`tests/cases/integrity.js`。saveVersion 3 で `integrity` を必須にし、`integrity` を消して書き換えるすり抜けを塞いだ。自動テスト 303件すべて成功。ヘッドレス Chrome で書き換えたデータ・`integrity` を消したデータの拒否と、旧形式の読み込みを確認。`tests/MANUAL.md` 第12章 6項目）
+- セーブデータの改ざん検出（`SPEC_save_integrity.md`、1回の作業）：承認済み（`js/integrity.js`、`tests/cases/integrity.js`。saveVersion 3 で `integrity` を必須にし、`integrity` を消して書き換えるすり抜けを塞いだ。自動テスト 303件すべて成功。ヘッドレス Chrome で書き換えたデータ・`integrity` を消したデータの拒否と、旧形式の読み込みを確認。`tests/MANUAL.md` 第12章 6項目）
 
 ## フェーズ7の進め方（SPEC 10・21.5）
 
