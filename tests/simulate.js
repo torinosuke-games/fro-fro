@@ -41,6 +41,52 @@ if (lv1Share > B.PRODUCTION_SHARE_TARGET * 1.5) {
   console.log(`NG: Lv1 の生産の割合 ${(lv1Share * 100).toFixed(1)}% が目標 ${B.PRODUCTION_SHARE_TARGET * 100}% を大きく超えている`);
 }
 
+// ---- 2b. 探索（v0.2）を含めた到達時間（SPEC_v0.2 4.3） ----
+// 探索あり：地域が開いたらすぐ探索を進める（探索の問題を解く時間もプレイ時間に含める）。
+// 報酬だけ：探索にかかる時間を 0 とみなした場合（短縮の上限の目安）。
+console.log('\n■ 探索（v0.2）を含めた到達時間  探索あり＝問題を解く時間も含める／報酬だけ＝探索の時間を0とみなす');
+console.log('到達点        プロフィール   探索なし    探索あり    ずれ     報酬だけ    ずれ     目標      目標との差  判定');
+const withEx = {}, rewardOnly = {};
+for (const key of Object.keys(B.SIM_PROFILES)) {
+  withEx[key] = FF.simulator.run(B.SIM_PROFILES[key], { explore: true });
+  rewardOnly[key] = FF.simulator.run(B.SIM_PROFILES[key], { explore: true, exploreTimeScale: 0 });
+}
+const pct = x => (x >= 0 ? '+' : '') + (x * 100).toFixed(1) + '%';
+for (const ms of ['furnace2', 'furnace3', 'all5']) {
+  for (const key of Object.keys(B.SIM_PROFILES)) {
+    const base = results[key].milestones[ms];
+    const got = withEx[key].milestones[ms];
+    const upper = rewardOnly[key].milestones[ms];
+    const target = B.TARGETS[ms][key];
+    const diff = (got - target) / target;
+    // 判定：探索ありでも目標の ±30% 以内、かつ探索による短縮（報酬だけの場合でも）が 30% を超えない
+    const ok = Math.abs(diff) <= B.TARGET_TOLERANCE && (base - upper) / base <= B.TARGET_TOLERANCE;
+    if (!ok) failures++;
+    console.log(`${ms.padEnd(12)}  ${key.padEnd(12)} ${pad(fmtMin(base), 9)}  ${pad(fmtMin(got), 9)}  ${pad(pct((got - base) / base), 7)}  ${pad(fmtMin(upper), 9)}  ${pad(pct((upper - base) / base), 7)}  ${pad(fmtMin(target), 8)}  ${pad(pct(diff), 8)}    ${ok ? 'OK' : 'NG'}`);
+  }
+}
+
+console.log('\n■ 探索の内訳（期待値）');
+console.log('プロフィール  地域        出る学年  1問の秒数  1地点の秒数  100%到達（プレイ時間）');
+for (const key of Object.keys(withEx)) {
+  const x = withEx[key].explore;
+  for (const r of x.regions) {
+    console.log(`${key.padEnd(12)} ${r.id.padEnd(10)}  ${pad(r.grade.toFixed(1), 7)}  ${pad(r.secPerQuestion.toFixed(1), 8)}  ${pad(r.secPerNode.toFixed(1), 10)}   ${pad(fmtMin(x.completedAt[r.id]), 9)}`);
+  }
+  console.log(`${''.padEnd(12)} 合計：探索のプレイ時間 ${fmtMin(x.minutes)}、進んだ地点 ${x.nodes}、資源 ${x.resources}（全施設Lv5までの獲得の ${(x.resources / (withEx[key].learned + withEx[key].produced + x.resources) * 100).toFixed(1)}%）、チケット ${x.tickets}`);
+}
+
+// 宝箱のチケット：1地域あたり「まっとうにチケットを稼いだ場合の1〜2時間分」を超えない（SPEC_v0.2 4.1）
+// チケットの回復は1時間に 60/5 = 12 枚。1時間分（12枚）を上限として判定する。
+const perHour = 3600000 / B.TICKET_RECOVER_MS;
+console.log(`\n■ 宝箱のチケット（1時間に回復する枚数 = ${perHour}）`);
+for (const r of FF.defs.REGIONS) {
+  const n = r.nodes.filter(x => x.kind === 'chest').reduce((a, x) => a + (B.EXPLORE.CHESTS[x.chest].tickets || 0), 0);
+  const ok = n <= perHour;
+  if (!ok) failures++;
+  console.log(`${r.id.padEnd(10)}  ${n} 枚（回復 ${(n / perHour * 60).toFixed(0)} 分ぶん）  ${ok ? 'OK' : 'NG'}`);
+}
+
 // ---- 3. 当てずっぽうの期待値（1チケットあたり） ----
 console.log('\n■ 当てずっぽう（4択・正解率25%）の期待値：1チケットあたりの獲得量');
 const off = JSON.parse(JSON.stringify(B));

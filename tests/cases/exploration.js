@@ -562,4 +562,59 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     s = advanceTo(s, 'forest', 5, FF.util.makeRng(8));
     assert.deepStrictEqual(plain(X.normalizeExploration(s).exploration), plain(s.exploration));
   });
+
+  // ---- バランスシミュレーター（v0.2-3） ----
+  test('シミュレーター：1地点の期待時間の式が、実際の出題・回答の処理を何度も試した平均と合う', () => {
+    const sec = 20, retry = B.SIM_DEFAULTS.retrySecRatio;
+    for (const p of [0.5, 0.9]) {
+      const rng = FF.util.makeRng(Math.round(p * 100));
+      let total = 0;
+      const N = 4000;
+      let s = base();
+      for (let n = 0; n < N; n++) {
+        // 毎回、雪原の入口にいる状態から1地点進むまで
+        s.exploration.regions.snowfield = FF.state.defaultRegionState();
+        let st = s;
+        while (pos(st) === 0) {
+          const type = X.chooseSelection(st, 'snowfield', rng).answerType;
+          let a = FF.learning.startAttempt(type === 'choice' ? choiceQ : inputQ, rng);
+          let first = true;
+          for (;;) {
+            total += first ? sec : sec * retry;
+            first = false;
+            const r = X.answerExplore(st, 'snowfield', a, rng() < p ? '2' : '3', T0, rng);
+            st = r.state; a = r.attempt;
+            if (r.outcome.status !== 'retry') break;
+          }
+        }
+      }
+      const expected = FF.simulator.exploreSecPerNode(sec, p, B, retry);
+      assert.ok(Math.abs(total / N - expected) / expected < 0.03, `p=${p}: 試行 ${(total / N).toFixed(2)} / 式 ${expected.toFixed(2)}`);
+    }
+  });
+
+  test('シミュレーター：探索ありでも中央炉 Lv2・Lv3 の到達時間は変わらず、報酬の合計は宝箱＋イベントの期待値', () => {
+    for (const key of Object.keys(B.SIM_PROFILES)) {
+      const a = FF.simulator.run(B.SIM_PROFILES[key]);
+      const e = FF.simulator.run(B.SIM_PROFILES[key], { explore: true });
+      assert.strictEqual(e.milestones.furnace2, a.milestones.furnace2);
+      assert.strictEqual(e.milestones.furnace3, a.milestones.furnace3);
+      assert.ok(e.milestones.all5 <= a.milestones.all5 * 1.01);
+      assert.strictEqual(a.explore, null);
+      assert.strictEqual(e.explore.nodes, X.lastIndex('snowfield') + X.lastIndex('forest'));
+      assert.strictEqual(e.explore.tickets, 7);
+      // 宝箱 1780 ＋ イベント（雪原 (30+20)×3/6、森林 (40+40)×4/6）
+      assert.ok(Math.abs(e.explore.resources - (1780 + 25 + 160 / 3)) <= 1, String(e.explore.resources));
+    }
+  });
+
+  test('シミュレーター：探索の学年の期待値と1問の秒数（SPEC 8.3 の想定時間を補間）', () => {
+    assert.strictEqual(FF.simulator.secForGrade(1, B), 10);
+    assert.strictEqual(FF.simulator.secForGrade(5, B), 30);
+    assert.strictEqual(FF.simulator.secForGrade(9, B), 60);
+    assert.strictEqual(FF.simulator.secForGrade(3, B), 20);
+    const sf = FF.defs.REGIONS[0];
+    assert.strictEqual(FF.simulator.exploreGrade(sf, 2, B), 1.5);
+    assert.ok(Math.abs(FF.simulator.exploreGrade(sf, 9, B) - 65 / 17) < 1e-9);
+  });
 };
