@@ -122,9 +122,24 @@
         U.el('button', { class: 'btn small', text: '雪原を終点の1つ手前まで', on: { click: function () { exAdvance('snowfield', 'last'); } } }),
         U.el('button', { class: 'btn small', text: '凍結森林を1地点進める', on: { click: function () { exAdvance('forest', 1); } } }),
         U.el('button', { class: 'btn small', text: '凍結森林を終点の1つ手前まで', on: { click: function () { exAdvance('forest', 'last'); } } }),
-        U.el('button', { class: 'btn small ghost', text: '探索を最初からにする', on: { click: exReset } })
+        U.el('button', { class: 'btn small ghost', text: '探索を最初からにする', on: { click: exReset } }),
+        U.el('button', { class: 'btn small', text: '探索で、選択肢に漢字がある4択を出す', on: { click: exKanjiChoice } })
       ])
     ]));
+    // ふりがなの確認用：選択肢に {漢字|よみ} がある4択（解放済みの学年）を、探索の次の問題として出す
+    function exKanjiChoice() {
+      var s = app.state, X = FF.exploration;
+      var region = FF.defs.REGIONS.filter(function (r) { return X.isRegionUnlocked(s, r.id) && !X.isComplete(s, r.id); })[0];
+      if (!region) { U.toast('探索できる地域がない（中央炉 Lv3 以上で、100% でない地域が必要）'); return; }
+      var qs = Object.keys(app.bank.byId).map(function (id) { return app.bank.byId[id]; }).filter(function (q) {
+        return q.answerType === 'choice' && q.gradeLevel <= FF.learning.unlockedGrade(s, q.subject) &&
+          q.choices.some(function (c) { return /\{[^{}|]+\|[^{}]+\}/.test(c); });
+      });
+      if (!qs.length) { U.toast('該当する問題がない'); return; }
+      var q = qs[Math.floor(Math.random() * qs.length)];
+      app.exploreSession = { region: region.id, attempt: FF.learning.startAttempt(q, Math.random) };
+      U.show('exploreQuiz', { region: region.id });
+    }
     // 中央炉とほかの建物をそのレベルまで上げる（資源は使わない）
     function setFurnace(level) {
       var s = FF.util.clone(app.state);
