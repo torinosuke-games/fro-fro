@@ -231,7 +231,7 @@
     var fa = dec(A, 1), fb = dec(B, 1), ans = dec(A * B, 2);
     return {
       key: [fa, fb], text: fa + ' × ' + fb + ' = □', answer: ans, mode: 'number',
-      hints: ['小数点を とって、' + A + ' × ' + B + ' を 計算しよう', 'かける数と かけられる数の 小数点より下の けた数を たそう（1 + 1 = 2）', '答えの 小数点を、右から 2 けたの ところに うとう'],
+      hints: ['小数点を とって、' + A + ' × ' + B + ' を 計算しよう', 'かける数と かけられる数の 小数点より下の けた{数|すう}を たそう（1 + 1 = 2）', '答えの 小数点を、右から 2 けたの ところに うとう'],
       explanation: A + ' × ' + B + ' = ' + A * B + '。小数点より下は あわせて 2 けたなので、' + ans + ' です。',
       distractors: [dec(A * B, 1), dec(A * B, 3), dec(A * B + 1, 2), dec(A * B - 1, 2)],
       meta: { op: 'dec_mul_dec', a: fa, b: fb }
@@ -367,7 +367,7 @@
     else { text = p(a) + ' × ' + p(b); r = a * b; }
     return {
       key: [isDiv ? 'd' : 'x', isDiv ? a * b : a, b], text: text + ' = □', answer: String(r), mode: 'number',
-      hints: ['まず 符号を 考えずに 計算しよう', '負の 数が 1つ なら 答えは 負、2つ なら 正', '絶対値の 答えに 符号を つけよう'],
+      hints: ['まず 符号を 考えずに 計算しよう', '{負|ふ}の {数|すう}が 1つ なら 答えは 負、2つ なら 正', '絶対値の 答えに 符号を つけよう'],
       explanation: text + ' = ' + r + ' です。',
       distractors: [-r, r + 1, r - 1, isDiv ? a * b * b : a + b].map(String),
       meta: { op: 'int_mul', text: text, a: isDiv ? a * b : a, b: b, div: isDiv }
@@ -394,7 +394,7 @@
     var rhs = term(c, 'x', true) + (d === 0 ? '' : d < 0 ? ' − ' + (-d) : ' + ' + d);
     return {
       key: [a, b, c, d], text: lhs + ' = ' + rhs + ' のとき、x の値を 求めよう', answer: String(x), mode: 'number',
-      hints: ['x の 項を 左辺に、数の 項を 右辺に 集めよう', term(a - c, 'x', true) + ' = ' + (d - b), '両辺を ' + p(a - c) + ' で わろう'],
+      hints: ['x の 項を 左辺に、{数|すう}の {項|こう}を 右辺に 集めよう', term(a - c, 'x', true) + ' = ' + (d - b), '両辺を ' + p(a - c) + ' で わろう'],
       explanation: '移項すると ' + term(a - c, 'x', true) + ' = ' + (d - b) + '。x = ' + x + ' です。',
       distractors: [-x, x + 1, x - 1, d - b].map(String),
       meta: { op: 'lin_eq2', a: a, b: b, c: c, d: d }
@@ -424,7 +424,7 @@
     var e2 = term(a2, 'x', true) + term(b2, 'y', false) + ' = ' + c2;
     return {
       key: [a1, b1, c1, a2, b2, c2], text: '連立方程式\n' + e1 + '\n' + e2 + '\nの解のうち、x の値を 求めよう', answer: String(x), mode: 'number',
-      hints: ['どちらかの 文字の 係数を そろえて 消そう（加減法）', 'y を 消すには、上の式を ' + Math.abs(b2) + ' 倍、下の式を ' + Math.abs(b1) + ' 倍 してみよう', 'y が 消えたら、x の 1次方程式を 解こう'],
+      hints: ['どちらかの 文字の 係数を そろえて 消そう（加減法）', 'y を 消すには、上の式を ' + Math.abs(b2) + ' 倍、下の式を ' + Math.abs(b1) + ' 倍 してみよう', 'y が 消えたら、x の 1次方程式を {解|と}こう'],
       explanation: '加減法で y を消すと x = ' + x + '。代入すると y = ' + y + ' です。',
       distractors: [y, -x, x + 1, x - 1].map(String),
       meta: { op: 'simul', a1: a1, b1: b1, c1: c1, a2: a2, b2: b2, c2: c2, y: y }

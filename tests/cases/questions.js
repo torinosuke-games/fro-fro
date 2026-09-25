@@ -57,6 +57,27 @@ module.exports = ({ test, FF, ctx, assert }) => {
     assert.deepStrictEqual(ng, []);
   });
 
+  test('answerDisplay（表示用の答え）は、ふりがなを外すと answer と同じ文字になる', () => {
+    const withDisplay = bank.filter(q => q.answerDisplay !== undefined);
+    assert.ok(withDisplay.length >= 1);
+    for (const q of withDisplay) assert.strictEqual(FF.util.plainText(q.answerDisplay), q.answer, q.id);
+    const bad = Object.assign({}, withDisplay[0], { answerDisplay: '{中京|ちゅうきょう}' });
+    assert.ok(FF.learning.validateQuestion(bad).some(e => /answerDisplay/.test(e)));
+  });
+
+  test('「正しい答え」の表示には answerDisplay を使い、判定は answer・acceptedAnswers のまま', () => {
+    const q = bank.find(x => x.id === 'social_g5_industry_001');
+    assert.strictEqual(FF.learning.displayAnswer(q), '{中京工業地帯|ちゅうきょうこうぎょうちたい}');
+    assert.strictEqual(FF.learning.displayAnswer(bank.find(x => x.answerDisplay === undefined && x.answerType === 'input')) !== undefined, true);
+    for (const input of ['中京工業地帯', 'ちゅうきょう', 'チュウキョウ', '中京']) assert.ok(FF.answer.judgeInput(q, input).correct, input);
+    const T0 = 1790000000000;
+    const s = FF.state.createDefaultState(T0);
+    s.learning.unlocked.social = 5;
+    const r = FF.learning.submitAnswer(s, FF.learning.startAttempt(q), '中京工業地帯', { now: T0, resource: 'wood' });
+    assert.strictEqual(r.outcome.status, 'correct');
+    assert.strictEqual(r.outcome.correctAnswer, q.answerDisplay);
+  });
+
   test('全教科・全学年で昇格試験を組める（「準備中」にならない）', () => {
     const b = FF.learning.createBank(bank), ng = [];
     for (const s of ['math'].concat(TEXT_SUBJECTS)) for (const g of GRADES) {

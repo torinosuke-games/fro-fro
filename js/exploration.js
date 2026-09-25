@@ -324,7 +324,7 @@
       outcome: {
         status: result.correct ? 'correct' : 'wrong',
         attempts: result.correct ? wrong + 1 : wrong,
-        correctAnswer: q.answer,
+        correctAnswer: FF.learning.displayAnswer(q),
         explanation: q.explanation
       },
       arrival: arrival

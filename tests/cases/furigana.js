@@ -60,4 +60,19 @@ module.exports = ({ test, FF, assert, plain }) => {
     const missing = report(strings);
     assert.ok(missing.length === 0, missing.join('\n'));
   });
+
+  // 辞書の一字の語（「数」→かず、「解」→かい など）が、文脈と違う読みを付けていた箇所（v0.2 の監査で修正）
+  test('辞書の誤読を直した箇所が、正しい読みで表示される', () => {
+    const rt = s => plain(U.parseRichText(U.autoRubyMarkup(s))).filter(t => t.ruby).map(t => t.ruby + ':' + t.rt);
+    assert.ok(rt(FF.texts.breakdown.attempt).includes('回答回数:かいとうかいすう'));
+    const rng = U.makeRng(5);
+    const hints = new Set();
+    for (let i = 0; i < 400; i++) for (const [g, d] of [[5, 'advanced'], [7, 'standard'], [7, 'advanced'], [8, 'standard']]) {
+      FF.generators.generate(g, d, 'input', rng).hints.forEach(h => hints.add(h));
+    }
+    const all = [...hints].flatMap(rt);
+    for (const want of ['解:と', '負:ふ', '項:こう']) assert.ok(all.includes(want), want);
+    // 「けた数」「負の 数」「数の 項」「解こう」を読みの明示なしで書いたヒントが残っていない
+    for (const h of hints) assert.ok(!/けた数|負の 数|数の 項|解こう/.test(h), '読みを明示していない: ' + h);
+  });
 };

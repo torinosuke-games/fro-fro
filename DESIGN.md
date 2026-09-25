@@ -201,6 +201,7 @@ FURNACE_UNLOCKS = [{ level:2, type:"building", id:"quarry" }, { level:3, type:"t
   hints: ["...", "...", "..."],     必須  1〜3個（考え方の補助）
   explanation: "...",               必須
   reviewed: false                   必須  AI 作成分はすべて false
+  answerDisplay: "…"               任意  「正しい答え」の表示用（ふりがなの記法入り）。自由入力の answer に記法を書けないため（v0.2 で追加）
 }
 ```
 

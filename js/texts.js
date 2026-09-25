@@ -109,7 +109,7 @@
     switchToInput: '自由入力に切り替える',
     noReward: '今回は資源を得られなかった。',
     breakdown: {
-      base: '基本', difficulty: '難易度', format: '形式', hint: 'ヒント', attempt: '回答回数', repeat: '同じ問題のくり返し',
+      base: '基本', difficulty: '難易度', format: '形式', hint: 'ヒント', attempt: '{回答回数|かいとうかいすう}', repeat: '同じ問題のくり返し',
       facility: '施設ボーナス', focus: '重点教科', accuracy: '直近の正答率'
     },
     selection: '{subject}　Lv{grade}　{difficulty}　{format}',

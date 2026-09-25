@@ -160,7 +160,7 @@
       var fb = U.el('div', { class: 'feedback ' + (run.last.correct ? 'good' : 'bad') }, [
         U.R('div', 'verdict', run.last.correct ? U.T('examCorrect') : U.T('examWrong')),
         U.R('div', 'section-title', U.T('correctAnswer')),
-        U.el('div', { style: { fontWeight: '800' } }, U.rich(it.question.answer)),
+        U.el('div', { style: { fontWeight: '800' } }, U.rich(FF.learning.displayAnswer(it.question))),
         U.R('div', 'section-title', U.T('explanation')),
         U.el('div', { class: 'pre small' }, U.rich(it.question.explanation))
       ]);

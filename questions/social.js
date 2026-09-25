@@ -386,7 +386,7 @@ window.QUESTION_BANK.push(
     id: 'social_g5_industry_001', subject: 'social', gradeLevel: 5, unit: 'industry',
     difficulty: 'standard', answerType: 'input',
     question: '{愛知県|あいちけん}を {中心|ちゅうしん}に {広|ひろ}がり、{自動車|じどうしゃ}などの {機械工業|きかいこうぎょう}が さかんな {工業地帯|こうぎょうちたい}を {何|なん}と いうかな。',
-    answer: '中京工業地帯', acceptedAnswers: ['中京', 'ちゅうきょう', 'ちゅうきょうこうぎょうちたい'], validationMode: 'kana-insensitive',
+    answer: '中京工業地帯', answerDisplay: '{中京工業地帯|ちゅうきょうこうぎょうちたい}', acceptedAnswers: ['中京', 'ちゅうきょう', 'ちゅうきょうこうぎょうちたい'], validationMode: 'kana-insensitive',
     hints: ['{名古屋|なごや}は、{東京|とうきょう}と {京都|きょうと}の あいだに ある {都市|とし}として「○○」と よばれたよ。', '「ちゅうきょう」から はじまるよ。'],
     explanation: '{愛知県|あいちけん}を {中心|ちゅうしん}と する「{中京工業地帯|ちゅうきょうこうぎょうちたい}」は、2019{年|ねん}の {統計|とうけい}で {工業生産額|こうぎょうせいさんがく}が {日本|にほん}で いちばん {多|おお}い {工業地帯|こうぎょうちたい}です。',
     reviewed: true

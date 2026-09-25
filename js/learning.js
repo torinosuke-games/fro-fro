@@ -26,6 +26,7 @@
     if (!str(q.explanation)) e.push('explanation がない');
     if (typeof q.reviewed !== 'boolean') e.push('reviewed が true/false でない');
     if (!Array.isArray(q.hints) || q.hints.length < 1 || q.hints.length > 3 || !q.hints.every(str)) e.push('hints は1〜3個の文字列');
+    if (q.answerDisplay !== undefined && (!str(q.answerDisplay) || FF.util.plainText(q.answerDisplay) !== q.answer)) e.push('answerDisplay のふりがなを外した文字が answer と一致しない');
     if (q.acceptedAnswers !== undefined && (!Array.isArray(q.acceptedAnswers) || !q.acceptedAnswers.every(str))) e.push('acceptedAnswers は文字列の配列');
     if (q.answerType === 'choice') {
       if (!Array.isArray(q.choices) || q.choices.length !== 4) e.push('choices がちょうど4つでない');
@@ -43,6 +44,12 @@
       if (str(q.answer) && !FF.answer.judgeInput(q, q.answer).correct) e.push('answer 自身が正解と判定されない');
     }
     return e;
+  }
+
+  // 「正しい答え」として表示する文字列。自由入力の answer には {漢字|よみ} を書けない（入力と比べるため）ので、
+  // 辞書の自動ふりがなが誤る答えだけ answerDisplay（ふりがなの記法入り）を持たせる。
+  function displayAnswer(q) {
+    return q.answerDisplay || q.answer;
   }
 
   // ---- 索引 ----
@@ -224,7 +231,7 @@
         reward: reward,
         breakdown: breakdown,
         attempts: attemptNo,
-        correctAnswer: q.answer,
+        correctAnswer: displayAnswer(q),
         explanation: q.explanation
       }
     };
@@ -268,6 +275,7 @@
   FF.learning = {
     keyOf: keyOf,
     validateQuestion: validateQuestion,
+    displayAnswer: displayAnswer,
     createBank: createBank,
     staticPool: staticPool,
     isAvailable: isAvailable,
