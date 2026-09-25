@@ -1,0 +1,9 @@
+{
+  "playerName": "  ゆきねこ  ",
+  "resources": { "wood": 120, "iron": 30, "stone": 80, "food": 10 },
+  "buildingLevels": { "furnace": 2, "housing": 1, "lumber": 2, "mine": 1, "quarry": 1, "foodhall": 1 },
+  "ticketCount": 7,
+  "lastRecoveredAt": 1790000000000,
+  "unlockedGrades": { "math": 4, "japanese": 2 },
+  "furigana": false
+}

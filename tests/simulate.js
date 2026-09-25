@@ -4,13 +4,7 @@
 'use strict';
 const { load } = require('./lib/loader');
 
-const ctx = load([
-  'js/balance.js',
-  'js/defs.js',
-  'js/rewards.js',
-  'js/buildings.js',
-  'js/simulator.js'
-]);
+const ctx = load();
 const FF = ctx.FF;
 const B = FF.balance;
 

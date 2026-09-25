@@ -58,7 +58,48 @@
     return rewardBreakdown(p, b).total;
   }
 
+  // ---- 反復倍率用の正解履歴：{ 問題ID: [正解時刻, ...] } ----
+
+  // 24時間以内の正解回数（今回を含まない）。時計が戻って「未来」の記録になったものも数える。
+  function countRecentCorrect(correctLog, qid, now, b) {
+    var win = bal(b).REPEAT_WINDOW_MS;
+    var list = (correctLog && correctLog[qid]) || [];
+    var n = 0;
+    for (var i = 0; i < list.length; i++) if (now - list[i] < win) n++;
+    return n;
+  }
+
+  // 24時間より古い記録を全体から取り除いた新しい correctLog を返す
+  function pruneCorrectLog(correctLog, now, b) {
+    var win = bal(b).REPEAT_WINDOW_MS;
+    var out = {};
+    for (var qid in correctLog) {
+      var kept = correctLog[qid].filter(function (t) { return now - t < win; });
+      if (kept.length) out[qid] = kept;
+    }
+    return out;
+  }
+
+  // 正解を記録した新しい correctLog を返す（古い記録は同時に削除）
+  function recordCorrect(correctLog, qid, now, b) {
+    var out = pruneCorrectLog(correctLog || {}, now, b);
+    out[qid] = (out[qid] || []).concat([now]);
+    return out;
+  }
+
+  // 本日の重点教科：ローカル日付の通し日数で教科を順番に切り替える
+  function focusSubjectOf(now, subjects) {
+    subjects = subjects || FF.defs.SUBJECTS;
+    var day = FF.util.localDayNumber(now);
+    var i = ((day % subjects.length) + subjects.length) % subjects.length;
+    return subjects[i].id;
+  }
+
   FF.rewards = {
+    countRecentCorrect: countRecentCorrect,
+    pruneCorrectLog: pruneCorrectLog,
+    recordCorrect: recordCorrect,
+    focusSubjectOf: focusSubjectOf,
     recentAccuracy: recentAccuracy,
     accuracyMultiplier: accuracyMultiplier,
     facilityMultiplier: facilityMultiplier,
