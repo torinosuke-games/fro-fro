@@ -108,6 +108,8 @@
     }
     var state = fillDefaults(cur, createDefaultState(now));
     state.saveVersion = cfg.SAVE_VERSION;
+    // 建物のレベルの整合（中央炉を超えるレベル、解放済みなのに Lv0 など）
+    if (FF.buildings && FF.buildings.normalizeBuildings) state = FF.buildings.normalizeBuildings(state, now);
     state.player.name = util.normalizeName(state.player.name, cfg);
     return { ok: true, state: state, migratedFrom: from };
   }
