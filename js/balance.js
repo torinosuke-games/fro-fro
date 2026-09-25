@@ -40,6 +40,11 @@
     },
     DIAGNOSIS: { MAX_QUESTIONS: 10, START_GRADE: 5, MIN_GRADE: 1, MAX_UNLOCK: 7, MIN_INPUT_RATIO: 0.8 },
     RECOMMEND: { WINDOW: 10, BELOW: 0.4 },
+    PICK: {
+      CANDIDATES: 6,              // 自動生成で候補を何問作って選ぶか
+      AVOID_RECENT: 10,           // 直近に出した問題を何問ぶん避けるか
+      MATH_WORD_SHARE: 0.2        // 算数で文章題（問題データ）を出す割合
+    },
     HISTORY_LIMIT: 500,
     EXAM_HISTORY_LIMIT: 100,
 

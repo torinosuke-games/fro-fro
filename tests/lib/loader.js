@@ -19,8 +19,18 @@ const LOGIC_FILES = [
   'js/tickets.js',
   'js/rewards.js',
   'js/buildings.js',
+  'js/answer.js',
+  'js/generators.js',
+  // questions/*.js はここに入る（QUESTION_FILES）
+  'js/learning.js',
+  'js/exam.js',
   'js/simulator.js'
 ];
+
+// 問題データ（ファイル名順）
+const QUESTION_FILES = fs.readdirSync(path.join(ROOT, 'questions')).filter(f => f.endsWith('.js')).sort().map(f => 'questions/' + f);
+const i = LOGIC_FILES.indexOf('js/learning.js');
+LOGIC_FILES.splice(i, 0, ...QUESTION_FILES);
 
 // files: ROOT からの相対パスの配列
 function load(files) {
@@ -34,4 +44,4 @@ function load(files) {
   return context;
 }
 
-module.exports = { load, ROOT, LOGIC_FILES };
+module.exports = { load, ROOT, LOGIC_FILES, QUESTION_FILES };
