@@ -106,18 +106,32 @@
     }))));
 
     // 学年
-    var gradeBox = U.el('div', { class: 'grid3' }, FF.defs.GRADES.map(function (gr) {
+    // 小学生（Lv1〜6）と中学生（Lv7〜9）の2段に分け、学年を小さなチップで横一列に並べる。
+    // チップは「小1」「中3」と Lv（未解放は 🔒）。解放条件・選択の仕組みはこれまでと同じ（pick と同じ .selected・disabled）。
+    var anyLocked = false;
+    function gradeChip(gr) {
+      var band = gr.level <= 6 ? 'elem' : 'jr', n = band === 'elem' ? gr.level : gr.level - 6;
       var open = L.isGradeUnlocked(s, sel.subject, gr.level);
-      return pick({
-        title: gr.label,
-        sub: U.rich(gr.school),
-        tag: open ? null : ['🔒 ', U.rich(U.T('gradeLocked'))],
-        selected: sel.grade === gr.level,
+      if (!open) anyLocked = true;
+      return U.el('button', {
+        class: 'pick grade-chip ' + band + (sel.grade === gr.level ? ' selected' : ''),
         disabled: !open,
-        onClick: function () { set('grade', gr.level); }
-      });
-    }));
+        attrs: { 'aria-pressed': sel.grade === gr.level ? 'true' : 'false', 'aria-label': gr.label + ' ' + gr.school + (open ? '' : ' ' + U.plain(U.T('gradeLocked'))) },
+        on: { click: function () { set('grade', gr.level); } }
+      }, [
+        U.el('span', { class: 'title' }, [U.rich(U.T('gradeChip.' + band)), String(n)]),
+        U.el('span', { class: 'sub', text: open ? gr.label : '🔒' })
+      ]);
+    }
+    function band(id, from, to) {
+      return U.el('div', { class: 'grade-band ' + id }, [
+        U.el('div', { class: 'band-label' }, U.rich(U.T('gradeBand.' + id))),
+        U.el('div', { class: 'grade-row' }, FF.defs.GRADES.filter(function (g) { return g.level >= from && g.level <= to; }).map(gradeChip))
+      ]);
+    }
+    var gradeBox = U.el('div', { class: 'grade-bands' }, [band('elem', 1, 6), band('jr', 7, 9)]);
     var gradeSec = section(U.T('chooseGrade'), gradeBox);
+    if (anyLocked) gradeSec.appendChild(U.R('div', 'small muted grade-note', U.T('gradeLockedNote')));
     if (L.shouldRecommendLower(s, sel.subject, sel.grade)) gradeSec.appendChild(U.R('div', 'notice', U.T('recommendLower')));
     box.appendChild(gradeSec);
 

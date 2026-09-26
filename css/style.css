@@ -1,6 +1,9 @@
 /* FROZEN FRONTIER — 雪原・氷・金属・炉の火をイメージした、重厚なダークUI */
 
 :root {
+  /* 学年のチップ（学習画面の「学年を選ぼう」）。小学生＝青、中学生＝緑。夜は同じ色相の暗い地に明るい文字 */
+  --gr-elem-bg: #16304a; --gr-elem-edge: #4f86ad; --gr-elem-text: #a9d4f2;
+  --gr-jr-bg: #173626; --gr-jr-edge: #4f9a6a; --gr-jr-text: #a8e0bb;
   /* 資源のタイルの色（学習画面の「欲しい資源を選ぼう」）。木材＝茶、鉄＝青灰、石＝灰、食料＝赤茶 */
   --tile-wood: rgba(176, 120, 64, 0.30);
   --tile-iron: rgba(120, 160, 196, 0.28);
@@ -102,6 +105,8 @@
 
 /* 昼のテーマ（SPEC_theme.md）。昼の見た目を持つ画面（ui/core.js の THEMED_SCREENS）を表示しているときだけ <html data-theme="day"> になる */
 :root[data-theme="day"] {
+  --gr-elem-bg: #e3f0fa; --gr-elem-edge: #9dc3de; --gr-elem-text: #2c5a78;
+  --gr-jr-bg: #e6f4ea; --gr-jr-edge: #a9d4b5; --gr-jr-text: #2f6b42;
   --tile-wood: rgba(139, 90, 43, 0.18);
   --tile-iron: rgba(84, 118, 148, 0.18);
   --tile-stone: rgba(120, 126, 134, 0.18);
@@ -358,6 +363,23 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick.subj .sub { font-size: 10px; line-height: 1.2; }
 /* 資源のボタン：教科と同じ形で4つを横一列。タイルは資源ごとの色をうすく敷き、絵文字を大きく出す */
 .res-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+/* 学年のチップ：小学生（青）・中学生（緑）の2段。6列の格子で、中学生の3つも同じ幅で左に寄せる */
+.grade-bands { display: grid; gap: 6px; }
+.grade-band .band-label { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.grade-band.elem .band-label { color: var(--gr-elem-text); }
+.grade-band.jr .band-label { color: var(--gr-jr-text); }
+.grade-row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
+.pick.grade-chip {
+  align-items: center; gap: 0; min-height: 40px; padding: 3px 1px; text-align: center; border-radius: 8px; border-width: 1.5px;
+}
+.pick.grade-chip.elem { background: var(--gr-elem-bg); border-color: var(--gr-elem-edge); color: var(--gr-elem-text); }
+.pick.grade-chip.jr { background: var(--gr-jr-bg); border-color: var(--gr-jr-edge); color: var(--gr-jr-text); }
+.pick.grade-chip .title { font-size: 14px; line-height: 1.2; }
+.pick.grade-chip .sub { font-size: 9.5px; line-height: 1.2; color: inherit; opacity: 0.8; }
+.pick.grade-chip:hover:not(:disabled) { border-color: var(--ice); }
+.pick.grade-chip.selected { border-color: var(--ember); border-width: 2px; }
+.pick.grade-chip:disabled { opacity: 0.45; }
+.grade-note { margin-top: 4px; }
 .pick.res .res-tile {
   display: flex; align-items: center; justify-content: center;
   width: 100%; max-width: 56px; aspect-ratio: 1; border-radius: 7px;
