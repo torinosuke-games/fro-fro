@@ -340,6 +340,17 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick .title { font-weight: 800; font-size: 15px; }
 .pick .sub { font-size: 12px; color: var(--muted); }
 .pick .tag { font-size: 11px; color: var(--warn); }
+/* 教科のボタン：アイコン＋教科名を5つ横一列（幅 320px でも折り返さない） */
+.subj-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.pick.subj { position: relative; align-items: center; gap: 1px; min-height: 0; padding: 5px 2px 4px; text-align: center; }
+.pick.subj .subj-icon { display: block; width: 100%; max-width: 56px; height: auto; aspect-ratio: 1; }
+.pick.subj .title { font-size: 12px; line-height: 1.25; }
+.pick.subj .paren { display: block; font-size: 10px; font-weight: 700; }
+.pick.subj .sub { font-size: 10px; line-height: 1.2; }
+.pick.subj .tag {
+  position: absolute; top: -8px; right: 2px; padding: 0 3px; border-radius: 6px;
+  font-size: 9.5px; font-weight: 800; line-height: 1.5; background: var(--pick-bg); border: 1px solid var(--warn);
+}
 .badge {
   display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 10px;
   border: 1px solid var(--edge-strong); color: var(--ice); background: var(--badge-bg);

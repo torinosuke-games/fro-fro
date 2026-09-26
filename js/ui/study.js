@@ -37,6 +37,22 @@
     ]);
   }
 
+  // 教科のボタン：アイコンと教科名（5つを横一列に並べる）。選択中・未選択の見た目は pick と同じ（.pick.selected）。
+  // 「生活（理科）」のような名前は、かっこの部分を小さくして2行目に出す（幅が狭いため）。
+  function subjectPick(opts) {
+    var m = /^(.*?)（(.*)）$/.exec(opts.name);
+    return U.el('button', {
+      class: 'pick subj' + (opts.selected ? ' selected' : ''),
+      attrs: { 'aria-pressed': opts.selected ? 'true' : 'false' },
+      on: { click: opts.onClick }
+    }, [
+      FF.svgSubjects.icon(opts.id, FF.app.theme),
+      U.el('span', { class: 'title' }, m ? [U.rich(m[1]), U.el('span', { class: 'paren' }, U.rich('（' + m[2] + '）'))] : U.rich(opts.name)),
+      U.el('span', { class: 'sub' }, opts.sub),
+      opts.tag ? U.el('span', { class: 'tag' }, opts.tag) : null
+    ]);
+  }
+
   function renderLearn(box) {
     var app = FF.app, s = app.state, now = app.now();
     var sel = app.studySel = app.studySel || defaultSel();
@@ -61,10 +77,11 @@
     }))));
 
     // 教科
-    box.appendChild(section(U.T('chooseSubject'), U.el('div', { class: 'grid3' }, FF.defs.SUBJECTS.map(function (subj) {
+    box.appendChild(section(U.T('chooseSubject'), U.el('div', { class: 'subj-row' }, FF.defs.SUBJECTS.map(function (subj) {
       var g = L.unlockedGrade(s, subj.id);
-      return pick({
-        title: U.rich(nameOfSubject(subj.id, sel.subject === subj.id ? sel.grade : g)),
+      return subjectPick({
+        id: subj.id,
+        name: nameOfSubject(subj.id, sel.subject === subj.id ? sel.grade : g),
         sub: 'Lv1〜' + g,
         tag: subj.id === focus ? '×1.25' : null,
         selected: sel.subject === subj.id,
