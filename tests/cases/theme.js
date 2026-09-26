@@ -25,13 +25,13 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     }
   });
 
-  test('知らない値・未設定は夜（これまでの見た目）', () => {
+  test('初期値は昼。知らない値・未設定も昼（SPEC_theme_default_day.md）', () => {
+    assert.strictEqual(T.DEFAULT_MODE, 'day');
     for (const m of [undefined, null, '', 'purple', 1]) {
-      assert.strictEqual(T.normalizeMode(m), 'night');
-      assert.strictEqual(T.resolve(m, at(12)), 'night');
+      assert.strictEqual(T.normalizeMode(m), 'day');
+      for (const h of [3, 12, 22]) assert.strictEqual(T.resolve(m, at(h)), 'day', h + '時');
     }
     assert.deepStrictEqual(plain(T.MODES), ['night', 'day', 'auto']);
-    assert.strictEqual(T.DEFAULT_MODE, 'night');
   });
 
   test('昼の時間帯は config.DAY_HOURS で決まる', () => {
@@ -52,16 +52,25 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   });
 
   // ---- 設定・保存（第1.3節） ----
-  test('新規の状態の themeMode は夜', () => {
-    assert.strictEqual(FF.state.createDefaultState(T0).settings.themeMode, 'night');
+  test('新規の状態の themeMode は昼', () => {
+    assert.strictEqual(FF.state.createDefaultState(T0).settings.themeMode, 'day');
   });
 
-  test('themeMode のない旧いセーブは夜で補われ、saveVersion は 3 のまま', () => {
+  test('すでに「夜」や「自動」を選んでいるセーブは、初期値が昼になってもそのまま（ユーザーの設定を尊重する）', () => {
+    for (const m of ['night', 'auto']) {
+      const s = FF.state.createDefaultState(T0);
+      s.settings.themeMode = m;
+      const r = FF.state.parseSave(FF.state.serialize(s), T0);
+      assert.strictEqual(r.state.settings.themeMode, m);
+    }
+  });
+
+  test('themeMode のない旧いセーブは昼（初期値）で補われ、saveVersion は 3 のまま', () => {
     const fixture = n => fs.readFileSync(path.join(__dirname, '..', 'fixtures', n), 'utf8');
     for (const text of [fixture('save_v0.json'), fixture('save_v1.json')]) {
       const r = FF.state.parseSave(text, T0);
       assert.strictEqual(r.ok, true);
-      assert.strictEqual(r.state.settings.themeMode, 'night');
+      assert.strictEqual(r.state.settings.themeMode, 'day');
       assert.strictEqual(r.state.saveVersion, 3);
       assert.strictEqual(FF.config.SAVE_VERSION, 3, '新しい saveVersion は作らない');
     }
@@ -74,14 +83,14 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(FF.integrity.verify(JSON.parse(text)), true);
     const r = FF.state.parseSave(text, T0);
     assert.strictEqual(r.ok, true, r.error);
-    assert.strictEqual(r.state.settings.themeMode, 'night');
+    assert.strictEqual(r.state.settings.themeMode, 'day');
     // 補完が終わったあとの内容で計算されている（保存し直した文字列が検証を通り、themeMode を含む）
     const saved = JSON.parse(r.saveText);
-    assert.strictEqual(saved.settings.themeMode, 'night');
+    assert.strictEqual(saved.settings.themeMode, 'day');
     assert.strictEqual(FF.integrity.verify(saved), true);
   });
 
-  test('themeMode は保存・読み込みで残り、知らない値は夜に直される', () => {
+  test('themeMode は保存・読み込みで残り、知らない値は初期値の昼に直される', () => {
     for (const m of ['night', 'day', 'auto']) {
       const s = FF.state.createDefaultState(T0);
       s.settings.themeMode = m;
@@ -90,7 +99,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const bad = FF.state.createDefaultState(T0);
     bad.settings.themeMode = 'purple';
     const r = FF.state.parseSave(FF.state.serialize(bad), T0);
-    assert.strictEqual(r.state.settings.themeMode, 'night');
+    assert.strictEqual(r.state.settings.themeMode, 'day');
     assert.strictEqual(FF.integrity.verify(JSON.parse(r.saveText)), true);
   });
 
@@ -196,5 +205,25 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
       for (const bg of bgs) assert.ok(ratio(val(n), bg) >= 4.5, `${n} ${val(n)} on ${bg}: ${ratio(val(n), bg).toFixed(2)}`);
     }
     assert.ok(ratio('#ffffff', val('--ice')) >= 4.5, '選ばれた切り替えボタン（白い文字・--ice の地）');
+  });
+
+  // ---- 開始画面・対象の画面（SPEC_theme_default_day.md 1.2・1.3） ----
+  test('昼の見た目を持つ画面に開始画面が入り、デバッグ画面は入らない', () => {
+    const src = fs.readFileSync(path.join(ROOT, 'js', 'ui', 'core.js'), 'utf8');
+    const m = src.match(/var THEMED_SCREENS = (\[[^\]]*\]);/);
+    assert.ok(m, 'THEMED_SCREENS が見つからない');
+    const list = JSON.parse(m[1].replace(/'/g, '"'));
+    assert.deepStrictEqual(list, ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz']);
+    assert.ok(!list.includes('debug'));
+  });
+
+  test('開始画面の空（renderSky）は、昼の配色で太陽と雲を描き、建物は描かない', () => {
+    loadSvg();
+    const find = (tree, pred, out = []) => { if (pred(tree)) out.push(tree); (tree.children || []).forEach(c => find(c, pred, out)); return out; };
+    const day = FF.svgScene.renderSky('day');
+    assert.ok(find(day, n => n.attrs && n.attrs.id === 'grSun').length === 1);
+    assert.ok(find(day, n => n.attrs && n.attrs.class === 'bld').length === 0);
+    const sky = find(day, n => n.attrs && n.attrs.id === 'grSky')[0].children.map(c => c.attrs['stop-color']);
+    assert.deepStrictEqual(sky, plain(FF.svgScene.PALETTES.day.sky));
   });
 };

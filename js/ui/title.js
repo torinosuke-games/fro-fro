@@ -29,6 +29,10 @@
     var app = FF.app;
     var wrap = U.el('div', { class: 'title-screen' });
     main.appendChild(wrap);
+    // 昼は青空・太陽・雲を描く。夜は描かない（これまでの開始画面の見た目のまま。SPEC_theme_default_day.md）
+    function sky() { return app.theme === 'day' ? FF.svgScene.renderSky('day') : null; }
+    var sky1 = sky();
+    if (sky1) wrap.appendChild(sky1);
 
     var logo = U.el('div', { class: 'logo fade-in' }, [FF.config.TITLE, U.el('small', { text: 'SURVIVE · LEARN · BUILD' })]);
     wrap.appendChild(logo);
@@ -50,6 +54,8 @@
 
     function showIntro() {
       U.clear(wrap);
+      var sky2 = sky();
+      if (sky2) wrap.appendChild(sky2);
       wrap.appendChild(U.el('div', { class: 'logo' }, [FF.config.TITLE]));
       var box = U.el('div', { class: 'panel strong stack fade-in' });
       // 名前は textContent で表示する

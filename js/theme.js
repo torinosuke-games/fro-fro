@@ -5,9 +5,9 @@
   var FF = root.FF = root.FF || {};
 
   var MODES = ['night', 'day', 'auto'];
-  var DEFAULT_MODE = 'night';   // 何も設定しなければ、これまでと同じ夜の見た目
+  var DEFAULT_MODE = 'day';     // 何も設定しなければ昼（SPEC_theme_default_day.md。以前は夜）
 
-  // 設定の値を正規化する（知らない値は夜）
+  // 設定の値を正規化する（知らない値は初期値の昼）
   function normalizeMode(mode) {
     return MODES.indexOf(mode) >= 0 ? mode : DEFAULT_MODE;
   }

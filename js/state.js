@@ -55,7 +55,7 @@
         history: []
       },
       exploration: defaultExploration(),
-      settings: { furigana: true, furiganaAuto: true, themeMode: 'night' },   // themeMode：'night' | 'day' | 'auto'
+      settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE },   // themeMode：'night' | 'day' | 'auto'（初期値は昼）
       flags: { introSeen: false, diagnosisOffered: false, unlockNoticesSeen: [] }
     };
   }
@@ -141,7 +141,7 @@
     // 探索の整合（位置を順路の範囲に収める、定義にない宝箱・イベントを捨てる など）
     if (FF.exploration && FF.exploration.normalizeExploration) state = FF.exploration.normalizeExploration(state);
     state.player.name = util.normalizeName(state.player.name, cfg);
-    // テーマの設定：ない・知らない値は夜（補完はここまでに済ませ、integrity は最後の saveText で計算する）
+    // テーマの設定：ない・知らない値は初期値の昼（補完はここまでに済ませ、integrity は最後の saveText で計算する）
     if (FF.theme) state.settings.themeMode = FF.theme.normalizeMode(state.settings.themeMode);
     return { ok: true, state: state, migratedFrom: from, saveText: serialize(state) };
   }

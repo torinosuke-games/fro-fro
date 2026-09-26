@@ -88,6 +88,11 @@
   --arrival-edge: rgba(255,209,102,0.45);
   --event-bg: rgba(255,209,102,0.06);
   --chest-glow: rgba(255,209,102,0.22);
+  /* 開始画面（値はこれまで直接書いていたものと同じ） */
+  --logo-color: #eaf6ff;
+  --logo-shadow: 0 0 18px rgba(143,211,255,0.55), 0 2px 0 #0b2233;
+  --logo-sub-shadow: 0 0 10px rgba(255,138,61,0.7);
+  --opening-color: #c9d7e3;
 }
 
 /* 昼のテーマ（SPEC_theme.md）。昼の見た目を持つ画面（ui/core.js の THEMED_SCREENS）を表示しているときだけ <html data-theme="day"> になる */
@@ -174,6 +179,10 @@
   --arrival-edge: rgba(194, 130, 0, 0.45);
   --event-bg: rgba(255, 209, 102, 0.16);
   --chest-glow: rgba(255, 196, 70, 0.35);
+  --logo-color: #12324d;
+  --logo-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 0 16px rgba(143,211,255,0.55);
+  --logo-sub-shadow: none;
+  --opening-color: #2a3d4f;
 }
 /* 昼は降る雪を少し灰色にして、明るい背景でも見えるようにする */
 :root[data-theme="day"] .snowfall { filter: invert(0.45); opacity: 0.35; }
@@ -455,11 +464,12 @@ textarea { min-height: 110px; font-family: ui-monospace, Consolas, monospace; fo
 .title-screen { min-height: calc(100vh - 40px); display: flex; flex-direction: column; justify-content: center; gap: 18px; padding: 24px 6px; }
 .logo {
   text-align: center; font-size: 34px; font-weight: 900; letter-spacing: 0.16em; line-height: 1.15;
-  color: #eaf6ff; text-shadow: 0 0 18px rgba(143,211,255,0.55), 0 2px 0 #0b2233;
+  color: var(--logo-color); text-shadow: var(--logo-shadow);
   font-family: "Arial Black", "Segoe UI", var(--font);
 }
-.logo small { display: block; font-size: 11px; letter-spacing: 0.5em; color: var(--ember); text-shadow: 0 0 10px rgba(255,138,61,0.7); margin-top: 8px; }
-.opening { text-align: center; white-space: pre-line; color: #c9d7e3; line-height: 2; }
+.logo small { display: block; font-size: 11px; letter-spacing: 0.5em; color: var(--ember); text-shadow: var(--logo-sub-shadow); margin-top: 8px; }
+.opening { text-align: center; white-space: pre-line; color: var(--opening-color); line-height: 2; }
+.title-sky { display: block; width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--edge); box-shadow: var(--scene-shadow); }
 .intro-name { text-align: center; font-size: 26px; font-weight: 900; letter-spacing: 0.08em; }
 .intro-line { text-align: center; color: var(--muted); }
 .fade-in { animation: fadein 0.8s ease both; }

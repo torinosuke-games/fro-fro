@@ -119,8 +119,8 @@ module.exports = ({ test, FF, assert, plain }) => {
     for (const k of ['player', 'resources', 'buildings', 'tickets', 'learning', 'flags']) {
       assert.deepStrictEqual(plain(s[k]), src[k], k);
     }
-    // 設定は元のまま、あとから足した項目（テーマ）だけ初期値で補われる
-    assert.deepStrictEqual(plain(s.settings), Object.assign({}, src.settings, { themeMode: 'night' }));
+    // 設定は元のまま、あとから足した項目（テーマ）だけ初期値（昼）で補われる
+    assert.deepStrictEqual(plain(s.settings), Object.assign({}, src.settings, { themeMode: 'day' }));
     // 中央炉 Lv3 のセーブなので、読み込んだ時点で雪原が開いている
     assert.strictEqual(FF.exploration.isRegionUnlocked(s, 'snowfield'), true);
   });
