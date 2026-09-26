@@ -43,6 +43,8 @@
   }
 
   function focusInput() {
+    var s = FF.app.session;
+    if (s && s.attempt && !U.autoFocusOK(s.attempt.question)) return;
     setTimeout(function () { var i = document.querySelector('.answer-row input'); if (i) i.focus(); }, 30);
   }
 
@@ -98,6 +100,7 @@
         input,
         U.el('button', { class: 'btn primary', rich: U.T('answer'), disabled: done, on: { click: function () { submit(input.value); } } })
       ]));
+      if (!done && U.usesNumpad(q)) panel.appendChild(U.numpad(input));
       if (!done) focusInput();
     }
 

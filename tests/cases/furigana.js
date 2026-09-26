@@ -41,6 +41,26 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(U.plainText('{中央炉|}'), '中央炉');
   });
 
+  // 記法を含む値は語の表記をそのまま置き換えるので、ふりがなを外すと元の語に戻らなければならない
+  // （v0.3 まで「見張り塔」の値が「み{張|は}りとう」で、本文が「み張りとう」と表示されていた）
+  test('辞書の記法入りの値は、ふりがなを外すと元の語と同じ', () => {
+    const bad = Object.entries(FF.FURIGANA).filter(([k, v]) => v.indexOf('{') >= 0 && U.plainText(v) !== k);
+    assert.deepStrictEqual(bad, []);
+  });
+
+  test('建物名は、ふりがなを付けても表記が変わらない', () => {
+    for (const b of FF.defs.BUILDINGS) assert.strictEqual(U.plainText(U.autoRubyMarkup(b.name)), b.name);
+    assert.strictEqual(U.plainText(U.autoRubyMarkup(FF.texts.teaser.watchtower)), '見張り塔');
+  });
+
+  test('「見張り塔」をかなで書いた文言が残っていない', () => {
+    const strings = allStrings(FF.texts).concat(allStrings(FF.defs.REGIONS));
+    for (const s of strings) {
+      const p = U.plainText(U.autoRubyMarkup(s));
+      assert.ok(!/み張り|みはり|張りとう/.test(p), p);
+    }
+  });
+
   test('画面の文言・名称に読みのない漢字がない', () => {
     const strings = allStrings(FF.texts)
       .concat(FF.defs.SUBJECTS.map(s => s.name), FF.defs.SUBJECTS.flatMap(s => (s.nameByGrade || []).map(n => n.name)))

@@ -218,7 +218,36 @@
     if (sc && sc.onTick) sc.onTick();
   }
 
+  // ---- 算数の自由入力のテンキー（SPEC_v0.3 2章） ----
+  // 押した文字を入力欄の末尾に足す（入力欄はそのままキーボードでも打てる）。「けす」は末尾の1文字を消す。
+  var NUMPAD_KEYS = ['7', '8', '9', '/', '4', '5', '6', '-', '1', '2', '3', '.', '0'];
+  function usesNumpad(q) { return !!q && q.subject === 'math' && q.answerType === 'input'; }
+  function numpad(input) {
+    var keys = NUMPAD_KEYS.map(function (k) {
+      var sym = /[^0-9]/.test(k);
+      return el('button', {
+        class: 'numpad-key' + (sym ? ' sym' : '') + (k === '0' ? ' wide' : ''),
+        text: k === '-' ? '−' : k,
+        attrs: { type: 'button', 'aria-label': k === '-' ? plain(T('numpad.minus')) : k === '/' ? plain(T('numpad.slash')) : k === '.' ? plain(T('numpad.dot')) : k },
+        on: { click: function () { input.value += k; } }
+      });
+    });
+    keys.push(el('button', {
+      class: 'numpad-key del wide', rich: T('numpad.del'),
+      attrs: { type: 'button', 'aria-label': plain(T('numpad.delLabel')) },
+      on: { click: function () { input.value = Array.from(input.value).slice(0, -1).join(''); } }
+    }));
+    return el('div', { class: 'numpad', attrs: { role: 'group', 'aria-label': plain(T('numpad.label')) } }, keys);
+  }
+  // 自由入力の欄に自動でフォーカスしてよいか。テンキーを出す問題では、タッチ操作の端末だと
+  // 標準のキーボードが開いてテンキーを隠すので、自動ではフォーカスしない。
+  function autoFocusOK(q) {
+    if (!usesNumpad(q)) return true;
+    return !(root.matchMedia && root.matchMedia('(pointer: coarse)').matches);
+  }
+
   FF.ui = {
+    usesNumpad: usesNumpad, numpad: numpad, autoFocusOK: autoFocusOK,
     el: el, svg: svg, clear: clear, rich: rich, R: R, plain: plain, T: T, fmt: fmt,
     resDef: resDef, buildingName: buildingName, nameOf: nameOf, costView: costView,
     toast: toast, modal: modal, renderHud: renderHud, renderNav: renderNav,

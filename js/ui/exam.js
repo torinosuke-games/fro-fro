@@ -153,7 +153,8 @@
       var input = U.el('input', { attrs: { type: 'text', autocomplete: 'off', inputmode: it.question.validationMode === 'number' ? 'decimal' : 'text', 'aria-label': FF.util.plainText(U.T('inputPlaceholder')), placeholder: FF.util.plainText(U.T('inputPlaceholder')) }, disabled: answered });
       input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing) answer(input.value); });
       panel.appendChild(U.el('div', { class: 'answer-row' }, [input, U.el('button', { class: 'btn primary', rich: U.T('answer'), disabled: answered, on: { click: function () { answer(input.value); } } })]));
-      if (!answered) setTimeout(function () { input.focus(); }, 30);
+      if (!answered && U.usesNumpad(it.question)) panel.appendChild(U.numpad(input));
+      if (!answered && U.autoFocusOK(it.question)) setTimeout(function () { input.focus(); }, 30);
     }
 
     if (answered) {

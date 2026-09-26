@@ -429,6 +429,18 @@ h3 { font-size: 15px; color: var(--ice); }
   background: var(--input-bg); border: 1px solid var(--edge-strong); border-radius: 5px; color: var(--text);
 }
 .answer-row input:focus, textarea:focus, .field:focus { outline: 2px solid var(--ice); outline-offset: 1px; }
+/* 算数の自由入力のテンキー（SPEC_v0.3 2章）。色は昼／夜で切り替わる既存の変数だけを使う */
+.numpad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; max-width: 360px; }
+.numpad-key {
+  min-height: 48px; padding: 4px; cursor: pointer; font-size: 21px; font-weight: 800; font-family: var(--font);
+  background: var(--choice-bg); color: var(--text); border: 1px solid var(--edge-strong); border-radius: 5px;
+  box-shadow: var(--btn-shadow); touch-action: manipulation;
+}
+.numpad-key:hover { border-color: var(--ice); }
+.numpad-key:active { transform: translateY(1px); }
+.numpad-key.sym { color: var(--ice); }
+.numpad-key.del { color: var(--ice); font-size: 16px; }
+.numpad-key.wide { grid-column: span 2; }
 .hints { margin-top: 12px; }
 .hint { border-left: 3px solid var(--ice); padding: 4px 10px; margin: 6px 0; background: var(--hint-bg); font-size: 14px; }
 .feedback { margin-top: 14px; padding: 12px; border-radius: 5px; border: 1px solid var(--edge); background: var(--feedback-bg); }
