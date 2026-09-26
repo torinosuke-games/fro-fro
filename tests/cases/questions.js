@@ -61,6 +61,20 @@ module.exports = ({ test, FF, ctx, assert }) => {
     assert.deepStrictEqual(short, []);
   });
 
+  // v0.3（B案）：算数の文章題は各学年10問（基礎3・標準5・発展2）、標準の自由入力4問以上（昇格試験で文章題を1問まで使う）
+  test('B案の問題数：算数の文章題は各学年10問以上（基礎3・標準5・発展2）、標準の自由入力4問以上', () => {
+    const errors = [];
+    for (const g of GRADES) {
+      const qs = bank.filter(q => q.subject === 'math' && q.gradeLevel === g);
+      const n = d => qs.filter(q => q.difficulty === d).length;
+      const stdInput = qs.filter(q => q.difficulty === 'standard' && q.answerType === 'input').length;
+      if (qs.length < 10 || n('basic') < 3 || n('standard') < 5 || n('advanced') < 2 || stdInput < 4) {
+        errors.push(`math Lv${g}：全${qs.length}（基礎${n('basic')}・標準${n('standard')}・発展${n('advanced')}）標準の自由入力${stdInput}`);
+      }
+    }
+    assert.ok(errors.length === 0, errors.join('\n'));
+  });
+
   test('自由入力の別解（acceptedAnswers）はすべて正解と判定される', () => {
     const ng = [];
     bank.filter(q => q.answerType === 'input').forEach(q => (q.acceptedAnswers || []).forEach(a => {
