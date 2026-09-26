@@ -41,7 +41,7 @@ module.exports = ({ test, FF, ctx, assert }) => {
 
   // v0.3（SPEC_v0.3.md 4章・B案）：各学年27問（基礎6・標準15・発展6）。自由入力は半分以上、標準の自由入力は9問以上。
   // 1教科ずつ作るので、作り終えた教科をここに足していく。
-  const B_PLAN_DONE = ['japanese', 'science'];
+  const B_PLAN_DONE = ['japanese', 'science', 'social'];
   test(`B案の問題数：${B_PLAN_DONE.join('・')} は各学年27問以上（基礎6・標準15・発展6）、半分以上が自由入力、標準の自由入力9問以上`, () => {
     const errors = [];
     for (const s of B_PLAN_DONE) for (const g of GRADES) {
