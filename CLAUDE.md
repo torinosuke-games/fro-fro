@@ -28,7 +28,7 @@
   - 4章の作問（B案）：理科：完了・承認済み（162問を追加して各学年27問。`reviewed` は false のまま。確認用ページ https://claude.ai/artifact/Px2zw9eM5T2e1MqgQJEX62 。自動テスト 329件すべて成功。判断117）
   - 4章の作問（B案）：社会：完了・承認済み（162問を追加して各学年27問。`reviewed` は false のまま。確認用ページ https://claude.ai/artifact/WQ73cBHhmT6LKonRECdoJz 。自動テスト 329件すべて成功。判断118）
   - 4章の作問（B案）：英語：完了・承認済み（162問を追加して各学年27問。`reviewed` は false のまま。確認用ページ https://claude.ai/artifact/AdbinCxN7hFMxPG8GiJj5M 。自動テスト 329件すべて成功。判断119）
-  - 4章の作問（B案）：算数の文章題：完了・承認済み（54問を追加して各学年10問。`reviewed` は false のまま。確認用ページ https://claude.ai/artifact/XqKDgQcaussAMRbVQyudwV 。答えは独立に検算して54問すべて一致。判断120）。これで B案は全教科完了（追加 702問、問題データは合計 1062問）
+  - 4章の作問（B案）：算数の文章題：完了・承認済み（54問を追加して各学年10問。`reviewed` は false のまま。確認用ページ https://claude.ai/artifact/XqKDgQcaussAMRbVQyudwV 。答えは独立に検算して54問すべて一致。判断120）。これで B案は全教科完了（追加 702問、問題データは合計 1062問）。追加 702問は 2026-09-26 にユーザーの承認で `reviewed: true` にした（確認済みは 1061問。`japanese_g5_homonym_001` だけ false）
   - 3章（建物の強化の待ち時間）：完成・承認待ち（判断121〜130。自動テスト 340件すべて成功。シミュレーターは9マスすべて目標内。`tests/MANUAL.md` 第15章 12項目）
   - 残り：`SPEC_v0.3_battle.md`
 
@@ -46,7 +46,7 @@
   - 4択：`choices` はちょうど4つで重複なし、`answer` と同じ文字列を1つ含める。表示のたびにシャッフルされるので「上のどれでもない」のような選択肢は使わない。
   - 自由入力：`validationMode` は `exact`・`number`・`kana-insensitive`・`any-of`。読みを答える問題（ひらがな・カタカナどちらでもよい）は `kana-insensitive`。別解は `acceptedAnswers` に入れる（どのモードでも正解候補になる）。`any-of` は `acceptedAnswers` が空だとエラー。`number` は `answer` が数値でないとエラー。
   - `hints` は1〜3個。答えそのものではなく考え方の手がかりにする。`explanation` は必須。
-  - AI が作った問題は必ず `reviewed: false`。人が内容を確認したら `true` にし、`tests/cases/questions.js` の確認済みの数（現在 359）も更新する。
+  - AI が作った問題は必ず `reviewed: false`。人が内容を確認したら `true` にし、`tests/cases/questions.js` の確認済みの数（現在 1061）も更新する。
   - **ふりがな**：問題文・選択肢・ヒント・解説には、`texts.js` の辞書にある語へ自動でふりがなが付く。辞書にない語や、読みが文脈で変わる語（「上」「下」「方」など）は `{漢字|よみ}` と明示する。**漢字の読みを問う問題（`kanji_read` など）では、答えの漢字を `{漢字|}`（読みが空）と書き、ふりがなを付けない**（辞書にある語でも付かない。テストで確認）。低学年（Lv1〜2）の問題はひらがな中心にする。自由入力の `answer`・`acceptedAnswers` には `{…|…}` を書かない（入力と比べるため）。答えの表示で辞書のふりがなが誤るときは、任意の項目 `answerDisplay`（記法入り。ふりがなを外すと `answer` と同じ文字になること）を足す。文中で `{` `}` を記法以外に使わない。
 - 構造チェック（`tests/cases/questions.js`）が確かめること：必須項目、`choices` が4つで `answer` を含む、ID の重複がない、`gen_` と衝突しない、`reviewed: true` の数、第10.3節の問題数、別解が正解になる、読みの問題で答えが見えない。**事実の正しさは確かめない**ので、REVIEW_NEEDED.md への記録を忘れない。
 - 問題を入れたあとは、ブラウザで各教科の学習・昇格試験・実力診断が「準備中」でなくなることも確認する。
