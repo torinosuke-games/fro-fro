@@ -1,6 +1,11 @@
 /* FROZEN FRONTIER — 雪原・氷・金属・炉の火をイメージした、重厚なダークUI */
 
 :root {
+  /* 資源のタイルの色（学習画面の「欲しい資源を選ぼう」）。木材＝茶、鉄＝青灰、石＝灰、食料＝赤茶 */
+  --tile-wood: rgba(176, 120, 64, 0.30);
+  --tile-iron: rgba(120, 160, 196, 0.28);
+  --tile-stone: rgba(150, 156, 164, 0.26);
+  --tile-food: rgba(200, 96, 70, 0.28);
   --bg-0: #070b11;
   --bg-1: #0d1520;
   --panel: rgba(16, 26, 38, 0.82);
@@ -97,6 +102,10 @@
 
 /* 昼のテーマ（SPEC_theme.md）。昼の見た目を持つ画面（ui/core.js の THEMED_SCREENS）を表示しているときだけ <html data-theme="day"> になる */
 :root[data-theme="day"] {
+  --tile-wood: rgba(139, 90, 43, 0.18);
+  --tile-iron: rgba(84, 118, 148, 0.18);
+  --tile-stone: rgba(120, 126, 134, 0.18);
+  --tile-food: rgba(176, 72, 48, 0.16);
   --bg-0: #cfe3f2;
   --bg-1: #e8f3fb;
   --panel: rgba(255, 255, 255, 0.88);
@@ -347,6 +356,17 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick.subj .title { font-size: 12px; line-height: 1.25; }
 .pick.subj .paren { display: block; font-size: 10px; font-weight: 700; }
 .pick.subj .sub { font-size: 10px; line-height: 1.2; }
+/* 資源のボタン：教科と同じ形で4つを横一列。タイルは資源ごとの色をうすく敷き、絵文字を大きく出す */
+.res-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.pick.res .res-tile {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; max-width: 56px; aspect-ratio: 1; border-radius: 7px;
+  font-size: 30px; line-height: 1; background: var(--res-tile);
+}
+.pick.res-wood { --res-tile: var(--tile-wood); }
+.pick.res-iron { --res-tile: var(--tile-iron); }
+.pick.res-stone { --res-tile: var(--tile-stone); }
+.pick.res-food { --res-tile: var(--tile-food); }
 .pick.subj .tag {
   position: absolute; top: -8px; right: 2px; padding: 0 3px; border-radius: 6px;
   font-size: 9.5px; font-weight: 800; line-height: 1.5; background: var(--pick-bg); border: 1px solid var(--warn);

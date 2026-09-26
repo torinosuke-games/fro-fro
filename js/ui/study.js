@@ -53,6 +53,21 @@
     ]);
   }
 
+  // 資源のボタン：色付きのタイルに絵文字を大きく出し、下に資源名と所持数（4つを横一列に並べる）。
+  // 学習ボーナスは、教科の重点の「×1.25」と同じく上の枠に重ねたバッジで出す。
+  function resourcePick(opts) {
+    return U.el('button', {
+      class: 'pick subj res res-' + opts.id + (opts.selected ? ' selected' : ''),
+      attrs: { 'aria-pressed': opts.selected ? 'true' : 'false' },
+      on: { click: opts.onClick }
+    }, [
+      U.el('span', { class: 'res-tile', attrs: { 'aria-hidden': 'true' }, text: opts.icon }),
+      U.el('span', { class: 'title' }, U.rich(opts.name)),
+      U.el('span', { class: 'sub' }, opts.sub),
+      opts.tag ? U.el('span', { class: 'tag' }, opts.tag) : null
+    ]);
+  }
+
   function renderLearn(box) {
     var app = FF.app, s = app.state, now = app.now();
     var sel = app.studySel = app.studySel || defaultSel();
@@ -64,13 +79,14 @@
     box.appendChild(U.el('div', { class: 'focus-banner' }, U.rich(U.T('focusToday'), { subject: nameOfSubject(focus, L.unlockedGrade(s, focus)) })));
 
     // 資源
-    box.appendChild(section(U.T('chooseResource'), U.el('div', { class: 'grid2' }, FF.defs.RESOURCES.map(function (r) {
+    box.appendChild(section(U.T('chooseResource'), U.el('div', { class: 'res-row' }, FF.defs.RESOURCES.map(function (r) {
       var producer = FF.defs.BUILDINGS.filter(function (d) { return d.produces === r.id; })[0];
       var lv = producer ? s.buildings[producer.id].level : 0;
       var bonus = Math.round((FF.rewards.facilityMultiplier(lv) - 1) * 100);
-      return pick({
-        title: [r.icon + ' ', U.rich(r.name)],
-        sub: [U.rich(U.T('owned')), ' ' + U.fmt(s.resources[r.id] || 0), bonus > 0 ? '　' : '', bonus > 0 ? U.rich(U.T('studyBonus')) : '', bonus > 0 ? ' +' + bonus + '%' : ''],
+      return resourcePick({
+        id: r.id, icon: r.icon, name: r.name,
+        sub: [U.rich(U.T('owned')), ' ' + U.fmt(s.resources[r.id] || 0)],
+        tag: bonus > 0 ? '+' + bonus + '%' : null,
         selected: sel.resource === r.id,
         onClick: function () { set('resource', r.id); }
       });
