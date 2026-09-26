@@ -17,6 +17,25 @@
     }];
   }
 
+  // ---- 強化の待ち時間（SPEC_v0.3 3章） ----
+  // {time} を、ふりがなの記法入りの残り時間に置き換える（変数で入れた文字には ふりがなが付かないため）
+  function withTime(template, ms) { return template.replace('{time}', FF.util.formatDurationMarkup(ms)); }
+  // 「Lv◯まで あと ◯分」。1秒ごとに updateTimers で書き換える
+  function remainingView(id, state, now) {
+    var c = B.constructionOf(state, id);
+    return U.el('span', { class: 'ct-left', attrs: { 'data-id': id } },
+      U.rich(withTime(U.T('constructUntil'), B.constructionRemainingMs(state, id, now)), { level: c.toLevel }));
+  }
+  function updateTimers() {
+    var app = FF.app, now = app.now();
+    Array.prototype.forEach.call(document.querySelectorAll('.ct-left'), function (node) {
+      var id = node.getAttribute('data-id'), c = B.constructionOf(app.state, id);
+      if (!c) return;
+      U.clear(node);
+      node.appendChild(U.rich(withTime(U.T('constructUntil'), B.constructionRemainingMs(app.state, id, now)), { level: c.toLevel }));
+    });
+  }
+
   function pendingView(state, now) {
     var p = B.pendingAll(state, now);
     var items = Object.keys(p).filter(function (r) { return p[r] > 0; });
@@ -64,10 +83,18 @@
       var nx = effectText(id, bld.level + 1);
       body.appendChild(U.R('div', 'section-title', U.T('nextLevel')));
       if (nx) body.appendChild(U.el('div', { class: 'small muted' }, U.rich(nx[0], nx[1])));
-      body.appendChild(U.R('div', 'small muted', U.T('cost')));
-      body.appendChild(U.costView(B.upgradeCost(id, bld.level), s.resources));
+      // 工事中は資源を払い終えているので、必要な資源と工事の時間は出さない
+      if (!bld.construction) {
+        body.appendChild(U.R('div', 'small muted', U.T('cost')));
+        body.appendChild(U.costView(B.upgradeCost(id, bld.level), s.resources));
+        body.appendChild(U.R('div', 'small muted', withTime(U.T('buildTime'), B.buildDurationMs(id, bld.level + 1))));
+      }
     }
-    if (!can.ok) {
+    if (bld.construction) {
+      body.appendChild(U.el('div', { class: 'notice constructing' }, [
+        '🔨 ', U.rich(U.T('constructing')), '　', remainingView(id, s, app.now())
+      ]));
+    } else if (!can.ok) {
       var reasonVars = { level: can.unlockAt };
       body.appendChild(U.R('div', 'notice', U.T('reason.' + can.reason), reasonVars));
     }
@@ -86,7 +113,8 @@
     var r = B.upgrade(app.state, id, app.now());
     if (!r.ok) { U.toast(U.T('reason.' + r.reason)); return; }
     app.commit(r.state);
-    U.toast(U.T('upgradeDone'), { building: U.buildingName(id), level: r.state.buildings[id].level });
+    if (r.completed.length) U.toast(U.T('upgradeDone'), { building: U.buildingName(id), level: r.toLevel });
+    else U.toast(withTime(U.T('upgradeStarted'), r.endsAt - app.now()), { building: U.buildingName(id), level: r.toLevel });
     U.rerender();
   }
 
@@ -137,7 +165,7 @@
       var ef = effectText(id, bld.level);
       var can = B.canUpgrade(s, id);
       list.appendChild(U.el('button', {
-        class: 'bld-card' + (locked ? ' locked' : ''),
+        class: 'bld-card' + (locked ? ' locked' : '') + (bld.construction ? ' is-building' : ''),
         on: { click: function () { openBuilding(id); } }
       }, [
         U.R('span', 'nm', U.buildingName(id)),
@@ -145,6 +173,7 @@
         U.el('span', { class: 'ef' }, locked
           ? U.rich(U.T('reason.locked'), { level: B.unlockLevel(id) })
           : [U.rich(ef[0], ef[1]), can.ok ? U.el('span', { class: 'ready' }, ['  ▲ ', U.rich(U.T('upgrade'))]) : null,
+            bld.construction ? U.el('span', { class: 'constructing' }, ['🔨 ', U.rich(U.T('constructing')), ' ', remainingView(id, s, now)]) : null,
             B.isStorageFull(s, id, now) ? U.el('span', { class: 'notice' }, ['  ', U.rich(U.T('storageFull'))]) : null])
       ]));
     });
@@ -155,6 +184,6 @@
 
   U.screens.base = {
     render: render,
-    onTick: renderCollect
+    onTick: function () { renderCollect(); updateTimers(); }
   };
 })(this);

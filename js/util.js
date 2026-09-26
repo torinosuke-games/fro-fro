@@ -143,7 +143,20 @@
     return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
   }
 
+  // 残り時間を「1時間20分」「5分」「30秒」の形の、ふりがなの記法入りの文字列にする（SPEC_v0.3 3章の「あと◯分」）。
+  // 1分以上は分に切り上げ、1時間以上は時間と分。「分」の読みは数の一の位で変わる（1・3・4・6・8・0 → ぷん、2・5・7・9 → ふん）。
+  function minuteReading(n) { return /[134680]$/.test(String(n)) ? 'ぷん' : 'ふん'; }
+  function formatDurationMarkup(ms) {
+    var sec = Math.max(0, Math.ceil(ms / 1000));
+    if (sec < 60) return sec + '{秒|びょう}';
+    var min = Math.ceil(sec / 60), h = Math.floor(min / 60), m = min % 60;
+    var out = h > 0 ? h + '{時間|じかん}' : '';
+    if (m > 0) out += m + '{分|' + minuteReading(m) + '}';
+    return out;
+  }
+
   FF.util = {
+    formatDurationMarkup: formatDurationMarkup,
     clone: clone,
     isPlainObject: isPlainObject,
     normalizeName: normalizeName,

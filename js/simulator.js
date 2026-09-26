@@ -10,6 +10,12 @@
 // - 生産物は各プレイ日の開始時に受け取る（collectsPerDay 回に分けて受け取ったとみなす）。
 // - ヒント・反復・重点教科は使わない（倍率 1.0）。
 // - options.explore が true なら探索（v0.2）も行う（explorePlan を参照）。地域が開いたら、学習より先に探索を進める。
+// - 強化には工事の待ち時間がある（SPEC_v0.3 3章、balance.js の BUILD_MINUTES）。資源は着工時に払い、実時間で完成する。
+//   1日は24時間で、プレイしていない間（24時間 − minutesPerDay）も工事は進む。複数の建物を同時に工事できる。
+//   中央炉の上限・採石場の解放・到達時間は「完成」で数える（完成に気づいたプレイ時間。プレイしていない間に完成したら次の日の開始時）。
+//   工事の完成待ちで次の強化に進めない間は、その先の強化の資源を学習でためる。先の強化の資源まですべて足りていたら
+//   完成を待つ（その日のプレイ時間内に完成するなら待つ時間もプレイ時間に数え、完成しないならその日はやめる）。
+//   options.buildTimeScale で待ち時間を何倍にするか（0 で待ち時間なし＝v0.2 までと同じ）。
 (function (root) {
   'use strict';
   var FF = root.FF = root.FF || {};
@@ -162,6 +168,12 @@
     var milestones = { furnace2: null, furnace3: null, all5: null };
     var tickets = b.TICKET_MAX, ticketAccum = 0;
     var memo = {};
+    // 工事（SPEC_v0.3 3章）
+    var buildScale = opt.buildTimeScale == null ? 1 : opt.buildTimeScale;
+    var pending = [];   // { id, to, endsAt（実時間の秒） }
+    var waitSec = 0;    // 完成待ちでプレイ時間に数えた秒数
+    var maxParallel = 0;
+    var lastDone = 0;   // 最後に完成した工事のプレイ時間（分）
     // 探索
     var ex = opt.explore ? explorePlan(profile, opt, b) : null;
     var exPos = {}, exDone = {}, exploreSec = 0, exploreNodes = 0, exploreTickets = 0, exploreRes = 0;
@@ -197,22 +209,64 @@
       return memo[key];
     }
 
-    function tryUpgrades(now) {
+    // 実時間 realNow までに終わる工事を完成させる。now はそのときのプレイ時間（分）。
+    // 到達時間は完成した時点のプレイ時間（今日のプレイ中に完成したらその時点、プレイしていない間ならその日の開始時）
+    function completeDue(realNow, now, dayStart) {
+      pending.sort(function (x, y) { return x.endsAt - y.endsAt; });
+      while (pending.length && pending[0].endsAt <= realNow) {
+        var c = pending.shift();
+        var at = Math.max(now - (realNow - Math.max(c.endsAt, dayStart)) / 60, play / 60);
+        lv[c.id] = c.to;
+        if (c.id === 'furnace') {
+          if (c.to >= b.BUILDING_UNLOCK_FURNACE_LEVEL.quarry && lv.quarry === 0) lv.quarry = 1;
+          if (c.to === 2) milestones.furnace2 = at;
+          if (c.to === 3) milestones.furnace3 = at;
+        }
+        lastDone = at;
+      }
+    }
+    // 次の強化に着工できるか：前の工事が完成している、ほかの建物は完成した中央炉のレベルまで
+    function startable(s) {
+      if (lv[s.id] !== s.to - 1) return false;
+      if (s.id !== 'furnace' && lv.furnace < s.to) return false;
+      return true;
+    }
+    // 着工できるだけ着工する。すべて完成していれば true
+    function tryUpgrades(realNow, now, dayStart) {
+      completeDue(realNow, now, dayStart);
       while (step < plan.length) {
         var s = plan[step];
+        if (!startable(s)) break;
         var cost = FF.buildings.upgradeCost(s.id, s.to - 1, b);
-        for (var r in cost) if (res[r] < cost[r]) return false;
+        var ok = true;
+        for (var r in cost) if (res[r] < cost[r]) ok = false;
+        if (!ok) break;
         for (var r2 in cost) res[r2] -= cost[r2];
-        lv[s.id] = s.to;
-        if (s.id === 'furnace') {
-          if (s.to >= b.BUILDING_UNLOCK_FURNACE_LEVEL.quarry && lv.quarry === 0) lv.quarry = 1;
-          if (s.to === 2) milestones.furnace2 = now;
-          if (s.to === 3) milestones.furnace3 = now;
-        }
+        pending.push({ id: s.id, to: s.to, endsAt: realNow + FF.buildings.buildDurationMs(s.id, s.to, b) / 1000 * buildScale });
+        maxParallel = Math.max(maxParallel, pending.length);
         step++;
+        completeDue(realNow, now, dayStart);   // 待ち時間 0 ならすぐ完成
       }
-      milestones.all5 = now;
-      return true;
+      if (step >= plan.length && pending.length === 0) {
+        milestones.all5 = step > 0 ? lastDone : now;
+        return true;
+      }
+      return false;
+    }
+    // 学習でためる資源：次の強化から順に費用を足し、最初に足りなくなったところで最も不足している資源。すべて足りていれば null
+    function studyTarget() {
+      var cum = {};
+      for (var j = step; j < plan.length; j++) {
+        var c = FF.buildings.upgradeCost(plan[j].id, plan[j].to - 1, b);
+        for (var r in c) cum[r] = (cum[r] || 0) + c[r];
+        var pick = null, worst = 0;
+        for (var r2 in cum) {
+          var deficit = cum[r2] - res[r2];
+          if (deficit > worst) { worst = deficit; pick = r2; }
+        }
+        if (pick) return pick;
+      }
+      return null;
     }
 
     for (var day = 0; day < 5000; day++) {
@@ -227,9 +281,9 @@
         tickets = Math.max(tickets, b.TICKET_MAX);   // 24時間近く離れていれば満タン（宝箱で20枚を超えていればそのまま）
         ticketAccum = 0;
       }
-      var t = 0;
+      var t = 0, dayStart = day * 86400;
       while (t < sessionSec) {
-        if (tryUpgrades((play + t) / 60)) {
+        if (tryUpgrades(dayStart + t, (play + t) / 60, dayStart)) {
           return finish();
         }
         var region = nextExploreRegion();
@@ -251,11 +305,13 @@
           passTime(node.sec);
           continue;
         }
-        var cost = FF.buildings.upgradeCost(plan[step].id, plan[step].to - 1, b);
-        var pick = null, worst = -Infinity;
-        for (var r in cost) {
-          var deficit = cost[r] - res[r];
-          if (deficit > worst) { worst = deficit; pick = r; }
+        var pick = studyTarget();
+        if (!pick) {
+          // 資源は足りていて、工事の完成を待つだけ
+          var next = pending.reduce(function (m, c) { return Math.min(m, c.endsAt); }, Infinity);
+          var wait = next - (dayStart + t);
+          if (t + wait <= sessionSec) { t += wait; waitSec += wait; passTime(wait); continue; }
+          break;   // 今日のプレイ時間内には完成しないので、今日はやめる
         }
         var type = profile.format === 'choice' && tickets >= 1 ? 'choice' : 'input';
         var e = expected(type, lv[producerOf(pick)] || 0);
@@ -283,6 +339,7 @@
         learned: Math.round(learned),
         produced: produced,
         productionShare: produced / (produced + learned),
+        build: { waitMinutes: waitSec / 60, maxParallel: maxParallel },   // 完成待ちでプレイ時間に数えた分、同時に工事した最大数
         explore: ex ? {
           minutes: exploreSec / 60,             // 探索に使ったプレイ時間
           nodes: exploreNodes,

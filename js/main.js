@@ -39,6 +39,7 @@
     // デバッグで時刻を動かしたとき
     onTimeJump: function () {
       recoverTickets();
+      completeBuilds();
       U.rerender();
     },
 
@@ -63,6 +64,20 @@
     }
   }
 
+  // 終わった工事を完成させる（SPEC_v0.3 3章）。完成した建物があれば知らせる。
+  // 描き直すのは基地の画面を開いているときだけ（出題中に描き直すと、入力中の答えが消えるため）。
+  // 中央炉の解放のお知らせは、基地の画面を描いたときに出る。
+  function completeBuilds() {
+    var r = FF.buildings.completeConstructions(app.state, app.now());
+    if (r.state === app.state) return false;
+    app.commit(r.state);
+    r.completed.forEach(function (c) {
+      U.toast(U.T('upgradeDone'), { building: U.buildingName(c.id), level: c.level });
+    });
+    if (r.completed.length && app.screen === 'base') U.rerender();
+    return true;
+  }
+
   function boot() {
     document.title = FF.config.TITLE;
     var now = app.now();
@@ -85,15 +100,19 @@
     if (loaded.status === 'error') U.modal({ body: U.T('loadError') });
     else if (loaded.status === 'migrated') U.toast(U.T('migrated'));
 
+    // アプリを閉じていた間に終わった工事
+    completeBuilds();
+
     setInterval(function () {
       recoverTickets();
+      completeBuilds();
       U.tick();
     }, 1000);
 
     // ページを閉じるとき・隠れるときにも保存する
     document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'hidden') app.save();
-      else { recoverTickets(); U.rerender(); }
+      else { recoverTickets(); completeBuilds(); U.rerender(); }
     });
     root.addEventListener('pagehide', app.save);
   }

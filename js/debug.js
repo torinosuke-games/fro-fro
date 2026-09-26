@@ -143,6 +143,7 @@
       U.el('h3', { text: '探索（テスト用）' }),
       U.el('div', { class: 'small muted', text: '雪原は中央炉 Lv3、凍結森林は雪原 100% かつ中央炉 Lv4 で開く。進めると宝箱・できごとの報酬も入る。' }),
       U.el('div', { class: 'grid2' }, [
+        U.el('button', { class: 'btn small', text: '工事中の建物をすべて完成させる', on: { click: finishBuilds } }),
         U.el('button', { class: 'btn small', text: '中央炉を Lv3 にする', on: { click: function () { setFurnace(3); } } }),
         U.el('button', { class: 'btn small', text: '中央炉を Lv4 にする', on: { click: function () { setFurnace(4); } } }),
         U.el('button', { class: 'btn small', text: '雪原を1地点進める', on: { click: function () { exAdvance('snowfield', 1); } } }),
@@ -168,6 +169,14 @@
       U.show('exploreQuiz', { region: region.id });
     }
     // 中央炉とほかの建物をそのレベルまで上げる（資源は使わない）
+    // 強化の待ち時間（v0.3）：工事中の建物の終了時刻を今にして完成させる
+    function finishBuilds() {
+      var s = FF.util.clone(app.state), now = app.now(), n = 0;
+      FF.defs.BUILDINGS.forEach(function (d) { var c = s.buildings[d.id].construction; if (c) { c.endsAt = Math.min(c.endsAt, now); c.startedAt = Math.min(c.startedAt, now); n++; } });
+      if (!n) { U.toast('工事中の建物はない'); return; }
+      app.commit(s);
+      app.onTimeJump();
+    }
     function setFurnace(level) {
       var s = FF.util.clone(app.state);
       FF.defs.BUILDINGS.forEach(function (d) { if (s.buildings[d.id].level < level) s.buildings[d.id].level = level; });

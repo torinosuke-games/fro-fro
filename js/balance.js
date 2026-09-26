@@ -68,6 +68,13 @@
     },
     COST_ROUND: 10,
     BUILDING_UNLOCK_FURNACE_LEVEL: { quarry: 2 },
+    // 強化の待ち時間（SPEC_v0.3 3章）：資源を使って工事を始め、この時間が過ぎると完成する。キーは強化後のレベル。単位は分。
+    // 低いレベルでは ほぼ待たず、レベルが上がるほど長くなる。中央炉以外の建物は other。
+    // Lv2・Lv3 は短くする：中央炉Lv2・Lv3の到達時間（目標 3〜60分）に直接足されるため（tests/simulate.js）。
+    BUILD_MINUTES: {
+      furnace: { 2: 10 / 60, 3: 3, 4: 60, 5: 240 },   // Lv2 は10秒
+      other:   { 2: 10 / 60, 3: 2, 4: 30, 5: 120 }
+    },
 
     // 生産：施設レベル × PRODUCTION_PER_LEVEL_PER_HOUR 個／時間
     PRODUCTION_PER_LEVEL_PER_HOUR: 2,

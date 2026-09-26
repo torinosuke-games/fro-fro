@@ -10,6 +10,7 @@ const B = FF.balance;
 
 let failures = 0;
 const pad = (s, n) => String(s).padStart(n);
+const fmtWait = m => (m < 1 ? Math.round(m * 60) + '秒' : m >= 60 ? (m / 60) + '時間' : m + '分');
 const fmtMin = m => (m == null ? '—' : m >= 120 ? (m / 60).toFixed(1) + '時間' : m.toFixed(1) + '分');
 
 // ---- 1. 到達時間 ----
@@ -26,6 +27,24 @@ for (const ms of ['furnace2', 'furnace3', 'all5']) {
     if (!ok) failures++;
     console.log(`${ms.padEnd(12)}  ${key.padEnd(12)} ${pad(fmtMin(got), 9)}  ${pad(fmtMin(target), 8)}  ${pad((diff * 100).toFixed(0) + '%', 5)}   ${ok ? 'OK' : 'NG'}`);
   }
+}
+
+// ---- 1b. 強化の待ち時間（SPEC_v0.3 3章）の影響 ----
+// 上の表は待ち時間あり。待ち時間なし（buildTimeScale 0 ＝ v0.2 までと同じ）と比べる。
+console.log('\n■ 強化の待ち時間（v0.3）の影響  待ち時間：中央炉 ' + Object.keys(B.BUILD_MINUTES.furnace).map(k => 'Lv' + k + ' ' + fmtWait(B.BUILD_MINUTES.furnace[k])).join('・') +
+  '／ほかの建物 ' + Object.keys(B.BUILD_MINUTES.other).map(k => 'Lv' + k + ' ' + fmtWait(B.BUILD_MINUTES.other[k])).join('・'));
+console.log('到達点        プロフィール   待ち時間なし  待ち時間あり  ずれ');
+const noWait = {};
+for (const key of Object.keys(B.SIM_PROFILES)) noWait[key] = FF.simulator.run(B.SIM_PROFILES[key], { buildTimeScale: 0 });
+for (const ms of ['furnace2', 'furnace3', 'all5']) {
+  for (const key of Object.keys(B.SIM_PROFILES)) {
+    const a0 = noWait[key].milestones[ms], a1 = results[key].milestones[ms];
+    console.log(`${ms.padEnd(12)}  ${key.padEnd(12)} ${pad(fmtMin(a0), 11)}  ${pad(fmtMin(a1), 11)}  ${pad(((a1 - a0) / a0 * 100 >= 0 ? '+' : '') + ((a1 - a0) / a0 * 100).toFixed(1) + '%', 7)}`);
+  }
+}
+for (const key of Object.keys(results)) {
+  const r = results[key];
+  console.log(`${key.padEnd(12)} 日数 ${noWait[key].days} → ${r.days}、完成待ちでプレイ時間に数えた時間 ${r.build.waitMinutes.toFixed(1)}分、同時に工事した最大数 ${r.build.maxParallel}`);
 }
 
 // ---- 2. 経済の内訳 ----

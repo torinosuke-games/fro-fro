@@ -54,12 +54,19 @@
     effectFurnace: 'ほかの建物の上限：Lv{level}',
     nextLevel: '次のレベル',
     upgrade: '強化する',
-    upgradeDone: '{building}を Lv{level} に強化した。',
+    upgradeDone: '{building}の{工事|こうじ}が {終|お}わり、Lv{level} に なった！',
+    // 強化の待ち時間（SPEC_v0.3 3章）。{time} は表示の直前に、ふりがなの記法入りの残り時間に置き換える（util.formatDurationMarkup）
+    upgradeStarted: '{building}の{工事|こうじ}を {始|はじ}めた。Lv{level}まで あと {time}',
+    constructing: '{工事中|こうじちゅう}',
+    constructUntil: 'Lv{level}まで あと {time}',
+    buildTime: '{工事|こうじ}に かかる {時間|じかん}：{time}',
     cost: '必要な資源',
     reason: {
       locked: '中央炉 Lv{level} で解放',
       maxLevel: '最大レベル',
       furnaceCap: '先に中央炉を強化しよう',
+      furnaceBuilding: '中央炉の{工事|こうじ}が {終|お}わるまで {待|ま}とう',
+      building: '{工事中|こうじちゅう}。{完成|かんせい}するまで {次|つぎ}の {強化|きょうか}は できない',
       resources: '資源が足りない'
     },
     teaser: {

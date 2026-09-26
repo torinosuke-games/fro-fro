@@ -29,13 +29,27 @@ module.exports = ({ test, FF, assert, plain }) => {
   });
 
   // ---- 強化 ----
-  test('資源を消費して強化できる', () => {
+  // 強化は工事を始めるだけで、完成は completeConstructions（SPEC_v0.3 3章）。
+  // build：強化を始めて、完成の時刻まで進めて完成させる（テスト用）。{ state, start（upgrade の結果）, completed }
+  const build = (st, id, now) => {
+    const r = B.upgrade(st, id, now);
+    if (!r.ok) return { state: st, start: r, completed: [] };
+    const d = B.completeConstructions(r.state, r.endsAt);
+    return { state: d.state, start: r, completed: d.completed };
+  };
+  const unlockedIds = res => res.completed.flatMap(c => c.unlocked.map(u => u.id));
+
+  test('資源を消費して強化を始め、待ち時間のあとに完成する', () => {
     const s = newState();
     s.resources = { wood: 200, iron: 0, stone: 120, food: 0 };
     const r = B.upgrade(s, 'furnace', T0);
     assert.strictEqual(r.ok, true);
-    assert.strictEqual(r.state.buildings.furnace.level, 2);
-    assert.deepStrictEqual(plain(r.state.resources), { wood: 50, iron: 0, stone: 20, food: 0 });
+    assert.deepStrictEqual(plain(r.state.resources), { wood: 50, iron: 0, stone: 20, food: 0 }, '資源は始めた時点で使う');
+    assert.strictEqual(r.state.buildings.furnace.level, 1, '完成するまでレベルは上がらない');
+    assert.deepStrictEqual(plain(r.state.buildings.furnace.construction), { toLevel: 2, startedAt: T0, endsAt: T0 + B.buildDurationMs('furnace', 2) });
+    const done = B.completeConstructions(r.state, r.endsAt);
+    assert.strictEqual(done.state.buildings.furnace.level, 2);
+    assert.strictEqual(done.state.buildings.furnace.construction, undefined, '完成したら工事の記録を消す');
     assert.strictEqual(s.buildings.furnace.level, 1, '元の状態は変わらない');
   });
 
@@ -49,45 +63,48 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(r.state, s);
   });
 
-  test('中央炉のレベルを超えて他の建物を強化できない', () => {
+  test('中央炉のレベルを超えて他の建物を強化できない（中央炉の工事中も、完成するまでは上げられない）', () => {
     let s = rich();
-    const r = B.upgrade(s, 'lumber', T0);
-    assert.strictEqual(r.ok, false);
-    assert.strictEqual(r.reason, 'furnaceCap');
-    s = B.upgrade(s, 'furnace', T0).state;
-    s = B.upgrade(s, 'lumber', T0).state;
+    assert.strictEqual(B.upgrade(s, 'lumber', T0).reason, 'furnaceCap');
+    const f = B.upgrade(s, 'furnace', T0);
+    assert.strictEqual(B.upgrade(f.state, 'lumber', T0).reason, 'furnaceBuilding', '中央炉が工事中の間はまだ上げられない（完成を待つように知らせる）');
+    s = B.completeConstructions(f.state, f.endsAt).state;
+    s = build(s, 'lumber', f.endsAt).state;
     assert.strictEqual(s.buildings.lumber.level, 2);
     assert.strictEqual(B.upgrade(s, 'lumber', T0).reason, 'furnaceCap');
   });
 
   test('最大レベル（Lv5）より上には強化できない', () => {
     let s = rich();
-    for (let i = 0; i < 4; i++) s = B.upgrade(s, 'furnace', T0).state;
+    for (let i = 0; i < 4; i++) s = build(s, 'furnace', T0).state;
     assert.strictEqual(s.buildings.furnace.level, 5);
     assert.strictEqual(B.upgrade(s, 'furnace', T0).reason, 'maxLevel');
     for (const id of ['housing', 'lumber', 'mine', 'quarry', 'foodhall']) {
-      while (B.canUpgrade(s, id).ok) s = B.upgrade(s, id, T0).state;
+      while (B.canUpgrade(s, id).ok) s = build(s, id, T0).state;
       assert.strictEqual(s.buildings[id].level, 5, id);
       assert.strictEqual(B.canUpgrade(s, id).reason, 'maxLevel');
     }
   });
 
-  test('石切り場は中央炉 Lv2 で解放される', () => {
-    let s = rich();
+  test('石切り場は中央炉 Lv2 の完成で解放され、生産は完成した時刻から', () => {
+    const s = rich();
     assert.strictEqual(s.buildings.quarry.level, 0);
     assert.strictEqual(B.canUpgrade(s, 'quarry').reason, 'locked');
     const r = B.upgrade(s, 'furnace', T0 + 5000);
-    assert.strictEqual(r.state.buildings.quarry.level, 1);
-    assert.strictEqual(r.state.buildings.quarry.lastCollectedAt, T0 + 5000);
-    assert.deepStrictEqual(plain(r.unlocked.map(u => u.id)), ['quarry']);
+    assert.strictEqual(r.state.buildings.quarry.level, 0, '工事中はまだ解放されない');
+    const done = B.completeConstructions(r.state, r.endsAt + 60000);
+    assert.strictEqual(done.state.buildings.quarry.level, 1);
+    assert.strictEqual(done.state.buildings.quarry.lastCollectedAt, r.endsAt, '完成した時刻（確かめた時刻ではない）');
+    assert.deepStrictEqual(plain(done.completed.flatMap(c => c.unlocked.map(u => u.id))), ['quarry']);
   });
 
-  test('中央炉のレベルごとの解放（Lv3 見張り塔・Lv4 雪原・Lv5 探索の予告）', () => {
+  test('中央炉のレベルごとの解放（Lv3 見張り塔・Lv4 雪原・Lv5 探索の予告）は完成の時点', () => {
     let s = rich();
     const got = [];
     for (let i = 0; i < 4; i++) {
-      const r = B.upgrade(s, 'furnace', T0);
-      got.push(r.unlocked.map(u => u.id).join(','));
+      const r = build(s, 'furnace', T0);
+      assert.strictEqual(r.start.completed.length, 0, '始めた時点では何も解放されない');
+      got.push(unlockedIds(r).join(','));
       s = r.state;
     }
     assert.deepStrictEqual(got, ['quarry', 'watchtower', 'snowfield', 'expedition']);
@@ -95,7 +112,7 @@ module.exports = ({ test, FF, assert, plain }) => {
 
   test('解放のお知らせは一度見たら出ない', () => {
     let s = rich();
-    s = B.upgrade(s, 'furnace', T0).state;
+    s = build(s, 'furnace', T0).state;
     assert.deepStrictEqual(plain(B.pendingUnlockNotices(s).map(u => u.id)), ['quarry']);
     s = B.markUnlockNoticeSeen(s, 'quarry');
     assert.strictEqual(B.pendingUnlockNotices(s).length, 0);
@@ -103,12 +120,125 @@ module.exports = ({ test, FF, assert, plain }) => {
 
   test('建物のレベルが保存される', () => {
     let s = rich();
-    s = B.upgrade(s, 'furnace', T0).state;
-    s = B.upgrade(s, 'mine', T0).state;
-    const loaded = FF.state.parseSave(FF.state.serialize(s), T0 + HOUR).state;
+    s = build(s, 'furnace', T0).state;
+    s = build(s, 'mine', T0 + HOUR).state;
+    const loaded = FF.state.parseSave(FF.state.serialize(s), T0 + 2 * HOUR).state;
     assert.strictEqual(loaded.buildings.furnace.level, 2);
     assert.strictEqual(loaded.buildings.mine.level, 2);
     assert.strictEqual(loaded.buildings.quarry.level, 1);
+  });
+
+  // ---- 強化の待ち時間（SPEC_v0.3 3章） ----
+  test('待ち時間は balance.js の表どおりで、レベルが高いほど長い', () => {
+    const t = FF.balance.BUILD_MINUTES;
+    for (let lv = 2; lv <= 5; lv++) {
+      assert.strictEqual(B.buildDurationMs('furnace', lv), t.furnace[lv] * MIN);
+      assert.strictEqual(B.buildDurationMs('mine', lv), t.other[lv] * MIN);
+      if (lv > 2) {
+        assert.ok(B.buildDurationMs('furnace', lv) > B.buildDurationMs('furnace', lv - 1));
+        assert.ok(B.buildDurationMs('lumber', lv) > B.buildDurationMs('lumber', lv - 1));
+      }
+    }
+    assert.ok(B.buildDurationMs('furnace', 2) <= MIN, '最初の強化は ほぼ待たない（1分以内）');
+  });
+
+  test('完成の境目：終了時刻の1ミリ秒前は工事中、ちょうどで完成', () => {
+    const r = B.upgrade(rich(), 'furnace', T0);
+    const before = B.completeConstructions(r.state, r.endsAt - 1);
+    assert.strictEqual(before.completed.length, 0);
+    assert.strictEqual(before.state, r.state, '変化がなければ同じ状態を返す');
+    assert.strictEqual(B.constructionRemainingMs(r.state, 'furnace', r.endsAt - 1), 1);
+    const at = B.completeConstructions(r.state, r.endsAt);
+    assert.deepStrictEqual(plain(at.completed.map(c => [c.id, c.level])), [['furnace', 2]]);
+    assert.strictEqual(B.constructionRemainingMs(at.state, 'furnace', r.endsAt), null);
+  });
+
+  test('残り時間：始めた直後は工事の時間、途中は減っていき、過ぎても 0 より小さくならない', () => {
+    let s = build(rich(), 'furnace', T0).state;
+    s = build(s, 'furnace', T0).state;                       // Lv3
+    const r = B.upgrade(s, 'furnace', T0);                    // Lv3 → 4
+    const dur = B.buildDurationMs('furnace', 4);
+    assert.strictEqual(B.constructionRemainingMs(r.state, 'furnace', T0), dur);
+    assert.strictEqual(B.constructionRemainingMs(r.state, 'furnace', T0 + 25 * MIN), dur - 25 * MIN);
+    assert.strictEqual(B.constructionRemainingMs(r.state, 'furnace', T0 + 10 * HOUR), 0);
+  });
+
+  test('工事中の建物は、完成するまで次の強化ができない', () => {
+    const r = B.upgrade(rich(), 'furnace', T0);
+    assert.strictEqual(B.canUpgrade(r.state, 'furnace').reason, 'building');
+    assert.strictEqual(B.upgrade(r.state, 'furnace', T0).ok, false);
+  });
+
+  test('ほかの建物は同時に工事できる（工事中でも別の建物の強化を始められる）', () => {
+    const s = build(rich(), 'furnace', T0).state;             // 中央炉 Lv2
+    const a = B.upgrade(s, 'lumber', T0);
+    const b2 = B.upgrade(a.state, 'mine', T0 + 1000);
+    const c = B.upgrade(b2.state, 'furnace', T0 + 2000);
+    assert.ok(c.ok, '中央炉の工事も同時に始められる');
+    const ids = ['lumber', 'mine', 'furnace'].filter(id => B.constructionOf(c.state, id));
+    assert.deepStrictEqual(ids, ['lumber', 'mine', 'furnace']);
+    const done = B.completeConstructions(c.state, T0 + HOUR);
+    assert.deepStrictEqual(plain(done.completed.map(x => x.id)), ['lumber', 'mine', 'furnace'], '終わる順に完成する');
+    assert.deepStrictEqual([done.state.buildings.lumber.level, done.state.buildings.mine.level, done.state.buildings.furnace.level], [2, 2, 3]);
+  });
+
+  test('アプリを閉じていた間に終わった工事は、保存データを読み込んで確かめると完成している', () => {
+    const s = build(build(rich(), 'furnace', T0).state, 'furnace', T0).state;
+    const r = B.upgrade(s, 'furnace', T0);                    // Lv3 → 4
+    const dur = B.buildDurationMs('furnace', 4);
+    const text = FF.state.serialize(r.state);                // ここでアプリを閉じた
+    const early = FF.state.parseSave(text, T0 + dur / 2).state;
+    assert.strictEqual(B.completeConstructions(early, T0 + dur / 2).state.buildings.furnace.level, 3, '半分の時間ではまだ工事中');
+    assert.strictEqual(B.constructionRemainingMs(early, 'furnace', T0 + dur / 2), dur / 2);
+    const later = FF.state.parseSave(text, T0 + dur + 5 * HOUR).state;
+    const done = B.completeConstructions(later, T0 + dur + 5 * HOUR);
+    assert.strictEqual(done.state.buildings.furnace.level, 4, '時間がたってから開くと完成している');
+    assert.deepStrictEqual(plain(done.completed.flatMap(c => c.unlocked.map(u => u.id))), ['snowfield']);
+  });
+
+  test('端末の時計が工事を始めた時刻より前に戻ったら、残り時間が工事の時間を超えないようにする', () => {
+    const r = B.upgrade(rich(), 'furnace', T0);
+    const dur = B.buildDurationMs('furnace', 2);
+    const back = B.completeConstructions(r.state, T0 - HOUR);
+    assert.strictEqual(back.completed.length, 0);
+    assert.deepStrictEqual(plain(back.state.buildings.furnace.construction), { toLevel: 2, startedAt: T0 - HOUR, endsAt: T0 - HOUR + dur });
+    assert.strictEqual(B.constructionRemainingMs(r.state, 'furnace', T0 - HOUR), dur, '表示の残り時間も工事の時間まで');
+  });
+
+  test('待ち時間が 0 の設定なら、その場で完成する', () => {
+    const b0 = Object.assign({}, FF.balance, { BUILD_MINUTES: { furnace: { 2: 0, 3: 0, 4: 0, 5: 0 }, other: { 2: 0, 3: 0, 4: 0, 5: 0 } } });
+    const r = B.upgrade(rich(), 'furnace', T0, b0);
+    assert.strictEqual(r.state.buildings.furnace.level, 2);
+    assert.deepStrictEqual(plain(r.completed.map(c => c.id)), ['furnace']);
+  });
+
+  test('残り時間の表示「あと◯分」：秒・分・時間の形と「分」の読み（ふん／ぷん）', () => {
+    const f = FF.util.formatDurationMarkup;
+    assert.strictEqual(f(30 * 1000), '30{秒|びょう}');
+    assert.strictEqual(f(59 * 1000 + 1), '1{分|ぷん}', '59秒あまりは切り上げて1分');
+    assert.strictEqual(f(2 * MIN), '2{分|ふん}');
+    assert.strictEqual(f(3 * MIN), '3{分|ぷん}');
+    assert.strictEqual(f(10 * MIN), '10{分|ぷん}');
+    assert.strictEqual(f(25 * MIN), '25{分|ふん}');
+    assert.strictEqual(f(4 * MIN + 1), '5{分|ふん}', '分は切り上げ');
+    assert.strictEqual(f(HOUR), '1{時間|じかん}');
+    assert.strictEqual(f(HOUR + 20 * MIN), '1{時間|じかん}20{分|ぷん}');
+    assert.strictEqual(f(0), '0{秒|びょう}');
+    assert.strictEqual(FF.util.plainText(f(3 * HOUR + 7 * MIN)), '3時間7分');
+  });
+
+  test('読み込み時の整合：形のおかしい工事の記録や、次の段階でない記録は消す（正しいものは残す）', () => {
+    const s = plain(build(rich(), 'furnace', T0).state);
+    s.buildings.furnace.construction = { toLevel: 3, startedAt: T0, endsAt: T0 + 10 * MIN };   // 正しい
+    s.buildings.mine.construction = { toLevel: 3, startedAt: T0, endsAt: T0 + MIN };           // Lv1 → 3 はおかしい
+    s.buildings.lumber.construction = { toLevel: 2, startedAt: 'x', endsAt: T0 };              // 形がおかしい
+    s.buildings.housing.construction = { toLevel: 2, startedAt: T0 + MIN, endsAt: T0 };        // 終わりが始まりより前
+    const r = FF.state.migrate(s, T0).state;
+    assert.deepStrictEqual(plain(r.buildings.furnace.construction), { toLevel: 3, startedAt: T0, endsAt: T0 + 10 * MIN });
+    for (const id of ['mine', 'lumber', 'housing']) assert.strictEqual(r.buildings[id].construction, undefined, id);
+    const r2 = plain(newState());
+    r2.buildings.mine.construction = { toLevel: 2, startedAt: T0, endsAt: T0 + MIN };          // 中央炉 Lv1 を超える
+    assert.strictEqual(FF.state.migrate(r2, T0).state.buildings.mine.construction, undefined);
   });
 
   test('読み込み時に、中央炉を超えるレベルや解放漏れを直す', () => {

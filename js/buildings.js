@@ -67,17 +67,77 @@
     });
   }
 
+  // ---- 強化の待ち時間（SPEC_v0.3 3章） ----
+  // 工事中の建物は bld.construction = { toLevel, startedAt, endsAt }（ミリ秒）。工事中でなければ construction を持たない。
+  // 完成するまでレベルは上がらない。
+
+  // fromLevel → toLevel の工事にかかる時間（ミリ秒）
+  function buildDurationMs(buildingId, toLevel, b) {
+    var t = bal(b).BUILD_MINUTES;
+    if (!t) return 0;
+    var table = buildingId === 'furnace' ? t.furnace : t.other;
+    return Math.round((table[toLevel] || 0) * 60 * 1000);
+  }
+
+  function constructionOf(state, buildingId) {
+    var bld = state.buildings[buildingId];
+    return bld && bld.construction ? bld.construction : null;
+  }
+
+  // 完成までの残りミリ秒（工事中でなければ null）
+  function constructionRemainingMs(state, buildingId, now) {
+    var c = constructionOf(state, buildingId);
+    if (!c) return null;
+    return Math.max(0, Math.min(c.endsAt - now, c.endsAt - c.startedAt));
+  }
+
+  // 時刻 now までに終わった工事を完成させる。{ state, completed: [{ id, level, unlocked }] }
+  // 中央炉が完成したら、新しく解放された建物を Lv1 にする（生産は完成した時刻から）。
+  // 端末の時計が戻って開始時刻より前になっていたら、残り時間が工事の時間を超えないように開始時刻を今にする。
+  function completeConstructions(state, now, b) {
+    b = bal(b);
+    var ids = FF.defs.BUILDINGS.map(function (d) { return d.id; }).filter(function (id) { return constructionOf(state, id); });
+    if (!ids.length) return { state: state, completed: [] };
+    var s = FF.util.clone(state), completed = [], changed = false;
+    ids.sort(function (x, y) { return s.buildings[x].construction.endsAt - s.buildings[y].construction.endsAt; });
+    ids.forEach(function (id) {
+      var bld = s.buildings[id], c = bld.construction;
+      if (now < c.startedAt) {
+        var dur = c.endsAt - c.startedAt;
+        bld.construction = { toLevel: c.toLevel, startedAt: now, endsAt: now + dur };
+        changed = true;
+        return;
+      }
+      if (now < c.endsAt) return;
+      bld.level = c.toLevel;
+      delete bld.construction;
+      var unlocked = [];
+      if (id === 'furnace') {
+        applyUnlocks(s, c.endsAt, b);
+        unlocked = FF.defs.FURNACE_UNLOCKS.filter(function (u) { return u.level === c.toLevel; });
+      }
+      completed.push({ id: id, level: c.toLevel, unlocked: unlocked });
+      changed = true;
+    });
+    // 何も変わらなければ元の状態をそのまま返す（1秒ごとに呼ばれるので、むだな保存をしない）
+    return { state: changed ? s : state, completed: completed };
+  }
+
   // ---- 強化 ----
 
-  // { ok, reason: 'unknown' | 'locked' | 'maxLevel' | 'furnaceCap' | 'resources', cost, missing }
+  // { ok, reason: 'unknown' | 'locked' | 'building' | 'maxLevel' | 'furnaceCap' | 'resources', cost, missing }
   function canUpgrade(state, buildingId, b) {
     b = bal(b);
     var bld = state.buildings[buildingId];
     if (!bld || !defOf(buildingId)) return { ok: false, reason: 'unknown' };
     if (!isUnlocked(state, buildingId, b) || bld.level === 0) return { ok: false, reason: 'locked', unlockAt: unlockLevel(buildingId, b) };
+    if (bld.construction) return { ok: false, reason: 'building' };
     if (bld.level >= b.MAX_LEVEL) return { ok: false, reason: 'maxLevel' };
     // 中央炉以外は、中央炉のレベルを超えて強化できない
-    if (buildingId !== 'furnace' && bld.level >= state.buildings.furnace.level) return { ok: false, reason: 'furnaceCap' };
+    // 中央炉が工事中なら、その完成を待つように知らせる（SPEC_v0.3 3章）
+    if (buildingId !== 'furnace' && bld.level >= state.buildings.furnace.level) {
+      return { ok: false, reason: state.buildings.furnace.construction ? 'furnaceBuilding' : 'furnaceCap' };
+    }
     var cost = upgradeCost(buildingId, bld.level, b);
     var missing = {}, short = false;
     for (var r in cost) {
@@ -88,21 +148,20 @@
     return { ok: true, cost: cost };
   }
 
-  // 強化する（即時完了）。{ ok, state, reason, unlocked: [FURNACE_UNLOCKS の項目] }
+  // 強化を始める：資源を使い、工事を開始する（SPEC_v0.3 3章）。完成は completeConstructions で行う。
+  // 工事の時間が 0 のときは、その場で完成させる。
+  // { ok, state, reason, cost, toLevel, endsAt, completed: [completeConstructions の completed] }
   function upgrade(state, buildingId, now, b) {
     b = bal(b);
     var can = canUpgrade(state, buildingId, b);
     if (!can.ok) return { ok: false, state: state, reason: can.reason, missing: can.missing };
     var s = FF.util.clone(state);
     for (var r in can.cost) s.resources[r] -= can.cost[r];
-    s.buildings[buildingId].level++;
-    var unlocked = [];
-    if (buildingId === 'furnace') {
-      applyUnlocks(s, now, b);
-      var lv = s.buildings.furnace.level;
-      unlocked = FF.defs.FURNACE_UNLOCKS.filter(function (u) { return u.level === lv; });
-    }
-    return { ok: true, state: s, unlocked: unlocked, cost: can.cost };
+    var toLevel = s.buildings[buildingId].level + 1;
+    var endsAt = now + buildDurationMs(buildingId, toLevel, b);
+    s.buildings[buildingId].construction = { toLevel: toLevel, startedAt: now, endsAt: endsAt };
+    var done = endsAt <= now ? completeConstructions(s, now, b) : { state: s, completed: [] };
+    return { ok: true, state: done.state, cost: can.cost, toLevel: toLevel, endsAt: endsAt, completed: done.completed };
   }
 
   // 中央炉のレベルで解放済みなのに、まだお知らせを見ていない項目
@@ -191,6 +250,16 @@
         if (bld.level === 0) bld.lastCollectedAt = null;
       }
     });
+    // 工事中の記録（v0.3）：形が正しく（工事中でなければ construction を持たない）、今のレベルの次の段階で、中央炉の上限を超えないものだけ残す
+    FF.defs.BUILDINGS.forEach(function (d) {
+      var bld = s.buildings[d.id], c = bld.construction;
+      var valid = FF.util.isPlainObject(c) &&
+        typeof c.startedAt === 'number' && typeof c.endsAt === 'number' && isFinite(c.startedAt) && isFinite(c.endsAt) &&
+        c.endsAt >= c.startedAt && c.toLevel === bld.level + 1 && bld.level >= 1 && c.toLevel <= b.MAX_LEVEL &&
+        (d.id === 'furnace' || c.toLevel <= f.level);
+      if (valid) bld.construction = { toLevel: c.toLevel, startedAt: c.startedAt, endsAt: c.endsAt };
+      else delete bld.construction;
+    });
     return s;
   }
 
@@ -204,6 +273,10 @@
     isUnlocked: isUnlocked,
     canUpgrade: canUpgrade,
     upgrade: upgrade,
+    buildDurationMs: buildDurationMs,
+    constructionOf: constructionOf,
+    constructionRemainingMs: constructionRemainingMs,
+    completeConstructions: completeConstructions,
     pendingUnlockNotices: pendingUnlockNotices,
     markUnlockNoticeSeen: markUnlockNoticeSeen,
     pendingProduction: pendingProduction,

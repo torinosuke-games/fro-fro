@@ -385,6 +385,10 @@ h3 { font-size: 15px; color: var(--ice); }
 .bld-card .ef { grid-column: 1 / -1; font-size: 12px; color: var(--muted); }
 .bld-card.locked { opacity: 0.55; }
 .bld-card .ready { color: var(--good); font-size: 12px; }
+/* 強化の工事中（SPEC_v0.3 3章）。色は昼／夜で切り替わる既存の変数 */
+.bld-card.is-building { border-style: dashed; border-color: var(--warn); }
+.bld-card .constructing, .notice.constructing { color: var(--warn); font-weight: 700; }
+.bld-card .constructing { display: block; margin-top: 2px; font-size: 12px; }
 
 .cost { display: flex; flex-wrap: wrap; gap: 6px; }
 .cost .item { background: var(--chip-bg); border: 1px solid var(--edge); border-radius: 4px; padding: 2px 8px; font-variant-numeric: tabular-nums; }
