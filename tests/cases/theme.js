@@ -182,4 +182,19 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.ok(day.length >= 20);
     assert.deepStrictEqual(day.filter(n => !night.includes(n)), []);
   });
+
+  test('CSS：昼の文字色は、白いパネルと昼の背景の上でコントラスト比 4.5 以上（WCAG AA）', () => {
+    const css = fs.readFileSync(path.join(ROOT, 'css', 'style.css'), 'utf8');
+    const i = css.indexOf(':root[data-theme="day"] {');
+    const day = css.slice(i, css.indexOf('}', i));
+    const val = n => (day.match(new RegExp(n + ':\\s*(#[0-9a-fA-F]{6})')) || [])[1];
+    const lum = h => [1, 3, 5].map(k => parseInt(h.slice(k, k + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)).reduce((a, v, k) => a + v * [0.2126, 0.7152, 0.0722][k], 0);
+    const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+    const bgs = ['#ffffff', val('--bg-1')];
+    for (const n of ['--text', '--muted', '--ice', '--ember', '--good', '--bad', '--warn']) {
+      assert.ok(val(n), n + ' がない');
+      for (const bg of bgs) assert.ok(ratio(val(n), bg) >= 4.5, `${n} ${val(n)} on ${bg}: ${ratio(val(n), bg).toFixed(2)}`);
+    }
+    assert.ok(ratio('#ffffff', val('--ice')) >= 4.5, '選ばれた切り替えボタン（白い文字・--ice の地）');
+  });
 };

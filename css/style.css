@@ -41,9 +41,56 @@
   --toast-bg: rgba(8, 14, 22, 0.96);
   --toast-shadow: 0 6px 20px rgba(0,0,0,0.6);
   --rt: #b7c9d8;
+  /* 出題・学習・記録・設定・探索の画面（値はこれまで直接書いていたものと同じ） */
+  --tab-bg: rgba(12, 20, 30, 0.9);
+  --tab-active-bg: rgba(255,138,61,0.12);
+  --focus-edge: rgba(255,138,61,0.45);
+  --focus-bg: linear-gradient(90deg, rgba(255,138,61,0.16), transparent);
+  --track-soft: rgba(255,255,255,0.08);
+  --question-bg: rgba(4, 8, 13, 0.6);
+  --choice-bg: rgba(22, 35, 50, 0.92);
+  --good-bg: rgba(127,224,166,0.14);
+  --bad-bg: rgba(255,122,122,0.12);
+  --input-bg: rgba(4, 8, 13, 0.8);
+  --hint-bg: rgba(143,211,255,0.06);
+  --feedback-bg: rgba(4,8,13,0.7);
+  --bad-edge: rgba(255,122,122,0.6);
+  --pick-bg: rgba(20, 32, 46, 0.85);
+  --ember-glow: rgba(255,138,61,0.25);
+  --badge-ember-edge: rgba(255,138,61,0.5);
+  --badge-ember-bg: rgba(255,138,61,0.08);
+  --table-line: rgba(150,196,228,0.12);
+  --on-ice: #04121c;
+  --region-bg: linear-gradient(135deg, rgba(40,64,88,0.85), rgba(12,20,30,0.92));
+  --region-forest-bg: linear-gradient(135deg, rgba(24,58,54,0.88), rgba(8,18,20,0.94));
+  --done-edge: rgba(127,224,166,0.55);
+  --map-sf-bg: #1c2c3c;
+  --map-sf-drift: rgba(230,241,250,0.10);
+  --map-fr-bg: #0f2124;
+  --map-fr-tree: rgba(170,215,205,0.10);
+  --trail: rgba(200,220,235,0.35);
+  --trail-enemy: rgba(160,200,230,0.3);
+  --node-focus: #fff;
+  --disc: #1a2735;
+  --disc-edge: rgba(200,220,235,0.45);
+  --node-ico: #e4edf5;
+  --chest-fill: #8a6240;
+  --chest-edge: #d9b36c;
+  --chest-open: #ffd166;
+  --disc-reached: #24506f;
+  --disc-current: #5a3419;
+  --disc-next: rgba(143,211,255,0.14);
+  --disc-locked: #122130;
+  --disc-locked-edge: rgba(160,200,230,0.35);
+  --ice-shell: rgba(143,211,255,0.18);
+  --ice-shell-edge: #9fd4f7;
+  --node-q: #cfe9ff;
+  --arrival-edge: rgba(255,209,102,0.45);
+  --event-bg: rgba(255,209,102,0.06);
+  --chest-glow: rgba(255,209,102,0.22);
 }
 
-/* 昼のテーマ（SPEC_theme.md）。今は基地の画面を表示しているときだけ <html data-theme="day"> になる */
+/* 昼のテーマ（SPEC_theme.md）。昼の見た目を持つ画面（ui/core.js の THEMED_SCREENS）を表示しているときだけ <html data-theme="day"> になる */
 :root[data-theme="day"] {
   --bg-0: #cfe3f2;
   --bg-1: #e8f3fb;
@@ -56,9 +103,9 @@
   --faint: #8196a8;
   --ice: #1f6fa3;
   --ice-deep: #155580;
-  --ember: #d4600f;
+  --ember: #ad4a0a;
   --ember-deep: #c2541a;
-  --good: #1f8a4c;
+  --good: #1a7a43;
   --bad: #c62f2f;
   --warn: #9a6200;
   --metal: linear-gradient(180deg, #f6f9fc 0%, #dae5ef 100%);
@@ -81,6 +128,52 @@
   --toast-bg: rgba(255, 255, 255, 0.97);
   --toast-shadow: 0 6px 20px rgba(20,50,80,0.25);
   --rt: #4f6b82;
+  --tab-bg: rgba(255, 255, 255, 0.8);
+  --tab-active-bg: rgba(212,96,15,0.10);
+  --focus-edge: rgba(212,96,15,0.45);
+  --focus-bg: linear-gradient(90deg, rgba(212,96,15,0.12), transparent);
+  --track-soft: rgba(20, 60, 100, 0.12);
+  --question-bg: rgba(255, 255, 255, 0.92);
+  --choice-bg: rgba(255, 255, 255, 0.95);
+  --good-bg: rgba(31,138,76,0.12);
+  --bad-bg: rgba(198,47,47,0.10);
+  --input-bg: #ffffff;
+  --hint-bg: rgba(31,111,163,0.07);
+  --feedback-bg: rgba(255, 255, 255, 0.92);
+  --bad-edge: rgba(198,47,47,0.55);
+  --pick-bg: rgba(255, 255, 255, 0.88);
+  --ember-glow: rgba(212,96,15,0.22);
+  --badge-ember-edge: rgba(212,96,15,0.5);
+  --badge-ember-bg: rgba(212,96,15,0.08);
+  --table-line: rgba(44, 86, 122, 0.15);
+  --on-ice: #ffffff;
+  --region-bg: linear-gradient(135deg, rgba(206, 229, 246, 0.96), rgba(247, 251, 254, 0.96));
+  --region-forest-bg: linear-gradient(135deg, rgba(204, 234, 224, 0.96), rgba(245, 251, 248, 0.96));
+  --done-edge: rgba(31,138,76,0.55);
+  --map-sf-bg: #e2f0fa;
+  --map-sf-drift: rgba(110, 155, 195, 0.16);
+  --map-fr-bg: #dcefe8;
+  --map-fr-tree: rgba(40, 110, 90, 0.20);
+  --trail: rgba(40, 80, 120, 0.45);
+  --trail-enemy: rgba(40, 80, 120, 0.35);
+  --node-focus: #13202c;
+  --disc: #ffffff;
+  --disc-edge: rgba(40, 80, 120, 0.5);
+  --node-ico: #2a3f52;
+  --chest-fill: #b07c4c;
+  --chest-edge: #7a5226;
+  --chest-open: #f2b53a;
+  --disc-reached: #cfe6f7;
+  --disc-current: #ffe3cc;
+  --disc-next: rgba(31, 111, 163, 0.12);
+  --disc-locked: #eef4f9;
+  --disc-locked-edge: rgba(40, 80, 120, 0.4);
+  --ice-shell: rgba(31, 111, 163, 0.14);
+  --ice-shell-edge: #3f86b8;
+  --node-q: #1f5f8c;
+  --arrival-edge: rgba(194, 130, 0, 0.45);
+  --event-bg: rgba(255, 209, 102, 0.16);
+  --chest-glow: rgba(255, 196, 70, 0.35);
 }
 /* 昼は降る雪を少し灰色にして、明るい背景でも見えるようにする */
 :root[data-theme="day"] .snowfall { filter: invert(0.45); opacity: 0.35; }
@@ -230,10 +323,10 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick {
   display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
   width: 100%; min-height: 56px; padding: 10px 12px; cursor: pointer; text-align: left;
-  background: rgba(20, 32, 46, 0.85); border: 1px solid var(--edge); border-radius: 5px;
+  background: var(--pick-bg); border: 1px solid var(--edge); border-radius: 5px;
 }
 .pick:hover:not(:disabled) { border-color: var(--ice); }
-.pick.selected { border-color: var(--ember); box-shadow: 0 0 0 1px var(--ember) inset, 0 0 12px rgba(255,138,61,0.25); }
+.pick.selected { border-color: var(--ember); box-shadow: 0 0 0 1px var(--ember) inset, 0 0 12px var(--ember-glow); }
 .pick:disabled { opacity: 0.5; cursor: not-allowed; }
 .pick .title { font-weight: 800; font-size: 15px; }
 .pick .sub { font-size: 12px; color: var(--muted); }
@@ -242,7 +335,7 @@ h3 { font-size: 15px; color: var(--ice); }
   display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 10px;
   border: 1px solid var(--edge-strong); color: var(--ice); background: var(--badge-bg);
 }
-.badge.ember { color: var(--ember); border-color: rgba(255,138,61,0.5); background: rgba(255,138,61,0.08); }
+.badge.ember { color: var(--ember); border-color: var(--badge-ember-edge); background: var(--badge-ember-bg); }
 .badge.lock { color: var(--faint); }
 
 /* 基地 */
@@ -295,43 +388,43 @@ h3 { font-size: 15px; color: var(--ice); }
 /* 学習 */
 .subtabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 12px; }
 .subtabs button {
-  min-height: 38px; border: 1px solid var(--edge); background: rgba(12, 20, 30, 0.9); color: var(--muted);
+  min-height: 38px; border: 1px solid var(--edge); background: var(--tab-bg); color: var(--muted);
   border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 13px;
 }
-.subtabs button.active { color: var(--text); border-color: var(--ember); background: rgba(255,138,61,0.12); }
+.subtabs button.active { color: var(--text); border-color: var(--ember); background: var(--tab-active-bg); }
 .focus-banner {
-  border: 1px solid rgba(255,138,61,0.45); background: linear-gradient(90deg, rgba(255,138,61,0.16), transparent);
+  border: 1px solid var(--focus-edge); background: var(--focus-bg);
   border-radius: 5px; padding: 6px 10px; font-size: 13px; margin-bottom: 10px;
 }
 .stepper { display: flex; gap: 4px; margin-bottom: 10px; }
-.stepper i { flex: 1; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; }
+.stepper i { flex: 1; height: 3px; background: var(--track-soft); border-radius: 2px; }
 .stepper i.on { background: var(--ember); }
 .crumbs { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
 
 .question {
   font-size: 19px; font-weight: 700; white-space: pre-line; line-height: 1.9; margin: 6px 0 14px;
-  padding: 14px; border-radius: 5px; background: rgba(4, 8, 13, 0.6); border: 1px solid var(--edge);
+  padding: 14px; border-radius: 5px; background: var(--question-bg); border: 1px solid var(--edge);
 }
 .choices { display: grid; gap: 8px; }
 .choice {
   min-height: 52px; padding: 10px 14px; text-align: left; cursor: pointer; font-size: 17px; font-weight: 700;
-  background: rgba(22, 35, 50, 0.92); border: 1px solid var(--edge-strong); border-radius: 5px;
+  background: var(--choice-bg); border: 1px solid var(--edge-strong); border-radius: 5px;
 }
 .choice:hover:not(:disabled) { border-color: var(--ice); }
-.choice.is-correct { border-color: var(--good); background: rgba(127,224,166,0.14); }
-.choice.is-wrong { border-color: var(--bad); background: rgba(255,122,122,0.12); }
+.choice.is-correct { border-color: var(--good); background: var(--good-bg); }
+.choice.is-wrong { border-color: var(--bad); background: var(--bad-bg); }
 .choice:disabled { cursor: default; }
 .answer-row { display: flex; gap: 8px; }
 .answer-row input {
   flex: 1; min-width: 0; min-height: 48px; padding: 8px 12px; font-size: 18px;
-  background: rgba(4, 8, 13, 0.8); border: 1px solid var(--edge-strong); border-radius: 5px; color: var(--text);
+  background: var(--input-bg); border: 1px solid var(--edge-strong); border-radius: 5px; color: var(--text);
 }
 .answer-row input:focus, textarea:focus, .field:focus { outline: 2px solid var(--ice); outline-offset: 1px; }
 .hints { margin-top: 12px; }
-.hint { border-left: 3px solid var(--ice); padding: 4px 10px; margin: 6px 0; background: rgba(143,211,255,0.06); font-size: 14px; }
-.feedback { margin-top: 14px; padding: 12px; border-radius: 5px; border: 1px solid var(--edge); background: rgba(4,8,13,0.7); }
+.hint { border-left: 3px solid var(--ice); padding: 4px 10px; margin: 6px 0; background: var(--hint-bg); font-size: 14px; }
+.feedback { margin-top: 14px; padding: 12px; border-radius: 5px; border: 1px solid var(--edge); background: var(--feedback-bg); }
 .feedback.good { border-color: var(--good); }
-.feedback.bad { border-color: rgba(255,122,122,0.6); }
+.feedback.bad { border-color: var(--bad-edge); }
 .feedback .verdict { font-size: 18px; font-weight: 800; }
 .feedback.good .verdict { color: var(--good); }
 .feedback.bad .verdict { color: var(--bad); }
@@ -342,7 +435,7 @@ h3 { font-size: 15px; color: var(--ice); }
 /* 表 */
 .table-wrap { overflow-x: auto; }
 table.data { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
-table.data th, table.data td { padding: 5px 6px; border-bottom: 1px solid rgba(150,196,228,0.12); text-align: right; white-space: nowrap; }
+table.data th, table.data td { padding: 5px 6px; border-bottom: 1px solid var(--table-line); text-align: right; white-space: nowrap; }
 table.data th:first-child, table.data td:first-child { text-align: left; }
 table.data th { color: var(--muted); font-weight: 600; font-size: 12px; }
 .progress-line { font-size: 16px; font-weight: 800; letter-spacing: 0.02em; }
@@ -351,12 +444,12 @@ table.data th { color: var(--muted); font-weight: 600; font-size: 12px; }
 /* フォーム */
 .field, textarea {
   width: 100%; padding: 10px 12px; min-height: 44px; border-radius: 5px;
-  background: rgba(4, 8, 13, 0.8); border: 1px solid var(--edge-strong); color: var(--text);
+  background: var(--input-bg); border: 1px solid var(--edge-strong); color: var(--text);
 }
 textarea { min-height: 110px; font-family: ui-monospace, Consolas, monospace; font-size: 12px; resize: vertical; }
 .switch { display: inline-flex; border: 1px solid var(--edge-strong); border-radius: 5px; overflow: hidden; }
 .switch button { border: 0; background: transparent; padding: 8px 16px; min-height: 40px; cursor: pointer; color: var(--muted); font-weight: 700; }
-.switch button.on { background: var(--ice); color: #04121c; }
+.switch button.on { background: var(--ice); color: var(--on-ice); }
 
 /* 開始画面 */
 .title-screen { min-height: calc(100vh - 40px); display: flex; flex-direction: column; justify-content: center; gap: 18px; padding: 24px 6px; }
@@ -415,17 +508,17 @@ ruby rt { font-size: 0.5em; color: var(--rt); letter-spacing: 0; }
 .region-card {
   display: block; width: 100%; text-align: left; margin-bottom: 10px; padding: 14px;
   border: 1px solid var(--edge-strong); border-radius: var(--radius); cursor: pointer;
-  background: linear-gradient(135deg, rgba(40,64,88,0.85), rgba(12,20,30,0.92));
+  background: var(--region-bg);
 }
-.region-card.region-forest { background: linear-gradient(135deg, rgba(24,58,54,0.88), rgba(8,18,20,0.94)); }
+.region-card.region-forest { background: var(--region-forest-bg); }
 .region-card.locked { opacity: 0.55; cursor: default; }
-.region-card.done { border-color: rgba(127,224,166,0.55); }
+.region-card.done { border-color: var(--done-edge); }
 .region-card .row { margin-top: 6px; }
 .rg-name { font-size: 18px; font-weight: 900; letter-spacing: 0.06em; }
 .rg-en { font-size: 11px; letter-spacing: 0.25em; color: var(--muted); }
 .rg-title { margin: 0; font-size: 20px; letter-spacing: 0.06em; }
 .pct { font-size: 13px; font-weight: 800; color: var(--ice); white-space: nowrap; }
-.xp-bar { flex: 1; min-width: 80px; height: 6px; margin: 6px 0; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.xp-bar { flex: 1; min-width: 80px; height: 6px; margin: 6px 0; border-radius: 3px; background: var(--track-soft); overflow: hidden; }
 .xp-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--ice-deep), var(--ice)); }
 .xp-head { margin-bottom: 6px; }
 .xp-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 12px; font-size: 13px; color: var(--muted); }
@@ -436,40 +529,40 @@ ruby rt { font-size: 0.5em; color: var(--rt); letter-spacing: 0; }
 
 .xp-map-wrap { border: 1px solid var(--edge-strong); border-radius: var(--radius); overflow: hidden; margin: 10px 0 4px; }
 .xp-map { display: block; width: 100%; height: auto; }
-.map-snowfield .map-bg { fill: #1c2c3c; }
-.map-snowfield .drift { fill: rgba(230,241,250,0.10); }
-.map-forest .map-bg { fill: #0f2124; }
-.map-forest .tree { fill: rgba(170,215,205,0.10); }
-.xp-map .trail { stroke: rgba(200,220,235,0.35); stroke-width: 0.9; stroke-dasharray: 1.6 1.6; }
+.map-snowfield .map-bg { fill: var(--map-sf-bg); }
+.map-snowfield .drift { fill: var(--map-sf-drift); }
+.map-forest .map-bg { fill: var(--map-fr-bg); }
+.map-forest .tree { fill: var(--map-fr-tree); }
+.xp-map .trail { stroke: var(--trail); stroke-width: 0.9; stroke-dasharray: 1.6 1.6; }
 .xp-map .trail.done { stroke: var(--ice); stroke-dasharray: none; stroke-width: 1.1; }
-.xp-map .trail.enemy-link { stroke: rgba(160,200,230,0.3); stroke-width: 0.5; stroke-dasharray: 0.6 1.2; }
+.xp-map .trail.enemy-link { stroke: var(--trail-enemy); stroke-width: 0.5; stroke-dasharray: 0.6 1.2; }
 .xp-map .node { cursor: pointer; }
 .xp-map .hit { fill: transparent; pointer-events: all; }
 .xp-map .node:focus { outline: none; }
-.xp-map .node:focus .disc { stroke: #fff; stroke-width: 0.9; }
-.xp-map .disc { fill: #1a2735; stroke: rgba(200,220,235,0.45); stroke-width: 0.6; }
-.xp-map .ico { fill: none; stroke: #e4edf5; stroke-width: 0.6; }
-.xp-map .ico.fill { fill: #e4edf5; stroke: none; }
-.xp-map .ico.chest { fill: #8a6240; stroke: #d9b36c; stroke-width: 0.4; }
-.xp-map .ico.chest.opened { fill: #ffd166; }
-.xp-map .st-reached .disc { fill: #24506f; stroke: var(--ice); }
-.xp-map .st-current .disc { fill: #5a3419; stroke: var(--ember); stroke-width: 0.9; }
-.xp-map .st-next .disc { fill: rgba(143,211,255,0.14); stroke: var(--ice); stroke-dasharray: 1 0.8; }
+.xp-map .node:focus .disc { stroke: var(--node-focus); stroke-width: 0.9; }
+.xp-map .disc { fill: var(--disc); stroke: var(--disc-edge); stroke-width: 0.6; }
+.xp-map .ico { fill: none; stroke: var(--node-ico); stroke-width: 0.6; }
+.xp-map .ico.fill { fill: var(--node-ico); stroke: none; }
+.xp-map .ico.chest { fill: var(--chest-fill); stroke: var(--chest-edge); stroke-width: 0.4; }
+.xp-map .ico.chest.opened { fill: var(--chest-open); }
+.xp-map .st-reached .disc { fill: var(--disc-reached); stroke: var(--ice); }
+.xp-map .st-current .disc { fill: var(--disc-current); stroke: var(--ember); stroke-width: 0.9; }
+.xp-map .st-next .disc { fill: var(--disc-next); stroke: var(--ice); stroke-dasharray: 1 0.8; }
 .xp-map .st-ahead { opacity: 0.5; }
-.xp-map .st-locked .disc { fill: #122130; stroke: rgba(160,200,230,0.35); }
-.xp-map .ice-shell { fill: rgba(143,211,255,0.18); stroke: #9fd4f7; stroke-width: 0.45; }
-.xp-map .ico.q { fill: #cfe9ff; stroke: none; font-size: 4.2px; font-weight: 900; }
+.xp-map .st-locked .disc { fill: var(--disc-locked); stroke: var(--disc-locked-edge); }
+.xp-map .ice-shell { fill: var(--ice-shell); stroke: var(--ice-shell-edge); stroke-width: 0.45; }
+.xp-map .ico.q { fill: var(--node-q); stroke: none; font-size: 4.2px; font-weight: 900; }
 .xp-map .you { fill: var(--ember); }
 .xp-map .pulse { fill: none; stroke: var(--ice); stroke-width: 0.5; animation: xp-pulse 1.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
 @keyframes xp-pulse { from { opacity: 0.9; transform: scale(0.7); } to { opacity: 0; transform: scale(1.4); } }
 
-.arrival { border-color: rgba(255,209,102,0.45); }
-.event-box { border-left: 3px solid var(--warn); padding: 6px 10px; background: rgba(255,209,102,0.06); }
+.arrival { border-color: var(--arrival-edge); }
+.event-box { border-left: 3px solid var(--warn); padding: 6px 10px; background: var(--event-bg); }
 .event-box .choices { margin-top: 8px; }
 .cost.reward .item { color: var(--good); }
 .chest-row { display: flex; align-items: center; gap: 12px; }
 .chest-art { width: 72px; height: auto; flex: none; }
-.chest-art .chest-glow { fill: rgba(255,209,102,0.22); }
+.chest-art .chest-glow { fill: var(--chest-glow); }
 .chest-art .chest-lid { transform-box: fill-box; transform-origin: 100% 100%; transform: rotate(-28deg) translate(-2px, -3px); }
 .chest-art.animate .chest-lid { animation: chest-open 0.9s ease-out both; }
 .chest-art.animate .chest-glow { animation: chest-glow 1.4s ease-out both; }
