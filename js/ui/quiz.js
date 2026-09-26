@@ -167,24 +167,17 @@
       panel.appendChild(fb);
     }
 
-    // 判定のあと：［学習を終える］［次の問題］を画面の下（ナビの上）に固定する。解説が長くてもスクロールせずに押せる。
+    // ［学習を終える］［次の問題 ▶］は、出題の最初から画面の下（ナビの上）に固定しておく（判定の前後でバーの位置・大きさは変えない）。
+    // 判定の前は［次の問題］だけを無効（グレー）にし、判定が出たら有効（オレンジ）にする。［学習を終える］はいつでも押せる。
     // 本文がバーの裏に隠れないよう、同じ高さの余白（.quiz-footer-space）を最後に置く。
-    if (done) {
-      main.appendChild(U.el('div', { class: 'quiz-footer-space', attrs: { 'aria-hidden': 'true' } }));
-      main.appendChild(U.el('div', { class: 'quiz-footer' }, U.el('div', { class: 'inner' }, [
-        U.el('button', { class: 'btn qf-end', rich: U.T('endStudy'), on: { click: endStudy } }),
-        U.el('button', {
-          class: 'btn primary qf-next',
-          on: { click: function () { nextQuestion(); U.rerender(); } }
-        }, [U.rich(U.T('next')), U.el('span', { attrs: { 'aria-hidden': 'true' }, text: ' ▶' })])
-      ])));
-      return;
-    }
-    // 判定の前（回答中）：これまでどおり本文の下
-    main.appendChild(U.el('div', { class: 'grid2' }, [
-      U.el('button', { class: 'btn', rich: U.T('endStudy'), on: { click: endStudy } }),
-      U.el('button', { class: 'btn primary', rich: U.T('next'), disabled: true })
-    ]));
+    main.appendChild(U.el('div', { class: 'quiz-footer-space', attrs: { 'aria-hidden': 'true' } }));
+    main.appendChild(U.el('div', { class: 'quiz-footer' }, U.el('div', { class: 'inner' }, [
+      U.el('button', { class: 'btn qf-end', rich: U.T('endStudy'), on: { click: endStudy } }),
+      U.el('button', {
+        class: 'btn primary qf-next', disabled: !done,
+        on: { click: function () { if (!ses.attempt || !ses.attempt.done) return; nextQuestion(); U.rerender(); } }
+      }, [U.rich(U.T('next')), U.el('span', { attrs: { 'aria-hidden': 'true' }, text: ' ▶' })])
+    ])));
   }
 
   U.screens.quiz = { render: render };
