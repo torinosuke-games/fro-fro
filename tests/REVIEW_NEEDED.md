@@ -260,3 +260,29 @@ AI が作成した問題のうち、人が事実関係・表現を確認すべ�
 | social_g9_economy_006 | 景気が過熱しているときの日本銀行の政策（国債などを売って通貨量を減らす）の説明。 |
 | social_g9_history_004 | 小笠原諸島の返還を1968年、奄美群島を1953年とした。 |
 | social_g9_rights_003 | 一票の格差が「違憲状態と判断されたことがある」とした。 |
+
+### 英語（`questions/english.js`、162問を追加）
+
+全体の確認：小学校の外国語活動・外国語科と中学校の学年ごとの文法事項の配置、英文の自然さ、別解の過不足。判断59 を守り、Lv1〜4 の自由入力は日本語か数字で答える形、英語のつづりを書かせるのは Lv5 から、大文字・小文字の書き分けを自由入力では問わない。
+
+| 問題ID | 確認すべき点 |
+|---|---|
+| english_g1_word_003 | 「sun」の答えを「たいよう」とし、「おひさま」「ひ（日）」なども正解にした。 |
+| english_g2_food_005 | 「rice」の答えを「ごはん」とし、「こめ」「ライス」なども正解にした。 |
+| english_g2_greeting_004 | 「I'm sorry.」への返事を「That's OK.」とした。 |
+| english_g3_alphabet_003・english_g3_alphabet_006 | 大文字・小文字を問う問題は4択だけで出した（自由入力では区別できないため）。 |
+| english_g3_word_004 | 「sport」の意味の答えを「スポーツ」（カタカナ語）とし、「うんどう」も正解にした。 |
+| english_g3_number_005 | 誤りの選択肢に「Tree.」（three と似たつづり）を入れた。 |
+| english_g4_word_004 | 解説で、校庭を schoolyard、体育館を gym とした。 |
+| english_g4_week_004 | 「Wednesday」の d は発音しない、と解説した。 |
+| english_g5_want_003 | 「I'd like 〜, please.」を Lv5（小5）に置いた。 |
+| english_g6_spell_005 | 「English」を書かせる。自由入力は大文字・小文字を区別しないので「english」も正解になる（解説で大文字で始めることに触れた）。 |
+| english_g6_subject_003 | 体育を「P.E.」とし、解説で図工を arts and crafts とした。 |
+| english_g7_can_001・english_g7_imperative_001・english_g7_past_004 | 短縮形で答える問題。答えは短縮形だけ（can't・Don't・didn't）で、’（右シングル引用符）の形も正解にした。 |
+| english_g7_article_002 | 「play the piano」の the を正解にした（アメリカ英語のくだけた言い方では the を付けないこともある）。 |
+| english_g8_modal_002 | 「May I 〜?」を正解にし、「Can」も別解にした。 |
+| english_g8_comparison_005 | 答えは「most beautiful」の2語（問題文に the がある）。 |
+| english_g8_comparison_007 | 「Which do you like better, A or B?」を正解にした。 |
+| english_g9_relative_002 | 目的格の関係代名詞で which を正解にした（that も可能だが選択肢に入れていない）。 |
+| english_g9_relative_004 | 答えを that とし、who・whom も正解にした。 |
+| english_g9_perfect_008 | 完了の疑問文の yet。 |
