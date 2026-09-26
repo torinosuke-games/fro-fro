@@ -42,6 +42,14 @@
     U.rerender();
   }
 
+  // 学習を終える：出題を片付けて学習画面（学ぶ）に戻る。回答中の下のボタンと、判定後の固定バーの両方から呼ぶ（確認なし）
+  function endStudy() {
+    var app = FF.app;
+    app.session.attempt = null;
+    app.session.outcome = null;
+    U.show('study', { tab: 'learn' });
+  }
+
   function focusInput() {
     var s = FF.app.session;
     if (s && s.attempt && !U.autoFocusOK(s.attempt.question)) return;
@@ -159,12 +167,23 @@
       panel.appendChild(fb);
     }
 
+    // 判定のあと：［学習を終える］［次の問題］を画面の下（ナビの上）に固定する。解説が長くてもスクロールせずに押せる。
+    // 本文がバーの裏に隠れないよう、同じ高さの余白（.quiz-footer-space）を最後に置く。
+    if (done) {
+      main.appendChild(U.el('div', { class: 'quiz-footer-space', attrs: { 'aria-hidden': 'true' } }));
+      main.appendChild(U.el('div', { class: 'quiz-footer' }, U.el('div', { class: 'inner' }, [
+        U.el('button', { class: 'btn qf-end', rich: U.T('endStudy'), on: { click: endStudy } }),
+        U.el('button', {
+          class: 'btn primary qf-next',
+          on: { click: function () { nextQuestion(); U.rerender(); } }
+        }, [U.rich(U.T('next')), U.el('span', { attrs: { 'aria-hidden': 'true' }, text: ' ▶' })])
+      ])));
+      return;
+    }
+    // 判定の前（回答中）：これまでどおり本文の下
     main.appendChild(U.el('div', { class: 'grid2' }, [
-      U.el('button', { class: 'btn', rich: U.T('endStudy'), on: { click: function () { app.session.attempt = null; app.session.outcome = null; U.show('study', { tab: 'learn' }); } } }),
-      U.el('button', {
-        class: 'btn primary', rich: U.T('next'), disabled: !done,
-        on: { click: function () { nextQuestion(); U.rerender(); } }
-      })
+      U.el('button', { class: 'btn', rich: U.T('endStudy'), on: { click: endStudy } }),
+      U.el('button', { class: 'btn primary', rich: U.T('next'), disabled: true })
     ]));
   }
 

@@ -1,6 +1,9 @@
 /* FROZEN FRONTIER — 雪原・氷・金属・炉の火をイメージした、重厚なダークUI */
 
 :root {
+  /* 出題の判定後の固定バー（夜）。［学習を終える］はダークニュートラルの地・やや明るいグレーの枠・ライトグレーの文字 */
+  --qf-bg: #1b2a3d; --qf-edge: #2b3d54; --qf-shadow: 0 -4px 14px rgba(0, 0, 0, 0.4);
+  --qf-end-bg: #242a31; --qf-end-edge: #5d6875; --qf-end-text: #c5cdd6;
   /* 学年のチップ（学習画面の「学年を選ぼう」）。小学生＝青、中学生＝緑。夜は同じ色相の暗い地に明るい文字 */
   --gr-elem-bg: #16304a; --gr-elem-edge: #4f86ad; --gr-elem-text: #a9d4f2;
   --gr-jr-bg: #173626; --gr-jr-edge: #4f9a6a; --gr-jr-text: #a8e0bb;
@@ -105,6 +108,8 @@
 
 /* 昼のテーマ（SPEC_theme.md）。昼の見た目を持つ画面（ui/core.js の THEMED_SCREENS）を表示しているときだけ <html data-theme="day"> になる */
 :root[data-theme="day"] {
+  --qf-bg: #ffffff; --qf-edge: #e2e8ee; --qf-shadow: 0 -4px 14px rgba(20, 30, 40, 0.10);
+  --qf-end-bg: #f1f3f5; --qf-end-edge: #d5dbe1; --qf-end-text: #66727f;
   --gr-elem-bg: #e3f0fa; --gr-elem-edge: #9dc3de; --gr-elem-text: #2c5a78;
   --gr-jr-bg: #e6f4ea; --gr-jr-edge: #a9d4b5; --gr-jr-text: #2f6b42;
   --tile-wood: rgba(139, 90, 43, 0.18);
@@ -380,6 +385,20 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick.grade-chip.selected { border-color: var(--ember); border-width: 2px; }
 .pick.grade-chip:disabled { opacity: 0.45; }
 .grade-note { margin-top: 4px; }
+/* 出題の判定後の固定バー：ナビの上に固定。左は控えめな［学習を終える］、右は主役の［次の問題］ */
+.quiz-footer {
+  position: fixed; left: 0; right: 0; z-index: 6;
+  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
+  background: var(--qf-bg); border-top: 1px solid var(--qf-edge); box-shadow: var(--qf-shadow);
+  display: flex; justify-content: center;
+}
+.quiz-footer .inner { display: flex; gap: 10px; width: 100%; max-width: 520px; padding: 10px 14px; }
+.quiz-footer .qf-end {
+  flex: 0 0 96px; min-height: 48px; padding: 6px 4px; font-size: 12.5px; letter-spacing: 0;
+  background: var(--qf-end-bg); border-color: var(--qf-end-edge); color: var(--qf-end-text); box-shadow: none;
+}
+.quiz-footer .qf-next { flex: 1 1 auto; min-height: 48px; font-size: 16px; font-weight: 800; }
+.quiz-footer-space { height: 76px; }
 /* 難易度：ふだんは1行（今の難易度と、開くためのボタン）。開いたときだけ選択肢を4列で出す */
 .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .diff-sec { margin-top: 10px; }
