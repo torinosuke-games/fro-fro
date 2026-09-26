@@ -39,6 +39,23 @@ module.exports = ({ test, FF, ctx, assert }) => {
     assert.ok(errors.length === 0, errors.join('\n'));
   });
 
+  // v0.3（SPEC_v0.3.md 4章・B案）：各学年27問（基礎6・標準15・発展6）。自由入力は半分以上、標準の自由入力は9問以上。
+  // 1教科ずつ作るので、作り終えた教科をここに足していく。
+  const B_PLAN_DONE = ['japanese'];
+  test(`B案の問題数：${B_PLAN_DONE.join('・')} は各学年27問以上（基礎6・標準15・発展6）、半分以上が自由入力、標準の自由入力9問以上`, () => {
+    const errors = [];
+    for (const s of B_PLAN_DONE) for (const g of GRADES) {
+      const qs = bank.filter(q => q.subject === s && q.gradeLevel === g);
+      const n = d => qs.filter(q => q.difficulty === d).length;
+      const input = qs.filter(q => q.answerType === 'input').length;
+      const stdInput = qs.filter(q => q.difficulty === 'standard' && q.answerType === 'input').length;
+      if (qs.length < 27 || n('basic') < 6 || n('standard') < 15 || n('advanced') < 6 || input * 2 < qs.length || stdInput < 9) {
+        errors.push(`${s} Lv${g}：全${qs.length}（基礎${n('basic')}・標準${n('standard')}・発展${n('advanced')}）自由入力${input}・標準の自由入力${stdInput}`);
+      }
+    }
+    assert.ok(errors.length === 0, errors.join('\n'));
+  });
+
   test('算数の文章題：各学年3問以上', () => {
     const short = GRADES.filter(g => bank.filter(q => q.subject === 'math' && q.gradeLevel === g).length < 3);
     assert.deepStrictEqual(short, []);
@@ -132,8 +149,9 @@ module.exports = ({ test, FF, ctx, assert }) => {
     assert.deepStrictEqual(ng, []);
   });
 
-  test('人が内容を確認した問題（reviewed: true）は 2026-09-26 に確認した360問だけ（新しく AI が作った問題は false）', () => {
-    // 確認済みの問題を増やしたら、この数も更新する
-    assert.strictEqual(bank.filter(q => q.reviewed === true).length, 360);
+  test('人が内容を確認した問題（reviewed: true）は 2026-09-26 に確認した359問だけ（新しく AI が作った問題は false）', () => {
+    // 確認済みの問題を増やしたら、この数も更新する。
+    // 確認済みの360問のうち japanese_g5_homonym_001 は、v0.3 で漢字の配当に合わせて作り直したので false に戻した（359問）
+    assert.strictEqual(bank.filter(q => q.reviewed === true).length, 359);
   });
 };
