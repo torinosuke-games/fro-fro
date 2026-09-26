@@ -1,4 +1,4 @@
-// 学習画面：タブ（学ぶ・昇格試験・実力診断・記録）と、「学ぶ」の選択（資源 → 教科 → 学年 → 難易度 → 形式）
+// 学習画面：タブ（学ぶ・昇格試験・実力診断・記録）と、「学ぶ」の選択（資源 → 教科 → 学年 → 難易度（ふだんはランダム・折りたたみ） → 出題形式）
 (function (root) {
   'use strict';
   var FF = root.FF;
@@ -15,7 +15,7 @@
       resource: 'wood',
       subject: focus,
       grade: L.unlockedGrade(s, focus),
-      difficulty: 'standard',
+      difficulty: L.RANDOM_DIFFICULTY,   // 初期値はランダム。指定したいときだけ折りたたみを開いて選ぶ
       answerType: FF.tickets.recoverTickets(s.tickets, app.now()).count > 0 ? 'choice' : 'input'
     };
   }
@@ -135,19 +135,36 @@
     if (L.shouldRecommendLower(s, sel.subject, sel.grade)) gradeSec.appendChild(U.R('div', 'notice', U.T('recommendLower')));
     box.appendChild(gradeSec);
 
-    // 難易度
-    box.appendChild(section(U.T('chooseDifficulty'), U.el('div', { class: 'grid3' }, FF.defs.DIFFICULTIES.map(function (d) {
-      var any = L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'choice') || L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'input');
-      return pick({
-        title: U.rich(d.name),
-        sub: '×' + FF.balance.DIFFICULTY_MULT[d.id],
-        tag: any ? null : U.rich(U.T('preparing')),
-        selected: sel.difficulty === d.id,
-        onClick: function () { set('difficulty', d.id); }
-      });
-    }))));
+    // 難易度：ふだんは「難易度：ランダム」と［難易度を指定する ▾］の1行だけ。開くと、ランダムと基礎・標準・発展の選択肢を出す
+    var diffOpen = !!app.studyDiffOpen;
+    var mults = FF.balance.DIFFICULTY_MULT;
+    var curName = sel.difficulty === L.RANDOM_DIFFICULTY ? U.T('difficultyRandom') : U.nameOf(FF.defs.DIFFICULTIES, sel.difficulty);
+    var diffSec = U.el('div', { class: 'diff-sec' }, U.el('div', { class: 'diff-line' }, [
+      U.R('span', 'diff-now', U.T('difficultyNow')),
+      U.el('span', { class: 'diff-now-name' }, U.rich(curName)),
+      U.el('button', {
+        class: 'diff-toggle', attrs: { 'aria-expanded': diffOpen ? 'true' : 'false', 'aria-controls': 'diff-options' },
+        on: { click: function () { app.studyDiffOpen = !diffOpen; U.rerender(); } }
+      }, [U.rich(U.T(diffOpen ? 'difficultyClose' : 'difficultyOpen')), U.el('span', { class: 'chev', attrs: { 'aria-hidden': 'true' }, text: diffOpen ? ' ▴' : ' ▾' })])
+    ]));
+    if (diffOpen) {
+      var opts = [{ id: L.RANDOM_DIFFICULTY, name: U.T('difficultyRandom'), sub: U.rich(U.T('difficultyRandomNote')) }].concat(FF.defs.DIFFICULTIES.map(function (d) {
+        return { id: d.id, name: d.name, sub: '×' + mults[d.id] };
+      }));
+      diffSec.appendChild(U.el('div', { class: 'grid4', attrs: { id: 'diff-options' } }, opts.map(function (d) {
+        var any = L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'choice') || L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'input');
+        return pick({
+          title: U.rich(d.name),
+          sub: d.sub,
+          tag: any ? null : U.rich(U.T('preparing')),
+          selected: sel.difficulty === d.id,
+          onClick: function () { set('difficulty', d.id); }
+        });
+      })));
+    }
+    box.appendChild(diffSec);
 
-    // 形式
+    // 出題形式
     var tickets = FF.tickets.recoverTickets(s.tickets, now).count;
     box.appendChild(section(U.T('chooseFormat'), U.el('div', { class: 'grid2' }, FF.defs.ANSWER_TYPES.map(function (t) {
       var avail = L.isAvailable(app.bank, sel.subject, sel.grade, sel.difficulty, t.id);

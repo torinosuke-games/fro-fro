@@ -32,8 +32,8 @@
     ],
 
     ANSWER_TYPES: [
-      { id: 'choice', name: '4択' },
-      { id: 'input', name: '自由入力' }
+      { id: 'choice', name: '選択問題' },
+      { id: 'input', name: '書き問題' }
     ],
 
     RESOURCES: [

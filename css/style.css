@@ -380,6 +380,19 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick.grade-chip.selected { border-color: var(--ember); border-width: 2px; }
 .pick.grade-chip:disabled { opacity: 0.45; }
 .grade-note { margin-top: 4px; }
+/* 難易度：ふだんは1行（今の難易度と、開くためのボタン）。開いたときだけ選択肢を4列で出す */
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.diff-sec { margin-top: 10px; }
+.diff-line { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.diff-now-name { color: var(--text); font-weight: 700; }
+.diff-toggle {
+  margin-left: auto; min-height: 36px; padding: 4px 6px; border: 0; background: none; cursor: pointer;
+  color: var(--ice); font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px;
+}
+.diff-sec .grid4 { margin-top: 6px; }
+.diff-sec .grid4 .pick { min-height: 48px; padding: 6px 4px; align-items: center; text-align: center; }
+.diff-sec .grid4 .pick .title { font-size: 14px; }
+.diff-sec .grid4 .pick .sub { font-size: 11px; }
 .pick.res .res-tile {
   display: flex; align-items: center; justify-content: center;
   width: 100%; max-width: 56px; aspect-ratio: 1; border-radius: 7px;

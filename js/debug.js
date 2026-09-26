@@ -215,7 +215,7 @@
     var p = FF.balance.SIM_PROFILES.lv1;
     var grade = select(FF.defs.GRADES.map(function (g) { return [g.level, g.label]; }), p.grade);
     var diff = select(FF.defs.DIFFICULTIES.map(function (d) { return [d.id, d.name]; }), p.difficulty);
-    var fmt = select(FF.defs.ANSWER_TYPES.map(function (d) { return [d.id, d.name + (d.id === 'choice' ? '（チケットが切れたら自由入力）' : '')]; }), p.format);
+    var fmt = select(FF.defs.ANSWER_TYPES.map(function (d) { return [d.id, d.name + (d.id === 'choice' ? '（チケットが切れたら書き問題）' : '')]; }), p.format);
     var sec = numInput(p.secPerQuestion, { min: 1 });
     var acc = numInput(Math.round(p.accuracy * 100), { min: 1, max: 100 });
     var mpd = numInput(FF.balance.SIM_DEFAULTS.minutesPerDay, { min: 1 });

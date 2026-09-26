@@ -325,4 +325,28 @@ module.exports = ({ test, FF, assert, plain }) => {
     s.learning.unlocked.math = 7;
     assert.ok(L.progressLine(s).startsWith('数学 Lv7'));
   });
+  // ---- 難易度「ランダム」（学習画面の初期値） ----
+  test("難易度ランダム：出せる難易度だけから、ほぼ同じ割合で選ぶ（問題がない難易度は出さない）", () => {
+    const bank = L.createBank([mk({ id: "rb", difficulty: "basic" }), mk({ id: "ra2", difficulty: "advanced" })]);
+    assert.deepStrictEqual(Array.from(L.availableDifficulties(bank, "science", 2, "input")), ["basic", "advanced"]);
+    assert.strictEqual(L.isAvailable(bank, "science", 2, "random", "input"), true);
+    assert.strictEqual(L.isAvailable(bank, "science", 2, "random", "choice"), false);
+    const count = { basic: 0, standard: 0, advanced: 0 };
+    const r = FF.util.makeRng(7);
+    for (let i = 0; i < 2000; i++) count[L.pickQuestion(bank, { subject: "science", grade: 2, difficulty: "random", answerType: "input" }, { now: T0, rng: r }).difficulty]++;
+    assert.strictEqual(count.standard, 0);
+    assert.ok(Math.abs(count.basic - 1000) < 100 && Math.abs(count.advanced - 1000) < 100, JSON.stringify(count));
+    assert.strictEqual(L.pickQuestion(bank, { subject: "science", grade: 2, difficulty: "random", answerType: "choice" }, { now: T0, rng: r }), null);
+  });
+
+  test("難易度ランダム：算数（自動生成）は3つの難易度が出て、報酬は出た問題の難易度で決まる", () => {
+    const bank = L.createBank([]);
+    const seen = {};
+    const r = FF.util.makeRng(11);
+    for (let i = 0; i < 300; i++) seen[L.pickQuestion(bank, { subject: "math", grade: 2, difficulty: "random", answerType: "input" }, { now: T0, rng: r }).difficulty] = true;
+    assert.deepStrictEqual(Object.keys(seen).sort(), ["advanced", "basic", "standard"]);
+    const q = L.pickQuestion(bank, { subject: "math", grade: 2, difficulty: "random", answerType: "input" }, { now: T0, rng: FF.util.makeRng(3) });
+    const res = L.submitAnswer(newState(), L.startAttempt(q), String(q.answer), ctx());
+    assert.strictEqual(res.outcome.breakdown.difficulty, FF.balance.DIFFICULTY_MULT[q.difficulty]);
+  });
 };

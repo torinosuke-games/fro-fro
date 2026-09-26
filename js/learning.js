@@ -73,7 +73,15 @@
   }
 
   // その組み合わせで出題できるか（できなければ画面は「準備中」）
+  // 難易度の「ランダム」（学習画面の初期値）。問題を出すたびに、出せる難易度から1つを同じ確率で選ぶ。
+  var RANDOM = 'random';
+  function availableDifficulties(bank, subject, grade, answerType) {
+    return FF.defs.DIFFICULTIES.map(function (d) { return d.id; }).filter(function (d) {
+      return isAvailable(bank, subject, grade, d, answerType);
+    });
+  }
   function isAvailable(bank, subject, grade, difficulty, answerType) {
+    if (difficulty === RANDOM) return availableDifficulties(bank, subject, grade, answerType).length > 0;
     return staticPool(bank, subject, grade, difficulty, answerType).length > 0 ||
       FF.generators.supports(subject, grade, difficulty);
   }
@@ -112,9 +120,15 @@
 
   // sel: { subject, grade, difficulty, answerType }
   // ctx: { correctLog, recentIds, now, rng }
+  // sel.difficulty が 'random' なら、出せる難易度から1つ選んでから出題する（報酬は出た問題の難易度で決まる）
   function pickQuestion(bank, sel, ctx, b) {
     b = bal(b);
     var rng = ctx.rng || Math.random;
+    if (sel.difficulty === RANDOM) {
+      var diffs = availableDifficulties(bank, sel.subject, sel.grade, sel.answerType);
+      if (!diffs.length) return null;
+      sel = Object.assign({}, sel, { difficulty: diffs[Math.floor(rng() * diffs.length)] });
+    }
     var pool = staticPool(bank, sel.subject, sel.grade, sel.difficulty, sel.answerType);
     var canGen = FF.generators.supports(sel.subject, sel.grade, sel.difficulty);
     if (canGen && (pool.length === 0 || rng() >= b.PICK.MATH_WORD_SHARE)) {
@@ -283,6 +297,8 @@
     isGradeUnlocked: isGradeUnlocked,
     subjectName: subjectName,
     pickQuestion: pickQuestion,
+    RANDOM_DIFFICULTY: RANDOM,
+    availableDifficulties: availableDifficulties,
     startAttempt: startAttempt,
     revealHint: revealHint,
     submitAnswer: submitAnswer,

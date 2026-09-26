@@ -67,7 +67,10 @@
     var res = U.resDef(sel.resource);
     main.appendChild(U.el('div', { class: 'crumbs' }, [res.icon + ' ', U.rich(U.T('selection'), {
       subject: L.subjectName(sel.subject, sel.grade), grade: sel.grade,
-      difficulty: U.nameOf(FF.defs.DIFFICULTIES, sel.difficulty), format: U.nameOf(FF.defs.ANSWER_TYPES, sel.answerType)
+      difficulty: sel.difficulty === L.RANDOM_DIFFICULTY
+        ? U.plain(U.T('difficultyRandom')) + (ses.attempt ? '（' + U.nameOf(FF.defs.DIFFICULTIES, ses.attempt.question.difficulty) + '）' : '')
+        : U.nameOf(FF.defs.DIFFICULTIES, sel.difficulty),
+      format: U.nameOf(FF.defs.ANSWER_TYPES, sel.answerType)
     })]));
 
     var panel = U.el('div', { class: 'panel' });
