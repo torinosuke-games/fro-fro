@@ -163,11 +163,11 @@ module.exports = ({ test, FF, ctx, assert }) => {
     assert.deepStrictEqual(ng, []);
   });
 
-  test('人が内容を確認した問題（reviewed: true）は 2026-09-26 に確認した1061問だけ（新しく AI が作った問題は false）', () => {
+  test('人が内容を確認した問題（reviewed: true）は 2026-09-26 に確認した1062問だけ（新しく AI が作った問題は false）', () => {
     // 確認済みの問題を増やしたら、この数も更新する。
-    // フェーズ7の360問のうち japanese_g5_homonym_001 は、v0.3 で漢字の配当に合わせて作り直したので false に戻した（359問）。
-    // v0.3（B案）で追加した702問は、ユーザーの承認で true にした（359 + 702 = 1061問）
-    assert.strictEqual(bank.filter(q => q.reviewed === true).length, 1061);
-    assert.strictEqual(bank.filter(q => q.reviewed === false).map(q => q.id).join(','), 'japanese_g5_homonym_001');
+    // フェーズ7の360問（v0.3 で漢字の配当に合わせて作り直した japanese_g5_homonym_001 を含む）と、
+    // v0.3（B案）で追加した702問は、ユーザーの承認で true にした（360 + 702 = 1062問）
+    assert.strictEqual(bank.filter(q => q.reviewed === true).length, 1062);
+    assert.strictEqual(bank.filter(q => q.reviewed === false).length, 0);
   });
 };
