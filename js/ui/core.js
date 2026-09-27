@@ -204,6 +204,7 @@
   function rerender() {
     applyTheme();
     var main = doc.getElementById('screen');
+    doc.body.classList.remove('typing');   // 入力欄ごと描き直すと blur が来ないことがあるため
     clear(main);
     var sc = screens[FF.app.screen];
     if (sc) sc.render(main, FF.app.params || {});
@@ -239,15 +240,54 @@
     }));
     return el('div', { class: 'numpad', attrs: { role: 'group', 'aria-label': plain(T('numpad.label')) } }, keys);
   }
-  // 自由入力の欄に自動でフォーカスしてよいか。テンキーを出す問題では、タッチ操作の端末だと
-  // 標準のキーボードが開いてテンキーを隠すので、自動ではフォーカスしない。
-  function autoFocusOK(q) {
-    if (!usesNumpad(q)) return true;
-    return !(root.matchMedia && root.matchMedia('(pointer: coarse)').matches);
+  // 書き問題の欄に自動でフォーカスしてよいか。タッチ操作の端末（スマートフォンなど）では、どの問題でも自動ではフォーカスしない
+  // （キーボードが勝手に開いて問題文やヒント・テンキーを隠すため）。PC は従来どおり自動でフォーカスする。
+  function isTouch() { return !!(root.matchMedia && root.matchMedia('(pointer: coarse)').matches); }
+  function autoFocusOK(q) { return !isTouch(); }
+
+  // 書き問題の欄をタップしてフォーカスが当たったら、キーボードが開いたあとの見えている範囲（visualViewport）に
+  // 問題文と入力欄が入るようにスクロールする。問題文の上端を上のヘッダーのすぐ下に合わせ、
+  // 入らないときは入力欄の下端を見えている範囲の下端に合わせる。見た目（入力欄・ボタン）は変えない。
+  // 入力中（フォーカスがある間）は、画面の下に固定したナビと出題の固定バーを隠す（body.typing）。
+  // キーボードで画面が縮む端末では、それらがキーボードの上に出て問題文の場所を取るため。フォーカスが外れたら戻す。
+  function keepInView(input) {
+    if (!isTouch()) return;
+    var timer = null;
+    function align() {
+      if (doc.activeElement !== input) return;
+      var vv = root.visualViewport;
+      var visTop = vv ? vv.offsetTop : 0, visBottom = vv ? vv.offsetTop + vv.height : root.innerHeight;
+      var hud = doc.getElementById('hud');
+      if (hud && !hud.hidden) visTop += hud.getBoundingClientRect().height;
+      // 画面の下に固定しているもの（出題の固定バー・ナビ）が見えている範囲にかかっていれば、その上までを使う
+      Array.prototype.forEach.call(doc.querySelectorAll('.quiz-footer, nav.tabs'), function (f) {
+        var r = f.getBoundingClientRect();
+        if (r.height && r.top < visBottom && r.bottom > visTop) visBottom = Math.min(visBottom, r.top);
+      });
+      var panel = input.closest ? input.closest('.panel') : null;
+      var qEl = (panel && panel.querySelector('.question')) || doc.querySelector('.question');
+      var row = input.parentNode || input;
+      var top = (qEl || row).getBoundingClientRect().top, bottom = row.getBoundingClientRect().bottom;
+      var delta = top - (visTop + 8);
+      if (bottom - delta > visBottom - 8) delta = bottom - (visBottom - 8);
+      if (Math.abs(delta) > 2) root.scrollBy(0, delta);
+    }
+    function schedule() { clearTimeout(timer); timer = setTimeout(align, 60); }
+    input.addEventListener('focus', function () {
+      doc.body.classList.add('typing');
+      schedule();
+      setTimeout(align, 400);   // visualViewport がない・キーボードの大きさが変わらない端末のため
+      if (root.visualViewport) root.visualViewport.addEventListener('resize', schedule);
+    });
+    input.addEventListener('blur', function () {
+      doc.body.classList.remove('typing');
+      clearTimeout(timer);
+      if (root.visualViewport) root.visualViewport.removeEventListener('resize', schedule);
+    });
   }
 
   FF.ui = {
-    usesNumpad: usesNumpad, numpad: numpad, autoFocusOK: autoFocusOK,
+    usesNumpad: usesNumpad, numpad: numpad, autoFocusOK: autoFocusOK, keepInView: keepInView,
     el: el, svg: svg, clear: clear, rich: rich, R: R, plain: plain, T: T, fmt: fmt,
     resDef: resDef, buildingName: buildingName, nameOf: nameOf, costView: costView,
     toast: toast, modal: modal, renderHud: renderHud, renderNav: renderNav,

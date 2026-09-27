@@ -406,6 +406,8 @@ h3 { font-size: 15px; color: var(--ice); }
   background: var(--qf-next-off-bg); border-color: var(--qf-next-off-bg); color: var(--qf-next-off-text);
 }
 .quiz-footer-space { height: 76px; }
+/* タッチ端末で書き問題の欄に入力している間は、下に固定したナビと固定バーを隠す（キーボードの上に出て場所を取らないように） */
+body.typing nav.tabs, body.typing .quiz-footer { display: none; }
 /* 難易度：ふだんは1行（今の難易度と、開くためのボタン）。開いたときだけ選択肢を4列で出す */
 .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .diff-sec { margin-top: 10px; }

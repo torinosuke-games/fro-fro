@@ -107,6 +107,7 @@
         value: done ? (ses.picked || '') : ''
       });
       input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing) submit(input.value); });
+      U.keepInView(input);
       panel.appendChild(U.el('div', { class: 'answer-row' }, [
         input,
         U.el('button', { class: 'btn primary', rich: U.T('answer'), disabled: done, on: { click: function () { submit(input.value); } } })
