@@ -331,6 +331,17 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(back.ok, true);
     assert.deepStrictEqual(plain(back.state.exploration), plain(s.exploration));
   });
+  test('地域のおすすめより低い学年しか解放していない教科があると、昇格試験をすすめる一言を出す', () => {
+    const s = base(5);                                   // 新しいデータ：全教科 Lv2 まで
+    assert.strictEqual(X.belowRecommended(s, 'snowfield'), false, '雪原は Lv1 から');
+    assert.strictEqual(X.belowRecommended(s, 'forest'), true, '凍結森林は Lv3 から');
+    assert.strictEqual(X.belowRecommended(s, 'glacier'), true);
+    Object.keys(s.learning.unlocked).forEach(k => { s.learning.unlocked[k] = 5; });
+    assert.strictEqual(X.belowRecommended(s, 'glacier'), false);
+    s.learning.unlocked.english = 4;
+    assert.strictEqual(X.belowRecommended(s, 'glacier'), true, '1教科でも低ければ出す');
+  });
+
   // ---- シミュレーター（v0.3-3） ----
   test("シミュレーターの勝率の式：1回の挑戦で勝つ確率が設計の表（DESIGN 13.4）と一致する", () => {
     const w = (need, lose, p) => Math.round(FF.simulator.battleAttempt(need, lose, p).win * 100);

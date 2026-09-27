@@ -141,6 +141,7 @@
         ]),
         U.el('div', { class: 'small muted' }, U.rich(U.T('explore.recommended'), { from: r.grades[0], to: r.grades[1] })),
         open ? U.el('div', { class: 'row' }, [progressBar(pct), U.el('span', { class: 'pct' }, done ? U.rich(U.T('explore.complete')) : U.rich(U.T('explore.progress'), { pct: pct }))]) : null,
+        open && X.belowRecommended(s, r.id) ? U.el('div', { class: 'small grade-hint' }, ['🎯 ', U.rich(U.T('explore.gradeHint'))]) : null,
         status ? U.el('div', { class: 'notice' }, status) : null
       ]));
     });

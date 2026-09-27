@@ -106,6 +106,14 @@
     return true;
   }
 
+  // 推奨学年より低い学年しか解放していない教科があるか（地域の選択で、昇格試験をすすめる一言を出すため）。
+  // 探索・戦闘の出題は解放済みの学年からしか出さない（DESIGN 12.6・判断64）ので、この場合は推奨より易しい問題が多くなる
+  function belowRecommended(state, regionId) {
+    var r = regionDef(regionId);
+    if (!r) return false;
+    return FF.defs.SUBJECTS.some(function (subj) { return FF.learning.unlockedGrade(state, subj.id) < r.grades[0]; });
+  }
+
   // 探索タブが開いているか（どれか1地域でも解放されている）
   function isExploreOpen(state, b) {
     return FF.defs.REGIONS.some(function (r) { return isRegionUnlocked(state, r.id, b); });
@@ -467,6 +475,7 @@
     pickRegionQuestion: pickRegionQuestion,
     isRegionUnlocked: isRegionUnlocked,
     isExploreOpen: isExploreOpen,
+    belowRecommended: belowRecommended,
     progressPercent: progressPercent,
     nodeStatus: nodeStatus,
     pendingExploreNotices: pendingExploreNotices,

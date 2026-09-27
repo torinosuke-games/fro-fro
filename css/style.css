@@ -732,6 +732,7 @@ ruby rt { font-size: 0.5em; color: var(--rt); letter-spacing: 0; }
 
 /* ---- v0.3 その2：氷河の地図、敵・ボスの地点 ---- */
 .map-glacier .map-bg { fill: var(--map-gl-bg); }
+.region-card .grade-hint { color: var(--ice); font-weight: 700; margin-top: 4px; }
 .map-glacier .drift { fill: var(--map-gl-drift); }
 .xp-map .ico.swords { fill: none; stroke: var(--enemy-ico); stroke-width: 0.8; stroke-linecap: round; }
 .xp-map .ico.check { fill: none; stroke: var(--good); stroke-width: 0.8; stroke-linecap: round; stroke-linejoin: round; }
