@@ -269,7 +269,7 @@ main#screen { flex: 1; padding: 12px 14px 24px; }
 .hud-tickets .timer { font-variant-numeric: tabular-nums; }
 .ticket-bar { flex: 1; height: 4px; margin: 0 10px; background: var(--track); border-radius: 2px; overflow: hidden; }
 /* 学習の「学ぶ」ではチケットの行だけなので、上下を最小まで詰める */
-.hud.compact { padding-top: 2px; padding-bottom: 2px; }
+.hud.compact { padding-top: 4px; padding-bottom: 4px; }
 .hud.compact .hud-tickets { margin-top: 0; font-size: 12px; line-height: 1.15; }
 .hud.compact .hud-tickets .count { font-size: 13px; }
 .ticket-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--ice-deep), var(--ice)); }
