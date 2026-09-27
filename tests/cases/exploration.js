@@ -13,7 +13,13 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   }
   // 雪原を pos まで進めた状態（宝箱・イベントの処理も通す）
   function advanceTo(s, regionId, pos, rng = FF.util.makeRng(1)) {
-    while (X.regionState(s, regionId).position < pos) s = X.advance(s, regionId, T0, rng).state;
+    // v0.3 その2：ボスの手前から先（ボスの地点）へは、ボスに勝って進む
+    while (X.regionState(s, regionId).position < pos) {
+      if (X.nextIsBoss(s, regionId)) { s = FF.battle.winBattle(s, regionId, X.bossNode(regionId).enemy, T0).state; continue; }
+      const before = X.regionState(s, regionId).position;
+      s = X.advance(s, regionId, T0, rng).state;
+      if (X.regionState(s, regionId).position === before) throw new Error("advanceTo: 進めない（" + regionId + " " + before + "）");
+    }
     return s;
   }
 
@@ -30,8 +36,13 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   const pos = (s, r = 'snowfield') => X.regionState(s, r).position;
 
   // ---- 定義 ----
-  test('地域の定義：順路がつながり、地点数・宝箱・イベント・敵が設計どおり', () => {
-    const expect = { snowfield: { route: 10, chests: 3, events: 3, enemies: 2 }, forest: { route: 12, chests: 4, events: 4, enemies: 3 } };
+  test('地域の定義：順路がつながり、地点数・宝箱・イベント・敵・ボスが設計どおり（DESIGN 13.2・13.3）', () => {
+    const expect = {
+      snowfield: { route: 11, chests: 3, events: 3, enemies: 2 },
+      forest: { route: 13, chests: 4, events: 4, enemies: 2 },
+      glacier: { route: 13, chests: 4, events: 4, enemies: 3 }
+    };
+    assert.strictEqual(FF.defs.REGIONS.map(r => r.id).join(','), 'snowfield,forest,glacier');
     for (const r of FF.defs.REGIONS) {
       const route = X.route(r.id);
       const e = expect[r.id];
@@ -45,9 +56,19 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
       assert.strictEqual(enemies.length, e.enemies);
       // 順路 + 敵 = すべての地点（どこにもつながらない地点がない）
       assert.strictEqual(route.length + enemies.length, r.nodes.length);
+      // ボスは順路の最後に1体だけ
+      assert.strictEqual(route.filter(n => n.kind === 'boss').length, 1, r.id + ' のボス');
+      assert.strictEqual(route[route.length - 1].kind, 'boss', r.id + ' の終点はボス');
+      for (const n of route.filter(x => x.kind === 'boss').concat(enemies)) {
+        const def = FF.defs.ENEMIES[n.enemy];
+        assert.ok(def, n.id + ' の敵の定義');
+        assert.strictEqual(def.region, r.id);
+        assert.strictEqual(def.boss, n.kind === 'boss');
+        assert.ok(B.BATTLE.ENEMIES[n.enemy] && B.BATTLE.REWARDS[n.enemy], n.enemy + ' の数値');
+      }
       for (const n of enemies) {
         assert.ok(route.some(x => x.id === n.adjacent), n.id + ' の隣の地点が順路にある');
-        assert.strictEqual(n.reachable, false);
+        assert.strictEqual(n.reachable, true);
       }
       assert.ok(r.grades[0] <= r.grades[1]);
     }
@@ -211,20 +232,27 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     }
   });
 
-  test('終点に着くと完了時刻が記録され、到着の情報に completed が付く', () => {
-    let s = advanceTo(base(), 'snowfield', X.lastIndex('snowfield') - 1);
+  test('ボスの手前では問題に正解しても進まず、出題もされない（ボスは戦闘に勝つと進む）', () => {
+    let s = advanceTo(base(), 'snowfield', X.gateIndex('snowfield'));
+    assert.strictEqual(X.gateIndex('snowfield'), X.lastIndex('snowfield') - 1);
+    assert.strictEqual(X.nextIsBoss(s, 'snowfield'), true);
     assert.strictEqual(X.regionState(s, 'snowfield').completedAt, null);
+    assert.strictEqual(X.isComplete(s, 'snowfield'), false);
+    assert.strictEqual(X.pickExploreQuestion(bank, s, 'snowfield', FF.util.makeRng(1), T0), null);
     const r = ans(s, choiceQ, '2');
-    assert.strictEqual(r.arrival.completed, true);
-    assert.strictEqual(X.regionState(r.state, 'snowfield').completedAt, T0);
+    assert.strictEqual(r.outcome.status, 'error');
+    assert.strictEqual(r.outcome.error, 'boss');
+    assert.strictEqual(X.advance(s, 'snowfield', T0).state, s, 'advance でも進まない');
   });
 
-  test('進捗％：入口 0%、途中は切り捨て、終点 100%（敵地点は数えない）', () => {
+  test('進捗％：入口 0%、途中は切り捨て、ボスの手前は 90%、ボスを倒すと 100%（寄り道の敵は数えない）', () => {
     let s = base();
     assert.strictEqual(X.progressPercent(s, 'snowfield'), 0);
     s = advanceTo(s, 'snowfield', 1);
-    assert.strictEqual(X.progressPercent(s, 'snowfield'), 11);   // 1/9
+    assert.strictEqual(X.progressPercent(s, 'snowfield'), 10);   // 1/10
     s = advanceTo(s, 'snowfield', 9);
+    assert.strictEqual(X.progressPercent(s, 'snowfield'), 90);
+    s = advanceTo(s, 'snowfield', 10);
     assert.strictEqual(X.progressPercent(s, 'snowfield'), 100);
   });
 
@@ -367,33 +395,32 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   });
 
   // ---- 敵地点（6.3） ----
-  test('敵地点は常に到達不可：状態は locked、入れず、順路に入らず、進行で到達しない', () => {
-    let s = base(4);
+  test('寄り道の敵：隣の地点に着くまで locked、着いたら available。順路に入らず、進行で到達しない', () => {
+    let s = base(5);
     const enemies = FF.defs.REGIONS.flatMap(r => r.nodes.filter(n => n.kind === 'enemy').map(n => [r.id, n]));
-    assert.ok(enemies.length >= 1);
-    const check = st => {
-      for (const [regionId, n] of enemies) {
-        assert.strictEqual(X.nodeStatus(st, regionId, n.id), 'locked');
-        assert.strictEqual(X.canEnterNode(n), false);
-        assert.ok(!X.route(regionId).includes(n));
-      }
-    };
-    check(s);
+    assert.ok(enemies.length >= 7);
     const reached = new Set();
-    for (const regionId of ['snowfield', 'forest']) {
-      while (!X.isComplete(s, regionId)) {
+    for (const regionId of ['snowfield', 'forest', 'glacier']) {
+      const ids = X.route(regionId).map(n => n.id);
+      while (!X.nextIsBoss(s, regionId)) {
         const r = X.advance(s, regionId, T0, FF.util.makeRng(2));
         reached.add(r.arrival.node.kind);
         s = r.state;
-        check(s);
+        for (const [rid, n] of enemies.filter(e => e[0] === regionId)) {
+          const want = X.regionState(s, rid).position >= ids.indexOf(n.adjacent) ? 'available' : 'locked';
+          assert.strictEqual(X.nodeStatus(s, rid, n.id), want, n.id);
+          assert.strictEqual(X.enemyStatus(s, rid, n.enemy), want, n.id);
+          assert.strictEqual(X.canEnterNode(n), true);
+          assert.ok(!X.route(rid).includes(n));
+        }
       }
     }
-    assert.ok(!reached.has('enemy'));
+    assert.ok(!reached.has('enemy') && !reached.has('boss'));
   });
 
-  test('v0.3 で reachable を true にすれば入れる（フラグだけで切り替わる）', () => {
-    const n = Object.assign({}, FF.defs.REGIONS[0].nodes.find(x => x.kind === 'enemy'), { reachable: true });
-    assert.strictEqual(X.canEnterNode(n), true);
+  test('reachable が false の敵地点は入れない（フラグで切り替わる）', () => {
+    const n = Object.assign({}, FF.defs.REGIONS[0].nodes.find(x => x.kind === 'enemy'), { reachable: false });
+    assert.strictEqual(X.canEnterNode(n), false);
   });
 
   test('地点の表示状態：到達済み・現在地・次・先', () => {
@@ -533,7 +560,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   test('新規の状態には、全地域の探索が入口の状態で入っている', () => {
     const s = base();
     for (const r of FF.defs.REGIONS) {
-      assert.deepStrictEqual(plain(s.exploration.regions[r.id]), { position: 0, progress: 0, missedHere: false, openedChests: [], events: {}, completedAt: null });
+      assert.deepStrictEqual(plain(s.exploration.regions[r.id]), { position: 0, progress: 0, missedHere: false, openedChests: [], events: {}, completedAt: null, defeated: [], bossLosses: 0 });
     }
     assert.deepStrictEqual(plain(s.exploration.stats), { answered: 0, correct: 0 });
   });
@@ -559,7 +586,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const r = FF.state.migrate(s, T0);
     assert.strictEqual(r.ok, true);
     const ex = r.state.exploration;
-    assert.strictEqual(ex.regions.snowfield.position, 9);
+    assert.strictEqual(ex.regions.snowfield.position, X.lastIndex('snowfield'));
     assert.strictEqual(ex.regions.snowfield.progress, 0);
     assert.deepStrictEqual(plain(ex.regions.snowfield.openedChests), ['sf_chest_1']);
     assert.deepStrictEqual(plain(ex.regions.snowfield.events), { sf_03: { id: 'sf_ev_hollow', choice: null } });
@@ -615,10 +642,12 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
       assert.strictEqual(e.milestones.furnace3, a.milestones.furnace3);
       assert.ok(e.milestones.all5 <= a.milestones.all5 * 1.01);
       assert.strictEqual(a.explore, null);
-      assert.strictEqual(e.explore.nodes, X.lastIndex('snowfield') + X.lastIndex('forest'));
-      assert.strictEqual(e.explore.tickets, 7);
-      // 宝箱 1780 ＋ イベント（雪原 (30+20)×3/6、森林 (40+40)×4/6）
-      assert.ok(Math.abs(e.explore.resources - (1780 + 25 + 160 / 3)) <= 1, String(e.explore.resources));
+      // 雪原・凍結森林はボスの手前まで進む（ボスの戦闘のモデルは v0.3-3 で足す）。氷河は中央炉 Lv5 で開き、全施設 Lv5 までに進めた分だけ
+      const two = X.gateIndex('snowfield') + X.gateIndex('forest');
+      assert.ok(e.explore.nodes >= two && e.explore.nodes <= two + X.gateIndex('glacier'), String(e.explore.nodes));
+      assert.ok(e.explore.tickets >= 7 && e.explore.tickets <= 11, String(e.explore.tickets));
+      // 雪原・凍結森林の宝箱 1780 ＋ イベント（雪原 (30+20)×3/6、森林 (40+40)×4/6）以上
+      assert.ok(e.explore.resources >= Math.floor(1780 + 25 + 160 / 3), String(e.explore.resources));
     }
   });
 

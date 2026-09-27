@@ -1,4 +1,5 @@
 // 探索（v0.2、SPEC_v0.2）：地域の解放、進行、出題の選択、宝箱、イベント、読み込み時の整合。純粋関数のみ。
+// v0.3 その2：順路の最後のボス（kind: 'boss'）と、寄り道の敵（kind: 'enemy'）。戦闘そのものは js/battle.js。
 // 探索の回答は学習の記録・反復記録・チケットの消費に一切触れない（FF.learning.submitAnswer は呼ばない）。
 (function (root) {
   'use strict';
@@ -17,7 +18,7 @@
     return r ? r.nodes.filter(function (n) { return n.id === nodeId; })[0] || null : null;
   }
 
-  // 順路：start から next をたどった地点の配列（敵地点は含まない）
+  // 順路：start から next をたどった地点の配列（寄り道の敵地点は含まない。ボスは最後に含む）
   var routeCache = {};
   function route(regionId) {
     var r = regionDef(regionId);
@@ -37,12 +38,28 @@
 
   function lastIndex(regionId) { return route(regionId).length - 1; }
 
+  // 順路の最後のボスの地点（なければ null）
+  function bossNode(regionId) {
+    var list = route(regionId);
+    var last = list[list.length - 1];
+    return last && last.kind === 'boss' ? last : null;
+  }
+
+  // ボスの手前の地点（ボスがいなければ終点）の番号。ここまで進めば次の地域が開く（DESIGN 13.1）
+  function gateIndex(regionId) { return lastIndex(regionId) - (bossNode(regionId) ? 1 : 0); }
+
   function eventDef(eventId) { return FF.defs.EXPLORE_EVENTS[eventId] || null; }
 
-  // 敵地点には入れない。v0.3 で reachable を true にしたら入れるようになる
+  // 敵地点は reachable が true のものだけ戦える（v0.3 その2 で true にした）
   function canEnterNode(node) {
     if (!node) return false;
     return node.kind !== 'enemy' || node.reachable === true;
+  }
+
+  // 敵・ボスの地点（defs の enemy が enemyId のもの）
+  function enemyNode(regionId, enemyId) {
+    var r = regionDef(regionId);
+    return r ? r.nodes.filter(function (n) { return (n.kind === 'enemy' || n.kind === 'boss') && n.enemy === enemyId; })[0] || null : null;
   }
 
   // ---- 状態の参照 ----
@@ -55,13 +72,37 @@
     return regionState(state, regionId).position >= lastIndex(regionId);
   }
 
-  // 地域の解放：中央炉のレベル ＋（requires があれば）その地域が 100%
+  // ボスの手前（ボスがいなければ終点）まで進んだか
+  function isGateReached(state, regionId) {
+    return regionState(state, regionId).position >= gateIndex(regionId);
+  }
+
+  // 次の地点がボスか（ボスは問題に正解しても進めない。戦闘に勝つと進む）
+  function nextIsBoss(state, regionId) {
+    var list = route(regionId);
+    var next = list[regionState(state, regionId).position + 1];
+    return !!(next && next.kind === 'boss');
+  }
+
+  // 敵・ボスの状態：locked（まだ戦えない）/ available（戦える）/ defeated（倒した）
+  // 寄り道の敵は、隣の地点に着いたら戦える。ボスは、ボスの手前まで進んだら戦える
+  function enemyStatus(state, regionId, enemyId) {
+    var node = enemyNode(regionId, enemyId);
+    if (!node || !canEnterNode(node)) return 'locked';
+    var rs = regionState(state, regionId);
+    if ((rs.defeated || []).indexOf(enemyId) >= 0) return 'defeated';
+    if (node.kind === 'boss') return isGateReached(state, regionId) ? 'available' : 'locked';
+    var i = route(regionId).map(function (n) { return n.id; }).indexOf(node.adjacent);
+    return i >= 0 && rs.position >= i ? 'available' : 'locked';
+  }
+
+  // 地域の解放：中央炉のレベル ＋（requires があれば）その地域のボスの手前まで進んでいる
   function isRegionUnlocked(state, regionId, b) {
     var r = regionDef(regionId);
     if (!r) return false;
     var need = E(b).UNLOCK_FURNACE_LEVEL[regionId];
     if (need != null && state.buildings.furnace.level < need) return false;
-    if (r.requires && !isComplete(state, r.requires)) return false;
+    if (r.requires && !isGateReached(state, r.requires)) return false;
     return true;
   }
 
@@ -77,11 +118,12 @@
     return Math.floor(Math.min(regionState(state, regionId).position, last) * 100 / last);
   }
 
-  // 地点の表示上の状態：reached / current / next / ahead / locked（敵）/ unknown
+  // 地点の表示上の状態：reached / current / next / ahead / locked・available・defeated（寄り道の敵）/ unknown
+  // ボスは順路の地点と同じ（倒すまでは next か ahead、倒したら current）。戦えるかは enemyStatus で見る
   function nodeStatus(state, regionId, nodeId) {
     var node = nodeDef(regionId, nodeId);
     if (!node) return 'unknown';
-    if (node.kind === 'enemy') return canEnterNode(node) ? 'ahead' : 'locked';
+    if (node.kind === 'enemy') return node.enemy ? enemyStatus(state, regionId, node.enemy) : 'locked';
     var i = route(regionId).indexOf(node);
     if (i < 0) return 'unknown';
     var pos = regionState(state, regionId).position;
@@ -181,10 +223,10 @@
   }
 
   // ---- 進行 ----
-  // 1地点進む。終点にいれば何もしない。
+  // 1地点進む。終点にいれば何もしない。次がボスなら進まない（ボスは戦闘に勝つと進む。battle.js）。
   // { state, arrival: null | { node, index, completed, chest: {id, reward}, event: {id, reward} } }
   function advance(state, regionId, now, rng, b) {
-    if (!regionDef(regionId) || isComplete(state, regionId)) return { state: state, arrival: null };
+    if (!regionDef(regionId) || isComplete(state, regionId) || nextIsBoss(state, regionId)) return { state: state, arrival: null };
     var w = withRegion(state, regionId);
     w.rs.position += 1;
     w.rs.progress = 0;
@@ -223,7 +265,8 @@
   }
 
   // 教科・学年・難易度・形式を決める。{ subject, grade, difficulty, answerType }
-  function chooseSelection(state, regionId, rng, b) {
+  // opts（戦闘で使う）：{ forceInput: 書き問題だけにする, choiceShare: 選択問題の割合 }。省略すると探索の地点の設定
+  function chooseSelection(state, regionId, rng, b, opts) {
     var ex = E(b);
     var r = regionDef(regionId);
     var subject = FF.defs.SUBJECTS[Math.floor(rng() * FF.defs.SUBJECTS.length)].id;
@@ -235,7 +278,9 @@
     }, rng);
     var dw = ex.DIFFICULTY_WEIGHT[regionId];
     var difficulty = weighted(Object.keys(dw), function (d) { return dw[d]; }, rng);
-    var answerType = regionState(state, regionId).missedHere ? 'input' : (rng() < ex.CHOICE_SHARE ? 'choice' : 'input');
+    var forceInput = opts ? !!opts.forceInput : regionState(state, regionId).missedHere;
+    var share = opts && opts.choiceShare != null ? opts.choiceShare : ex.CHOICE_SHARE;
+    var answerType = forceInput ? 'input' : (rng() < share ? 'choice' : 'input');
     return { subject: subject, grade: grade, difficulty: difficulty, answerType: answerType };
   }
 
@@ -255,21 +300,28 @@
     return out;
   }
 
-  // 次の地点のための問題を1問選ぶ。完了済み・未解放の地域では null。状態は変えない。
-  function pickExploreQuestion(bank, state, regionId, rng, now, b) {
+  // その地域の出題の決め方で1問選ぶ（地点・戦闘の共通）。状態は変えない。opts は chooseSelection と同じ
+  function pickRegionQuestion(bank, state, regionId, rng, now, b, opts) {
     b = bal(b);
     rng = rng || Math.random;
-    if (!isRegionUnlocked(state, regionId, b) || isComplete(state, regionId)) return null;
-    var sel = chooseSelection(state, regionId, rng, b);
+    var sel = chooseSelection(state, regionId, rng, b, opts);
+    var forceInput = opts ? !!opts.forceInput : regionState(state, regionId).missedHere;
     // 探索専用の「直近に出した問題」だけを避ける（学習の反復記録は使わない）
     var pb = Object.assign({}, b, { PICK: Object.assign({}, b.PICK, { AVOID_RECENT: b.EXPLORE.AVOID_RECENT }) });
     var ctx = { correctLog: {}, recentIds: (state.exploration && state.exploration.recentQuestionIds) || [], now: now, rng: rng };
-    var list = fallbackSelections(state, sel,sel.answerType === 'input' && regionState(state, regionId).missedHere);
+    var list = fallbackSelections(state, sel, sel.answerType === 'input' && forceInput);
     for (var i = 0; i < list.length; i++) {
       var q = FF.learning.pickQuestion(bank, list[i], ctx, pb);
       if (q) return q;
     }
     return null;
+  }
+
+  // 次の地点のための問題を1問選ぶ。完了済み・未解放の地域、次がボスのときは null。状態は変えない。
+  function pickExploreQuestion(bank, state, regionId, rng, now, b) {
+    b = bal(b);
+    if (!isRegionUnlocked(state, regionId, b) || isComplete(state, regionId) || nextIsBoss(state, regionId)) return null;
+    return pickRegionQuestion(bank, state, regionId, rng, now, b);
   }
 
   // ---- 回答（SPEC_v0.2 3.1） ----
@@ -282,6 +334,7 @@
     function err(code) { return { state: state, attempt: att, outcome: { status: 'error', error: code }, arrival: null }; }
     if (!isRegionUnlocked(state, regionId, b)) return err('locked');
     if (isComplete(state, regionId)) return err('complete');
+    if (nextIsBoss(state, regionId)) return err('boss');
     if (att.done) return err('finished');
     var q = att.question;
     var result = FF.answer.judge(q, input);
@@ -331,6 +384,12 @@
     };
   }
 
+  // ボスに負けた回数の上限（それ以上は HP が減らない回数。BOSS_MERCY_MAX ÷ BOSS_MERCY_STEP）
+  function bossLossCap(b) {
+    var bt = bal(b).BATTLE;
+    return bt ? Math.round(bt.BOSS_MERCY_MAX / bt.BOSS_MERCY_STEP) : 0;
+  }
+
   // ---- 読み込み時の整合 ----
   // 位置を順路の範囲に収め、定義にない宝箱・イベント・地点を捨てる。未開封の宝箱を勝手に開けることはしない。
   function normalizeExploration(state, b) {
@@ -362,6 +421,15 @@
         events[nodeId] = { id: rec.id, choice: choice };
       });
       rs.events = events;
+      // 倒した敵（定義にある、この地域の敵・ボスだけ。重複なし）とボスに負けた回数（v0.3 その2）
+      var enemyIds = r.nodes.filter(function (n) { return n.enemy; }).map(function (n) { return n.enemy; });
+      rs.defeated = (Array.isArray(rs.defeated) ? rs.defeated : []).filter(function (id, i, arr) {
+        return enemyIds.indexOf(id) >= 0 && arr.indexOf(id) === i;
+      });
+      var boss = bossNode(r.id);
+      if (boss && rs.position >= last && rs.defeated.indexOf(boss.enemy) < 0) rs.defeated.push(boss.enemy);   // 終点にいる＝ボスを倒した
+      var losses = Math.floor(Number(rs.bossLosses));
+      rs.bossLosses = isFinite(losses) ? Math.max(0, Math.min(bossLossCap(b), losses)) : 0;
       if (rs.position < last) rs.completedAt = null;
       else if (typeof rs.completedAt !== 'number') rs.completedAt = null;
       ex.regions[r.id] = rs;
@@ -387,6 +455,16 @@
     canEnterNode: canEnterNode,
     regionState: regionState,
     isComplete: isComplete,
+    bossNode: bossNode,
+    gateIndex: gateIndex,
+    isGateReached: isGateReached,
+    nextIsBoss: nextIsBoss,
+    enemyNode: enemyNode,
+    enemyStatus: enemyStatus,
+    bossLossCap: bossLossCap,
+    withRegion: withRegion,
+    addReward: addReward,
+    pickRegionQuestion: pickRegionQuestion,
     isRegionUnlocked: isRegionUnlocked,
     isExploreOpen: isExploreOpen,
     progressPercent: progressPercent,

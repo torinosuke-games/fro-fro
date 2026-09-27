@@ -14,7 +14,7 @@
 
   // 探索の初期状態（v0.2）。地域は defs.js の REGIONS から作る
   function defaultRegionState() {
-    return { position: 0, progress: 0, missedHere: false, openedChests: [], events: {}, completedAt: null };
+    return { position: 0, progress: 0, missedHere: false, openedChests: [], events: {}, completedAt: null, defeated: [], bossLosses: 0 };
   }
   function defaultExploration() {
     return {

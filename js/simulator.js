@@ -142,7 +142,8 @@
       return {
         id: r.id, requires: r.requires, unlockFurnace: b.EXPLORE.UNLOCK_FURNACE_LEVEL[r.id] || 1,
         grade: grade, secPerQuestion: sec,
-        nodes: route.slice(1).map(function (n) {
+        // ボスの地点（v0.3 その2）は問題では進めない（戦闘に勝つと進む）。戦闘のモデルは v0.3-3 で足すので、ここではボスの手前までを進める
+        nodes: route.slice(1).filter(function (n) { return n.kind !== 'boss'; }).map(function (n) {
           var reward = {};
           if (n.kind === 'chest') reward = Object.assign({}, b.EXPLORE.CHESTS[n.chest]);
           if (n.kind === 'event') reward = Object.assign({}, eventReward);

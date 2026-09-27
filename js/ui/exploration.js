@@ -212,6 +212,11 @@
 
   function openNode(regionId, n) {
     var st = FF.app.state;
+    // 敵・ボスの地点（v0.3 その2）：戦闘画面は v0.3-4 で作る。それまでは文章と「準備中」だけを出す
+    if (n.kind === 'enemy' || n.kind === 'boss') {
+      U.modal({ title: n.name, body: U.el('div', { class: 'stack' }, [U.R('div', 'pre', n.text), U.R('div', 'small muted', U.T('explore.battleSoon'))]) });
+      return;
+    }
     var status = X.nodeStatus(st, regionId, n.id);
     if (status === 'locked') {
       U.modal({ title: n.name, body: U.R('div', 'pre', n.text) });
@@ -271,9 +276,14 @@
       info.appendChild(U.el('div', {}, [U.el('span', { class: 'badge' }, U.rich(U.T('explore.current'))), ' ', U.el('b', {}, U.rich(cur.name))]));
       info.appendChild(U.R('div', 'small muted pre', cur.text));
       info.appendChild(U.el('div', {}, [U.el('span', { class: 'badge ember' }, U.rich(U.T('explore.next'))), ' ', U.el('b', {}, U.rich(next.name))]));
-      if (rs.missedHere) info.appendChild(U.R('div', 'notice', U.T('explore.missedNote')));
-      info.appendChild(U.el('button', { class: 'btn primary block', rich: U.T('explore.challenge'), on: { click: function () { startChallenge(regionId); } } }));
-      info.appendChild(U.R('div', 'small muted center', U.T('explore.challengeNote')));
+      if (next.kind === 'boss') {
+        // 次がボス：問題では進めない。戦闘画面（v0.3-4）ができるまでは「準備中」
+        info.appendChild(U.R('div', 'notice', U.T('explore.battleSoon')));
+      } else {
+        if (rs.missedHere) info.appendChild(U.R('div', 'notice', U.T('explore.missedNote')));
+        info.appendChild(U.el('button', { class: 'btn primary block', rich: U.T('explore.challenge'), on: { click: function () { startChallenge(regionId); } } }));
+        info.appendChild(U.R('div', 'small muted center', U.T('explore.challengeNote')));
+      }
     }
     main.appendChild(info);
   }

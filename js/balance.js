@@ -85,12 +85,13 @@
     // ---- 探索（v0.2、SPEC_v0.2） ----
     EXPLORE: {
       CORRECT_PER_NODE: 1,                           // 1地点進むのに必要な正解数（SPEC_v0.2 3.1）
-      UNLOCK_FURNACE_LEVEL: { snowfield: 3, forest: 4 },
+      UNLOCK_FURNACE_LEVEL: { snowfield: 3, forest: 4, glacier: 5 },
       CHOICE_SHARE: 0.5,                             // 4択を出す割合（まちがえた地点では自由入力だけ）
       GRADE_WEIGHT: { inRange: 3, outOfRange: 1 },   // 推奨学年の範囲内・範囲外の重み
       DIFFICULTY_WEIGHT: {
         snowfield: { basic: 0.6, standard: 0.4 },
-        forest: { standard: 0.6, advanced: 0.4 }
+        forest: { standard: 0.6, advanced: 0.4 },
+        glacier: { standard: 0.4, advanced: 0.6 }
       },
       AVOID_RECENT: 20,                              // 探索で直近に出した問題を何問ぶん避けるか
       // 宝箱の中身（固定・1個につき1回）。tickets はチケットの枚数、それ以外は資源
@@ -101,14 +102,55 @@
         fr_chest_1: { wood: 150, iron: 150 },
         fr_chest_2: { tickets: 1, stone: 200 },
         fr_chest_3: { tickets: 1, food: 200, iron: 100 },
-        fr_chest_4: { tickets: 2, wood: 250, stone: 200 }
+        fr_chest_4: { tickets: 2, wood: 250, stone: 200 },
+        gl_chest_1: { iron: 200, stone: 150 },
+        gl_chest_2: { tickets: 1, wood: 200 },
+        gl_chest_3: { tickets: 1, iron: 200, food: 150 },
+        gl_chest_4: { tickets: 2, stone: 250, wood: 200 }
       },
       // 資源イベントの量（宝箱よりずっと少なく）
       EVENT_REWARDS: {
         sf_ev_crate: { wood: 30 },
         sf_ev_rivets: { iron: 20 },
         fr_ev_firewood: { wood: 40 },
-        fr_ev_nuts: { food: 40 }
+        fr_ev_nuts: { food: 40 },
+        gl_ev_sled: { food: 40 },
+        gl_ev_bolts: { iron: 40 }
+      }
+    },
+
+    // ---- 戦闘（v0.3 その2、SPEC_v0.3_battle 第1章、DESIGN 13.4・13.5） ----
+    // 敵の HP ＝ 勝つのに必要な正解の数 × DAMAGE_PER_CORRECT。攻撃力 ＝ 隊長の HP ÷ 負けるまでのまちがいの回数（切り上げ）。
+    BATTLE: {
+      PLAYER_HP: 100,                // 隊長の HP（挑戦のたびに満タンから）
+      DAMAGE_PER_CORRECT: 10,        // 正解1問で敵に与えるダメージ（選択問題・書き問題とも同じ）
+      CHOICE_SHARE: 0.5,             // 選択問題を出す割合。一度まちがえたら、その戦闘の間は書き問題だけ
+      BOSS_MERCY_STEP: 0.1,          // ボスに負けるたびに、次の挑戦でボスの HP を最大値のこの割合ずつ減らす
+      BOSS_MERCY_MAX: 0.5,           // 減らす上限（半分まで）
+      ENEMIES: {
+        sf_enemy_fangs: { hp: 30, attack: 20 },
+        sf_enemy_machine: { hp: 40, attack: 20 },
+        sf_boss_wolf: { hp: 80, attack: 17 },
+        fr_enemy_antler: { hp: 40, attack: 20 },
+        fr_enemy_roots: { hp: 50, attack: 20 },
+        fr_enemy_warden: { hp: 100, attack: 17 },
+        gl_enemy_leopard: { hp: 50, attack: 20 },
+        gl_enemy_drone: { hp: 50, attack: 20 },
+        gl_enemy_golem: { hp: 60, attack: 20 },
+        gl_boss_guardian: { hp: 120, attack: 17 }
+      },
+      // 初めて倒したときだけの報酬（2回目以降は何もない）
+      REWARDS: {
+        sf_enemy_fangs: { food: 60 },
+        sf_enemy_machine: { iron: 60 },
+        sf_boss_wolf: { wood: 150, food: 100, tickets: 2 },
+        fr_enemy_antler: { wood: 100 },
+        fr_enemy_roots: { stone: 100 },
+        fr_enemy_warden: { stone: 200, iron: 150, tickets: 2 },
+        gl_enemy_leopard: { food: 120 },
+        gl_enemy_drone: { iron: 120 },
+        gl_enemy_golem: { stone: 120 },
+        gl_boss_guardian: { iron: 250, stone: 200, tickets: 3 }
       }
     },
 
