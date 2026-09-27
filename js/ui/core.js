@@ -109,7 +109,7 @@
       body,
       el('div', { class: 'actions' }, (opts.buttons || [{ label: T('ok'), class: 'primary' }]).map(function (b) {
         return el('button', {
-          class: 'btn ' + (b.class || ''), rich: b.label,
+          class: 'btn ' + (b.class || ''), rich: b.label, disabled: !!b.disabled,
           on: { click: function () { if (!b.keepOpen) close(); if (b.onClick) b.onClick(close); } }
         });
       }))
@@ -142,8 +142,30 @@
     hud.appendChild(el('div', { class: 'hud-tickets' }, [
       el('span', {}, [R('span', '', T('tickets')), ' ', el('span', { class: 'count', text: t.count + ' / ' + max })]),
       el('span', { class: 'ticket-bar' }, el('i', { style: { width: Math.min(100, t.count / max * 100) + '%' } })),
-      el('span', { class: 'timer' }, next === null ? R('span', '', T('ticketsFull')) : [R('span', '', T('ticketsNext')), ' ' + FF.util.formatCountdown(next)])
+      el('span', { class: 'timer' }, next === null ? R('span', '', T('ticketsFull')) : [R('span', 'lbl', T('ticketsNext')), ' ' + FF.util.formatCountdown(next)]),
+      ptChip(s)
     ]));
+  }
+
+  // 勉強量ポイント（v0.4、DESIGN 14.4）：チケットの行の右の端。押すと引換所を開く。
+  // 出題中（学習・昇格試験・実力診断・探索・戦闘）と引換所の画面では押せない（試験を途中で出ると不合格になるため。判断51）
+  var PT_LOCKED_SCREENS = ['quiz', 'exam', 'diagnosis', 'exploreQuiz', 'battle', 'redeem'];
+  function ptChip(s) {
+    var locked = PT_LOCKED_SCREENS.indexOf(FF.app.screen) >= 0;
+    var n = fmt(s.studyPoints || 0);
+    return el('button', {
+      class: 'pt-chip' + (locked ? ' locked' : ''),
+      attrs: {
+        type: 'button', 'aria-disabled': locked ? 'true' : null, tabindex: locked ? '-1' : null,
+        'aria-label': plain(T('ptLabel')) + ' ' + n + (locked ? '' : '（' + plain(T('ptOpen')) + '）')
+      },
+      on: { click: function () { if (!locked) openRedeem(); } }
+    }, [el('span', { class: 'ico', text: '⭐' }), el('span', { class: 'num', text: n })]);
+  }
+  // 引換所を開く。［もどる］で今の画面に戻れるよう、開く前の画面を覚えておく
+  function openRedeem() {
+    if (FF.app.screen !== 'redeem') FF.app.redeemReturn = { screen: FF.app.screen, params: FF.app.params || {} };
+    show('redeem');
   }
 
   // ---- ナビ ----
@@ -152,7 +174,7 @@
     { id: 'allies', icon: '👥', locked: true }, { id: 'study', icon: '📖' }, { id: 'settings', icon: '⚙️' }
   ];
   function navGroup(screen) {
-    if (screen === 'exam' || screen === 'diagnosis' || screen === 'quiz') return 'study';
+    if (screen === 'exam' || screen === 'diagnosis' || screen === 'quiz' || screen === 'redeem') return 'study';
     if (screen === 'debug') return 'settings';
     if (screen === 'exploreQuiz') return 'explore';
     return screen;
@@ -176,7 +198,7 @@
 
   // ---- 昼／夜テーマ（SPEC_theme.md） ----
   // 昼の見た目を持つ画面。デバッグ画面は対象外で、常に夜。
-  var THEMED_SCREENS = ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz', 'battle'];
+  var THEMED_SCREENS = ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz', 'battle', 'redeem'];
   // 「自動」の判定に使う時刻：実際の端末の時計（FF.clock は使わない）。デバッグ画面で時だけ指定できる
   function themeNow() {
     var d = new Date();
@@ -293,7 +315,7 @@
     usesNumpad: usesNumpad, numpad: numpad, autoFocusOK: autoFocusOK, keepInView: keepInView,
     el: el, svg: svg, clear: clear, rich: rich, R: R, plain: plain, T: T, fmt: fmt,
     resDef: resDef, buildingName: buildingName, nameOf: nameOf, costView: costView,
-    toast: toast, modal: modal, renderHud: renderHud, renderNav: renderNav,
+    toast: toast, modal: modal, renderHud: renderHud, renderNav: renderNav, openRedeem: openRedeem,
     screens: screens, show: show, rerender: rerender, tick: tick,
     currentTheme: currentTheme, applyTheme: applyTheme
   };

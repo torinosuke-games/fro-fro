@@ -200,7 +200,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const lum = h => [1, 3, 5].map(k => parseInt(h.slice(k, k + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)).reduce((a, v, k) => a + v * [0.2126, 0.7152, 0.0722][k], 0);
     const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
     const bgs = ['#ffffff', val('--bg-1')];
-    for (const n of ['--text', '--muted', '--ice', '--ember', '--good', '--bad', '--warn']) {
+    for (const n of ['--text', '--muted', '--ice', '--ember', '--good', '--bad', '--warn', '--pt']) {
       assert.ok(val(n), n + ' がない');
       for (const bg of bgs) assert.ok(ratio(val(n), bg) >= 4.5, `${n} ${val(n)} on ${bg}: ${ratio(val(n), bg).toFixed(2)}`);
     }
@@ -213,7 +213,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const m = src.match(/var THEMED_SCREENS = (\[[^\]]*\]);/);
     assert.ok(m, 'THEMED_SCREENS が見つからない');
     const list = JSON.parse(m[1].replace(/'/g, '"'));
-    assert.deepStrictEqual(list, ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz', 'battle']);   // v0.3 その2：戦闘画面（SPEC_v0.3_battle 1.3）
+    assert.deepStrictEqual(list, ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz', 'battle', 'redeem']);   // v0.3 その2：戦闘画面（SPEC_v0.3_battle 1.3）
     assert.ok(!list.includes('debug'));
   });
 

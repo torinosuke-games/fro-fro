@@ -81,6 +81,23 @@
       })])
     ]));
 
+    // ---- 勉強量ポイント（v0.4） ----
+    function setPoints(fn, msg) {
+      var s = FF.util.clone(app.state);
+      fn(s);
+      app.commit(s);
+      U.toast(msg);
+    }
+    main.appendChild(U.el('div', { class: 'panel stack' }, [
+      U.el('h3', { text: '勉強量ポイント（残高 ' + U.fmt(app.state.studyPoints || 0) + ' pt）' }),
+      U.el('div', { class: 'grid3' }, [
+        U.el('button', { class: 'btn small', text: '+3,000 pt', on: { click: function () { setPoints(function (s) { FF.points.addPoints(s, 3000); }, 'pt を 3,000 足した'); U.rerender(); } } }),
+        U.el('button', { class: 'btn small', text: '+500 pt', on: { click: function () { setPoints(function (s) { FF.points.addPoints(s, 500); }, 'pt を 500 足した'); U.rerender(); } } }),
+        U.el('button', { class: 'btn small ghost', text: '残高を 0 に', on: { click: function () { setPoints(function (s) { s.studyPoints = 0; }, 'pt の残高を 0 にした'); U.rerender(); } } }),
+        U.el('button', { class: 'btn small ghost', text: '引換の履歴を消す', on: { click: function () { setPoints(function (s) { s.redeemHistory = []; }, '引換の履歴を消した'); } } })
+      ])
+    ]));
+
     // ---- 学年 ----
     main.appendChild(U.el('div', { class: 'panel stack' }, [
       U.el('h3', { text: '学年の解放（テスト用）' }),

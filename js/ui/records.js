@@ -17,7 +17,19 @@
   function render(box) {
     var s = FF.app.state;
 
-    var top = U.el('div', { class: 'panel' }, [
+    // 勉強量ポイント（v0.4）：残高・累計・引換所への入り口
+    box.appendChild(U.el('div', { class: 'panel pt-panel' }, [
+      U.el('div', { class: 'row between' }, [
+        U.el('div', {}, [
+          U.el('div', { class: 'small muted' }, ['⭐ ', U.rich(U.T('ptBalance'))]),
+          U.el('div', { class: 'pt-big', text: U.fmt(s.studyPoints || 0) + ' pt' })
+        ]),
+        U.el('button', { class: 'btn primary small', rich: U.T('ptToRedeem'), on: { click: function () { U.openRedeem(); } } })
+      ]),
+      U.el('div', { class: 'row between small' }, [U.R('span', 'muted', U.T('ptEarnedTotal')), U.el('strong', { text: U.fmt(s.studyPointsEarnedTotal || 0) + ' pt' })])
+    ]));
+
+    var top =U.el('div', { class: 'panel' }, [
       U.R('h3', '', U.T('progress')),
       U.el('div', { class: 'progress-line' }, U.rich(L.progressLine(s))),
       U.R('div', 'disclaimer', U.T('recordsNote'))
@@ -85,7 +97,7 @@
       var res = h.resource ? U.resDef(h.resource) : null;
       return U.el('div', { class: 'row between small' }, [
         U.el('span', {}, [(h.correct ? '✓ ' : '✗ ') + when(h.at) + '  ', U.rich(L.subjectName(h.subject, h.grade)), ' Lv' + h.grade]),
-        U.el('span', { class: 'muted', text: res ? '+' + h.reward + ' ' + res.icon : '—' })
+        U.el('span', { class: 'muted', text: res ? '+' + h.reward + ' ' + res.icon + (h.points ? '  +' + h.points + ' ⭐' : '') : '—' })
       ]);
     }) : [U.R('div', 'small muted', U.T('noRecords'))])));
 

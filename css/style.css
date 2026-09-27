@@ -36,6 +36,7 @@
   /* 以下は昼／夜テーマ（SPEC_theme.md）のために変数にしたもの。値はこれまで直接書いていたものと同じ */
   --body-grad: radial-gradient(ellipse at 50% -10%, #1b2a3b 0%, var(--bg-1) 45%, var(--bg-0) 100%);
   --hud-bg: linear-gradient(180deg, rgba(6, 10, 16, 0.96), rgba(8, 13, 20, 0.88));
+  --pt: #ffd35c;              /* 勉強量ポイント（v0.4）の金色の文字 */
   --track: rgba(255,255,255,0.07);
   --nav-bg: linear-gradient(180deg, rgba(12, 19, 28, 0.96), rgba(5, 8, 12, 0.99));
   --panel-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 6px 18px rgba(0,0,0,0.35);
@@ -144,6 +145,7 @@
   --metal: linear-gradient(180deg, #f6f9fc 0%, #dae5ef 100%);
   --body-grad: radial-gradient(ellipse at 50% -10%, #ffffff 0%, var(--bg-1) 45%, var(--bg-0) 100%);
   --hud-bg: linear-gradient(180deg, rgba(243, 249, 254, 0.97), rgba(228, 239, 249, 0.93));
+  --pt: #8a5a00;              /* 勉強量ポイント（v0.4）の金色の文字 */
   --track: rgba(20, 60, 100, 0.12);
   --nav-bg: linear-gradient(180deg, rgba(247, 251, 254, 0.97), rgba(224, 236, 246, 0.99));
   --panel-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 14px rgba(30,70,110,0.12);
@@ -765,3 +767,53 @@ ruby rt { font-size: 0.5em; color: var(--rt); letter-spacing: 0; }
   .battle-art.fx-hit, .battle-screen.fx-hurt .battle-art { animation: none; }
   .hp-bar > i { transition: none; }
 }
+
+/* ---- 勉強量ポイントと引換所（v0.4、DESIGN 14.4） ---- */
+.pt-chip {
+  display: inline-flex; align-items: center; gap: 3px; margin-left: 8px; padding: 1px 7px; min-height: 24px;
+  border: 1px solid var(--edge-strong); border-radius: 12px; background: var(--metal); cursor: pointer;
+  color: var(--pt); font-weight: 800; font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.pt-chip .ico { font-size: 12px; }
+.pt-chip:hover:not(.locked) { border-color: var(--pt); }
+.pt-chip.locked { cursor: default; }
+.hud.compact .pt-chip { min-height: 0; padding: 0 6px; font-size: 12px; line-height: 1.15; }   /* 「学ぶ」のヘッダーの高さを変えない（判断141） */
+.hud-tickets > span { white-space: nowrap; }
+.ticket-bar { min-width: 16px; }
+/* 幅が狭いときは「次の回復まで」を出さず時刻だけにする（⭐ の場所を空けるため。DESIGN 14.4） */
+@media (max-width: 419px) {
+  .hud-tickets .timer .lbl { display: none; }
+}
+@media (max-width: 359px) {
+  .ticket-bar { margin: 0 6px; }
+  .pt-chip { margin-left: 6px; padding: 1px 5px; }
+}
+.feedback .gain .gain-res { white-space: nowrap; }
+.feedback .gain .gain-pt { color: var(--pt); white-space: nowrap; }
+.pt-big { font-size: 22px; font-weight: 800; color: var(--pt); font-variant-numeric: tabular-nums; }
+.pt-huge { font-size: 34px; font-weight: 900; color: var(--pt); font-variant-numeric: tabular-nums; line-height: 1.2; margin: 2px 0 4px; }
+.redeem-head { flex-wrap: nowrap; margin-bottom: 8px; }
+.redeem-head h2 { margin: 0; }
+.redeem-head .btn, .redeem-head-space { flex: 0 0 96px; white-space: nowrap; }
+.preset-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.pick.preset { align-items: center; text-align: center; padding: 8px 2px; min-height: 64px; justify-content: center; }
+.pick.preset .title { font-size: 15px; }
+.pick.preset .sub { color: var(--pt); font-weight: 700; font-variant-numeric: tabular-nums; }
+.pick.preset.short .sub { color: var(--muted); }
+.redeem-note { margin: 8px 2px 12px; }
+.redeem-row { padding: 8px 0; border-top: 1px dashed var(--edge); }
+.redeem-row:first-of-type { border-top: 0; }
+.ticket-id { font-family: ui-monospace, Consolas, monospace; letter-spacing: 0.06em; }
+.rate-input { width: 8em; }
+a.btn { text-decoration: none; }
+/* 券面：紙の見た目（昼夜で変えない。印刷と同じ白地に黒） */
+.ticket-card {
+  background: #ffffff; color: #1b1b1b; border: 2px dashed #6b6b6b; border-radius: 6px;
+  padding: 12px 14px; margin: 0 auto 12px; max-width: 360px;
+}
+.ticket-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-weight: 800; border-bottom: 1px solid #1b1b1b; padding-bottom: 4px; margin-bottom: 8px; }
+.ticket-brand { font-size: 12px; letter-spacing: 0.08em; }
+.ticket-fields { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
+.ticket-fields dt { color: #555555; font-size: 13px; }
+.ticket-fields dd { margin: 0; font-weight: 800; font-size: 16px; overflow-wrap: anywhere; }
+.ticket-cost { font-size: 12px; color: #555555; margin-top: 8px; }

@@ -155,8 +155,15 @@
       var fb = U.el('div', { class: 'feedback ' + (good ? 'good' : 'bad') });
       fb.appendChild(U.R('div', 'verdict', good ? U.T('correct') : U.T('wrong')));
       if (good) {
-        fb.appendChild(U.el('div', { class: 'gain' }, ['+' + U.fmt(o.reward) + ' ' + res.icon + ' ', U.rich(res.name)]));
+        // 資源の右に勉強量ポイント（SPEC 8.4「+42 木材 ／ +38 pt」）
+        // 折り返すときは「／」の前で折り返す（資源と pt のそれぞれは1行にまとめる）
+        fb.appendChild(U.el('div', { class: 'gain' }, [
+          U.el('span', { class: 'gain-res' }, ['+' + U.fmt(o.reward) + ' ' + res.icon + ' ', U.rich(res.name)]),
+          ' ',
+          U.el('span', { class: 'gain-pt' }, '／ ⭐ +' + U.fmt(o.points || 0) + ' pt')
+        ]));
         fb.appendChild(breakdownView(o.breakdown));
+        if (o.pointsBreakdown && o.pointsBreakdown.repeat < 1) fb.appendChild(U.R('div', 'small muted', U.T('ptRepeatNote')));
       } else {
         fb.appendChild(U.R('div', 'small muted', U.T('noReward')));
       }

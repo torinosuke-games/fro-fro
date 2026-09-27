@@ -20,6 +20,61 @@
     }
   }
 
+  // 交換レートは確認のモーダルを1段はさんで変える（SPEC 14.4）。メールアドレスは空（登録しない）か正しい形だけを保存する。
+  function parentPanel() {
+    var app = FF.app, s = app.state, SP = FF.balance.STUDY_POINTS;
+    var rate = FF.points.rateOf(s);
+    var rateInput = U.el('input', {
+      class: 'field rate-input',
+      attrs: { type: 'number', inputmode: 'numeric', min: SP.PER_HOUR_MIN, max: SP.PER_HOUR_MAX, step: 100, 'aria-label': U.plain(U.T('parent.rate')) },
+      value: String(rate)
+    });
+    var mailInput = U.el('input', {
+      class: 'field',
+      attrs: { type: 'email', inputmode: 'email', autocomplete: 'email', placeholder: 'parent@example.com', 'aria-label': U.plain(U.T('parent.email')) },
+      value: s.settings.parentEmail || ''
+    });
+    function setSettings(patch) {
+      app.commit(Object.assign({}, app.state, { settings: Object.assign({}, app.state.settings, patch) }));
+    }
+    function changeRate() {
+      var raw = String(rateInput.value).trim();
+      var v = /^\d+$/.test(raw) ? Number(raw) : NaN;
+      if (!FF.points.isValidRate(v)) {
+        U.modal({ body: U.T('parent.rateError'), vars: { min: SP.PER_HOUR_MIN, max: SP.PER_HOUR_MAX } });
+        return;
+      }
+      var from = FF.points.rateOf(app.state);
+      if (v === from) { U.toast(U.T('parent.rateSame')); return; }
+      U.modal({
+        body: U.T('parent.rateConfirm'), vars: { from: U.fmt(from), to: U.fmt(v) },
+        buttons: [
+          { label: U.T('cancel'), class: 'ghost', onClick: function () { rateInput.value = String(from); } },
+          { label: U.T('change'), class: 'primary', onClick: function () { setSettings({ pointsPerHour: v }); U.toast(U.T('parent.rateChanged')); U.rerender(); } }
+        ]
+      });
+    }
+    function saveEmail() {
+      var v = String(mailInput.value).trim();
+      if (v !== '' && !FF.points.isValidEmail(v)) { U.modal({ body: U.T('parent.emailError') }); return; }
+      setSettings({ parentEmail: v });
+      U.toast(U.T(v === '' ? 'parent.emailCleared' : 'parent.emailSaved'));
+      U.rerender();
+    }
+    return U.el('div', { class: 'panel stack parent-panel' }, [
+      U.R('h3', '', U.T('parent.title')),
+      U.R('div', 'small muted', U.T('parent.help')),
+      U.R('div', 'section-title', U.T('parent.rate')),
+      U.el('div', { class: 'row' }, [rateInput, U.R('span', '', U.T('parent.rateUnit')), U.el('button', { class: 'btn small', rich: U.T('change'), on: { click: changeRate } })]),
+      U.R('div', 'section-title', U.T('parent.email')),
+      mailInput,
+      U.el('div', { class: 'row between' }, [U.R('span', 'small muted', U.T('parent.emailHelp')), U.el('button', { class: 'btn small', rich: U.T('parent.save'), on: { click: saveEmail } })]),
+      U.el('div', { class: 'row', style: { justifyContent: 'flex-end' } }, [
+        U.el('button', { class: 'btn small ice', rich: U.T('parent.openRedeem'), on: { click: function () { U.openRedeem(); } } })
+      ])
+    ]);
+  }
+
   function render(main) {
     var app = FF.app, s = app.state;
 
@@ -71,6 +126,9 @@
       ]),
       U.R('div', 'small muted', U.T('themeNote'))
     ]));
+
+    // 保護者の方へ：交換レートとメールアドレス（v0.4、SPEC 14.4・DESIGN 14.4）
+    main.appendChild(parentPanel());
 
     // エクスポート
     var out = U.el('textarea', { attrs: { readonly: true, 'aria-label': FF.util.plainText(U.T('exportTitle')) }, value: FF.state.serialize(app.state) });
