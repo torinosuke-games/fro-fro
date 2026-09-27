@@ -213,7 +213,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const m = src.match(/var THEMED_SCREENS = (\[[^\]]*\]);/);
     assert.ok(m, 'THEMED_SCREENS が見つからない');
     const list = JSON.parse(m[1].replace(/'/g, '"'));
-    assert.deepStrictEqual(list, ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz']);
+    assert.deepStrictEqual(list, ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz', 'battle']);   // v0.3 その2：戦闘画面（SPEC_v0.3_battle 1.3）
     assert.ok(!list.includes('debug'));
   });
 

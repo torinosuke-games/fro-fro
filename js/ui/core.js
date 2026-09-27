@@ -176,7 +176,7 @@
 
   // ---- 昼／夜テーマ（SPEC_theme.md） ----
   // 昼の見た目を持つ画面。デバッグ画面は対象外で、常に夜。
-  var THEMED_SCREENS = ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz'];
+  var THEMED_SCREENS = ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz', 'battle'];
   // 「自動」の判定に使う時刻：実際の端末の時計（FF.clock は使わない）。デバッグ画面で時だけ指定できる
   function themeNow() {
     var d = new Date();

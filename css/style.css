@@ -78,6 +78,15 @@
   --map-sf-drift: rgba(230,241,250,0.10);
   --map-fr-bg: #0f2124;
   --map-fr-tree: rgba(170,215,205,0.10);
+  /* v0.3 その2：氷河の地図・敵とボスの地点・戦闘の HP */
+  --map-gl-bg: #132a3e;
+  --map-gl-drift: rgba(150,210,245,0.14);
+  --enemy-ico: #ff8a7a;
+  --boss-ring: #ffc861;
+  --hp-track: rgba(255,255,255,0.12);
+  --hp-enemy: linear-gradient(90deg, #d8483a, #ff7a5c);
+  --hp-player: linear-gradient(90deg, #2d78aa, #7cc8f5);
+  --hurt-flash: rgba(255, 74, 61, 0.55);
   --trail: rgba(200,220,235,0.35);
   --trail-enemy: rgba(160,200,230,0.3);
   --node-focus: #fff;
@@ -176,6 +185,14 @@
   --map-sf-drift: rgba(110, 155, 195, 0.16);
   --map-fr-bg: #dcefe8;
   --map-fr-tree: rgba(40, 110, 90, 0.20);
+  --map-gl-bg: #d6ecfa;
+  --map-gl-drift: rgba(60, 140, 200, 0.18);
+  --enemy-ico: #b3261e;
+  --boss-ring: #a86a00;
+  --hp-track: rgba(20, 40, 60, 0.12);
+  --hp-enemy: linear-gradient(90deg, #b3261e, #e0533f);
+  --hp-player: linear-gradient(90deg, #1f5f8b, #3f96cf);
+  --hurt-flash: rgba(200, 40, 30, 0.45);
   --trail: rgba(40, 80, 120, 0.45);
   --trail-enemy: rgba(40, 80, 120, 0.35);
   --node-focus: #13202c;
@@ -711,4 +728,39 @@ ruby rt { font-size: 0.5em; color: var(--rt); letter-spacing: 0; }
 @keyframes chest-glow { from { opacity: 0; } 40% { opacity: 1; } to { opacity: 0.8; } }
 @media (prefers-reduced-motion: reduce) {
   .xp-map .pulse, .chest-art.animate .chest-lid, .chest-art.animate .chest-glow { animation: none; }
+}
+
+/* ---- v0.3 その2：氷河の地図、敵・ボスの地点 ---- */
+.map-glacier .map-bg { fill: var(--map-gl-bg); }
+.map-glacier .drift { fill: var(--map-gl-drift); }
+.xp-map .ico.swords { fill: none; stroke: var(--enemy-ico); stroke-width: 0.8; stroke-linecap: round; }
+.xp-map .ico.check { fill: none; stroke: var(--good); stroke-width: 0.8; stroke-linecap: round; stroke-linejoin: round; }
+.xp-map .st-defeated .ico.swords { opacity: 0.45; }
+.xp-map .boss-ring { fill: none; stroke: var(--boss-ring); stroke-width: 0.8; }
+.xp-map .ico.crown { fill: var(--boss-ring); stroke: none; }
+.xp-map .boss-ring.beaten, .xp-map .ico.crown.beaten { opacity: 0.5; }
+
+/* ---- 戦闘画面（DESIGN 13.6） ---- */
+.battle-art {
+  position: relative; width: 100%; aspect-ratio: 3 / 2; max-height: 240px; overflow: hidden;
+  border: 1px solid var(--edge-strong); border-radius: var(--radius); background: var(--panel);
+}
+.battle-art.boss { border: 2px solid var(--boss-ring); }
+.battle-art img, .battle-art svg { display: block; width: 100%; height: 100%; object-fit: cover; }
+.modal .battle-art { max-height: 170px; }
+.hp-box { display: grid; gap: 6px; margin: 8px 0 10px; }
+.hp-row { display: grid; grid-template-columns: minmax(0, 11em) minmax(56px, 1fr) auto; align-items: center; gap: 8px; font-size: 13px; }
+.hp-name { font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hp-bar { height: 10px; border-radius: 5px; background: var(--hp-track); overflow: hidden; }
+.hp-bar > i { display: block; height: 100%; border-radius: 5px; transition: width 0.35s ease-out; }
+.hp-row.enemy .hp-bar > i { background: var(--hp-enemy); }
+.hp-row.player .hp-bar > i { background: var(--hp-player); }
+.hp-num { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 12px; color: var(--muted); }
+.battle-art.fx-hit { animation: battle-shake 0.35s ease-out; }
+.battle-screen.fx-hurt .battle-art { animation: battle-hurt 0.5s ease-out; }
+@keyframes battle-shake { 0%, 100% { transform: none; } 25% { transform: translateX(-6px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-3px); } }
+@keyframes battle-hurt { from { box-shadow: 0 0 0 4px var(--hurt-flash); } to { box-shadow: 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) {
+  .battle-art.fx-hit, .battle-screen.fx-hurt .battle-art { animation: none; }
+  .hp-bar > i { transition: none; }
 }

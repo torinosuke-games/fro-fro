@@ -22,6 +22,7 @@
     if (reward.tickets) items.push(U.el('span', { class: 'item ticket' }, U.rich(U.T('explore.tickets'), { n: reward.tickets })));
     return U.el('div', { class: 'cost reward' }, items);
   }
+  U.exploreRewardView = rewardView;   // 戦闘の報酬の表示（ui/battle.js）でも使う
 
   // 宝箱の絵（開いた状態。animate なら開く動き）
   function chestArt(animate) {
@@ -194,10 +195,23 @@
         g.appendChild(s('path', { class: 'ico chest' + (opened ? ' opened' : ''), d: opened ? 'M-2.4 -1.2 L-1.6 -3.6 H2.2 L2.4 -1.2 Z' : 'M-2.4 -1.2 Q0 -3.4 2.4 -1.2 Z' }));
       }
       if (n.kind === 'enemy') {
-        g.appendChild(s('path', { class: 'ice-shell', d: 'M0 -4.2 L3.6 -2.1 V2.1 L0 4.2 L-3.6 2.1 V-2.1 Z' }));
-        var q = s('text', { class: 'ico q', x: 0, y: 1.5, 'text-anchor': 'middle' });
-        q.textContent = '?';
-        g.appendChild(q);
+        if (status === 'locked') {
+          // まだ戦えない敵：氷に閉ざされた「？」
+          g.appendChild(s('path', { class: 'ice-shell', d: 'M0 -4.2 L3.6 -2.1 V2.1 L0 4.2 L-3.6 2.1 V-2.1 Z' }));
+          var q = s('text', { class: 'ico q', x: 0, y: 1.5, 'text-anchor': 'middle' });
+          q.textContent = '?';
+          g.appendChild(q);
+        } else {
+          // 戦える敵：交差した剣。倒した敵は剣を薄くして、チェックを付ける
+          g.appendChild(s('path', { class: 'ico swords', d: 'M-2.6 -2.6 L2.6 2.6 M2.6 -2.6 L-2.6 2.6 M-2.9 1.4 L-1.4 2.9 M2.9 1.4 L1.4 2.9' }));
+          if (status === 'defeated') g.appendChild(s('path', { class: 'ico check', d: 'M1.6 -3.4 L2.8 -2.2 L4.8 -4.6' }));
+        }
+      }
+      if (n.kind === 'boss') {
+        // ボス：大きめの二重の枠と王冠
+        var beaten = X.enemyStatus(st, regionId, n.enemy) === 'defeated';
+        g.appendChild(s('circle', { class: 'boss-ring' + (beaten ? ' beaten' : ''), r: 6 }));
+        g.appendChild(s('path', { class: 'ico crown' + (beaten ? ' beaten' : ''), d: 'M-2.8 1.8 L-3 -1.8 L-1.4 -0.2 L0 -2.6 L1.4 -0.2 L3 -1.8 L2.8 1.8 Z' }));
       }
       if (status === 'current') {
         g.appendChild(s('path', { class: 'you', d: 'M0 -5.2 L-2 -8.6 H2 Z' }));
@@ -212,9 +226,9 @@
 
   function openNode(regionId, n) {
     var st = FF.app.state;
-    // 敵・ボスの地点（v0.3 その2）：戦闘画面は v0.3-4 で作る。それまでは文章と「準備中」だけを出す
+    // 敵・ボスの地点（v0.3 その2）：遭遇の文章と［戦う］（ui/battle.js）
     if (n.kind === 'enemy' || n.kind === 'boss') {
-      U.modal({ title: n.name, body: U.el('div', { class: 'stack' }, [U.R('div', 'pre', n.text), U.R('div', 'small muted', U.T('explore.battleSoon'))]) });
+      U.openEncounter(regionId, n.enemy);
       return;
     }
     var status = X.nodeStatus(st, regionId, n.id);
@@ -277,8 +291,9 @@
       info.appendChild(U.R('div', 'small muted pre', cur.text));
       info.appendChild(U.el('div', {}, [U.el('span', { class: 'badge ember' }, U.rich(U.T('explore.next'))), ' ', U.el('b', {}, U.rich(next.name))]));
       if (next.kind === 'boss') {
-        // 次がボス：問題では進めない。戦闘画面（v0.3-4）ができるまでは「準備中」
-        info.appendChild(U.R('div', 'notice', U.T('explore.battleSoon')));
+        // 次がボス：問題では進めない。戦って勝つと探索完了
+        info.appendChild(U.R('div', 'notice', U.T('explore.bossNext')));
+        info.appendChild(U.el('button', { class: 'btn primary block', rich: U.T('explore.bossChallenge'), on: { click: function () { U.openEncounter(regionId, next.enemy); } } }));
       } else {
         if (rs.missedHere) info.appendChild(U.R('div', 'notice', U.T('explore.missedNote')));
         info.appendChild(U.el('button', { class: 'btn primary block', rich: U.T('explore.challenge'), on: { click: function () { startChallenge(regionId); } } }));
@@ -433,7 +448,11 @@
     }
 
     var buttons = [U.el('button', { class: 'btn', rich: U.T('explore.backToMap'), on: { click: toMap } })];
-    if (done && !complete) {
+    if (done && !complete && X.nextIsBoss(app.state, regionId)) {
+      // ボスの手前にたどり着いた：次は問題ではなくボスとの戦闘
+      var boss = X.bossNode(regionId);
+      buttons.push(U.el('button', { class: 'btn primary', rich: U.T('explore.bossChallenge'), on: { click: function () { app.exploreSession = null; U.openEncounter(regionId, boss.enemy); } } }));
+    } else if (done && !complete) {
       var good2 = ses.outcome && ses.outcome.status === 'correct';
       buttons.push(U.el('button', {
         class: 'btn primary', rich: good2 ? U.T('explore.nextChallenge') : U.T('explore.tryAgain'),
