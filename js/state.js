@@ -55,7 +55,13 @@
         history: []
       },
       exploration: defaultExploration(),
-      settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE },   // themeMode：'night' | 'day' | 'auto'（初期値は昼）
+      // 勉強量ポイント（SPEC 8.4・14.2）：残高・累計・引換券の履歴
+      studyPoints: 0,
+      studyPointsEarnedTotal: 0,
+      redeemHistory: [],
+      // themeMode：'night' | 'day' | 'auto'（初期値は昼）
+      // pointsPerHour：交換レート（この pt で1時間）、parentEmail：保護者のメールアドレス（SPEC 14.4）
+      settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE, pointsPerHour: b.STUDY_POINTS.PER_HOUR_DEFAULT, parentEmail: '' },
       flags: { introSeen: false, diagnosisOffered: false, unlockNoticesSeen: [] }
     };
   }
@@ -140,6 +146,8 @@
     if (FF.buildings && FF.buildings.normalizeBuildings) state = FF.buildings.normalizeBuildings(state, now);
     // 探索の整合（位置を順路の範囲に収める、定義にない宝箱・イベントを捨てる など）
     if (FF.exploration && FF.exploration.normalizeExploration) state = FF.exploration.normalizeExploration(state);
+    // 勉強量ポイントの整合（残高・累計は 0 以上の整数、形のおかしい引換券の履歴を捨てる、交換レートの範囲）
+    if (FF.points && FF.points.normalizePoints) state = FF.points.normalizePoints(state);
     state.player.name = util.normalizeName(state.player.name, cfg);
     // テーマの設定：ない・知らない値は初期値の昼（補完はここまでに済ませ、integrity は最後の saveText で計算する）
     if (FF.theme) state.settings.themeMode = FF.theme.normalizeMode(state.settings.themeMode);

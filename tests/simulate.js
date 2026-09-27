@@ -178,5 +178,78 @@ for (const acc of [0.7, 0.8, 0.9, 1.0]) {
   console.log(`正答率 ${(acc * 100).toFixed(0)}%   ` + cells.join('   '));
 }
 
+// ---- 6. 勉強量ポイント（v0.4、SPEC 8.4・DESIGN 14.1） ----
+// 自分の学年の標準・選択問題・ヒントなしを続けて解いたときの 1時間あたりの pt（定常状態）と、初期の交換レートでの遊び時間。
+// 「実際」は、解説を読む・［次の問題］を押す時間を入れて 1.5 倍かかるとみなした値。
+const SP = B.STUDY_POINTS;
+console.log(`\n■ 勉強量ポイント：1時間の勉強で貯まる pt（標準・選択問題・ヒントなし）  交換レート ${SP.PER_HOUR_DEFAULT.toLocaleString()}pt ＝ 1時間`);
+console.log('学年   1問の秒数  正答率70%   80%       90%       遊び時間（90%）  実際（×1.5）');
+const ptPerHour = {};
+for (const g of [1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+  const sec = FF.simulator.secForGrade(g, B);
+  const cells = [0.7, 0.8, 0.9].map(acc => {
+    const e = FF.simulator.expectedPerQuestion({ grade: g, difficulty: 'standard', answerType: 'choice', secPerQuestion: sec, accuracy: acc, kind: 'points' });
+    return e.reward * 3600 / e.sec;
+  });
+  ptPerHour[g] = cells[2];
+  const play = cells[2] / SP.PER_HOUR_DEFAULT * 60;
+  console.log(`Lv${g}   ${pad(sec, 7)}   ${cells.map(v => pad(Math.round(v).toLocaleString(), 7)).join('   ')}   ${pad(play.toFixed(0) + '分', 10)}      ${pad((play / 1.5).toFixed(0) + '分', 6)}`);
+}
+const ptRatio = ptPerHour[9] / ptPerHour[1];
+const ptRatioOk = ptRatio <= 1.5 + 0.01;   // 基本ポイントは整数なので、端数のずれ（0.01 まで）は許す
+if (!ptRatioOk) failures++;
+console.log(`時間あたりの学年差 Lv9 / Lv1 = ${ptRatio.toFixed(2)} 倍（1.5 倍まで）  ${ptRatioOk ? 'OK' : 'NG'}`);
+
+// 当てずっぽう：1チケットあたりの pt
+const ptHonest = FF.simulator.expectedPerQuestion({ grade: 1, difficulty: 'standard', answerType: 'choice', secPerQuestion: 10, accuracy: 0.9, kind: 'points' }).reward;
+console.log(`\n■ 勉強量ポイント：当てずっぽうの4択（1チケットあたり）  比較対象：Lv1 標準を正答率90%で解く = ${ptHonest.toFixed(2)}`);
+console.log('条件           最初の20問  最初の50問  定常      判定（定常 ≦ 比較対象の 1/3）');
+for (const c of [{ label: 'Lv9 標準', grade: 9, difficulty: 'standard' }, { label: 'Lv9 発展', grade: 9, difficulty: 'advanced' }, { label: 'Lv7 発展', grade: 7, difficulty: 'advanced' }]) {
+  const g = FF.simulator.guessExpectation(Object.assign({ pGuess: 0.25, answers: 200, kind: 'points' }, c));
+  const ok = g.steady <= ptHonest / 3;
+  if (!ok) failures++;
+  console.log(`${c.label.padEnd(12)}  ${pad(g.avgFirst(20).toFixed(2), 10)}  ${pad(g.avgFirst(50).toFixed(2), 10)}  ${pad(g.steady.toFixed(2), 6)}    ${ok ? 'OK' : 'NG'}`);
+}
+
+// 下の学年を速く解いてためる：実際の出題・回答の処理（learning.js）で 1時間ぶん解く。
+// 算数（自動生成＋文章題）の書き問題を、全問1回目で正解し続ける。反復倍率は実際の問題 ID で効く。
+function studyHour(grade, secEach, accuracy, seed) {
+  const bank = FF.learning.createBank(ctx.QUESTION_BANK);
+  const rng = FF.util.makeRng(seed);
+  let s = FF.state.createDefaultState(0);
+  FF.defs.SUBJECTS.forEach(sub => { s.learning.unlocked[sub.id] = 9; });
+  const recentIds = [];
+  let t = 0, n = 0;
+  while (t < 3600) {
+    const now = t * 1000;
+    const q = FF.learning.pickQuestion(bank, { subject: 'math', grade, difficulty: 'standard', answerType: 'input' }, { correctLog: s.learning.correctLog, recentIds, now, rng });
+    const att = FF.learning.startAttempt(q, rng);
+    const input = rng() < accuracy ? String(q.answer) : '__wrong__';
+    let r = FF.learning.submitAnswer(s, att, input, { now, resource: 'wood' });
+    // まちがえたら、次は正解する（2回目）
+    if (r.outcome.status === 'retry') r = FF.learning.submitAnswer(s, r.attempt, String(q.answer), { now, resource: 'wood' });
+    s = r.state;
+    recentIds.push(q.id);
+    t += secEach;
+    n++;
+  }
+  return { points: s.studyPoints, questions: n };
+}
+console.log('\n■ 勉強量ポイント：下の学年を速く解いたとき（算数の書き問題を1時間。実際の出題と反復倍率）');
+console.log('条件                                  問題数   pt/時間   遊び時間');
+for (const c of [
+  { label: 'Lv5 標準を 30秒・正答率90%（自分の学年）', grade: 5, sec: 30, acc: 0.9 },
+  { label: 'Lv1 標準を 10秒・正答率90%（自分の学年）', grade: 1, sec: 10, acc: 0.9 },
+  { label: 'Lv9 標準を 60秒・正答率90%（自分の学年）', grade: 9, sec: 60, acc: 0.9 },
+  { label: 'Lv1 標準を 15秒・正答率90%（自分の学年）', grade: 1, sec: 15, acc: 0.9 },
+  { label: 'Lv5 標準を 45秒・正答率90%（自分の学年）', grade: 5, sec: 45, acc: 0.9 },
+  { label: 'Lv1 標準を 5秒・全問正解（Lv5 の子）', grade: 1, sec: 5, acc: 1 },
+  { label: 'Lv3 標準を 10秒・全問正解（Lv5 の子）', grade: 3, sec: 10, acc: 1 },
+  { label: 'Lv3 標準を 20秒・全問正解（Lv5 の子）', grade: 3, sec: 20, acc: 1 }
+]) {
+  const r = studyHour(c.grade, c.sec, c.acc, 7);
+  console.log(`${c.label.padEnd(34)}  ${pad(r.questions, 6)}   ${pad(r.points.toLocaleString(), 7)}   ${pad((r.points / SP.PER_HOUR_DEFAULT * 60).toFixed(0) + '分', 6)}`);
+}
+
 console.log('\n' + (failures === 0 ? '結果：すべて目標内' : `結果：目標外 ${failures} 件`));
 process.exitCode = failures === 0 ? 0 : 1;

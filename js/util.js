@@ -157,6 +157,7 @@
 
   FF.util = {
     formatDurationMarkup: formatDurationMarkup,
+    minuteReading: minuteReading,
     clone: clone,
     isPlainObject: isPlainObject,
     normalizeName: normalizeName,

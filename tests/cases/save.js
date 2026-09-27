@@ -30,7 +30,10 @@ module.exports = ({ test, FF, assert, plain }) => {
     s.learning.stats.math = { 3: { attempts: 4, correct: 3, choice: { attempts: 1, correct: 1 }, input: { attempts: 3, correct: 2 }, hintsUsed: 1, recent: [1, 0, 1, 1] } };
     s.learning.correctLog = { q1: [T0] };
     s.learning.history.push({ at: T0, qid: 'q1', correct: true });
-    s.settings = { furigana: false, furiganaAuto: false, themeMode: 'day' };
+    s.settings = { furigana: false, furiganaAuto: false, themeMode: 'day', pointsPerHour: 2400, parentEmail: 'parent@example.com' };
+    s.studyPoints = 1234;
+    s.studyPointsEarnedTotal = 5678;
+    s.redeemHistory = [{ id: 'K7QX-3M9P', issuedAt: T0, points: 4444, minutes: 90, pointsPerHour: 3000, method: 'print' }];
     s.flags.introSeen = true;
     return s;
   }
@@ -119,8 +122,12 @@ module.exports = ({ test, FF, assert, plain }) => {
     for (const k of ['player', 'resources', 'buildings', 'tickets', 'learning', 'flags']) {
       assert.deepStrictEqual(plain(s[k]), src[k], k);
     }
-    // 設定は元のまま、あとから足した項目（テーマ）だけ初期値（昼）で補われる
-    assert.deepStrictEqual(plain(s.settings), Object.assign({}, src.settings, { themeMode: 'day' }));
+    // 設定は元のまま、あとから足した項目（テーマ・交換レート・メールアドレス）だけ初期値で補われる
+    assert.deepStrictEqual(plain(s.settings), Object.assign({}, src.settings, { themeMode: 'day', pointsPerHour: 3000, parentEmail: '' }));
+    // 勉強量ポイント（v0.4）は空の状態で補われる
+    assert.strictEqual(s.studyPoints, 0);
+    assert.strictEqual(s.studyPointsEarnedTotal, 0);
+    assert.deepStrictEqual(plain(s.redeemHistory), []);
     // 中央炉 Lv3 のセーブなので、読み込んだ時点で雪原が開いている
     assert.strictEqual(FF.exploration.isRegionUnlocked(s, 'snowfield'), true);
   });

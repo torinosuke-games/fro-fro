@@ -25,6 +25,28 @@
     // 倍率 = a >= THRESHOLD ? 1 : (a / THRESHOLD) ^ EXPONENT
     ACCURACY: { WINDOW: 10, THRESHOLD: 0.6, EXPONENT: 4, PRIOR: 0.6 },
 
+    // ---- 勉強量ポイント（SPEC 8.4・14.4・14.5、DESIGN 14.1） ----
+    // 獲得 pt = BASE[学年][難易度] × 反復倍率 × ヒント倍率 × 回答回数倍率 × 正答率倍率（倍率は上の報酬と同じ表）
+    // 標準 ＝ 1問の想定時間（Lv1 10秒・Lv5 30秒・Lv9 60秒）× 時間あたりの効率（Lv1 1.0 → Lv9 1.5）。基礎 ×0.8・発展 ×1.3
+    STUDY_POINTS: {
+      BASE: {
+        1: { basic: 8, standard: 10, advanced: 13 },
+        2: { basic: 12, standard: 15, advanced: 20 },
+        3: { basic: 18, standard: 22, advanced: 29 },
+        4: { basic: 24, standard: 30, advanced: 39 },
+        5: { basic: 30, standard: 38, advanced: 49 },
+        6: { basic: 38, standard: 48, advanced: 62 },
+        7: { basic: 48, standard: 60, advanced: 78 },
+        8: { basic: 60, standard: 75, advanced: 98 },
+        9: { basic: 72, standard: 90, advanced: 117 }
+      },
+      MIN: 1,
+      PER_HOUR_DEFAULT: 3000,                  // 交換レートの初期値（pt ＝ 1時間）
+      PER_HOUR_MIN: 100,
+      PER_HOUR_MAX: 100000,
+      PRESET_MINUTES: [15, 30, 60, 120]        // 引換所のプリセット
+    },
+
     // ---- チケット（SPEC 7.2） ----
     TICKET_MAX: 20,
     TICKET_RECOVER_MS: 5 * MIN,

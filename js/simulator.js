@@ -37,6 +37,9 @@
     return r;
   }
 
+  // o.kind が 'points' なら、資源の報酬の代わりに勉強量ポイント（SPEC 8.4）を計算する
+  function calcOf(o) { return o.kind === 'points' ? FF.points.calcPoints : FF.rewards.calcReward; }
+
   // 1問あたりの期待報酬と期待時間（秒）。
   // windowSize: 直近の記録件数（定常状態なら WINDOW）
   function expectedPerQuestion(o, b) {
@@ -52,7 +55,7 @@
       var recent = makeRecent(x, W);
       for (var i = 1; i <= A; i++) {
         var pi = Math.pow(1 - p, i - 1) * p;
-        reward += w * pi * FF.rewards.calcReward({
+        reward += w * pi * calcOf(o)({
           grade: o.grade, difficulty: o.difficulty, answerType: o.answerType,
           hintsUsed: 0, attempt: i, repeatCount: 0,
           facilityLevel: o.facilityLevel || 0, isFocusSubject: !!o.isFocusSubject,
@@ -421,7 +424,7 @@
       var n = Math.min(i, W);
       var e = 0;
       for (var x = 0; x <= n; x++) {
-        e += binomPmf(n, x, o.pGuess) * o.pGuess * FF.rewards.calcReward({
+        e += binomPmf(n, x, o.pGuess) * o.pGuess * calcOf(o)({
           grade: o.grade, difficulty: o.difficulty, answerType: 'choice',
           hintsUsed: 0, attempt: 1, repeatCount: 0,
           facilityLevel: o.facilityLevel || 0, isFocusSubject: !!o.isFocusSubject,

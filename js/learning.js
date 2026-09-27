@@ -202,21 +202,26 @@
   function finish(s, att, correct, attemptNo, ctx, b) {
     var q = att.question, now = ctx.now, L = s.learning;
     var cell = statsCell(s, q.subject, q.gradeLevel);
-    var reward = 0, breakdown = null;
+    var reward = 0, breakdown = null, points = 0, pointsBreakdown = null;
 
     if (correct) {
       var producer = FF.defs.BUILDINGS.filter(function (d) { return d.produces === ctx.resource; })[0];
-      breakdown = FF.rewards.rewardBreakdown({
+      var params = {
         grade: q.gradeLevel, difficulty: q.difficulty, answerType: q.answerType,
         hintsUsed: att.hintsShown, attempt: attemptNo,
         repeatCount: FF.rewards.countRecentCorrect(L.correctLog, q.id, now, b),
         facilityLevel: producer ? s.buildings[producer.id].level : 0,
         isFocusSubject: FF.rewards.focusSubjectOf(now) === q.subject,
         recent: cell.recent            // 今回の回答を記録する前の直近
-      }, b);
+      };
+      breakdown = FF.rewards.rewardBreakdown(params, b);
       reward = breakdown.total;
       s.resources[ctx.resource] = (s.resources[ctx.resource] || 0) + reward;
       L.totalEarned[ctx.resource] = (L.totalEarned[ctx.resource] || 0) + reward;
+      // 勉強量ポイント（SPEC 8.4）：同じ反復回数・直近の正答で計算する（施設・重点教科・形式はかからない）
+      pointsBreakdown = FF.points.pointsBreakdown(params, b);
+      points = pointsBreakdown.total;
+      FF.points.addPoints(s, points);
       L.correctLog = FF.rewards.recordCorrect(L.correctLog, q.id, now, b);
     } else {
       L.correctLog = FF.rewards.pruneCorrectLog(L.correctLog, now, b);
@@ -234,7 +239,7 @@
     L.history = L.history.concat([{
       at: now, qid: q.id, subject: q.subject, grade: q.gradeLevel, difficulty: q.difficulty,
       type: q.answerType, correct: correct, attempts: attemptNo, hints: att.hintsShown,
-      resource: correct ? ctx.resource : null, reward: reward
+      resource: correct ? ctx.resource : null, reward: reward, points: points
     }]).slice(-b.HISTORY_LIMIT);
 
     return {
@@ -244,6 +249,8 @@
         status: correct ? 'correct' : 'wrong',
         reward: reward,
         breakdown: breakdown,
+        points: points,
+        pointsBreakdown: pointsBreakdown,
         attempts: attemptNo,
         correctAnswer: displayAnswer(q),
         explanation: q.explanation
