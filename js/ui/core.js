@@ -130,7 +130,9 @@
     var s = FF.app.state, now = FF.app.now();
     hud.hidden = FF.app.screen === 'title';
     clear(hud);
-    hud.appendChild(el('div', { class: 'hud-res' }, FF.defs.RESOURCES.map(function (r) {
+    // 学習の「学ぶ」（選択画面）では、資源の所持数の行を出さない（縦の長さを減らすため。チケットの行は出す）
+    var hideRes = FF.app.screen === 'study' && FF.app.studyTab === 'learn';
+    if (!hideRes) hud.appendChild(el('div', { class: 'hud-res' }, FF.defs.RESOURCES.map(function (r) {
       return el('div', { class: 'res-chip', attrs: { title: r.name } }, [el('span', { class: 'ico', text: r.icon }), fmt(s.resources[r.id] || 0)]);
     })));
     var t = FF.tickets.recoverTickets(s.tickets, now);

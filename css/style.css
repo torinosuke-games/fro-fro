@@ -56,8 +56,6 @@
   /* 出題・学習・記録・設定・探索の画面（値はこれまで直接書いていたものと同じ） */
   --tab-bg: rgba(12, 20, 30, 0.9);
   --tab-active-bg: rgba(255,138,61,0.12);
-  --focus-edge: rgba(255,138,61,0.45);
-  --focus-bg: linear-gradient(90deg, rgba(255,138,61,0.16), transparent);
   --track-soft: rgba(255,255,255,0.08);
   --question-bg: rgba(4, 8, 13, 0.6);
   --choice-bg: rgba(22, 35, 50, 0.92);
@@ -156,8 +154,6 @@
   --rt: #4f6b82;
   --tab-bg: rgba(255, 255, 255, 0.8);
   --tab-active-bg: rgba(212,96,15,0.10);
-  --focus-edge: rgba(212,96,15,0.45);
-  --focus-bg: linear-gradient(90deg, rgba(212,96,15,0.12), transparent);
   --track-soft: rgba(20, 60, 100, 0.12);
   --question-bg: rgba(255, 255, 255, 0.92);
   --choice-bg: rgba(255, 255, 255, 0.95);
@@ -387,6 +383,32 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick.grade-chip.selected { border-color: var(--ember); border-width: 2px; }
 .pick.grade-chip:disabled { opacity: 0.45; }
 .grade-note { margin-top: 4px; }
+/* 見出しの行の右に寄せる注記（学年の「🔒 の学年は 昇格試験で解放」）。見出しの線の右に置く */
+.section-title.with-note::after { order: 1; }
+.section-title .title-note { order: 2; flex: none; font-size: 10px; letter-spacing: 0; white-space: nowrap; }
+/* 出題形式：書き問題の報酬の倍率を、教科・資源のバッジと同じく上の枠に重ねる */
+.fmt-row .pick { position: relative; }
+.pick .corner-tag {
+  position: absolute; top: -8px; right: 6px; padding: 0 5px; border-radius: 6px;
+  font-size: 10px; font-weight: 800; line-height: 1.5; color: var(--warn);
+  background: var(--pick-bg); border: 1px solid var(--warn);
+}
+.start-box { margin-top: 16px; }
+/* 「学ぶ」の選択画面：［挑戦する］までが高さ 667px の画面に収まるよう、見出しの余白とアイコンを詰める */
+.learn-sel .section-title { margin: 4px 2px 2px; line-height: 1.15; }
+.learn-sel .pick.subj .subj-icon { max-width: 44px; }
+.learn-sel .pick.res .res-tile { max-width: 44px; font-size: 24px; }
+.learn-sel .fmt-row .pick { min-height: 44px; padding: 8px 10px; justify-content: center; }
+.learn-sel .fmt-row .pick .title { font-size: 14px; }
+.learn-sel .fmt-note { font-size: 11px; font-weight: 600; color: var(--muted); }
+.learn-sel .start-box { margin-top: 10px; }
+.learn-sel .fmt-row .pick .title { white-space: nowrap; }
+@media (max-width: 359px) {
+  /* 幅 320px 前後：出題形式の「選択問題（チケット1枚）」が1行に収まるよう、文字と余白を少し小さくする */
+  .learn-sel .fmt-row .pick { padding: 8px 5px; }
+  .learn-sel .fmt-row .pick .title { font-size: 13px; }
+  .learn-sel .fmt-note { font-size: 9.5px; }
+}
 /* 出題の判定後の固定バー：ナビの上に固定。左は控えめな［学習を終える］、右は主役の［次の問題］ */
 .quiz-footer {
   position: fixed; left: 0; right: 0; z-index: 6;
@@ -499,10 +521,6 @@ body.typing nav.tabs, body.typing .quiz-footer { display: none; }
   border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 13px;
 }
 .subtabs button.active { color: var(--text); border-color: var(--ember); background: var(--tab-active-bg); }
-.focus-banner {
-  border: 1px solid var(--focus-edge); background: var(--focus-bg);
-  border-radius: 5px; padding: 6px 10px; font-size: 13px; margin-bottom: 10px;
-}
 .stepper { display: flex; gap: 4px; margin-bottom: 10px; }
 .stepper i { flex: 1; height: 3px; background: var(--track-soft); border-radius: 2px; }
 .stepper i.on { background: var(--ember); }
