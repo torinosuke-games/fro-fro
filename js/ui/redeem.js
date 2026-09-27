@@ -103,19 +103,32 @@
     U.show('redeem', { ticket: r.entry.id });
   }
 
-  // ---- 券の画面（v0.4-3 は仮。券面の QR コードと印刷は v0.4-4） ----
-  // 券面は保護者も読むので、ふりがなを付けない（DESIGN 14.5）
+  // ---- 券の画面（DESIGN 14.5） ----
+  // 券面は保護者も読むので、ふりがなを付けない。画面と印刷で同じ部品を使う（印刷では券面だけを名刺の大きさで出す）
+  function qrSvg(text) {
+    var q = FF.qrcode.encode(text);
+    var n = q.size + 8;   // まわりに 4 マスの白い余白
+    return U.svg('svg', { class: 'ticket-qr', viewBox: '0 0 ' + n + ' ' + n, role: 'img', 'aria-label': 'QR コード', 'shape-rendering': 'crispEdges' }, [
+      U.svg('rect', { width: n, height: n, fill: '#ffffff' }),
+      U.svg('path', { d: FF.qrcode.pathData(q.modules, 4), fill: '#000000' })
+    ]);
+  }
   function ticketCard(s, h) {
     var t = function (k, vars) { return U.plain(U.T(k), vars); };
     return U.el('div', { class: 'ticket-card' }, [
-      U.el('div', { class: 'ticket-top' }, [U.el('span', { class: 'ticket-brand', text: FF.config.TITLE }), U.el('span', { text: t('redeem.ticketHeading') })]),
-      U.el('dl', { class: 'ticket-fields' }, [
-        U.el('dt', { text: t('redeem.ticketName') }), U.el('dd', { text: s.player.name }),
-        U.el('dt', { text: t('redeem.ticketTime') }), U.el('dd', { text: P.formatMinutes(h.minutes) }),
-        U.el('dt', { text: t('redeem.ticketDate') }), U.el('dd', { text: P.formatDateTime(h.issuedAt) }),
-        U.el('dt', { text: 'ID' }), U.el('dd', { class: 'ticket-id', text: h.id })
-      ]),
-      U.el('div', { class: 'ticket-cost', text: t('redeem.ticketCost', { pt: U.fmt(h.points), rate: U.fmt(h.pointsPerHour) }) })
+      U.el('div', { class: 'ticket-top' }, [U.el('span', { class: 'ticket-brand', text: FF.config.TITLE }), U.el('span', { class: 'ticket-heading', text: t('redeem.ticketHeading') })]),
+      U.el('div', { class: 'ticket-body' }, [
+        qrSvg(P.qrText(s, h)),
+        U.el('div', { class: 'ticket-info' }, [
+          U.el('dl', { class: 'ticket-fields' }, [
+            U.el('dt', { text: t('redeem.ticketName') }), U.el('dd', { text: s.player.name }),
+            U.el('dt', { text: t('redeem.ticketTime') }), U.el('dd', { text: P.formatMinutes(h.minutes) }),
+            U.el('dt', { text: t('redeem.ticketDate') }), U.el('dd', { class: 'ticket-date', text: P.formatDateTime(h.issuedAt) }),
+            U.el('dt', { text: 'ID' }), U.el('dd', { class: 'ticket-id', text: h.id })
+          ]),
+          U.el('div', { class: 'ticket-cost', text: t('redeem.ticketCost', { pt: U.fmt(h.points), rate: U.fmt(h.pointsPerHour) }) })
+        ])
+      ])
     ]);
   }
 
@@ -134,7 +147,8 @@
       mail,
       hasMail ? U.R('div', 'small muted', U.T('redeem.mailNote'))
         : U.el('div', { class: 'notice' }, [U.rich(U.T('redeem.noEmail')), ' ', U.el('button', { class: 'btn small', rich: U.T('redeem.openSettings'), on: { click: function () { U.show('settings'); } } })]),
-      U.el('button', { class: 'btn block', rich: '🖨 ' + U.T('redeem.doPrint'), on: { click: function () { U.toast(U.T('redeem.printSoon')); } } })
+      U.R('div', 'small muted', U.T('redeem.printNote')),
+      U.el('button', { class: 'btn block', rich: '🖨 ' + U.T('redeem.doPrint'), on: { click: function () { root.print(); } } })
     ]));
     main.appendChild(U.el('button', { class: 'btn ghost block', rich: U.T('redeem.toList'), on: { click: function () { U.show('redeem'); } } }));
   }

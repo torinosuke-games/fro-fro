@@ -813,7 +813,47 @@ a.btn { text-decoration: none; }
 }
 .ticket-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-weight: 800; border-bottom: 1px solid #1b1b1b; padding-bottom: 4px; margin-bottom: 8px; }
 .ticket-brand { font-size: 12px; letter-spacing: 0.08em; }
-.ticket-fields { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
+.ticket-body { display: flex; gap: 12px; align-items: flex-start; }
+.ticket-qr { flex: 0 0 auto; width: 118px; height: 118px; display: block; }
+.ticket-info { flex: 1; min-width: 0; }
+.ticket-fields { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; margin: 0; }
 .ticket-fields dt { color: #555555; font-size: 13px; }
-.ticket-fields dd { margin: 0; font-weight: 800; font-size: 16px; overflow-wrap: anywhere; }
+.ticket-fields dd { margin: 0; font-weight: 800; font-size: 15px; overflow-wrap: anywhere; }
+.ticket-fields dt { align-self: baseline; }
+/* 幅の狭い画面では、項目名を値の上に置く（日付や ID を途中で折り返さないように） */
+@media (max-width: 400px) {
+  .ticket-qr { width: 104px; height: 104px; }
+  .ticket-fields { grid-template-columns: 1fr; gap: 0; }
+  .ticket-fields dt { font-size: 11px; }
+  .ticket-fields dd { margin-bottom: 3px; }
+  .ticket-fields dd.ticket-date, .ticket-fields dd.ticket-id { white-space: nowrap; }
+}
 .ticket-cost { font-size: 12px; color: #555555; margin-top: 8px; }
+
+/* ---- 引換券の印刷（DESIGN 14.5）：券面だけを、紙の左上に名刺の大きさ（91 × 55mm）で出す ---- */
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  html, body { background: #ffffff !important; color: #000000; }
+  body { padding: 0 !important; min-height: 0 !important; }
+  .snowfall, #hud, nav.tabs, .debug-flag, .toast, .overlay { display: none !important; }
+  #app { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+  main#screen { padding: 0 !important; }
+  main#screen > :not(.ticket-card) { display: none !important; }
+  .ticket-card {
+    box-sizing: border-box; width: 91mm; height: 55mm; max-width: none; margin: 0; padding: 3mm 3.5mm;
+    border: 0.35mm dashed #000000; border-radius: 0; color: #000000; overflow: hidden;
+    break-inside: avoid; page-break-inside: avoid;
+    display: flex; flex-direction: column;
+  }
+  .ticket-body { flex: 1; align-items: center; }
+  .ticket-fields { grid-template-columns: auto 1fr; }
+  .ticket-fields dd { margin-bottom: 0; }
+  .ticket-top { font-size: 9pt; padding-bottom: 1mm; margin-bottom: 2mm; border-bottom-width: 0.3mm; }
+  .ticket-brand { font-size: 7pt; }
+  .ticket-body { gap: 3mm; }
+  .ticket-qr { width: 30mm; height: 30mm; }
+  .ticket-fields { gap: 0.6mm 2.5mm; }
+  .ticket-fields dt { font-size: 7pt; color: #333333; }
+  .ticket-fields dd { font-size: 10pt; }
+  .ticket-cost { font-size: 6.5pt; margin-top: 1.5mm; color: #333333; }
+}
