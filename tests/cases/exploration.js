@@ -637,7 +637,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   test('シミュレーター：探索ありでも中央炉 Lv2・Lv3 の到達時間は変わらず、報酬の合計は宝箱＋イベントの期待値', () => {
     for (const key of Object.keys(B.SIM_PROFILES)) {
       const a = FF.simulator.run(B.SIM_PROFILES[key]);
-      const e = FF.simulator.run(B.SIM_PROFILES[key], { explore: true });
+      const e = FF.simulator.run(B.SIM_PROFILES[key], { explore: true, battles: false });   // v0.2 の探索だけ（戦闘は tests/cases/battle.js と simulate.js）
       assert.strictEqual(e.milestones.furnace2, a.milestones.furnace2);
       assert.strictEqual(e.milestones.furnace3, a.milestones.furnace3);
       assert.ok(e.milestones.all5 <= a.milestones.all5 * 1.01);

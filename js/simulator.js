@@ -122,7 +122,50 @@
     return perCorrect * b.EXPLORE.CORRECT_PER_NODE;
   }
 
+  // ---- 戦闘（v0.3 その2、DESIGN 13.4・13.11） ----
+  // 1回の挑戦：正解 need 回で勝ち、まちがい lose 回で負け。各回答の正答率 p。
+  // { win: 勝つ確率, answers: 挑戦が終わるまでの回答数の期待値 }
+  function battleAttempt(need, lose, p) {
+    function C(n, k) { var r = 1; for (var i = 1; i <= k; i++) r = r * (n - k + i) / i; return r; }
+    var win = 0, answers = 0;
+    for (var k = 0; k < lose; k++) {             // k 回まちがえて勝つ
+      var pw = C(need - 1 + k, k) * Math.pow(p, need) * Math.pow(1 - p, k);
+      win += pw; answers += pw * (need + k);
+    }
+    for (var j = 0; j < need; j++) {             // j 回正解して負ける
+      var pl = C(lose - 1 + j, j) * Math.pow(1 - p, lose) * Math.pow(p, j);
+      answers += pl * (lose + j);
+    }
+    return { win: win, answers: answers };
+  }
+
+  // 敵に勝つまで挑み続けたときの期待値。{ attempts: 挑戦の回数, answers: 回答の総数, firstWin: 1回目で勝つ確率 }
+  // ボスは負けるたびに必要な正解の数が減る（battle.js の startHp と同じ式。上限の回数以降は同じ）
+  function battleExpect(enemyId, p, b) {
+    b = bal(b);
+    var bt = b.BATTLE, st = bt.ENEMIES[enemyId], def = FF.defs.ENEMIES[enemyId];
+    var need0 = Math.ceil(st.hp / bt.DAMAGE_PER_CORRECT), lose = Math.ceil(bt.PLAYER_HP / st.attack);
+    var cap = def.boss ? Math.round(bt.BOSS_MERCY_MAX / bt.BOSS_MERCY_STEP) : 0;
+    var alive = 1, attempts = 0, answers = 0, firstWin = null;
+    for (var i = 0; ; i++) {
+      var need = need0 - (def.boss ? Math.round(need0 * Math.min(bt.BOSS_MERCY_MAX, i * bt.BOSS_MERCY_STEP)) : 0);
+      var a = battleAttempt(need, lose, p);
+      if (firstWin === null) firstWin = a.win;
+      if (i >= cap) {                            // ここから先は同じ条件のくり返し（幾何分布）
+        attempts += alive / a.win;
+        answers += alive * a.answers / a.win;
+        break;
+      }
+      attempts += alive;
+      answers += alive * a.answers;
+      alive *= 1 - a.win;
+    }
+    return { attempts: attempts, answers: answers, firstWin: firstWin };
+  }
+
   // 地域ごとの「地点を1つ進むごとの時間と報酬（期待値）」の列
+  // v0.3 その2：寄り道の敵は隣の地点に着いた直後に、ボスは最後に戦う（opt.battles が false なら戦わない）。
+  // 戦闘の1回の回答は、1問の秒数ぶんかかるとみなす（書き問題のやり直しは実際はもっと短いので、時間は多めに見積もる）
   function explorePlan(profile, opt, b) {
     var top = Math.max(profile.grade, b.INITIAL_UNLOCKED_GRADE);
     var retry = opt.retrySecRatio == null ? b.SIM_DEFAULTS.retrySecRatio : opt.retrySecRatio;
@@ -139,16 +182,26 @@
         var rw = b.EXPLORE.EVENT_REWARDS[id];
         for (var k in rw || {}) eventReward[k] = (eventReward[k] || 0) + rw[k] * drawP / eventNodes;
       });
+      var battles = opt.battles !== false;
+      function battleItem(enemyId) {
+        var e = battleExpect(enemyId, profile.accuracy, b);
+        return { sec: e.answers * sec * scale, reward: Object.assign({}, b.BATTLE.REWARDS[enemyId]), battle: enemyId, attempts: e.attempts, firstWin: e.firstWin };
+      }
+      var gate = FF.exploration.gateIndex(r.id);
+      var items = [];
+      route.slice(1).forEach(function (n, idx) {
+        if (n.kind === 'boss') { if (battles) items.push(battleItem(n.enemy)); return; }
+        var reward = {};
+        if (n.kind === 'chest') reward = Object.assign({}, b.EXPLORE.CHESTS[n.chest]);
+        if (n.kind === 'event') reward = Object.assign({}, eventReward);
+        items.push({ sec: perNode, reward: reward, gate: idx + 1 === gate });
+        if (battles) r.nodes.filter(function (x) { return x.kind === 'enemy' && x.adjacent === n.id && x.reachable; })
+          .forEach(function (x) { items.push(battleItem(x.enemy)); });
+      });
       return {
         id: r.id, requires: r.requires, unlockFurnace: b.EXPLORE.UNLOCK_FURNACE_LEVEL[r.id] || 1,
         grade: grade, secPerQuestion: sec,
-        // ボスの地点（v0.3 その2）は問題では進めない（戦闘に勝つと進む）。戦闘のモデルは v0.3-3 で足すので、ここではボスの手前までを進める
-        nodes: route.slice(1).filter(function (n) { return n.kind !== 'boss'; }).map(function (n) {
-          var reward = {};
-          if (n.kind === 'chest') reward = Object.assign({}, b.EXPLORE.CHESTS[n.chest]);
-          if (n.kind === 'event') reward = Object.assign({}, eventReward);
-          return { sec: perNode, reward: reward };
-        })
+        nodes: items
       };
     });
   }
@@ -177,15 +230,16 @@
     var lastDone = 0;   // 最後に完成した工事のプレイ時間（分）
     // 探索
     var ex = opt.explore ? explorePlan(profile, opt, b) : null;
-    var exPos = {}, exDone = {}, exploreSec = 0, exploreNodes = 0, exploreTickets = 0, exploreRes = 0;
+    var exPos = {}, exDone = {}, exGate = {}, exploreSec = 0, exploreNodes = 0, exploreTickets = 0, exploreRes = 0;
     var exploreMilestones = {};
+    var battleSec = 0, battleCount = 0, battleRes = 0, battleTickets = 0, battleAttempts = 0;
     function nextExploreRegion() {
       if (!ex) return null;
       for (var i = 0; i < ex.length; i++) {
         var r = ex[i];
         if (exDone[r.id]) continue;
         if (lv.furnace < r.unlockFurnace) continue;
-        if (r.requires && !exDone[r.requires]) continue;
+        if (r.requires && !exGate[r.requires]) continue;   // 前の地域のボスの手前まで進めば開く（v0.3 その2）
         return r;
       }
       return null;
@@ -293,14 +347,17 @@
           var node = region.nodes[i0];
           t += node.sec;
           exploreSec += node.sec;
-          exploreNodes++;
+          if (node.battle) { battleSec += node.sec; battleCount++; battleAttempts += node.attempts; }
+          else exploreNodes++;
+          if (node.gate) exGate[region.id] = true;
           for (var k in node.reward) {
-            if (k === 'tickets') { tickets += node.reward[k]; exploreTickets += node.reward[k]; }
-            else { res[k] += node.reward[k]; exploreRes += node.reward[k]; }
+            if (k === 'tickets') { tickets += node.reward[k]; exploreTickets += node.reward[k]; if (node.battle) battleTickets += node.reward[k]; }
+            else { res[k] += node.reward[k]; exploreRes += node.reward[k]; if (node.battle) battleRes += node.reward[k]; }
           }
           exPos[region.id] = i0 + 1;
           if (exPos[region.id] >= region.nodes.length) {
             exDone[region.id] = true;
+            exGate[region.id] = true;
             exploreMilestones[region.id] = (play + t) / 60;
           }
           passTime(node.sec);
@@ -342,10 +399,11 @@
         productionShare: produced / (produced + learned),
         build: { waitMinutes: waitSec / 60, maxParallel: maxParallel },   // 完成待ちでプレイ時間に数えた分、同時に工事した最大数
         explore: ex ? {
-          minutes: exploreSec / 60,             // 探索に使ったプレイ時間
-          nodes: exploreNodes,
-          resources: Math.round(exploreRes),    // 宝箱とイベントで得た資源（期待値）
+          minutes: exploreSec / 60,             // 探索に使ったプレイ時間（戦闘を含む）
+          nodes: exploreNodes,                  // 問題に正解して進んだ地点の数（戦闘は含まない）
+          resources: Math.round(exploreRes),    // 宝箱・イベント・戦闘の初回の報酬で得た資源（期待値）
           tickets: exploreTickets,
+          battle: { count: battleCount, minutes: battleSec / 60, attempts: battleAttempts, resources: Math.round(battleRes), tickets: battleTickets },
           completedAt: exploreMilestones,       // 地域を 100% にしたプレイ時間（分）
           regions: ex.map(function (r) { return { id: r.id, grade: r.grade, secPerQuestion: r.secPerQuestion, secPerNode: r.nodes[0].sec }; })
         } : null
@@ -389,6 +447,8 @@
     exploreGrade: exploreGrade,
     exploreSecPerNode: exploreSecPerNode,
     explorePlan: explorePlan,
+    battleAttempt: battleAttempt,
+    battleExpect: battleExpect,
     guessExpectation: guessExpectation
   };
 })(this);

@@ -331,4 +331,33 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(back.ok, true);
     assert.deepStrictEqual(plain(back.state.exploration), plain(s.exploration));
   });
+  // ---- シミュレーター（v0.3-3） ----
+  test("シミュレーターの勝率の式：1回の挑戦で勝つ確率が設計の表（DESIGN 13.4）と一致する", () => {
+    const w = (need, lose, p) => Math.round(FF.simulator.battleAttempt(need, lose, p).win * 100);
+    assert.strictEqual(w(3, 5, 0.5), 77);
+    assert.strictEqual(w(8, 6, 0.7), 83);
+    assert.strictEqual(w(10, 6, 0.8), 94);
+    assert.strictEqual(w(12, 6, 0.7), 60);
+  });
+
+  test("シミュレーターの期待値（挑戦回数・回答数）が、battle.js で実際に戦った平均と合う（ボスの HP の軽減を含む）", () => {
+    for (const [regionId, enemyId, p] of [["snowfield", "sf_enemy_machine", 0.6], ["snowfield", "sf_boss_wolf", 0.55]]) {
+      const rng = FF.util.makeRng(42);
+      let attempts = 0, answers = 0;
+      const N = 3000;
+      for (let n = 0; n < N; n++) {
+        let s = gate(base(3), regionId);
+        for (;;) {
+          let r = { state: s, battle: BA.startBattle(s, regionId, enemyId) };
+          attempts++;
+          while (!r.battle.result) { r = hit(r.state, r.battle, choiceQ, rng() < p ? "2" : "1"); answers++; }
+          s = r.state;
+          if (r.result === "win") break;
+        }
+      }
+      const e = FF.simulator.battleExpect(enemyId, p, B);
+      assert.ok(Math.abs(attempts / N - e.attempts) / e.attempts < 0.05, enemyId + " 挑戦 " + (attempts / N) + " / " + e.attempts);
+      assert.ok(Math.abs(answers / N - e.answers) / e.answers < 0.05, enemyId + " 回答 " + (answers / N) + " / " + e.answers);
+    }
+  });
 };

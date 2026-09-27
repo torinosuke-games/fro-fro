@@ -85,6 +85,35 @@ for (const ms of ['furnace2', 'furnace3', 'all5']) {
   }
 }
 
+// ---- 2c. 戦闘（v0.3 その2、DESIGN 13.11） ----
+// 探索あり（戦闘あり）と、探索あり・戦闘なし（opt.battles = false）を比べる。
+console.log('\n■ 戦闘（v0.3 その2）の影響  探索あり（戦闘なし）と探索あり（戦闘あり）');
+console.log('到達点        プロフィール   戦闘なし    戦闘あり    ずれ     目標      目標との差  判定');
+const noBattle = {};
+for (const key of Object.keys(B.SIM_PROFILES)) noBattle[key] = FF.simulator.run(B.SIM_PROFILES[key], { explore: true, battles: false });
+for (const ms of ['furnace2', 'furnace3', 'all5']) {
+  for (const key of Object.keys(B.SIM_PROFILES)) {
+    const a0 = noBattle[key].milestones[ms], a1 = withEx[key].milestones[ms], target = B.TARGETS[ms][key];
+    const diff = (a1 - target) / target;
+    // 判定：戦闘ありでも目標の ±30% 以内、かつ戦闘による短縮が 30% を超えない
+    const ok = Math.abs(diff) <= B.TARGET_TOLERANCE && (a0 - a1) / a0 <= B.TARGET_TOLERANCE;
+    if (!ok) failures++;
+    console.log(`${ms.padEnd(12)}  ${key.padEnd(12)} ${pad(fmtMin(a0), 9)}  ${pad(fmtMin(a1), 9)}  ${pad(pct((a1 - a0) / a0), 7)}  ${pad(fmtMin(target), 8)}  ${pad(pct(diff), 8)}    ${ok ? 'OK' : 'NG'}`);
+  }
+}
+console.log('\n■ 戦闘の内訳（期待値。全施設Lv5 までに戦った分）');
+for (const key of Object.keys(withEx)) {
+  const bt = withEx[key].explore.battle;
+  console.log(`${key.padEnd(12)} 戦った敵 ${bt.count}体、挑戦 ${bt.attempts.toFixed(1)}回、戦闘のプレイ時間 ${fmtMin(bt.minutes)}、初回の報酬 資源 ${bt.resources}・チケット ${bt.tickets}`);
+}
+console.log('\n■ 敵ごとの勝率（1回目の挑戦で勝つ確率／勝つまでの挑戦回数の期待値）  正答率ごと');
+console.log('敵                    ' + [0.5, 0.6, 0.7, 0.8, 0.9].map(p => pad(Math.round(p * 100) + '%', 13)).join(''));
+for (const id of Object.keys(FF.defs.ENEMIES)) {
+  const name = FF.util.plainText(FF.defs.ENEMIES[id].name) + (FF.defs.ENEMIES[id].boss ? '（ボス）' : '');
+  const cells = [0.5, 0.6, 0.7, 0.8, 0.9].map(p => { const e = FF.simulator.battleExpect(id, p, B); return pad((e.firstWin * 100).toFixed(0) + '%/' + e.attempts.toFixed(1) + '回', 13); });
+  console.log(name.padEnd(14, '　') + cells.join(''));
+}
+
 console.log('\n■ 探索の内訳（期待値）');
 console.log('プロフィール  地域        出る学年  1問の秒数  1地点の秒数  100%到達（プレイ時間）');
 for (const key of Object.keys(withEx)) {
