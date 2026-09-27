@@ -127,12 +127,11 @@
         U.el('div', { class: 'grade-row' }, FF.defs.GRADES.filter(function (g) { return g.level >= from && g.level <= to; }).map(gradeChip))
       ]);
     }
-    var gradeBox = U.el('div', { class: 'grade-bands' }, [band('elem', 1, 6), band('jr', 7, 9)]);
-    // 「🔒 の学年は 昇格試験で解放」は見出しの行の右に寄せる（未解放の学年があるときだけ）
-    var gradeSec = U.el('div', {}, [
-      U.el('div', { class: 'section-title with-note' }, [U.rich(U.T('chooseGrade')), anyLocked ? U.R('span', 'title-note', U.T('gradeLockedNote')) : null]),
-      gradeBox
-    ]);
+    // 「🔒 の学年は 昇格試験で解放」は「小学生」の小見出しの行の右に寄せる（未解放の学年があるときだけ）
+    var elemRow = band('elem', 1, 6), jrRow = band('jr', 7, 9);   // 先に両方作って anyLocked を決める
+    if (anyLocked) elemRow.querySelector('.band-label').appendChild(U.R('span', 'band-note', U.T('gradeLockedNote')));
+    var gradeBox = U.el('div', { class: 'grade-bands' }, [elemRow, jrRow]);
+    var gradeSec = section(U.T('chooseGrade'), gradeBox);
     if (L.shouldRecommendLower(s, sel.subject, sel.grade)) gradeSec.appendChild(U.R('div', 'notice', U.T('recommendLower')));
 
     // 難易度：ふだんは「難易度：ランダム」と［難易度を指定する ▾］の1行だけ。開くと、ランダムと基礎・標準・発展の選択肢を出す

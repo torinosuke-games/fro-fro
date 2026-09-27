@@ -268,6 +268,10 @@ main#screen { flex: 1; padding: 12px 14px 24px; }
 .hud-tickets .count { color: var(--ice); font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; }
 .hud-tickets .timer { font-variant-numeric: tabular-nums; }
 .ticket-bar { flex: 1; height: 4px; margin: 0 10px; background: var(--track); border-radius: 2px; overflow: hidden; }
+/* 学習の「学ぶ」ではチケットの行だけなので、上下を最小まで詰める */
+.hud.compact { padding-top: 2px; padding-bottom: 2px; }
+.hud.compact .hud-tickets { margin-top: 0; font-size: 12px; line-height: 1.15; }
+.hud.compact .hud-tickets .count { font-size: 13px; }
 .ticket-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--ice-deep), var(--ice)); }
 
 /* ナビ */
@@ -368,7 +372,9 @@ h3 { font-size: 15px; color: var(--ice); }
 .res-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 /* 学年のチップ：小学生（青）・中学生（緑）の2段。6列の格子で、中学生の3つも同じ幅で左に寄せる */
 .grade-bands { display: grid; gap: 6px; }
-.grade-band .band-label { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.grade-band .band-label { font-size: 11px; font-weight: 700; margin-bottom: 2px; display: flex; align-items: baseline; gap: 6px; }
+/* 「小学生」の行の右に寄せる注記（🔒 の学年は 昇格試験で解放） */
+.grade-band .band-note { margin-left: auto; font-size: 10px; font-weight: 600; color: var(--muted); white-space: nowrap; }
 .grade-band.elem .band-label { color: var(--gr-elem-text); }
 .grade-band.jr .band-label { color: var(--gr-jr-text); }
 .grade-row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
@@ -383,9 +389,6 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick.grade-chip.selected { border-color: var(--ember); border-width: 2px; }
 .pick.grade-chip:disabled { opacity: 0.45; }
 .grade-note { margin-top: 4px; }
-/* 見出しの行の右に寄せる注記（学年の「🔒 の学年は 昇格試験で解放」）。見出しの線の右に置く */
-.section-title.with-note::after { order: 1; }
-.section-title .title-note { order: 2; flex: none; font-size: 10px; letter-spacing: 0; white-space: nowrap; }
 /* 出題形式：書き問題の報酬の倍率を、教科・資源のバッジと同じく上の枠に重ねる */
 .fmt-row .pick { position: relative; }
 .pick .corner-tag {
@@ -395,7 +398,7 @@ h3 { font-size: 15px; color: var(--ice); }
 }
 .start-box { margin-top: 16px; }
 /* 「学ぶ」の選択画面：［挑戦する］までが高さ 667px の画面に収まるよう、見出しの余白とアイコンを詰める */
-.learn-sel .section-title { margin: 4px 2px 2px; line-height: 1.15; }
+.learn-sel .section-title { margin: 8px 2px 4px; }   /* 見出しの余白：元の 14px/6px と詰めた 4px/2px の中間 */
 .learn-sel .pick.subj .subj-icon { max-width: 44px; }
 .learn-sel .pick.res .res-tile { max-width: 44px; font-size: 24px; }
 .learn-sel .fmt-row .pick { min-height: 44px; padding: 8px 10px; justify-content: center; }
@@ -515,9 +518,9 @@ body.typing nav.tabs, body.typing .quiz-footer { display: none; }
 .collect-bar .pend { font-size: 13px; color: var(--muted); }
 
 /* 学習 */
-.subtabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 12px; }
+.subtabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 8px; }
 .subtabs button {
-  min-height: 38px; border: 1px solid var(--edge); background: var(--tab-bg); color: var(--muted);
+  min-height: 28px; padding: 1px 2px; line-height: 1.15; border: 1px solid var(--edge); background: var(--tab-bg); color: var(--muted);
   border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 13px;
 }
 .subtabs button.active { color: var(--text); border-color: var(--ember); background: var(--tab-active-bg); }
