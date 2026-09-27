@@ -141,15 +141,20 @@
     // ---- 探索（v0.2） ----
     main.appendChild(U.el('div', { class: 'panel stack' }, [
       U.el('h3', { text: '探索（テスト用）' }),
-      U.el('div', { class: 'small muted', text: '雪原は中央炉 Lv3、凍結森林は雪原 100% かつ中央炉 Lv4 で開く。進めると宝箱・できごとの報酬も入る。' }),
+      U.el('div', { class: 'small muted', text: '雪原は中央炉 Lv3、凍結森林は雪原のボスの手前かつ中央炉 Lv4、氷河は凍結森林のボスの手前かつ中央炉 Lv5 で開く。進めると宝箱・できごとの報酬も入る（ボスの地点へは、戦闘に勝たないと進めない）。' }),
       U.el('div', { class: 'grid2' }, [
         U.el('button', { class: 'btn small', text: '工事中の建物をすべて完成させる', on: { click: finishBuilds } }),
         U.el('button', { class: 'btn small', text: '中央炉を Lv3 にする', on: { click: function () { setFurnace(3); } } }),
         U.el('button', { class: 'btn small', text: '中央炉を Lv4 にする', on: { click: function () { setFurnace(4); } } }),
         U.el('button', { class: 'btn small', text: '雪原を1地点進める', on: { click: function () { exAdvance('snowfield', 1); } } }),
-        U.el('button', { class: 'btn small', text: '雪原を終点の1つ手前まで', on: { click: function () { exAdvance('snowfield', 'last'); } } }),
+        U.el('button', { class: 'btn small', text: '雪原をボスの手前まで', on: { click: function () { exAdvance('snowfield', 'last'); } } }),
         U.el('button', { class: 'btn small', text: '凍結森林を1地点進める', on: { click: function () { exAdvance('forest', 1); } } }),
-        U.el('button', { class: 'btn small', text: '凍結森林を終点の1つ手前まで', on: { click: function () { exAdvance('forest', 'last'); } } }),
+        U.el('button', { class: 'btn small', text: '凍結森林をボスの手前まで', on: { click: function () { exAdvance('forest', 'last'); } } }),
+        U.el('button', { class: 'btn small', text: '中央炉を Lv5 にする', on: { click: function () { setFurnace(5); } } }),
+        U.el('button', { class: 'btn small', text: '氷河を1地点進める', on: { click: function () { exAdvance('glacier', 1); } } }),
+        U.el('button', { class: 'btn small', text: '氷河をボスの手前まで', on: { click: function () { exAdvance('glacier', 'last'); } } }),
+        U.el('button', { class: 'btn small', text: 'どのボスにも5回負けたことにする（HP 半分）', on: { click: function () { exBossLosses(5); } } }),
+        U.el('button', { class: 'btn small ghost', text: '倒した敵・ボスの負けの回数を消す', on: { click: exClearBattles } }),
         U.el('button', { class: 'btn small ghost', text: '探索を最初からにする', on: { click: exReset } }),
         U.el('button', { class: 'btn small', text: '探索で、選択肢に漢字がある4択を出す', on: { click: exKanjiChoice } })
       ])
@@ -187,11 +192,35 @@
     function exAdvance(regionId, n) {
       var s = app.state, X = FF.exploration;
       if (!X.isRegionUnlocked(s, regionId)) { U.toast('その地域はまだ開いていない'); return; }
-      var goal = n === 'last' ? X.lastIndex(regionId) - 1 : X.regionState(s, regionId).position + n;
-      while (X.regionState(s, regionId).position < goal && !X.isComplete(s, regionId)) s = X.advance(s, regionId, app.now(), Math.random).state;
+      // 'last'：ボスの手前（ボスがいなければ終点の1つ手前）。ボスの地点へは advance では進まないので、進めなくなったら止める
+      var goal = n === 'last' ? (X.bossNode(regionId) ? X.gateIndex(regionId) : X.lastIndex(regionId) - 1) : X.regionState(s, regionId).position + n;
+      while (X.regionState(s, regionId).position < goal && !X.isComplete(s, regionId)) {
+        var before = X.regionState(s, regionId).position;
+        s = X.advance(s, regionId, app.now(), Math.random).state;
+        if (X.regionState(s, regionId).position === before) break;
+      }
+      if (X.nextIsBoss(s, regionId)) U.toast('次はボス（戦闘に勝つと進む）');
       app.exploreSession = null;
       app.commit(s);
       U.toast(regionId + '：' + X.progressPercent(s, regionId) + '%');
+    }
+    // 戦闘（v0.3 その2）：ボスの負けの回数を n に（上限まで）。倒した記録は変えない
+    function exBossLosses(n) {
+      var st = FF.util.clone(app.state), X = FF.exploration;
+      FF.defs.REGIONS.forEach(function (r) { var rs = st.exploration.regions[r.id]; rs.bossLosses = Math.min(n, X.bossLossCap()); });
+      app.commit(st);
+      U.toast('ボスの負けの回数を ' + Math.min(n, X.bossLossCap()) + ' にした');
+    }
+    // 倒した敵とボスの負けの回数を消す（受け取った報酬はそのまま。ボスを倒して 100% にした地域は、ボスの手前に戻す）
+    function exClearBattles() {
+      var st = FF.util.clone(app.state), X = FF.exploration;
+      FF.defs.REGIONS.forEach(function (r) {
+        var rs = st.exploration.regions[r.id];
+        rs.defeated = []; rs.bossLosses = 0;
+        if (X.bossNode(r.id) && rs.position > X.gateIndex(r.id)) { rs.position = X.gateIndex(r.id); rs.completedAt = null; }
+      });
+      app.commit(st);
+      U.toast('倒した敵・ボスの負けの回数を消した');
     }
     function exReset() {
       var s = FF.util.clone(app.state);
