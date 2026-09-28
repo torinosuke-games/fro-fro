@@ -484,6 +484,7 @@ body.typing nav.tabs, body.typing .quiz-footer { display: none; }
 }
 .badge.ember { color: var(--ember); border-color: var(--badge-ember-edge); background: var(--badge-ember-bg); }
 .badge.lock { color: var(--faint); }
+.badge.used { color: var(--muted); border-style: dashed; background: transparent; }
 
 /* 基地 */
 .commander { display: flex; align-items: baseline; gap: 8px; }
@@ -829,6 +830,14 @@ a.btn { text-decoration: none; }
   .ticket-fields dd.ticket-date, .ticket-fields dd.ticket-id { white-space: nowrap; }
 }
 .ticket-cost { font-size: 12px; color: #555555; margin-top: 8px; }
+/* 使用済みの券（判断173）：券面の上に斜めの印。紙の見た目なので昼夜で変えない。印刷しても出る */
+.ticket-card { position: relative; }
+.ticket-card.is-used .ticket-body, .ticket-card.is-used .ticket-top { opacity: 0.45; }
+.ticket-used-stamp {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg);
+  border: 3px double #b00020; color: #b00020; background: rgba(255, 255, 255, 0.85);
+  font-weight: 800; font-size: 16px; padding: 4px 10px; white-space: nowrap; border-radius: 4px;
+}
 
 /* ---- 引換券の印刷（DESIGN 14.5）：券面だけを、紙の左上に名刺の大きさ（91 × 55mm）で出す ---- */
 @media print {
@@ -856,4 +865,5 @@ a.btn { text-decoration: none; }
   .ticket-fields dt { font-size: 7pt; color: #333333; }
   .ticket-fields dd { font-size: 10pt; }
   .ticket-cost { font-size: 6.5pt; margin-top: 1.5mm; color: #333333; }
+  .ticket-used-stamp { font-size: 11pt; border-width: 0.8mm; padding: 1mm 3mm; }
 }

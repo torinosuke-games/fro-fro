@@ -29,11 +29,6 @@
       attrs: { type: 'number', inputmode: 'numeric', min: SP.PER_HOUR_MIN, max: SP.PER_HOUR_MAX, step: 100, 'aria-label': U.plain(U.T('parent.rate')) },
       value: String(rate)
     });
-    var mailInput = U.el('input', {
-      class: 'field',
-      attrs: { type: 'email', inputmode: 'email', autocomplete: 'email', placeholder: 'parent@example.com', 'aria-label': U.plain(U.T('parent.email')) },
-      value: s.settings.parentEmail || ''
-    });
     function setSettings(patch) {
       app.commit(Object.assign({}, app.state, { settings: Object.assign({}, app.state.settings, patch) }));
     }
@@ -54,21 +49,11 @@
         ]
       });
     }
-    function saveEmail() {
-      var v = String(mailInput.value).trim();
-      if (v !== '' && !FF.points.isValidEmail(v)) { U.modal({ body: U.T('parent.emailError') }); return; }
-      setSettings({ parentEmail: v });
-      U.toast(U.T(v === '' ? 'parent.emailCleared' : 'parent.emailSaved'));
-      U.rerender();
-    }
     return U.el('div', { class: 'panel stack parent-panel' }, [
       U.R('h3', '', U.T('parent.title')),
       U.R('div', 'small muted', U.T('parent.help')),
       U.R('div', 'section-title', U.T('parent.rate')),
       U.el('div', { class: 'row' }, [rateInput, U.R('span', '', U.T('parent.rateUnit')), U.el('button', { class: 'btn small', rich: U.T('change'), on: { click: changeRate } })]),
-      U.R('div', 'section-title', U.T('parent.email')),
-      mailInput,
-      U.el('div', { class: 'row between' }, [U.R('span', 'small muted', U.T('parent.emailHelp')), U.el('button', { class: 'btn small', rich: U.T('parent.save'), on: { click: saveEmail } })]),
       U.el('div', { class: 'row', style: { justifyContent: 'flex-end' } }, [
         U.el('button', { class: 'btn small ice', rich: U.T('parent.openRedeem'), on: { click: function () { U.openRedeem(); } } })
       ])

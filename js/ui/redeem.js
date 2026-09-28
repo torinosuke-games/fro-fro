@@ -1,5 +1,6 @@
 // 引換所（v0.4、SPEC 14.5・DESIGN 14.4）：pt の残高と換算、引換券にする時間（プリセット）、確認と方式、これまでの引換券。
-// 券の画面（params.ticket）：発行した券を出し、メールアプリを開く・印刷する。履歴から何度でも出し直せる（pt は減らない）。
+// 券の画面（params.ticket）：発行した券を出して印刷する。保護者に見せて［この券を使う］を押すと使用済みになる（判断173）。
+// 履歴から何度でも出し直し・印刷し直しができる（pt は減らない）。使用済みの券は、券面にも「使用済み」と出る。
 (function (root) {
   'use strict';
   var FF = root.FF;
@@ -64,7 +65,9 @@
       return U.el('div', { class: 'redeem-row' }, [
         U.el('div', { class: 'row between' }, [
           U.el('span', {}, [when(h.issuedAt) + '  ', U.el('strong', {}, U.rich(P.formatMinutesMarkup(h.minutes))), '  ' + U.fmt(h.points) + 'pt']),
-          U.el('span', { class: 'small muted' }, U.rich(U.T('redeem.methods.' + h.method)))
+          P.isUsed(h)
+            ? U.el('span', { class: 'badge used' }, U.rich(U.T('redeem.usedBadge')))
+            : U.el('span', { class: 'badge ice' }, U.rich(U.T('redeem.unusedBadge')))
         ]),
         U.el('div', { class: 'row between' }, [
           U.el('span', { class: 'small muted ticket-id', text: 'ID ' + h.id }),
@@ -74,24 +77,15 @@
     }) : [U.R('div', 'small muted', U.T('redeem.noHistory'))])));
   }
 
-  // 時間を選んだら確認し、方式（メール／印刷）を押した時点で発行する（DESIGN 14.4）
+  // 時間を選んだら確認し、［引換券を発行する］で発行して券の画面へ（方式は印刷だけ。判断173）
   function confirmIssue(minutes, cost) {
-    var s = FF.app.state;
-    var hasMail = P.isValidEmail(s.settings.parentEmail);
-    var closeModal = null;
-    function choose(method) { if (closeModal) closeModal(); issue(minutes, method); }
-    // 方式のボタンは幅いっぱいに縦に並べる（幅 320px でも押しやすいように）。メールアドレスがなければメールは押せない
-    var body = U.el('div', { class: 'stack' }, [
-      U.el('div', { class: 'pre' }, U.rich(withTime(U.T('redeem.confirm'), minutes), { pt: U.fmt(cost) })),
-      U.R('div', 'section-title', U.T('redeem.howTitle')),
-      U.el('button', { class: 'btn primary block', disabled: !hasMail, rich: U.T('redeem.mail'), on: { click: function () { choose('mail'); } } }),
-      hasMail ? null : U.el('div', { class: 'notice' }, [
-        U.rich(U.T('redeem.noEmail')), ' ',
-        U.el('button', { class: 'btn small', rich: U.T('redeem.openSettings'), on: { click: function () { closeModal(); U.show('settings'); } } })
-      ]),
-      U.el('button', { class: 'btn primary block', rich: U.T('redeem.print'), on: { click: function () { choose('print'); } } })
-    ]);
-    closeModal = U.modal({ body: body, buttons: [{ label: U.T('cancel'), class: 'ghost' }] });
+    U.modal({
+      body: U.el('div', { class: 'pre' }, U.rich(withTime(U.T('redeem.confirm'), minutes), { pt: U.fmt(cost) })),
+      buttons: [
+        { label: U.T('cancel'), class: 'ghost' },
+        { label: U.T('redeem.issue'), class: 'primary', onClick: function () { issue(minutes, 'print'); } }
+      ]
+    });
   }
 
   function issue(minutes, method) {
@@ -115,7 +109,8 @@
   }
   function ticketCard(s, h) {
     var t = function (k, vars) { return U.plain(U.T(k), vars); };
-    return U.el('div', { class: 'ticket-card' }, [
+    var used = P.isUsed(h);
+    return U.el('div', { class: 'ticket-card' + (used ? ' is-used' : '') }, [
       U.el('div', { class: 'ticket-top' }, [U.el('span', { class: 'ticket-brand', text: FF.config.TITLE }), U.el('span', { class: 'ticket-heading', text: t('redeem.ticketHeading') })]),
       U.el('div', { class: 'ticket-body' }, [
         qrSvg(P.qrText(s, h)),
@@ -128,7 +123,8 @@
           ]),
           U.el('div', { class: 'ticket-cost', text: t('redeem.ticketCost', { pt: U.fmt(h.points), rate: U.fmt(h.pointsPerHour) }) })
         ])
-      ])
+      ]),
+      used ? U.el('div', { class: 'ticket-used-stamp', text: t('redeem.usedStamp', { date: P.formatDateTime(h.usedAt) }) }) : null
     ]);
   }
 
@@ -139,18 +135,37 @@
     main.appendChild(header(U.T('redeem.ticketTitle'), function () { U.show('redeem'); }));
     main.appendChild(ticketCard(s, h));
 
-    var hasMail = P.isValidEmail(s.settings.parentEmail);
-    var mail = hasMail
-      ? U.el('a', { class: 'btn primary block', attrs: { href: P.mailtoUrl(s, h) }, rich: '✉ ' + U.T('redeem.openMail') })
-      : U.el('button', { class: 'btn primary block', disabled: true, rich: '✉ ' + U.T('redeem.openMail') });
+    var used = P.isUsed(h);
+    // 券を使う（保護者に見せて押してもらう）。使用済みなら押せない
+    main.appendChild(U.el('div', { class: 'panel stack' }, used ? [
+      U.el('div', { class: 'notice' }, U.rich(U.T('redeem.alreadyUsed'), { date: P.formatDateTime(h.usedAt) })),
+      U.el('button', { class: 'btn primary block', disabled: true, rich: U.T('redeem.use') })
+    ] : [
+      U.R('div', 'small muted', U.T('redeem.useNote')),
+      U.el('button', { class: 'btn primary block', rich: U.T('redeem.use'), on: { click: function () { confirmUse(h); } } })
+    ]));
+    // 印刷（使用済みの券も印刷はできる。券面に「使用済み」が出る）
     main.appendChild(U.el('div', { class: 'panel stack' }, [
-      mail,
-      hasMail ? U.R('div', 'small muted', U.T('redeem.mailNote'))
-        : U.el('div', { class: 'notice' }, [U.rich(U.T('redeem.noEmail')), ' ', U.el('button', { class: 'btn small', rich: U.T('redeem.openSettings'), on: { click: function () { U.show('settings'); } } })]),
       U.R('div', 'small muted', U.T('redeem.printNote')),
       U.el('button', { class: 'btn block', rich: '🖨 ' + U.T('redeem.doPrint'), on: { click: function () { root.print(); } } })
     ]));
     main.appendChild(U.el('button', { class: 'btn ghost block', rich: U.T('redeem.toList'), on: { click: function () { U.show('redeem'); } } }));
+  }
+
+  // ［この券を使う］：確認してから使用済みにする。使うと元に戻せない
+  function confirmUse(h) {
+    U.modal({
+      body: U.el('div', { class: 'pre' }, U.rich(withTime(U.T('redeem.useConfirm'), h.minutes), { id: h.id })),
+      buttons: [
+        { label: U.T('cancel'), class: 'ghost' },
+        { label: U.T('redeem.useDo'), class: 'primary', onClick: function () {
+          var app = FF.app;
+          var r = P.useTicket(app.state, h.id, app.now());
+          if (r.ok) { app.commit(r.state); U.toast(U.T('redeem.usedToast')); }
+          U.rerender();
+        } }
+      ]
+    });
   }
 
   function render(main, params) {

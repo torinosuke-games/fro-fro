@@ -60,8 +60,8 @@
       studyPointsEarnedTotal: 0,
       redeemHistory: [],
       // themeMode：'night' | 'day' | 'auto'（初期値は昼）
-      // pointsPerHour：交換レート（この pt で1時間）、parentEmail：保護者のメールアドレス（SPEC 14.4）
-      settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE, pointsPerHour: b.STUDY_POINTS.PER_HOUR_DEFAULT, parentEmail: '' },
+      // pointsPerHour：交換レート（この pt で1時間。SPEC 14.4）
+      settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE, pointsPerHour: b.STUDY_POINTS.PER_HOUR_DEFAULT },
       flags: { introSeen: false, diagnosisOffered: false, unlockNoticesSeen: [] }
     };
   }
