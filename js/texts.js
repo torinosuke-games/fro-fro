@@ -40,6 +40,7 @@
     },
     collect: '生産物を受け取る',
     collectNone: 'まだ受け取れる生産物はない。',
+    baseStudyCta: '学習をはじめる',   // 絵の見た目（判断177）の基地の大きなボタン
     collected: '受け取った',
     pending: '未受け取り',
     storageFull: '保管庫がいっぱい',

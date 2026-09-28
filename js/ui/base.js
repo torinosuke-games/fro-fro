@@ -118,6 +118,42 @@
     U.rerender();
   }
 
+  // ---- 絵の見た目の風景（判断177）：生成した雪原の絵の上に、建物の札（小さな絵・名前・Lv）を重ねる ----
+  // 位置は絵の幅・高さに対する割合（札の中心の x、上端の y）。札を押すと、SVG の風景と同じく建物の画面を開く
+  var ART_SPOTS = {
+    quarry: { x: 24, y: 14 }, watchtower: { x: 88, y: 6 }, lumber: { x: 12, y: 40 },
+    furnace: { x: 50, y: 30 }, mine: { x: 85, y: 38 }, housing: { x: 27, y: 58 }, foodhall: { x: 74, y: 58 }
+  };
+  function artScene(s) {
+    var box = U.el('div', { class: 'scene art' });
+    var bg = U.artImg('field', 'scene-art-bg', function () { return FF.svgScene.render(s, openBuilding, FF.app.theme); });
+    box.appendChild(bg);
+    Object.keys(ART_SPOTS).forEach(function (id) {
+      var p = ART_SPOTS[id], name, level = 0, locked, building = false, ready = false;
+      if (id === 'watchtower') {
+        name = FF.texts.teaser.watchtower;
+        locked = !FF.exploration.isExploreOpen(s);
+      } else {
+        name = U.buildingName(id);
+        level = s.buildings[id].level;
+        locked = level === 0;
+        building = !!s.buildings[id].construction;
+        ready = !locked && B.canUpgrade(s, id).ok;
+      }
+      var plainName = FF.util.plainText(name);
+      box.appendChild(U.el('button', {
+        class: 'art-bld' + (locked ? ' locked' : '') + (building ? ' is-building' : '') + (ready ? ' ready' : ''),
+        style: { left: p.x + '%', top: p.y + '%' },
+        attrs: { 'aria-label': plainName + (level ? ' Lv' + level : '') + (locked ? ' 🔒' : '') },
+        on: { click: function () { openBuilding(id); } }
+      }, [
+        U.el('span', { class: 'thumb' }, [U.artImg(id, ''), building ? U.el('span', { class: 'mark', text: '🔨' }) : ready ? U.el('span', { class: 'mark up', text: '▲' }) : null]),
+        U.el('span', { class: 'nm' }, [U.rich(name), level ? U.el('span', { class: 'lv', text: ' Lv' + level }) : null, locked ? ' 🔒' : null])
+      ]));
+    });
+    return box;
+  }
+
   // 解放のお知らせを1つずつ出す。中央炉のお知らせのあとに、探索の地域のお知らせ（v0.2）
   function showUnlockNotices() {
     var app = FF.app;
@@ -153,11 +189,14 @@
     ]);
     main.appendChild(head);
 
-    main.appendChild(U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding, FF.app.theme)));
+    main.appendChild(U.artOn() ? artScene(s) : U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding, FF.app.theme)));
 
     collectBar = U.el('div', { class: 'panel collect-bar' });
     main.appendChild(collectBar);
     renderCollect();
+
+    // 絵の見た目では、学習への大きなボタンを風景の下に置く（見本の画面に合わせる。判断177）
+    if (U.artOn()) main.appendChild(U.el('button', { class: 'btn primary base-cta', rich: U.T('baseStudyCta'), on: { click: function () { U.show('study'); } } }));
 
     var list = U.el('div', { class: 'bld-list' });
     ORDER.forEach(function (id) {
