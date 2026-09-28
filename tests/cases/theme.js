@@ -1,4 +1,4 @@
-// 昼／夜テーマ（SPEC_theme.md）
+// テーマ（SPEC_theme.md。2026-09-28 からいつも昼。夜の配色は使わずに残してある。判断176）
 module.exports = ({ test, FF, ctx, assert, plain }) => {
   const fs = require('fs');
   const path = require('path');
@@ -8,60 +8,39 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   const T0 = 1790000000000;
   const at = (h, m = 0) => new Date(2026, 8, 26, h, m, 0);   // 端末のローカル時刻
 
-  // ---- FF.theme.resolve（第4章） ----
-  test('自動：6時〜17時台は昼、それ以外は夜（境目：5時・6時・17時・18時・19時）', () => {
-    const expect = { 0: 'night', 5: 'night', 6: 'day', 12: 'day', 17: 'day', 18: 'night', 19: 'night', 23: 'night' };
-    for (const h in expect) assert.strictEqual(T.resolve('auto', at(Number(h))), expect[h], h + '時');
-    assert.strictEqual(T.resolve('auto', at(5, 59)), 'night', '5時59分');
-    assert.strictEqual(T.resolve('auto', at(6, 0)), 'day', '6時0分');
-    assert.strictEqual(T.resolve('auto', at(17, 59)), 'day', '17時59分');
-    assert.strictEqual(T.resolve('auto', at(18, 0)), 'night', '18時0分');
-  });
-
-  test('「昼」「夜」は時刻に関係なく固定', () => {
-    for (let h = 0; h < 24; h++) {
-      assert.strictEqual(T.resolve('day', at(h)), 'day', h + '時');
-      assert.strictEqual(T.resolve('night', at(h)), 'night', h + '時');
+  // ---- テーマはいつも昼（2026-09-28 から。判断176） ----
+  test('テーマはいつも昼：どの設定・どの時刻でも resolve は day、設定の値も day に直る', () => {
+    for (const m of ['day', 'night', 'auto', 'purple', undefined, null]) {
+      for (const h of [0, 5, 6, 12, 17, 18, 23]) assert.strictEqual(T.resolve(m, at(h)), 'day', `${m} ${h}時`);
+      assert.strictEqual(T.normalizeMode(m), 'day', String(m));
     }
-  });
-
-  test('初期値は昼。知らない値・未設定も昼（SPEC_theme_default_day.md）', () => {
+    assert.deepStrictEqual(plain(T.MODES), ['day']);
     assert.strictEqual(T.DEFAULT_MODE, 'day');
-    for (const m of [undefined, null, '', 'purple', 1]) {
-      assert.strictEqual(T.normalizeMode(m), 'day');
-      for (const h of [3, 12, 22]) assert.strictEqual(T.resolve(m, at(h)), 'day', h + '時');
-    }
-    assert.deepStrictEqual(plain(T.MODES), ['night', 'day', 'auto']);
   });
 
-  test('昼の時間帯は config.DAY_HOURS で決まる', () => {
-    assert.deepStrictEqual(plain(FF.config.DAY_HOURS), { start: 6, end: 18 });
-    const cfg = Object.assign({}, FF.config, { DAY_HOURS: { start: 8, end: 16 } });
-    assert.strictEqual(T.resolve('auto', at(7), cfg), 'night');
-    assert.strictEqual(T.resolve('auto', at(8), cfg), 'day');
-    assert.strictEqual(T.resolve('auto', at(16), cfg), 'night');
-  });
-
-  test('resolve は渡された時刻だけで決まり、FF.clock（ゲームの時計）には左右されない', () => {
-    FF.clock.set(new Date(2026, 0, 1, 0, 0).getTime());   // ゲームの時計は真夜中
-    assert.strictEqual(T.resolve('auto', at(12)), 'day');
-    FF.clock.set(new Date(2026, 0, 1, 12, 0).getTime());  // ゲームの時計は正午
-    assert.strictEqual(T.resolve('auto', at(22)), 'night');
+  test('theme.js は時刻を自分で取らない（FF.clock にも関わらない）', () => {
     const src = fs.readFileSync(path.join(ROOT, 'js', 'theme.js'), 'utf8').replace(/\/\/.*$/gm, '');
-    assert.ok(!/new Date|Date\.now|FF\.clock/.test(src), 'theme.js は時刻を自分で取らない');
+    assert.ok(!/new Date|Date\.now|FF\.clock/.test(src));
   });
 
-  // ---- 設定・保存（第1.3節） ----
+  test('画面はいつも昼（テーマの切り替えの画面・操作がない）', () => {
+    const core = fs.readFileSync(path.join(ROOT, 'js', 'ui', 'core.js'), 'utf8');
+    assert.ok(!/THEMED_SCREENS/.test(core), '画面ごとの昼夜の切り替えはない');
+    assert.ok(!/themeMode/.test(fs.readFileSync(path.join(ROOT, 'js', 'ui', 'settings.js'), 'utf8')), '設定画面にテーマの切り替えはない');
+    assert.ok(!/themeMode|themeHourOverride/.test(fs.readFileSync(path.join(ROOT, 'js', 'debug.js'), 'utf8')), 'デバッグ画面にテーマの操作はない');
+  });
+
   test('新規の状態の themeMode は昼', () => {
     assert.strictEqual(FF.state.createDefaultState(T0).settings.themeMode, 'day');
   });
 
-  test('すでに「夜」や「自動」を選んでいるセーブは、初期値が昼になってもそのまま（ユーザーの設定を尊重する）', () => {
+  test('前に「夜」や「自動」を選んでいたセーブは、読み込むと昼になる', () => {
     for (const m of ['night', 'auto']) {
       const s = FF.state.createDefaultState(T0);
       s.settings.themeMode = m;
       const r = FF.state.parseSave(FF.state.serialize(s), T0);
-      assert.strictEqual(r.state.settings.themeMode, m);
+      assert.strictEqual(r.ok, true);
+      assert.strictEqual(r.state.settings.themeMode, 'day');
     }
   });
 
@@ -90,12 +69,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(FF.integrity.verify(saved), true);
   });
 
-  test('themeMode は保存・読み込みで残り、知らない値は初期値の昼に直される', () => {
-    for (const m of ['night', 'day', 'auto']) {
-      const s = FF.state.createDefaultState(T0);
-      s.settings.themeMode = m;
-      assert.strictEqual(FF.state.parseSave(FF.state.serialize(s), T0).state.settings.themeMode, m);
-    }
+  test('themeMode は保存・読み込みで昼のまま。知らない値も昼に直り、integrity が付き直す', () => {
     const bad = FF.state.createDefaultState(T0);
     bad.settings.themeMode = 'purple';
     const r = FF.state.parseSave(FF.state.serialize(bad), T0);
@@ -208,15 +182,6 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   });
 
   // ---- 開始画面・対象の画面（SPEC_theme_default_day.md 1.2・1.3） ----
-  test('昼の見た目を持つ画面に開始画面が入り、デバッグ画面は入らない', () => {
-    const src = fs.readFileSync(path.join(ROOT, 'js', 'ui', 'core.js'), 'utf8');
-    const m = src.match(/var THEMED_SCREENS = (\[[^\]]*\]);/);
-    assert.ok(m, 'THEMED_SCREENS が見つからない');
-    const list = JSON.parse(m[1].replace(/'/g, '"'));
-    assert.deepStrictEqual(list, ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz', 'battle', 'redeem']);   // v0.3 その2：戦闘画面（SPEC_v0.3_battle 1.3）
-    assert.ok(!list.includes('debug'));
-  });
-
   test('開始画面の空（renderSky）は、昼の配色で太陽と雲を描き、建物は描かない', () => {
     loadSvg();
     const find = (tree, pred, out = []) => { if (pred(tree)) out.push(tree); (tree.children || []).forEach(c => find(c, pred, out)); return out; };

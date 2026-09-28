@@ -91,27 +91,6 @@
       ])
     ]));
 
-    // 画面の明るさ（昼／夜テーマ。SPEC_theme.md）
-    var mode = FF.theme.normalizeMode(s.settings.themeMode);
-    function setThemeMode(m) {
-      var ns = Object.assign({}, app.state, { settings: Object.assign({}, app.state.settings, { themeMode: m }) });
-      app.commit(ns);
-      U.rerender();
-    }
-    main.appendChild(U.el('div', { class: 'panel stack' }, [
-      U.el('div', { class: 'row between' }, [
-        U.R('h3', '', U.T('theme')),
-        U.el('div', { class: 'switch', attrs: { role: 'group' } }, FF.theme.MODES.map(function (m) {
-          return U.el('button', {
-            class: mode === m ? 'on' : '', rich: U.T('themeModes.' + m),
-            attrs: { 'aria-pressed': mode === m ? 'true' : 'false' },
-            on: { click: function () { setThemeMode(m); } }
-          });
-        }))
-      ]),
-      U.R('div', 'small muted', U.T('themeNote'))
-    ]));
-
     // 保護者の方へ：交換レートとメールアドレス（v0.4、SPEC 14.4・DESIGN 14.4）
     main.appendChild(parentPanel());
 

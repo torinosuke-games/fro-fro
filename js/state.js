@@ -59,7 +59,7 @@
       studyPoints: 0,
       studyPointsEarnedTotal: 0,
       redeemHistory: [],
-      // themeMode：'night' | 'day' | 'auto'（初期値は昼）
+      // themeMode：いつも 'day'（判断176。前のセーブの 'night'・'auto' も読み込み時に 'day' に直す）
       // pointsPerHour：交換レート（この pt で1時間。SPEC 14.4）
       settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE, pointsPerHour: b.STUDY_POINTS.PER_HOUR_DEFAULT },
       flags: { introSeen: false, diagnosisOffered: false, unlockNoticesSeen: [] }
