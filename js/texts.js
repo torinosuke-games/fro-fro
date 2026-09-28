@@ -65,6 +65,7 @@
     constructUntil: 'Lv{level}まで あと {time}',
     buildTime: '{工事|こうじ}に かかる {時間|じかん}：{time}',
     cost: '必要な資源',
+    shortTapHint: '足りない資源を {押|お}すと、その資源を集める学習へ行ける。',
     reason: {
       locked: '中央炉 Lv{level} で解放',
       maxLevel: '最大レベル',
@@ -165,6 +166,8 @@
     studyBonus: '学習ボーナス',
     chooseSubject: '教科を選ぼう',
     chooseGrade: '学年を選ぼう',
+    chooseSubjectFirst: '先に 教科を選ぼう。',
+    chooseAllFirst: '教科・学年・出題形式を選ぼう',
     chooseDifficulty: '難易度を選ぼう',
     difficultyNow: '難易度：',
     difficultyRandom: 'ランダム',

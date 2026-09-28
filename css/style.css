@@ -374,7 +374,7 @@ h3 { font-size: 15px; color: var(--ice); }
   width: 100%; min-height: 56px; padding: 10px 12px; cursor: pointer; text-align: left;
   background: var(--pick-bg); border: 1px solid var(--edge); border-radius: 5px;
 }
-.pick:hover:not(:disabled) { border-color: var(--ice); }
+@media (hover: hover) { .pick:hover:not(:disabled) { border-color: var(--ice); } }   /* スマホでは押したあと枠が残らないように（判断187） */
 .pick.selected { border-color: var(--ember); box-shadow: 0 0 0 1px var(--ember) inset, 0 0 12px var(--ember-glow); }
 .pick:disabled { opacity: 0.5; cursor: not-allowed; }
 .pick .title { font-weight: 800; font-size: 15px; }
@@ -404,7 +404,7 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick.grade-chip.jr { background: var(--gr-jr-bg); border-color: var(--gr-jr-edge); color: var(--gr-jr-text); }
 .pick.grade-chip .title { font-size: 14px; line-height: 1.2; }
 .pick.grade-chip .sub { font-size: 9.5px; line-height: 1.2; color: inherit; opacity: 0.8; }
-.pick.grade-chip:hover:not(:disabled) { border-color: var(--ice); }
+@media (hover: hover) { .pick.grade-chip:hover:not(:disabled) { border-color: var(--ice); } }   /* スマホでは押したあと枠が残らないように（判断187） */
 .pick.grade-chip.selected { border-color: var(--ember); border-width: 2px; }
 .pick.grade-chip:disabled { opacity: 0.45; }
 .grade-note { margin-top: 4px; }
@@ -948,3 +948,7 @@ a.btn { text-decoration: none; }
 /* 建物の画面の小さな絵（判断186）。そのレベルの雪原の絵から建物のまわりを切り出す（base.js の buildingArt） */
 .bld-art { max-width: 100%; margin: 0 auto 2px; border-radius: 14px; background-repeat: no-repeat; box-shadow: 0 2px 8px rgba(0, 0, 0, .18); }
 .bld-art.locked { filter: grayscale(1); opacity: .6; }
+/* 足りない資源のボタン（判断187）：押すと学ぶの画面へ */
+.cost button.item.tap { font: inherit; cursor: pointer; background: var(--chip-bg); min-height: 32px; }
+.cost button.item.tap:active { transform: translateY(1px); }
+.cost button.item.tap .go { font-size: .8em; }

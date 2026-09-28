@@ -90,7 +90,10 @@
       // 工事中は資源を払い終えているので、必要な資源と工事の時間は出さない
       if (!bld.construction) {
         body.appendChild(U.R('div', 'small muted', U.T('cost')));
-        body.appendChild(U.costView(B.upgradeCost(id, bld.level), s.resources));
+        var cost = B.upgradeCost(id, bld.level);
+        body.appendChild(U.costView(cost, s.resources, studyFor));
+        var anyShort = Object.keys(cost).some(function (r) { return (s.resources[r] || 0) < cost[r]; });
+        if (anyShort) body.appendChild(U.R('div', 'small muted', U.T('shortTapHint')));
         body.appendChild(U.R('div', 'small muted', withTime(U.T('buildTime'), B.buildDurationMs(id, bld.level + 1))));
       }
     }
@@ -102,7 +105,14 @@
       var reasonVars = { level: can.unlockAt };
       body.appendChild(U.R('div', 'notice', U.T('reason.' + can.reason), reasonVars));
     }
-    U.modal({
+    // 足りない資源を押すと、学ぶの画面へ。資源だけを選び、教科・学年・出題形式は未選択にする（判断187）
+    function studyFor(r) {
+      if (closeModal) closeModal();
+      app.studySel = { resource: r, subject: null, grade: null, difficulty: FF.learning.RANDOM_DIFFICULTY, answerType: null, pickGrade: true };
+      app.studyTab = 'learn';
+      U.show('study', { tab: 'learn' });
+    }
+    var closeModal = U.modal({
       title: name + (bld.level > 0 ? '  Lv' + bld.level : ''),
       body: body,
       buttons: [
