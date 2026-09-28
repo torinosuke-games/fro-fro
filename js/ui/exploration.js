@@ -115,8 +115,9 @@
   }
 
   function renderRegions(main) {
-    var s = FF.app.state;
-    main.appendChild(U.el('div', { class: 'panel' }, [
+    var s = FF.app.state, art = U.artOn();
+    if (art) main.classList.add('explore-art');   // 地域の絵のカード（判断190）
+    main.appendChild(U.el('div', { class: 'panel' + (art ? ' xp-intro' : '') }, [
       U.R('div', 'section-title', U.T('explore.chooseRegion')),
       U.R('div', 'small muted', U.T('explore.intro'))
     ]));
@@ -134,16 +135,32 @@
         class: 'region-card region-' + r.id + (open ? '' : ' locked') + (done ? ' done' : ''),
         attrs: { 'aria-disabled': open ? null : 'true' },
         on: { click: function () { if (open) U.show('explore', { region: r.id }); else U.toast(FF.util.plainText(U.T('explore.lockedFurnace'), { level: FF.balance.EXPLORE.UNLOCK_FURNACE_LEVEL[r.id] })); } }
-      }, [
-        U.el('div', { class: 'row between' }, [
-          U.el('span', { class: 'rg-name' }, [open ? '' : '🔒 ', regionName(r)]),
-          U.el('span', { class: 'rg-en', text: r.nameEn })
-        ]),
-        U.el('div', { class: 'small muted' }, U.rich(U.T('explore.recommended'), { from: r.grades[0], to: r.grades[1] })),
-        open ? U.el('div', { class: 'row' }, [progressBar(pct), U.el('span', { class: 'pct' }, done ? U.rich(U.T('explore.complete')) : U.rich(U.T('explore.progress'), { pct: pct }))]) : null,
-        open && X.belowRecommended(s, r.id) ? U.el('div', { class: 'small grade-hint' }, ['🎯 ', U.rich(U.T('explore.gradeHint'))]) : null,
-        status ? U.el('div', { class: 'notice' }, status) : null
-      ]));
+      }, (function () {
+        var info = [
+          U.el('div', { class: 'small muted' }, U.rich(U.T('explore.recommended'), { from: r.grades[0], to: r.grades[1] })),
+          open ? U.el('div', { class: 'row' }, [progressBar(pct), U.el('span', { class: 'pct' }, done ? U.rich(U.T('explore.complete')) : U.rich(U.T('explore.progress'), { pct: pct }))]) : null,
+          open && X.belowRecommended(s, r.id) ? U.el('div', { class: 'small grade-hint' }, ['🎯 ', U.rich(U.T('explore.gradeHint'))]) : null,
+          status ? U.el('div', { class: 'notice' }, status) : null
+        ];
+        if (!art) {
+          return [U.el('div', { class: 'row between' }, [
+            U.el('span', { class: 'rg-name' }, [open ? '' : '🔒 ', regionName(r)]),
+            U.el('span', { class: 'rg-en', text: r.nameEn })
+          ])].concat(info);
+        }
+        // 絵の上に名前、下に推奨の学年と進み具合（判断190）。絵が読めないときは色の帯だけ
+        return [
+          U.el('div', { class: 'rg-pic' }, [
+            U.artImg('region-' + r.id, 'rg-img', function () { return U.el('span', { class: 'rg-img' }); }),
+            U.el('div', { class: 'rg-cap' }, [
+              U.el('span', { class: 'rg-name' }, regionName(r)),
+              U.el('span', { class: 'rg-en', text: r.nameEn })
+            ]),
+            !open ? U.el('span', { class: 'rg-chip lock', text: '🔒' }) : done ? U.el('span', { class: 'rg-chip done' }, U.rich(U.T('explore.complete'))) : null
+          ]),
+          U.el('div', { class: 'rg-body' }, info)
+        ];
+      })()));
     });
   }
 

@@ -952,3 +952,33 @@ a.btn { text-decoration: none; }
 .cost button.item.tap { font: inherit; cursor: pointer; background: var(--chip-bg); min-height: 32px; }
 .cost button.item.tap:active { transform: translateY(1px); }
 .cost button.item.tap .go { font-size: .8em; }
+
+/* 探索の地域のカード（絵の見た目。判断190）：開始画面・基地と同じ、角の丸い白いカードに影 */
+.explore-art .xp-intro { border: 0; border-radius: 20px; box-shadow: var(--hero-shadow, 0 10px 28px rgba(22, 50, 74, 0.12)); }
+.explore-art .region-card {
+  display: block; width: 100%; padding: 0; overflow: hidden; text-align: left; font: inherit; color: inherit;
+  background: #fff; border: 0; border-radius: 20px; box-shadow: var(--hero-shadow, 0 10px 28px rgba(22, 50, 74, 0.12));
+  transition: transform .12s ease;
+}
+.explore-art .region-card:active:not(.locked) { transform: scale(.98); }
+.explore-art .region-card.locked { opacity: 1; }
+.explore-art .region-card.done { box-shadow: 0 0 0 2px var(--done-edge), var(--hero-shadow, 0 10px 28px rgba(22, 50, 74, 0.12)); }
+.explore-art .rg-pic { position: relative; aspect-ratio: 16 / 7; overflow: hidden; background: linear-gradient(160deg, #cfe6f7, #eef6fc); }
+.explore-art .rg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.explore-art .region-card.locked .rg-img { filter: grayscale(.85) brightness(1.05); opacity: .75; }
+.explore-art .rg-cap {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 16px 10px;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  background: linear-gradient(to top, rgba(10, 30, 50, .62), rgba(10, 30, 50, 0));
+}
+.explore-art .rg-cap .rg-name { color: #fff; font-size: 22px; text-shadow: 0 1px 4px rgba(0, 0, 0, .35); }
+.explore-art .rg-cap .rg-name rt { color: rgba(255, 255, 255, .9); }
+.explore-art .rg-cap .rg-en { color: rgba(255, 255, 255, .88); font-family: "Nunito", var(--font); font-weight: 800; }
+.explore-art .rg-chip {
+  position: absolute; top: 10px; right: 10px; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 800;
+  background: rgba(255, 255, 255, .92); color: var(--hero-ink, #16324a); box-shadow: 0 2px 6px rgba(0, 0, 0, .15);
+}
+.explore-art .rg-body { padding: 10px 16px 14px; }
+.explore-art .rg-body .xp-bar { height: 8px; border-radius: 999px; }
+.explore-art .rg-body .xp-bar i { border-radius: 999px; }
+.explore-art .rg-body .notice { margin-top: 8px; border-radius: 12px; }

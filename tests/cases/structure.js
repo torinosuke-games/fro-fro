@@ -69,7 +69,8 @@ module.exports = ({ test, assert }) => {
     assert.ok(levels, 'FIELD_LEVELS が見つからない');
     const fields = levels.split(',').map(s => 'field_lv' + s.trim());
     const names = fields.concat(['furnace', 'housing', 'lumber', 'mine', 'quarry', 'foodhall', 'watchtower',
-      'res-wood', 'res-iron', 'res-stone', 'res-food', 'subj-jp', 'subj-math', 'subj-sci', 'subj-soc', 'subj-en']);
+      'res-wood', 'res-iron', 'res-stone', 'res-food', 'subj-jp', 'subj-math', 'subj-sci', 'subj-soc', 'subj-en',
+      'region-snowfield', 'region-forest', 'region-glacier']);
     const missing = names.filter(n => !fs.existsSync(path.join(ROOT, 'img/art', n + '.jpg')));
     assert.deepStrictEqual(missing, []);
   });
