@@ -6,7 +6,7 @@
 
 - 仕様：`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 188）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 189）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む）
 - 完成報告：`REPORT.md`（v0.1）、`REPORT_v0.2.md`、`REPORT_v0.3.md`、`REPORT_v0.4.md`
 - 手動確認：`tests/MANUAL.md`（末尾に自動テストとの分類の表）
@@ -35,6 +35,7 @@
 - 自動テスト：`node tests/run.js`（`tests/cases/*.js` をすべて実行。失敗があれば終了コード1）
 - バランス計算：`node tests/simulate.js`（目標外があれば終了コード1）
 - 画面の確認：`index.html` を開く。テスト操作は `index.html?debug=1` のデバッグ画面。手順は `tests/MANUAL.md`
+- スマホの確認ページ（Artifact）：ふつう https://claude.ai/artifact/XLuEepmTkNsku4cPPTfqCF 、デバッグ用 https://claude.ai/artifact/4V4WJ32ByTk6YAk7GzfuuW （index.html に `window.FF_DEBUG = true` を足したもの。判断188）。変えたファイルを両方に送る
 - 問題データの確認済みの数（`tests/cases/questions.js`）は 1062
 
 ## ファイル構成の要約
