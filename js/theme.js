@@ -1,26 +1,18 @@
-// 昼／夜テーマ（SPEC_theme.md）：見た目の配色を決めるだけ。ゲームのロジックには関わらない。純粋関数のみ。
-// 「自動」の判定に使う時刻は、画面側で実際の端末の時計（new Date()）を渡す。FF.clock は使わない（SPEC_theme 1.2）。
+// テーマ：2026-09-28 から昼だけ（ユーザーの判断。判断176）。夜のテーマは完成まで作らない。
+// 夜の配色（css/style.css の :root、js/svg/*.js の PALETTES.night）は、あとで夜を足すかを決めるときのために残してあるが、使わない。
+// 純粋関数のみ。
 (function (root) {
   'use strict';
   var FF = root.FF = root.FF || {};
 
-  var MODES = ['night', 'day', 'auto'];
-  var DEFAULT_MODE = 'day';     // 何も設定しなければ昼（SPEC_theme_default_day.md。以前は夜）
+  var MODES = ['day'];
+  var DEFAULT_MODE = 'day';
 
-  // 設定の値を正規化する（知らない値は初期値の昼）
-  function normalizeMode(mode) {
-    return MODES.indexOf(mode) >= 0 ? mode : DEFAULT_MODE;
-  }
+  // 設定の値はいつも昼（前のセーブの 'night'・'auto' も昼に直す）
+  function normalizeMode() { return DEFAULT_MODE; }
 
-  // mode：'day' | 'night' | 'auto'、now：Date → 'day' | 'night'
-  // 自動は config.DAY_HOURS（start 時以上 end 時未満）を昼とする
-  function resolve(mode, now, cfg) {
-    cfg = cfg || FF.config;
-    var m = normalizeMode(mode);
-    if (m !== 'auto') return m;
-    var h = now.getHours();
-    return h >= cfg.DAY_HOURS.start && h < cfg.DAY_HOURS.end ? 'day' : 'night';
-  }
+  // いつも 'day'（引数は前の版との互換のため）
+  function resolve() { return 'day'; }
 
   FF.theme = {
     MODES: MODES,

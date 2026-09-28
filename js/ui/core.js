@@ -196,19 +196,8 @@
     })));
   }
 
-  // ---- 昼／夜テーマ（SPEC_theme.md） ----
-  // 昼の見た目を持つ画面。デバッグ画面は対象外で、常に夜。
-  var THEMED_SCREENS = ['title', 'base', 'study', 'quiz', 'exam', 'settings', 'explore', 'exploreQuiz', 'battle', 'redeem'];
-  // 「自動」の判定に使う時刻：実際の端末の時計（FF.clock は使わない）。デバッグ画面で時だけ指定できる
-  function themeNow() {
-    var d = new Date();
-    if (FF.app.themeHourOverride != null) d.setHours(FF.app.themeHourOverride, 0, 0, 0);
-    return d;
-  }
-  function currentTheme() {
-    if (!FF.app.state || THEMED_SCREENS.indexOf(FF.app.screen) < 0) return 'night';
-    return FF.theme.resolve(FF.app.state.settings.themeMode, themeNow());
-  }
+  // ---- テーマ：すべての画面でいつも昼（判断176。夜のテーマは完成まで作らない） ----
+  function currentTheme() { return FF.theme.resolve(); }
   function applyTheme() {
     var t = currentTheme();
     FF.app.theme = t;

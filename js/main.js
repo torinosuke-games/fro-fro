@@ -14,8 +14,7 @@
     studyTab: 'learn',
     examRun: null,
     exploreSession: null,
-    theme: 'night',          // いま画面に使っているテーマ（'night' | 'day'）
-    themeHourOverride: null, // デバッグ画面：テーマ「自動」の確認用の時刻（時）。保存しない   // 探索の出題（画面の一時状態。保存しない）
+    theme: 'day',            // いま画面に使っているテーマ（いつも 'day'。判断176）
     leaveGuard: null,
     saveWarned: false,
 
