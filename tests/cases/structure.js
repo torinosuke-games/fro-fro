@@ -28,7 +28,11 @@ module.exports = ({ test, assert }) => {
     }
     const html = read('index.html');
     assert.ok(!/type="module"/.test(html));
-    assert.ok(!/(src|href)="(https?:)?\/\//.test(html), '外部の URL を読み込んでいる');
+    // 外部の URL は Google Fonts だけ（判断175）。外部のスクリプトは読まない
+    for (const m of html.match(/(src|href)="(https?:)?\/\/[^"]*"/g) || []) {
+      assert.ok(/^href="https:\/\/fonts\.(googleapis|gstatic)\.com(\/|")/.test(m), '外部の URL を読み込んでいる：' + m);
+    }
+    assert.ok(!/<script[^>]+src="(https?:)?\/\//.test(html), '外部のスクリプトを読み込んでいる');
   });
 
   test('ロジックのファイルは document・localStorage・alert を直接使わない（storage.js を除く）', () => {

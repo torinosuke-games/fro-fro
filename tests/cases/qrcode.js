@@ -125,7 +125,10 @@ module.exports = ({ test, FF, assert, plain }) => {
     // 読み込みは index.html の <script> だけで、外部のファイルを読まない
     const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
     assert.ok(/<script src="js\/qrcode\.js"><\/script>/.test(html));
-    assert.ok(!/(src|href)="(https?:)?\/\//.test(html), 'index.html に外部の URL がない');
+    // 外部の URL は Google Fonts（フォントのスタイルシートと接続の準備）だけ。スクリプトは外部から読まない（判断175）
+    const ext = html.match(/(src|href)="(https?:)?\/\/[^"]*"/g) || [];
+    for (const m of ext) assert.ok(/^href="https:\/\/fonts\.(googleapis|gstatic)\.com(\/|")/.test(m), 'index.html の外部の URL は Google Fonts だけ：' + m);
+    assert.ok(!/<script[^>]+src="(https?:)?\/\//.test(html), 'index.html は外部のスクリプトを読まない');
   });
 
   test('入りきらない長さはエラーにする', () => {
