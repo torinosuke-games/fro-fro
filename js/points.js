@@ -67,11 +67,6 @@
     return d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()) + ' ' + p2(d.getHours()) + ':' + p2(d.getMinutes());
   }
 
-  // ---- 保護者のメールアドレス ----
-  function isValidEmail(s) {
-    return typeof s === 'string' && s.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
-  }
-
   // ---- 引換券ID：XXXX-XXXX ----
   // 見まちがえやすい 0・O・1・I を除いた 32 字。7文字をランダムに選び、8文字目はチェック用。
   // チェック：Σ (i+1) × 値[i]（i = 0〜7）が 31 で割り切れるように8文字目（0〜30）を決める。
@@ -120,16 +115,16 @@
   }
 
   // ---- 引換 ----
-  var METHODS = ['mail', 'print'];
+  // 方式は印刷だけ（メールでの申請は v0.4-5 のあとでやめた。判断173）。前に 'mail' で発行した券は、履歴にそのまま残す
+  var METHODS = ['print'];
 
   // o: { minutes, method, now, rng }
-  // 戻り値：{ ok: true, state, entry } または { ok: false, error: 'notEnough' | 'noEmail' | 'badMinutes' | 'badMethod' }
+  // 戻り値：{ ok: true, state, entry } または { ok: false, error: 'notEnough' | 'badMinutes' | 'badMethod' }
   function redeem(state, o, b) {
     b = bal(b);
     var minutes = o.minutes;
     if (typeof minutes !== 'number' || Math.floor(minutes) !== minutes || minutes <= 0) return { ok: false, error: 'badMinutes' };
     if (METHODS.indexOf(o.method) < 0) return { ok: false, error: 'badMethod' };
-    if (o.method === 'mail' && !isValidEmail(state.settings.parentEmail)) return { ok: false, error: 'noEmail' };
     var rate = rateOf(state, b);
     var cost = costFor(minutes, rate);
     if ((state.studyPoints || 0) < cost) return { ok: false, error: 'notEnough', cost: cost };
@@ -147,18 +142,22 @@
     return { ok: true, state: s, entry: entry };
   }
 
-  // ---- メールと QR コードの文字列（SPEC 14.5） ----
-  function mailSubject(state) {
-    return '【学習ゲーム】' + state.player.name + 'さんが遊び時間を申請しています';
+  // ---- 券を使う（判断173） ----
+  // 保護者に券を見せて、アプリの［この券を使う］を押すと使用済みになる。一度使った券は、もう使えない。
+  // 戻り値：{ ok: true, state, entry } または { ok: false, error: 'notFound' | 'alreadyUsed', entry }
+  function isUsed(entry) { return !!entry && isCount(entry.usedAt); }
+  function useTicket(state, id, now) {
+    var list = state.redeemHistory || [];
+    var i = -1;
+    for (var k = 0; k < list.length; k++) if (list[k].id === id) { i = k; break; }
+    if (i < 0) return { ok: false, error: 'notFound' };
+    if (isUsed(list[i])) return { ok: false, error: 'alreadyUsed', entry: list[i] };
+    var s = FF.util.clone(state);
+    s.redeemHistory[i].usedAt = now;
+    return { ok: true, state: s, entry: s.redeemHistory[i] };
   }
-  function mailBody(state, entry) {
-    return state.player.name + 'さんが勉強量ポイントを' + entry.points.toLocaleString('en-US') + 'pt使って、' +
-      formatMinutes(entry.minutes) + 'ぶんの遊び時間を申請しました。（引換券ID: ' + entry.id + '、発行日時: ' + formatDateTime(entry.issuedAt) + '）';
-  }
-  function mailtoUrl(state, entry) {
-    var to = encodeURIComponent(state.settings.parentEmail || '').replace(/%40/g, '@');
-    return 'mailto:' + to + '?subject=' + encodeURIComponent(mailSubject(state)) + '&body=' + encodeURIComponent(mailBody(state, entry));
-  }
+
+  // ---- QR コードの文字列（SPEC 14.5。データベースで使用済みを確かめるしくみは今後の検討課題） ----
   function qrText(state, entry) {
     return [
       FF.config.TITLE + ' 引換券',
@@ -182,7 +181,10 @@
     if (!isCount(state.studyPointsEarnedTotal)) state.studyPointsEarnedTotal = 0;
     state.redeemHistory = (Array.isArray(state.redeemHistory) ? state.redeemHistory : []).filter(isValidEntry);
     if (!isValidRate(state.settings.pointsPerHour, b)) state.settings.pointsPerHour = b.STUDY_POINTS.PER_HOUR_DEFAULT;
-    if (typeof state.settings.parentEmail !== 'string') state.settings.parentEmail = '';
+    // 使った日時は、形がおかしければ消す（使っていない券として扱う）
+    state.redeemHistory.forEach(function (e) { if ('usedAt' in e && !isCount(e.usedAt)) delete e.usedAt; });
+    // 保護者のメールアドレス（メールでの申請をやめたので使わない。前のセーブにあれば消す）
+    delete state.settings.parentEmail;
     return state;
   }
 
@@ -197,15 +199,13 @@
     formatMinutes: formatMinutes,
     formatMinutesMarkup: formatMinutesMarkup,
     formatDateTime: formatDateTime,
-    isValidEmail: isValidEmail,
     ID_CHARS: ID_CHARS,
     isValidTicketId: isValidTicketId,
     newTicketId: newTicketId,
     METHODS: METHODS,
     redeem: redeem,
-    mailSubject: mailSubject,
-    mailBody: mailBody,
-    mailtoUrl: mailtoUrl,
+    isUsed: isUsed,
+    useTicket: useTicket,
     qrText: qrText,
     normalizePoints: normalizePoints
   };

@@ -201,19 +201,22 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   });
 
   // ---- 保存（SPEC 14.2） ----
-  test('pt の残高・累計・引換の履歴・交換レート・メールアドレスが、エクスポート／インポートで元に戻る', () => {
+  test('pt の残高・累計・引換の履歴（使った日時を含む）・交換レートが、エクスポート／インポートで元に戻る', () => {
     let s = newState();
     s = answer(s, mkQ({}), 'みず').state;
-    s.settings.parentEmail = 'parent@example.com';
     s.settings.pointsPerHour = 1800;
     s.studyPoints += 5000;
-    const rd = P.redeem(s, { minutes: 30, method: 'mail', now: T0 + 1, rng: FF.util.makeRng(9) });
+    let rd = P.redeem(s, { minutes: 30, method: 'print', now: T0 + 1, rng: FF.util.makeRng(9) });
     assert.strictEqual(rd.ok, true);
-    const back = FF.state.parseSave(FF.state.serialize(rd.state), T0 + 2);
+    rd = P.redeem(rd.state, { minutes: 15, method: 'print', now: T0 + 2, rng: FF.util.makeRng(8) });
+    rd = P.useTicket(rd.state, rd.state.redeemHistory[0].id, T0 + 3);
+    assert.strictEqual(rd.ok, true);
+    const back = FF.state.parseSave(FF.state.serialize(rd.state), T0 + 4);
     assert.strictEqual(back.ok, true);
     for (const k of ['studyPoints', 'studyPointsEarnedTotal', 'redeemHistory', 'resources']) assert.deepStrictEqual(plain(back.state[k]), plain(rd.state[k]), k);
     assert.strictEqual(back.state.settings.pointsPerHour, 1800);
-    assert.strictEqual(back.state.settings.parentEmail, 'parent@example.com');
+    assert.strictEqual(back.state.redeemHistory[0].usedAt, T0 + 3);
+    assert.strictEqual('usedAt' in back.state.redeemHistory[1], false);
   });
 
   test('保存データの pt を書き換えると読み込まない（改ざん検出）', () => {
@@ -233,17 +236,23 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
       { id: 'K7QX-3M9P', issuedAt: T0, points: 3000, minutes: 60, pointsPerHour: 3000, method: 'print' },
       { id: '', issuedAt: T0, points: 3000, minutes: 60, pointsPerHour: 3000, method: 'print' },
       { id: 'X', issuedAt: T0, points: -1, minutes: 60, pointsPerHour: 3000, method: 'print' },
+      { id: 'M2QA-7KXE', issuedAt: T0, points: 750, minutes: 15, pointsPerHour: 3000, method: 'mail', usedAt: 'きのう' },
+      { id: 'P9RT-4HNW', issuedAt: T0, points: 750, minutes: 15, pointsPerHour: 3000, method: 'print', usedAt: T0 + 9 },
       'text', null
     ];
     s.settings.pointsPerHour = 99;
-    s.settings.parentEmail = 42;
+    s.settings.parentEmail = 'parent@example.com';   // 前の版のセーブ（メールでの申請をやめたので消す）
     const r = FF.state.migrate(JSON.parse(JSON.stringify(s)), T0);
     assert.strictEqual(r.ok, true);
     assert.strictEqual(r.state.studyPoints, 0);
     assert.strictEqual(r.state.studyPointsEarnedTotal, 0);
-    assert.deepStrictEqual(plain(r.state.redeemHistory.map(h => h.id)), ['K7QX-3M9P']);
+    // 前にメールで発行した券は残す。使った日時の形がおかしければ、使っていない券として扱う
+    assert.deepStrictEqual(plain(r.state.redeemHistory.map(h => h.id)), ['K7QX-3M9P', 'M2QA-7KXE', 'P9RT-4HNW']);
+    assert.strictEqual(P.isUsed(r.state.redeemHistory[1]), false);
+    assert.strictEqual('usedAt' in r.state.redeemHistory[1], false);
+    assert.strictEqual(r.state.redeemHistory[2].usedAt, T0 + 9);
     assert.strictEqual(r.state.settings.pointsPerHour, SP.PER_HOUR_DEFAULT);
-    assert.strictEqual(r.state.settings.parentEmail, '');
+    assert.strictEqual('parentEmail' in r.state.settings, false);
     // 範囲の端はそのまま
     for (const v of [SP.PER_HOUR_MIN, SP.PER_HOUR_MAX]) {
       s.settings.pointsPerHour = v;
@@ -251,13 +260,13 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     }
   });
 
-  test('新規のセーブは残高 0・交換レート 3,000pt ＝ 1時間・メールアドレスは空', () => {
+  test('新規のセーブは残高 0・交換レート 3,000pt ＝ 1時間（メールアドレスの項目はない）', () => {
     const s = FF.state.createDefaultState(T0);
     assert.strictEqual(s.studyPoints, 0);
     assert.strictEqual(s.studyPointsEarnedTotal, 0);
     assert.deepStrictEqual(plain(s.redeemHistory), []);
     assert.strictEqual(s.settings.pointsPerHour, 3000);
-    assert.strictEqual(s.settings.parentEmail, '');
+    assert.strictEqual('parentEmail' in s.settings, false);
   });
 
   // ---- 交換レートと時間（SPEC 14.4・14.5） ----
@@ -297,11 +306,6 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   test('交換レートの範囲：100〜100,000 の整数', () => {
     for (const v of [100, 3000, 100000]) assert.strictEqual(P.isValidRate(v), true, v);
     for (const v of [99, 100001, 0, -3000, 1500.5, '3000', NaN, Infinity, null]) assert.strictEqual(P.isValidRate(v), false, String(v));
-  });
-
-  test('メールアドレスの形', () => {
-    for (const v of ['a@b.jp', 'parent.name+x@example.co.jp']) assert.strictEqual(P.isValidEmail(v), true, v);
-    for (const v of ['', 'a@b', '@b.jp', 'a b@c.jp', 'a@@b.jp', null, 3]) assert.strictEqual(P.isValidEmail(v), false, String(v));
   });
 
   // ---- 引換（SPEC 14.5） ----
@@ -344,15 +348,37 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(ok.state.studyPoints, 0);
   });
 
-  test('メールアドレスが未登録のときは、メールでは発行できない（印刷はできる）', () => {
+  test('方式は印刷だけ（メールでは発行できない）', () => {
     const s = newState();
     s.studyPoints = 9000;
-    assert.strictEqual(P.redeem(s, { minutes: 30, method: 'mail', now: T0, rng: FF.util.makeRng(1) }).error, 'noEmail');
-    s.settings.parentEmail = 'a@b';
-    assert.strictEqual(P.redeem(s, { minutes: 30, method: 'mail', now: T0, rng: FF.util.makeRng(1) }).error, 'noEmail');
+    assert.strictEqual(P.redeem(s, { minutes: 30, method: 'mail', now: T0, rng: FF.util.makeRng(1) }).error, 'badMethod');
     assert.strictEqual(P.redeem(s, { minutes: 30, method: 'print', now: T0, rng: FF.util.makeRng(1) }).ok, true);
-    s.settings.parentEmail = 'parent@example.com';
-    assert.strictEqual(P.redeem(s, { minutes: 30, method: 'mail', now: T0, rng: FF.util.makeRng(1) }).ok, true);
+  });
+
+  // ---- 券を使う（判断173） ----
+  test('［この券を使う］で使用済みになり、2回目は使えない。ほかの券・残高には触れない', () => {
+    let s = newState();
+    s.studyPoints = 9000;
+    s = P.redeem(s, { minutes: 30, method: 'print', now: T0, rng: FF.util.makeRng(1) }).state;
+    s = P.redeem(s, { minutes: 30, method: 'print', now: T0 + 1, rng: FF.util.makeRng(2) }).state;
+    const [a, b] = s.redeemHistory.map(h => h.id);
+    assert.strictEqual(P.isUsed(s.redeemHistory[0]), false);
+    const r = P.useTicket(s, a, T0 + 100);
+    assert.strictEqual(r.ok, true);
+    assert.strictEqual(r.entry.usedAt, T0 + 100);
+    assert.strictEqual(P.isUsed(r.state.redeemHistory[0]), true);
+    assert.strictEqual(P.isUsed(r.state.redeemHistory[1]), false);
+    assert.strictEqual(r.state.studyPoints, s.studyPoints);
+    // 元の状態は変えない
+    assert.strictEqual(P.isUsed(s.redeemHistory[0]), false);
+    // 2回目：使えない（使った日時は最初のまま）
+    const r2 = P.useTicket(r.state, a, T0 + 200);
+    assert.strictEqual(r2.ok, false);
+    assert.strictEqual(r2.error, 'alreadyUsed');
+    assert.strictEqual(r2.entry.usedAt, T0 + 100);
+    // もう1枚は使える。ない ID は notFound
+    assert.strictEqual(P.useTicket(r.state, b, T0 + 300).ok, true);
+    assert.strictEqual(P.useTicket(r.state, 'ZZZZ-ZZZZ', T0).error, 'notFound');
   });
 
   test('時間・方式がおかしいときは発行しない', () => {
@@ -406,25 +432,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.ok(subChecked > 40000 && swapChecked > 1000);
   });
 
-  // ---- メールと QR コードの文字列 ----
-  test('mailto：宛先・件名・本文（SPEC 14.5 の例のとおり）', () => {
-    const s = newState();
-    s.player.name = 'たろう';
-    s.settings.parentEmail = 'parent+kid@example.com';
-    const entry = { id: 'K7QX-3M9P', issuedAt: new Date(2026, 8, 27, 15, 0).getTime(), points: 4500, minutes: 90, pointsPerHour: 3000, method: 'mail' };
-    const url = P.mailtoUrl(s, entry);
-    const m = url.match(/^mailto:([^?]*)\?subject=([^&]*)&body=([^&]*)$/);
-    assert.ok(m, url);
-    assert.strictEqual(decodeURIComponent(m[1]), 'parent+kid@example.com');
-    assert.strictEqual(decodeURIComponent(m[2]), '【学習ゲーム】たろうさんが遊び時間を申請しています');
-    assert.strictEqual(decodeURIComponent(m[3]), 'たろうさんが勉強量ポイントを4,500pt使って、1時間30分ぶんの遊び時間を申請しました。（引換券ID: K7QX-3M9P、発行日時: 2026-09-27 15:00）');
-    // 名前に & や ? があっても URL が壊れない
-    s.player.name = 'A&B?C=D';
-    const m2 = P.mailtoUrl(s, entry).match(/^mailto:([^?]*)\?subject=([^&]*)&body=([^&]*)$/);
-    assert.ok(m2);
-    assert.ok(decodeURIComponent(m2[3]).startsWith('A&B?C=Dさんが'));
-  });
-
+  // ---- QR コードの文字列 ----
   test('QR コードに入れる文字列：引換券ID・名前・時間・発行日時を文字のまま', () => {
     const s = newState();
     s.player.name = 'ユキ⛄';
