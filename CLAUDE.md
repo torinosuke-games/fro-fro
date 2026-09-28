@@ -20,6 +20,7 @@
 - **見た目は昼だけ（判断176）。夜のテーマは作らない・確かめない**（完成してから足すかを決める）。色は CSS 変数で、昼の値は `:root[data-theme="day"]`。新しい変数は `:root` にも同じ値を置けばよい（夜の値は考えない）。スクリーンショットも昼だけ。
 - セーブ：saveVersion 3、`integrity`（改ざん検出）が必須。項目を足すときは saveVersion を上げずに読み込み時に補う形が基本（`state.js` の移行・整合）。
 - git：作業用ブランチに commit・push し、`main` へは PR を通す（GitHub Pages は `main` を公開）。
+- 公開先：https://torinosuke-games.github.io/fro-fro/ （リポジトリは Organization の `torinosuke-games/fro-fro`。前の `torinosuke/fro-fro` から移した）
 
 ## 今の状態（2026-09-28）
 
