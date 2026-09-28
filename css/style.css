@@ -624,6 +624,33 @@ textarea { min-height: 110px; font-family: ui-monospace, Consolas, monospace; fo
 .intro-name { text-align: center; font-size: 26px; font-weight: 900; letter-spacing: 0.08em; }
 .intro-line { text-align: center; color: var(--muted); }
 .fade-in { animation: fadein 0.8s ease both; }
+/* 開始画面の試作（config.TITLE_STYLE = 'hero'、昼のテーマだけ）：上に雪原の絵、白いカード。戻すときは config を 'classic' に */
+:root[data-theme="day"] {
+  --hero-ink: #16324a; --hero-muted: #5b7388; --hero-sub: #c2641e;
+  --hero-card: #ffffff; --hero-field: #f7fbfe; --hero-field-edge: #c9dcea;
+  --hero-shadow: 0 10px 28px rgba(22, 50, 74, 0.12);
+}
+.title-screen.hero { justify-content: flex-start; gap: 0; padding: 14px 4px 24px; }
+.title-hero {
+  display: block; width: 100%; height: clamp(160px, 30vh, 240px); object-fit: cover;
+  border-radius: 20px; box-shadow: var(--hero-shadow);
+}
+.title-screen.hero .title-sky { border-radius: 20px; }
+.title-screen.hero .logo {
+  margin-top: 14px; font-size: clamp(22px, 7.4vw, 28px); letter-spacing: 0.04em; color: var(--hero-ink); text-shadow: none; white-space: nowrap;
+}
+.title-screen.hero .logo small { letter-spacing: 0.28em; font-size: 10px; margin-top: 4px; color: var(--hero-sub); text-shadow: none; font-weight: 800; }
+.title-screen.hero .title-card {
+  margin-top: 14px; background: var(--hero-card); border: 0; border-radius: 22px; box-shadow: var(--hero-shadow);
+  padding: 18px 16px; color: var(--hero-ink);
+}
+.title-screen.hero .opening { color: var(--hero-ink); line-height: 1.85; font-size: 15px; }
+.title-screen.hero .field {
+  border-radius: 14px; border: 1.5px solid var(--hero-field-edge); background: var(--hero-field);
+  color: var(--hero-ink); font-size: 18px; padding: 12px 14px; min-height: 52px;
+}
+.title-screen.hero .muted, .title-screen.hero .intro-line { color: var(--hero-muted); }
+.title-screen.hero .btn.primary { border-radius: 16px; min-height: 52px; font-size: 17px; }
 @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 /* モーダル・トースト */

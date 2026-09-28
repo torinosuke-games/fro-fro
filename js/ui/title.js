@@ -27,17 +27,25 @@
 
   function render(main) {
     var app = FF.app;
-    var wrap = U.el('div', { class: 'title-screen' });
+    // 試作の見た目（config.TITLE_STYLE = 'hero'）は昼のテーマのときだけ。夜はこれまでの見た目（判断102）
+    var hero = app.theme === 'day' && FF.config.TITLE_STYLE === 'hero';
+    var wrap = U.el('div', { class: 'title-screen' + (hero ? ' hero' : '') });
     main.appendChild(wrap);
-    // 昼は青空・太陽・雲を描く。夜は描かない（これまでの開始画面の見た目のまま。SPEC_theme_default_day.md）
-    function sky() { return app.theme === 'day' ? FF.svgScene.renderSky('day') : null; }
+    // 昼は青空・太陽・雲を描く（試作では雪原の絵。読み込めなければ描いた空に切り替える）。夜は描かない（SPEC_theme_default_day.md）
+    function sky() {
+      if (app.theme !== 'day') return null;
+      if (!hero) return FF.svgScene.renderSky('day');
+      var img = U.el('img', { class: 'title-hero', attrs: { src: FF.config.TITLE_HERO_IMAGE, alt: '' } });
+      img.addEventListener('error', function () { if (img.parentNode) img.parentNode.replaceChild(FF.svgScene.renderSky('day'), img); });
+      return img;
+    }
     var sky1 = sky();
     if (sky1) wrap.appendChild(sky1);
 
     var logo = U.el('div', { class: 'logo fade-in' }, [FF.config.TITLE, U.el('small', { text: 'SURVIVE · LEARN · BUILD' })]);
     wrap.appendChild(logo);
 
-    var form = U.el('div', { class: 'panel strong stack fade-in' });
+    var form = U.el('div', { class: 'panel strong stack fade-in title-card' });
     var ni = nameInput('', decide);
     form.appendChild(U.R('div', 'opening', U.T('opening')));
     form.appendChild(ni.input);
@@ -57,7 +65,7 @@
       var sky2 = sky();
       if (sky2) wrap.appendChild(sky2);
       wrap.appendChild(U.el('div', { class: 'logo' }, [FF.config.TITLE]));
-      var box = U.el('div', { class: 'panel strong stack fade-in' });
+      var box = U.el('div', { class: 'panel strong stack fade-in title-card' });
       // 名前は textContent で表示する
       box.appendChild(U.el('div', { class: 'intro-name', text: app.state.player.name }));
       box.appendChild(U.R('div', 'intro-line', U.T('introAfter')));
