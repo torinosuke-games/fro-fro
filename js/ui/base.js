@@ -122,7 +122,7 @@
   // 名札は建物の絵に重ならないよう、建物のすぐ下などの空いた地面に置く（位置は絵に対する %。x は名札の中心、y は上端）。
   // 建物の絵そのもの（ART_AREAS の楕円の内側の四角）も押せる。どちらを押しても、SVG の風景と同じく建物の画面を開く
   var ART_SPOTS = {
-    quarry: { x: 31, y: 44 }, watchtower: { x: 72, y: 29 }, lumber: { x: 13, y: 67 },
+    quarry: { x: 31, y: 44 }, watchtower: { x: 72, y: 29 }, lumber: { x: 13, y: 59 },
     furnace: { x: 51, y: 59 }, mine: { x: 86, y: 56 }, housing: { x: 29, y: 87 }, foodhall: { x: 73, y: 87 }
   };
 
