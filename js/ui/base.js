@@ -130,7 +130,7 @@
   // 絵は「全部の建物がそのレベルの姿」の雪原を1枚ずつ（img/art/field_lv1.jpg など。どれも同じ構図）。
   // Lv1 の絵を土台にして、建物ごとに、そのレベルの絵の建物のまわりだけ（ふちをぼかした楕円）を重ねる。
   // 絵のないレベルは、それより低いレベルでいちばん近い絵を使う（今は Lv1 と Lv5 だけ）
-  var FIELD_LEVELS = [1, 5];
+  var FIELD_LEVELS = [1, 2, 3, 4, 5];
   // 建物のまわりの楕円（絵に対する %。cx・cy は中心、rx・ry は半径）
   var ART_AREAS = {
     quarry: { cx: 27, cy: 30, rx: 18, ry: 16 }, lumber: { cx: 15, cy: 52, rx: 15, ry: 15 },
@@ -164,6 +164,9 @@
   var ART_SMOKE = {
     furnace: {
       1: [{ x: 49.3, y: 49, size: 4, puffs: 3, sec: 3.6, dx: 40 }],     // たき火
+      2: [{ x: 49.8, y: 50, size: 4.5, puffs: 3, sec: 3.8, dx: 45 }],  // 石で囲んだたき火
+      3: [{ x: 50, y: 46, size: 5, puffs: 3, sec: 4.2, dx: 60 }],      // 石のかまどの上
+      4: [{ x: 52, y: 33, size: 6, puffs: 4, sec: 4.6, dx: 75 }],      // 短い煙突
       5: [{ x: 50.8, y: 21, size: 7, puffs: 4, sec: 5, dx: 90 }]        // 中央炉の煙突
     },
     foodhall: {
