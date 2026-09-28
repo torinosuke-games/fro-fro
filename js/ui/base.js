@@ -118,12 +118,14 @@
     U.rerender();
   }
 
-  // ---- 絵の見た目の風景（判断177）：生成した雪原の絵の上に、建物の札（小さな絵・名前・Lv）を重ねる ----
-  // 位置は絵の幅・高さに対する割合（札の中心の x、上端の y）。札を押すと、SVG の風景と同じく建物の画面を開く
+  // ---- 絵の見た目の風景（判断177・181）：生成した雪原の絵の上に、建物の名札（名前・Lv）を重ねる ----
+  // 名札は建物の絵に重ならないよう、建物のすぐ下などの空いた地面に置く（位置は絵に対する %。x は名札の中心、y は上端）。
+  // 建物の絵そのもの（ART_AREAS の楕円の内側の四角）も押せる。どちらを押しても、SVG の風景と同じく建物の画面を開く
   var ART_SPOTS = {
-    quarry: { x: 24, y: 14 }, watchtower: { x: 88, y: 6 }, lumber: { x: 12, y: 40 },
-    furnace: { x: 50, y: 30 }, mine: { x: 85, y: 38 }, housing: { x: 27, y: 58 }, foodhall: { x: 74, y: 58 }
+    quarry: { x: 31, y: 44 }, watchtower: { x: 72, y: 29 }, lumber: { x: 13, y: 67 },
+    furnace: { x: 51, y: 59 }, mine: { x: 86, y: 56 }, housing: { x: 29, y: 87 }, foodhall: { x: 73, y: 87 }
   };
+
   // ---- レベルで変わる基地の絵（判断180） ----
   // 絵は「全部の建物がそのレベルの姿」の雪原を1枚ずつ（img/art/field_lv1.jpg など。どれも同じ構図）。
   // Lv1 の絵を土台にして、建物ごとに、そのレベルの絵の建物のまわりだけ（ふちをぼかした楕円）を重ねる。
@@ -186,6 +188,7 @@
       if (s.buildings[id].level < 1) return;
       (ART_SMOKE[id][fieldLevel(shownLevel(s, id))] || []).forEach(function (p) { box.appendChild(smokeView(p)); });
     });
+    var labels = [];
     Object.keys(ART_SPOTS).forEach(function (id) {
       var p = ART_SPOTS[id], name, level = 0, locked, building = false, ready = false;
       if (id === 'watchtower') {
@@ -198,17 +201,27 @@
         building = !!s.buildings[id].construction;
         ready = !locked && B.canUpgrade(s, id).ok;
       }
-      var plainName = FF.util.plainText(name);
+      var plainName = FF.util.plainText(name), label = plainName + (level ? ' Lv' + level : '') + (locked ? ' 🔒' : '');
+      var ar = ART_AREAS[id];
+      // 建物の絵の上の押せる場所（見た目はなし。キーボードでは名札のほうを使う）
       box.appendChild(U.el('button', {
+        class: 'art-hit', attrs: { tabindex: '-1', 'aria-hidden': 'true' },
+        style: { left: (ar.cx - ar.rx * 0.6) + '%', top: (ar.cy - ar.ry * 0.6) + '%', width: (ar.rx * 1.2) + '%', height: (ar.ry * 1.2) + '%' },
+        on: { click: function () { openBuilding(id); } }
+      }));
+      labels.push(U.el('button', {
         class: 'art-bld' + (locked ? ' locked' : '') + (building ? ' is-building' : '') + (ready ? ' ready' : ''),
         style: { left: p.x + '%', top: p.y + '%' },
-        attrs: { 'aria-label': plainName + (level ? ' Lv' + level : '') + (locked ? ' 🔒' : '') },
+        attrs: { 'aria-label': label },
         on: { click: function () { openBuilding(id); } }
       }, [
-        U.el('span', { class: 'thumb' }, [U.artImg(id, ''), building ? U.el('span', { class: 'mark', text: '🔨' }) : ready ? U.el('span', { class: 'mark up', text: '▲' }) : null]),
-        U.el('span', { class: 'nm' }, [U.rich(name), level ? U.el('span', { class: 'lv', text: ' Lv' + level }) : null, locked ? ' 🔒' : null])
+        U.el('span', { class: 'nm' }, [
+          U.rich(name), level ? U.el('span', { class: 'lv', text: ' Lv' + level }) : null, locked ? ' 🔒' : null,
+          building ? U.el('span', { class: 'mark', text: ' 🔨' }) : ready ? U.el('span', { class: 'mark up', text: ' ▲' }) : null
+        ])
       ]));
     });
+    labels.forEach(function (l) { box.appendChild(l); });   // 名札は押せる場所より上に
     return box;
   }
 
