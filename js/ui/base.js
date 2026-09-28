@@ -118,6 +118,116 @@
     U.rerender();
   }
 
+  // ---- 絵の見た目の風景（判断177・181）：生成した雪原の絵の上に、建物の名札（名前・Lv）を重ねる ----
+  // 名札は建物の絵に重ならないよう、建物のすぐ下などの空いた地面に置く（位置は絵に対する %。x は名札の中心、y は上端）。
+  // 建物の絵そのもの（ART_AREAS の楕円の内側の四角）も押せる。どちらを押しても、SVG の風景と同じく建物の画面を開く
+  var ART_SPOTS = {
+    quarry: { x: 31, y: 44 }, watchtower: { x: 72, y: 29 }, lumber: { x: 13, y: 59 },
+    furnace: { x: 51, y: 59 }, mine: { x: 86, y: 56 }, housing: { x: 29, y: 87 }, foodhall: { x: 73, y: 86 }
+  };
+
+  // ---- レベルで変わる基地の絵（判断180） ----
+  // 絵は「全部の建物がそのレベルの姿」の雪原を1枚ずつ（img/art/field_lv1.jpg など。どれも同じ構図）。
+  // Lv1 の絵を土台にして、建物ごとに、そのレベルの絵の建物のまわりだけ（ふちをぼかした楕円）を重ねる。
+  // 絵のないレベルは、それより低いレベルでいちばん近い絵を使う（今は Lv1 と Lv5 だけ）
+  var FIELD_LEVELS = [1, 2, 3, 4, 5];
+  // 建物のまわりの楕円（絵に対する %。cx・cy は中心、rx・ry は半径）
+  var ART_AREAS = {
+    quarry: { cx: 27, cy: 30, rx: 18, ry: 16 }, lumber: { cx: 15, cy: 52, rx: 15, ry: 15 },
+    furnace: { cx: 51, cy: 37, rx: 13, ry: 24 }, watchtower: { cx: 72, cy: 15, rx: 8, ry: 17 },
+    mine: { cx: 82, cy: 40, rx: 15, ry: 15 }, housing: { cx: 27, cy: 73, rx: 18, ry: 21 },
+    foodhall: { cx: 74, cy: 73, rx: 21, ry: 20 }
+  };
+  function fieldLevel(level) {
+    var best = FIELD_LEVELS[0];
+    FIELD_LEVELS.forEach(function (l) { if (l <= level) best = l; });
+    return best;
+  }
+  // 絵の上での建物の姿のレベル。まだ使えない建物は Lv1 の絵（建てる前の姿）。見張り塔は探索が開いたら完成した姿
+  function shownLevel(s, id) {
+    if (id === 'watchtower') return FF.exploration.isExploreOpen(s) ? 5 : 1;
+    return Math.max(1, s.buildings[id].level);
+  }
+  function layerView(id, lv) {
+    var a = ART_AREAS[id];
+    var mask = 'radial-gradient(' + a.rx + '% ' + a.ry + '% at ' + a.cx + '% ' + a.cy + '%, #000 72%, transparent 100%)';
+    var img = U.artImg('field_lv' + lv, 'scene-art-layer');
+    img.style.webkitMaskImage = mask;
+    img.style.maskImage = mask;
+    return img;
+  }
+
+  // 動く煙（判断179・180）：絵に描いてある煙突・たき火の位置（絵に対する %）から、白い粒を少しずつずらして上げる。
+  // 絵のレベルごとに位置が違うので、建物 → 絵のレベル → 煙の出どころ（複数可）の表にする。
+  // size は粒の大きさ（絵の幅に対する %）、puffs は粒の数、sec は1つの粒が消えるまでの秒数、dx は横に流れる量。
+  // 建物が使えるとき（Lv1 以上）だけ出す
+  var ART_SMOKE = {
+    furnace: {
+      1: [{ x: 49.3, y: 49, size: 4, puffs: 3, sec: 3.6, dx: 40 }],     // たき火
+      2: [{ x: 49.8, y: 50, size: 4.5, puffs: 3, sec: 3.8, dx: 45 }],  // 石で囲んだたき火
+      3: [{ x: 50, y: 46, size: 5, puffs: 3, sec: 4.2, dx: 60 }],      // 石のかまどの上
+      4: [{ x: 52, y: 33, size: 6, puffs: 4, sec: 4.6, dx: 75 }],      // 短い煙突
+      5: [{ x: 50.8, y: 21, size: 7, puffs: 4, sec: 5, dx: 90 }]        // 中央炉の煙突
+    },
+    foodhall: {
+      5: [{ x: 71.0, y: 58, size: 4, puffs: 3, sec: 4.2, dx: 15 }]      // 食料庫の煙突
+    }
+  };
+  function smokeView(p) {
+    var puffs = [];
+    for (var i = 0; i < p.puffs; i++) puffs.push(U.el('span', { class: 'puff', style: { animationDuration: p.sec + 's', animationDelay: -(i * p.sec / p.puffs).toFixed(2) + 's' } }));
+    var box = U.el('span', { class: 'art-smoke', attrs: { 'aria-hidden': 'true' }, style: { left: p.x + '%', top: p.y + '%', width: p.size + '%' } }, puffs);
+    box.style.setProperty('--dx', p.dx + '%');
+    return box;
+  }
+  function artScene(s) {
+    var box = U.el('div', { class: 'scene art' });
+    box.appendChild(U.artImg('field_lv1', 'scene-art-bg', function () { return FF.svgScene.render(s, openBuilding, FF.app.theme); }));
+    Object.keys(ART_AREAS).forEach(function (id) {
+      var lv = fieldLevel(shownLevel(s, id));
+      if (lv > 1) box.appendChild(layerView(id, lv));
+    });
+    Object.keys(ART_SMOKE).forEach(function (id) {
+      if (s.buildings[id].level < 1) return;
+      (ART_SMOKE[id][fieldLevel(shownLevel(s, id))] || []).forEach(function (p) { box.appendChild(smokeView(p)); });
+    });
+    var labels = [];
+    Object.keys(ART_SPOTS).forEach(function (id) {
+      var p = ART_SPOTS[id], name, level = 0, locked, building = false, ready = false;
+      if (id === 'watchtower') {
+        name = FF.texts.teaser.watchtower;
+        locked = !FF.exploration.isExploreOpen(s);
+      } else {
+        name = U.buildingName(id);
+        level = s.buildings[id].level;
+        locked = level === 0;
+        building = !!s.buildings[id].construction;
+        ready = !locked && B.canUpgrade(s, id).ok;
+      }
+      var plainName = FF.util.plainText(name), label = plainName + (level ? ' Lv' + level : '') + (locked ? ' 🔒' : '');
+      var ar = ART_AREAS[id];
+      // 建物の絵の上の押せる場所（見た目はなし。キーボードでは名札のほうを使う）
+      box.appendChild(U.el('button', {
+        class: 'art-hit', attrs: { tabindex: '-1', 'aria-hidden': 'true' },
+        style: { left: (ar.cx - ar.rx * 0.6) + '%', top: (ar.cy - ar.ry * 0.6) + '%', width: (ar.rx * 1.2) + '%', height: (ar.ry * 1.2) + '%' },
+        on: { click: function () { openBuilding(id); } }
+      }));
+      labels.push(U.el('button', {
+        class: 'art-bld' + (locked ? ' locked' : '') + (building ? ' is-building' : '') + (ready ? ' ready' : ''),
+        style: { left: p.x + '%', top: p.y + '%' },
+        attrs: { 'aria-label': label },
+        on: { click: function () { openBuilding(id); } }
+      }, [
+        U.el('span', { class: 'nm' }, [
+          U.rich(name), level ? U.el('span', { class: 'lv', text: ' Lv' + level }) : null, locked ? ' 🔒' : null,
+          building ? U.el('span', { class: 'mark', text: ' 🔨' }) : ready ? U.el('span', { class: 'mark up', text: ' ▲' }) : null
+        ])
+      ]));
+    });
+    labels.forEach(function (l) { box.appendChild(l); });   // 名札は押せる場所より上に
+    return box;
+  }
+
   // 解放のお知らせを1つずつ出す。中央炉のお知らせのあとに、探索の地域のお知らせ（v0.2）
   function showUnlockNotices() {
     var app = FF.app;
@@ -153,11 +263,14 @@
     ]);
     main.appendChild(head);
 
-    main.appendChild(U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding, FF.app.theme)));
+    main.appendChild(U.artOn() ? artScene(s) : U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding, FF.app.theme)));
 
     collectBar = U.el('div', { class: 'panel collect-bar' });
     main.appendChild(collectBar);
     renderCollect();
+
+    // 絵の見た目では、学習への大きなボタンを風景の下に置く（見本の画面に合わせる。判断177）
+    if (U.artOn()) main.appendChild(U.el('button', { class: 'btn primary base-cta', rich: U.T('baseStudyCta'), on: { click: function () { U.show('study'); } } }));
 
     var list = U.el('div', { class: 'bld-list' });
     ORDER.forEach(function (id) {

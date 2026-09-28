@@ -37,6 +37,13 @@
     ]);
   }
 
+  // 教科のアイコン：絵の見た目（判断177）では img/art/ の絵、読めないときと 'classic' では SVG
+  var SUBJECT_ART = { japanese: 'subj-jp', math: 'subj-math', science: 'subj-sci', social: 'subj-soc', english: 'subj-en' };
+  function subjectIcon(id) {
+    function svgIcon() { return FF.svgSubjects.icon(id, FF.app.theme); }
+    return U.artOn() && SUBJECT_ART[id] ? U.artImg(SUBJECT_ART[id], 'subj-icon art', svgIcon) : svgIcon();
+  }
+
   // 教科のボタン：アイコンと教科名（5つを横一列に並べる）。選択中・未選択の見た目は pick と同じ（.pick.selected）。
   // 「生活（理科）」のような名前は、かっこの部分を小さくして2行目に出す（幅が狭いため）。
   function subjectPick(opts) {
@@ -46,7 +53,7 @@
       attrs: { 'aria-pressed': opts.selected ? 'true' : 'false' },
       on: { click: opts.onClick }
     }, [
-      FF.svgSubjects.icon(opts.id, FF.app.theme),
+      subjectIcon(opts.id),
       U.el('span', { class: 'title' }, m ? [U.rich(m[1]), U.el('span', { class: 'paren' }, U.rich('（' + m[2] + '）'))] : U.rich(opts.name)),
       opts.sub ? U.el('span', { class: 'sub' }, opts.sub) : null,
       opts.tag ? U.el('span', { class: 'tag' }, opts.tag) : null
@@ -61,7 +68,9 @@
       attrs: { 'aria-pressed': opts.selected ? 'true' : 'false' },
       on: { click: opts.onClick }
     }, [
-      U.el('span', { class: 'res-tile', attrs: { 'aria-hidden': 'true' }, text: opts.icon }),
+      U.artOn()
+        ? U.el('span', { class: 'res-tile art', attrs: { 'aria-hidden': 'true' } }, U.artImg('res-' + opts.id, '', function () { return U.el('span', { text: opts.icon }); }))
+        : U.el('span', { class: 'res-tile', attrs: { 'aria-hidden': 'true' }, text: opts.icon }),
       U.el('span', { class: 'title' }, U.rich(opts.name)),
       opts.tag ? U.el('span', { class: 'tag' }, opts.tag) : null
     ]);

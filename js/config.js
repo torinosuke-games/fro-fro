@@ -14,6 +14,10 @@
     // 開始画面の見た目（試作。2026-09-28）：'hero' ＝ 雪原の絵・白いカード（昼のテーマのときだけ）、
     // 'classic' ＝ これまでの見た目。戻すときは 'classic' にする（夜のテーマはどちらでも これまでの見た目）
     TITLE_STYLE: 'hero',
-    TITLE_HERO_IMAGE: 'img/title_snowfield.jpg'
+    TITLE_HERO_IMAGE: 'img/title_snowfield.jpg',
+    // 絵の見た目（試作。2026-09-28、判断177）：'art' ＝ 生成した絵（img/art/）で、基地の風景・建物・資源・教科のアイコンを出す。
+    // 'classic' ＝ これまでの SVG・絵文字。戻すときは 'classic' にする。元の画像は img/test_img/（img/art/ は縮めた写し）
+    ART_STYLE: 'art',
+    ART_DIR: 'img/art/'
   };
 })(this);

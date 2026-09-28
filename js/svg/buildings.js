@@ -122,7 +122,7 @@
     return g({}, parts);
   }
 
-  // ---- 生存者住宅：テント → 小屋 → 長屋 → 石と金属の住居棟 ----
+  // ---- 住宅：テント → 小屋 → 長屋 → 石と金属の住居棟 ----
   function housing(L) {
     var parts = [snowMound(34 + L * 4)];
     if (L === 1) {
@@ -154,7 +154,7 @@
     return g({}, parts);
   }
 
-  // ---- 木材置き場：丸太の山 → 作業小屋 → 製材の刃 → クレーン ----
+  // ---- 木工所：丸太の山 → 作業小屋 → 製材の刃 → クレーン ----
   function lumber(L) {
     var parts = [snowMound(30 + L * 4)];
     var piles = Math.min(L + 1, 5);
@@ -222,7 +222,7 @@
     return g({}, parts);
   }
 
-  // ---- 石切り場：切り出した石 → 足場 → クレーン ----
+  // ---- 採石場：切り出した石 → 足場 → クレーン ----
   function quarry(L) {
     var parts = [snowMound(30 + L * 4)];
     parts.push(path('M-30 0 L-26 -18 L-12 -24 L-4 -14 L-4 0 Z', C.stone));
@@ -244,7 +244,7 @@
     return g({}, parts);
   }
 
-  // ---- 食料施設：燻製小屋 → 温室ドーム → 大型の食料庫 ----
+  // ---- 食料庫：燻製小屋 → 温室ドーム → 大型の食料庫 ----
   function foodhall(L) {
     var parts = [snowMound(32 + L * 4)];
     parts.push(rect(-26, -18, 20, 18, C.wood));

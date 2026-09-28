@@ -900,3 +900,47 @@ a.btn { text-decoration: none; }
   .ticket-cost { font-size: 6.5pt; margin-top: 1.5mm; color: #333333; }
   .ticket-used-stamp { font-size: 11pt; border-width: 0.8mm; padding: 1mm 3mm; }
 }
+
+/* ---- 絵の見た目（判断177。config.ART_STYLE = 'art'）：生成した絵を使う基地の風景・資源・教科のアイコン ---- */
+.hud.art .res-chip { gap: 6px; padding: 3px 8px 3px 3px; border-radius: 999px; background: #fff; box-shadow: 0 1px 3px rgba(30,70,110,0.12); justify-content: flex-start; }
+.res-chip .ico.art { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; flex: none; }
+.scene.art { aspect-ratio: 1168 / 784; border-radius: 18px; }
+.scene.art .scene-art-bg, .scene.art .scene-art-layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block; }
+.scene.art .scene-art-layer { pointer-events: none; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.scene.art > svg { position: absolute; inset: 0; }
+.art-hit { position: absolute; padding: 0; margin: 0; border: 0; background: none; cursor: pointer; border-radius: 40%; }
+.art-hit:active { background: rgba(255,255,255,0.18); }
+.art-bld {
+  position: absolute; transform: translateX(-50%); padding: 0; margin: 0; border: 0; background: none;
+  cursor: pointer; font: inherit; color: inherit;
+}
+.art-bld .nm {
+  display: block; font-size: 10px; font-weight: 800; line-height: 1.2; white-space: nowrap; padding: 1px 7px 2px; border-radius: 999px;
+  background: rgba(255,255,255,0.9); color: var(--text); box-shadow: 0 1px 3px rgba(20,50,80,0.3); border: 1px solid rgba(255,255,255,0.95);
+}
+.art-bld .nm rt { font-size: 6px; }
+.art-bld .nm .lv { color: var(--ember); }
+.art-bld .mark.up { color: var(--good); font-weight: 900; }
+.art-bld.locked .nm { color: var(--muted); background: rgba(255,255,255,0.75); }
+.art-bld.ready .nm { border-color: var(--good); }
+.art-bld.is-building .nm { border-color: var(--warn); }
+.art-bld:hover .nm, .art-bld:focus-visible .nm { border-color: var(--ice); }
+.art-bld:focus { outline: none; }
+.btn.base-cta { width: 100%; min-height: 56px; margin: 0 0 12px; font-size: 18px; border-radius: 16px; }
+.pick.subj .subj-icon.art { border-radius: 22%; object-fit: cover; }
+.pick.res .res-tile.art { background: none; overflow: hidden; border-radius: 50%; }
+.pick.res .res-tile.art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* 動く煙（判断179）：煙突の出口に置いた枠（幅は絵に対する %）の中で、白い粒が右へ流れながら上がり、広がって消える */
+.art-smoke { position: absolute; aspect-ratio: 1; transform: translate(-50%, -50%); pointer-events: none; }
+.art-smoke .puff {
+  position: absolute; inset: 0; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, rgba(250,252,255,0.95) 0%, rgba(235,241,247,0.7) 40%, rgba(235,241,247,0) 70%);
+  animation: art-smoke 5s linear infinite;
+}
+@keyframes art-smoke {
+  0%   { opacity: 0;    transform: translate(0, 0) scale(0.45); }
+  12%  { opacity: 0.85; }
+  60%  { opacity: 0.5; }
+  100% { opacity: 0;    transform: translate(var(--dx, 90%), -420%) scale(2.4); }
+}
+@media (prefers-reduced-motion: reduce) { .art-smoke { display: none; } }

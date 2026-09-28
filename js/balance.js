@@ -100,7 +100,7 @@
 
     // 生産：施設レベル × PRODUCTION_PER_LEVEL_PER_HOUR 個／時間
     PRODUCTION_PER_LEVEL_PER_HOUR: 2,
-    STORAGE_HOURS: { BASE: 4, PER_LEVEL: 2, MAX: 12 },  // 生存者住宅 Lv1 で4時間、+2時間/Lv
+    STORAGE_HOURS: { BASE: 4, PER_LEVEL: 2, MAX: 12 },  // 住宅 Lv1 で4時間、+2時間/Lv
 
     INITIAL_RESOURCES: { wood: 0, iron: 0, stone: 0, food: 0 },
 

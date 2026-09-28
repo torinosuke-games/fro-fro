@@ -45,11 +45,11 @@
 
     BUILDINGS: [
       { id: 'furnace', name: '中央炉' },
-      { id: 'housing', name: '生存者住宅' },
-      { id: 'lumber', name: '木材置き場', produces: 'wood' },
+      { id: 'housing', name: '住宅' },
+      { id: 'lumber', name: '木工所', produces: 'wood' },
       { id: 'mine', name: '鉱山', produces: 'iron' },
-      { id: 'quarry', name: '石切り場', produces: 'stone' },
-      { id: 'foodhall', name: '食料施設', produces: 'food' }
+      { id: 'quarry', name: '採石場', produces: 'stone' },
+      { id: 'foodhall', name: '食料庫', produces: 'food' }
     ],
 
     // 中央炉のレベルによる解放（v0.1）

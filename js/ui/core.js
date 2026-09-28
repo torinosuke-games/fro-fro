@@ -75,6 +75,20 @@
 
   function fmt(n) { return Math.floor(n).toLocaleString('ja-JP'); }
   function resDef(id) { return FF.defs.RESOURCES.filter(function (r) { return r.id === id; })[0]; }
+
+  // ---- 絵の見た目（判断177。config.ART_STYLE が 'art' のとき、img/art/ の絵を使う） ----
+  function artOn() { return FF.config.ART_STYLE === 'art'; }
+  // 絵の <img>。読めないとき（ファイルがない など）は fallback（これまでの絵文字・SVG）に差し替える
+  function artImg(name, cls, fallback) {
+    var img = el('img', { class: cls, attrs: { src: FF.config.ART_DIR + name + '.jpg', alt: '', draggable: 'false' } });
+    img.addEventListener('error', function () { if (fallback && img.parentNode) img.parentNode.replaceChild(fallback(), img); });
+    return img;
+  }
+  // 資源のアイコン：絵のときは丸い絵、そうでなければ絵文字
+  function resIcon(r) {
+    function emoji() { return el('span', { class: 'ico', text: r.icon }); }
+    return artOn() ? artImg('res-' + r.id, 'ico art', emoji) : emoji();
+  }
   function buildingName(id) { return FF.buildings.defOf(id).name; }
   function nameOf(list, id) { var d = list.filter(function (x) { return x.id === id; })[0]; return d ? d.name : id; }
 
@@ -129,12 +143,13 @@
     if (!hud || !FF.app.state) return;
     var s = FF.app.state, now = FF.app.now();
     hud.hidden = FF.app.screen === 'title';
+    hud.classList.toggle('art', artOn());
     clear(hud);
     // 学習の「学ぶ」（選択画面）では、資源の所持数の行を出さない（縦の長さを減らすため。チケットの行は出す）
     var hideRes = FF.app.screen === 'study' && FF.app.studyTab === 'learn';
     hud.classList.toggle('compact', hideRes);   // チケットの行だけのときは上下を詰める
     if (!hideRes) hud.appendChild(el('div', { class: 'hud-res' }, FF.defs.RESOURCES.map(function (r) {
-      return el('div', { class: 'res-chip', attrs: { title: r.name } }, [el('span', { class: 'ico', text: r.icon }), fmt(s.resources[r.id] || 0)]);
+      return el('div', { class: 'res-chip', attrs: { title: r.name } }, [resIcon(r), fmt(s.resources[r.id] || 0)]);
     })));
     var t = FF.tickets.recoverTickets(s.tickets, now);
     var next = FF.tickets.msUntilNext(t, now);
@@ -303,7 +318,7 @@
   FF.ui = {
     usesNumpad: usesNumpad, numpad: numpad, autoFocusOK: autoFocusOK, keepInView: keepInView,
     el: el, svg: svg, clear: clear, rich: rich, R: R, plain: plain, T: T, fmt: fmt,
-    resDef: resDef, buildingName: buildingName, nameOf: nameOf, costView: costView,
+    resDef: resDef, artOn: artOn, artImg: artImg, resIcon: resIcon, buildingName: buildingName, nameOf: nameOf, costView: costView,
     toast: toast, modal: modal, renderHud: renderHud, renderNav: renderNav, openRedeem: openRedeem,
     screens: screens, show: show, rerender: rerender, tick: tick,
     currentTheme: currentTheme, applyTheme: applyTheme
