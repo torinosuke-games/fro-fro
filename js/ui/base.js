@@ -123,7 +123,7 @@
   // 建物の絵そのもの（ART_AREAS の楕円の内側の四角）も押せる。どちらを押しても、SVG の風景と同じく建物の画面を開く
   var ART_SPOTS = {
     quarry: { x: 31, y: 44 }, watchtower: { x: 72, y: 29 }, lumber: { x: 13, y: 59 },
-    furnace: { x: 51, y: 59 }, mine: { x: 86, y: 56 }, housing: { x: 29, y: 87 }, foodhall: { x: 73, y: 87 }
+    furnace: { x: 51, y: 59 }, mine: { x: 86, y: 56 }, housing: { x: 29, y: 87 }, foodhall: { x: 73, y: 92 }
   };
 
   // ---- レベルで変わる基地の絵（判断180） ----
@@ -136,7 +136,7 @@
     quarry: { cx: 27, cy: 30, rx: 18, ry: 16 }, lumber: { cx: 15, cy: 52, rx: 15, ry: 15 },
     furnace: { cx: 51, cy: 37, rx: 13, ry: 24 }, watchtower: { cx: 72, cy: 15, rx: 8, ry: 17 },
     mine: { cx: 82, cy: 40, rx: 15, ry: 15 }, housing: { cx: 27, cy: 73, rx: 18, ry: 21 },
-    foodhall: { cx: 74, cy: 71, rx: 21, ry: 19 }
+    foodhall: { cx: 74, cy: 73, rx: 21, ry: 20 }
   };
   function fieldLevel(level) {
     var best = FIELD_LEVELS[0];
@@ -167,7 +167,7 @@
       5: [{ x: 50.8, y: 21, size: 7, puffs: 4, sec: 5, dx: 90 }]        // 中央炉の煙突
     },
     foodhall: {
-      5: [{ x: 70.1, y: 51, size: 5, puffs: 3, sec: 4.2, dx: 15 }]      // 家の煙突
+      5: [{ x: 71.0, y: 58, size: 4, puffs: 3, sec: 4.2, dx: 15 }]      // 食料庫の煙突
     }
   };
   function smokeView(p) {
