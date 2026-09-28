@@ -116,8 +116,7 @@
 
   function renderRegions(main) {
     var s = FF.app.state, art = U.artOn();
-    if (art) main.classList.add('explore-art');   // 地域の絵のカード（判断190）
-    main.appendChild(U.el('div', { class: 'panel' + (art ? ' xp-intro' : '') }, [
+    main.appendChild(U.el('div', { class: 'panel' + (art ? ' xp-lead' : '') }, [
       U.R('div', 'section-title', U.T('explore.chooseRegion')),
       U.R('div', 'small muted', U.T('explore.intro'))
     ]));
@@ -239,7 +238,9 @@
       g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
       svg.appendChild(g);
     });
-    return U.el('div', { class: 'xp-map-wrap' }, svg);
+    var wrap = U.el('div', { class: 'xp-map-wrap' }, svg);
+    if (U.artOn()) wrap.style.backgroundImage = 'url("' + FF.config.ART_DIR + 'region-' + regionId + '.jpg")';   // 地図の下に地域の絵をうすく（判断191）
+    return wrap;
   }
 
   function openNode(regionId, n) {
@@ -285,7 +286,17 @@
       U.el('button', { class: 'btn small ghost', rich: U.T('explore.backToRegions'), on: { click: function () { U.show('explore'); } } }),
       U.el('span', { class: 'rg-en', text: r.nameEn })
     ]));
-    main.appendChild(U.el('div', { class: 'panel' }, [
+    if (U.artOn()) {
+      // 地域の絵の見出し（判断191）：上に絵と名前、下に進み具合と地域の説明
+      main.appendChild(U.el('div', { class: 'panel xp-hero' }, [
+        U.el('div', { class: 'rg-pic' }, [
+          U.artImg('region-' + r.id, 'rg-img', function () { return U.el('span', { class: 'rg-img' }); }),
+          U.el('div', { class: 'rg-cap' }, [U.el('h2', { class: 'rg-name' }, regionName(r)), U.el('span', { class: 'rg-en', text: r.nameEn })]),
+          U.el('span', { class: 'rg-chip' }, done ? U.rich(U.T('explore.complete')) : U.rich(U.T('explore.progress'), { pct: pct }))
+        ]),
+        U.el('div', { class: 'rg-body' }, [progressBar(pct), U.R('div', 'small muted xp-intro', r.intro, { name: s.player.name })])
+      ]));
+    } else main.appendChild(U.el('div', { class: 'panel' }, [
       U.el('div', { class: 'row between' }, [
         U.el('h2', { class: 'rg-title' }, regionName(r)),
         U.el('span', { class: 'pct' }, done ? U.rich(U.T('explore.complete')) : U.rich(U.T('explore.progress'), { pct: pct }))
@@ -323,6 +334,7 @@
 
   function render(main, params) {
     if (!X.isExploreOpen(FF.app.state)) { U.show('base'); return; }
+    if (U.artOn()) main.classList.add('explore-art');   // 絵の見た目：角の丸いカード（判断190・191）
     if (params.region) renderRoute(main, params.region);
     else renderRegions(main);
     setTimeout(showExploreNotices, 100);
