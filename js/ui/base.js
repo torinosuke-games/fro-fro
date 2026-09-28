@@ -123,7 +123,7 @@
   // 建物の絵そのもの（ART_AREAS の楕円の内側の四角）も押せる。どちらを押しても、SVG の風景と同じく建物の画面を開く
   var ART_SPOTS = {
     quarry: { x: 31, y: 44 }, watchtower: { x: 72, y: 29 }, lumber: { x: 13, y: 59 },
-    furnace: { x: 51, y: 59 }, mine: { x: 86, y: 56 }, housing: { x: 29, y: 87 }, foodhall: { x: 73, y: 92 }
+    furnace: { x: 51, y: 59 }, mine: { x: 86, y: 56 }, housing: { x: 29, y: 87 }, foodhall: { x: 73, y: 86 }
   };
 
   // ---- レベルで変わる基地の絵（判断180） ----
