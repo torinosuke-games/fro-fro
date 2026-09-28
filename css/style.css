@@ -935,3 +935,18 @@ a.btn { text-decoration: none; }
 .pick.subj .subj-icon.art { border-radius: 22%; object-fit: cover; }
 .pick.res .res-tile.art { background: none; overflow: hidden; border-radius: 50%; }
 .pick.res .res-tile.art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* 動く煙（判断179）：煙突の出口に置いた枠（幅は絵に対する %）の中で、白い粒が右へ流れながら上がり、広がって消える */
+.art-smoke { position: absolute; aspect-ratio: 1; transform: translate(-50%, -50%); pointer-events: none; }
+.art-smoke .puff {
+  position: absolute; inset: 0; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, rgba(250,252,255,0.95) 0%, rgba(235,241,247,0.7) 40%, rgba(235,241,247,0) 70%);
+  animation: art-smoke 5s linear infinite;
+}
+@keyframes art-smoke {
+  0%   { opacity: 0;    transform: translate(0, 0) scale(0.45); }
+  12%  { opacity: 0.85; }
+  60%  { opacity: 0.5; }
+  100% { opacity: 0;    transform: translate(var(--dx, 90%), -420%) scale(2.4); }
+}
+.art-smoke-foodhall { --dx: 15%; }
+@media (prefers-reduced-motion: reduce) { .art-smoke { display: none; } }

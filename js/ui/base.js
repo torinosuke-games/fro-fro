@@ -124,10 +124,22 @@
     quarry: { x: 24, y: 14 }, watchtower: { x: 88, y: 6 }, lumber: { x: 12, y: 40 },
     furnace: { x: 50, y: 30 }, mine: { x: 85, y: 38 }, housing: { x: 27, y: 58 }, foodhall: { x: 74, y: 58 }
   };
+  // 動く煙（判断179）：絵に描いてある煙突の出口（絵に対する割合）から、白い粒を少しずつずらして上げる。
+  // size は粒の大きさ（絵の幅に対する %）、puffs は粒の数、sec は1つの粒が消えるまでの秒数。建物が使えるとき（Lv1 以上）だけ出す
+  var ART_SMOKE = [
+    { id: 'furnace', x: 50.8, y: 21, size: 7, puffs: 4, sec: 5 },
+    { id: 'foodhall', x: 70.1, y: 51, size: 5, puffs: 3, sec: 4.2 }
+  ];
+  function smokeView(p) {
+    var puffs = [];
+    for (var i = 0; i < p.puffs; i++) puffs.push(U.el('span', { class: 'puff', style: { animationDuration: p.sec + 's', animationDelay: -(i * p.sec / p.puffs).toFixed(2) + 's' } }));
+    return U.el('span', { class: 'art-smoke art-smoke-' + p.id, attrs: { 'aria-hidden': 'true' }, style: { left: p.x + '%', top: p.y + '%', width: p.size + '%' } }, puffs);
+  }
   function artScene(s) {
     var box = U.el('div', { class: 'scene art' });
     var bg = U.artImg('field', 'scene-art-bg', function () { return FF.svgScene.render(s, openBuilding, FF.app.theme); });
     box.appendChild(bg);
+    ART_SMOKE.forEach(function (p) { if (s.buildings[p.id].level > 0) box.appendChild(smokeView(p)); });
     Object.keys(ART_SPOTS).forEach(function (id) {
       var p = ART_SPOTS[id], name, level = 0, locked, building = false, ready = false;
       if (id === 'watchtower') {
