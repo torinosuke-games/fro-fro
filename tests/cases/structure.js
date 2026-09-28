@@ -64,7 +64,7 @@ module.exports = ({ test, assert }) => {
   });
 
   test('絵の見た目（判断177）で使う img/art/ の絵がすべてある', () => {
-    const names = ['field', 'furnace', 'housing', 'lumber', 'mine', 'quarry', 'foodhall', 'watchtower',
+    const names = ['field_lv1', 'field_lv5', 'furnace', 'housing', 'lumber', 'mine', 'quarry', 'foodhall', 'watchtower',
       'res-wood', 'res-iron', 'res-stone', 'res-food', 'subj-jp', 'subj-math', 'subj-sci', 'subj-soc', 'subj-en'];
     const missing = names.filter(n => !fs.existsSync(path.join(ROOT, 'img/art', n + '.jpg')));
     assert.deepStrictEqual(missing, []);

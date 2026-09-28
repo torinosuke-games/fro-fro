@@ -124,22 +124,68 @@
     quarry: { x: 24, y: 14 }, watchtower: { x: 88, y: 6 }, lumber: { x: 12, y: 40 },
     furnace: { x: 50, y: 30 }, mine: { x: 85, y: 38 }, housing: { x: 27, y: 58 }, foodhall: { x: 74, y: 58 }
   };
-  // 動く煙（判断179）：絵に描いてある煙突の出口（絵に対する割合）から、白い粒を少しずつずらして上げる。
-  // size は粒の大きさ（絵の幅に対する %）、puffs は粒の数、sec は1つの粒が消えるまでの秒数。建物が使えるとき（Lv1 以上）だけ出す
-  var ART_SMOKE = [
-    { id: 'furnace', x: 50.8, y: 21, size: 7, puffs: 4, sec: 5 },
-    { id: 'foodhall', x: 70.1, y: 51, size: 5, puffs: 3, sec: 4.2 }
-  ];
+  // ---- レベルで変わる基地の絵（判断180） ----
+  // 絵は「全部の建物がそのレベルの姿」の雪原を1枚ずつ（img/art/field_lv1.jpg など。どれも同じ構図）。
+  // Lv1 の絵を土台にして、建物ごとに、そのレベルの絵の建物のまわりだけ（ふちをぼかした楕円）を重ねる。
+  // 絵のないレベルは、それより低いレベルでいちばん近い絵を使う（今は Lv1 と Lv5 だけ）
+  var FIELD_LEVELS = [1, 5];
+  // 建物のまわりの楕円（絵に対する %。cx・cy は中心、rx・ry は半径）
+  var ART_AREAS = {
+    quarry: { cx: 27, cy: 30, rx: 18, ry: 16 }, lumber: { cx: 15, cy: 52, rx: 15, ry: 15 },
+    furnace: { cx: 51, cy: 37, rx: 13, ry: 24 }, watchtower: { cx: 72, cy: 15, rx: 8, ry: 17 },
+    mine: { cx: 82, cy: 40, rx: 15, ry: 15 }, housing: { cx: 27, cy: 73, rx: 18, ry: 21 },
+    foodhall: { cx: 74, cy: 71, rx: 21, ry: 19 }
+  };
+  function fieldLevel(level) {
+    var best = FIELD_LEVELS[0];
+    FIELD_LEVELS.forEach(function (l) { if (l <= level) best = l; });
+    return best;
+  }
+  // 絵の上での建物の姿のレベル。まだ使えない建物は Lv1 の絵（建てる前の姿）。見張り塔は探索が開いたら完成した姿
+  function shownLevel(s, id) {
+    if (id === 'watchtower') return FF.exploration.isExploreOpen(s) ? 5 : 1;
+    return Math.max(1, s.buildings[id].level);
+  }
+  function layerView(id, lv) {
+    var a = ART_AREAS[id];
+    var mask = 'radial-gradient(' + a.rx + '% ' + a.ry + '% at ' + a.cx + '% ' + a.cy + '%, #000 72%, transparent 100%)';
+    var img = U.artImg('field_lv' + lv, 'scene-art-layer');
+    img.style.webkitMaskImage = mask;
+    img.style.maskImage = mask;
+    return img;
+  }
+
+  // 動く煙（判断179・180）：絵に描いてある煙突・たき火の位置（絵に対する %）から、白い粒を少しずつずらして上げる。
+  // 絵のレベルごとに位置が違うので、建物 → 絵のレベル → 煙の出どころ（複数可）の表にする。
+  // size は粒の大きさ（絵の幅に対する %）、puffs は粒の数、sec は1つの粒が消えるまでの秒数、dx は横に流れる量。
+  // 建物が使えるとき（Lv1 以上）だけ出す
+  var ART_SMOKE = {
+    furnace: {
+      1: [{ x: 49.3, y: 49, size: 4, puffs: 3, sec: 3.6, dx: 40 }],     // たき火
+      5: [{ x: 50.8, y: 21, size: 7, puffs: 4, sec: 5, dx: 90 }]        // 中央炉の煙突
+    },
+    foodhall: {
+      5: [{ x: 70.1, y: 51, size: 5, puffs: 3, sec: 4.2, dx: 15 }]      // 家の煙突
+    }
+  };
   function smokeView(p) {
     var puffs = [];
     for (var i = 0; i < p.puffs; i++) puffs.push(U.el('span', { class: 'puff', style: { animationDuration: p.sec + 's', animationDelay: -(i * p.sec / p.puffs).toFixed(2) + 's' } }));
-    return U.el('span', { class: 'art-smoke art-smoke-' + p.id, attrs: { 'aria-hidden': 'true' }, style: { left: p.x + '%', top: p.y + '%', width: p.size + '%' } }, puffs);
+    var box = U.el('span', { class: 'art-smoke', attrs: { 'aria-hidden': 'true' }, style: { left: p.x + '%', top: p.y + '%', width: p.size + '%' } }, puffs);
+    box.style.setProperty('--dx', p.dx + '%');
+    return box;
   }
   function artScene(s) {
     var box = U.el('div', { class: 'scene art' });
-    var bg = U.artImg('field', 'scene-art-bg', function () { return FF.svgScene.render(s, openBuilding, FF.app.theme); });
-    box.appendChild(bg);
-    ART_SMOKE.forEach(function (p) { if (s.buildings[p.id].level > 0) box.appendChild(smokeView(p)); });
+    box.appendChild(U.artImg('field_lv1', 'scene-art-bg', function () { return FF.svgScene.render(s, openBuilding, FF.app.theme); }));
+    Object.keys(ART_AREAS).forEach(function (id) {
+      var lv = fieldLevel(shownLevel(s, id));
+      if (lv > 1) box.appendChild(layerView(id, lv));
+    });
+    Object.keys(ART_SMOKE).forEach(function (id) {
+      if (s.buildings[id].level < 1) return;
+      (ART_SMOKE[id][fieldLevel(shownLevel(s, id))] || []).forEach(function (p) { box.appendChild(smokeView(p)); });
+    });
     Object.keys(ART_SPOTS).forEach(function (id) {
       var p = ART_SPOTS[id], name, level = 0, locked, building = false, ready = false;
       if (id === 'watchtower') {

@@ -905,7 +905,8 @@ a.btn { text-decoration: none; }
 .hud.art .res-chip { gap: 6px; padding: 3px 8px 3px 3px; border-radius: 999px; background: #fff; box-shadow: 0 1px 3px rgba(30,70,110,0.12); justify-content: flex-start; }
 .res-chip .ico.art { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; flex: none; }
 .scene.art { aspect-ratio: 1168 / 784; border-radius: 18px; }
-.scene.art .scene-art-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.scene.art .scene-art-bg, .scene.art .scene-art-layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block; }
+.scene.art .scene-art-layer { pointer-events: none; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
 .scene.art > svg { position: absolute; inset: 0; }
 .art-bld {
   position: absolute; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 2px;
@@ -948,5 +949,4 @@ a.btn { text-decoration: none; }
   60%  { opacity: 0.5; }
   100% { opacity: 0;    transform: translate(var(--dx, 90%), -420%) scale(2.4); }
 }
-.art-smoke-foodhall { --dx: 15%; }
 @media (prefers-reduced-motion: reduce) { .art-smoke { display: none; } }
