@@ -944,3 +944,7 @@ a.btn { text-decoration: none; }
   100% { opacity: 0;    transform: translate(var(--dx, 90%), -420%) scale(2.4); }
 }
 @media (prefers-reduced-motion: reduce) { .art-smoke { display: none; } }
+
+/* 建物の画面の小さな絵（判断186）。そのレベルの雪原の絵から建物のまわりを切り出す（base.js の buildingArt） */
+.bld-art { max-width: 100%; margin: 0 auto 2px; border-radius: 14px; background-repeat: no-repeat; box-shadow: 0 2px 8px rgba(0, 0, 0, .18); }
+.bld-art.locked { filter: grayscale(1); opacity: .6; }

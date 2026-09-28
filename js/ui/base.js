@@ -70,12 +70,16 @@
     if (id === 'watchtower') {
       // v0.2：完成した見張り塔は探索の入口
       if (FF.exploration.isExploreOpen(s)) { U.show('explore'); return; }
-      U.modal({ title: U.T('teaser.watchtower'), body: U.T('teaser.watchtowerLocked') });
+      var tb = U.el('div', { class: 'stack' });
+      if (U.artOn()) tb.appendChild(buildingArt('watchtower', 1, true));
+      tb.appendChild(U.R('div', 'pre', U.T('teaser.watchtowerLocked')));
+      U.modal({ title: U.T('teaser.watchtower'), body: tb });
       return;
     }
     var bld = s.buildings[id], name = U.buildingName(id);
     var can = B.canUpgrade(s, id);
     var body = U.el('div', { class: 'stack' });
+    if (U.artOn()) body.appendChild(buildingArt(id, shownLevel(s, id), bld.level === 0));   // 名前の下に、今のレベルの姿（判断186）
     body.appendChild(U.R('div', 'small', U.T('buildingInfo.' + id)));
     var cur = effectText(id, bld.level);
     if (cur) body.appendChild(U.el('div', { class: 'badge' }, U.rich(cur[0], cur[1])));
@@ -147,6 +151,24 @@
   function shownLevel(s, id) {
     if (id === 'watchtower') return FF.exploration.isExploreOpen(s) ? 5 : 1;
     return Math.max(1, s.buildings[id].level);
+  }
+  // 建物の画面に出す小さな絵（判断186）：そのレベルの雪原の絵から、建物のまわりの四角（ART_CROPS。絵に対する %。
+  // どのレベルの姿も入るように広めにとる）を切り出し、高さ ART_CROP_PX にそろえる。絵は CSS の背景。まだ使えない建物は薄い灰色
+  var ART_CROPS = {
+    quarry: { x: 5, y: 8, w: 42, h: 40 }, lumber: { x: 0, y: 33, w: 30, h: 39 }, furnace: { x: 34, y: 16, w: 32, h: 48 },
+    watchtower: { x: 60, y: 2, w: 26, h: 34 }, mine: { x: 58, y: 22, w: 42, h: 38 }, housing: { x: 3, y: 55, w: 39, h: 44 },
+    foodhall: { x: 52, y: 50, w: 44, h: 46 }
+  };
+  var FIELD_ASPECT = 960 / 644, ART_CROP_PX = 150;   // img/art/field_lv*.jpg の横 / 縦、切り出した絵の高さ
+  function buildingArt(id, lv, locked) {
+    var c = ART_CROPS[id];
+    var box = U.el('div', { class: 'bld-art' + (locked ? ' locked' : ''), attrs: { 'aria-hidden': 'true' } });
+    box.style.backgroundImage = 'url("' + FF.config.ART_DIR + 'field_lv' + fieldLevel(lv) + '.jpg")';
+    box.style.backgroundSize = (10000 / c.w) + '% ' + (10000 / c.h) + '%';
+    box.style.backgroundPosition = (c.x / (100 - c.w) * 100) + '% ' + (c.y / (100 - c.h) * 100) + '%';
+    box.style.width = Math.round(ART_CROP_PX * c.w * FIELD_ASPECT / c.h) + 'px';
+    box.style.height = ART_CROP_PX + 'px';
+    return box;
   }
   function layerView(id, lv) {
     var a = ART_AREAS[id];
