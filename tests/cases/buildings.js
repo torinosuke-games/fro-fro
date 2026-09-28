@@ -86,7 +86,7 @@ module.exports = ({ test, FF, assert, plain }) => {
     }
   });
 
-  test('石切り場は中央炉 Lv2 の完成で解放され、生産は完成した時刻から', () => {
+  test('採石場は中央炉 Lv2 の完成で解放され、生産は完成した時刻から', () => {
     const s = rich();
     assert.strictEqual(s.buildings.quarry.level, 0);
     assert.strictEqual(B.canUpgrade(s, 'quarry').reason, 'locked');
@@ -308,7 +308,7 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(s.buildings.lumber.lastCollectedAt, T0 + 10 * HOUR);
   });
 
-  test('解放前の石切り場は生産しない', () => {
+  test('解放前の採石場は生産しない', () => {
     const s = newState();
     assert.strictEqual(B.pendingProduction(s, 'quarry', T0 + 5 * HOUR), 0);
   });
