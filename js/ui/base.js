@@ -66,15 +66,14 @@
   }
 
   // ---- 基地の絵の上の受け取り（判断196）：建物の上の吹き出し（1つずつ）と、絵の右下のかご（まとめて） ----
-  // 吹き出しの位置は絵に対する %（建物の上の空いたところ）
-  var ART_BUBBLES = { lumber: { x: 9, y: 47 }, mine: { x: 83, y: 30 }, quarry: { x: 22, y: 17 }, foodhall: { x: 80, y: 57 } };
+  // 収穫のアイコンを付ける建物（名札の右上に小さく重ねる。判断197）
+  var ART_BUBBLES = { lumber: true, mine: true, quarry: true, foodhall: true };
   var bubbleEls = {}, basketEl = null;
   function producerOf(id) { return FF.defs.BUILDINGS.filter(function (d) { return d.id === id; })[0]; }
   function bubbleView(id) {
-    var r = U.resDef(producerOf(id).produces), p = ART_BUBBLES[id];
+    var r = U.resDef(producerOf(id).produces);
     var b = U.el('button', {
       class: 'art-bubble', attrs: { hidden: '', 'aria-label': FF.util.plainText(U.T('collectOne'), { name: r.name }) },
-      style: { left: p.x + '%', top: p.y + '%' },
       on: { click: function (e) { e.stopPropagation(); collectOneArt(id); } }
     }, U.resIcon(r));
     bubbleEls[id] = b;
@@ -87,7 +86,7 @@
     }, [U.el('span', { class: 'ico', attrs: { 'aria-hidden': 'true' }, text: '🧺' }), U.el('span', { class: 'badge-n' })]);
     return basketEl;
   }
-  // 貯まり具合で吹き出しを出し分ける（4割未満は小さく、8割以上は大きく揺らす）。画面を作り直さずに毎秒ここだけ直す
+  // 貯まっている建物だけアイコンを出す（8割以上は金色のふちで小さくはずむ）。画面を作り直さずに毎秒ここだけ直す
   function updateBubbles() {
     if (!basketEl || !document.body.contains(basketEl)) return;
     var s = FF.app.state, now = FF.app.now(), n = 0;
@@ -97,7 +96,6 @@
       n++;
       var ratio = B.storageRatio(s, id, now);
       b.hidden = false;
-      b.classList.toggle('small', ratio < 0.4);
       b.classList.toggle('full', ratio >= 0.8);
     });
     basketEl.hidden = n === 0;
@@ -328,6 +326,7 @@
       (ART_SMOKE[id][fieldLevel(shownLevel(s, id))] || []).forEach(function (p) { box.appendChild(smokeView(p)); });
     });
     var labels = [];
+    bubbleEls = {};
     Object.keys(ART_SPOTS).forEach(function (id) {
       var p = ART_SPOTS[id], name, level = 0, locked, building = false, ready = false;
       if (id === 'watchtower') {
@@ -348,9 +347,8 @@
         style: { left: (ar.cx - ar.rx * 0.6) + '%', top: (ar.cy - ar.ry * 0.6) + '%', width: (ar.rx * 1.2) + '%', height: (ar.ry * 1.2) + '%' },
         on: { click: function () { openBuilding(id); } }
       }));
-      labels.push(U.el('button', {
+      var lab = U.el('button', {
         class: 'art-bld' + (locked ? ' locked' : '') + (building ? ' is-building' : '') + (ready ? ' ready' : ''),
-        style: { left: p.x + '%', top: p.y + '%' },
         attrs: { 'aria-label': label },
         on: { click: function () { openBuilding(id); } }
       }, [
@@ -358,11 +356,11 @@
           U.rich(name), level ? U.el('span', { class: 'lv', text: ' Lv' + level }) : null, locked ? ' 🔒' : null,
           building ? U.el('span', { class: 'mark', text: ' 🔨' }) : ready ? U.el('span', { class: 'mark up', text: ' ▲' }) : null
         ])
-      ]));
+      ]);
+      // 名札と、その右上に小さく重ねる収穫のアイコン（生産施設だけ。判断196・197）
+      labels.push(U.el('span', { class: 'art-tag', style: { left: p.x + '%', top: p.y + '%' } }, [lab, ART_BUBBLES[id] ? bubbleView(id) : null]));
     });
     labels.forEach(function (l) { box.appendChild(l); });   // 名札は押せる場所より上に
-    bubbleEls = {};
-    Object.keys(ART_BUBBLES).forEach(function (id) { box.appendChild(bubbleView(id)); });   // 受け取りの吹き出しは名札より上に（判断196）
     box.appendChild(basketView());
     return box;
   }
