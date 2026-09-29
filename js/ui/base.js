@@ -65,6 +65,74 @@
     U.rerender();
   }
 
+  // ---- 基地の絵の上の受け取り（判断196）：建物の上の吹き出し（1つずつ）と、絵の右下のかご（まとめて） ----
+  // 吹き出しの位置は絵に対する %（建物の上の空いたところ）
+  var ART_BUBBLES = { lumber: { x: 9, y: 47 }, mine: { x: 83, y: 30 }, quarry: { x: 22, y: 17 }, foodhall: { x: 80, y: 57 } };
+  var bubbleEls = {}, basketEl = null;
+  function producerOf(id) { return FF.defs.BUILDINGS.filter(function (d) { return d.id === id; })[0]; }
+  function bubbleView(id) {
+    var r = U.resDef(producerOf(id).produces), p = ART_BUBBLES[id];
+    var b = U.el('button', {
+      class: 'art-bubble', attrs: { hidden: '', 'aria-label': FF.util.plainText(U.T('collectOne'), { name: r.name }) },
+      style: { left: p.x + '%', top: p.y + '%' },
+      on: { click: function (e) { e.stopPropagation(); collectOneArt(id); } }
+    }, U.resIcon(r));
+    bubbleEls[id] = b;
+    return b;
+  }
+  function basketView() {
+    basketEl = U.el('button', {
+      class: 'art-basket', attrs: { hidden: '', 'aria-label': FF.util.plainText(U.T('collectAllArt')) },
+      on: { click: function (e) { e.stopPropagation(); collectAllArt(); } }
+    }, [U.el('span', { class: 'ico', attrs: { 'aria-hidden': 'true' }, text: '🧺' }), U.el('span', { class: 'badge-n' })]);
+    return basketEl;
+  }
+  // 貯まり具合で吹き出しを出し分ける（4割未満は小さく、8割以上は大きく揺らす）。画面を作り直さずに毎秒ここだけ直す
+  function updateBubbles() {
+    if (!basketEl || !document.body.contains(basketEl)) return;
+    var s = FF.app.state, now = FF.app.now(), n = 0;
+    Object.keys(bubbleEls).forEach(function (id) {
+      var b = bubbleEls[id], amount = B.pendingProduction(s, id, now);
+      if (amount <= 0) { b.hidden = true; return; }
+      n++;
+      var ratio = B.storageRatio(s, id, now);
+      b.hidden = false;
+      b.classList.toggle('small', ratio < 0.4);
+      b.classList.toggle('full', ratio >= 0.8);
+    });
+    basketEl.hidden = n === 0;
+    basketEl.querySelector('.badge-n').textContent = n;
+  }
+  // 受け取った資源の絵を、上のバーの資源の欄へ飛ばす（動きを減らす設定では飛ばさない）
+  function flyToHud(fromEl, resId) {
+    if (!fromEl || fromEl.hidden || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var idx = FF.defs.RESOURCES.map(function (r) { return r.id; }).indexOf(resId);
+    var chip = document.querySelectorAll('#hud .res-chip')[idx];
+    var src = fromEl.querySelector('img, .ico');
+    if (!chip || !src || !src.animate) return;
+    var a = src.getBoundingClientRect(), c = chip.getBoundingClientRect();
+    var ghost = src.cloneNode(true);
+    ghost.className = 'fly-res';
+    ghost.style.left = a.left + 'px'; ghost.style.top = a.top + 'px'; ghost.style.width = a.width + 'px'; ghost.style.height = a.height + 'px';
+    document.body.appendChild(ghost);
+    var dx = c.left + 8 - a.left, dy = c.top + c.height / 2 - a.height / 2 - a.top;
+    ghost.animate([
+      { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+      { transform: 'translate(' + dx * 0.5 + 'px, ' + (dy * 0.5 - 40) + 'px) scale(1.15)', opacity: 1, offset: 0.45 },
+      { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(0.7)', opacity: 0.2 }
+    ], { duration: 750, easing: 'ease-in' }).onfinish = function () { ghost.remove(); chip.classList.add('got'); setTimeout(function () { chip.classList.remove('got'); }, 400); };
+  }
+  function afterCollectArt(r, ids) {
+    var got = Object.keys(r.collected);
+    if (!got.length) { U.toast(U.T('collectNone')); return; }
+    ids.forEach(function (id) { var d = producerOf(id); if (r.collected[d.produces]) flyToHud(bubbleEls[id], d.produces); });
+    FF.app.commit(r.state);
+    U.toast(U.T('collected') + '：' + got.map(function (k) { return U.resDef(k).icon + ' +' + U.fmt(r.collected[k]); }).join('  '));
+    updateBubbles();
+  }
+  function collectOneArt(id) { afterCollectArt(B.collectOne(FF.app.state, id, FF.app.now()), [id]); }
+  function collectAllArt() { afterCollectArt(B.collectAll(FF.app.state, FF.app.now()), Object.keys(bubbleEls)); }
+
   function openBuilding(id) {
     var app = FF.app, s = app.state;
     if (id === 'watchtower') {
@@ -293,6 +361,9 @@
       ]));
     });
     labels.forEach(function (l) { box.appendChild(l); });   // 名札は押せる場所より上に
+    bubbleEls = {};
+    Object.keys(ART_BUBBLES).forEach(function (id) { box.appendChild(bubbleView(id)); });   // 受け取りの吹き出しは名札より上に（判断196）
+    box.appendChild(basketView());
     return box;
   }
 
@@ -333,9 +404,13 @@
 
     main.appendChild(U.artOn() ? artScene(s) : U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding, FF.app.theme)));
 
-    collectBar = U.el('div', { class: 'panel collect-bar' });
-    main.appendChild(collectBar);
-    renderCollect();
+    // 絵の見た目では「生産物」の行を出さず、絵の上の吹き出しとかごで受け取る（判断196）
+    if (U.artOn()) { collectBar = null; updateBubbles(); }
+    else {
+      collectBar = U.el('div', { class: 'panel collect-bar' });
+      main.appendChild(collectBar);
+      renderCollect();
+    }
 
     // 絵の見た目では、学習への大きなボタンを風景の下に置く（見本の画面に合わせる。判断177）
     if (U.artOn()) main.appendChild(U.el('button', { class: 'btn primary base-cta', rich: U.T('baseStudyCta'), on: { click: function () { U.show('study'); } } }));
@@ -365,6 +440,6 @@
 
   U.screens.base = {
     render: render,
-    onTick: function () { renderCollect(); updateTimers(); }
+    onTick: function () { renderCollect(); updateBubbles(); updateTimers(); }
   };
 })(this);

@@ -210,27 +210,48 @@
     return now - bld.lastCollectedAt >= storageHours(state.buildings.housing.level, b) * HOUR;
   }
 
+  // 1つの施設の受け取り（s をその場で書きかえる）。上限に達していなければ、受け取った分の時間だけ lastCollectedAt を進める（端数の時間を失わない）
+  function collectInto(s, d, now, b, collected) {
+    var bld = s.buildings[d.id];
+    if (!bld.level || bld.lastCollectedAt == null) return;
+    var capMs = storageHours(s.buildings.housing.level, b) * HOUR;
+    var elapsed = now - bld.lastCollectedAt;
+    if (elapsed < 0) { bld.lastCollectedAt = now; return; }   // 時計が戻っていた
+    var amount = pendingProduction(s, d.id, now, b);
+    if (amount > 0) {
+      s.resources[d.produces] = (s.resources[d.produces] || 0) + amount;
+      collected[d.produces] = (collected[d.produces] || 0) + amount;
+    }
+    if (elapsed >= capMs) bld.lastCollectedAt = now;
+    else if (amount > 0) bld.lastCollectedAt += Math.floor(amount * HOUR / productionPerHour(bld.level, b));
+  }
+
   // 「受け取り」：すべての生産施設の生産物を資源に加える。{ state, collected: { wood: n, ... } }
-  // 上限に達していなければ、受け取った分の時間だけ lastCollectedAt を進める（端数の時間を失わない）。
   function collectAll(state, now, b) {
     b = bal(b);
     var s = FF.util.clone(state);
     var collected = {};
-    var capMs = storageHours(s.buildings.housing.level, b) * HOUR;
-    producers().forEach(function (d) {
-      var bld = s.buildings[d.id];
-      if (!bld.level || bld.lastCollectedAt == null) return;
-      var elapsed = now - bld.lastCollectedAt;
-      if (elapsed < 0) { bld.lastCollectedAt = now; return; }   // 時計が戻っていた
-      var amount = pendingProduction(s, d.id, now, b);
-      if (amount > 0) {
-        s.resources[d.produces] = (s.resources[d.produces] || 0) + amount;
-        collected[d.produces] = (collected[d.produces] || 0) + amount;
-      }
-      if (elapsed >= capMs) bld.lastCollectedAt = now;
-      else if (amount > 0) bld.lastCollectedAt += Math.floor(amount * HOUR / productionPerHour(bld.level, b));
-    });
+    producers().forEach(function (d) { collectInto(s, d, now, b, collected); });
     return { state: s, collected: collected };
+  }
+
+  // 1つの施設だけ受け取る（基地の絵の吹き出し。判断196）。生産施設でなければ何もしない。{ state, collected }
+  function collectOne(state, buildingId, now, b) {
+    b = bal(b);
+    var s = FF.util.clone(state);
+    var collected = {};
+    var d = producers().filter(function (x) { return x.id === buildingId; })[0];
+    if (d) collectInto(s, d, now, b, collected);
+    return { state: s, collected: collected };
+  }
+
+  // 保管の上限に対する貯まり具合（0〜1。画面の吹き出しの大きさ用）
+  function storageRatio(state, buildingId, now, b) {
+    b = bal(b);
+    var bld = state.buildings[buildingId];
+    if (!bld || !bld.level || bld.lastCollectedAt == null) return 0;
+    var capMs = storageHours(state.buildings.housing.level, b) * HOUR;
+    return Math.max(0, Math.min(1, (now - bld.lastCollectedAt) / capMs));
   }
 
   // ---- 読み込み時の整合 ----
@@ -280,6 +301,8 @@
     pendingUnlockNotices: pendingUnlockNotices,
     markUnlockNoticeSeen: markUnlockNoticeSeen,
     pendingProduction: pendingProduction,
+    collectOne: collectOne,
+    storageRatio: storageRatio,
     pendingAll: pendingAll,
     isStorageFull: isStorageFull,
     collectAll: collectAll,

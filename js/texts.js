@@ -42,6 +42,8 @@
     collectNone: 'まだ受け取れる生産物はない。',
     baseStudyCta: '学習をはじめる',   // 絵の見た目（判断177）の基地の大きなボタン
     collected: '受け取った',
+    collectOne: '{name}を受け取る',
+    collectAllArt: '生産物をまとめて受け取る',
     pending: '未受け取り',
     storageFull: '保管庫がいっぱい',
     storageHours: '保管できる時間：{hours}時間',
