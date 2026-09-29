@@ -29,6 +29,38 @@
     if (!FF.debugMode) { U.show('settings'); return; }
     main.classList.add('debug');
 
+    // ---- 問題のレビュー（判断202）----
+    (function () {
+      var box = U.el('div', { class: 'panel stack' });
+      main.appendChild(box);
+      function draw() {
+        U.clear(box);
+        var r = review.all(), ids = Object.keys(r);
+        var targets = Object.keys(app.bank.byId).map(function (id) { return app.bank.byId[id]; }).filter(function (q) { return q.reviewed === false; });
+        var ok = ids.filter(function (id) { return r[id].status === 'ok'; }), fix = ids.filter(function (id) { return r[id].status === 'fix'; });
+        var left = targets.filter(function (q) { return !r[q.id]; }).length;
+        var only = review.onlyUnreviewed();
+        box.appendChild(U.el('h3', { text: '問題のレビュー' }));
+        box.appendChild(U.el('div', { class: 'small', text: '確認前の問題 ' + targets.length + ' 問：✅ OK ' + ok.length + '　🛠 要改善 ' + fix.length + '　のこり ' + left }));
+        box.appendChild(U.el('div', { class: 'small muted', text: '「学ぶ」で問題に答えると、答え合わせの下にレビューの欄が出る。記録はこの端末と、確認ページのデータベースに残る。' }));
+        box.appendChild(U.el('label', { class: 'review-toggle' }, [
+          U.el('input', { attrs: { type: 'checkbox', checked: only }, on: { change: function (e) { review.setOnlyUnreviewed(e.target.checked); draw(); } } }),
+          U.el('span', { text: '「学ぶ」で、確認前でレビューしていない問題を先に出す' })
+        ]));
+        if (fix.length) {
+          box.appendChild(U.el('div', { class: 'section-title', text: '要改善の問題' }));
+          box.appendChild(U.el('div', { class: 'stack' }, fix.map(function (id) {
+            return U.el('div', { class: 'small review-item' }, [
+              U.el('code', { text: id }), ' ', U.el('span', { text: r[id].note || '（メモなし）' }), ' ',
+              U.el('button', { class: 'btn small ghost', text: '取り消す', on: { click: function () { review.remove(id); draw(); } } })
+            ]);
+          })));
+        }
+      }
+      draw();
+      review.connect().then(draw);
+    })();
+
     // ---- 時刻 ----
     var clockInfo = U.el('div', { class: 'small muted' });
     function refreshClock() {
@@ -269,6 +301,86 @@
     }
     simulate();
   }
+
+  // ---- 問題のレビュー（判断202）----
+  // デバッグモードの答え合わせの下に［レビューOK］［要改善］とメモ。記録は localStorage（storage.js）と、
+  // デバッグ用の確認ページ（Artifact）のデータベース（db の reviews コレクション。Claude が読む）の両方に置く。
+  // db が使えないとき（file:// など）は localStorage だけ
+  var review = (function () {
+    var recs = null, dbp = null, db = null, onlyKey = 'ffReviewOnly';
+    function all() { if (!recs) recs = FF.storage.loadReviews(); return recs; }
+    function docId(qid) { return String(qid).replace(/[^A-Za-z0-9_\-.~:@+]/g, '~'); }   // 「#input」は「~input」に
+    function connect() {
+      if (dbp) return dbp;
+      dbp = (root.claude && root.claude.use ? root.claude.use('db') : Promise.resolve(null)).then(function (d) {
+        db = d;
+        if (!db) return null;
+        // 別の端末でつけた記録も取りこむ（新しいほうを残す）
+        return db.collection('reviews').get().then(function (snap) {
+          var r = all(), changed = false;
+          snap.docs.forEach(function (doc) {
+            var v = doc.data();
+            if (v && v.qid && (!r[v.qid] || (r[v.qid].at || 0) < (v.at || 0))) { r[v.qid] = { status: v.status, note: v.note || '', at: v.at }; changed = true; }
+          });
+          if (changed) FF.storage.saveReviews(r);
+          return db;
+        }, function () { return db; });
+      }, function () { return null; });
+      return dbp;
+    }
+    function set(q, status, note) {
+      var r = all();
+      var rec = { status: status, note: note || '', at: FF.clock.now() };
+      r[q.id] = rec;
+      FF.storage.saveReviews(r);
+      connect().then(function (d) {
+        if (!d) return;
+        d.collection('reviews').doc(docId(q.id)).set({
+          qid: q.id, status: status, note: rec.note, at: rec.at,
+          subject: q.subject, grade: q.gradeLevel, difficulty: q.difficulty, answerType: q.answerType, derivedFrom: q.derivedFrom || null
+        }).catch(function () { U.toast('データベースに保存できなかった（この端末には保存した）'); });
+      });
+    }
+    function remove(qid) {
+      var r = all(); delete r[qid]; FF.storage.saveReviews(r);
+      connect().then(function (d) { if (d) d.collection('reviews').doc(docId(qid)).delete().catch(function () {}); });
+    }
+    function onlyUnreviewed() { try { return root.localStorage.getItem(onlyKey) === '1'; } catch (e) { return false; } }
+    function setOnlyUnreviewed(v) { try { root.localStorage.setItem(onlyKey, v ? '1' : '0'); } catch (e) { /* 何もしない */ } }
+    // 確認前（reviewed: false）で、まだレビューしていない問題だけの索引（出題はこの中から）
+    function filterBank(bank) {
+      var r = all(), byKey = {};
+      Object.keys(bank.byKey).forEach(function (k) {
+        var list = bank.byKey[k].filter(function (q) { return q.reviewed === false && !r[q.id]; });
+        if (list.length) byKey[k] = list;
+      });
+      return { byKey: byKey, byId: bank.byId, invalid: [], duplicates: [], count: 0 };
+    }
+    function panel(q) {
+      connect();
+      var rec = all()[q.id];
+      var note = U.el('textarea', { class: 'field review-note', attrs: { rows: '2', placeholder: 'メモ（要改善のときは、どこを直すか）' }, value: rec ? rec.note : '' });
+      var status = U.el('div', { class: 'small review-status' });
+      function showStatus() {
+        var cur = all()[q.id];
+        status.textContent = cur ? (cur.status === 'ok' ? '✅ レビューOK' : '🛠 要改善') + '（' + new Date(cur.at).toLocaleString('ja-JP') + '）' : 'まだレビューしていない';
+      }
+      showStatus();
+      function mark(st) { set(q, st, note.value.trim()); showStatus(); U.toast(st === 'ok' ? 'レビューOK にした' : '要改善 にした'); }
+      return U.el('div', { class: 'panel stack review-panel' }, [
+        U.el('div', { class: 'row between' }, [U.el('strong', { text: '問題のレビュー（デバッグ）' }), U.el('span', { class: 'small muted', text: q.reviewed ? '確認済み' : '確認前' })]),
+        U.el('div', { class: 'small muted', text: q.id + (q.derivedFrom ? '（選択問題 ' + q.derivedFrom + ' から作った書き問題）' : '') }),
+        status,
+        note,
+        U.el('div', { class: 'grid2' }, [
+          U.el('button', { class: 'btn small primary', text: '✅ レビューOK', on: { click: function () { mark('ok'); } } }),
+          U.el('button', { class: 'btn small', text: '🛠 要改善', on: { click: function () { mark('fix'); } } })
+        ])
+      ]);
+    }
+    return { all: all, set: set, remove: remove, connect: connect, panel: panel, filterBank: filterBank, onlyUnreviewed: onlyUnreviewed, setOnlyUnreviewed: setOnlyUnreviewed };
+  })();
+  U.review = review;
 
   U.screens.debug = { render: render };
 })(this);

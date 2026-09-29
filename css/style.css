@@ -1056,3 +1056,9 @@ a.btn { text-decoration: none; }
 .more-sum { font-size: 13px; }
 .more-options { margin-top: 8px; }
 .diag-hint .btn { flex: none; white-space: nowrap; }
+/* 問題のレビュー（デバッグ。判断202） */
+.review-panel { margin-top: 10px; border: 2px dashed #b08a2a; }
+.review-note { min-height: 44px; font-family: inherit; font-size: 14px; }
+.review-item code { font-size: 12px; }
+.review-toggle { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.review-toggle input { width: 20px; height: 20px; flex: none; }

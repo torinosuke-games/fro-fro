@@ -48,5 +48,20 @@
     try { store.removeItem(FF.config.SAVE_KEY); } catch (e) { /* 何もしない */ }
   }
 
-  FF.storage = { load: load, save: save, clear: clear };
+  // 問題のレビューの記録（デバッグモードだけで使う。判断202）。セーブとは別のキーで、integrity は付けない
+  function reviewKey() { return FF.config.SAVE_KEY + '.reviews'; }
+  function loadReviews(ls) {
+    var store = getLs(ls);
+    try {
+      var v = store ? JSON.parse(store.getItem(reviewKey()) || '{}') : {};
+      return v && typeof v === 'object' && !Array.isArray(v) ? v : {};
+    } catch (e) { return {}; }
+  }
+  function saveReviews(obj, ls) {
+    var store = getLs(ls);
+    if (!store) return false;
+    try { store.setItem(reviewKey(), JSON.stringify(obj)); return true; } catch (e) { return false; }
+  }
+
+  FF.storage = { load: load, save: save, clear: clear, loadReviews: loadReviews, saveReviews: saveReviews };
 })(this);
