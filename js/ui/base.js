@@ -218,27 +218,28 @@
     box.style.setProperty('--dx', p.dx + '%');
     return box;
   }
-  // 行き来する人（判断194）：中央炉と各建物のあいだの道を、小さな人が行って戻る（煙と同じく CSS のアニメーション）。
-  // 道は絵に対する %（a → m → b）。その建物が使えるとき（Lv1 以上）だけ歩き、Lv3 以上なら2人（逆向きにずらす）。
+  // 行き来する人（判断194・195）：中央炉と各建物のあいだの道を、町の人がゆっくり行って戻る（煙と同じく CSS のアニメーション）。
+  // 人は生成した絵（img/art/villager-*.png。1回の生成で8人を描かせて切り分けた）。道は絵に対する %（a → m → b）。
+  // 行った先・戻った先で立ち止まる。その建物が使えるとき（Lv1 以上）だけ歩き、Lv3 以上なら2人（別の人・ずらして）。
   // 街が発展するほど人が増える ＝ 救われた生存者（STORY.md）
   var ART_WALKS = [
-    { id: 'housing', a: [30, 86], m: [38, 72], b: [46, 62], sec: 16 },
-    { id: 'mine', a: [54, 60], m: [68, 55], b: [81, 51], sec: 18 },
-    { id: 'lumber', a: [44, 60], m: [32, 58], b: [19, 62], sec: 17 },
-    { id: 'foodhall', a: [52, 64], m: [58, 74], b: [65, 82], sec: 15 },
-    { id: 'quarry', a: [46, 56], m: [40, 49], b: [33, 45], sec: 14 }
+    { id: 'housing', a: [30, 86], m: [38, 72], b: [46, 62], sec: 96, who: ['elder', 'child'] },
+    { id: 'mine', a: [54, 60], m: [68, 55], b: [81, 51], sec: 110, who: ['miner', 'smith'] },
+    { id: 'lumber', a: [44, 60], m: [32, 58], b: [19, 62], sec: 104, who: ['lumberjack', 'hunter'] },
+    { id: 'foodhall', a: [52, 64], m: [58, 74], b: [65, 82], sec: 88, who: ['cook', 'child'] },
+    { id: 'quarry', a: [46, 56], m: [40, 49], b: [33, 45], sec: 92, who: ['mason', 'smith'] }
   ];
-  var COATS = ['#b8432f', '#2f5d8a', '#6b4a2b', '#3f7a4a', '#7a3f73'];
   function walkerView(w, k) {
+    var i = ART_WALKS.indexOf(w);
     var el = U.el('span', { class: 'art-walker', attrs: { 'aria-hidden': 'true' } },
-      U.el('span', { class: 'bob' }, [U.el('span', { class: 'hd' }), U.el('span', { class: 'bd' }), U.el('span', { class: 'pk' })]));
+      U.artImg('villager-' + w.who[k] + '.png', 'vg', function () { return U.el('span'); }));
     var st = el.style, ym = w.m[1];
     [['--x1', w.a[0]], ['--y1', w.a[1]], ['--xm', w.m[0]], ['--ym', w.m[1]], ['--x2', w.b[0]], ['--y2', w.b[1]]].forEach(function (v) { st.setProperty(v[0], v[1] + '%'); });
     st.setProperty('--dir', w.b[0] >= w.a[0] ? 1 : -1);              // 絵は右向き。行きの向きに合わせる
-    st.setProperty('--coat', COATS[(ART_WALKS.indexOf(w) + k * 2) % COATS.length]);
-    st.width = (1.95 * (0.7 + ym / 100 * 0.6)).toFixed(2) + '%';      // 手前（下）ほど大きく
-    st.animationDuration = w.sec + 's';
-    st.animationDelay = -(k * w.sec / 2 + ART_WALKS.indexOf(w) * 1.7).toFixed(1) + 's';
+    st.width = (2.3 * (0.7 + ym / 100 * 0.6)).toFixed(2) + '%';      // 手前（下）ほど大きく
+    var sec = w.sec + k * 13;                                         // 2人目は少し遅く、同じ動きに見えないように
+    st.animationDuration = sec + 's';
+    st.animationDelay = -((k * 0.55 + i * 0.21) % 1 * sec).toFixed(1) + 's';
     return el;
   }
   function artScene(s) {

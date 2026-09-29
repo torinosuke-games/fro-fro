@@ -70,8 +70,8 @@ module.exports = ({ test, assert }) => {
     const fields = levels.split(',').map(s => 'field_lv' + s.trim());
     const names = fields.concat(['furnace', 'housing', 'lumber', 'mine', 'quarry', 'foodhall', 'watchtower',
       'res-wood', 'res-iron', 'res-stone', 'res-food', 'subj-jp', 'subj-math', 'subj-sci', 'subj-soc', 'subj-en',
-      'region-snowfield', 'region-forest', 'region-glacier']);
-    const missing = names.filter(n => !fs.existsSync(path.join(ROOT, 'img/art', n + '.jpg')));
+      'region-snowfield', 'region-forest', 'region-glacier'].concat(['lumberjack', 'miner', 'mason', 'cook', 'smith', 'hunter', 'elder', 'child'].map(n => 'villager-' + n)));
+    const missing = names.filter(n => !fs.existsSync(path.join(ROOT, 'img/art', n + (n.startsWith('villager-') ? '.png' : '.jpg'))));   // 人の絵は透明の背景の PNG（判断195）
     assert.deepStrictEqual(missing, []);
   });
 };

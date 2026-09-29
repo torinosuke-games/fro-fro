@@ -80,7 +80,7 @@
   function artOn() { return FF.config.ART_STYLE === 'art'; }
   // 絵の <img>。読めないとき（ファイルがない など）は fallback（これまでの絵文字・SVG）に差し替える
   function artImg(name, cls, fallback) {
-    var img = el('img', { class: cls, attrs: { src: FF.config.ART_DIR + name + '.jpg', alt: '', draggable: 'false' } });
+    var img = el('img', { class: cls, attrs: { src: FF.config.ART_DIR + name + (/\.\w+$/.test(name) ? '' : '.jpg'), alt: '', draggable: 'false' } });
     img.addEventListener('error', function () { if (fallback && img.parentNode) img.parentNode.replaceChild(fallback(), img); });
     return img;
   }
