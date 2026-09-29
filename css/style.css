@@ -992,3 +992,24 @@ a.btn { text-decoration: none; }
 .explore-art .xp-map-wrap { border: 0; border-radius: 20px; box-shadow: var(--hero-shadow, 0 10px 28px rgba(22, 50, 74, 0.12)); background-size: cover; background-position: center; }
 .explore-art .xp-map .map-bg { opacity: .78; }
 .explore-art .xp-legend { margin-top: 8px; }
+.hud-tickets .tk-ico { font-size: 1.25em; vertical-align: -0.12em; }   /* 問題チケットのアイコン（判断194） */
+
+/* 基地の絵の上を行き来する人（判断194）。left/top を CSS 変数の道（a → m → b → m → a）で動かし、戻るときは左右を反転 */
+.art-walker { position: absolute; aspect-ratio: 5 / 11; pointer-events: none; left: var(--x1); top: var(--y1);
+  transform: translate(-50%, -100%) scaleX(var(--dir)); animation: art-walk 16s linear infinite; }
+.art-walker .bob { position: absolute; inset: 0; animation: art-bob .45s ease-in-out infinite alternate; }
+.art-walker .hd { position: absolute; left: 22%; top: 0; width: 56%; aspect-ratio: 1; border-radius: 50%; background: #f1c9a5; box-shadow: inset 0 -35% 0 #5a3a22; }
+.art-walker .bd { position: absolute; left: 12%; top: 24%; width: 76%; height: 62%; border-radius: 40% 40% 18% 18%; background: var(--coat, #b8432f); }
+.art-walker .pk { position: absolute; left: -12%; top: 32%; width: 36%; height: 34%; border-radius: 30%; background: #7a5a3a; }
+.art-walker::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6%; height: 12%; border-radius: 50%; background: rgba(40, 60, 80, .25); }
+@keyframes art-walk {
+  0%   { left: var(--x1); top: var(--y1); transform: translate(-50%, -100%) scaleX(var(--dir)); }
+  22%  { left: var(--xm); top: var(--ym); transform: translate(-50%, -100%) scaleX(var(--dir)); }
+  45%  { left: var(--x2); top: var(--y2); transform: translate(-50%, -100%) scaleX(var(--dir)); }
+  50%  { left: var(--x2); top: var(--y2); transform: translate(-50%, -100%) scaleX(calc(var(--dir) * -1)); }
+  72%  { left: var(--xm); top: var(--ym); transform: translate(-50%, -100%) scaleX(calc(var(--dir) * -1)); }
+  95%  { left: var(--x1); top: var(--y1); transform: translate(-50%, -100%) scaleX(calc(var(--dir) * -1)); }
+  100% { left: var(--x1); top: var(--y1); transform: translate(-50%, -100%) scaleX(var(--dir)); }
+}
+@keyframes art-bob { from { transform: translateY(0); } to { transform: translateY(-6%); } }
+@media (prefers-reduced-motion: reduce) { .art-walker { display: none; } }

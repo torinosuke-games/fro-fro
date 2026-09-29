@@ -160,7 +160,8 @@
     var next = FF.tickets.msUntilNext(t, now);
     var max = FF.balance.TICKET_MAX;
     hud.appendChild(el('div', { class: 'hud-tickets' }, [
-      el('span', {}, [R('span', '', T('tickets')), ' ', el('span', { class: 'count', text: t.count + ' / ' + max })]),
+      // 絵の見た目では「問題チケット」の文字の代わりに 🎫（読み上げは名前のまま。判断194）
+      el('span', {}, [artOn() ? el('span', { class: 'tk-ico', attrs: { role: 'img', 'aria-label': FF.util.plainText(T('tickets')), title: FF.util.plainText(T('tickets')) }, text: '🎫' }) : R('span', '', T('tickets')), ' ', el('span', { class: 'count', text: t.count + ' / ' + max })]),
       el('span', { class: 'ticket-bar' }, el('i', { style: { width: Math.min(100, t.count / max * 100) + '%' } })),
       el('span', { class: 'timer' }, next === null ? R('span', '', T('ticketsFull')) : [R('span', 'lbl', T('ticketsNext')), ' ' + FF.util.formatCountdown(next)]),
       ptChip(s)

@@ -218,12 +218,41 @@
     box.style.setProperty('--dx', p.dx + '%');
     return box;
   }
+  // 行き来する人（判断194）：中央炉と各建物のあいだの道を、小さな人が行って戻る（煙と同じく CSS のアニメーション）。
+  // 道は絵に対する %（a → m → b）。その建物が使えるとき（Lv1 以上）だけ歩き、Lv3 以上なら2人（逆向きにずらす）。
+  // 街が発展するほど人が増える ＝ 救われた生存者（STORY.md）
+  var ART_WALKS = [
+    { id: 'housing', a: [30, 86], m: [38, 72], b: [46, 62], sec: 16 },
+    { id: 'mine', a: [54, 60], m: [68, 55], b: [81, 51], sec: 18 },
+    { id: 'lumber', a: [44, 60], m: [32, 58], b: [19, 62], sec: 17 },
+    { id: 'foodhall', a: [52, 64], m: [58, 74], b: [65, 82], sec: 15 },
+    { id: 'quarry', a: [46, 56], m: [40, 49], b: [33, 45], sec: 14 }
+  ];
+  var COATS = ['#b8432f', '#2f5d8a', '#6b4a2b', '#3f7a4a', '#7a3f73'];
+  function walkerView(w, k) {
+    var el = U.el('span', { class: 'art-walker', attrs: { 'aria-hidden': 'true' } },
+      U.el('span', { class: 'bob' }, [U.el('span', { class: 'hd' }), U.el('span', { class: 'bd' }), U.el('span', { class: 'pk' })]));
+    var st = el.style, ym = w.m[1];
+    [['--x1', w.a[0]], ['--y1', w.a[1]], ['--xm', w.m[0]], ['--ym', w.m[1]], ['--x2', w.b[0]], ['--y2', w.b[1]]].forEach(function (v) { st.setProperty(v[0], v[1] + '%'); });
+    st.setProperty('--dir', w.b[0] >= w.a[0] ? 1 : -1);              // 絵は右向き。行きの向きに合わせる
+    st.setProperty('--coat', COATS[(ART_WALKS.indexOf(w) + k * 2) % COATS.length]);
+    st.width = (1.95 * (0.7 + ym / 100 * 0.6)).toFixed(2) + '%';      // 手前（下）ほど大きく
+    st.animationDuration = w.sec + 's';
+    st.animationDelay = -(k * w.sec / 2 + ART_WALKS.indexOf(w) * 1.7).toFixed(1) + 's';
+    return el;
+  }
   function artScene(s) {
     var box = U.el('div', { class: 'scene art' });
     box.appendChild(U.artImg('field_lv1', 'scene-art-bg', function () { return FF.svgScene.render(s, openBuilding, FF.app.theme); }));
     Object.keys(ART_AREAS).forEach(function (id) {
       var lv = fieldLevel(shownLevel(s, id));
       if (lv > 1) box.appendChild(layerView(id, lv));
+    });
+    ART_WALKS.forEach(function (w) {
+      var lv = s.buildings[w.id].level;
+      if (lv < 1) return;
+      box.appendChild(walkerView(w, 0));
+      if (lv >= 3) box.appendChild(walkerView(w, 1));
     });
     Object.keys(ART_SMOKE).forEach(function (id) {
       if (s.buildings[id].level < 1) return;
