@@ -119,9 +119,11 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.deepStrictEqual(plain(s.exploration), plain(S.defaultExploration()));
     for (const regionId of ['snowfield', 'forest']) assert.strictEqual(s.exploration.regions[regionId].position, 0);
     // v0.1 の部分はそのまま
-    for (const k of ['player', 'resources', 'buildings', 'tickets', 'learning', 'flags']) {
+    for (const k of ['resources', 'buildings', 'tickets', 'learning', 'flags']) {
       assert.deepStrictEqual(plain(s[k]), src[k], k);
     }
+    // 名前はそのまま、あとから足した学年・主人公の絵（判断198）は未設定（null）で補われる
+    assert.deepStrictEqual(plain(s.player), Object.assign({}, src.player, { grade: null, avatar: null }));
     // 設定は元のまま、あとから足した項目（テーマ・交換レート・メールアドレス）だけ初期値で補われる
     assert.deepStrictEqual(plain(s.settings), Object.assign({}, src.settings, { themeMode: 'day', pointsPerHour: 3000 }));
     // 勉強量ポイント（v0.4）は空の状態で補われる
@@ -201,5 +203,35 @@ module.exports = ({ test, FF, assert, plain }) => {
 
   test('すべての移行段階が定義されている', () => {
     for (let v = 0; v < FF.config.SAVE_VERSION; v++) assert.strictEqual(typeof S.MIGRATIONS[v], 'function', `MIGRATIONS[${v}]`);
+  });
+  test('学年・主人公の絵（判断198）：読み込み時に形のおかしい値は未設定に', () => {
+    const s = S.createDefaultState(T0);
+    assert.strictEqual(s.player.grade, null);
+    assert.strictEqual(s.player.avatar, null);
+    for (const [g, want] of [[3, 3], [9, 9], [0, null], [10, null], [2.5, null], ['3', null]]) {
+      const x = S.createDefaultState(T0); x.player.grade = g;
+      assert.strictEqual(S.migrate(x, T0).state.player.grade, want, String(g));
+    }
+    for (const [a, want] of [['a1', 'a1'], ['zz', null], [3, null]]) {
+      const x = S.createDefaultState(T0); x.player.avatar = a;
+      assert.strictEqual(S.migrate(x, T0).state.player.avatar, want, String(a));
+    }
+    // 保存して読み直しても同じ
+    let y = S.setPlayerAvatar(S.setPlayerGrade(S.createDefaultState(T0), 4), 'a2');
+    const r = S.parseSave(S.serialize(y), T0);
+    assert.strictEqual(r.ok, true);
+    assert.strictEqual(r.state.player.grade, 4);
+    assert.strictEqual(r.state.player.avatar, 'a2');
+  });
+
+  test('学年を入れると、ふりがなの自動設定は小3以下でオン（判断198）', () => {
+    const base = FF.exam.applyFuriganaAuto(S.createDefaultState(T0));
+    assert.strictEqual(base.settings.furigana, true);                       // 学年なし：これまでどおり（全教科 Lv2 以下）
+    assert.strictEqual(S.setPlayerGrade(base, 3).settings.furigana, true);
+    assert.strictEqual(S.setPlayerGrade(base, 4).settings.furigana, false);
+    assert.strictEqual(S.setPlayerGrade(base, 1).settings.furigana, true);
+    // 手動で切り替えたあとは変えない
+    const manual = Object.assign({}, base, { settings: Object.assign({}, base.settings, { furigana: true, furiganaAuto: false }) });
+    assert.strictEqual(S.setPlayerGrade(manual, 7).settings.furigana, true);
   });
 };

@@ -8,13 +8,36 @@
 
   function nameOfSubject(id, grade) { return L.subjectName(id, grade); }
 
+  // 教科を選んだときの学年：入れた学年（判断198）があれば、解放済みの範囲でそれに合わせる。なければ解放済みのいちばん上
+  function gradeFor(s, subject) {
+    var top = L.unlockedGrade(s, subject), g = s.player && s.player.grade;
+    return g ? Math.min(g, top) : top;
+  }
+  // いちばん少ない資源（おまかせ・初めの選択。判断198）
+  function scarcestResource(s) {
+    var best = null;
+    FF.defs.RESOURCES.forEach(function (r) { if (!best || (s.resources[r.id] || 0) < (s.resources[best] || 0)) best = r.id; });
+    return best;
+  }
+  // おまかせ：重点教科（×1.25）・その学年・いちばん少ない資源・チケットがあれば選択問題（判断198）
+  function autoSel() {
+    var app = FF.app, s = app.state;
+    var focus = FF.rewards.focusSubjectOf(app.now());
+    return {
+      resource: scarcestResource(s),
+      subject: focus,
+      grade: gradeFor(s, focus),
+      difficulty: L.RANDOM_DIFFICULTY,
+      answerType: FF.tickets.recoverTickets(s.tickets, app.now()).count > 0 ? 'choice' : 'input'
+    };
+  }
   function defaultSel() {
     var app = FF.app, s = app.state;
     var focus = FF.rewards.focusSubjectOf(app.now());
     return {
-      resource: 'wood',
+      resource: scarcestResource(s),
       subject: focus,
-      grade: L.unlockedGrade(s, focus),
+      grade: gradeFor(s, focus),
       difficulty: L.RANDOM_DIFFICULTY,   // 初期値はランダム。指定したいときだけ折りたたみを開いて選ぶ
       answerType: FF.tickets.recoverTickets(s.tickets, app.now()).count > 0 ? 'choice' : 'input'
     };
@@ -110,7 +133,7 @@
         name: nameOfSubject(subj.id, sel.subject === subj.id && sel.grade != null ? sel.grade : g),
         tag: subj.id === focus ? '×1.25' : null,
         selected: sel.subject === subj.id,
-        onClick: function () { sel.subject = subj.id; sel.grade = sel.pickGrade ? null : L.unlockedGrade(s, subj.id); U.rerender(); }
+        onClick: function () { sel.subject = subj.id; sel.grade = sel.pickGrade ? null : gradeFor(s, subj.id); U.rerender(); }
       });
     })));
 
@@ -146,32 +169,40 @@
     if (!sel.subject) gradeSec.appendChild(U.R('div', 'small muted', U.T('chooseSubjectFirst')));
     if (chosen && L.shouldRecommendLower(s, sel.subject, sel.grade)) gradeSec.appendChild(U.R('div', 'notice', U.T('recommendLower')));
 
-    // 難易度：ふだんは「難易度：ランダム」と［難易度を指定する ▾］の1行だけ。開くと、ランダムと基礎・標準・発展の選択肢を出す
-    var diffOpen = !!app.studyDiffOpen;
+    // くわしく選ぶ（判断198）：資源・学年・難易度は、ふだんは「資源：木材 ・ 学年：小3 ・ 難易度：ランダム」の1行に畳む。
+    // 学年・資源が未選択のとき（足りない資源から来たとき。判断187）は開いておく
+    var moreOpen = !!app.studyMoreOpen || sel.grade == null || !sel.resource;
     var mults = FF.balance.DIFFICULTY_MULT;
     var curName = sel.difficulty === L.RANDOM_DIFFICULTY ? U.T('difficultyRandom') : U.nameOf(FF.defs.DIFFICULTIES, sel.difficulty);
+    var gradeName = sel.grade != null ? FF.util.plainText(U.T('gradeChip.' + (sel.grade <= 6 ? 'elem' : 'jr'))) + (sel.grade <= 6 ? sel.grade : sel.grade - 6) : '—';
+    var resName = sel.resource ? U.resDef(sel.resource).name : '—';
     var diffSec = U.el('div', { class: 'diff-sec' }, U.el('div', { class: 'diff-line' }, [
-      U.R('span', 'diff-now', U.T('difficultyNow')),
-      U.el('span', { class: 'diff-now-name' }, U.rich(curName)),
+      U.el('span', { class: 'diff-now-name more-sum' }, [
+        U.R('span', 'diff-now', U.T('moreResource')), U.rich(resName), '　',
+        U.R('span', 'diff-now', U.T('moreGrade')), gradeName, '　',
+        U.R('span', 'diff-now', U.T('difficultyNow')), U.rich(curName)
+      ]),
       U.el('button', {
-        class: 'diff-toggle', attrs: { 'aria-expanded': diffOpen ? 'true' : 'false', 'aria-controls': 'diff-options' },
-        on: { click: function () { app.studyDiffOpen = !diffOpen; U.rerender(); } }
-      }, [U.rich(U.T(diffOpen ? 'difficultyClose' : 'difficultyOpen')), U.el('span', { class: 'chev', attrs: { 'aria-hidden': 'true' }, text: diffOpen ? ' ▴' : ' ▾' })])
+        class: 'diff-toggle', attrs: { 'aria-expanded': moreOpen ? 'true' : 'false', 'aria-controls': 'more-options' },
+        on: { click: function () { app.studyMoreOpen = !moreOpen; U.rerender(); } }
+      }, [U.rich(U.T(moreOpen ? 'moreClose' : 'moreOpen')), U.el('span', { class: 'chev', attrs: { 'aria-hidden': 'true' }, text: moreOpen ? ' ▴' : ' ▾' })])
     ]));
-    if (diffOpen) {
+    if (moreOpen) {
       var opts = [{ id: L.RANDOM_DIFFICULTY, name: U.T('difficultyRandom'), sub: U.rich(U.T('difficultyRandomNote')) }].concat(FF.defs.DIFFICULTIES.map(function (d) {
         return { id: d.id, name: d.name, sub: '×' + mults[d.id] };
       }));
-      diffSec.appendChild(U.el('div', { class: 'grid4', attrs: { id: 'diff-options' } }, opts.map(function (d) {
-        var any = !chosen || L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'choice') || L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'input');
-        return pick({
-          title: U.rich(d.name),
-          sub: d.sub,
-          tag: any ? null : U.rich(U.T('preparing')),
-          selected: sel.difficulty === d.id,
-          onClick: function () { set('difficulty', d.id); }
-        });
-      })));
+      var more = U.el('div', { class: 'more-options stack', attrs: { id: 'more-options' } }, [resSec, gradeSec,
+        section(U.T('chooseDifficulty'), U.el('div', { class: 'grid4' }, opts.map(function (d) {
+          var any = !chosen || L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'choice') || L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'input');
+          return pick({
+            title: U.rich(d.name),
+            sub: d.sub,
+            tag: any ? null : U.rich(U.T('preparing')),
+            selected: sel.difficulty === d.id,
+            onClick: function () { set('difficulty', d.id); }
+          });
+        })))]);
+      diffSec.appendChild(more);
     }
 
     // 出題形式
@@ -197,7 +228,28 @@
       class: 'btn primary block', rich: ok ? U.T('start') : U.T(ready ? 'preparing' : 'chooseAllFirst'), disabled: !ok,
       on: { click: function () { delete sel.pickGrade; app.session = { sel: Object.assign({}, sel), recentIds: (app.session && app.session.recentIds) || [] }; U.show('quiz'); } }
     }));
-    [subjSec, resSec, gradeSec, fmtSec, startBox, diffSec].forEach(function (n) { box.appendChild(n); });
+    // おまかせ（判断198）：1回押すだけで始める。何が選ばれるかを下に小さく出す
+    var auto = autoSel();
+    var autoOk = L.isAvailable(app.bank, auto.subject, auto.grade, auto.difficulty, auto.answerType);
+    var autoBox = U.el('div', { class: 'auto-box' }, [
+      U.el('button', {
+        class: 'btn primary block auto-start', rich: U.T('autoStart'), disabled: !autoOk,
+        on: { click: function () { app.studySel = Object.assign({}, auto); app.session = { sel: Object.assign({}, auto), recentIds: (app.session && app.session.recentIds) || [] }; U.show('quiz'); } }
+      }),
+      U.el('div', { class: 'small muted auto-sum' }, [
+        U.rich(nameOfSubject(auto.subject, auto.grade)), '・',
+        FF.util.plainText(U.T('gradeChip.' + (auto.grade <= 6 ? 'elem' : 'jr'))) + (auto.grade <= 6 ? auto.grade : auto.grade - 6), '・',
+        U.rich(FF.defs.ANSWER_TYPES.filter(function (x) { return x.id === auto.answerType; })[0].name), '・',
+        U.rich(U.resDef(auto.resource).name)
+      ])
+    ]);
+    // 入れた学年まで開いていない教科は、実力診断をすすめる（判断198）
+    var pg = s.player && s.player.grade;
+    var diagHint = pg && sel.subject && L.unlockedGrade(s, sel.subject) < pg ? U.el('div', { class: 'notice diag-hint' }, [
+      U.R('span', '', U.T('diagnosisHint'), { grade: FF.util.plainText(U.T('gradeChip.' + (pg <= 6 ? 'elem' : 'jr'))) + (pg <= 6 ? pg : pg - 6) }),
+      U.el('button', { class: 'btn small ice', rich: U.T('diagnosisStart'), on: { click: function () { U.show('study', { tab: 'diagnosis' }); } } })
+    ]) : null;
+    [autoBox, U.R('div', 'section-title or-self', U.T('chooseSelf')), subjSec, diagHint, fmtSec, startBox, diffSec].forEach(function (n) { if (n) box.appendChild(n); });
   }
 
   function render(main, params) {

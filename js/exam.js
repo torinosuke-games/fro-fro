@@ -7,11 +7,13 @@
   function bal(b) { return b || FF.balance; }
   var DIFF_ORDER = ['standard', 'basic', 'advanced'];
 
-  // ふりがなの自動設定：ユーザーが手動で切り替えるまで「全教科 Lv2 以下なら ON」
+  // ふりがなの自動設定：ユーザーが手動で切り替えるまで。学年を入れていれば「小3 以下なら ON」（判断198）、
+  // 入れていなければこれまでどおり「全教科 Lv2 以下なら ON」
   function applyFuriganaAuto(state, b) {
     b = bal(b);
     if (!state.settings.furiganaAuto) return state;
-    var low = FF.defs.SUBJECTS.every(function (s) {
+    var g = state.player && state.player.grade;
+    var low = g ? g <= b.FURIGANA_AUTO_MAX_GRADE : FF.defs.SUBJECTS.every(function (s) {
       return FF.learning.unlockedGrade(state, s.id) <= b.INITIAL_UNLOCKED_GRADE;
     });
     var s = Object.assign({}, state);

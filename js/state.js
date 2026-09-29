@@ -34,7 +34,7 @@
       saveVersion: cfg.SAVE_VERSION,
       createdAt: now,
       updatedAt: now,
-      player: { name: cfg.DEFAULT_PLAYER_NAME },
+      player: { name: cfg.DEFAULT_PLAYER_NAME, grade: null, avatar: null },   // grade・avatar は判断198（未設定は null）
       resources: mapIds(defs.RESOURCES, function (r) { return b.INITIAL_RESOURCES[r.id] || 0; }),
       buildings: mapIds(defs.BUILDINGS, function (d) {
         var level = (b.BUILDING_UNLOCK_FURNACE_LEVEL[d.id] || 1) > 1 ? 0 : 1;
@@ -149,6 +149,9 @@
     // 勉強量ポイントの整合（残高・累計は 0 以上の整数、形のおかしい引換券の履歴を捨てる、交換レートの範囲）
     if (FF.points && FF.points.normalizePoints) state = FF.points.normalizePoints(state);
     state.player.name = util.normalizeName(state.player.name, cfg);
+    // 学年（1〜9 の整数）と主人公の絵（AVATARS のどれか）。それ以外は未設定（null）に（判断198。saveVersion は上げない）
+    state.player.grade = normalizeGrade(state.player.grade);
+    state.player.avatar = normalizeAvatar(state.player.avatar);
     // テーマの設定：ない・知らない値は初期値の昼（補完はここまでに済ませ、integrity は最後の saveText で計算する）
     if (FF.theme) state.settings.themeMode = FF.theme.normalizeMode(state.settings.themeMode);
     return { ok: true, state: state, migratedFrom: from, saveText: serialize(state) };
@@ -190,6 +193,24 @@
     return s;
   }
 
+  function normalizeGrade(g) {
+    return typeof g === 'number' && Math.floor(g) === g && g >= 1 && g <= FF.defs.GRADES.length ? g : null;
+  }
+  function normalizeAvatar(a) {
+    return typeof a === 'string' && FF.defs.AVATARS.indexOf(a) >= 0 ? a : null;
+  }
+  // 学年を決める（判断198）。ふりがなの自動設定にも反映する（手動で切り替えていなければ）
+  function setPlayerGrade(state, grade) {
+    var s = Object.assign({}, state);
+    s.player = Object.assign({}, state.player, { grade: normalizeGrade(grade) });
+    return FF.exam && FF.exam.applyFuriganaAuto ? FF.exam.applyFuriganaAuto(s) : s;
+  }
+  function setPlayerAvatar(state, avatar) {
+    var s = Object.assign({}, state);
+    s.player = Object.assign({}, state.player, { avatar: normalizeAvatar(avatar) });
+    return s;
+  }
+
   function setPlayerName(state, raw, cfg) {
     var s = Object.assign({}, state);
     s.player = Object.assign({}, state.player, { name: util.normalizeName(raw, cfg) });
@@ -206,6 +227,8 @@
     serialize: serialize,
     parseSave: parseSave,
     withUpdated: withUpdated,
-    setPlayerName: setPlayerName
+    setPlayerName: setPlayerName,
+    setPlayerGrade: setPlayerGrade,
+    setPlayerAvatar: setPlayerAvatar
   };
 })(this);

@@ -57,7 +57,39 @@
     function decide() {
       var s = FF.state.setPlayerName(app.state, ni.input.value);
       app.commit(s);
-      showIntro();
+      showAvatar();
+    }
+
+    // 主人公の絵を選ぶ（判断198）。絵の見た目のときだけ（絵が読めなければ飛ばす）
+    function showAvatar() {
+      if (!U.artOn()) { showGrade(); return; }
+      var box = step();
+      box.appendChild(U.R('div', 'opening', U.T('chooseAvatar')));
+      box.appendChild(U.avatarPicker(app.state.player.avatar, function (id) {
+        app.commit(FF.state.setPlayerAvatar(app.state, id));
+        showGrade();
+      }));
+    }
+
+    // 学年を選ぶ（判断198）。ふりがなの初めの設定と「学ぶ」の初めの選択に使う（解放はこれまでどおり試験・診断）
+    function showGrade() {
+      var box = step();
+      box.appendChild(U.R('div', 'opening', U.T('chooseMyGrade')));
+      box.appendChild(U.gradePicker(app.state.player.grade, function (g) {
+        app.commit(FF.state.setPlayerGrade(app.state, g));
+        showIntro();
+      }));
+      box.appendChild(U.R('div', 'small muted center', U.T('gradeLater')));
+    }
+
+    function step() {
+      U.clear(wrap);
+      var sky2 = sky();
+      if (sky2) wrap.appendChild(sky2);
+      wrap.appendChild(U.el('div', { class: 'logo' }, [FF.config.TITLE]));
+      var box = U.el('div', { class: 'panel strong stack fade-in title-card' });
+      wrap.appendChild(box);
+      return box;
     }
 
     function showIntro() {
@@ -75,7 +107,8 @@
 
     function enterBase() {
       var s = Object.assign({}, app.state, { flags: Object.assign({}, app.state.flags, { introSeen: true }) });
-      var offer = !s.flags.diagnosisOffered;
+      var g = s.player.grade;
+      var offer = !s.flags.diagnosisOffered && (!g || g > FF.balance.INITIAL_UNLOCKED_GRADE);   // 小2以下は最初から選べるので案内しない（判断198）
       s = FF.exam.markDiagnosisOffered(s);
       app.commit(s);
       U.show('base');
@@ -93,6 +126,34 @@
     }
   }
 
+  // 主人公の絵の選択（開始画面と設定で使う。判断198）。押すとすぐ onPick(id)
+  function avatarPicker(current, onPick) {
+    return U.el('div', { class: 'avatar-grid' }, FF.defs.AVATARS.map(function (id, i) {
+      return U.el('button', {
+        class: 'avatar-pick' + (current === id ? ' selected' : ''),
+        attrs: { 'aria-pressed': current === id ? 'true' : 'false', 'aria-label': FF.util.plainText(U.T('avatarN'), { n: i + 1 }) },
+        on: { click: function () { onPick(id); } }
+      }, U.artImg('avatar-' + id + '.png', 'avatar-img', function () { return U.el('span', { text: String(i + 1) }); }));
+    }));
+  }
+  // 学年の選択（小1〜小6・中1〜中3。判断198）
+  function gradePicker(current, onPick) {
+    function chip(gr) {
+      var band = gr.level <= 6 ? 'elem' : 'jr', n = band === 'elem' ? gr.level : gr.level - 6;
+      return U.el('button', {
+        class: 'pick grade-chip ' + band + (current === gr.level ? ' selected' : ''),
+        attrs: { 'aria-pressed': current === gr.level ? 'true' : 'false', 'aria-label': gr.school },
+        on: { click: function () { onPick(gr.level); } }
+      }, U.el('span', { class: 'title' }, [U.rich(U.T('gradeChip.' + band)), String(n)]));
+    }
+    return U.el('div', { class: 'grade-bands start-grades' }, [
+      U.el('div', { class: 'grade-row' }, FF.defs.GRADES.filter(function (g) { return g.level <= 6; }).map(chip)),
+      U.el('div', { class: 'grade-row' }, FF.defs.GRADES.filter(function (g) { return g.level > 6; }).map(chip))
+    ]);
+  }
+
+  U.avatarPicker = avatarPicker;
+  U.gradePicker = gradePicker;
   U.nameInput = nameInput;
   U.screens.title = { render: render };
 })(this);

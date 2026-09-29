@@ -54,6 +54,7 @@
     // ---- 学習 ----
     INPUT_MAX_ATTEMPTS: 3,
     INITIAL_UNLOCKED_GRADE: 2,
+    FURIGANA_AUTO_MAX_GRADE: 3,   // 学年を入れたとき、ふりがなを自動でオンにするのはこの学年まで（判断198）
     MAX_GRADE: 9,
     EXAM: {
       QUESTIONS: 5, PASS: 4, MIN_INPUT: 3,

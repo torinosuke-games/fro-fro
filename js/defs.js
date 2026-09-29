@@ -4,6 +4,8 @@
   var FF = root.FF = root.FF || {};
 
   FF.defs = {
+    // 主人公の絵（判断198）。img/art/avatar-<id>.png。1回の生成で6人を描かせて切り分けた
+    AVATARS: ['a1', 'a2', 'a3', 'a4', 'a5', 'a6'],
     GRADES: [
       { level: 1, label: 'Lv1', school: '小学1年' },
       { level: 2, label: 'Lv2', school: '小学2年' },
