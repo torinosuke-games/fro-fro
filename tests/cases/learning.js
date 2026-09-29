@@ -349,4 +349,34 @@ module.exports = ({ test, FF, assert, plain }) => {
     const res = L.submitAnswer(newState(), L.startAttempt(q), String(q.answer), ctx());
     assert.strictEqual(res.outcome.breakdown.difficulty, FF.balance.DIFFICULTY_MULT[q.difficulty]);
   });
+  test('選択問題の inputForm から書き問題の形を作る（判断200）', () => {
+    const base = {
+      id: 'social_g5_test_001', subject: 'social', gradeLevel: 5, unit: 'test', difficulty: 'standard', answerType: 'choice',
+      question: '日本で いちばん 長い 川は どれか。', choices: ['信濃川', '利根川', '石狩川', '北上川'], answer: '信濃川',
+      hints: ['新潟県を 流れる。'], explanation: '信濃川です。', reviewed: true
+    };
+    const q = Object.assign({}, base, { inputForm: { question: '日本で いちばん 長い 川は 何か。', acceptedAnswers: ['しなのがわ'], validationMode: 'kana-insensitive', reviewed: false } });
+    assert.strictEqual(L.validateQuestion(q).join(' / '), '');
+    const v = L.inputVariant(q);
+    assert.strictEqual(v.id, 'social_g5_test_001#input');
+    assert.strictEqual(v.answerType, 'input');
+    assert.strictEqual(v.derivedFrom, 'social_g5_test_001');
+    assert.strictEqual(v.question, '日本で いちばん 長い 川は 何か。');
+    assert.strictEqual(v.answer, '信濃川');
+    assert.strictEqual(v.choices, undefined);
+    assert.strictEqual(v.inputForm, undefined);
+    assert.strictEqual(v.reviewed, false);
+    assert.strictEqual(JSON.stringify(v.hints), JSON.stringify(base.hints));   // 省いた項目は元のもの
+    assert.strictEqual(FF.answer.judgeInput(v, 'しなのがわ').correct, true);
+    // 索引には両方入り、書き問題の候補に入る
+    const bank = L.createBank([q]);
+    assert.strictEqual(bank.count, 2);
+    assert.strictEqual(bank.byKey['social|5|standard|input'][0].id, 'social_g5_test_001#input');
+    assert.strictEqual(bank.byKey['social|5|standard|choice'][0].id, 'social_g5_test_001');
+    // 形のおかしい inputForm は元の問題ごと索引に入れない
+    const bad = Object.assign({}, base, { inputForm: { validationMode: 'number', reviewed: false } });
+    assert.ok(L.validateQuestion(bad).some(m => /^inputForm: /.test(m)));
+    assert.strictEqual(L.createBank([bad]).count, 0);
+    assert.ok(L.validateQuestion(Object.assign({}, base, { answerType: 'input', validationMode: 'exact', choices: undefined, inputForm: { validationMode: 'exact', reviewed: false } })).indexOf('inputForm は選択問題にだけ付けられる') >= 0);
+  });
 };
