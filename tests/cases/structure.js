@@ -64,9 +64,14 @@ module.exports = ({ test, assert }) => {
   });
 
   test('絵の見た目（判断177）で使う img/art/ の絵がすべてある', () => {
-    const names = ['field_lv1', 'field_lv5', 'furnace', 'housing', 'lumber', 'mine', 'quarry', 'foodhall', 'watchtower',
-      'res-wood', 'res-iron', 'res-stone', 'res-food', 'subj-jp', 'subj-math', 'subj-sci', 'subj-soc', 'subj-en'];
-    const missing = names.filter(n => !fs.existsSync(path.join(ROOT, 'img/art', n + '.jpg')));
+    // 基地の雪原は base.js の FIELD_LEVELS のレベルの絵（判断180・183・185）
+    const levels = (read('js/ui/base.js').match(/var FIELD_LEVELS = \[([\d,\s]+)\]/) || [])[1] || '';
+    assert.ok(levels, 'FIELD_LEVELS が見つからない');
+    const fields = levels.split(',').map(s => 'field_lv' + s.trim());
+    const names = fields.concat(['furnace', 'housing', 'lumber', 'mine', 'quarry', 'foodhall', 'watchtower',
+      'res-wood', 'res-iron', 'res-stone', 'res-food', 'subj-jp', 'subj-math', 'subj-sci', 'subj-soc', 'subj-en',
+      'region-snowfield', 'region-forest', 'region-glacier'].concat(['lumberjack', 'miner', 'mason', 'cook', 'smith', 'hunter', 'elder', 'child'].map(n => 'villager-' + n)));
+    const missing = names.filter(n => !fs.existsSync(path.join(ROOT, 'img/art', n + (n.startsWith('villager-') ? '.png' : '.jpg'))));   // 人の絵は透明の背景の PNG（判断195）
     assert.deepStrictEqual(missing, []);
   });
 };

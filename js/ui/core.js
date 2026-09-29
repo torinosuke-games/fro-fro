@@ -80,7 +80,7 @@
   function artOn() { return FF.config.ART_STYLE === 'art'; }
   // 絵の <img>。読めないとき（ファイルがない など）は fallback（これまでの絵文字・SVG）に差し替える
   function artImg(name, cls, fallback) {
-    var img = el('img', { class: cls, attrs: { src: FF.config.ART_DIR + name + '.jpg', alt: '', draggable: 'false' } });
+    var img = el('img', { class: cls, attrs: { src: FF.config.ART_DIR + name + (/\.\w+$/.test(name) ? '' : '.jpg'), alt: '', draggable: 'false' } });
     img.addEventListener('error', function () { if (fallback && img.parentNode) img.parentNode.replaceChild(fallback(), img); });
     return img;
   }
@@ -92,12 +92,17 @@
   function buildingName(id) { return FF.buildings.defOf(id).name; }
   function nameOf(list, id) { var d = list.filter(function (x) { return x.id === id; })[0]; return d ? d.name : id; }
 
-  // 資源の量の並び（コスト表示など）。have を渡すと不足分を赤くする
-  function costView(cost, have) {
+  // 資源の量の並び（コスト表示など）。have を渡すと不足分を赤くする。
+  // onShort を渡すと、不足分は押せるボタンになり、押すと onShort(資源の id) を呼ぶ（判断187）
+  function costView(cost, have, onShort) {
     return el('div', { class: 'cost' }, Object.keys(cost).map(function (r) {
       var d = resDef(r);
       var short = have && (have[r] || 0) < cost[r];
-      return el('span', { class: 'item' + (short ? ' short' : '') }, [d.icon + ' ', R('span', '', d.name), ' ' + fmt(cost[r])]);
+      var kids = [d.icon + ' ', R('span', '', d.name), ' ' + fmt(cost[r])];
+      if (short && onShort) {
+        return el('button', { class: 'item short tap', attrs: { type: 'button' }, on: { click: function () { onShort(r); } } }, kids.concat([el('span', { class: 'go', attrs: { 'aria-hidden': 'true' }, text: ' ▶' })]));
+      }
+      return el('span', { class: 'item' + (short ? ' short' : '') }, kids);
     }));
   }
 
@@ -155,7 +160,8 @@
     var next = FF.tickets.msUntilNext(t, now);
     var max = FF.balance.TICKET_MAX;
     hud.appendChild(el('div', { class: 'hud-tickets' }, [
-      el('span', {}, [R('span', '', T('tickets')), ' ', el('span', { class: 'count', text: t.count + ' / ' + max })]),
+      // 絵の見た目では「問題チケット」の文字の代わりに 🎫（読み上げは名前のまま。判断194）
+      el('span', {}, [artOn() ? el('span', { class: 'tk-ico', attrs: { role: 'img', 'aria-label': FF.util.plainText(T('tickets')), title: FF.util.plainText(T('tickets')) }, text: '🎫' }) : R('span', '', T('tickets')), ' ', el('span', { class: 'count', text: t.count + ' / ' + max })]),
       el('span', { class: 'ticket-bar' }, el('i', { style: { width: Math.min(100, t.count / max * 100) + '%' } })),
       el('span', { class: 'timer' }, next === null ? R('span', '', T('ticketsFull')) : [R('span', 'lbl', T('ticketsNext')), ' ' + FF.util.formatCountdown(next)]),
       ptChip(s)

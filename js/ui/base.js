@@ -65,17 +65,87 @@
     U.rerender();
   }
 
+  // ---- 基地の絵の上の受け取り（判断196）：建物の上の吹き出し（1つずつ）と、絵の右下のかご（まとめて） ----
+  // 収穫のアイコンを付ける建物（名札の右上に小さく重ねる。判断197）
+  var ART_BUBBLES = { lumber: true, mine: true, quarry: true, foodhall: true };
+  var bubbleEls = {}, basketEl = null;
+  function producerOf(id) { return FF.defs.BUILDINGS.filter(function (d) { return d.id === id; })[0]; }
+  function bubbleView(id) {
+    var r = U.resDef(producerOf(id).produces);
+    var b = U.el('button', {
+      class: 'art-bubble', attrs: { hidden: '', 'aria-label': FF.util.plainText(U.T('collectOne'), { name: r.name }) },
+      on: { click: function (e) { e.stopPropagation(); collectOneArt(id); } }
+    }, U.resIcon(r));
+    bubbleEls[id] = b;
+    return b;
+  }
+  function basketView() {
+    basketEl = U.el('button', {
+      class: 'art-basket', attrs: { hidden: '', 'aria-label': FF.util.plainText(U.T('collectAllArt')) },
+      on: { click: function (e) { e.stopPropagation(); collectAllArt(); } }
+    }, [U.el('span', { class: 'ico', attrs: { 'aria-hidden': 'true' }, text: '🧺' }), U.el('span', { class: 'badge-n' })]);
+    return basketEl;
+  }
+  // 貯まっている建物だけアイコンを出す（8割以上は金色のふちで小さくはずむ）。画面を作り直さずに毎秒ここだけ直す
+  function updateBubbles() {
+    if (!basketEl || !document.body.contains(basketEl)) return;
+    var s = FF.app.state, now = FF.app.now(), n = 0;
+    Object.keys(bubbleEls).forEach(function (id) {
+      var b = bubbleEls[id], amount = B.pendingProduction(s, id, now);
+      if (amount <= 0) { b.hidden = true; return; }
+      n++;
+      var ratio = B.storageRatio(s, id, now);
+      b.hidden = false;
+      b.classList.toggle('full', ratio >= 0.8);
+    });
+    basketEl.hidden = n === 0;
+    basketEl.querySelector('.badge-n').textContent = n;
+  }
+  // 受け取った資源の絵を、上のバーの資源の欄へ飛ばす（動きを減らす設定では飛ばさない）
+  function flyToHud(fromEl, resId) {
+    if (!fromEl || fromEl.hidden || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var idx = FF.defs.RESOURCES.map(function (r) { return r.id; }).indexOf(resId);
+    var chip = document.querySelectorAll('#hud .res-chip')[idx];
+    var src = fromEl.querySelector('img, .ico');
+    if (!chip || !src || !src.animate) return;
+    var a = src.getBoundingClientRect(), c = chip.getBoundingClientRect();
+    var ghost = src.cloneNode(true);
+    ghost.className = 'fly-res';
+    ghost.style.left = a.left + 'px'; ghost.style.top = a.top + 'px'; ghost.style.width = a.width + 'px'; ghost.style.height = a.height + 'px';
+    document.body.appendChild(ghost);
+    var dx = c.left + 8 - a.left, dy = c.top + c.height / 2 - a.height / 2 - a.top;
+    ghost.animate([
+      { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+      { transform: 'translate(' + dx * 0.5 + 'px, ' + (dy * 0.5 - 40) + 'px) scale(1.15)', opacity: 1, offset: 0.45 },
+      { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(0.7)', opacity: 0.2 }
+    ], { duration: 750, easing: 'ease-in' }).onfinish = function () { ghost.remove(); chip.classList.add('got'); setTimeout(function () { chip.classList.remove('got'); }, 400); };
+  }
+  function afterCollectArt(r, ids) {
+    var got = Object.keys(r.collected);
+    if (!got.length) { U.toast(U.T('collectNone')); return; }
+    ids.forEach(function (id) { var d = producerOf(id); if (r.collected[d.produces]) flyToHud(bubbleEls[id], d.produces); });
+    FF.app.commit(r.state);
+    U.toast(U.T('collected') + '：' + got.map(function (k) { return U.resDef(k).icon + ' +' + U.fmt(r.collected[k]); }).join('  '));
+    updateBubbles();
+  }
+  function collectOneArt(id) { afterCollectArt(B.collectOne(FF.app.state, id, FF.app.now()), [id]); }
+  function collectAllArt() { afterCollectArt(B.collectAll(FF.app.state, FF.app.now()), Object.keys(bubbleEls)); }
+
   function openBuilding(id) {
     var app = FF.app, s = app.state;
     if (id === 'watchtower') {
       // v0.2：完成した見張り塔は探索の入口
       if (FF.exploration.isExploreOpen(s)) { U.show('explore'); return; }
-      U.modal({ title: U.T('teaser.watchtower'), body: U.T('teaser.watchtowerLocked') });
+      var tb = U.el('div', { class: 'stack' });
+      if (U.artOn()) tb.appendChild(buildingArt('watchtower', 1, true));
+      tb.appendChild(U.R('div', 'pre', U.T('teaser.watchtowerLocked')));
+      U.modal({ title: U.T('teaser.watchtower'), body: tb });
       return;
     }
     var bld = s.buildings[id], name = U.buildingName(id);
     var can = B.canUpgrade(s, id);
     var body = U.el('div', { class: 'stack' });
+    if (U.artOn()) body.appendChild(buildingArt(id, shownLevel(s, id), bld.level === 0));   // 名前の下に、今のレベルの姿（判断186）
     body.appendChild(U.R('div', 'small', U.T('buildingInfo.' + id)));
     var cur = effectText(id, bld.level);
     if (cur) body.appendChild(U.el('div', { class: 'badge' }, U.rich(cur[0], cur[1])));
@@ -86,7 +156,10 @@
       // 工事中は資源を払い終えているので、必要な資源と工事の時間は出さない
       if (!bld.construction) {
         body.appendChild(U.R('div', 'small muted', U.T('cost')));
-        body.appendChild(U.costView(B.upgradeCost(id, bld.level), s.resources));
+        var cost = B.upgradeCost(id, bld.level);
+        body.appendChild(U.costView(cost, s.resources, studyFor));
+        var anyShort = Object.keys(cost).some(function (r) { return (s.resources[r] || 0) < cost[r]; });
+        if (anyShort) body.appendChild(U.R('div', 'small muted', U.T('shortTapHint')));
         body.appendChild(U.R('div', 'small muted', withTime(U.T('buildTime'), B.buildDurationMs(id, bld.level + 1))));
       }
     }
@@ -98,7 +171,14 @@
       var reasonVars = { level: can.unlockAt };
       body.appendChild(U.R('div', 'notice', U.T('reason.' + can.reason), reasonVars));
     }
-    U.modal({
+    // 足りない資源を押すと、学ぶの画面へ。資源だけを選び、教科・学年・出題形式は未選択にする（判断187）
+    function studyFor(r) {
+      if (closeModal) closeModal();
+      app.studySel = { resource: r, subject: null, grade: null, difficulty: FF.learning.RANDOM_DIFFICULTY, answerType: null, pickGrade: true };
+      app.studyTab = 'learn';
+      U.show('study', { tab: 'learn' });
+    }
+    var closeModal = U.modal({
       title: name + (bld.level > 0 ? '  Lv' + bld.level : ''),
       body: body,
       buttons: [
@@ -129,8 +209,8 @@
   // ---- レベルで変わる基地の絵（判断180） ----
   // 絵は「全部の建物がそのレベルの姿」の雪原を1枚ずつ（img/art/field_lv1.jpg など。どれも同じ構図）。
   // Lv1 の絵を土台にして、建物ごとに、そのレベルの絵の建物のまわりだけ（ふちをぼかした楕円）を重ねる。
-  // 絵のないレベルは、それより低いレベルでいちばん近い絵を使う（今は Lv1 と Lv5 だけ）
-  var FIELD_LEVELS = [1, 2, 3, 4, 5];
+  // 絵のないレベルは、それより低いレベルでいちばん近い絵を使う（Lv1〜10 の絵がある。Lv6〜10 は最大レベルを上げたときのため。判断185）
+  var FIELD_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   // 建物のまわりの楕円（絵に対する %。cx・cy は中心、rx・ry は半径）
   var ART_AREAS = {
     quarry: { cx: 27, cy: 30, rx: 18, ry: 16 }, lumber: { cx: 15, cy: 52, rx: 15, ry: 15 },
@@ -147,6 +227,24 @@
   function shownLevel(s, id) {
     if (id === 'watchtower') return FF.exploration.isExploreOpen(s) ? 5 : 1;
     return Math.max(1, s.buildings[id].level);
+  }
+  // 建物の画面に出す小さな絵（判断186）：そのレベルの雪原の絵から、建物のまわりの四角（ART_CROPS。絵に対する %。
+  // どのレベルの姿も入るように広めにとる）を切り出し、高さ ART_CROP_PX にそろえる。絵は CSS の背景。まだ使えない建物は薄い灰色
+  var ART_CROPS = {
+    quarry: { x: 5, y: 8, w: 42, h: 40 }, lumber: { x: 0, y: 33, w: 30, h: 39 }, furnace: { x: 34, y: 16, w: 32, h: 48 },
+    watchtower: { x: 60, y: 2, w: 26, h: 34 }, mine: { x: 58, y: 22, w: 42, h: 38 }, housing: { x: 3, y: 55, w: 39, h: 44 },
+    foodhall: { x: 52, y: 50, w: 44, h: 46 }
+  };
+  var FIELD_ASPECT = 960 / 644, ART_CROP_PX = 150;   // img/art/field_lv*.jpg の横 / 縦、切り出した絵の高さ
+  function buildingArt(id, lv, locked) {
+    var c = ART_CROPS[id];
+    var box = U.el('div', { class: 'bld-art' + (locked ? ' locked' : ''), attrs: { 'aria-hidden': 'true' } });
+    box.style.backgroundImage = 'url("' + FF.config.ART_DIR + 'field_lv' + fieldLevel(lv) + '.jpg")';
+    box.style.backgroundSize = (10000 / c.w) + '% ' + (10000 / c.h) + '%';
+    box.style.backgroundPosition = (c.x / (100 - c.w) * 100) + '% ' + (c.y / (100 - c.h) * 100) + '%';
+    box.style.width = Math.round(ART_CROP_PX * c.w * FIELD_ASPECT / c.h) + 'px';
+    box.style.height = ART_CROP_PX + 'px';
+    return box;
   }
   function layerView(id, lv) {
     var a = ART_AREAS[id];
@@ -167,10 +265,16 @@
       2: [{ x: 49.8, y: 50, size: 4.5, puffs: 3, sec: 3.8, dx: 45 }],  // 石で囲んだたき火
       3: [{ x: 50, y: 46, size: 5, puffs: 3, sec: 4.2, dx: 60 }],      // 石のかまどの上
       4: [{ x: 52, y: 33, size: 6, puffs: 4, sec: 4.6, dx: 75 }],      // 短い煙突
-      5: [{ x: 50.8, y: 21, size: 7, puffs: 4, sec: 5, dx: 90 }]        // 中央炉の煙突
+      5: [{ x: 50.8, y: 21, size: 7, puffs: 4, sec: 5, dx: 90 }],       // 中央炉の煙突
+      6: [{ x: 51.2, y: 21, size: 7, puffs: 4, sec: 5, dx: 90 }],
+      7: [{ x: 51.2, y: 18, size: 7, puffs: 4, sec: 5, dx: 90 }],       // 煙突の上の囲い
+      8: [{ x: 51.2, y: 21, size: 7, puffs: 4, sec: 5, dx: 90 }],
+      9: [{ x: 51.2, y: 21, size: 7.5, puffs: 4, sec: 5, dx: 90 }],
+      10: [{ x: 51.2, y: 21.5, size: 7.5, puffs: 4, sec: 5, dx: 90 }]
     },
     foodhall: {
-      5: [{ x: 71.0, y: 58, size: 4, puffs: 3, sec: 4.2, dx: 15 }]      // 食料庫の煙突
+      5: [{ x: 71.0, y: 58, size: 4, puffs: 3, sec: 4.2, dx: 15 }],     // 食料庫の煙突
+      6: [{ x: 71.0, y: 58, size: 4, puffs: 3, sec: 4.2, dx: 15 }]      // Lv7 からは煙突がない
     }
   };
   function smokeView(p) {
@@ -180,6 +284,30 @@
     box.style.setProperty('--dx', p.dx + '%');
     return box;
   }
+  // 行き来する人（判断194・195）：中央炉と各建物のあいだの道を、町の人がゆっくり行って戻る（煙と同じく CSS のアニメーション）。
+  // 人は生成した絵（img/art/villager-*.png。1回の生成で8人を描かせて切り分けた）。道は絵に対する %（a → m → b）。
+  // 行った先・戻った先で立ち止まる。その建物が使えるとき（Lv1 以上）だけ歩き、Lv3 以上なら2人（別の人・ずらして）。
+  // 街が発展するほど人が増える ＝ 救われた生存者（STORY.md）
+  var ART_WALKS = [
+    { id: 'housing', a: [30, 86], m: [38, 72], b: [46, 62], sec: 96, who: ['elder', 'child'] },
+    { id: 'mine', a: [54, 60], m: [68, 55], b: [81, 51], sec: 110, who: ['miner', 'smith'] },
+    { id: 'lumber', a: [44, 60], m: [32, 58], b: [19, 62], sec: 104, who: ['lumberjack', 'hunter'] },
+    { id: 'foodhall', a: [52, 64], m: [58, 74], b: [65, 82], sec: 88, who: ['cook', 'child'] },
+    { id: 'quarry', a: [46, 56], m: [40, 49], b: [33, 45], sec: 92, who: ['mason', 'smith'] }
+  ];
+  function walkerView(w, k) {
+    var i = ART_WALKS.indexOf(w);
+    var el = U.el('span', { class: 'art-walker', attrs: { 'aria-hidden': 'true' } },
+      U.artImg('villager-' + w.who[k] + '.png', 'vg', function () { return U.el('span'); }));
+    var st = el.style, ym = w.m[1];
+    [['--x1', w.a[0]], ['--y1', w.a[1]], ['--xm', w.m[0]], ['--ym', w.m[1]], ['--x2', w.b[0]], ['--y2', w.b[1]]].forEach(function (v) { st.setProperty(v[0], v[1] + '%'); });
+    st.setProperty('--dir', w.b[0] >= w.a[0] ? 1 : -1);              // 絵は右向き。行きの向きに合わせる
+    st.width = (2.3 * (0.7 + ym / 100 * 0.6)).toFixed(2) + '%';      // 手前（下）ほど大きく
+    var sec = w.sec + k * 13;                                         // 2人目は少し遅く、同じ動きに見えないように
+    st.animationDuration = sec + 's';
+    st.animationDelay = -((k * 0.55 + i * 0.21) % 1 * sec).toFixed(1) + 's';
+    return el;
+  }
   function artScene(s) {
     var box = U.el('div', { class: 'scene art' });
     box.appendChild(U.artImg('field_lv1', 'scene-art-bg', function () { return FF.svgScene.render(s, openBuilding, FF.app.theme); }));
@@ -187,11 +315,18 @@
       var lv = fieldLevel(shownLevel(s, id));
       if (lv > 1) box.appendChild(layerView(id, lv));
     });
+    ART_WALKS.forEach(function (w) {
+      var lv = s.buildings[w.id].level;
+      if (lv < 1) return;
+      box.appendChild(walkerView(w, 0));
+      if (lv >= 3) box.appendChild(walkerView(w, 1));
+    });
     Object.keys(ART_SMOKE).forEach(function (id) {
       if (s.buildings[id].level < 1) return;
       (ART_SMOKE[id][fieldLevel(shownLevel(s, id))] || []).forEach(function (p) { box.appendChild(smokeView(p)); });
     });
     var labels = [];
+    bubbleEls = {};
     Object.keys(ART_SPOTS).forEach(function (id) {
       var p = ART_SPOTS[id], name, level = 0, locked, building = false, ready = false;
       if (id === 'watchtower') {
@@ -212,9 +347,8 @@
         style: { left: (ar.cx - ar.rx * 0.6) + '%', top: (ar.cy - ar.ry * 0.6) + '%', width: (ar.rx * 1.2) + '%', height: (ar.ry * 1.2) + '%' },
         on: { click: function () { openBuilding(id); } }
       }));
-      labels.push(U.el('button', {
+      var lab = U.el('button', {
         class: 'art-bld' + (locked ? ' locked' : '') + (building ? ' is-building' : '') + (ready ? ' ready' : ''),
-        style: { left: p.x + '%', top: p.y + '%' },
         attrs: { 'aria-label': label },
         on: { click: function () { openBuilding(id); } }
       }, [
@@ -222,9 +356,12 @@
           U.rich(name), level ? U.el('span', { class: 'lv', text: ' Lv' + level }) : null, locked ? ' 🔒' : null,
           building ? U.el('span', { class: 'mark', text: ' 🔨' }) : ready ? U.el('span', { class: 'mark up', text: ' ▲' }) : null
         ])
-      ]));
+      ]);
+      // 名札と、その右上に小さく重ねる収穫のアイコン（生産施設だけ。判断196・197）
+      labels.push(U.el('span', { class: 'art-tag', style: { left: p.x + '%', top: p.y + '%' } }, [lab, ART_BUBBLES[id] ? bubbleView(id) : null]));
     });
     labels.forEach(function (l) { box.appendChild(l); });   // 名札は押せる場所より上に
+    box.appendChild(basketView());
     return box;
   }
 
@@ -265,9 +402,13 @@
 
     main.appendChild(U.artOn() ? artScene(s) : U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding, FF.app.theme)));
 
-    collectBar = U.el('div', { class: 'panel collect-bar' });
-    main.appendChild(collectBar);
-    renderCollect();
+    // 絵の見た目では「生産物」の行を出さず、絵の上の吹き出しとかごで受け取る（判断196）
+    if (U.artOn()) { collectBar = null; updateBubbles(); }
+    else {
+      collectBar = U.el('div', { class: 'panel collect-bar' });
+      main.appendChild(collectBar);
+      renderCollect();
+    }
 
     // 絵の見た目では、学習への大きなボタンを風景の下に置く（見本の画面に合わせる。判断177）
     if (U.artOn()) main.appendChild(U.el('button', { class: 'btn primary base-cta', rich: U.T('baseStudyCta'), on: { click: function () { U.show('study'); } } }));
@@ -297,6 +438,6 @@
 
   U.screens.base = {
     render: render,
-    onTick: function () { renderCollect(); updateTimers(); }
+    onTick: function () { renderCollect(); updateBubbles(); updateTimers(); }
   };
 })(this);

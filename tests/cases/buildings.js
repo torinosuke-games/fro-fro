@@ -308,6 +308,33 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(s.buildings.lumber.lastCollectedAt, T0 + 10 * HOUR);
   });
 
+  test('1つの施設だけ受け取る（collectOne。判断196）', () => {
+    const s = newState();
+    const now = T0 + 3 * HOUR;
+    const r = B.collectOne(s, 'lumber', now);
+    assert.deepStrictEqual(plain(r.collected), { wood: 3 * rate });
+    assert.strictEqual(r.state.resources.wood, 3 * rate);
+    assert.strictEqual(r.state.resources.iron, 0);
+    assert.strictEqual(B.pendingProduction(r.state, 'lumber', now), 0);
+    assert.strictEqual(B.pendingProduction(r.state, 'mine', now), 3 * rate);   // ほかの施設はそのまま
+    assert.strictEqual(s.resources.wood, 0);                                     // 元の状態は変えない
+    // 生産施設でない・まだ使えない施設は何も起きない
+    assert.deepStrictEqual(plain(B.collectOne(s, 'housing', now).collected), {});
+    assert.deepStrictEqual(plain(B.collectOne(s, 'quarry', now).collected), {});
+    // 1つずつ受け取っても、まとめて受け取っても同じ
+    let one = s;
+    ['lumber', 'mine', 'quarry', 'foodhall'].forEach(id => { one = B.collectOne(one, id, now).state; });
+    assert.deepStrictEqual(plain(one.resources), plain(B.collectAll(s, now).state.resources));
+  });
+
+  test('保管の上限に対する貯まり具合（storageRatio）', () => {
+    const s = newState();
+    assert.strictEqual(B.storageRatio(s, 'lumber', T0), 0);
+    assert.strictEqual(B.storageRatio(s, 'lumber', T0 + 2 * HOUR), 0.5);   // 住宅 Lv1 は4時間
+    assert.strictEqual(B.storageRatio(s, 'lumber', T0 + 9 * HOUR), 1);
+    assert.strictEqual(B.storageRatio(s, 'quarry', T0 + 9 * HOUR), 0);     // まだ使えない
+  });
+
   test('解放前の採石場は生産しない', () => {
     const s = newState();
     assert.strictEqual(B.pendingProduction(s, 'quarry', T0 + 5 * HOUR), 0);

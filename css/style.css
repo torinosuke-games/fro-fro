@@ -32,7 +32,7 @@
   --metal: linear-gradient(180deg, #2a3a4a 0%, #16212d 100%);
   --radius: 6px;
   --nav-h: 64px;
-  --font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+  --font: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
   /* 以下は昼／夜テーマ（SPEC_theme.md）のために変数にしたもの。値はこれまで直接書いていたものと同じ */
   --body-grad: radial-gradient(ellipse at 50% -10%, #1b2a3b 0%, var(--bg-1) 45%, var(--bg-0) 100%);
   --hud-bg: linear-gradient(180deg, rgba(6, 10, 16, 0.96), rgba(8, 13, 20, 0.88));
@@ -374,7 +374,7 @@ h3 { font-size: 15px; color: var(--ice); }
   width: 100%; min-height: 56px; padding: 10px 12px; cursor: pointer; text-align: left;
   background: var(--pick-bg); border: 1px solid var(--edge); border-radius: 5px;
 }
-.pick:hover:not(:disabled) { border-color: var(--ice); }
+@media (hover: hover) { .pick:hover:not(:disabled) { border-color: var(--ice); } }   /* スマホでは押したあと枠が残らないように（判断187） */
 .pick.selected { border-color: var(--ember); box-shadow: 0 0 0 1px var(--ember) inset, 0 0 12px var(--ember-glow); }
 .pick:disabled { opacity: 0.5; cursor: not-allowed; }
 .pick .title { font-weight: 800; font-size: 15px; }
@@ -404,7 +404,7 @@ h3 { font-size: 15px; color: var(--ice); }
 .pick.grade-chip.jr { background: var(--gr-jr-bg); border-color: var(--gr-jr-edge); color: var(--gr-jr-text); }
 .pick.grade-chip .title { font-size: 14px; line-height: 1.2; }
 .pick.grade-chip .sub { font-size: 9.5px; line-height: 1.2; color: inherit; opacity: 0.8; }
-.pick.grade-chip:hover:not(:disabled) { border-color: var(--ice); }
+@media (hover: hover) { .pick.grade-chip:hover:not(:disabled) { border-color: var(--ice); } }   /* スマホでは押したあと枠が残らないように（判断187） */
 .pick.grade-chip.selected { border-color: var(--ember); border-width: 2px; }
 .pick.grade-chip:disabled { opacity: 0.45; }
 .grade-note { margin-top: 4px; }
@@ -944,3 +944,97 @@ a.btn { text-decoration: none; }
   100% { opacity: 0;    transform: translate(var(--dx, 90%), -420%) scale(2.4); }
 }
 @media (prefers-reduced-motion: reduce) { .art-smoke { display: none; } }
+
+/* 建物の画面の小さな絵（判断186）。そのレベルの雪原の絵から建物のまわりを切り出す（base.js の buildingArt） */
+.bld-art { max-width: 100%; margin: 0 auto 2px; border-radius: 14px; background-repeat: no-repeat; box-shadow: 0 2px 8px rgba(0, 0, 0, .18); }
+.bld-art.locked { filter: grayscale(1); opacity: .6; }
+/* 足りない資源のボタン（判断187）：押すと学ぶの画面へ */
+.cost button.item.tap { font: inherit; cursor: pointer; background: var(--chip-bg); min-height: 32px; }
+.cost button.item.tap:active { transform: translateY(1px); }
+.cost button.item.tap .go { font-size: .8em; }
+
+/* 探索の地域のカード（絵の見た目。判断190）：開始画面・基地と同じ、角の丸い白いカードに影 */
+.explore-art .xp-lead { margin: 4px 4px 12px; font-size: 20px; font-weight: 900; letter-spacing: 0.06em; color: var(--hero-ink, #16324a); }
+.explore-art .region-card {
+  display: block; width: 100%; padding: 0; overflow: hidden; text-align: left; font: inherit; color: inherit;
+  background: #fff; border: 0; border-radius: 20px; box-shadow: var(--hero-shadow, 0 10px 28px rgba(22, 50, 74, 0.12));
+  transition: transform .12s ease;
+}
+.explore-art .region-card:active:not(.locked) { transform: scale(.98); }
+.explore-art .region-card.locked { opacity: 1; }
+.explore-art .region-card.done { box-shadow: 0 0 0 2px var(--done-edge), var(--hero-shadow, 0 10px 28px rgba(22, 50, 74, 0.12)); }
+.explore-art .rg-pic { position: relative; aspect-ratio: 16 / 7; overflow: hidden; background: linear-gradient(160deg, #cfe6f7, #eef6fc); }
+.explore-art .rg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.explore-art .region-card.locked .rg-img { filter: grayscale(.85) brightness(1.05); opacity: .75; }
+.explore-art .rg-cap {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 16px 10px;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  background: linear-gradient(to top, rgba(10, 30, 50, .62), rgba(10, 30, 50, 0));
+}
+.explore-art .rg-cap .rg-name { color: #fff; font-size: 22px; text-shadow: 0 1px 4px rgba(0, 0, 0, .35); }
+.explore-art .rg-cap .rg-name rt { color: rgba(255, 255, 255, .9); }
+.explore-art .rg-cap .rg-en { color: rgba(255, 255, 255, .88); font-family: "Nunito", var(--font); font-weight: 800; }
+.explore-art .rg-chip {
+  position: absolute; top: 10px; right: 10px; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 800;
+  background: rgba(255, 255, 255, .92); color: var(--hero-ink, #16324a); box-shadow: 0 2px 6px rgba(0, 0, 0, .15);
+}
+.explore-art .rg-body { padding: 10px 16px 14px; }
+.explore-art .rg-body .xp-bar { height: 8px; border-radius: 999px; }
+.explore-art .rg-body .xp-bar i { border-radius: 999px; }
+.explore-art .rg-body .notice { margin-top: 8px; border-radius: 12px; }
+
+/* 探索の地域の中の画面（判断191）：一覧と同じ角の丸い白いカード。地図の下に地域の絵をうすく敷く */
+.explore-art .panel { border: 0; border-radius: 20px; box-shadow: var(--hero-shadow, 0 10px 28px rgba(22, 50, 74, 0.12)); }
+.explore-art .xp-head .btn { border-radius: 999px; padding-left: 14px; padding-right: 14px; background: #fff; box-shadow: 0 2px 8px rgba(22, 50, 74, .1); border: 0; }
+.explore-art .xp-hero { padding: 0; overflow: hidden; }
+.explore-art .xp-hero .rg-name { margin: 0; }
+.explore-art .xp-hero .rg-body .xp-intro { margin-top: 6px; }
+.explore-art .xp-map-wrap { border: 0; border-radius: 20px; box-shadow: var(--hero-shadow, 0 10px 28px rgba(22, 50, 74, 0.12)); background-size: cover; background-position: center; }
+.explore-art .xp-map .map-bg { opacity: .78; }
+.explore-art .xp-legend { margin-top: 8px; }
+.hud-tickets .tk-ico { font-size: 1.25em; vertical-align: -0.12em; }   /* 問題チケットのアイコン（判断194） */
+
+/* 基地の絵の上を行き来する人（判断194・195）。left/top を CSS 変数の道（a → m → b → m → a）でゆっくり動かし、
+   両端で立ち止まる（向きは立ち止まっている間に変える）。人の絵は右向き */
+.art-walker { position: absolute; pointer-events: none; left: var(--x1); top: var(--y1);
+  transform: translate(-50%, -100%) scaleX(var(--dir)); animation: art-walk 96s linear infinite; }
+.art-walker .vg { display: block; width: 100%; height: auto; filter: drop-shadow(0 1px 1px rgba(30, 45, 60, .35)); }
+@keyframes art-walk {
+  0%   { left: var(--x1); top: var(--y1); transform: translate(-50%, -100%) scaleX(var(--dir)); }
+  10%  { left: var(--x1); top: var(--y1); transform: translate(-50%, -100%) scaleX(var(--dir)); }
+  26%  { left: var(--xm); top: var(--ym); transform: translate(-50%, -100%) scaleX(var(--dir)); }
+  42%  { left: var(--x2); top: var(--y2); transform: translate(-50%, -100%) scaleX(var(--dir)); }
+  50%  { left: var(--x2); top: var(--y2); transform: translate(-50%, -100%) scaleX(var(--dir)); }
+  51%  { left: var(--x2); top: var(--y2); transform: translate(-50%, -100%) scaleX(calc(var(--dir) * -1)); }
+  60%  { left: var(--x2); top: var(--y2); transform: translate(-50%, -100%) scaleX(calc(var(--dir) * -1)); }
+  76%  { left: var(--xm); top: var(--ym); transform: translate(-50%, -100%) scaleX(calc(var(--dir) * -1)); }
+  92%  { left: var(--x1); top: var(--y1); transform: translate(-50%, -100%) scaleX(calc(var(--dir) * -1)); }
+  99%  { left: var(--x1); top: var(--y1); transform: translate(-50%, -100%) scaleX(calc(var(--dir) * -1)); }
+  100% { left: var(--x1); top: var(--y1); transform: translate(-50%, -100%) scaleX(var(--dir)); }
+}
+@media (prefers-reduced-motion: reduce) { .art-walker { display: none; } }
+
+/* 基地の絵の上の受け取り（判断196・197）：名札の右上の小さな収穫アイコンと、右上の空の小さなかご */
+.art-tag { position: absolute; transform: translateX(-50%); }
+.art-tag .art-bld { position: relative; transform: none; display: block; }
+.art-bubble { position: absolute; z-index: 4; right: -9px; top: -11px; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 4px rgba(22, 50, 74, .35); cursor: pointer; display: grid; place-items: center; }
+.art-bubble::before { content: ''; position: absolute; inset: -6px; }   /* 押せる範囲は周りに広げる（見た目は小さいまま） */
+.art-bubble[hidden] { display: none; }
+.art-bubble .ico { width: 18px; height: 18px; margin: 0; font-size: 12px; line-height: 18px; }
+.art-bubble .ico.art { border-radius: 50%; }
+.art-bubble.full { box-shadow: 0 0 0 2px #ffc93c, 0 1px 4px rgba(22, 50, 74, .35); animation: bubble-hop 1.6s ease-in-out infinite; }
+.art-bubble:active { transform: scale(.9); }
+@keyframes bubble-hop { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-3px); } }
+.art-basket { position: absolute; z-index: 4; right: 2%; top: 3%; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%;
+  background: linear-gradient(180deg, #fff, #eaf3fa); box-shadow: 0 2px 8px rgba(22, 50, 74, .3); cursor: pointer; display: grid; place-items: center; }
+.art-basket::before { content: ''; position: absolute; inset: -5px; }
+.art-basket[hidden] { display: none; }
+.art-basket .ico { font-size: 20px; line-height: 1; }
+.art-basket .badge-n { position: absolute; top: -5px; right: -5px; min-width: 16px; padding: 0 4px; border-radius: 999px;
+  background: #e0582b; color: #fff; font-size: 10px; font-weight: 900; line-height: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0, 0, 0, .25); }
+.art-basket:active { transform: scale(.92); }
+.fly-res { position: fixed; z-index: 1000; pointer-events: none; border-radius: 50%; margin: 0; }
+#hud .res-chip.got { animation: chip-got .4s ease-out; }
+@keyframes chip-got { 50% { transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { .art-bubble.full { animation: none; } }

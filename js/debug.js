@@ -6,7 +6,9 @@
   var U = FF.ui;
   var MIN = 60 * 1000;
 
-  FF.debugMode = /(?:^|[?&])debug=1(?:&|$)/.test((root.location && root.location.search || '').replace(/^\?/, ''));
+  // root.FF_DEBUG は、URL を付け足せない確認ページ（デバッグ用の Artifact）だけが index.html の前で入れる（判断188）
+  FF.debugMode = root.FF_DEBUG === true ||
+    /(?:^|[?&])debug=1(?:&|$)/.test((root.location && root.location.search || '').replace(/^\?/, ''));
 
   function field(label, input) {
     return U.el('label', {}, [label, input]);

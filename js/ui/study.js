@@ -81,7 +81,9 @@
     box.classList.add('learn-sel');   // 選択画面だけ見出しの余白・アイコンを詰める（style.css の .learn-sel）
     var sel = app.studySel = app.studySel || defaultSel();
     // 解放範囲を超えた選択は直す（データの読み込み直後など）
-    if (!L.isGradeUnlocked(s, sel.subject, sel.grade)) sel.grade = L.unlockedGrade(s, sel.subject);
+    // 足りない資源から来たとき（判断187）は教科・学年・出題形式が未選択（null）。選び終わるまで［挑戦する］は押せない
+    if (sel.subject && sel.grade != null && !L.isGradeUnlocked(s, sel.subject, sel.grade)) sel.grade = L.unlockedGrade(s, sel.subject);
+    var chosen = !!sel.subject && sel.grade != null;   // 教科と学年がそろっていれば、問題があるかを確かめられる
     function set(k, v) { sel[k] = v; U.rerender(); }
 
     var focus = FF.rewards.focusSubjectOf(now);
@@ -105,10 +107,10 @@
       var g = L.unlockedGrade(s, subj.id);
       return subjectPick({
         id: subj.id,
-        name: nameOfSubject(subj.id, sel.subject === subj.id ? sel.grade : g),
+        name: nameOfSubject(subj.id, sel.subject === subj.id && sel.grade != null ? sel.grade : g),
         tag: subj.id === focus ? '×1.25' : null,
         selected: sel.subject === subj.id,
-        onClick: function () { sel.subject = subj.id; sel.grade = L.unlockedGrade(s, subj.id); U.rerender(); }
+        onClick: function () { sel.subject = subj.id; sel.grade = sel.pickGrade ? null : L.unlockedGrade(s, subj.id); U.rerender(); }
       });
     })));
 
@@ -118,8 +120,8 @@
     var anyLocked = false;
     function gradeChip(gr) {
       var band = gr.level <= 6 ? 'elem' : 'jr', n = band === 'elem' ? gr.level : gr.level - 6;
-      var open = L.isGradeUnlocked(s, sel.subject, gr.level);
-      if (!open) anyLocked = true;
+      var open = !!sel.subject && L.isGradeUnlocked(s, sel.subject, gr.level);   // 教科を選ぶまでは押せない
+      if (!open && sel.subject) anyLocked = true;
       return U.el('button', {
         class: 'pick grade-chip ' + band + (sel.grade === gr.level ? ' selected' : ''),
         disabled: !open,
@@ -127,7 +129,7 @@
         on: { click: function () { set('grade', gr.level); } }
       }, [
         U.el('span', { class: 'title' }, [U.rich(U.T('gradeChip.' + band)), String(n)]),
-        U.el('span', { class: 'sub', text: open ? gr.label : '🔒' })
+        U.el('span', { class: 'sub', text: open || !sel.subject ? gr.label : '🔒' })
       ]);
     }
     function band(id, from, to) {
@@ -141,7 +143,8 @@
     if (anyLocked) elemRow.querySelector('.band-label').appendChild(U.R('span', 'band-note', U.T('gradeLockedNote')));
     var gradeBox = U.el('div', { class: 'grade-bands' }, [elemRow, jrRow]);
     var gradeSec = section(U.T('chooseGrade'), gradeBox);
-    if (L.shouldRecommendLower(s, sel.subject, sel.grade)) gradeSec.appendChild(U.R('div', 'notice', U.T('recommendLower')));
+    if (!sel.subject) gradeSec.appendChild(U.R('div', 'small muted', U.T('chooseSubjectFirst')));
+    if (chosen && L.shouldRecommendLower(s, sel.subject, sel.grade)) gradeSec.appendChild(U.R('div', 'notice', U.T('recommendLower')));
 
     // 難易度：ふだんは「難易度：ランダム」と［難易度を指定する ▾］の1行だけ。開くと、ランダムと基礎・標準・発展の選択肢を出す
     var diffOpen = !!app.studyDiffOpen;
@@ -160,7 +163,7 @@
         return { id: d.id, name: d.name, sub: '×' + mults[d.id] };
       }));
       diffSec.appendChild(U.el('div', { class: 'grid4', attrs: { id: 'diff-options' } }, opts.map(function (d) {
-        var any = L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'choice') || L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'input');
+        var any = !chosen || L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'choice') || L.isAvailable(app.bank, sel.subject, sel.grade, d.id, 'input');
         return pick({
           title: U.rich(d.name),
           sub: d.sub,
@@ -175,7 +178,7 @@
     var tickets = FF.tickets.recoverTickets(s.tickets, now).count;
     // 書き問題の報酬の倍率（×1.2）は、教科・資源と同じく上の枠に重ねたバッジで出す
     var fmtSec = section(U.T('chooseFormat'), U.el('div', { class: 'grid2 fmt-row' }, FF.defs.ANSWER_TYPES.map(function (t) {
-      var avail = L.isAvailable(app.bank, sel.subject, sel.grade, sel.difficulty, t.id);
+      var avail = !chosen || L.isAvailable(app.bank, sel.subject, sel.grade, sel.difficulty, t.id);
       var mult = FF.balance.FORMAT_MULT[t.id];
       var btn = pick({
         // 説明はタイトルの右に1行で「選択問題（チケット1枚）」の形
@@ -188,10 +191,11 @@
       return btn;
     })));
 
-    var ok = L.isAvailable(app.bank, sel.subject, sel.grade, sel.difficulty, sel.answerType);
+    var ready = chosen && !!sel.answerType;
+    var ok = ready && L.isAvailable(app.bank, sel.subject, sel.grade, sel.difficulty, sel.answerType);
     var startBox = U.el('div', { class: 'start-box' }, U.el('button', {
-      class: 'btn primary block', rich: ok ? U.T('start') : U.T('preparing'), disabled: !ok,
-      on: { click: function () { app.session = { sel: Object.assign({}, sel), recentIds: (app.session && app.session.recentIds) || [] }; U.show('quiz'); } }
+      class: 'btn primary block', rich: ok ? U.T('start') : U.T(ready ? 'preparing' : 'chooseAllFirst'), disabled: !ok,
+      on: { click: function () { delete sel.pickGrade; app.session = { sel: Object.assign({}, sel), recentIds: (app.session && app.session.recentIds) || [] }; U.show('quiz'); } }
     }));
     [subjSec, resSec, gradeSec, fmtSec, startBox, diffSec].forEach(function (n) { box.appendChild(n); });
   }

@@ -115,8 +115,10 @@
   }
 
   function renderRegions(main) {
-    var s = FF.app.state;
-    main.appendChild(U.el('div', { class: 'panel' }, [
+    var s = FF.app.state, art = U.artOn();
+    // 絵の見た目では、見出しの「探索する地域を選ぼう」だけを大きく太字で（説明の文は出さない。判断192）
+    if (art) main.appendChild(U.R('h2', 'xp-lead', U.T('explore.chooseRegion')));
+    else main.appendChild(U.el('div', { class: 'panel' }, [
       U.R('div', 'section-title', U.T('explore.chooseRegion')),
       U.R('div', 'small muted', U.T('explore.intro'))
     ]));
@@ -134,16 +136,32 @@
         class: 'region-card region-' + r.id + (open ? '' : ' locked') + (done ? ' done' : ''),
         attrs: { 'aria-disabled': open ? null : 'true' },
         on: { click: function () { if (open) U.show('explore', { region: r.id }); else U.toast(FF.util.plainText(U.T('explore.lockedFurnace'), { level: FF.balance.EXPLORE.UNLOCK_FURNACE_LEVEL[r.id] })); } }
-      }, [
-        U.el('div', { class: 'row between' }, [
-          U.el('span', { class: 'rg-name' }, [open ? '' : '🔒 ', regionName(r)]),
-          U.el('span', { class: 'rg-en', text: r.nameEn })
-        ]),
-        U.el('div', { class: 'small muted' }, U.rich(U.T('explore.recommended'), { from: r.grades[0], to: r.grades[1] })),
-        open ? U.el('div', { class: 'row' }, [progressBar(pct), U.el('span', { class: 'pct' }, done ? U.rich(U.T('explore.complete')) : U.rich(U.T('explore.progress'), { pct: pct }))]) : null,
-        open && X.belowRecommended(s, r.id) ? U.el('div', { class: 'small grade-hint' }, ['🎯 ', U.rich(U.T('explore.gradeHint'))]) : null,
-        status ? U.el('div', { class: 'notice' }, status) : null
-      ]));
+      }, (function () {
+        var info = [
+          U.el('div', { class: 'small muted' }, U.rich(U.T('explore.recommended'), { from: r.grades[0], to: r.grades[1] })),
+          open ? U.el('div', { class: 'row' }, [progressBar(pct), U.el('span', { class: 'pct' }, done ? U.rich(U.T('explore.complete')) : U.rich(U.T('explore.progress'), { pct: pct }))]) : null,
+          open && X.belowRecommended(s, r.id) ? U.el('div', { class: 'small grade-hint' }, ['🎯 ', U.rich(U.T('explore.gradeHint'))]) : null,
+          status ? U.el('div', { class: 'notice' }, status) : null
+        ];
+        if (!art) {
+          return [U.el('div', { class: 'row between' }, [
+            U.el('span', { class: 'rg-name' }, [open ? '' : '🔒 ', regionName(r)]),
+            U.el('span', { class: 'rg-en', text: r.nameEn })
+          ])].concat(info);
+        }
+        // 絵の上に名前、下に推奨の学年と進み具合（判断190）。絵が読めないときは色の帯だけ
+        return [
+          U.el('div', { class: 'rg-pic' }, [
+            U.artImg('region-' + r.id, 'rg-img', function () { return U.el('span', { class: 'rg-img' }); }),
+            U.el('div', { class: 'rg-cap' }, [
+              U.el('span', { class: 'rg-name' }, regionName(r)),
+              U.el('span', { class: 'rg-en', text: r.nameEn })
+            ]),
+            !open ? U.el('span', { class: 'rg-chip lock', text: '🔒' }) : done ? U.el('span', { class: 'rg-chip done' }, U.rich(U.T('explore.complete'))) : null
+          ]),
+          U.el('div', { class: 'rg-body' }, info)
+        ];
+      })()));
     });
   }
 
@@ -222,7 +240,9 @@
       g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
       svg.appendChild(g);
     });
-    return U.el('div', { class: 'xp-map-wrap' }, svg);
+    var wrap = U.el('div', { class: 'xp-map-wrap' }, svg);
+    if (U.artOn()) wrap.style.backgroundImage = 'url("' + FF.config.ART_DIR + 'region-' + regionId + '.jpg")';   // 地図の下に地域の絵をうすく（判断191）
+    return wrap;
   }
 
   function openNode(regionId, n) {
@@ -268,7 +288,17 @@
       U.el('button', { class: 'btn small ghost', rich: U.T('explore.backToRegions'), on: { click: function () { U.show('explore'); } } }),
       U.el('span', { class: 'rg-en', text: r.nameEn })
     ]));
-    main.appendChild(U.el('div', { class: 'panel' }, [
+    if (U.artOn()) {
+      // 地域の絵の見出し（判断191）：上に絵と名前、下に進み具合と地域の説明
+      main.appendChild(U.el('div', { class: 'panel xp-hero' }, [
+        U.el('div', { class: 'rg-pic' }, [
+          U.artImg('region-' + r.id, 'rg-img', function () { return U.el('span', { class: 'rg-img' }); }),
+          U.el('div', { class: 'rg-cap' }, [U.el('h2', { class: 'rg-name' }, regionName(r)), U.el('span', { class: 'rg-en', text: r.nameEn })]),
+          U.el('span', { class: 'rg-chip' }, done ? U.rich(U.T('explore.complete')) : U.rich(U.T('explore.progress'), { pct: pct }))
+        ]),
+        U.el('div', { class: 'rg-body' }, [progressBar(pct), U.R('div', 'small muted xp-intro', r.intro, { name: s.player.name })])
+      ]));
+    } else main.appendChild(U.el('div', { class: 'panel' }, [
       U.el('div', { class: 'row between' }, [
         U.el('h2', { class: 'rg-title' }, regionName(r)),
         U.el('span', { class: 'pct' }, done ? U.rich(U.T('explore.complete')) : U.rich(U.T('explore.progress'), { pct: pct }))
@@ -306,6 +336,7 @@
 
   function render(main, params) {
     if (!X.isExploreOpen(FF.app.state)) { U.show('base'); return; }
+    if (U.artOn()) main.classList.add('explore-art');   // 絵の見た目：角の丸いカード（判断190・191）
     if (params.region) renderRoute(main, params.region);
     else renderRegions(main);
     setTimeout(showExploreNotices, 100);
