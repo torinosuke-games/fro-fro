@@ -116,7 +116,9 @@
 
   function renderRegions(main) {
     var s = FF.app.state, art = U.artOn();
-    main.appendChild(U.el('div', { class: 'panel' + (art ? ' xp-lead' : '') }, [
+    // 絵の見た目では、見出しの「探索する地域を選ぼう」だけを大きく太字で（説明の文は出さない。判断192）
+    if (art) main.appendChild(U.R('h2', 'xp-lead', U.T('explore.chooseRegion')));
+    else main.appendChild(U.el('div', { class: 'panel' }, [
       U.R('div', 'section-title', U.T('explore.chooseRegion')),
       U.R('div', 'small muted', U.T('explore.intro'))
     ]));

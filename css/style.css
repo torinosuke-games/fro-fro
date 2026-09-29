@@ -954,7 +954,7 @@ a.btn { text-decoration: none; }
 .cost button.item.tap .go { font-size: .8em; }
 
 /* 探索の地域のカード（絵の見た目。判断190）：開始画面・基地と同じ、角の丸い白いカードに影 */
-.explore-art .xp-lead { border: 0; border-radius: 20px; box-shadow: var(--hero-shadow, 0 10px 28px rgba(22, 50, 74, 0.12)); }
+.explore-art .xp-lead { margin: 4px 4px 12px; font-size: 20px; font-weight: 900; letter-spacing: 0.06em; color: var(--hero-ink, #16324a); }
 .explore-art .region-card {
   display: block; width: 100%; padding: 0; overflow: hidden; text-align: left; font: inherit; color: inherit;
   background: #fff; border: 0; border-radius: 20px; box-shadow: var(--hero-shadow, 0 10px 28px rgba(22, 50, 74, 0.12));
