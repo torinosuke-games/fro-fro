@@ -18,6 +18,7 @@ window.QUESTION_BANK.push(
     answer: 'apple',
     hints: ['「アップル」と よむよ。', 'a から はじまる ことばだよ。'],
     explanation: '「りんご」は えいごで「apple（アップル）」です。banana は バナナ、orange は オレンジ、grape は ぶどうです。',
+    inputForm: { question: '「りんご」は えいごで なんと いうかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -64,6 +65,7 @@ window.QUESTION_BANK.push(
     answer: 'Good morning.',
     hints: ['「morning（モーニング）」は「あさ」という いみだよ。', '「Good night.」は ねる まえの あいさつだよ。'],
     explanation: 'あさの あいさつは「Good morning.（おはよう）」です。「Good night.」は おやすみ、「Goodbye.」は さようなら、「Thank you.」は ありがとう です。',
+    inputForm: { question: 'あさ、ともだちに あった ときの あいさつを えいごで いうと なにかな。', acceptedAnswers: ['Good morning', 'goodmorning'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -74,6 +76,7 @@ window.QUESTION_BANK.push(
     answer: 'あお',
     hints: ['はれた ひの そらの いろだよ。', 'うみの いろにも にて いるよ。'],
     explanation: '「blue（ブルー）」は「あお」です。きいろは yellow、みどりは green、しろは white です。',
+    inputForm: { acceptedAnswers: ['青', 'あおいろ', '青色'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -93,6 +96,7 @@ window.QUESTION_BANK.push(
     answer: 'Thank you.',
     hints: ['「サンキュー」と よむよ。', 'なにかを して もらった ときに いう ことばだよ。'],
     explanation: '「ありがとう」は「Thank you.（サンキュー）」です。「Sorry.」は ごめんなさい、「Hello.」は こんにちは、「See you.」は またね です。',
+    inputForm: { question: '「ありがとう」は えいごで なんと いうかな。', acceptedAnswers: ['Thank you', 'Thanks', 'Thanks.', 'thankyou'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -104,6 +108,7 @@ window.QUESTION_BANK.push(
     answer: 'banana',
     hints: ['「バナナ」と よむよ。', 'b から はじまる ことばだよ。'],
     explanation: '「ばなな」は えいごで「banana（バナナ）」です。apple は りんご、lemon は レモン、peach は もも です。',
+    inputForm: { question: '「ばなな」は えいごで なんと いうかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -114,6 +119,7 @@ window.QUESTION_BANK.push(
     answer: '1',
     hints: ['かずを かぞえる ときの さいしょの かずだよ。', 'two（ツー）は 2 だよ。'],
     explanation: '「one（ワン）」は 1 です。one（1）、two（2）、three（3）と かぞえます。',
+    inputForm: { acceptedAnswers: ['いち', 'ひとつ', '1こ'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -196,6 +202,7 @@ window.QUESTION_BANK.push(
     answer: 'Good night.',
     hints: ['「night（ナイト）」は「よる」という いみだよ。', '「Good morning.」は あさの あいさつだね。'],
     explanation: 'ねる まえの あいさつは「Good night.（おやすみなさい）」です。',
+    inputForm: { question: 'よる、ねる まえの あいさつを えいごで いうと なにかな。', acceptedAnswers: ['Good night', 'goodnight', 'Good night!'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -206,6 +213,7 @@ window.QUESTION_BANK.push(
     answer: 'car',
     hints: ['「カー」と よむよ。', 'cup は コップ、cat は ねこ、cake は ケーキ だよ。'],
     explanation: '「くるま」は えいごで「car（カー）」です。',
+    inputForm: { question: '「くるま」は えいごで なんと いうかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -216,6 +224,7 @@ window.QUESTION_BANK.push(
     answer: 'black',
     hints: ['「ブラック」と よむよ。', 'white は しろ、brown は ちゃいろ、blue は あお だよ。'],
     explanation: '「くろ」は えいごで「black（ブラック）」です。',
+    inputForm: { question: '「くろ」は えいごで なんと いうかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -226,6 +235,7 @@ window.QUESTION_BANK.push(
     answer: 'Sorry.',
     hints: ['「ソーリー」と よむよ。', 'わるい ことを した ときに いう ことばだよ。'],
     explanation: '「ごめんなさい」は「Sorry.（ソーリー）」です。「I\'m sorry.」とも いいます。',
+    inputForm: { question: '「ごめんなさい」は えいごで なんと いうかな。', acceptedAnswers: ['Sorry', 'I\'m sorry', 'I\'m sorry.', 'Sorry!'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -254,6 +264,7 @@ window.QUESTION_BANK.push(
     answer: 'ほん',
     hints: ['よんだり、えを みたり する ものだよ。', 'としょしつに たくさん あるよ。'],
     explanation: '「book（ブック）」は「ほん」です。つくえは desk、いすは chair、かばんは bag です。',
+    inputForm: { acceptedAnswers: ['本'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -264,6 +275,7 @@ window.QUESTION_BANK.push(
     answer: 'またね',
     hints: ['ともだちと わかれる ときに いうよ。', '「また あおうね」という きもちの ことばだよ。'],
     explanation: '「See you.」は「またね」という いみで、わかれる ときの あいさつです。',
+    inputForm: { acceptedAnswers: ['またね！', 'さようなら', 'じゃあね', 'またあとで', 'バイバイ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -276,6 +288,7 @@ window.QUESTION_BANK.push(
     answer: 'cat',
     hints: ['「キャット」と よむよ。', 'c から はじまる ことばだよ。'],
     explanation: '「ねこ」は「cat（キャット）」です。dog は いぬ、bird は とり、fish は さかなです。',
+    inputForm: { question: '「ねこ」は えいごで なんと いうかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -322,6 +335,7 @@ window.QUESTION_BANK.push(
     answer: 'Goodbye.',
     hints: ['「さようなら」の いみの ことばだよ。', '「Hello.」は あった ときの あいさつだよ。'],
     explanation: 'わかれる ときは「Goodbye.（さようなら）」と いいます。「See you.（またね）」とも いいます。',
+    inputForm: { question: 'ともだちと わかれる ときの あいさつを えいごで いうと なにかな。', acceptedAnswers: ['Goodbye', 'Good bye', 'Good bye.', 'Bye', 'Bye.', 'See you', 'See you.'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -332,6 +346,7 @@ window.QUESTION_BANK.push(
     answer: 'fish',
     hints: ['「フィッシュ」と よむよ。', 'f から はじまる ことばだよ。'],
     explanation: '「さかな」は「fish（フィッシュ）」です。bird は とり、frog は かえる、bear は くまです。',
+    inputForm: { question: '「さかな」は えいごで なんと いうかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -362,6 +377,7 @@ window.QUESTION_BANK.push(
     answer: 'grape',
     hints: ['「グレープ」と よむよ。', 'g から はじまる ことばだよ。'],
     explanation: '「ぶどう」は「grape（グレープ）」です。melon は メロン、cherry は さくらんぼ です。',
+    inputForm: { question: '「ぶどう」は えいごで なんと いうかな。', acceptedAnswers: ['grapes'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -372,6 +388,7 @@ window.QUESTION_BANK.push(
     answer: 'hand',
     hints: ['「ハンド」と よむよ。', 'foot は あし、head は あたま、eye は め だよ。'],
     explanation: '「て」は「hand（ハンド）」です。',
+    inputForm: { question: '「て」は えいごで なんと いうかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -454,6 +471,7 @@ window.QUESTION_BANK.push(
     answer: 'father',
     hints: ['「ファーザー」と よむよ。', 'mother は おかあさんだよ。'],
     explanation: '「おとうさん」は「father（ファーザー）」です。brother は おとこの きょうだい、sister は おんなの きょうだいです。',
+    inputForm: { question: '「おとうさん」は えいごで なんと いうかな。', acceptedAnswers: ['dad', 'daddy'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -464,6 +482,7 @@ window.QUESTION_BANK.push(
     answer: 'strawberry',
     hints: ['「ストロベリー」と よむよ。', 'tomato は トマト、potato は じゃがいも、onion は たまねぎ だよ。'],
     explanation: '「いちご」は「strawberry（ストロベリー）」です。',
+    inputForm: { question: '「いちご」は えいごで なんと いうかな。', acceptedAnswers: ['strawberries'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -474,6 +493,7 @@ window.QUESTION_BANK.push(
     answer: 'Nice to meet you.',
     hints: ['「meet（ミート）」は「あう」という いみだよ。', '「あえて うれしいです」という きもちの ことばだよ。'],
     explanation: '「はじめまして」は「Nice to meet you.（ナイス トゥ ミート ユー）」です。',
+    inputForm: { question: 'はじめて あった ひとに いう「はじめまして」は えいごで なんと いうかな。', acceptedAnswers: ['Nice to meet you', 'Nice to meet you!'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -484,6 +504,7 @@ window.QUESTION_BANK.push(
     answer: 'さる',
     hints: ['きのぼりが とくいな どうぶつだよ。', 'バナナが すきだと いわれるね。'],
     explanation: '「monkey（モンキー）」は「さる」です。うまは horse、ぶたは pig、ひつじは sheep です。',
+    inputForm: { acceptedAnswers: ['猿', 'おさる'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -534,6 +555,7 @@ window.QUESTION_BANK.push(
     answer: 'こんにちは',
     hints: ['「ハロー」と {読|よ}むよ。', '{人|ひと}に {会|あ}った ときの あいさつだよ。'],
     explanation: '「Hello.（ハロー）」は「こんにちは」です。',
+    inputForm: { question: '「Hello.」の 意味は 何かな。', acceptedAnswers: ['今日は', 'こんにちわ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -580,6 +602,7 @@ window.QUESTION_BANK.push(
     answer: 'Twelve.',
     hints: ['eleven が 11 だよ。その {次|つぎ}の {数|かず}だよ。', 'twenty は 20、two は 2 だよ。'],
     explanation: '12 は「twelve（トゥエルブ）」です。11 は eleven、20 は twenty です。',
+    inputForm: { question: '「How many apples?（りんごは いくつ？）」と きかれました。りんごは 12{個|こ} あります。英語で 答えよう。', acceptedAnswers: ['Twelve', 'twelve apples', 'Twelve apples.'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -609,6 +632,7 @@ window.QUESTION_BANK.push(
     answer: 'いくつ？',
     hints: ['{数|かず}を たずねる ときに {使|つか}うよ。', '「many（メニー）」は「たくさん」という {意味|いみ}だよ。'],
     explanation: '「How many?」は「いくつ？」と {数|かず}を たずねる ことばです。「どこ？」は Where?、「だれ？」は Who?、「いつ？」は When? です。',
+    inputForm: { question: '「How many?」の 意味は 何かな。', answer: 'いくつ', acceptedAnswers: ['いくつ？', 'いくつ?', '何個', 'なんこ', '何こ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -630,6 +654,7 @@ window.QUESTION_BANK.push(
     answer: 'うれしい',
     hints: ['「happy（ハッピー）」は、にこにこ する {気持|きも}ちだよ。', '「かなしい」は sad だよ。'],
     explanation: '「I\'m happy.」は「うれしい（しあわせ）」という {意味|いみ}です。かなしいは sad、ねむいは sleepy、おなかが すいたは hungry です。',
+    inputForm: { question: '「I\'m happy.」の 意味は 何かな。', acceptedAnswers: ['嬉しい', 'しあわせ', '幸せ', 'たのしい', '楽しい'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -712,6 +737,7 @@ window.QUESTION_BANK.push(
     answer: 'はじめまして',
     hints: ['はじめて {会|あ}った {人|ひと}に {言|い}う ことばだよ。', '「meet」は「{会|あ}う」という {意味|いみ}だよ。'],
     explanation: '「Nice to meet you.」は「はじめまして（{会|あ}えて うれしいです）」という {意味|いみ}です。',
+    inputForm: { question: '「Nice to meet you.」の 意味は 何かな。', acceptedAnswers: ['初めまして'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -742,6 +768,7 @@ window.QUESTION_BANK.push(
     answer: 'Three.',
     hints: ['3 は「スリー」と {言|い}うよ。', 'Tree（ツリー）は「{木|き}」、Thirty は 30、Thirteen は 13 だよ。'],
     explanation: '3 は「three（スリー）」です。tree（ツリー）は「{木|き}」という べつの ことばです。',
+    inputForm: { question: '「How many cats?（ねこは {何|なん}びき？）」と きかれました。ねこは 3びき います。英語で 答えよう。', acceptedAnswers: ['Three', 'three cats', 'Three cats.'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -792,6 +819,7 @@ window.QUESTION_BANK.push(
     answer: '{月曜日|げつようび}',
     hints: ['「Mon」は「moon（{月|つき}）」から できたと いわれて いるよ。', '{週|しゅう}の {始|はじ}まりの {平日|へいじつ}だよ。'],
     explanation: '「Monday」は「{月曜日|げつようび}」です。Sunday＝{日曜日|にちようび}、Tuesday＝{火曜日|かようび}、Friday＝{金曜日|きんようび}です。',
+    inputForm: { acceptedAnswers: ['月曜', 'げつようび'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -848,6 +876,7 @@ window.QUESTION_BANK.push(
     answer: 'えんぴつ',
     hints: ['「ペンシル」と {読|よ}むよ。', '{字|じ}を {書|か}く {道具|どうぐ}だよ。'],
     explanation: '「pencil」は「えんぴつ」です。けしゴムは eraser、ノートは notebook、じょうぎは ruler です。',
+    inputForm: { question: '「pencil」は 何かな。', acceptedAnswers: ['鉛筆'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -867,6 +896,7 @@ window.QUESTION_BANK.push(
     answer: '7{時|じ}30{分|ぷん}',
     hints: ['{最初|さいしょ}の {数|かず}が「{時|じ}」、{次|つぎ}の {数|かず}が「{分|ふん}」だよ。', 'seven は 7、thirty は 30 だよ。'],
     explanation: '「seven thirty」は「7{時|じ}30{分|ぷん}」です。{時|じ}と {分|ふん}の {数|かず}を {順|じゅん}に {言|い}います。',
+    inputForm: { answer: '7時30分', acceptedAnswers: ['7時半', '7:30', '7じはん', '7じ30ぷん', '7時30ぷん', '7じ30分', 'しちじはん'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -878,6 +908,7 @@ window.QUESTION_BANK.push(
     answer: '{晴|は}れ',
     hints: ['「sun（サン）」は「{太陽|たいよう}」だよ。', '{太陽|たいよう}が よく {出|で}て いる {天気|てんき}だね。'],
     explanation: '「sunny」は「{晴|は}れた」という {意味|いみ}で、「It\'s sunny.」は「{晴|は}れです」です。rainy＝{雨|あめ}、cloudy＝くもり、snowy＝{雪|ゆき}です。',
+    inputForm: { acceptedAnswers: ['はれ', '晴'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -888,6 +919,7 @@ window.QUESTION_BANK.push(
     answer: '{金曜日|きんようび}',
     hints: ['「フライデー」と {読|よ}むよ。', '{土曜日|どようび}の {前|まえ}の {日|ひ}だよ。'],
     explanation: '「Friday」は「{金曜日|きんようび}」です。Monday＝{月曜日|げつようび}、Wednesday＝{水曜日|すいようび}、Saturday＝{土曜日|どようび}です。',
+    inputForm: { acceptedAnswers: ['金曜', 'きんようび'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -980,6 +1012,7 @@ window.QUESTION_BANK.push(
     answer: '{教室|きょうしつ}',
     hints: ['「class（クラス）」＋「room（{部屋|へや}）」だよ。', '{毎日|まいにち} {授業|じゅぎょう}を うける {部屋|へや}だよ。'],
     explanation: '「classroom」は「{教室|きょうしつ}」です。{体育館|たいいくかん}は gym、{音楽室|おんがくしつ}は music room、{校庭|こうてい}は schoolyard です。',
+    inputForm: { acceptedAnswers: ['きょうしつ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -990,6 +1023,7 @@ window.QUESTION_BANK.push(
     answer: '{火曜日|かようび}',
     hints: ['「チューズデー」と {読|よ}むよ。', 'Thursday（サーズデー）は {木曜日|もくようび}だよ。'],
     explanation: '「Tuesday」は「{火曜日|かようび}」です。つづりの にて いる Thursday（{木曜日|もくようび}）と まちがえないように しましょう。',
+    inputForm: { acceptedAnswers: ['火曜', 'かようび'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1028,6 +1062,7 @@ window.QUESTION_BANK.push(
     answer: 'Saturday',
     hints: ['「サタデー」と {読|よ}むよ。', 'Sunday は {日曜日|にちようび}、Thursday は {木曜日|もくようび}、Tuesday は {火曜日|かようび}だよ。'],
     explanation: '「{土曜日|どようび}」は「Saturday」です。',
+    inputForm: { question: '「{土曜日|どようび}」を 英語で 言うと 何かな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1038,6 +1073,7 @@ window.QUESTION_BANK.push(
     answer: 'つくえの {上|うえ}',
     hints: ['「on（オン）」は、ものの {上|うえ}に のって いる ときに {使|つか}うよ。', '「under」なら {下|した}、「in」なら {中|なか}だよ。'],
     explanation: '「on the desk」は「つくえの {上|うえ}に」です。under the desk は「つくえの {下|した}に」、in the desk は「つくえの {中|なか}に」です。',
+    inputForm: { answer: 'つくえの上', acceptedAnswers: ['つくえの 上', '机の上', '机の 上', 'つくえのうえ', '上', 'うえ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -1050,6 +1086,7 @@ window.QUESTION_BANK.push(
     answer: '4{月|がつ}',
     hints: ['{日本|にほん}では {新学期|しんがっき}が {始|はじ}まる {月|つき}だよ。', 'August は 8{月|がつ}、May は 5{月|がつ}、October は 10{月|がつ}だよ。'],
     explanation: '「April」は 4{月|がつ}です。',
+    inputForm: { acceptedAnswers: ['4がつ', 'しがつ', '四月'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1106,6 +1143,7 @@ window.QUESTION_BANK.push(
     answer: '{右|みぎ}に {曲|ま}がる',
     hints: ['「turn」は「{曲|ま}がる」という {意味|いみ}だよ。', '「right」は {右|みぎ}、「left」は {左|ひだり}だよ。'],
     explanation: '「Turn right.」は「{右|みぎ}に {曲|ま}がって」です。「Turn left.」は {左|ひだり}に {曲|ま}がる、「Go straight.」は まっすぐ {進|すす}む です。',
+    inputForm: { answer: '右に曲がる', acceptedAnswers: ['右に 曲がる', 'みぎにまがる', '右へ曲がる', '右', 'みぎ', '右にまがる'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1125,6 +1163,7 @@ window.QUESTION_BANK.push(
     answer: 'August',
     hints: ['「オーガスト」と {読|よ}むよ。', 'October は 10{月|がつ}、June は 6{月|がつ}、March は 3{月|がつ}だよ。'],
     explanation: '8{月|がつ}は「August」です。',
+    inputForm: { question: '「8{月|がつ}」を 英語で 言うと 何かな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -1136,6 +1175,7 @@ window.QUESTION_BANK.push(
     answer: '12{月|がつ}',
     hints: ['「ディセンバー」と {読|よ}むよ。', '1{年|ねん}の {最後|さいご}の {月|つき}だよ。'],
     explanation: '「December」は 12{月|がつ}です。October は 10{月|がつ}、November は 11{月|がつ}、January は 1{月|がつ}です。',
+    inputForm: { acceptedAnswers: ['12がつ', 'じゅうにがつ', '十二月'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1228,6 +1268,7 @@ window.QUESTION_BANK.push(
     answer: '{先生|せんせい}',
     hints: ['「teach（ティーチ）」は「{教|おし}える」という {意味|いみ}だよ。', '{学校|がっこう}で はたらいて いる {人|ひと}だよ。'],
     explanation: '「teacher」は「{先生|せんせい}」です。{医者|いしゃ}は doctor、コックは cook、{警察官|けいさつかん}は police officer です。',
+    inputForm: { acceptedAnswers: ['せんせい', '教師', 'きょうし'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1248,6 +1289,7 @@ window.QUESTION_BANK.push(
     answer: '3{月|がつ}',
     hints: ['「マーチ」と {読|よ}むよ。', '{日本|にほん}では ひなまつりの ある {月|つき}だよ。'],
     explanation: '「March」は 3{月|がつ}です。May は 5{月|がつ}、January は 1{月|がつ}、November は 11{月|がつ}です。',
+    inputForm: { acceptedAnswers: ['3がつ', 'さんがつ', '三月'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1296,6 +1338,7 @@ window.QUESTION_BANK.push(
     answer: 'October',
     hints: ['「オクトーバー」と {読|よ}むよ。', 'August は 8{月|がつ}、September は 9{月|がつ}、November は 11{月|がつ}だよ。'],
     explanation: '10{月|がつ}は「October」です。',
+    inputForm: { question: '「10{月|がつ}」を 英語で 言うと 何かな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
 
@@ -1308,6 +1351,7 @@ window.QUESTION_BANK.push(
     answer: 'go',
     hints: ['「{行|い}く」という {意味|いみ}の ことばだよ。', '「{行|い}った」と {過去|かこ}の ことを {言|い}う ときに {形|かたち}が {変|か}わるよ。'],
     explanation: '「went」は「go（{行|い}く）」の {過去|かこ}の {形|かたち}です。',
+    inputForm: { validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1394,6 +1438,7 @@ window.QUESTION_BANK.push(
     answer: 'see',
     hints: ['「{見|み}る」という {意味|いみ}の ことばだよ。', '「{見|み}た」と {過去|かこ}の ことを {言|い}う ときに {形|かたち}が {変|か}わるよ。'],
     explanation: '「saw」は「see（{見|み}る）」の {過去|かこ}の {形|かたち}です。',
+    inputForm: { validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1404,6 +1449,7 @@ window.QUESTION_BANK.push(
     answer: '{理科|りか}',
     hints: ['{実験|じっけん}や {観察|かんさつ}を する {教科|きょうか}だよ。', '{社会|しゃかい}は social studies、{音楽|おんがく}は music だよ。'],
     explanation: '「science」は「{理科|りか}」です。{図工|ずこう}は arts and crafts です。',
+    inputForm: { acceptedAnswers: ['りか'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1486,6 +1532,7 @@ window.QUESTION_BANK.push(
     answer: '{夢|ゆめ}',
     hints: ['「わたしの ○ は パイロットに なる ことです」という {文|ぶん}だよ。', '「ドリーム」と {読|よ}むよ。'],
     explanation: '「dream」は「{夢|ゆめ}」です。「My dream is to be a pilot.」は「わたしの {夢|ゆめ}は パイロットに なる ことです」という {意味|いみ}です。',
+    inputForm: { question: '「My dream is to be a pilot.」の「dream」の 意味は 何かな。', acceptedAnswers: ['ゆめ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1506,6 +1553,7 @@ window.QUESTION_BANK.push(
     answer: 'P.E.',
     hints: ['physical education（{体|からだ}の {教育|きょういく}）の {頭文字|かしらもじ}だよ。', 'math は {算数|さんすう}、science は {理科|りか}、music は {音楽|おんがく}だよ。'],
     explanation: '「{体育|たいいく}」は「P.E.（physical education）」です。',
+    inputForm: { question: '「{体育|たいいく}」を 英語で 言うと 何かな。', acceptedAnswers: ['PE', 'P.E', 'physical education'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1544,6 +1592,7 @@ window.QUESTION_BANK.push(
     answer: '{中学校|ちゅうがっこう}',
     hints: ['{小学校|しょうがっこう}は elementary school だよ。', '{小学校|しょうがっこう}を {卒業|そつぎょう}した あとに {入|はい}る {学校|がっこう}だよ。'],
     explanation: '「junior high school」は「{中学校|ちゅうがっこう}」です。「{中学校|ちゅうがっこう}で テニス{部|ぶ}に {入|はい}りたい」という {意味|いみ}です。',
+    inputForm: { acceptedAnswers: ['ちゅうがっこう', '中学'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1554,6 +1603,7 @@ window.QUESTION_BANK.push(
     answer: '{修学旅行|しゅうがくりょこう}',
     hints: ['「trip（トリップ）」は「{旅行|りょこう}」という {意味|いみ}だよ。', '「memory」は「{思|おも}い{出|で}」だよ。'],
     explanation: '「school trip」は「{修学旅行|しゅうがくりょこう}」です。「いちばんの {思|おも}い{出|で}は {修学旅行|しゅうがくりょこう}です」という {意味|いみ}です。{運動会|うんどうかい}は sports day です。',
+    inputForm: { acceptedAnswers: ['しゅうがくりょこう'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -1566,6 +1616,7 @@ window.QUESTION_BANK.push(
     answer: 'am',
     hints: ['{主語|しゅご}は「I」。', 'I の ときの be{動詞|どうし}は {決|き}まって いる。'],
     explanation: '{主語|しゅご}が I の ときの be{動詞|どうし}は am です。you・{複数|ふくすう}は are、he・she・it などは is です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「I (　) a student.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1612,6 +1663,7 @@ window.QUESTION_BANK.push(
     answer: 'Where',
     hints: ['{答|こた}えは「{東京|とうきょう}に {住|す}んで います」。', '{場所|ばしょ}を たずねる {疑問詞|ぎもんし}は？'],
     explanation: '{住|す}んで いる {場所|ばしょ}を たずねて いるので、Where（どこに）を {使|つか}います。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「(　) do you live? — I live in Tokyo.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1622,6 +1674,7 @@ window.QUESTION_BANK.push(
     answer: 'do',
     hints: ['「Do you 〜?」で たずねられて いる。', 'たずねる ときに {使|つか}った {語|ご}で {答|こた}える。'],
     explanation: '「Do you 〜?」には「Yes, I do.」または「No, I don\'t.」で {答|こた}えます。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「Do you like music? — Yes, I (　).」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1641,6 +1694,7 @@ window.QUESTION_BANK.push(
     answer: 'watched',
     hints: ['「last night（{昨夜|さくや}）」に {注目|ちゅうもく}する。', '{過去|かこ}の ことを {表|あらわ}す {形|かたち}を {選|えら}ぶ。'],
     explanation: 'last night（{昨夜|さくや}）が あるので {過去形|かこけい}の watched を {使|つか}います。',
+    inputForm: { question: '（　）に 入る 語句を 書きなさい。「He (　) TV last night.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -1652,6 +1706,7 @@ window.QUESTION_BANK.push(
     answer: 'are',
     hints: ['{主語|しゅご}は「You」。', 'I は am、he・she は is。you は？'],
     explanation: '{主語|しゅご}が you の ときの be{動詞|どうし}は are です。「あなたは わたしの よい {友|とも}だちです」という {意味|いみ}です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「You (　) my good friend.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1662,6 +1717,7 @@ window.QUESTION_BANK.push(
     answer: 'He',
     hints: ['my brother（わたしの {兄|あに}・{弟|おとうと}）を {代名詞|だいめいし}に する。', '{男性|だんせい} 1{人|り}を さす {代名詞|だいめいし}。'],
     explanation: 'my brother は {男性|だんせい} 1{人|り}なので、He で {受|う}けます。{女性|じょせい}なら She、もの 1つなら It、{複数|ふくすう}なら They です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「This is my brother. (　) is a student.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1744,6 +1800,7 @@ window.QUESTION_BANK.push(
     answer: 'am',
     hints: ['{現在進行形|げんざいしんこうけい}は「be{動詞|どうし}＋-ing{形|けい}」。', '{主語|しゅご}が I の ときの be{動詞|どうし}は？'],
     explanation: '{現在進行形|げんざいしんこうけい}で {主語|しゅご}が I なので、be{動詞|どうし}は am です。「{数学|すうがく}を {勉強|べんきょう}して います」という {意味|いみ}です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「What are you doing? — I (　) studying math.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1754,6 +1811,7 @@ window.QUESTION_BANK.push(
     answer: 'your',
     hints: ['{答|こた}えの「it\'s mine（わたしの ものです）」から、「あなたの かさですか」と きいて いる。', '{名詞|めいし}（umbrella）の {前|まえ}に {置|お}く「あなたの」。'],
     explanation: '「あなたの 〜」と {名詞|めいし}の {前|まえ}に {置|お}くのは your です。yours は「あなたの もの」で、{名詞|めいし}の {前|まえ}には {置|お}きません。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「Is this (　) umbrella? — Yes, it\'s mine.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1764,6 +1822,7 @@ window.QUESTION_BANK.push(
     answer: 'When',
     hints: ['{答|こた}えは「5{月|がつ}3{日|か}です」。', '「いつ」を たずねる {疑問詞|ぎもんし}は？'],
     explanation: '{日付|ひづけ}（いつ）を たずねて いるので When を {使|つか}います。Where は どこ、Who は だれ、Which は どちら です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「(　) is your birthday? — It\'s May 3.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1774,6 +1833,7 @@ window.QUESTION_BANK.push(
     answer: 'does',
     hints: ['「Does 〜?」で たずねられて いる。', 'たずねる ときに {使|つか}った {語|ご}で {答|こた}える。'],
     explanation: '「Does 〜?」には「Yes, 〜 does.」または「No, 〜 doesn\'t.」で {答|こた}えます。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「Does your sister like cats? — Yes, she (　).」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1802,6 +1862,7 @@ window.QUESTION_BANK.push(
     answer: 'the',
     hints: ['{楽器|がっき}を「{演奏|えんそう}する」と {言|い}うとき、{楽器|がっき}の {前|まえ}に つける {語|ご}が ある。', 'スポーツ（play soccer）の ときは {何|なに}も つけない。'],
     explanation: '「{楽器|がっき}を {演奏|えんそう}する」は「play the＋{楽器|がっき}」です（play the piano）。スポーツの ときは the を つけません（play tennis）。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「I play (　) piano every day.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1870,6 +1931,7 @@ window.QUESTION_BANK.push(
     answer: 'playing',
     hints: ['enjoy の {後|あと}ろには、{決|き}まった {形|かたち}が くる。', 'enjoy は「〜する ことを {楽|たの}しむ」。{動名詞|どうめいし}（-ing）を {目的語|もくてきご}に とる。'],
     explanation: 'enjoy の {後|あと}ろには {動名詞|どうめいし}（-ing{形|けい}）が きます。to{不定詞|ふていし}は {使|つか}えません。',
+    inputForm: { question: '（　）に 入る 語句を 書きなさい。「I enjoy (　) soccer.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1880,6 +1942,7 @@ window.QUESTION_BANK.push(
     answer: 'are',
     hints: ['There is / There are の {後|あと}ろの {名詞|めいし}に {注目|ちゅうもく}する。', 'two cats は {複数|ふくすう}。'],
     explanation: '「There is / are 〜.」は、{後|あと}ろの {名詞|めいし}が {単数|たんすう}なら is、{複数|ふくすう}なら are を {使|つか}います。two cats は {複数|ふくすう}なので are です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「There (　) two cats under the table.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1899,6 +1962,7 @@ window.QUESTION_BANK.push(
     answer: 'the highest',
     hints: ['「{日本|にほん}で いちばん {高|たか}い {山|やま}」という {意味|いみ}に したい。', '「in Japan」の ような {範囲|はんい}を {表|あらわ}す {語句|ごく}が ある ときは {最上級|さいじょうきゅう}。'],
     explanation: '「{日本|にほん}で いちばん 〜」は {最上級|さいじょうきゅう}で、the を つけて the highest と します。',
+    inputForm: { question: '（　）に 入る 語句を 書きなさい。「Mt. Fuji is (　) mountain in Japan.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -1910,6 +1974,7 @@ window.QUESTION_BANK.push(
     answer: 'to',
     hints: ['「〜する つもりだ」は「be going (　)＋{動詞|どうし}の {原形|げんけい}」。', '{後|うし}ろの visit は {動詞|どうし}の {原形|げんけい}。'],
     explanation: '「be going to＋{動詞|どうし}の {原形|げんけい}」で「〜する つもりだ・〜する {予定|よてい}だ」という {未来|みらい}を {表|あらわ}します。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「I am going (　) visit Kyoto next week.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1920,6 +1985,7 @@ window.QUESTION_BANK.push(
     answer: 'because',
     hints: ['「{雨|あめ}だった」は、{家|いえ}に いた {理由|りゆう}。', '{理由|りゆう}を {表|あらわ}す {接続詞|せつぞくし}。'],
     explanation: '{理由|りゆう}を {表|あらわ}す「〜なので」は because です。but は「しかし」、or は「または」、if は「もし〜なら」です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「I stayed home (　) it was rainy.（{雨|あめ}だったので、{家|いえ}に いました）」', acceptedAnswers: ['since', 'as'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2002,6 +2068,7 @@ window.QUESTION_BANK.push(
     answer: 'big',
     hints: ['「as 〜 as …」は「…と {同|おな}じくらい 〜」。', 'as と as の あいだには、{形|かたち}を {変|か}えない {語|ご}（{原級|げんきゅう}）が {入|はい}る。'],
     explanation: '「as＋{原級|げんきゅう}＋as …」で「…と {同|おな}じくらい 〜」という {意味|いみ}です。{比較級|ひかくきゅう}や {最上級|さいじょうきゅう}には しません。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「My bag is as (　) as yours.（わたしの かばんは あなたの と {同|おな}じくらい {大|おお}きい）」', acceptedAnswers: ['large'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2012,6 +2079,7 @@ window.QUESTION_BANK.push(
     answer: 'rains',
     hints: ['if や when の {後|うし}ろ（{条件|じょうけん}を {表|あらわ}す {部分|ぶぶん}）では、{未来|みらい}の ことも {現在形|げんざいけい}で {表|あらわ}す。', '{主語|しゅご}は it（{三人称単数|さんにんしょうたんすう}）。'],
     explanation: '{条件|じょうけん}を {表|あらわ}す if の {後|うし}ろでは、{未来|みらい}の ことでも {現在形|げんざいけい}を {使|つか}います。{主語|しゅご}が it なので rains です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「If it (　) tomorrow, I will stay home.（もし {明日|あした} {雨|あめ}なら、{家|いえ}に いるつもりです）」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2022,6 +2090,7 @@ window.QUESTION_BANK.push(
     answer: 'me',
     hints: ['「give＋{人|ひと}＋もの」で「{人|ひと}に ものを あたえる」。', '{動詞|どうし}の {後|うし}ろに {置|お}く「わたしに」の {形|かたち}。'],
     explanation: '「give＋{人|ひと}＋もの」の {文|ぶん}で、{人|ひと}の {部分|ぶぶん}には {目的格|もくてきかく}（me）を {使|つか}います。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「My father gave (　) a watch.（{父|ちち}は わたしに {時計|とけい}を くれた）」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2032,6 +2101,7 @@ window.QUESTION_BANK.push(
     answer: 'Is',
     hints: ['There is 〜. の {疑問文|ぎもんぶん}は、be{動詞|どうし}を there の {前|まえ}に {出|だ}す。', 'a park は {単数|たんすう}。{答|こた}えも「there is」だね。'],
     explanation: '「There is 〜.」の {疑問文|ぎもんぶん}は「Is there 〜?」です。a park は {単数|たんすう}なので Is を {使|つか}います。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「(　) there a park near here? — Yes, there is.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2060,6 +2130,7 @@ window.QUESTION_BANK.push(
     answer: 'better',
     hints: ['2つの うち「どちらが より すきか」を たずねて いる。', 'like 〜 well の {比較級|ひかくきゅう}。well − better − best。'],
     explanation: '2つを くらべて「どちらが より すきですか」と たずねるときは「Which do you like better, A or B?」を {使|つか}います。3つ{以上|いじょう}の {中|なか}で いちばん すきな ものを たずねる ときは best を {使|つか}います。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「Which do you like (　), tea or coffee?」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2082,6 +2153,7 @@ window.QUESTION_BANK.push(
     answer: 'lived',
     hints: ['「have＋{過去分詞|かこぶんし}」で {現在完了形|げんざいかんりょうけい}。', '「for five years」は {継続|けいぞく}（ずっと〜して いる）を {表|あらわ}す。'],
     explanation: '{現在完了形|げんざいかんりょうけい}は「have（has）＋{過去分詞|かこぶんし}」です。live の {過去分詞|かこぶんし}は lived です。「5{年間|ねんかん} {東京|とうきょう}に {住|す}んで いる」という {意味|いみ}です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「I have (　) in Tokyo for five years.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2128,6 +2200,7 @@ window.QUESTION_BANK.push(
     answer: 'were',
     hints: ['「もし {鳥|とり}なら {飛|と}べるのに」と、{現実|げんじつ}と ちがう ことを {言|い}って いる。', '{仮定法|かていほう}では、{主語|しゅご}が I でも be{動詞|どうし}は ふつう were を {使|つか}う。'],
     explanation: '{現在|げんざい}の {事実|じじつ}と {反対|はんたい}の ことを {言|い}う {仮定法過去|かていほうかこ}では、「If＋{主語|しゅご}＋{過去形|かこけい}, {主語|しゅご}＋could / would＋{動詞|どうし}の {原形|げんけい}」の {形|かたち}に なり、be{動詞|どうし}は ふつう were を {使|つか}います。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「If I (　) a bird, I could fly.」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2138,6 +2211,7 @@ window.QUESTION_BANK.push(
     answer: 'she lives',
     hints: ['{文|ぶん}の {中|なか}に {疑問文|ぎもんぶん}が {入|はい}る {間接疑問|かんせつぎもん}。', '{間接疑問|かんせつぎもん}では「{疑問詞|ぎもんし}＋{主語|しゅご}＋{動詞|どうし}」の {語順|ごじゅん}に なる。'],
     explanation: '{間接疑問|かんせつぎもん}は「{疑問詞|ぎもんし}＋{主語|しゅご}＋{動詞|どうし}」の {語順|ごじゅん}なので、where she lives と なります。',
+    inputForm: { question: '（　）に 入る 語句を 書きなさい。「Do you know where (　)?」（{彼女|かのじょ}が どこに {住|す}んで いるか {知|し}って いますか）', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2157,6 +2231,7 @@ window.QUESTION_BANK.push(
     answer: 'to do',
     hints: ['「{疑問詞|ぎもんし}＋to＋{動詞|どうし}の {原形|げんけい}」の {形|かたち}。', 'what to do で「{何|なに}を すれば よいか」。'],
     explanation: '「what to do」は「{何|なに}を すれば よいか（{何|なに}を すべきか）」という {意味|いみ}です。how to 〜（〜の しかた）と {同|おな}じ {形|かたち}です。',
+    inputForm: { question: '（　）に 入る 語句を 書きなさい。「I don\'t know what (　).」（{何|なに}を すれば よいか わからない）', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -2168,6 +2243,7 @@ window.QUESTION_BANK.push(
     answer: 'climbed',
     hints: ['「Have you ever＋{過去分詞|かこぶんし}？」で「〜した ことが ありますか」。', 'climb は {規則動詞|きそくどうし}。'],
     explanation: '{経験|けいけん}を たずねる {現在完了形|げんざいかんりょうけい}は「Have you ever＋{過去分詞|かこぶんし}？」です。climb の {過去分詞|かこぶんし}は climbed です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「Have you ever (　) Mt. Fuji?（{富士山|ふじさん}に {登|のぼ}った ことが ありますか）」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2178,6 +2254,7 @@ window.QUESTION_BANK.push(
     answer: 'which',
     hints: ['{先行詞|せんこうし}の the book は「もの」。', '（　）の {後|うし}ろは「I bought（わたしが {買|か}った）」で、{目的語|もくてきご}が ぬけて いる。'],
     explanation: '{先行詞|せんこうし}が もので、{目的格|もくてきかく}の {関係代名詞|かんけいだいめいし}なので which を {使|つか}います（that も {使|つか}えます。{省略|しょうりゃく}も できます）。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「This is the book (　) I bought yesterday.（これは わたしが きのう {買|か}った {本|ほん}です）」', acceptedAnswers: ['that'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2260,6 +2337,7 @@ window.QUESTION_BANK.push(
     answer: 'yet',
     hints: ['{完了|かんりょう}の {疑問文|ぎもんぶん}で「もう」を {表|あらわ}す {語|ご}。', 'already は ふつう {肯定文|こうていぶん}で「すでに」の {意味|いみ}に {使|つか}う。'],
     explanation: '{現在完了形|げんざいかんりょうけい}の {疑問文|ぎもんぶん}で「もう〜しましたか」と たずねるときは、{文|ぶん}の {最後|さいご}に yet を {置|お}きます。{否定文|ひていぶん}の yet は「まだ」の {意味|いみ}です。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「Have you finished your lunch (　)?（もう {昼食|ちゅうしょく}を {食|た}べ{終|お}えましたか）」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2270,6 +2348,7 @@ window.QUESTION_BANK.push(
     answer: 'he wants',
     hints: ['{文|ぶん}の {中|なか}に {疑問文|ぎもんぶん}が {入|はい}る {間接疑問|かんせつぎもん}。', '{疑問詞|ぎもんし}の {後|うし}ろは「{主語|しゅご}＋{動詞|どうし}」の {語順|ごじゅん}。'],
     explanation: '{間接疑問|かんせつぎもん}では「{疑問詞|ぎもんし}＋{主語|しゅご}＋{動詞|どうし}」の {語順|ごじゅん}に なるので、what he wants と なります。does は {使|つか}いません。',
+    inputForm: { question: '（　）に 入る 語句を 書きなさい。「I don\'t know what (　).（{彼|かれ}が {何|なに}を ほしいのか わからない）」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2280,6 +2359,7 @@ window.QUESTION_BANK.push(
     answer: 'talking',
     hints: ['「〜して いる {少女|しょうじょ}」と {名詞|めいし}を {後|うし}ろから {修飾|しゅうしょく}する。', '「〜して いる」は {現在分詞|げんざいぶんし}、「〜された」は {過去分詞|かこぶんし}。'],
     explanation: '「ケンと {話|はな}して いる {少女|しょうじょ}」と、{進行中|しんこうちゅう}の {動作|どうさ}で {名詞|めいし}を {修飾|しゅうしょく}するので {現在分詞|げんざいぶんし}の talking を {使|つか}います。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「Do you know the girl (　) with Ken?（ケンと {話|はな}して いる {少女|しょうじょ}を {知|し}って いますか）」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2290,6 +2370,7 @@ window.QUESTION_BANK.push(
     answer: 'could',
     hints: ['{実際|じっさい}には {飛|と}べない ことを「〜できたら いいのに」と {願|ねが}って いる。', '{仮定法|かていほう}なので、can の {過去形|かこけい}を {使|つか}う。'],
     explanation: '「I wish I could 〜.」は「〜できたら いいのに」という {仮定法|かていほう}の {表現|ひょうげん}です。can の {過去形|かこけい} could を {使|つか}います。',
+    inputForm: { question: '（　）に 入る 語を 書きなさい。「I wish I (　) fly like a bird.（{鳥|とり}のように {飛|と}べたら いいのに）」', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {

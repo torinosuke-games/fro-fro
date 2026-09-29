@@ -16,6 +16,7 @@ window.QUESTION_BANK.push(
     answer: '7ほん',
     hints: ['「ぜんぶで」は たしざんの ことば。', '3と 4を あわせよう。'],
     explanation: '3＋4＝7 なので、たきぎは ぜんぶで 7ほんです。',
+    inputForm: { answer: '7', acceptedAnswers: ['7ほん', '7本'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -54,6 +55,7 @@ window.QUESTION_BANK.push(
     answer: '5ばんめ',
     hints: ['ゆきさんの うしろには なんにん いるかな。', '○を 7こ かいて、まえから 3ばんめに しるしを つけて みよう。'],
     explanation: 'ゆきさんの うしろには 7−3＝4にん います。うしろから かぞえると、4にんの つぎが ゆきさんなので 5ばんめです。',
+    inputForm: { answer: '5', acceptedAnswers: ['5ばんめ', '5番目'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -91,6 +93,7 @@ window.QUESTION_BANK.push(
     answer: '3じはん',
     hints: ['みじかい はりは「なんじ」を あらわすよ。3を すぎて いるので 3じ…', 'ながい はりが 6の ときは「はん（30ぷん）」だよ。'],
     explanation: 'みじかい はりが 3と 4の あいだなので 3じ、ながい はりが 6なので 30ぷん。3じはん（3じ30ぷん）です。',
+    inputForm: { answer: '3じはん', acceptedAnswers: ['3じ30ぷん', '3時半', '3時30分', '3じ30ふん', '3:30'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -112,6 +115,7 @@ window.QUESTION_BANK.push(
     answer: '20こ',
     hints: ['「5こずつ」が 4ふくろ ぶん あるよ。', '5×4 を かんがえよう。'],
     explanation: '1ふくろ 5こが 4ふくろ ぶんなので、5×4＝20。あめは 20こです。',
+    inputForm: { answer: '20', acceptedAnswers: ['20こ', '20個'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -150,6 +154,7 @@ window.QUESTION_BANK.push(
     answer: '24きゃく',
     hints: ['3きゃくずつが 8れつ ぶん。', '3の だんの くくで 3×8 を かんがえよう。'],
     explanation: '3きゃくずつ 8れつ ぶんなので、3×8＝24。いすは 24きゃくです。',
+    inputForm: { answer: '24', acceptedAnswers: ['24きゃく', '24脚'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -187,6 +192,7 @@ window.QUESTION_BANK.push(
     answer: '27にん',
     hints: ['まず 4にんずつ 6くみ ぶんを かけざんで もとめよう。', 'あまった 3にんも わすれずに たそう。'],
     explanation: '4×6＝24、24＋3＝27 なので、こどもは ぜんぶで 27にんです。',
+    inputForm: { answer: '27', acceptedAnswers: ['27にん', '27人'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -208,6 +214,7 @@ window.QUESTION_BANK.push(
     answer: '6{個|こ}',
     hints: ['{同|おな}じ {数|かず}ずつ {分|わ}けるときは わり{算|ざん}。', '24÷4 を {考|かんが}えよう。4の {段|だん}の 九九で {答|こた}えが 24に なるのは？'],
     explanation: '24÷4＝6 なので、ひとり{分|ぶん}は 6{個|こ}です。（4×6＝24 で たしかめられます）',
+    inputForm: { answer: '6', acceptedAnswers: ['6個', '6こ'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -246,6 +253,7 @@ window.QUESTION_BANK.push(
     answer: '{午前|ごぜん}10{時|じ}15{分|ふん}',
     hints: ['9{時|じ}45{分|ふん}から 10{時|じ}までは {何分|なんぷん}かな。', '15{分|ふん}で 10{時|じ}。のこりの 15{分|ふん}を たそう。'],
     explanation: '9{時|じ}45{分|ふん}から 15{分|ふん}で 10{時|じ}、さらに 15{分|ふん}で 10{時|じ}15{分|ふん}です。（60{分|ぷん}で 1{時間|じかん}なので、75{分|ふん}とは {言|い}いません）',
+    inputForm: { answer: '午前10時15分', acceptedAnswers: ['10時15分', 'ごぜん10じ15ふん', '10じ15ふん', '午前10:15', '10:15'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -304,6 +312,7 @@ window.QUESTION_BANK.push(
     answer: '96m²',
     hints: ['{長方形|ちょうほうけい}の {面積|めんせき}＝たて×よこ', '8×12 を {計算|けいさん}しよう。'],
     explanation: '{長方形|ちょうほうけい}の {面積|めんせき}は たて×よこ なので、8×12＝96。96m²です。（40m は まわりの {長|なが}さです）',
+    inputForm: { answer: '96', acceptedAnswers: ['96m²', '96m2', '96平方メートル'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -342,6 +351,7 @@ window.QUESTION_BANK.push(
     answer: '90°',
     hints: ['{長|なが}い {針|はり}は 60{分|ぷん}で 1{回転|かいてん}（360°）するよ。', '15{分|ふん}は 60{分|ぷん}の 4{分|ぶん}の1。'],
     explanation: '{長|なが}い {針|はり}は 60{分|ぷん}で 360°{回|まわ}ります。15{分|ふん}は その 4{分|ぶん}の1 なので、360÷4＝90°です（{直角|ちょっかく}）。',
+    inputForm: { answer: '90', acceptedAnswers: ['90°', '90度'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -379,6 +389,7 @@ window.QUESTION_BANK.push(
     answer: '900cm²',
     hints: ['{正方形|せいほうけい}の {面積|めんせき}＝1{辺|ぺん}×1{辺|ぺん}', '30×30 を {計算|けいさん}しよう。'],
     explanation: '30×30＝900 なので、900cm²です。（120cm は まわりの {長|なが}さです）',
+    inputForm: { answer: '900', acceptedAnswers: ['900cm²', '900cm2', '900平方センチメートル'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -400,6 +411,7 @@ window.QUESTION_BANK.push(
     answer: '12{匹|ひき}',
     hints: ['{平均|へいきん}＝{合計|ごうけい}÷{個数|こすう}', 'まず {3日間|みっかかん}の {合計|ごうけい}を {求|もと}めよう。'],
     explanation: '{合計|ごうけい}は 12＋15＋9＝36{匹|ひき}。36÷3＝12 なので、{平均|へいきん}は 12{匹|ひき}です。',
+    inputForm: { answer: '12', acceptedAnswers: ['12匹', '12ひき'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -438,6 +450,7 @@ window.QUESTION_BANK.push(
     answer: '20cm²',
     hints: ['{三角形|さんかくけい}の {面積|めんせき}＝{底辺|ていへん}×{高|たか}さ÷2', '8×5 を 2で わろう。'],
     explanation: '8×5÷2＝20 なので、20cm²です。（÷2 を わすれると 40 に なって しまいます）',
+    inputForm: { answer: '20', acceptedAnswers: ['20cm²', '20cm2'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -475,6 +488,7 @@ window.QUESTION_BANK.push(
     answer: '5/6',
     hints: ['{分母|ぶんぼ}の ちがう {分数|ぶんすう}の たし{算|ざん}は、{通分|つうぶん}してから たすよ。', '1/2＝3/6、1/3＝2/6。'],
     explanation: '1/2＋1/3＝3/6＋2/6＝5/6 です。（{分母|ぶんぼ}どうし、{分子|ぶんし}どうしを たして 2/5 と しないように {注意|ちゅうい}しましょう）',
+    inputForm: { question: 'ピザの 1/2 を {兄|あに}が、1/3 を {弟|おとうと}が {食|た}べました。2{人|り}で {合|あ}わせて ピザの 何分の何を 食べましたか。（分数で 答えよう）', acceptedAnswers: ['6分の5', '6ぶんの5'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -496,6 +510,7 @@ window.QUESTION_BANK.push(
     answer: '10{個|こ}',
     hints: ['3：2＝15：□ と {考|かんが}えよう。', '3を {何倍|なんばい}すると 15に なるかな。'],
     explanation: '3×5＝15 なので、2も 5{倍|ばい}して 2×5＝10。{石材|せきざい}は 10{個|こ}です。',
+    inputForm: { answer: '10', acceptedAnswers: ['10個', '10こ'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -534,6 +549,7 @@ window.QUESTION_BANK.push(
     answer: '6{通|とお}り',
     hints: ['{先頭|せんとう}が A の ときの ならび{方|かた}を {書|か}き{出|だ}して みよう（ABC、ACB）。', '{先頭|せんとう}は 3{通|とお}り、その それぞれで 2{通|とお}り ずつ。'],
     explanation: '{先頭|せんとう}が A・B・C の 3{通|とお}り、それぞれ {残|のこ}りの 2{人|り}の ならび{方|かた}が 2{通|とお}り あるので、3×2＝6{通|とお}りです（ABC、ACB、BAC、BCA、CAB、CBA）。',
+    inputForm: { answer: '6', acceptedAnswers: ['6通り', '6とおり'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -571,6 +587,7 @@ window.QUESTION_BANK.push(
     answer: '1km',
     hints: ['{実際|じっさい}の {長|なが}さは、{地図|ちず}の {長|なが}さの 25000{倍|ばい}。', '4×25000＝100000cm。1km＝100000cm。'],
     explanation: '4×25000＝100000cm＝1000m＝1km です。',
+    inputForm: { answer: '1', acceptedAnswers: ['1km', '1キロ', '1キロメートル'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -592,6 +609,7 @@ window.QUESTION_BANK.push(
     answer: '11℃',
     hints: ['{差|さ}は（{昼|ひる}の {気温|きおん}）−（{朝|あさ}の {気温|きおん}）で {求|もと}める。', '3−(−8) は 3＋8 と {同|おな}じ。'],
     explanation: '3−(−8)＝3＋8＝11 なので、{昼|ひる}は {朝|あさ}より 11℃{高|たか}いです。',
+    inputForm: { answer: '11', acceptedAnswers: ['11℃', '11度'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -630,6 +648,7 @@ window.QUESTION_BANK.push(
     answer: '{西|にし}へ 5m {進|すす}む',
     hints: ['{負|ふ}の {数|かず}は、{反対|はんたい}の {向|む}きや {性質|せいしつ}を {表|あらわ}す。', '{東|ひがし}の {反対|はんたい}の {向|む}きは？'],
     explanation: '＋が {東|ひがし}へ {進|すす}むことなら、−は その {反対|はんたい}の {西|にし}へ {進|すす}むことを {表|あらわ}します。',
+    inputForm: { answer: '西へ5m進む', acceptedAnswers: ['西へ 5m 進む', '西に5m進む', '西へ5m', '西に5m', '西へ5メートル進む'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -667,6 +686,7 @@ window.QUESTION_BANK.push(
     answer: '6{点|てん}',
     hints: ['{中央値|ちゅうおうち}は、データを {小|ちい}さい {順|じゅん}に ならべたときの まんなかの {値|あたい}。', '3、5、6、7、9 と ならべかえる。'],
     explanation: '{小|ちい}さい {順|じゅん}に ならべると 3、5、6、7、9。まんなか（3{番目|ばんめ}）は 6{点|てん}です。（{平均値|へいきんち}も 30÷5＝6{点|てん}です）',
+    inputForm: { question: '5{人|にん}の {小|しょう}テストの {得点|とくてん}は 3、7、5、9、6（{点|てん}）だった。中央値（メジアン）は 何点か。', answer: '6', acceptedAnswers: ['6点'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -688,6 +708,7 @@ window.QUESTION_BANK.push(
     answer: '1/6',
     hints: ['{目|め}の {出方|でかた}は {全部|ぜんぶ}で 6×6＝36{通|とお}り。', '{和|わ}が 7に なる {組|く}み{合|あ}わせを (1,6)、(2,5)… と {書|か}き{出|だ}そう。'],
     explanation: '{和|わ}が 7に なるのは (1,6)(2,5)(3,4)(4,3)(5,2)(6,1) の 6{通|とお}り。6/36＝1/6 です。',
+    inputForm: { validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -726,6 +747,7 @@ window.QUESTION_BANK.push(
     answer: '540°',
     hints: ['n{角形|かくけい}の {内角|ないかく}の {和|わ}＝180°×(n−2)', '{五角形|ごかくけい}は 1つの {頂点|ちょうてん}から {対角線|たいかくせん}を ひくと、3つの {三角形|さんかくけい}に {分|わ}けられる。'],
     explanation: '180°×(5−2)＝540° です。{四角形|しかくけい}は 360°、{六角形|ろっかくけい}は 720° です。',
+    inputForm: { answer: '540', acceptedAnswers: ['540°', '540度'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -763,6 +785,7 @@ window.QUESTION_BANK.push(
     answer: '3',
     hints: ['x{軸上|じくじょう}の {点|てん}は、y＝0。', '0＝−2x＋6 を {解|と}く。'],
     explanation: 'x{軸上|じくじょう}では y＝0 なので、0＝−2x＋6、2x＝6、x＝3 です。（6 は y{軸|じく}と {交|まじ}わる {点|てん}の y{座標|ざひょう}＝{切片|せっぺん}です）',
+    inputForm: { question: '{直線|ちょくせん} y＝−2x＋6 が x{軸|じく}と {交|まじ}わる {点|てん}の x座標を 求めなさい。', validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -784,6 +807,7 @@ window.QUESTION_BANK.push(
     answer: '10m',
     hints: ['{三平方|さんへいほう}の{定理|ていり}：a²＋b²＝c²（cは {斜辺|しゃへん}）', '6²＋8² を {計算|けいさん}しよう。'],
     explanation: '6²＋8²＝36＋64＝100。c²＝100、c＞0 なので c＝10。{斜辺|しゃへん}は 10mです。',
+    inputForm: { answer: '10', acceptedAnswers: ['10m'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -822,6 +846,7 @@ window.QUESTION_BANK.push(
     answer: '5√2 m',
     hints: ['1{辺|ぺん}を x m とすると x²＝50、x＞0。', '√50＝√(25×2)'],
     explanation: '1{辺|ぺん}は √50＝√(25×2)＝5√2 m です（{約|やく}7.07m）。',
+    inputForm: { question: '{面積|めんせき}が 50m²の {正方形|せいほうけい}の {土地|とち}が ある。この {土地|とち}の 1辺の 長さは 何mか。', answer: '5√2', acceptedAnswers: ['5√2 m', '5√2m', '5ルート2'], validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -859,6 +884,7 @@ window.QUESTION_BANK.push(
     answer: '8',
     hints: ['{変化|へんか}の {割合|わりあい}＝（y の {増加量|ぞうかりょう}）÷（x の {増加量|ぞうかりょう}）', 'x＝1 のとき y＝2、x＝3 のとき y＝18。'],
     explanation: 'y の {増加量|ぞうかりょう}は 18−2＝16、x の {増加量|ぞうかりょう}は 3−1＝2 なので、{変化|へんか}の {割合|わりあい}は 16÷2＝8 です。（y＝ax² の {変化|へんか}の {割合|わりあい}は {一定|いってい}では ありません）',
+    inputForm: { question: '{関数|かんすう} y＝2x² で、x の {値|あたい}が 1 から 3 まで {増加|ぞうか}するときの 変化の 割合を 求めなさい。', validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {

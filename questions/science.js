@@ -16,6 +16,7 @@ window.QUESTION_BANK.push(
     answer: 'はる',
     hints: ['あたたかく なって きた ころに まくよ。', 'なつに はなが さくように、その まえの きせつに まこう。'],
     explanation: 'あさがおは はる（4〜5がつごろ）に たねを まくと、なつに はなが さきます。',
+    inputForm: { acceptedAnswers: ['春'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -62,6 +63,7 @@ window.QUESTION_BANK.push(
     answer: 'まるく なる',
     hints: ['なまえに ヒントが あるよ。', '「だんご」の ような かたちに なるよ。'],
     explanation: 'だんごむしは さわられると、からだを まるめて「だんご」の ような かたちに なり、みを まもります。',
+    inputForm: { answer: 'まるくなる', acceptedAnswers: ['まるく なる', '丸くなる', '丸く なる', 'まるまる'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -72,6 +74,7 @@ window.QUESTION_BANK.push(
     answer: 'せみ',
     hints: ['すずむしや こおろぎは あきに なく むしだよ。', 'きに とまって おおきな こえで なくよ。'],
     explanation: 'なつに きに とまって なくのは「せみ」です。すずむしや こおろぎは あきの よるに なきます。',
+    inputForm: { question: 'なつに きのみきに とまって、「ミーンミーン」と なく むしは なにかな。', acceptedAnswers: ['セミ', '蝉', 'みんみんぜみ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -102,6 +105,7 @@ window.QUESTION_BANK.push(
     answer: 'ふゆ',
     hints: ['いちばん さむい きせつだよ。', 'ゆきだるまを つくって あそぶ きせつだよ。'],
     explanation: 'ゆきは さむい「ふゆ」に ふる ことが おおいです。',
+    inputForm: { acceptedAnswers: ['冬'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -112,6 +116,7 @@ window.QUESTION_BANK.push(
     answer: 'きいろ',
     hints: ['おひさまの ような あかるい いろだよ。', 'バナナの かわと にた いろだよ。'],
     explanation: 'ひまわりの はなびらは「きいろ」です。おひさまの ほうを むいて さくと いわれます。',
+    inputForm: { acceptedAnswers: ['黄色', 'きいろい', '黄'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -194,6 +199,7 @@ window.QUESTION_BANK.push(
     answer: 'すずむし',
     hints: ['なまえに「すず」が はいって いるよ。', 'せみは なつの ひるに なく むしだね。'],
     explanation: 'あきの よるに「リーンリーン」と なくのは「すずむし」です。すずの ような きれいな こえで なきます。',
+    inputForm: { question: 'あきの よるに「リーンリーン」と きれいな こえで なく むしは なにかな。', acceptedAnswers: ['鈴虫'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -204,6 +210,7 @@ window.QUESTION_BANK.push(
     answer: 'わたげ',
     hints: ['ふわふわ して いて、ふうっと ふくと とんで いくよ。', 'さきに たねが ついて いるよ。'],
     explanation: 'たんぽぽは はなが おわると「わたげ」が できます。わたげは かぜに のって とび、とおくで たねから めを だします。',
+    inputForm: { question: 'たんぽぽの はなが おわった あとに できて、かぜで とんで いく ものを なんと いうかな。', acceptedAnswers: ['綿毛'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -214,6 +221,7 @@ window.QUESTION_BANK.push(
     answer: 'えら',
     hints: ['あたまの よこに ある、ぱくぱく うごく ところだよ。', 'さかなは みずの なかでも くるしく ならないね。'],
     explanation: 'さかなは あたまの よこに ある「えら」で、みずに とけて いる くうきを とりいれて いきを して います。',
+    inputForm: { question: 'さかなが みずの なかで いきを する ための ところを なんと いうかな。', acceptedAnswers: ['鰓'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -262,6 +270,7 @@ window.QUESTION_BANK.push(
     answer: 'つちの なか',
     hints: ['しろくて まるまった ようちゅうは、くさった はっぱの つちを たべるよ。', 'なつに おとなに なって、つちから でて くるよ。'],
     explanation: 'かぶとむしの ようちゅうは「つちの なか」で、くさった はっぱなどを たべて おおきく なります。さなぎを へて、なつに おとなに なって でて きます。',
+    inputForm: { answer: 'つちのなか', acceptedAnswers: ['つちの なか', '土の中', '土の なか', 'つち', '土'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -274,6 +283,7 @@ window.QUESTION_BANK.push(
     answer: 'みどり',
     hints: ['はっぱと にた いろだよ。', 'だんだん いろが かわって、あかく なるよ。'],
     explanation: 'ミニトマトの みは、はじめは「みどり」いろで、じゅくすと あかく なります。',
+    inputForm: { acceptedAnswers: ['緑', 'みどりいろ', '緑色'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -320,6 +330,7 @@ window.QUESTION_BANK.push(
     answer: 'あき',
     hints: ['はっぱが あかや きいろに なる ころだよ。', 'くりや かきが みのる きせつだよ。'],
     explanation: 'どんぐりは「あき」に みのって おちます。はっぱが いろづく ころです。',
+    inputForm: { acceptedAnswers: ['秋'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -520,6 +531,7 @@ window.QUESTION_BANK.push(
     answer: 'ながく なる',
     hints: ['ゆうがたの おひさまは、ひくい ところに あるよ。', 'おひさまが ひくいと、ひかりは ななめに あたるね。'],
     explanation: 'ゆうがたは おひさまが ひくい ところに あるので、ひかりが ななめに あたり、かげは ひるより「ながく」なります。',
+    inputForm: { answer: 'ながくなる', acceptedAnswers: ['ながく なる', '長くなる', '長く なる', 'のびる'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -578,6 +590,7 @@ window.QUESTION_BANK.push(
     answer: 'しりぞけ{合|あ}う',
     hints: ['{同|おな}じ {極|きょく}どうしを {近|ちか}づけて いるね。', 'ちがう {極|きょく}どうし（N{極|きょく}と S{極|きょく}）なら {引|ひ}き{合|あ}うよ。'],
     explanation: '{同|おな}じ {極|きょく}どうしは しりぞけ{合|あ}い、ちがう {極|きょく}どうしは {引|ひ}き{合|あ}います。',
+    inputForm: { answer: 'しりぞけ合う', acceptedAnswers: ['しりぞけあう', 'しりぞけ 合う', '反発する', 'はんぱつする', '反発しあう'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -588,6 +601,7 @@ window.QUESTION_BANK.push(
     answer: '{西|にし}',
     hints: ['かげは {太陽|たいよう}の {反対|はんたい}がわに できるよ。', '{東|ひがし}の {反対|はんたい}の {方位|ほうい}は どれかな。'],
     explanation: 'かげは {太陽|たいよう}の {反対|はんたい}がわに できます。{太陽|たいよう}が {東|ひがし}に あるとき、かげは {西|にし}に できます。',
+    inputForm: { acceptedAnswers: ['にし'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -607,6 +621,7 @@ window.QUESTION_BANK.push(
     answer: 'ふるえて いる',
     hints: ['たいこの {上|うえ}に つぶを のせて たたくと、どう なるかな。', '{音|おと}が {出|で}て いる ものに そっと さわって みよう。'],
     explanation: '{音|おと}が {出|で}て いる ものは ふるえて います。ふるえを {手|て}で おさえると、{音|おと}は {止|と}まります。',
+    inputForm: { answer: 'ふるえている', acceptedAnswers: ['ふるえて いる', 'ふるえる', '振動している', 'しんどうしている'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -740,6 +755,7 @@ window.QUESTION_BANK.push(
     answer: '{実|み}',
     hints: ['{中|なか}に {次|つぎ}の {年|とし}に まく ものが {入|はい}って いるよ。', '{種|たね} → {子葉|しよう} → {葉|は} → つぼみ → {花|はな} → ？'],
     explanation: 'ホウセンカは {花|はな}が さいた あとに「{実|み}」が でき、その {中|なか}に {種|たね}が できます。{種|たね}を のこすと、{植物|しょくぶつ}は かれて しまいます。',
+    inputForm: { question: 'ホウセンカの {花|はな}が さいた あと、{花|はな}が あった ところに できる ものは 何かな。', acceptedAnswers: ['み'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -790,6 +806,7 @@ window.QUESTION_BANK.push(
     answer: '100℃',
     hints: ['{水|みず}が こおるのは 0℃だよ。', 'ふっとうしている {間|あいだ}、{温度|おんど}は {変|か}わらないよ。'],
     explanation: '{水|みず}は およそ 100℃で ふっとうします。ふっとうして いる {間|あいだ}、{温度|おんど}は 100℃の まま {変|か}わりません。',
+    inputForm: { answer: '100', acceptedAnswers: ['100℃', '100度', '100ど'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -836,6 +853,7 @@ window.QUESTION_BANK.push(
     answer: '{速|はや}く {回|まわ}る',
     hints: ['{直列|ちょくれつ}つなぎに すると、{電流|でんりゅう}の {大|おお}きさは どう なるかな。', '{電流|でんりゅう}が {大|おお}きく なると、モーターの {回|まわ}り{方|かた}も {変|か}わるよ。'],
     explanation: 'かん{電池|でんち}を {直列|ちょくれつ}つなぎに すると {電流|でんりゅう}が {大|おお}きく なり、モーターは 1{個|こ}の ときより {速|はや}く {回|まわ}ります。（{並列|へいれつ}つなぎでは、1{個|こ}の ときと ほぼ {同|おな}じです）',
+    inputForm: { answer: '速く回る', acceptedAnswers: ['速く 回る', 'はやくまわる', 'はやく まわる', '早く回る', '速くなる', 'はやくなる'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -846,6 +864,7 @@ window.QUESTION_BANK.push(
     answer: '{午後|ごご}2{時|じ}ごろ',
     hints: ['{太陽|たいよう}が いちばん {高|たか}く なるのは {正午|しょうご}ごろ。', '{太陽|たいよう}で {地面|じめん}が あたたまり、その {地面|じめん}が {空気|くうき}を あたためるので、{少|すこ}し おくれるよ。'],
     explanation: '{晴|は}れた {日|ひ}の {気温|きおん}は、{太陽|たいよう}が いちばん {高|たか}く なる {正午|しょうご}より {少|すこ}し おくれて、{午後|ごご}2{時|じ}ごろに いちばん {高|たか}く なります。',
+    inputForm: { answer: '午後2時ごろ', acceptedAnswers: ['午後2時', 'ごご2じ', 'ごご2じごろ', '14時', '14時ごろ', '2時', '2時ごろ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -886,6 +905,7 @@ window.QUESTION_BANK.push(
     answer: '{春|はる}',
     hints: ['あたたかく なって、{虫|むし}が {多|おお}く なる ころだよ。', '{秋|あき}には {南|みなみ}の {国|くに}へ わたって いくよ。'],
     explanation: 'ツバメは {春|はる}に {南|みなみ}の {国|くに}から わたって きて、{巣|す}を つくって {子|こ}そだてを します。{秋|あき}には {南|みなみ}の {国|くに}へ もどって いきます。',
+    inputForm: { acceptedAnswers: ['はる'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -968,6 +988,7 @@ window.QUESTION_BANK.push(
     answer: 'ほぼ {同|おな}じ {明|あか}るさ',
     hints: ['{並列|へいれつ}つなぎでは、{回路|かいろ}に {流|なが}れる {電流|でんりゅう}の {大|おお}きさは 1{個|こ}の ときと ほぼ {同|おな}じだよ。', '{直列|ちょくれつ}つなぎに すると {明|あか}るく なるね。'],
     explanation: 'かん{電池|でんち}の {並列|へいれつ}つなぎでは、{電流|でんりゅう}の {大|おお}きさは 1{個|こ}の ときと ほぼ {同|おな}じなので、{明|あか}るさも ほぼ {同|おな}じです。そのかわり、かん{電池|でんち}が {長|なが}もちします。',
+    inputForm: { answer: 'ほぼ同じ', acceptedAnswers: ['ほぼ 同じ 明るさ', 'ほぼ同じ明るさ', '同じ', 'おなじ', '同じ明るさ', '変わらない', 'かわらない'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -978,6 +999,7 @@ window.QUESTION_BANK.push(
     answer: '{変化|へんか}が {小|ちい}さい',
     hints: ['{雨|あめ}や くもりの {日|ひ}は、{雲|くも}が {日光|にっこう}を さえぎるよ。', '{日光|にっこう}で {地面|じめん}が あたたまりにくいと、{気温|きおん}は {上|あ}がるかな。'],
     explanation: '{雨|あめ}や くもりの {日|ひ}は、{雲|くも}が {日光|にっこう}を さえぎるので、1{日|にち}の {気温|きおん}の {変化|へんか}が {小|ちい}さく なります。{晴|は}れた {日|ひ}は {変化|へんか}が {大|おお}きく なります。',
+    inputForm: { answer: '変化が小さい', acceptedAnswers: ['変化が 小さい', 'へんかがちいさい', '小さい', '変化が少ない'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1026,6 +1048,7 @@ window.QUESTION_BANK.push(
     answer: 'ふえる',
     hints: ['{水|みず}を いっぱいに {入|い}れた ペットボトルを こおらせると、どう なるかな。', '{氷|こおり}は {水|みず}に うくね。'],
     explanation: '{水|みず}は {氷|こおり}に なると {体積|たいせき}が ふえます（{約|やく}1.1{倍|ばい}）。そのため、{氷|こおり}は {水|みず}に うきます。',
+    inputForm: { acceptedAnswers: ['増える', '大きくなる', '大きく なる'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1036,6 +1059,7 @@ window.QUESTION_BANK.push(
     answer: 'ちぢむ',
     hints: ['うでを {曲|ま}げて {力|ちから}こぶを さわって みよう。', '{内側|うちがわ}と {外側|そとがわ}の {筋肉|きんにく}は、{反対|はんたい}の はたらきを するよ。'],
     explanation: 'うでを {曲|ま}げる ときは、{内側|うちがわ}の {筋肉|きんにく}が ちぢみ、{外側|そとがわ}の {筋肉|きんにく}が ゆるみます。のばす ときは その {反対|はんたい}です。',
+    inputForm: { acceptedAnswers: ['縮む', 'ちぢまる'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -1094,6 +1118,7 @@ window.QUESTION_BANK.push(
     answer: '{水|みず}を {蒸発|じょうはつ}させる',
     hints: ['とけた {食塩|しょくえん}は、ろ{紙|し}を {通|とお}りぬけて しまうよ。', '{水|みず}だけを なくす {方法|ほうほう}を {考|かんが}えよう。'],
     explanation: '{食塩水|しょくえんすい}を {熱|ねっ}して {水|みず}を {蒸発|じょうはつ}させると、{食塩|しょくえん}が {出|で}て きます。{水|みず}に とけた ものは ろ{紙|し}で こしても {取|と}り{出|だ}せません。',
+    inputForm: { answer: '水を蒸発させる', acceptedAnswers: ['水を 蒸発させる', '蒸発させる', 'じょうはつさせる', '水をじょうはつさせる', '加熱する', '熱する'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1104,6 +1129,7 @@ window.QUESTION_BANK.push(
     answer: '{西|にし}から {東|ひがし}へ',
     hints: ['{天気|てんき}は、{雲|くも}の {動|うご}きに ともなって {変|か}わって いくよ。', '「{夕焼|ゆうや}けの {次|つぎ}の {日|ひ}は {晴|は}れ」という ことわざは、{西|にし}の {空|そら}の ようすを {見|み}て いるよ。'],
     explanation: '{日本|にほん}の {上空|じょうくう}には {西|にし}から {東|ひがし}へ {強|つよ}い {風|かぜ}（{偏西風|へんせいふう}）が ふいて いるので、{雲|くも}も {天気|てんき}も およそ {西|にし}から {東|ひがし}へ {変|か}わって いきます。',
+    inputForm: { answer: '西から東へ', acceptedAnswers: ['西から 東へ', 'にしからひがしへ', '西から東'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1123,6 +1149,7 @@ window.QUESTION_BANK.push(
     answer: 'でんぷん',
     hints: ['ヨウ{素液|そえき}は、ある {養分|ようぶん}が あると {青|あお}むらさき{色|いろ}に {変|か}わるよ。', 'ごはんや じゃがいもにも たくさん ふくまれて いるよ。'],
     explanation: 'ヨウ{素液|そえき}で {青|あお}むらさき{色|いろ}に {変|か}わるのは「でんぷん」が ある しるしです。{子葉|しよう}の でんぷんは {発芽|はつが}に {使|つか}われます。',
+    inputForm: { question: 'インゲンマメの {子葉|しよう}を {切|き}って ヨウ{素液|そえき}を つけると、{青|あお}むらさき{色|いろ}に {変|か}わりました。{子葉|しよう}に ふくまれて いる 養分は 何かな。', acceptedAnswers: ['デンプン'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -1134,6 +1161,7 @@ window.QUESTION_BANK.push(
     answer: 'おしべ',
     hints: ['{先|さき}の ふくろに、こなのような ものが たくさん ついて いるよ。', 'めしべの まわりに {何本|なんぼん}も あるよ。'],
     explanation: '{花粉|かふん}は「おしべ」の {先|さき}で つくられます。{花粉|かふん}が めしべの {先|さき}に つくと、やがて {実|み}が できます。',
+    inputForm: { question: 'アサガオの {花|はな}で、{花粉|かふん}を つくる ところは どこかな。', acceptedAnswers: ['雄しべ', 'オシベ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1284,6 +1312,7 @@ window.QUESTION_BANK.push(
     answer: '{約|やく}38{週|しゅう}',
     hints: ['1{年|ねん}（{約|やく}52{週|しゅう}）より {短|みじか}いよ。', '9か{月|げつ}くらいだよ。'],
     explanation: 'ヒトの {子|こ}どもは、{受精|じゅせい}してから {約|やく}38{週|しゅう}で {生|う}まれます。{生|う}まれる ときの {身長|しんちょう}は {約|やく}50cm、{体重|たいじゅう}は {約|やく}3000gです。',
+    inputForm: { question: 'ヒトの {子|こ}どもが {受精|じゅせい}してから {生|う}まれるまでの {期間|きかん}は、およそ 何週かな。', answer: '38', acceptedAnswers: ['約38週', '38週', 'やく38週'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -1294,6 +1323,7 @@ window.QUESTION_BANK.push(
     answer: 'めばな',
     hints: ['{実|み}に なるのは、めしべの もとの {部分|ぶぶん}だよ。', 'めしべが あるのは どちらの {花|はな}かな。'],
     explanation: 'ヘチマは めばなに めしべ、おばなに おしべが あります。{受粉|じゅふん}すると、めばなの めしべの もとが ふくらんで {実|み}に なります。',
+    inputForm: { acceptedAnswers: ['雌花'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -1306,6 +1336,7 @@ window.QUESTION_BANK.push(
     answer: '{酸素|さんそ}',
     hints: ['{空気|くうき}の {約|やく}5{分|ぶん}の1を しめる {気体|きたい}だよ。', '{人|ひと}が {呼吸|こきゅう}で とり{入|い}れる {気体|きたい}と {同|おな}じだよ。'],
     explanation: 'ものが {燃|も}えるときには {酸素|さんそ}が {使|つか}われ、{二酸化炭素|にさんかたんそ}が できます。{空気|くうき}の {約|やく}78％を しめる ちっ{素|そ}は、ものを {燃|も}やす はたらきが ありません。',
+    inputForm: { question: 'ものが {燃|も}えるときに {使|つか}われる 気体は 何かな。', acceptedAnswers: ['さんそ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1352,6 +1383,7 @@ window.QUESTION_BANK.push(
     answer: '{二酸化炭素|にさんかたんそ}',
     hints: ['{人|ひと}が はく {息|いき}を {石灰水|せっかいすい}に ふきこんでも {白|しろ}く にごるよ。', 'ものが {燃|も}えた あとに {増|ふ}える {気体|きたい}だよ。'],
     explanation: '{石灰水|せっかいすい}を {白|しろ}く にごらせるのは {二酸化炭素|にさんかたんそ}です。{二酸化炭素|にさんかたんそ}が あるかを {調|しら}べるのに {使|つか}います。',
+    inputForm: { question: '{石灰水|せっかいすい}に ある {気体|きたい}を ふきこむと、{白|しろ}く にごりました。この 気体は 何かな。', acceptedAnswers: ['にさんかたんそ', 'CO2'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1381,6 +1413,7 @@ window.QUESTION_BANK.push(
     answer: '{太陽|たいよう}と {反対|はんたい}の {方向|ほうこう}',
     hints: ['{月|つき}は {太陽|たいよう}の {光|ひかり}を {反射|はんしゃ}して {光|ひか}って いるよ。', '{地球|ちきゅう}から {見|み}て、{月|つき}の {光|ひか}って いる {面|めん}が {全部|ぜんぶ} {見|み}えるのは どんな とき かな。'],
     explanation: '{満月|まんげつ}は、{地球|ちきゅう}から {見|み}て {月|つき}が {太陽|たいよう}と {反対|はんたい}の {方向|ほうこう}に あり、{太陽|たいよう}に {照|て}らされた {面|めん}が {全部|ぜんぶ} {見|み}えるときです。{夕方|ゆうがた}に {東|ひがし}から のぼります。',
+    inputForm: { answer: '太陽と反対の方向', acceptedAnswers: ['太陽と 反対の 方向', '太陽と反対', '太陽の反対', '太陽と反対側', '太陽の反対側'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -1392,6 +1425,7 @@ window.QUESTION_BANK.push(
     answer: '{酸素|さんそ}',
     hints: ['はいた {息|いき}には、{吸|す}った {空気|くうき}より この {気体|きたい}が {少|すく}なく なって いるよ。', '{体|からだ}の {中|なか}で {養分|ようぶん}を {使|つか}う ときに {必要|ひつよう}な {気体|きたい}だよ。'],
     explanation: '{肺|はい}では、{空気中|くうきちゅう}の {酸素|さんそ}が {血液|けつえき}に {取|と}り{入|い}れられ、{血液中|けつえきちゅう}の {二酸化炭素|にさんかたんそ}が {出|だ}されます。',
+    inputForm: { question: 'はい（{肺|はい}）で、{吸|す}った {空気|くうき}から {血液|けつえき}に {取|と}り{入|い}れられる 気体は 何かな。', acceptedAnswers: ['さんそ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1402,6 +1436,7 @@ window.QUESTION_BANK.push(
     answer: 'コンデンサー',
     hints: ['{電気|でんき}を ためて、あとから {使|つか}える ようにする ものだよ。', '{発光|はっこう}ダイオードや {豆電球|まめでんきゅう}は、{電気|でんき}を {光|ひかり}に {変|か}える ものだね。'],
     explanation: '「コンデンサー」は {電気|でんき}を ためる ことが できます。{発光|はっこう}ダイオードと {豆電球|まめでんきゅう}は {電気|でんき}を {光|ひかり}に、モーターは {電気|でんき}を {運動|うんどう}に {変|か}えます。',
+    inputForm: { question: '{手回|てまわ}し{発電機|はつでんき}で つくった {電気|でんき}を、ためて おく ことが できる ものは 何かな。', acceptedAnswers: ['コンデンサ', 'ちくでんき', '蓄電器'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1504,6 +1539,7 @@ window.QUESTION_BANK.push(
     answer: '{三日月|みかづき}',
     hints: ['{月|つき}は、{太陽|たいよう}の ある {側|がわ}が {光|ひか}って {見|み}えるよ。', '{夕方|ゆうがた}、{太陽|たいよう}は {西|にし}に しずむね。{満月|まんげつ}は {夕方|ゆうがた}に {東|ひがし}から のぼるよ。'],
     explanation: '{夕方|ゆうがた}に {西|にし}の {空|そら}に {見|み}えるのは、{太陽|たいよう}に {近|ちか}い {方向|ほうこう}に ある {三日月|みかづき}です。{右側|みぎがわ}（{太陽|たいよう}の {側|がわ}）が {細|ほそ}く {光|ひか}って {見|み}えます。',
+    inputForm: { question: '{夕方|ゆうがた}、{西|にし}の {空|そら}の {低|ひく}い ところに {見|み}える 月を 何と いうかな。', acceptedAnswers: ['みかづき'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1514,6 +1550,7 @@ window.QUESTION_BANK.push(
     answer: '{角|かど}ばって いる',
     hints: ['{流|なが}れる {水|みず}で {運|はこ}ばれた つぶは、ぶつかり{合|あ}って {丸|まる}く なるね。', '{火山灰|かざんばい}は {水|みず}で {運|はこ}ばれて いないよ。'],
     explanation: '{火山灰|かざんばい}の つぶは {角|かど}ばって います。{流|なが}れる {水|みず}の はたらきで できた {地層|ちそう}の つぶは、{丸|まる}みを おびて います。',
+    inputForm: { answer: '角ばっている', acceptedAnswers: ['角ばって いる', 'かどばっている', '角ばる', 'とがっている', 'ごつごつしている'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1552,6 +1589,7 @@ window.QUESTION_BANK.push(
     answer: '{発光|はっこう}ダイオード',
     hints: ['{少|すく}ない {電気|でんき}で {光|ひか}る ことが できるのは どちらかな。', '{豆電球|まめでんきゅう}は {光|ひか}る ときに {熱|ねつ}も たくさん {出|だ}すよ。'],
     explanation: '{発光|はっこう}ダイオードは、{豆電球|まめでんきゅう}より {少|すく}ない {電気|でんき}で {光|ひか}るので、{長|なが}い {時間|じかん} {光|ひか}ります。このため、{信号機|しんごうき}や {照明|しょうめい}などに {使|つか}われて います。',
+    inputForm: { acceptedAnswers: ['LED', 'はっこうダイオード'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -1564,6 +1602,7 @@ window.QUESTION_BANK.push(
     answer: '{裸子植物|らししょくぶつ}',
     hints: ['マツは {種子|しゅし}で ふえる {植物|しょくぶつ}。', '{胚珠|はいしゅ}が {子房|しぼう}に つつまれて いるか、むき{出|だ}しか。'],
     explanation: 'マツは {種子|しゅし}で ふえ、{胚珠|はいしゅ}が むき{出|だ}しに なって いるので {裸子植物|らししょくぶつ}です。{胚珠|はいしゅ}が {子房|しぼう}に つつまれて いる {植物|しょくぶつ}は {被子植物|ひししょくぶつ}です。',
+    inputForm: { question: 'マツの {仲間|なかま}は、{植物|しょくぶつ}の {分類|ぶんるい}で 何に あたるか。', acceptedAnswers: ['らししょくぶつ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1639,6 +1678,7 @@ window.QUESTION_BANK.push(
     answer: '10％',
     hints: ['{質量|しつりょう}パーセント{濃度|のうど}＝{溶質|ようしつ}の {質量|しつりょう}÷{溶液|ようえき}の {質量|しつりょう}×100', '{溶液|ようえき}の {質量|しつりょう}は、{水|みず}と {食塩|しょくえん}の {合計|ごうけい}。'],
     explanation: '{溶液|ようえき}の {質量|しつりょう}は 90＋10＝100g。10÷100×100＝10％ です。（10÷90 と しないよう {注意|ちゅうい}）',
+    inputForm: { question: '{水|みず} 90gに {食塩|しょくえん} 10gを とかした {食塩水|しょくえんすい}の {質量|しつりょう}パーセント濃度は 何％か。', answer: '10', acceptedAnswers: ['10%', '10％'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -1660,6 +1700,7 @@ window.QUESTION_BANK.push(
     answer: '{鳥類|ちょうるい}',
     hints: ['ハチュウ{類|るい}の {体|からだ}の {表面|ひょうめん}は うろこで おおわれて いる。', 'ホニュウ{類|るい}は {卵|たまご}ではなく、{子|こ}を {産|う}む（{胎生|たいせい}）。'],
     explanation: '{羽毛|うもう}で おおわれて いるのは {鳥類|ちょうるい}です。ハチュウ{類|るい}は うろこ、{両生類|りょうせいるい}は しめった {皮膚|ひふ}、ホニュウ{類|るい}は {毛|け}で おおわれて います。',
+    inputForm: { question: 'セキツイ{動物|どうぶつ}の うち、{体|からだ}の {表面|ひょうめん}が {羽毛|うもう}で おおわれ、{殻|から}の ある {卵|たまご}を {産|う}む なかまは 何類か。', acceptedAnswers: ['ちょうるい', '鳥'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1752,6 +1793,7 @@ window.QUESTION_BANK.push(
     answer: '{上方置換法|じょうほうちかんほう}',
     hints: ['{水|みず}に とけやすい {気体|きたい}は、{水上置換法|すいじょうちかんほう}では {集|あつ}められない。', '{空気|くうき}より {軽|かる}い {気体|きたい}は、{容器|ようき}の {上|うえ}の ほうに たまる。'],
     explanation: '{水|みず}に とけやすく {空気|くうき}より {軽|かる}い アンモニアは、{上方置換法|じょうほうちかんほう}で {集|あつ}めます。{水|みず}に とけにくい {気体|きたい}は {水上置換法|すいじょうちかんほう}、{水|みず}に とけやすく {空気|くうき}より {重|おも}い {気体|きたい}は {下方置換法|かほうちかんほう}で {集|あつ}めます。',
+    inputForm: { question: 'アンモニアは {水|みず}に とても とけやすく、{空気|くうき}より {軽|かる}い {気体|きたい}である。アンモニアを {集|あつ}める {方法|ほうほう}として 適切な ものは 何か。', acceptedAnswers: ['じょうほうちかんほう', '上方置換'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1822,6 +1864,7 @@ window.QUESTION_BANK.push(
     answer: '{水素|すいそ}',
     hints: ['{陰極|いんきょく}には、{陽極|ようきょく}の {約|やく}2{倍|ばい}の {体積|たいせき}の {気体|きたい}が {発生|はっせい}する。', 'マッチの {火|ひ}を {近|ちか}づけると ポンと {音|おと}を たてて {燃|も}える {気体|きたい}。'],
     explanation: '{純粋|じゅんすい}な {水|みず}は {電流|でんりゅう}が {流|なが}れにくいので、{少量|しょうりょう}の {水酸化|すいさんか}ナトリウムを とかして {電気分解|でんきぶんかい}します。このとき {分解|ぶんかい}されるのは {水|みず}で、{陰極|いんきょく}に {水素|すいそ}、{陽極|ようきょく}に {酸素|さんそ}が {発生|はっせい}します。{体積|たいせき}の {比|ひ}は {水素|すいそ}：{酸素|さんそ}＝2：1 です。',
+    inputForm: { question: 'うすい {水酸化|すいさんか}ナトリウム{水溶液|すいようえき}を {電気分解|でんきぶんかい}したとき、{陰極|いんきょく}に {発生|はっせい}する 気体は 何か。', acceptedAnswers: ['すいそ', 'H2'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1897,6 +1940,7 @@ window.QUESTION_BANK.push(
     answer: '600Wh',
     hints: ['{電力量|でんりょくりょう}（Wh）＝{電力|でんりょく}（W）×{時間|じかん}（h）', '30{分|ぷん}は {何時間|なんじかん}か。'],
     explanation: '30{分|ぷん}＝0.5{時間|じかん}なので、1200×0.5＝600Wh です。（ジュールで {表|あらわ}すと 1200×1800＝2160000J）',
+    inputForm: { question: '{消費電力|しょうひでんりょく} 1200Wの ストーブを 30{分間|ふんかん} {使|つか}った。{使|つか}った 電力量は 何Whか。', answer: '600', acceptedAnswers: ['600Wh'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -1908,6 +1952,7 @@ window.QUESTION_BANK.push(
     answer: '{二酸化炭素|にさんかたんそ}',
     hints: ['{発生|はっせい}した {気体|きたい}を {石灰水|せっかいすい}に {通|とお}すと {白|しろ}く にごる。', 'ホットケーキが ふくらむのは、この {気体|きたい}が {出|で}る ため。'],
     explanation: '{炭酸水素|たんさんすいそ}ナトリウムを {加熱|かねつ}すると、{炭酸|たんさん}ナトリウム・{水|みず}・{二酸化炭素|にさんかたんそ}に {分解|ぶんかい}します。',
+    inputForm: { question: '{炭酸水素|たんさんすいそ}ナトリウムを {加熱|かねつ}すると {分解|ぶんかい}する。このとき {発生|はっせい}する 気体は 何か。', acceptedAnswers: ['にさんかたんそ', 'CO2'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1918,6 +1963,7 @@ window.QUESTION_BANK.push(
     answer: 'アミラーゼ',
     hints: ['ペプシンは {胃液|いえき}に ふくまれ、タンパク{質|しつ}を {分解|ぶんかい}する。', 'リパーゼは すい{液|えき}に ふくまれ、{脂肪|しぼう}を {分解|ぶんかい}する。'],
     explanation: 'だ{液|えき}に ふくまれる アミラーゼは、デンプンを {分解|ぶんかい}します。ペプシン（{胃液|いえき}）と トリプシン（すい{液|えき}）は タンパク{質|しつ}を、リパーゼ（すい{液|えき}）は {脂肪|しぼう}を {分解|ぶんかい}します。',
+    inputForm: { question: 'だ{液|えき}に ふくまれ、デンプンを {分解|ぶんかい}する 消化酵素は 何か。', validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2000,6 +2046,7 @@ window.QUESTION_BANK.push(
     answer: '{質量保存|しつりょうほぞん}の {法則|ほうそく}',
     hints: ['{化学変化|かがくへんか}では、{原子|げんし}の {組|く}み{合|あ}わせは {変|か}わるが、{原子|げんし}の {種類|しゅるい}と {数|かず}は {変|か}わらない。', '{質量|しつりょう}が「たもたれる」という {意味|いみ}の {名前|なまえ}。'],
     explanation: '{化学変化|かがくへんか}の {前後|ぜんご}で {物質|ぶっしつ}{全体|ぜんたい}の {質量|しつりょう}が {変|か}わらない ことを「{質量保存|しつりょうほぞん}の {法則|ほうそく}」と いいます。{気体|きたい}が {出|で}て いく {場合|ばあい}は、{密閉|みっぺい}した {容器|ようき}の {中|なか}で はかると {確|たし}かめられます。',
+    inputForm: { answer: '質量保存の法則', acceptedAnswers: ['質量保存の 法則', 'しつりょうほぞんのほうそく'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2010,6 +2057,7 @@ window.QUESTION_BANK.push(
     answer: '{葉緑体|ようりょくたい}',
     hints: ['{葉|は}が {緑色|みどりいろ}に {見|み}えるのは、この つぶが ある ため。', '{光|ひかり}の エネルギーを {使|つか}って、デンプンなどを つくる。'],
     explanation: '{光合成|こうごうせい}は {葉緑体|ようりょくたい}で {行|おこな}われます。{光|ひかり}の エネルギーを {使|つか}って、{水|みず}と {二酸化炭素|にさんかたんそ}から デンプンなどの {養分|ようぶん}を つくり、{酸素|さんそ}を {出|だ}します。',
+    inputForm: { question: '{植物|しょくぶつ}の {細胞|さいぼう}の {中|なか}で、{光合成|こうごうせい}が {行|おこな}われる {緑色|みどりいろ}の つぶを 何と いうか。', acceptedAnswers: ['ようりょくたい'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2020,6 +2068,7 @@ window.QUESTION_BANK.push(
     answer: '{西高東低|せいこうとうてい}',
     hints: ['{冬|ふゆ}は、ユーラシア{大陸|たいりく}の シベリア{高気圧|こうきあつ}が {発達|はったつ}する。', '{冬|ふゆ}の {季節風|きせつふう}は {北西|ほくせい}から ふく。'],
     explanation: '{冬|ふゆ}は {大陸|たいりく}（{西|にし}）に {高気圧|こうきあつ}、{太平洋|たいへいよう}の {北|きた}の {海上|かいじょう}（{東|ひがし}）に {低気圧|ていきあつ}が ある「{西高東低|せいこうとうてい}」の {気圧配置|きあつはいち}に なりやすく、{北西|ほくせい}の {季節風|きせつふう}が ふきます。',
+    inputForm: { question: '{日本|にほん}の {冬|ふゆ}の {天気図|てんきず}で よく {見|み}られる 気圧配置を 何と いうか。', acceptedAnswers: ['せいこうとうてい', '西高東低型'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2058,6 +2107,7 @@ window.QUESTION_BANK.push(
     answer: '{乱層雲|らんそううん}',
     hints: ['{温暖前線|おんだんぜんせん}では、{暖気|だんき}が {寒気|かんき}の {上|うえ}を ゆるやかに はい{上|あ}がる。', '{積乱雲|せきらんうん}は {寒冷前線|かんれいぜんせん}で できやすく、せまい {範囲|はんい}に {強|つよ}い {雨|あめ}を ふらせる。'],
     explanation: '{温暖前線|おんだんぜんせん}では {暖気|だんき}が ゆるやかに {上|あ}がるので、{乱層雲|らんそううん}などの {層状|そうじょう}の {雲|くも}が でき、{広|ひろ}い {範囲|はんい}に おだやかな {雨|あめ}が {長|なが}い {時間|じかん}ふります。',
+    inputForm: { question: '{温暖前線|おんだんぜんせん}が {近|ちか}づいて くるとき、{広|ひろ}い {範囲|はんい}に {長|なが}い {時間|じかん}、おだやかな {雨|あめ}を ふらせる 雲は 何か。', acceptedAnswers: ['らんそううん', '雨雲'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2080,6 +2130,7 @@ window.QUESTION_BANK.push(
     answer: '{中和|ちゅうわ}',
     hints: ['{水素|すいそ}イオンと {水酸化物|すいさんかぶつ}イオンが {結|むす}びついて {水|みず}が できる。', '「{和|わ}」の {字|じ}が つく ことば。'],
     explanation: '{酸|さん}と アルカリが たがいの {性質|せいしつ}を {打|う}ち{消|け}し{合|あ}う {反応|はんのう}を {中和|ちゅうわ}と いいます。{水|みず}と {塩|えん}が できます。',
+    inputForm: { acceptedAnswers: ['ちゅうわ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2126,6 +2177,7 @@ window.QUESTION_BANK.push(
     answer: '{力学的|りきがくてき}エネルギー',
     hints: ['ふりこや ジェットコースターの {運動|うんどう}で {考|かんが}える エネルギー。', '「{力学的|りきがくてき}エネルギーの {保存|ほぞん}」という {言葉|ことば}が ある。'],
     explanation: '{位置|いち}エネルギーと {運動|うんどう}エネルギーの {和|わ}を {力学的|りきがくてき}エネルギーと いい、まさつなどが なければ {一定|いってい}に {保|たも}たれます（{力学的|りきがくてき}エネルギーの {保存|ほぞん}）。',
+    inputForm: { acceptedAnswers: ['りきがくてきエネルギー'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2136,6 +2188,7 @@ window.QUESTION_BANK.push(
     answer: '{植物|しょくぶつ}',
     hints: ['{光合成|こうごうせい}に よって、{無機物|むきぶつ}から {有機物|ゆうきぶつ}を つくり{出|だ}す {生物|せいぶつ}。', '{動物|どうぶつ}は ほかの {生物|せいぶつ}を {食|た}べる「{消費者|しょうひしゃ}」。'],
     explanation: '{光合成|こうごうせい}で {有機物|ゆうきぶつ}を つくる {植物|しょくぶつ}が「{生産者|せいさんしゃ}」です。{動物|どうぶつ}は「{消費者|しょうひしゃ}」、{菌類|きんるい}・{細菌類|さいきんるい}は {死骸|しがい}などを {分解|ぶんかい}する「{分解者|ぶんかいしゃ}」です。',
+    inputForm: { question: '{生態系|せいたいけい}の {中|なか}で「{生産者|せいさんしゃ}」に あたる 生物は 何か。', acceptedAnswers: ['しょくぶつ', '緑色植物'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2155,6 +2208,7 @@ window.QUESTION_BANK.push(
     answer: '2.0N',
     hints: ['{浮力|ふりょく}は、{水中|すいちゅう}で {物体|ぶったい}を {上向|うわむ}きに おす {力|ちから}。', '{空気中|くうきちゅう}と {水中|すいちゅう}の ばねばかりの {値|あたい}の {差|さ}を {考|かんが}える。'],
     explanation: '{浮力|ふりょく}＝{空気中|くうきちゅう}の {値|あたい}−{水中|すいちゅう}の {値|あたい}＝5.0−3.0＝2.0N です。',
+    inputForm: { question: 'ばねばかりに つるした {物体|ぶったい}の {重|おも}さは、{空気中|くうきちゅう}で 5.0N、{全体|ぜんたい}を {水中|すいちゅう}に しずめると 3.0Nだった。この {物体|ぶったい}に はたらく 浮力は 何Nか。', answer: '2', acceptedAnswers: ['2.0N', '2N', '2.0'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -2176,6 +2230,7 @@ window.QUESTION_BANK.push(
     answer: '{木星|もくせい}',
     hints: ['{地球|ちきゅう}の {直径|ちょっけい}の {約|やく}11{倍|ばい}も ある、ガスで できた {惑星|わくせい}。', '{土星|どせい}は {大|おお}きな {環|わ}を もつ、2{番目|ばんめ}に {大|おお}きい {惑星|わくせい}。'],
     explanation: '{太陽系|たいようけい}で いちばん {大|おお}きい {惑星|わくせい}は {木星|もくせい}で、{直径|ちょっけい}は {地球|ちきゅう}の {約|やく}11{倍|ばい}です。{木星|もくせい}や {土星|どせい}は、おもに {気体|きたい}で できた {木星型惑星|もくせいがたわくせい}です。',
+    inputForm: { question: '{太陽系|たいようけい}の {惑星|わくせい}の うち、いちばん {大|おお}きい 惑星は 何か。', acceptedAnswers: ['もくせい'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2258,6 +2313,7 @@ window.QUESTION_BANK.push(
     answer: '7N',
     hints: ['{同|おな}じ {向|む}きの {力|ちから}の {合力|ごうりょく}は、2つの {力|ちから}の {和|わ}。', '{反対|はんたい}{向|む}きなら {差|さ}に なる。'],
     explanation: '{一直線上|いっちょくせんじょう}で {同|おな}じ {向|む}きに はたらく 2{力|りょく}の {合力|ごうりょく}は、{和|わ}の 3＋4＝7N です。{反対|はんたい}{向|む}きなら {差|さ}の 1N、{直角|ちょっかく}に はたらく {場合|ばあい}は {平行四辺形|へいこうしへんけい}の {法則|ほうそく}で 5N に なります。',
+    inputForm: { question: '1つの {物体|ぶったい}に、{一直線上|いっちょくせんじょう}で {同|おな}じ {向|む}きに 3Nと 4Nの {力|ちから}が はたらいて いる。この 2つの {力|ちから}の 合力は 何Nか。', answer: '7', acceptedAnswers: ['7N'], validationMode: 'number', reviewed: false },
     reviewed: true
   },
   {
@@ -2268,6 +2324,7 @@ window.QUESTION_BANK.push(
     answer: '{同|おな}じ {大|おお}きさ',
     hints: ['{作用|さよう}・{反作用|はんさよう}の {法則|ほうそく}を {思|おも}い{出|だ}そう。', '2つの {物体|ぶったい}の {間|あいだ}で {力|ちから}は {対|つい}に なって はたらく。'],
     explanation: '{物体|ぶったい}が ほかの {物体|ぶったい}に {力|ちから}を {加|くわ}えると、{同時|どうじ}に {同|おな}じ {大|おお}きさで {反対|はんたい}{向|む}きの {力|ちから}を {受|う}けます（{作用|さよう}・{反作用|はんさよう}の {法則|ほうそく}）。',
+    inputForm: { answer: '同じ大きさ', acceptedAnswers: ['同じ 大きさ', '同じ', 'おなじ', 'おなじおおきさ', '等しい'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2288,6 +2345,7 @@ window.QUESTION_BANK.push(
     answer: '{二酸化炭素|にさんかたんそ}',
     hints: ['{石油|せきゆ}や {石炭|せきたん}を {燃|も}やすと {発生|はっせい}する。', '{地表|ちひょう}から {出|で}る {熱|ねつ}を {吸収|きゅうしゅう}する「{温室効果|おんしつこうか}ガス」の 1つ。'],
     explanation: '{二酸化炭素|にさんかたんそ}は {温室効果|おんしつこうか}ガスの 1つで、{化石燃料|かせきねんりょう}の {使用|しよう}などで ふえ、{地球温暖化|ちきゅうおんだんか}の {原因|げんいん}の 1つと {考|かんが}えられて います。',
+    inputForm: { question: '{化石燃料|かせきねんりょう}の {大量|たいりょう}の {使用|しよう}などで {大気中|たいきちゅう}に ふえ、{地球温暖化|ちきゅうおんだんか}の {原因|げんいん}の 1つと {考|かんが}えられて いる 気体は 何か。', acceptedAnswers: ['にさんかたんそ', 'CO2'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
