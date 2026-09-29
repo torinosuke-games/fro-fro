@@ -150,10 +150,8 @@
     hud.hidden = FF.app.screen === 'title';
     hud.classList.toggle('art', artOn());
     clear(hud);
-    // 学習の「学ぶ」（選択画面）では、資源の所持数の行を出さない（縦の長さを減らすため。チケットの行は出す）
-    var hideRes = FF.app.screen === 'study' && FF.app.studyTab === 'learn';
-    hud.classList.toggle('compact', hideRes);   // チケットの行だけのときは上下を詰める
-    if (!hideRes) hud.appendChild(el('div', { class: 'hud-res' }, FF.defs.RESOURCES.map(function (r) {
+    // 資源の所持数の行は、どの画面でも出す（「学ぶ」でも。判断199。前は「学ぶ」だけ出さずに詰めていた）
+    hud.appendChild(el('div', { class: 'hud-res' }, FF.defs.RESOURCES.map(function (r) {
       return el('div', { class: 'res-chip', attrs: { title: r.name } }, [resIcon(r), fmt(s.resources[r.id] || 0)]);
     })));
     var t = FF.tickets.recoverTickets(s.tickets, now);
