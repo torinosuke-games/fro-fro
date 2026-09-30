@@ -47,6 +47,10 @@
           U.el('input', { attrs: { type: 'checkbox', checked: only }, on: { change: function (e) { review.setOnlyUnreviewed(e.target.checked); draw(); } } }),
           U.el('span', { text: '「学ぶ」で、確認前でレビューしていない問題を先に出す' })
         ]));
+        box.appendChild(U.el('label', { class: 'review-toggle' }, [
+          U.el('input', { attrs: { type: 'checkbox', checked: review.hideReviewed() }, on: { change: function (e) { review.setHideReviewed(e.target.checked); draw(); } } }),
+          U.el('span', { text: '「学ぶ」で、レビューした問題（OK・要改善）は出さない' })
+        ]));
         if (fix.length) {
           box.appendChild(U.el('div', { class: 'section-title', text: '要改善の問題' }));
           box.appendChild(U.el('div', { class: 'stack' }, fix.map(function (id) {
@@ -345,8 +349,22 @@
       var r = all(); delete r[qid]; FF.storage.saveReviews(r);
       connect().then(function (d) { if (d) d.collection('reviews').doc(docId(qid)).delete().catch(function () {}); });
     }
-    function onlyUnreviewed() { try { return root.localStorage.getItem(onlyKey) === '1'; } catch (e) { return false; } }
-    function setOnlyUnreviewed(v) { try { root.localStorage.setItem(onlyKey, v ? '1' : '0'); } catch (e) { /* 何もしない */ } }
+    function flag(key) { try { return root.localStorage.getItem(key) === '1'; } catch (e) { return false; } }
+    function setFlag(key, v) { try { root.localStorage.setItem(key, v ? '1' : '0'); } catch (e) { /* 何もしない */ } }
+    function onlyUnreviewed() { return flag(onlyKey); }
+    function setOnlyUnreviewed(v) { setFlag(onlyKey, v); }
+    // レビューした問題（OK・要改善のどちらも）は出さない（判断203）
+    var hideKey = 'ffReviewHide';
+    function hideReviewed() { return flag(hideKey); }
+    function setHideReviewed(v) { setFlag(hideKey, v); }
+    function withoutReviewed(bank) {
+      var r = all(), byKey = {};
+      Object.keys(bank.byKey).forEach(function (k) {
+        var list = bank.byKey[k].filter(function (q) { return !r[q.id]; });
+        if (list.length) byKey[k] = list;
+      });
+      return { byKey: byKey, byId: bank.byId, invalid: [], duplicates: [], count: 0 };
+    }
     // 確認前（reviewed: false）で、まだレビューしていない問題だけの索引（出題はこの中から）
     function filterBank(bank) {
       var r = all(), byKey = {};
@@ -378,7 +396,7 @@
         ])
       ]);
     }
-    return { all: all, set: set, remove: remove, connect: connect, panel: panel, filterBank: filterBank, onlyUnreviewed: onlyUnreviewed, setOnlyUnreviewed: setOnlyUnreviewed };
+    return { all: all, set: set, remove: remove, connect: connect, panel: panel, filterBank: filterBank, onlyUnreviewed: onlyUnreviewed, setOnlyUnreviewed: setOnlyUnreviewed, hideReviewed: hideReviewed, setHideReviewed: setHideReviewed, withoutReviewed: withoutReviewed };
   })();
   U.review = review;
 

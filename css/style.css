@@ -1060,5 +1060,5 @@ a.btn { text-decoration: none; }
 .review-panel { margin-top: 10px; border: 2px dashed #b08a2a; }
 .review-note { min-height: 44px; font-family: inherit; font-size: 14px; }
 .review-item code { font-size: 12px; }
-.review-toggle { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.review-toggle, .debug label.review-toggle { display: flex; flex-direction: row; align-items: center; gap: 8px; font-size: 14px; color: var(--text); }
 .review-toggle input { width: 20px; height: 20px; flex: none; }
