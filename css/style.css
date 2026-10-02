@@ -288,9 +288,6 @@ main#screen { flex: 1; padding: 12px 14px 24px; }
 .hud-tickets .timer { font-variant-numeric: tabular-nums; }
 .ticket-bar { flex: 1; height: 4px; margin: 0 10px; background: var(--track); border-radius: 2px; overflow: hidden; }
 /* 学習の「学ぶ」ではチケットの行だけなので、上下を最小まで詰める */
-.hud.compact { padding-top: 4px; padding-bottom: 4px; }
-.hud.compact .hud-tickets { margin-top: 0; font-size: 12px; line-height: 1.15; }
-.hud.compact .hud-tickets .count { font-size: 13px; }
 .ticket-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--ice-deep), var(--ice)); }
 
 /* ナビ */
@@ -811,7 +808,6 @@ ruby rt { font-size: 0.5em; color: var(--rt); letter-spacing: 0; }
 .pt-chip .ico { font-size: 12px; }
 .pt-chip:hover:not(.locked) { border-color: var(--pt); }
 .pt-chip.locked { cursor: default; }
-.hud.compact .pt-chip { min-height: 0; padding: 0 6px; font-size: 12px; line-height: 1.15; }   /* 「学ぶ」のヘッダーの高さを変えない（判断141） */
 .hud-tickets > span { white-space: nowrap; }
 .ticket-bar { min-width: 16px; }
 /* 幅が狭いときは「次の回復まで」を出さず時刻だけにする（⭐ の場所を空けるため。DESIGN 14.4） */
@@ -1038,3 +1034,31 @@ a.btn { text-decoration: none; }
 #hud .res-chip.got { animation: chip-got .4s ease-out; }
 @keyframes chip-got { 50% { transform: scale(1.12); } }
 @media (prefers-reduced-motion: reduce) { .art-bubble.full { animation: none; } }
+
+/* 主人公の絵と学年（判断198） */
+.avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.avatar-pick { padding: 4px; border: 2px solid transparent; border-radius: 18px; background: #f2f7fb; cursor: pointer; aspect-ratio: 1; }
+.avatar-pick .avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; display: block; }
+.avatar-pick.selected { border-color: var(--ember); background: #fff4ea; }
+.avatar-pick:active { transform: scale(.96); }
+.start-grades .grade-row { margin-bottom: 8px; }
+.start-grades .grade-chip { min-height: 44px; }
+.panel.head-with-avatar { display: flex; align-items: center; gap: 12px; }
+.head-avatar { flex: none; width: 56px; height: 56px; padding: 0; border: 0; border-radius: 50%; overflow: hidden; background: #e8f1f8; box-shadow: 0 1px 4px rgba(22, 50, 74, .2); cursor: pointer; }
+.head-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transform: scale(1.5); transform-origin: 50% 28%; }
+.head-text { min-width: 0; }
+/* 「学ぶ」の おまかせ と くわしく（判断198） */
+.auto-box { margin-bottom: 6px; }
+.btn.auto-start { min-height: 54px; font-size: 18px; border-radius: 16px; }
+.auto-sum { text-align: center; margin-top: 4px; }
+.section-title.or-self { margin-top: 10px; }
+.diag-hint { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.more-sum { font-size: 13px; }
+.more-options { margin-top: 8px; }
+.diag-hint .btn { flex: none; white-space: nowrap; }
+/* 問題のレビュー（デバッグ。判断202） */
+.review-panel { margin-top: 10px; border: 2px dashed #b08a2a; }
+.review-note { min-height: 44px; font-family: inherit; font-size: 14px; }
+.review-item code { font-size: 12px; }
+.review-toggle, .debug label.review-toggle { display: flex; flex-direction: row; align-items: center; gap: 8px; font-size: 14px; color: var(--text); }
+.review-toggle input { width: 20px; height: 20px; flex: none; }

@@ -170,4 +170,19 @@ module.exports = ({ test, FF, ctx, assert }) => {
     assert.strictEqual(bank.filter(q => q.reviewed === true).length, 1062);
     assert.strictEqual(bank.filter(q => q.reviewed === false).length, 0);
   });
+  test('選択問題の inputForm（書き問題としても出す。判断200）は、すべて書き問題として正しく、確認前は reviewed: false', () => {
+    const withForm = bank.filter(q => q.inputForm);
+    assert.ok(withForm.length >= 80, `inputForm が ${withForm.length} 問しかない`);
+    const ng = [];
+    withForm.forEach(q => {
+      const errs = FF.learning.validateQuestion(q);
+      if (errs.length) ng.push(q.id + ': ' + errs.join(' / '));
+      const v = FF.learning.inputVariant(q);
+      if (/[{}]/.test(v.answer) || (v.acceptedAnswers || []).some(a => /[{}]/.test(a))) ng.push(q.id + ': 答えにふりがなの記法がある');
+      if (/どれ/.test(FF.util.plainText(v.question))) ng.push(q.id + ': 書き問題の文に「どれ」が残っている');
+    });
+    assert.deepStrictEqual(ng, []);
+    // 人が内容を確認したら true にし、この数も更新する
+    assert.strictEqual(withForm.filter(q => q.inputForm.reviewed === true).length, 0);
+  });
 };

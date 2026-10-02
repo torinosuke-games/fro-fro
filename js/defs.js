@@ -4,6 +4,10 @@
   var FF = root.FF = root.FF || {};
 
   FF.defs = {
+    // 主人公の絵（判断198・204）。img/art/avatar-<id>.jpg。e＝小学生用、j＝中学生用（各12人）。学年に合う方から選ぶ
+    AVATARS_ELEM: ['e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8', 'e9', 'e10', 'e11', 'e12'],
+    AVATARS_JR: ['j1', 'j2', 'j3', 'j4', 'j5', 'j6', 'j7', 'j8', 'j9', 'j10', 'j11', 'j12'],
+    AVATARS: ['e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8', 'e9', 'e10', 'e11', 'e12', 'j1', 'j2', 'j3', 'j4', 'j5', 'j6', 'j7', 'j8', 'j9', 'j10', 'j11', 'j12'],
     GRADES: [
       { level: 1, label: 'Lv1', school: '小学1年' },
       { level: 2, label: 'Lv2', school: '小学2年' },
@@ -277,5 +281,10 @@
           { label: '{静|しず}かに{通|とお}りすぎる', result: '{足音|あしおと}をしのばせて{進|すす}んだ。こだまは、いつのまにかやんでいた。' }
         ] }
     }
+  };
+
+  // 学年に合う主人公の候補（判断204）。中1〜中3（7〜9）は中学生用、それ以外（小学生・未設定）は小学生用
+  FF.defs.avatarsFor = function (grade) {
+    return typeof grade === 'number' && grade >= 7 ? FF.defs.AVATARS_JR : FF.defs.AVATARS_ELEM;
   };
 })(this);

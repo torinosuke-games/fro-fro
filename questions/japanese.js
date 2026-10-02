@@ -62,6 +62,7 @@ window.QUESTION_BANK.push(
     answer: 'まる（。）',
     hints: ['ぶんが おわった ことを しめす しるしだよ。', '「てん（、）」は ぶんの とちゅうで くぎる ときに つかうよ。'],
     explanation: 'ぶんの おわりには「まる（。）」を つけます。「てん（、）」は ぶんの とちゅうの くぎり、「かぎ（「」）」は はなした ことばに つけます。',
+    inputForm: { question: 'ぶんの おわりに つける しるしは なにかな。', answer: 'まる', acceptedAnswers: ['。', 'まる（。）', 'くてん', '句点', '丸'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -112,6 +113,7 @@ window.QUESTION_BANK.push(
     answer: 'あ',
     hints: ['「アイス」の さいしょの おとだよ。', '「あいうえお」の いちばん はじめの じだよ。'],
     explanation: 'かたかなの「ア」は、ひらがなの「あ」と おなじ おとです。',
+    inputForm: { question: 'かたかなの「ア」と おなじ おとの ひらがなは なにかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -194,6 +196,7 @@ window.QUESTION_BANK.push(
     answer: 'おおかみ',
     hints: ['ひらがなでは、のばす おとに「ー」を つかわないよ。', '「おおきい」と おなじ かきかたを するよ。'],
     explanation: '「おおかみ」は「お」を ふたつ かきます。「おおきい」「とおい」なども おなじです。',
+    inputForm: { question: 'どうぶつの「おおかみ」を ひらがなで ただしく かこう。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -262,6 +265,7 @@ window.QUESTION_BANK.push(
     answer: 'ぼん',
     hints: ['ほそながい ものを かぞえる ことばだよ。', '「かみ」は まい、「いぬ」は ひき、「くるま」は だい で かぞえるね。'],
     explanation: 'えんぴつのような ほそながい ものは「ほん（ぼん・ぽん）」で かぞえます。「3ぼん」と いいます。',
+    inputForm: { question: 'えんぴつを かぞえる ときの ことばは なにかな。「えんぴつが 3□ ある。」', acceptedAnswers: ['ほん', '本'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -274,6 +278,7 @@ window.QUESTION_BANK.push(
     answer: '{冬|ふゆ}',
     hints: ['「{春|はる}」「{夏|なつ}」「{秋|あき}」は、1{年|ねん}の なかの なにを あらわす ことば かな。', 'きせつの なまえを さがそう。'],
     explanation: '「{春|はる}」「{夏|なつ}」「{秋|あき}」「{冬|ふゆ}」は、きせつの なまえです。',
+    inputForm: { question: '「{春|はる}」「{夏|なつ}」「{秋|あき}」と おなじ なかまの ことばは なにかな。', acceptedAnswers: ['ふゆ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -320,6 +325,7 @@ window.QUESTION_BANK.push(
     answer: '{犬|いぬ}が',
     hints: ['ほえたのは だれ（なに）かな。', '「〜が」の かたちの ことばを さがそう。'],
     explanation: 'ほえたのは「{犬|いぬ}」なので、「なにが」に あたる ことばは「{犬|いぬ}が」です。',
+    inputForm: { question: '「{犬|いぬ}が {大|おお}きな こえで ほえた。」で、「なにが」に あたる ことばを 書き出そう。', acceptedAnswers: ['犬', 'いぬが', 'いぬ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -330,6 +336,7 @@ window.QUESTION_BANK.push(
     answer: 'だから',
     hints: ['{雨|あめ}が ふって いた ことが、かさを さした わけ（りゆう）に なって いるよ。', 'わけを うけて つなぐ ことばを えらぼう。'],
     explanation: '「{雨|あめ}が ふって いた」ことが りゆうで「かさを さした」ので、「だから」で つなぎます。',
+    inputForm: { question: '□に 入る ことばを 書こう。「{雨|あめ}が ふって いた。□、かさを さして {出|で}かけた。」', acceptedAnswers: ['それで', 'そこで'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -452,6 +459,7 @@ window.QUESTION_BANK.push(
     answer: 'ところが',
     hints: ['「{晴|は}れて いた」のに「{雨|あめ}が ふって きた」ね。', 'まえと ちがう ことが おきた ときに つかう ことばだよ。'],
     explanation: '{晴|は}れて いたのに {雨|あめ}が ふって きたので、おもって いたのと ちがう ことが おきた ときの「ところが」で つなぎます。',
+    inputForm: { question: '□に 入る ことばを 書こう。「あさは よく {晴|は}れて いた。□、ひるから {雨|あめ}が ふって きた。」', acceptedAnswers: ['でも', 'しかし', 'けれども', 'けれど', 'だけど'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -462,6 +470,7 @@ window.QUESTION_BANK.push(
     answer: 'きらきら',
     hints: ['{星|ほし}が ひかる ようすを おもいうかべよう。', '「ざあざあ」は {雨|あめ}、「ぺこぺこ」は おなかの ようすだね。'],
     explanation: '{星|ほし}が ひかる ようすは「きらきら」です。「ざあざあ」は {雨|あめ}が ふる ようす、「ぺこぺこ」は おなかが すいた ようす、「のろのろ」は ゆっくり うごく ようすです。',
+    inputForm: { question: '□に あう ことばを 書こう。「よぞらで {星|ほし}が □ ひかる。」', acceptedAnswers: ['ぴかぴか'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -472,6 +481,7 @@ window.QUESTION_BANK.push(
     answer: 'とぶ',
     hints: ['ことりは なにを して いるのかな。', 'うごきを あらわす ことばは、ぶんの おわりの ほうに あるよ。'],
     explanation: 'ことりが して いる ことは「とぶ」なので、「どうする」に あたる ことばは「とぶ」です。',
+    inputForm: { question: '「ことりが {空|そら}を {高|たか}く とぶ。」で、「どうする」に あたる ことばを 書き出そう。', acceptedAnswers: ['飛ぶ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -510,6 +520,7 @@ window.QUESTION_BANK.push(
     answer: 'あれ',
     hints: ['「これ」は じぶんの ちかく、「それ」は あいての ちかくの ものだよ。', '「どれ」は わからない ものを きく ときに つかうね。'],
     explanation: '「あれ」は、どちらからも とおい ものを さします。「これ」は じぶんに ちかい もの、「それ」は あいてに ちかい もの、「どれ」は わからない ものを きく ときの ことばです。',
+    inputForm: { question: 'じぶんからも あいてからも とおくに ある ものを さす ことばは なにかな。', validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -520,6 +531,7 @@ window.QUESTION_BANK.push(
     answer: '{森|もり}',
     hints: ['{林|はやし}よりも、もっと {木|き}が たくさん ある ところだよ。', '{木|き}を {上|うえ}に 1つ、{下|した}に 2つ ならべた かたちだよ。'],
     explanation: '「{木|き}」が 3つで「{森|もり}」です。{林|はやし}よりも {木|き}が たくさん しげって いる ところを あらわします。',
+    inputForm: { question: '「{木|き}」が 2つで「{林|はやし}」。では、「{木|き}」が 3つで できる かんじは なにかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
 
@@ -578,6 +590,7 @@ window.QUESTION_BANK.push(
     answer: '{進|すす}む',
     hints: ['「ゆっくり」は どんな ようすを あらわして いるかな。', '「ゆっくり ○○」と つなげて {意味|いみ}が 通る ことばを さがそう。'],
     explanation: '「ゆっくり {進|すす}む」と つながるので、「ゆっくり」は「{進|すす}む」を くわしく して います（{修飾語|しゅうしょくご}）。',
+    inputForm: { question: '「{赤|あか}い {大|おお}きな {船|ふね}が ゆっくり {進|すす}む。」で、「ゆっくり」が くわしく して いる ことばを 書き出そう。', acceptedAnswers: ['すすむ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -607,6 +620,7 @@ window.QUESTION_BANK.push(
     answer: '集まる',
     hints: ['「あつめる」は「{集|あつ}める」と {書|か}くね。', '「あつ」の ぶぶんが {漢字|かんじ}に なるよ。'],
     explanation: '「あつまる」は「{集|あつ}まる」と {書|か}きます。「{集|あつ}める」「{集|あつ}まる」のように、かわる ところから {送|おく}りがなに します。',
+    inputForm: { question: '「あつまる」を {漢字|かんじ}と {送|おく}りがなで {書|か}いた とき、どう 書くかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -628,6 +642,7 @@ window.QUESTION_BANK.push(
     answer: 'しとしと',
     hints: ['{細|こま}かい {雨|あめ}が しずかに ふる ようすだよ。', '「ぽかぽか」は あたたかい ようす、「ぎらぎら」は つよく ひかる ようすだね。'],
     explanation: '{細|こま}かい {雨|あめ}が しずかに ふる ようすは「しとしと」です。「ぽかぽか」は あたたかい ようす、「からから」は かわいた ようす、「ぎらぎら」は つよく てりつける ようすです。',
+    inputForm: { question: '□に あう ことばを 書こう。「{細|こま}かい {雨|あめ}が □ ふって いる。」', validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -710,6 +725,7 @@ window.QUESTION_BANK.push(
     answer: '{弟|おとうと}は',
     hints: ['{元気|げんき}なのは だれかな。', '{主語|しゅご}は「〜は」「〜が」の {形|かたち}に なる ことが {多|おお}いよ。'],
     explanation: '{元気|げんき}なのは「{弟|おとうと}」なので、{主語|しゅご}は「{弟|おとうと}は」です。「ぼくの」は「{弟|おとうと}は」を くわしく して います。',
+    inputForm: { question: '「ぼくの {弟|おとうと}は とても {元気|げんき}です。」の {主語|しゅご}（「だれは」に あたる ことば）を 書き出そう。', acceptedAnswers: ['弟', 'おとうとは', 'おとうと'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -720,6 +736,7 @@ window.QUESTION_BANK.push(
     answer: 'それから',
     hints: ['{宿題|しゅくだい}の あとに、{公園|こうえん}へ {行|い}ったね。', 'じゅんばんに つづく ことを つなぐ ことばだよ。'],
     explanation: '{宿題|しゅくだい}を すませた あとに {公園|こうえん}へ {行|い}ったので、{順|じゅん}に つづく ことを あらわす「それから」で つなぎます。',
+    inputForm: { question: '□に 入る ことばを 書こう。「{宿題|しゅくだい}を すませた。□、{公園|こうえん}へ あそびに {行|い}った。」', acceptedAnswers: ['そして', 'そのあと', 'そのあとで'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -740,6 +757,7 @@ window.QUESTION_BANK.push(
     answer: 'ごんべん',
     hints: ['どれも {漢字|かんじ}の {左側|ひだりがわ}が {同|おな}じ {形|かたち}だよ。', 'ことばに かんけいの ある {部首|ぶしゅ}だよ。'],
     explanation: 'どれも {左側|ひだりがわ}に「ごんべん」が あります。ごんべんは「{言|い}う」の {形|かたち}から できた {部首|ぶしゅ}で、ことばに かんけいの ある {漢字|かんじ}に つきます。',
+    inputForm: { question: '「{話|はな}す」「{読|よ}む」「{詩|し}」に {共通|きょうつう}する 部首は 何かな。', acceptedAnswers: ['言偏', '言べん'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -778,6 +796,7 @@ window.QUESTION_BANK.push(
     answer: '{開|あ}ける',
     hints: ['しまって いる ものを ひらく ときの「あける」だよ。', '「{門|もん}」の {中|なか}に ほかの {形|かたち}が {入|はい}った {漢字|かんじ}だよ。'],
     explanation: 'しまって いる ものを ひらく ときは「{開|あ}ける」です。「{明|あ}ける」は {夜|よ}が おわって {明|あか}るく なる とき（{夜|よ}が {明|あ}ける）、「{空|あ}ける」は からに する とき（{部屋|へや}を {空|あ}ける）に {使|つか}います。「{上|あ}げる」は「あげる」と {読|よ}む べつの ことばです。',
+    inputForm: { question: '「まどを あけて、{空気|くうき}を {入|い}れかえる。」の「あける」に あてはまる 漢字を 書こう。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
 
@@ -790,6 +809,7 @@ window.QUESTION_BANK.push(
     answer: '{手伝|てつだ}う',
     hints: ['{体|からだ}の {部分|ぶぶん}を {使|つか}った {慣用句|かんようく}だよ。', '「{手|て}が {足|た}りない」ときに {頼|たの}む ことだよ。'],
     explanation: '「{手|て}を かす」は「{手伝|てつだ}う」という {意味|いみ}の {慣用句|かんようく}です。',
+    inputForm: { question: '「{手|て}を かす」の 意味は 何かな。', acceptedAnswers: ['てつだう', '手助けする', '助ける', 'たすける'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -846,6 +866,7 @@ window.QUESTION_BANK.push(
     answer: 'しかし',
     hints: ['{練習|れんしゅう}したのに、よくない {結果|けっか}に なって いるね。', '{前|まえ}と {後|あと}が {反対|はんたい}の {内容|ないよう}の ときに {使|つか}う ことばだよ。'],
     explanation: '「たくさん {練習|れんしゅう}した」のに「{負|ま}けた」という、{予想|よそう}と {反対|はんたい}の {結果|けっか}なので「しかし」で つなぎます。',
+    inputForm: { question: '□に 入る ことばを 書こう。「たくさん {練習|れんしゅう}した。□、{試合|しあい}に {負|ま}けて しまった。」', acceptedAnswers: ['でも', 'けれども', 'けれど', 'だが', 'ところが'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -886,6 +907,7 @@ window.QUESTION_BANK.push(
     answer: '{花|はな}が',
     hints: ['「{美|うつく}しい ○○」と つなげて {意味|いみ}が {通|とお}る ことばを さがそう。', 'ようすを あらわす ことばは、ものの {名前|なまえ}を くわしく する ことが {多|おお}いよ。'],
     explanation: '「{美|うつく}しい {花|はな}」と つながるので、「{美|うつく}しい」は「{花|はな}が」を くわしく して います（{修飾語|しゅうしょくご}）。',
+    inputForm: { question: '「{庭|にわ}に {美|うつく}しい {花|はな}が たくさん さいた。」で、「{美|うつく}しい」が くわしく して いる ことばを 書き出そう。', acceptedAnswers: ['花', 'はなが'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -978,6 +1000,7 @@ window.QUESTION_BANK.push(
     answer: 'そのため',
     hints: ['{雨|あめ}が {強|つよ}く なった ことが、{中止|ちゅうし}の わけに なって いるね。', '{前|まえ}の ことが {原因|げんいん}で、{後|あと}の ことが おこる ときに {使|つか}う ことばだよ。'],
     explanation: '「{雨|あめ}が {強|つよ}く なった」ことが {原因|げんいん}で「{中止|ちゅうし}に なった」ので、「そのため」で つなぎます。',
+    inputForm: { question: '□に 入る ことばを 書こう。「{雨|あめ}が {強|つよ}く なった。□、{試合|しあい}は {中止|ちゅうし}に なった。」', acceptedAnswers: ['だから', 'それで', 'そこで', 'したがって'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -998,6 +1021,7 @@ window.QUESTION_BANK.push(
     answer: 'てへん',
     hints: ['どれも {手|て}を {使|つか}う ことに かんけいが あるね。', '{左側|ひだりがわ}の {形|かたち}は「{手|て}」から できて いるよ。'],
     explanation: 'どれも {左側|ひだりがわ}に「てへん」が あります。てへんは「{手|て}」の {形|かたち}から できた {部首|ぶしゅ}で、{手|て}の はたらきに かんけいの ある {漢字|かんじ}に つきます。',
+    inputForm: { question: '「{持|も}つ」「{投|な}げる」「{指|ゆび}」に {共通|きょうつう}する 部首は 何かな。', acceptedAnswers: ['手偏', '手へん'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1026,6 +1050,7 @@ window.QUESTION_BANK.push(
     answer: '{変|か}える',
     hints: ['{前|まえ}と ちがう ものに する という {意味|いみ}の「かえる」だよ。', '「{変化|へんか}」の「{変|へん}」と {同|おな}じ {漢字|かんじ}だよ。'],
     explanation: 'ようすや {中身|なかみ}を ちがう ものに する ときは「{変|か}える」です。「{代|か}える」は ほかの ものに その {役目|やくめ}を させる とき（{手紙|てがみ}で あいさつに {代|か}える）、「{帰|かえ}る」は {家|いえ}などに もどる とき、「{返|かえ}る」は もとの {状態|じょうたい}に もどる とき（{我|われ}に {返|かえ}る）に {使|つか}います。',
+    inputForm: { question: '「{雨|あめ}なので、{遠足|えんそく}の {予定|よてい}を かえる。」の「かえる」に あてはまる 漢字を 書こう。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1048,6 +1073,7 @@ window.QUESTION_BANK.push(
     answer: '{尊敬語|そんけいご}',
     hints: ['{動作|どうさ}を して いるのは {先生|せんせい}（{目上|めうえ}の {人|ひと}）だね。', '{相手|あいて}の {動作|どうさ}を {高|たか}めて {言|い}う {敬語|けいご}は どれかな。'],
     explanation: '「いらっしゃる」は「{来|く}る・{行|い}く・いる」の {尊敬語|そんけいご}です。{目上|めうえ}の {人|ひと}の {動作|どうさ}を {高|たか}めて {言|い}います。',
+    inputForm: { acceptedAnswers: ['そんけいご'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1094,6 +1120,7 @@ window.QUESTION_BANK.push(
     answer: '{測|はか}る',
     hints: ['{長|なが}さ・{高|たか}さ・{深|ふか}さ・{広|ひろ}さを しらべる ときの「はかる」だね。', '「{測定|そくてい}」の「{測|そく}」と {同|おな}じ {漢字|かんじ}だよ。'],
     explanation: '{長|なが}さや {深|ふか}さ、{広|ひろ}さを しらべる ときは「{測|はか}る」です。{時間|じかん}や {数|かず}は「{計|はか}る」、{重|おも}さや かさは「{量|はか}る」、{解決|かいけつ}などを めざして くふうする ときは「{図|はか}る」を {使|つか}います。',
+    inputForm: { question: '「ものさしで プールの {深|ふか}さを はかる。」の「はかる」に あてはまる 漢字を 書こう。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1226,6 +1253,7 @@ window.QUESTION_BANK.push(
     answer: '{解答|かいとう}',
     hints: ['{問題|もんだい}を といて {答|こた}える ときの「かいとう」だよ。', '「{問題|もんだい}を {解|と}く」の「{解|と}」の {漢字|かんじ}を {使|つか}うよ。'],
     explanation: '{問題|もんだい}を といて {答|こた}える ことは「{解答|かいとう}」です。「{回答|かいとう}」は アンケートや {質問|しつもん}への {返事|へんじ}に {使|つか}います。',
+    inputForm: { question: '「テストの かいとう{用紙|ようし}に {名前|なまえ}を {書|か}く。」の「かいとう」に あてはまる 漢字を 書こう。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1236,6 +1264,7 @@ window.QUESTION_BANK.push(
     answer: 'ケーキは',
     hints: ['{述語|じゅつご}は「おいしい」。おいしいのは {何|なに}かな。', '「{兄|あに}が {作|つく}った」は、ケーキを くわしく して いる {部分|ぶぶん}だよ。'],
     explanation: '「おいしい」の {主語|しゅご}は「ケーキは」です。「{兄|あに}が {作|つく}った」は「ケーキ」を くわしく する {部分|ぶぶん}で、その {中|なか}の「{兄|あに}が」は「{作|つく}った」の {主語|しゅご}です。',
+    inputForm: { question: '「{兄|あに}が {作|つく}った ケーキは とても おいしい。」で、{文|ぶん}{全体|ぜんたい}の 主語を 書き出そう。', acceptedAnswers: ['ケーキ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1294,6 +1323,7 @@ window.QUESTION_BANK.push(
     answer: '{非|ひ}',
     hints: ['「{常識|じょうしき}が ない、{常識|じょうしき}に はずれて いる」という {意味|いみ}の ことばに なるよ。', '「□{公式|こうしき}」「□{売品|ばいひん}」にも {使|つか}う {漢字|かんじ}だよ。'],
     explanation: '「{非常識|ひじょうしき}」が {正|ただ}しい ことばです。「{非|ひ}」は「{非公式|ひこうしき}」「{非売品|ひばいひん}」のように、「〜では ない」という {意味|いみ}を そえます。',
+    inputForm: { question: '「□{常識|じょうしき}」の □に {入|はい}る、{打|う}ち{消|け}しの {意味|いみ}の 漢字を 書こう。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
 
@@ -1306,6 +1336,7 @@ window.QUESTION_BANK.push(
     answer: '{無|む}',
     hints: ['「かんけいが ない」という {意味|いみ}の ことばに なるよ。', '「{不|ふ}」「{非|ひ}」「{未|み}」を つけた ことばは ないね。'],
     explanation: '「{無関係|むかんけい}」が {正|ただ}しい ことばです。{打|う}ち{消|け}しの {漢字|かんじ}は、「{不|ふ}（{不安|ふあん}）」「{非|ひ}（{非常|ひじょう}）」「{未|み}（{未来|みらい}）」など、つく ことばが {決|き}まって います。',
+    inputForm: { question: '「□{関係|かんけい}」の □に {入|はい}る、{打|う}ち{消|け}しの {意味|いみ}の 漢字を 書こう。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1352,6 +1383,7 @@ window.QUESTION_BANK.push(
     answer: '{展示|てんじ}',
     hints: ['{作品|さくひん}を ならべて {見|み}せる という {意味|いみ}だね。', '「{展覧会|てんらんかい}」の「てん」だよ。'],
     explanation: '{作品|さくひん}を ならべて {見|み}せる ことは「{展示|てんじ}」です。「{点字|てんじ}」は {指|ゆび}で さわって {読|よ}む {文字|もじ}の ことです。',
+    inputForm: { question: '「{作品|さくひん}を てんじする。」の「てんじ」に あてはまる 漢字を 書こう。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1362,6 +1394,7 @@ window.QUESTION_BANK.push(
     answer: '{比喩|ひゆ}（たとえ）',
     hints: ['「まるで 〜の ように」に {注目|ちゅうもく}しよう。', '{雪|ゆき}を ほかの ものに たとえて いるね。'],
     explanation: '「まるで {綿|わた}の ように」と、{雪|ゆき}を {綿|わた}に たとえて いるので {比喩|ひゆ}です。',
+    inputForm: { question: '「{雪|ゆき}が まるで {綿|わた}の ように {白|しろ}い。」に {使|つか}われて いる 表現の 工夫を 何と いうかな。', answer: '比喩', acceptedAnswers: ['ひゆ', 'たとえ', '比ゆ', '直喩', 'ちょくゆ', '比喩（たとえ）'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1392,6 +1425,7 @@ window.QUESTION_BANK.push(
     answer: '誤る',
     hints: ['まちがえる という {意味|いみ}の「あやまる」は「ごんべん」に「{呉|ご}」の {漢字|かんじ}だよ。', '「あやま」までが {漢字|かんじ}の {読|よ}みで、{送|おく}りがなは「る」だけだよ。'],
     explanation: 'まちがえる という {意味|いみ}の「あやまる」は「{誤|あやま}る」と {書|か}きます。おわびを する {意味|いみ}の「あやまる」は「{謝|あやま}る」です。',
+    inputForm: { question: '「{計算|けいさん}を あやまる（まちがえる）。」の「あやまる」を {漢字|かんじ}と {送|おく}りがなで {書|か}いた とき、どう 書くかな。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1402,6 +1436,7 @@ window.QUESTION_BANK.push(
     answer: '{敬体|けいたい}',
     hints: ['{相手|あいて}を うやまう、ていねいな {書|か}き{方|かた}だよ。', '「だ」「である」で {終|お}わる {書|か}き{方|かた}は「{常体|じょうたい}」だよ。'],
     explanation: '「です」「ます」で {終|お}わる {書|か}き{方|かた}を「{敬体|けいたい}」、「だ」「である」で {終|お}わる {書|か}き{方|かた}を「{常体|じょうたい}」と いいます。1つの {文章|ぶんしょう}では、どちらかに そろえて {書|か}きます。',
+    inputForm: { acceptedAnswers: ['けいたい', 'です・ます体', 'ですます体', 'です・ます調', 'ですます調'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1484,6 +1519,7 @@ window.QUESTION_BANK.push(
     answer: 'つかない',
     hints: ['「{決|けっ}して」の あとには、{決|き}まった {言|い}い{方|かた}が くるよ。', '「{決|けっ}して 〜ない」の {形|かたち}で {使|つか}うよ。'],
     explanation: '「{決|けっ}して」は、あとに「〜ない」などの {打|う}ち{消|け}しの ことばが くる ことばです。「{決|けっ}して うそを つかない」と なります。',
+    inputForm: { question: '□に 入る ことばを 書こう。「{決|けっ}して うそを □。」', acceptedAnswers: ['つきません'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1504,6 +1540,7 @@ window.QUESTION_BANK.push(
     answer: '{用意|ようい}',
     hints: ['「{遠足|えんそく}の {準備|じゅんび}を する」の「{準備|じゅんび}」と {入|い}れかえても {意味|いみ}が かわらない ことばを さがそう。', 'ものごとの {前|まえ}に ととのえて おく ことだよ。'],
     explanation: '「{準備|じゅんび}」と「{用意|ようい}」は、ものごとの {前|まえ}に {必要|ひつよう}な ものを ととのえて おく という にた {意味|いみ}の ことばです。',
+    inputForm: { question: '「{準備|じゅんび}」と にた {意味|いみ}の ことば（類義語）は 何かな。', acceptedAnswers: ['ようい', '支度', 'したく'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1514,6 +1551,7 @@ window.QUESTION_BANK.push(
     answer: '{擬人法|ぎじんほう}',
     hints: ['「ささやく」のは、ふつう だれが する ことかな。', '{人|ひと}では ない ものを、{人|ひと}のように あらわして いるね。'],
     explanation: '「ささやく」は {人|ひと}が する ことです。{風|かぜ}を {人|ひと}のように あらわして いるので {擬人法|ぎじんほう}です。',
+    inputForm: { question: '「{春|はる}の {風|かぜ}が そっと ささやいた。」に {使|つか}われて いる 表現の 工夫を 何と いうかな。', acceptedAnswers: ['ぎじんほう'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1542,6 +1580,7 @@ window.QUESTION_BANK.push(
     answer: '{効果|こうか}',
     hints: ['ある ことを した ために あらわれた、よい {結果|けっか}の ことだよ。', '「{効|き}く」の {漢字|かんじ}を {使|つか}うよ。'],
     explanation: 'ある ことを した ために あらわれた {結果|けっか}は「{効果|こうか}」です。「{校歌|こうか}」は {学校|がっこう}の {歌|うた}、「{高価|こうか}」は ねだんが {高|たか}い こと、「{降下|こうか}」は {高|たか}い ところから おりる こと（パラシュートで {降下|こうか}する）です。',
+    inputForm: { question: '「{毎日|まいにち} {練習|れんしゅう}した こうかが {出|で}て きた。」の「こうか」に あてはまる 漢字を 書こう。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1552,6 +1591,7 @@ window.QUESTION_BANK.push(
     answer: '{倒置|とうち}',
     hints: ['ふつうの {順番|じゅんばん}に なおすと、どんな {文|ぶん}に なるかな。', '「この {夕焼|ゆうや}けは {美|うつく}しいなあ。」が もとの {順番|じゅんばん}だね。'],
     explanation: 'ふつうは「この {夕焼|ゆうや}けは {美|うつく}しいなあ。」ですが、{順番|じゅんばん}を {入|い}れかえて「{美|うつく}しいなあ」を {強|つよ}めて います。これを {倒置|とうち}と いいます。',
+    inputForm: { question: '「{美|うつく}しいなあ、この {夕焼|ゆうや}けは。」に {使|つか}われて いる 表現の 工夫を 何と いうかな。', acceptedAnswers: ['とうち', '倒置法', 'とうちほう'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -1564,6 +1604,7 @@ window.QUESTION_BANK.push(
     answer: '{形容動詞|けいようどうし}',
     hints: ['{言|い}い{切|き}りの {形|かたち}（{終止形|しゅうしけい}）に すると どう なるかな。', '{言|い}い{切|き}りが「い」なら {形容詞|けいようし}、「だ」なら {形容動詞|けいようどうし}。'],
     explanation: '「{静|しず}かな」は {言|い}い{切|き}りの {形|かたち}が「{静|しず}かだ」と なるので {形容動詞|けいようどうし}です。',
+    inputForm: { question: '「{静|しず}かな {海|うみ}」の「{静|しず}かな」の 品詞は 何か。', acceptedAnswers: ['けいようどうし'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1610,6 +1651,7 @@ window.QUESTION_BANK.push(
     answer: 'おじいさん',
     hints: ['{竹|たけ}の {中|なか}から かぐや{姫|ひめ}を {見|み}つけた {人物|じんぶつ}。', '「{翁|おきな}」に {対|たい}して、おばあさんは「{嫗|おうな}」という。'],
     explanation: '「{翁|おきな}」は {年老|としお}いた {男性|だんせい}、つまり「おじいさん」の ことです。',
+    inputForm: { question: '『{竹取物語|たけとりものがたり}』の {冒頭|ぼうとう}「{今|いま}は{昔|むかし}、{竹取|たけとり}の{翁|おきな}と いふ もの ありけり。」の「{翁|おきな}」の 意味は 何か。', acceptedAnswers: ['老人', 'ろうじん', 'じいさん', 'おきな'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1620,6 +1662,7 @@ window.QUESTION_BANK.push(
     answer: 'が',
     hints: ['{付属語|ふぞくご}は、それだけでは {意味|いみ}が わからず、{自立語|じりつご}の {後|あと}に つく {語|ご}。', '{助詞|じょし}や {助動詞|じょどうし}が {付属語|ふぞくご}。'],
     explanation: '「が」は {助詞|じょし}で、{付属語|ふぞくご}です。「{弟|おとうと}」「{本|ほん}」（{名詞|めいし}）、「{読|よ}む」（{動詞|どうし}）は {自立語|じりつご}です。（「を」も {付属語|ふぞくご}です）',
+    inputForm: { question: '「{弟|おとうと}が {本|ほん}を {読|よ}む。」の {中|なか}で、付属語は 何か。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1639,6 +1682,7 @@ window.QUESTION_BANK.push(
     answer: '{春|はる}',
     hints: ['「{雪|ゆき}」が ある からといって {冬|ふゆ}とは かぎらない。', '{雪|ゆき}が「とけて」いる。{子|こ}どもたちが {外|そと}に あふれ{出|で}て くるのは いつか。'],
     explanation: '{季語|きご}は「{雪|ゆき}とけて（{雪解|ゆきど}け）」で、{季節|きせつ}は {春|はる}です。{冬|ふゆ}が {終|お}わり、{子|こ}どもたちが {外|そと}で {遊|あそ}ぶ ようすを よんで います。',
+    inputForm: { question: '{俳句|はいく}「{雪|ゆき}とけて {村|むら}いっぱいの {子|こ}どもかな」（{小林一茶|こばやしいっさ}）の 季節は 何か。', acceptedAnswers: ['はる'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -1650,6 +1694,7 @@ window.QUESTION_BANK.push(
     answer: '{副詞|ふくし}',
     hints: ['「ゆっくり」は {活用|かつよう}しない（{形|かたち}が かわらない）{語|ご}。', '{主|おも}に {用言|ようげん}（ここでは「{流|なが}れる」）を くわしく する {品詞|ひんし}。'],
     explanation: '「ゆっくり」は {活用|かつよう}せず、{用言|ようげん}「{流|なが}れる」を {修飾|しゅうしょく}して いるので {副詞|ふくし}です。',
+    inputForm: { question: '「{雲|くも}が ゆっくり {流|なが}れる。」の「ゆっくり」の 品詞は 何か。', acceptedAnswers: ['ふくし'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1772,6 +1817,7 @@ window.QUESTION_BANK.push(
     answer: '{対象|たいしょう}',
     hints: ['はたらきかける {相手|あいて}・{目標|もくひょう}と なる もの。', '「{対照|たいしょう}」は くらべる こと、「{対称|たいしょう}」は つりあって いる こと。'],
     explanation: 'はたらきかける {相手|あいて}や {目標|もくひょう}は「{対象|たいしょう}」です。「{対照|たいしょう}」は くらべ{合|あ}わせる こと（{対照的|たいしょうてき}）、「{対称|たいしょう}」は {左右|さゆう}などが つりあって いる こと（{左右対称|さゆうたいしょう}）です。',
+    inputForm: { question: '「{小学生|しょうがくせい}を たいしょうに した {本|ほん}。」の「たいしょう」に あてはまる 漢字を 書け。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -1800,6 +1846,7 @@ window.QUESTION_BANK.push(
     answer: 'ヘルマン・ヘッセ',
     hints: ['ドイツ{生|う}まれの {作家|さっか}。', '『{車輪|しゃりん}の{下|した}』も この {作家|さっか}の {作品|さくひん}。'],
     explanation: '『{少年|しょうねん}の{日|ひ}の{思|おも}い{出|で}』は、ドイツ{生|う}まれの {作家|さっか} ヘルマン・ヘッセの {作品|さくひん}です。{主人公|しゅじんこう}が {友|とも}だちの {大切|たいせつ}な チョウを こわして しまい、つぐなおうと しても ゆるされない {場面|ばめん}で {知|し}られます。',
+    inputForm: { acceptedAnswers: ['ヘッセ', 'ヘルマンヘッセ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1810,6 +1857,7 @@ window.QUESTION_BANK.push(
     answer: '{連体詞|れんたいし}',
     hints: ['「{大|おお}きな」は「{大|おお}きだ」「{大|おお}きかった」のように {形|かたち}が かわるか。', '{活用|かつよう}せず、{体言|たいげん}（{名詞|めいし}）だけを {修飾|しゅうしょく}する {品詞|ひんし}。'],
     explanation: '「{大|おお}きな」は {活用|かつよう}せず、{体言|たいげん}「{木|き}」だけを {修飾|しゅうしょく}するので {連体詞|れんたいし}です。{形容詞|けいようし}の「{大|おお}きい」と まちがえやすいので {注意|ちゅうい}しましょう。',
+    inputForm: { question: '「{大|おお}きな {木|き}の {下|した}で {休|やす}む。」の「{大|おお}きな」の 品詞は 何か。', acceptedAnswers: ['れんたいし'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -1822,6 +1870,7 @@ window.QUESTION_BANK.push(
     answer: '{上一段活用|かみいちだんかつよう}',
     hints: ['「ない」を つけて みよう。', '「{起|お}きない」の「き」は イ{段|だん}の {音|おと}。'],
     explanation: '「ない」を つけると「{起|お}きない」と なり、「ない」の {直前|ちょくぜん}が イ{段|だん}の {音|おと}なので {上一段活用|かみいちだんかつよう}です。（ア{段|だん}なら {五段|ごだん}、エ{段|だん}なら {下一段|しもいちだん}）',
+    inputForm: { question: '{動詞|どうし}「{起|お}きる」の 活用の 種類は 何か。', acceptedAnswers: ['かみいちだんかつよう', '上一段'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1868,6 +1917,7 @@ window.QUESTION_BANK.push(
     answer: '{枕草子|まくらのそうし}',
     hints: ['{平安時代|へいあんじだい}に {清少納言|せいしょうなごん}が {書|か}いた {随筆|ずいひつ}。', '{季節|きせつ}ごとの {好|す}きな {時間帯|じかんたい}を {述|の}べて いる。'],
     explanation: '「{春|はる}は あけぼの。」は、{清少納言|せいしょうなごん}の『{枕草子|まくらのそうし}』の {冒頭|ぼうとう}です。『{徒然草|つれづれぐさ}』は「つれづれなるままに」、『{方丈記|ほうじょうき}』は「ゆく{河|かわ}の{流|なが}れは{絶|た}えずして」、『{平家物語|へいけものがたり}』は「{祇園精舎|ぎおんしょうじゃ}の{鐘|かね}の{声|こえ}」で {始|はじ}まります。',
+    inputForm: { question: '「{春|はる}は あけぼの。」で {始|はじ}まる 作品は 何か。', acceptedAnswers: ['まくらのそうし', '枕草紙'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -1897,6 +1947,7 @@ window.QUESTION_BANK.push(
     answer: '{尊敬|そんけい}',
     hints: ['{話|はな}して いるのは {誰|だれ}か。', '{目上|めうえ}の {人|ひと}の {動作|どうさ}に ついて いる。'],
     explanation: '{先生|せんせい}（{目上|めうえ}の {人|ひと}）の {動作|どうさ}「{話|はな}す」を {高|たか}めて いるので、「れる」は {尊敬|そんけい}の {意味|いみ}です。',
+    inputForm: { question: '「{先生|せんせい}が {話|はな}される。」の「れる」の 意味は 何か。', acceptedAnswers: ['そんけい'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -1908,6 +1959,7 @@ window.QUESTION_BANK.push(
     answer: '{仮定形|かていけい}',
     hints: ['すぐ {後|あと}に {続|つづ}く {語|ご}に {注目|ちゅうもく}しよう。', '「ば」に {続|つづ}く {形|かたち}は {何|なに}か。'],
     explanation: '「ば」に {続|つづ}く {形|かたち}なので {仮定形|かていけい}です。「{書|か}け。」と {言|い}い{切|き}れば {命令形|めいれいけい}に なります。',
+    inputForm: { question: '「{手紙|てがみ}を {書|か}けば、{気持|きも}ちが {伝|つた}わる。」の「{書|か}け」の 活用形は 何か。', acceptedAnswers: ['かていけい'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2000,6 +2052,7 @@ window.QUESTION_BANK.push(
     answer: '{兼好法師|けんこうほうし}',
     hints: ['{鎌倉時代|かまくらじだい}の {終|お}わりごろに {書|か}かれた {随筆|ずいひつ}。', '『{方丈記|ほうじょうき}』の {作者|さくしゃ}は {鴨長明|かものちょうめい}、『{枕草子|まくらのそうし}』は {清少納言|せいしょうなごん}。'],
     explanation: '『{徒然草|つれづれぐさ}』の {作者|さくしゃ}は {兼好法師|けんこうほうし}（{吉田兼好|よしだけんこう}）です。『{枕草子|まくらのそうし}』『{方丈記|ほうじょうき}』と あわせて {日本|にほん}の {三大随筆|さんだいずいひつ}と よばれます。',
+    inputForm: { acceptedAnswers: ['吉田兼好', 'けんこうほうし', 'よしだけんこう', '卜部兼好'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2010,6 +2063,7 @@ window.QUESTION_BANK.push(
     answer: '{助動詞|じょどうし}',
     hints: ['「ない」を「ぬ」に {置|お}きかえて みよう。', '「{降|ふ}らぬ」と {言|い}える「ない」は、{打|う}ち{消|け}しの {助動詞|じょどうし}。'],
     explanation: '「{降|ふ}らぬ」と {置|お}きかえられるので、{打|う}ち{消|け}しの {助動詞|じょどうし}「ない」です。「お{金|かね}が ない」のように「ぬ」に {置|お}きかえられない「ない」は {形容詞|けいようし}です。',
+    inputForm: { question: '「{今日|きょう}は {雨|あめ}が {降|ふ}らない。」の「ない」の 品詞は 何か。', acceptedAnswers: ['じょどうし'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2030,6 +2084,7 @@ window.QUESTION_BANK.push(
     answer: '{構成|こうせい}',
     hints: ['{文章|ぶんしょう}の {組|く}み{立|た}ての こと。', '「{校正|こうせい}」は {書|か}いた {後|あと}に {誤|あやま}りを {直|なお}す こと。'],
     explanation: '{文章|ぶんしょう}の {組|く}み{立|た}ては「{構成|こうせい}」です。「{校正|こうせい}」は {文字|もじ}の {誤|あやま}りを {直|なお}す こと、「{公正|こうせい}」は かたよりが ない こと、「{厚生|こうせい}」は {人々|ひとびと}の {健康|けんこう}や くらしを ゆたかに する ことです。',
+    inputForm: { question: '「{作文|さくぶん}の こうせいを {考|かんが}えてから {書|か}き{始|はじ}める。」の「こうせい」に あてはまる 漢字を 書け。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2058,6 +2113,7 @@ window.QUESTION_BANK.push(
     answer: '{自発|じはつ}',
     hints: ['{自分|じぶん}で {思|おも}い{出|だ}そうと して いるか。', '「{自然|しぜん}に 〜して しまう」と {言|い}いかえられる。'],
     explanation: '「{自然|しぜん}に {思|おも}い{出|だ}して しまう」という {意味|いみ}なので {自発|じはつ}です。「{思|おも}う」「{感|かん}じる」「しのぶ」など、{心|こころ}の はたらきを {表|あらわ}す {動詞|どうし}に つく ことが {多|おお}いです。',
+    inputForm: { question: '「{冬|ふゆ}に なると {故郷|ふるさと}の ことが {思|おも}い{出|だ}される。」の「れる」の 意味は 何か。', acceptedAnswers: ['じはつ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2068,6 +2124,7 @@ window.QUESTION_BANK.push(
     answer: '{太宰治|だざいおさむ}',
     hints: ['{昭和|しょうわ}の {初|はじ}めに {活躍|かつやく}した {作家|さっか}で、『{人間失格|にんげんしっかく}』も {書|か}いた。', '{青森県|あおもりけん}の {生|う}まれで、『{斜陽|しゃよう}』も {書|か}いた。'],
     explanation: '『{走|はし}れメロス』は {太宰治|だざいおさむ}の {作品|さくひん}です。{夏目漱石|なつめそうせき}は『{坊|ぼ}っちゃん』、{芥川龍之介|あくたがわりゅうのすけ}は『{羅生門|らしょうもん}』、{宮沢賢治|みやざわけんじ}は『{銀河鉄道|ぎんがてつどう}の{夜|よる}』などを {書|か}きました。',
+    inputForm: { acceptedAnswers: ['だざいおさむ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
 
@@ -2080,6 +2137,7 @@ window.QUESTION_BANK.push(
     answer: 'や',
     hints: ['{切|き}れ{字|じ}は、{句|く}の {切|き}れ{目|め}を {示|しめ}し、{感動|かんどう}を {強|つよ}める {言葉|ことば}。', '「や」「かな」「けり」などが {代表的|だいひょうてき}な {切|き}れ{字|じ}。'],
     explanation: '「{古池|ふるいけ}や」の「や」が {切|き}れ{字|じ}です。「や」「かな」「けり」が {代表的|だいひょうてき}な {切|き}れ{字|じ}です。',
+    inputForm: { question: '{俳句|はいく}「{古池|ふるいけ}や {蛙|かわず}{飛|と}びこむ {水|みず}の{音|おと}」（{松尾芭蕉|まつおばしょう}）の 切れ字は 何か。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -2126,6 +2184,7 @@ window.QUESTION_BANK.push(
     answer: '{松尾芭蕉|まつおばしょう}',
     hints: ['{江戸時代|えどじだい}の {前半|ぜんはん}、{東北|とうほく}・{北陸|ほくりく}を {旅|たび}した {俳人|はいじん}。', '「{古池|ふるいけ}や」の {句|く}の {作者|さくしゃ}。'],
     explanation: '『おくのほそ{道|みち}』は {松尾芭蕉|まつおばしょう}が {東北|とうほく}・{北陸|ほくりく}を {旅|たび}して {書|か}いた {紀行文|きこうぶん}です。',
+    inputForm: { acceptedAnswers: ['芭蕉', 'まつおばしょう'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2136,6 +2195,7 @@ window.QUESTION_BANK.push(
     answer: '{掛詞|かけことば}',
     hints: ['{同|おな}じ {音|おと}の {言葉|ことば}に {意味|いみ}を「かける」。', '{例|れい}：「まつ」に「{松|まつ}」と「{待|ま}つ」の {意味|いみ}を {持|も}たせる。'],
     explanation: '一つの {言葉|ことば}に {同音|どうおん}の {二|ふた}つの {意味|いみ}を {持|も}たせる {技法|ぎほう}は「{掛詞|かけことば}」です。「{枕詞|まくらことば}」は {特定|とくてい}の {言葉|ことば}を {導|みちび}く {決|き}まった {言葉|ことば}（「ひさかたの」→「{光|ひかり}」など）です。',
+    inputForm: { question: '{和歌|わか}で、一つの {言葉|ことば}に {二|ふた}つの {意味|いみ}を {持|も}たせる 表現技法を 何と いうか。', acceptedAnswers: ['かけことば'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2155,6 +2215,7 @@ window.QUESTION_BANK.push(
     answer: '{追及|ついきゅう}',
     hints: ['{責任|せきにん}や {罪|つみ}を {問|と}いつめる ときの「ついきゅう」。', '「{利益|りえき}を ついきゅう」は「{追求|ついきゅう}」、「{真理|しんり}を ついきゅう」は「{追究|ついきゅう}」。'],
     explanation: '{責任|せきにん}を {問|と}いつめる ときは「{追及|ついきゅう}」です。「{追求|ついきゅう}」は {目的|もくてき}の ものを {追|お}い{求|もと}める こと、「{追究|ついきゅう}」は {学問|がくもん}などで {深|ふか}く {調|しら}べる ことです。',
+    inputForm: { question: '「{事故|じこ}の {責任|せきにん}を ついきゅうする。」の「ついきゅう」に あてはまる 漢字を 書け。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   // --- v0.3 で追加（B案：各学年27問） ---
@@ -2166,6 +2227,7 @@ window.QUESTION_BANK.push(
     answer: '{魯迅|ろじん}',
     hints: ['{中国|ちゅうごく}の {作家|さっか}。', '『{阿|あ}Q{正伝|せいでん}』も この {作家|さっか}の {作品|さくひん}。'],
     explanation: '『{故郷|こきょう}』は {中国|ちゅうごく}の {作家|さっか} {魯迅|ろじん}の {小説|しょうせつ}です。{最後|さいご}に「{私|わたし}」が、{希望|きぼう}を {地上|ちじょう}の {道|みち}に たとえて {考|かんが}える {場面|ばめん}で {知|し}られます。',
+    inputForm: { acceptedAnswers: ['ろじん'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2268,6 +2330,7 @@ window.QUESTION_BANK.push(
     answer: '{秋|あき}',
     hints: ['「{名月|めいげつ}」は {旧暦|きゅうれき}8{月|がつ}15{日|にち}の {月|つき}（{中秋|ちゅうしゅう}の {名月|めいげつ}）。', 'お{月見|つきみ}を する {季節|きせつ}を {考|かんが}えよう。'],
     explanation: '「{名月|めいげつ}」は {秋|あき}の {季語|きご}です。{俳句|はいく}では、ただ「{月|つき}」と いう だけでも {秋|あき}の {季語|きご}に なります。',
+    inputForm: { question: '{俳句|はいく}「{名月|めいげつ}や {池|いけ}を めぐりて {夜|よ}もすがら」（{松尾芭蕉|まつおばしょう}）の {季語|きご}「{名月|めいげつ}」の 季節は 何か。', acceptedAnswers: ['あき'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -2316,6 +2379,7 @@ window.QUESTION_BANK.push(
     answer: '{森鷗外|もりおうがい}',
     hints: ['{明治|めいじ}・{大正|たいしょう}の {作家|さっか}で、{軍医|ぐんい}でも あった。', '『{舞姫|まいひめ}』も この {作家|さっか}の {作品|さくひん}。'],
     explanation: '『{高瀬舟|たかせぶね}』は {森鷗外|もりおうがい}の {作品|さくひん}です。{森鷗外|もりおうがい}は {軍医|ぐんい}として はたらきながら、『{舞姫|まいひめ}』『{山椒大夫|さんしょうだゆう}』などを {書|か}きました。',
+    inputForm: { acceptedAnswers: ['森鴎外', 'もりおうがい'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {

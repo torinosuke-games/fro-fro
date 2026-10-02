@@ -76,6 +76,17 @@
       U.rerender();
     }
 
+    // 学年・主人公の絵（判断198）
+    main.appendChild(U.el('div', { class: 'panel stack' }, [
+      U.R('h3', '', U.T('settingsGrade')),
+      U.R('div', 'small muted', U.T('settingsGradeHelp')),
+      U.gradePicker(s.player.grade, function (g) { app.commit(FF.state.setPlayerGrade(app.state, g)); app.studySel = null; U.toast(U.T('gradeChanged')); U.rerender(); })
+    ]));
+    if (U.artOn()) main.appendChild(U.el('div', { class: 'panel stack' }, [
+      U.R('h3', '', U.T('settingsAvatar')),
+      U.avatarPicker(s.player.avatar, function (id) { app.commit(FF.state.setPlayerAvatar(app.state, id)); U.rerender(); }, s.player.grade)
+    ]));
+
     // ふりがな
     var on = s.settings.furigana;
     function setFurigana(v) {

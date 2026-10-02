@@ -1,5 +1,5 @@
 // ファイル構成のルール（SPEC 14.1・21.1・3.2）
-module.exports = ({ test, assert }) => {
+module.exports = ({ test, FF, assert, plain }) => {
   const fs = require('fs');
   const path = require('path');
   const { ROOT, ALL_SCRIPTS, LOGIC_FILES, UI_FILES } = require('../lib/loader');
@@ -73,5 +73,16 @@ module.exports = ({ test, assert }) => {
       'region-snowfield', 'region-forest', 'region-glacier'].concat(['lumberjack', 'miner', 'mason', 'cook', 'smith', 'hunter', 'elder', 'child'].map(n => 'villager-' + n)));
     const missing = names.filter(n => !fs.existsSync(path.join(ROOT, 'img/art', n + (n.startsWith('villager-') ? '.png' : '.jpg'))));   // 人の絵は透明の背景の PNG（判断195）
     assert.deepStrictEqual(missing, []);
+  });
+
+  test('主人公の絵（判断204）：小学生用・中学生用の12人ずつの絵がすべてあり、学年で候補が分かれる', () => {
+    const D = FF.defs;
+    assert.strictEqual(D.AVATARS_ELEM.length, 12);
+    assert.strictEqual(D.AVATARS_JR.length, 12);
+    assert.deepStrictEqual(plain(D.AVATARS), plain(D.AVATARS_ELEM).concat(plain(D.AVATARS_JR)));
+    const missing = D.AVATARS.filter(id => !fs.existsSync(path.join(ROOT, 'img/art', 'avatar-' + id + '.jpg')));
+    assert.deepStrictEqual(plain(missing), []);
+    for (const g of [1, 4, 6, null]) assert.strictEqual(D.avatarsFor(g), D.AVATARS_ELEM, String(g));
+    for (const g of [7, 8, 9]) assert.strictEqual(D.avatarsFor(g), D.AVATARS_JR, String(g));
   });
 };

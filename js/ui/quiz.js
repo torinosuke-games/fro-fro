@@ -8,9 +8,13 @@
 
   function nextQuestion() {
     var app = FF.app, ses = app.session;
-    var q = L.pickQuestion(app.bank, ses.sel, {
-      correctLog: app.state.learning.correctLog, recentIds: ses.recentIds, now: app.now(), rng: Math.random
-    });
+    // デバッグの「レビューしていない問題だけ出す」（判断202）。その組み合わせに残っていなければ、ふつうに出す
+    var rv = FF.debugMode && U.review && U.review.onlyUnreviewed() ? U.review.filterBank(app.bank) : null;
+    var ctxPick = { correctLog: app.state.learning.correctLog, recentIds: ses.recentIds, now: app.now(), rng: Math.random };
+    // 「レビューした問題は出さない」（判断203）：残りがなければ出さず、全部レビューしたことを画面に出す
+    var hide = FF.debugMode && U.review && U.review.hideReviewed();
+    var q = (rv && L.pickQuestion(rv, ses.sel, ctxPick)) || L.pickQuestion(hide ? U.review.withoutReviewed(app.bank) : app.bank, ses.sel, ctxPick);
+    ses.allReviewed = !q && hide;
     ses.outcome = null;
     ses.retry = null;
     ses.notice = null;
@@ -85,7 +89,9 @@
     main.appendChild(panel);
 
     if (!ses.attempt) {
-      panel.appendChild(U.R('div', 'center muted', U.T('preparing')));
+      // デバッグの「レビューした問題は出さない」で残りがないとき（判断203。デバッグだけなので文言はここに書く）
+      if (ses.allReviewed) panel.appendChild(U.el('div', { class: 'center muted', text: 'この組み合わせの問題は、すべてレビューした（デバッグ）' }));
+      else panel.appendChild(U.R('div', 'center muted', U.T('preparing')));
       main.appendChild(U.el('button', { class: 'btn block', rich: U.T('back'), on: { click: function () { U.show('study', { tab: 'learn' }); } } }));
       return;
     }
@@ -173,6 +179,7 @@
       fb.appendChild(U.el('div', { class: 'pre' }, U.rich(o.explanation)));
       if (L.shouldRecommendLower(app.state, q.subject, q.gradeLevel)) fb.appendChild(U.R('div', 'notice', U.T('recommendLower')));
       panel.appendChild(fb);
+      if (FF.debugMode && U.review) panel.appendChild(U.review.panel(q));   // 問題のレビュー（デバッグモードだけ。判断202）
     }
 
     // ［学習を終える］［次の問題 ▶］は、出題の最初から画面の下（ナビの上）に固定しておく（判定の前後でバーの位置・大きさは変えない）。

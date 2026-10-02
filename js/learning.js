@@ -37,6 +37,12 @@
         if (norm.some(function (c, i) { return norm.indexOf(c) !== i; })) e.push('choices に重複がある');
       }
     }
+    // 選択問題を書き問題にも使う形（判断200）。中身は inputVariant で作った書き問題として検証する
+    if (q.inputForm !== undefined) {
+      if (q.answerType !== 'choice') e.push('inputForm は選択問題にだけ付けられる');
+      else if (!q.inputForm || typeof q.inputForm !== 'object') e.push('inputForm がオブジェクトではない');
+      else validateQuestion(inputVariant(q)).forEach(function (m) { e.push('inputForm: ' + m); });
+    }
     if (q.answerType === 'input') {
       if (FF.answer.VALIDATION_MODES.indexOf(q.validationMode) < 0) e.push('validationMode が不正: ' + q.validationMode);
       if (q.validationMode === 'any-of' && !(q.acceptedAnswers && q.acceptedAnswers.length)) e.push('any-of なのに acceptedAnswers が空');
@@ -44,6 +50,30 @@
       if (str(q.answer) && !FF.answer.judgeInput(q, q.answer).correct) e.push('answer 自身が正解と判定されない');
     }
     return e;
+  }
+
+  // 選択問題の inputForm から、書き問題として出す問題を作る（判断200）。ID は元の ID + '#input'（くり返しの数え方も別になる）。
+  // inputForm: { question?, answer?, acceptedAnswers?, validationMode, hints?, explanation?, answerDisplay?, reviewed }
+  // 省いた項目は元の選択問題のものを使う（answer を変えたときの answerDisplay は元のものを使わない）
+  var INPUT_SUFFIX = '#input';
+  function inputVariant(q) {
+    var f = q.inputForm || {};
+    var v = {};
+    Object.keys(q).forEach(function (k) { if (k !== 'choices' && k !== 'inputForm') v[k] = q[k]; });
+    v.id = q.id + INPUT_SUFFIX;
+    v.answerType = 'input';
+    v.derivedFrom = q.id;
+    ['question', 'hints', 'explanation'].forEach(function (k) { if (f[k] !== undefined) v[k] = f[k]; });
+    if (f.answer !== undefined) { v.answer = f.answer; delete v.answerDisplay; }
+    else if (/[{}]/.test(v.answer)) {   // 選択問題の答えのふりがなの記法は、入力と比べられるように外す（表示は記法入りのまま）
+      if (v.answerDisplay === undefined) v.answerDisplay = v.answer;
+      v.answer = FF.util.plainText(v.answer);
+    }
+    if (f.answerDisplay !== undefined) v.answerDisplay = f.answerDisplay;
+    v.validationMode = f.validationMode;
+    if (f.acceptedAnswers !== undefined) v.acceptedAnswers = f.acceptedAnswers; else delete v.acceptedAnswers;
+    v.reviewed = f.reviewed;
+    return v;
   }
 
   // 「正しい答え」として表示する文字列。自由入力の answer には {漢字|よみ} を書けない（入力と比べるため）ので、
@@ -60,10 +90,12 @@
       var errors = validateQuestion(q);
       if (errors.length) { bank.invalid.push({ id: q && q.id, errors: errors }); return; }
       if (bank.byId[q.id]) { bank.duplicates.push(q.id); return; }
-      bank.byId[q.id] = q;
-      var k = keyOf(q.subject, q.gradeLevel, q.difficulty, q.answerType);
-      (bank.byKey[k] = bank.byKey[k] || []).push(q);
-      bank.count++;
+      [q].concat(q.inputForm ? [inputVariant(q)] : []).forEach(function (x) {   // 書き問題の形も一緒に入れる（判断200）
+        bank.byId[x.id] = x;
+        var k = keyOf(x.subject, x.gradeLevel, x.difficulty, x.answerType);
+        (bank.byKey[k] = bank.byKey[k] || []).push(x);
+        bank.count++;
+      });
     });
     return bank;
   }
@@ -296,6 +328,8 @@
   FF.learning = {
     keyOf: keyOf,
     validateQuestion: validateQuestion,
+    inputVariant: inputVariant,
+    INPUT_SUFFIX: INPUT_SUFFIX,
     displayAnswer: displayAnswer,
     createBank: createBank,
     staticPool: staticPool,
