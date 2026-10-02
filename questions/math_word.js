@@ -115,7 +115,7 @@ window.QUESTION_BANK.push(
     answer: '20こ',
     hints: ['「5こずつ」が 4ふくろ ぶん あるよ。', '5×4 を かんがえよう。'],
     explanation: '1ふくろ 5こが 4ふくろ ぶんなので、5×4＝20。あめは 20こです。',
-    inputForm: { answer: '20', acceptedAnswers: ['20こ', '20個'], validationMode: 'number', reviewed: false },
+    inputForm: { answer: '20', acceptedAnswers: ['20こ', '20個'], validationMode: 'number', reviewed: true },
     reviewed: true
   },
   {
@@ -192,7 +192,7 @@ window.QUESTION_BANK.push(
     answer: '27にん',
     hints: ['まず 4にんずつ 6くみ ぶんを かけざんで もとめよう。', 'あまった 3にんも わすれずに たそう。'],
     explanation: '4×6＝24、24＋3＝27 なので、こどもは ぜんぶで 27にんです。',
-    inputForm: { answer: '27', acceptedAnswers: ['27にん', '27人'], validationMode: 'number', reviewed: false },
+    inputForm: { answer: '27', acceptedAnswers: ['27にん', '27人'], validationMode: 'number', reviewed: true },
     reviewed: true
   },
   {

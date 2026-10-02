@@ -196,7 +196,6 @@ window.QUESTION_BANK.push(
     answer: 'おおかみ',
     hints: ['ひらがなでは、のばす おとに「ー」を つかわないよ。', '「おおきい」と おなじ かきかたを するよ。'],
     explanation: '「おおかみ」は「お」を ふたつ かきます。「おおきい」「とおい」なども おなじです。',
-    inputForm: { question: 'どうぶつの「おおかみ」を ひらがなで ただしく かこう。', validationMode: 'exact', reviewed: false },
     reviewed: true
   },
   {
@@ -265,7 +264,7 @@ window.QUESTION_BANK.push(
     answer: 'ぼん',
     hints: ['ほそながい ものを かぞえる ことばだよ。', '「かみ」は まい、「いぬ」は ひき、「くるま」は だい で かぞえるね。'],
     explanation: 'えんぴつのような ほそながい ものは「ほん（ぼん・ぽん）」で かぞえます。「3ぼん」と いいます。',
-    inputForm: { question: 'えんぴつを かぞえる ときの ことばは なにかな。「えんぴつが 3□ ある。」', acceptedAnswers: ['ほん', '本'], validationMode: 'kana-insensitive', reviewed: false },
+    inputForm: { question: 'えんぴつを かぞえる ときの ことばは なにかな。「えんぴつが 3□ ある。」', acceptedAnswers: ['ほん', '本'], validationMode: 'kana-insensitive', reviewed: true },
     reviewed: true
   },
 
@@ -278,7 +277,7 @@ window.QUESTION_BANK.push(
     answer: '{冬|ふゆ}',
     hints: ['「{春|はる}」「{夏|なつ}」「{秋|あき}」は、1{年|ねん}の なかの なにを あらわす ことば かな。', 'きせつの なまえを さがそう。'],
     explanation: '「{春|はる}」「{夏|なつ}」「{秋|あき}」「{冬|ふゆ}」は、きせつの なまえです。',
-    inputForm: { question: '「{春|はる}」「{夏|なつ}」「{秋|あき}」と おなじ なかまの ことばは なにかな。', acceptedAnswers: ['ふゆ'], validationMode: 'kana-insensitive', reviewed: false },
+    inputForm: { question: '「{春|はる}」「{夏|なつ}」「{秋|あき}」の つぎは なにかな。', acceptedAnswers: ['ふゆ'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -325,7 +324,7 @@ window.QUESTION_BANK.push(
     answer: '{犬|いぬ}が',
     hints: ['ほえたのは だれ（なに）かな。', '「〜が」の かたちの ことばを さがそう。'],
     explanation: 'ほえたのは「{犬|いぬ}」なので、「なにが」に あたる ことばは「{犬|いぬ}が」です。',
-    inputForm: { question: '「{犬|いぬ}が {大|おお}きな こえで ほえた。」で、「なにが」に あたる ことばを 書き出そう。', acceptedAnswers: ['犬', 'いぬが', 'いぬ'], validationMode: 'kana-insensitive', reviewed: false },
+    inputForm: { question: '「{犬|いぬ}が {大|おお}きな こえで ほえた。」で、「なにが」に あたる ことばを 書き出そう。', acceptedAnswers: ['犬', 'いぬが', 'いぬ'], validationMode: 'kana-insensitive', reviewed: true },
     reviewed: true
   },
   {
@@ -336,7 +335,6 @@ window.QUESTION_BANK.push(
     answer: 'だから',
     hints: ['{雨|あめ}が ふって いた ことが、かさを さした わけ（りゆう）に なって いるよ。', 'わけを うけて つなぐ ことばを えらぼう。'],
     explanation: '「{雨|あめ}が ふって いた」ことが りゆうで「かさを さした」ので、「だから」で つなぎます。',
-    inputForm: { question: '□に 入る ことばを 書こう。「{雨|あめ}が ふって いた。□、かさを さして {出|で}かけた。」', acceptedAnswers: ['それで', 'そこで'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -436,11 +434,11 @@ window.QUESTION_BANK.push(
   {
     id: 'japanese_g2_katakana_002', subject: 'japanese', gradeLevel: 2, unit: 'katakana',
     difficulty: 'standard', answerType: 'input',
-    question: 'なつに およぐ「ぷうる」を、かたかなで かこう。',
+    question: 'なつに がっこうで およぐ、みずを ためた ところを、かたかなで かこう。',
     answer: 'プール', validationMode: 'exact',
-    hints: ['「ぷ」は かたかなで「プ」。まるを わすれないでね。', 'のばす おとは「ー」で かくよ。'],
+    hints: ['はじめの おとは「ぷ」。かたかなでは「プ」と かくよ。まるを わすれないでね。', 'のばす おとは「ー」で かくよ。'],
     explanation: '「プール」と かきます。かたかなでは、のばす おとを「ー」で あらわします。',
-    reviewed: true
+    reviewed: false
   },
   {
     id: 'japanese_g2_grammar_002', subject: 'japanese', gradeLevel: 2, unit: 'grammar',
@@ -459,7 +457,6 @@ window.QUESTION_BANK.push(
     answer: 'ところが',
     hints: ['「{晴|は}れて いた」のに「{雨|あめ}が ふって きた」ね。', 'まえと ちがう ことが おきた ときに つかう ことばだよ。'],
     explanation: '{晴|は}れて いたのに {雨|あめ}が ふって きたので、おもって いたのと ちがう ことが おきた ときの「ところが」で つなぎます。',
-    inputForm: { question: '□に 入る ことばを 書こう。「あさは よく {晴|は}れて いた。□、ひるから {雨|あめ}が ふって きた。」', acceptedAnswers: ['でも', 'しかし', 'けれども', 'けれど', 'だけど'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -470,7 +467,6 @@ window.QUESTION_BANK.push(
     answer: 'きらきら',
     hints: ['{星|ほし}が ひかる ようすを おもいうかべよう。', '「ざあざあ」は {雨|あめ}、「ぺこぺこ」は おなかの ようすだね。'],
     explanation: '{星|ほし}が ひかる ようすは「きらきら」です。「ざあざあ」は {雨|あめ}が ふる ようす、「ぺこぺこ」は おなかが すいた ようす、「のろのろ」は ゆっくり うごく ようすです。',
-    inputForm: { question: '□に あう ことばを 書こう。「よぞらで {星|ほし}が □ ひかる。」', acceptedAnswers: ['ぴかぴか'], validationMode: 'kana-insensitive', reviewed: false },
     reviewed: true
   },
   {
@@ -481,7 +477,7 @@ window.QUESTION_BANK.push(
     answer: 'とぶ',
     hints: ['ことりは なにを して いるのかな。', 'うごきを あらわす ことばは、ぶんの おわりの ほうに あるよ。'],
     explanation: 'ことりが して いる ことは「とぶ」なので、「どうする」に あたる ことばは「とぶ」です。',
-    inputForm: { question: '「ことりが {空|そら}を {高|たか}く とぶ。」で、「どうする」に あたる ことばを 書き出そう。', acceptedAnswers: ['飛ぶ'], validationMode: 'kana-insensitive', reviewed: false },
+    inputForm: { question: '「ことりが {空|そら}を {高|たか}く とぶ。」で、「どうする」に あたる ことばを 書き出そう。', acceptedAnswers: ['飛ぶ'], validationMode: 'kana-insensitive', reviewed: true },
     reviewed: true
   },
   {
@@ -531,7 +527,7 @@ window.QUESTION_BANK.push(
     answer: '{森|もり}',
     hints: ['{林|はやし}よりも、もっと {木|き}が たくさん ある ところだよ。', '{木|き}を {上|うえ}に 1つ、{下|した}に 2つ ならべた かたちだよ。'],
     explanation: '「{木|き}」が 3つで「{森|もり}」です。{林|はやし}よりも {木|き}が たくさん しげって いる ところを あらわします。',
-    inputForm: { question: '「{木|き}」が 2つで「{林|はやし}」。では、「{木|き}」が 3つで できる かんじは なにかな。', validationMode: 'exact', reviewed: false },
+    inputForm: { question: '「{木|き}」が 2つで「{林|はやし}」。では、「{木|き}」が 3つで できる かんじは なにかな。', validationMode: 'exact', reviewed: true },
     reviewed: true
   },
 

@@ -163,12 +163,13 @@ module.exports = ({ test, FF, ctx, assert }) => {
     assert.deepStrictEqual(ng, []);
   });
 
-  test('人が内容を確認した問題（reviewed: true）は 2026-09-26 に確認した1062問だけ（新しく AI が作った問題は false）', () => {
+  test('人が内容を確認した問題（reviewed: true）は 1061問だけ（新しく AI が作った・直した問題は false）', () => {
     // 確認済みの問題を増やしたら、この数も更新する。
     // フェーズ7の360問（v0.3 で漢字の配当に合わせて作り直した japanese_g5_homonym_001 を含む）と、
     // v0.3（B案）で追加した702問は、ユーザーの承認で true にした（360 + 702 = 1062問）
-    assert.strictEqual(bank.filter(q => q.reviewed === true).length, 1062);
-    assert.strictEqual(bank.filter(q => q.reviewed === false).length, 0);
+    // 2026-10-02：japanese_g2_katakana_002 をレビューの指摘（判断205）で直したので、確認し直すまで false
+    assert.strictEqual(bank.filter(q => q.reviewed === true).length, 1061);
+    assert.strictEqual(bank.filter(q => q.reviewed === false).length, 1);
   });
   test('選択問題の inputForm（書き問題としても出す。判断200）は、すべて書き問題として正しく、確認前は reviewed: false', () => {
     const withForm = bank.filter(q => q.inputForm);
@@ -183,6 +184,6 @@ module.exports = ({ test, FF, ctx, assert }) => {
     });
     assert.deepStrictEqual(ng, []);
     // 人が内容を確認したら true にし、この数も更新する
-    assert.strictEqual(withForm.filter(q => q.inputForm.reviewed === true).length, 0);
+    assert.strictEqual(withForm.filter(q => q.inputForm.reviewed === true).length, 6);   // 2026-10-02 のレビューでOKだった6問（判断205）
   });
 };
