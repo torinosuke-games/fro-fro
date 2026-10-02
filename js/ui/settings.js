@@ -84,7 +84,7 @@
     ]));
     if (U.artOn()) main.appendChild(U.el('div', { class: 'panel stack' }, [
       U.R('h3', '', U.T('settingsAvatar')),
-      U.avatarPicker(s.player.avatar, function (id) { app.commit(FF.state.setPlayerAvatar(app.state, id)); U.rerender(); })
+      U.avatarPicker(s.player.avatar, function (id) { app.commit(FF.state.setPlayerAvatar(app.state, id)); U.rerender(); }, s.player.grade)
     ]));
 
     // ふりがな

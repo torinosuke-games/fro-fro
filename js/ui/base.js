@@ -401,7 +401,7 @@
     // 主人公の絵（判断198）：選んでいれば名前の左に。押すと設定で変えられる
     var face = U.artOn() && s.player.avatar ? U.el('button', {
       class: 'head-avatar', attrs: { 'aria-label': FF.util.plainText(U.T('settingsAvatar')) }, on: { click: function () { U.show('settings'); } }
-    }, U.artImg('avatar-' + s.player.avatar + '.png', '', function () { return U.el('span'); })) : null;
+    }, U.artImg('avatar-' + s.player.avatar + '.jpg', '', function () { return U.el('span'); })) : null;
     var head = U.el('div', { class: 'panel' + (face ? ' head-with-avatar' : '') }, [face, text]);
     main.appendChild(head);
 

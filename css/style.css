@@ -1038,14 +1038,14 @@ a.btn { text-decoration: none; }
 /* 主人公の絵と学年（判断198） */
 .avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .avatar-pick { padding: 4px; border: 2px solid transparent; border-radius: 18px; background: #f2f7fb; cursor: pointer; aspect-ratio: 1; }
-.avatar-pick .avatar-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.avatar-pick .avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; display: block; }
 .avatar-pick.selected { border-color: var(--ember); background: #fff4ea; }
 .avatar-pick:active { transform: scale(.96); }
 .start-grades .grade-row { margin-bottom: 8px; }
 .start-grades .grade-chip { min-height: 44px; }
 .panel.head-with-avatar { display: flex; align-items: center; gap: 12px; }
 .head-avatar { flex: none; width: 56px; height: 56px; padding: 0; border: 0; border-radius: 50%; overflow: hidden; background: #e8f1f8; box-shadow: 0 1px 4px rgba(22, 50, 74, .2); cursor: pointer; }
-.head-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.head-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transform: scale(1.5); transform-origin: 50% 28%; }
 .head-text { min-width: 0; }
 /* 「学ぶ」の おまかせ と くわしく（判断198） */
 .auto-box { margin-bottom: 6px; }

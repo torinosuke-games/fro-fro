@@ -57,29 +57,29 @@
     function decide() {
       var s = FF.state.setPlayerName(app.state, ni.input.value);
       app.commit(s);
-      showAvatar();
+      showGrade();
     }
 
-    // 主人公の絵を選ぶ（判断198）。絵の見た目のときだけ（絵が読めなければ飛ばす）
-    function showAvatar() {
-      if (!U.artOn()) { showGrade(); return; }
-      var box = step();
-      box.appendChild(U.R('div', 'opening', U.T('chooseAvatar')));
-      box.appendChild(U.avatarPicker(app.state.player.avatar, function (id) {
-        app.commit(FF.state.setPlayerAvatar(app.state, id));
-        showGrade();
-      }));
-    }
-
-    // 学年を選ぶ（判断198）。ふりがなの初めの設定と「学ぶ」の初めの選択に使う（解放はこれまでどおり試験・診断）
+    // 学年を選ぶ（判断198）。ふりがなの初めの設定と「学ぶ」の初めの選択に使う（解放はこれまでどおり試験・診断）。主人公の候補はこの学年で決まる（判断204）
     function showGrade() {
       var box = step();
       box.appendChild(U.R('div', 'opening', U.T('chooseMyGrade')));
       box.appendChild(U.gradePicker(app.state.player.grade, function (g) {
         app.commit(FF.state.setPlayerGrade(app.state, g));
-        showIntro();
+        showAvatar();
       }));
       box.appendChild(U.R('div', 'small muted center', U.T('gradeLater')));
+    }
+
+    // 主人公の絵を選ぶ（判断198・204）。絵の見た目のときだけ（絵が読めなければ飛ばす）。小学生用・中学生用から学年に合う方を出す
+    function showAvatar() {
+      if (!U.artOn()) { showIntro(); return; }
+      var box = step();
+      box.appendChild(U.R('div', 'opening', U.T('chooseAvatar')));
+      box.appendChild(U.avatarPicker(app.state.player.avatar, function (id) {
+        app.commit(FF.state.setPlayerAvatar(app.state, id));
+        showIntro();
+      }, app.state.player.grade));
     }
 
     function step() {
@@ -126,14 +126,14 @@
     }
   }
 
-  // 主人公の絵の選択（開始画面と設定で使う。判断198）。押すとすぐ onPick(id)
-  function avatarPicker(current, onPick) {
-    return U.el('div', { class: 'avatar-grid' }, FF.defs.AVATARS.map(function (id, i) {
+  // 主人公の絵の選択（開始画面と設定で使う。判断198・204）。押すとすぐ onPick(id)。grade に合う候補（小学生用か中学生用）を出す
+  function avatarPicker(current, onPick, grade) {
+    return U.el('div', { class: 'avatar-grid' }, FF.defs.avatarsFor(grade).map(function (id, i) {
       return U.el('button', {
         class: 'avatar-pick' + (current === id ? ' selected' : ''),
         attrs: { 'aria-pressed': current === id ? 'true' : 'false', 'aria-label': FF.util.plainText(U.T('avatarN'), { n: i + 1 }) },
         on: { click: function () { onPick(id); } }
-      }, U.artImg('avatar-' + id + '.png', 'avatar-img', function () { return U.el('span', { text: String(i + 1) }); }));
+      }, U.artImg('avatar-' + id + '.jpg', 'avatar-img', function () { return U.el('span', { text: String(i + 1) }); }));
     }));
   }
   // 学年の選択（小1〜小6・中1〜中3。判断198）

@@ -212,16 +212,16 @@ module.exports = ({ test, FF, assert, plain }) => {
       const x = S.createDefaultState(T0); x.player.grade = g;
       assert.strictEqual(S.migrate(x, T0).state.player.grade, want, String(g));
     }
-    for (const [a, want] of [['a1', 'a1'], ['zz', null], [3, null]]) {
+    for (const [a, want] of [['e1', 'e1'], ['j12', 'j12'], ['a1', null], ['zz', null], [3, null]]) {
       const x = S.createDefaultState(T0); x.player.avatar = a;
       assert.strictEqual(S.migrate(x, T0).state.player.avatar, want, String(a));
     }
     // 保存して読み直しても同じ
-    let y = S.setPlayerAvatar(S.setPlayerGrade(S.createDefaultState(T0), 4), 'a2');
+    let y = S.setPlayerAvatar(S.setPlayerGrade(S.createDefaultState(T0), 4), 'j2');
     const r = S.parseSave(S.serialize(y), T0);
     assert.strictEqual(r.ok, true);
     assert.strictEqual(r.state.player.grade, 4);
-    assert.strictEqual(r.state.player.avatar, 'a2');
+    assert.strictEqual(r.state.player.avatar, 'j2');
   });
 
   test('学年を入れると、ふりがなの自動設定は小3以下でオン（判断198）', () => {
