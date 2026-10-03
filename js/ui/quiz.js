@@ -98,6 +98,7 @@
 
     var att = ses.attempt, q = att.question, done = att.done;
     panel.appendChild(U.el('div', { class: 'question' }, U.rich(q.question)));
+    if (q.diagram && FF.lessonFigure) panel.appendChild(FF.lessonFigure.render(q.diagram));
 
     if (q.answerType === 'choice') {
       panel.appendChild(U.el('div', { class: 'choices' }, att.choices.map(function (c) {

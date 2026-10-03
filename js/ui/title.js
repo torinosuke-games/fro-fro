@@ -108,7 +108,7 @@
     function enterBase() {
       var s = Object.assign({}, app.state, { flags: Object.assign({}, app.state.flags, { introSeen: true }) });
       var g = s.player.grade;
-      var offer = !s.flags.diagnosisOffered && (!g || g > FF.balance.INITIAL_UNLOCKED_GRADE);   // 小2以下は最初から選べるので案内しない（判断198）
+      var offer = false; // リニューアル：選んだ学年からすぐ学べる。診断は学習メニューから任意で開く。
       s = FF.exam.markDiagnosisOffered(s);
       app.commit(s);
       U.show('base');

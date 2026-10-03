@@ -345,7 +345,7 @@
   // ---- 出題 ----
   function newQuestion(ses) {
     var app = FF.app;
-    ses.outcome = null; ses.retry = null; ses.picked = null; ses.arrival = null;
+    ses.outcome = null; ses.retry = null; ses.picked = null; ses.arrival = null; ses.selected = null; ses.typed = ''; ses.grade = app.state.player.grade || 1;
     var q = X.pickExploreQuestion(app.bank, app.state, ses.region, Math.random, app.now());
     ses.attempt = q ? L.startAttempt(q, Math.random) : null;
   }
@@ -358,7 +358,7 @@
     ses.attempt = r.attempt;
     app.commit(r.state);
     if (o.status === 'retry') {
-      ses.retry = o;
+      ses.retry = o; ses.typed = '';
       U.rerender();
       focusInput();
       return;
@@ -373,7 +373,7 @@
   function focusInput() {
     var s = FF.app.exploreSession;
     if (s && s.attempt && !U.autoFocusOK(s.attempt.question)) return;
-    setTimeout(function () { var i = document.querySelector('.answer-row input'); if (i) i.focus(); }, 30);
+    setTimeout(function () { var i = document.querySelector('.renewal-input'); if (i) i.focus(); }, 30);
   }
 
   function renderQuiz(main, params) {
@@ -383,6 +383,7 @@
     if (!r || !X.isRegionUnlocked(app.state, regionId)) { U.show('explore'); return; }
     var ses = app.exploreSession;
     if (!ses || ses.region !== regionId) ses = app.exploreSession = { region: regionId };
+    if (ses.attempt && ses.grade !== (app.state.player.grade || 1)) newQuestion(ses);
     if (!ses.attempt && !ses.outcome) {
       if (X.isComplete(app.state, regionId)) { U.show('explore', { region: regionId }); return; }
       newQuestion(ses);
@@ -396,73 +397,49 @@
     // どこへ向かっているか（回答後は、たどり着いた地点ではなく出題時の行き先を出す）
     var rs = X.regionState(app.state, regionId), route = X.route(regionId);
     var target = ses.arrival ? ses.arrival.node : route[Math.min(rs.position + 1, route.length - 1)];
-    main.appendChild(U.el('div', { class: 'crumbs' }, ['🗺️ ', regionName(r), '　›　', U.rich(target.name)]));
-
-    var panel = U.el('div', { class: 'panel' });
-    main.appendChild(panel);
-    if (!ses.attempt) {
-      panel.appendChild(U.R('div', 'center muted', U.T('explore.noQuestion')));
-      main.appendChild(U.el('button', { class: 'btn block', rich: U.T('explore.backToMap'), on: { click: toMap } }));
-      return;
-    }
-
-    var att = ses.attempt, q = att.question, done = att.done;
-    if (!done && rs.missedHere && q.answerType === 'input') panel.appendChild(U.R('div', 'notice', U.T('explore.missedNote')));
-    panel.appendChild(U.el('div', { class: 'question' }, U.rich(q.question)));
-
-    if (q.answerType === 'choice') {
-      panel.appendChild(U.el('div', { class: 'choices' }, att.choices.map(function (c) {
-        var cls = 'choice';
-        if (done && c === q.answer) cls += ' is-correct';
-        else if (done && c === ses.picked) cls += ' is-wrong';
-        return U.el('button', { class: cls, disabled: done, on: { click: function () { submit(c); } } }, U.rich(c));
-      })));
-    } else {
-      var input = U.el('input', {
-        attrs: { type: 'text', inputmode: q.validationMode === 'number' ? 'decimal' : 'text', autocomplete: 'off', placeholder: FF.util.plainText(U.T('inputPlaceholder')), 'aria-label': FF.util.plainText(U.T('inputPlaceholder')) },
-        disabled: done,
-        value: done ? (ses.picked || '') : ''
+    var R = FF.texts.renewal, gradeDef = FF.defs.GRADES.filter(function(g){return g.level === (app.state.player.grade || 1);})[0];
+    main.appendChild(U.el('div', {class:'lesson-heading explore-lesson-heading'}, [
+      U.el('button', {class:'text-button',text:'‹ '+FF.util.plainText(U.T('explore.backToMap')),on:{click:toMap}}),
+      regionName(r), ' › ', U.rich(target.name), U.el('span',{class:'lesson-session-count',text:gradeDef.school})
+    ]));
+    var layout = U.el('div',{class:'workbench explore-workbench'}),panel = U.el('section',{class:'question-card'});
+    layout.appendChild(panel);main.appendChild(layout);
+    if (!ses.attempt) {panel.appendChild(U.R('div','center muted',U.T('explore.noQuestion')));return;}
+    var att=ses.attempt,q=att.question,done=att.done;
+    panel.appendChild(U.el('div',{class:'question-meta'},[
+      U.el('span',{class:'question-badge',text:R.question+' '+(rs.position+1)}),
+      U.el('span',{class:'question-unit',text:gradeDef.school+' '+FF.util.plainText(L.subjectName(q.subject,q.gradeLevel))}),
+      U.el('span',{class:'difficulty-badge '+q.difficulty},['★ ',U.rich(U.nameOf(FF.defs.DIFFICULTIES,q.difficulty))])
+    ]));
+    if(!done&&rs.missedHere&&q.answerType==='input')panel.appendChild(U.R('div','notice',U.T('explore.missedNote')));
+    panel.appendChild(U.R('div','lesson-question',q.question));
+    if(q.diagram&&FF.lessonFigure)panel.appendChild(FF.lessonFigure.render(q.diagram));
+    var answers=U.el('div',{class:'lesson-answers'});
+    if(q.answerType==='choice'){
+      att.choices.forEach(function(c,i){
+        var cls='answer-option'+(ses.selected===c?' selected':'');
+        if(done&&c===q.answer)cls+=' correct';else if(done&&c===ses.picked)cls+=' incorrect';
+        answers.appendChild(U.el('button',{class:cls,disabled:done,attrs:{type:'button','aria-pressed':ses.selected===c?'true':'false'},on:{click:function(e){ses.selected=c;U.rerender();if(e.detail===0){var check=document.querySelector('.check-answer');if(check)check.focus();}}}},[
+          U.el('span',{class:'option-mark',text:done&&c===q.answer?'✓':String.fromCharCode(65+i)}),U.R('span','option-text',c)
+        ]));
       });
-      input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing) submit(input.value); });
-      U.keepInView(input);
-      panel.appendChild(U.el('div', { class: 'answer-row' }, [
-        input,
-        U.el('button', { class: 'btn primary', rich: U.T('answer'), disabled: done, on: { click: function () { submit(input.value); } } })
-      ]));
-      if (!done && U.usesNumpad(q)) panel.appendChild(U.numpad(input));
-      if (!done) focusInput();
+    }else{
+      var input=U.el('input',{class:'renewal-input',value:done?(ses.picked||''):(ses.typed||''),disabled:done,attrs:{type:'text',inputmode:q.validationMode==='number'?'decimal':'text',autocomplete:'off',placeholder:R.inputPlaceholder,'aria-label':R.inputPlaceholder},on:{input:function(e){ses.typed=e.target.value;},keydown:function(e){if(e.key==='Enter'&&!e.isComposing)submit(ses.typed||'');}}});
+      U.keepInView(input);answers.appendChild(U.el('label',{class:'input-label'},[U.el('span',{text:R.yourAnswer}),input]));
     }
-
-    // ヒント（探索では報酬がないので倍率の表示はしない）
-    var hints = U.el('div', { class: 'hints' });
-    for (var i = 0; i < att.hintsShown; i++) {
-      hints.appendChild(U.el('div', { class: 'hint' }, [U.rich(U.T('hint')), ' ' + (i + 1) + '：', U.rich(q.hints[i])]));
-    }
-    if (!done && att.hintsShown < q.hints.length) {
-      hints.appendChild(U.el('button', {
-        class: 'btn small ghost',
-        on: { click: function () { ses.attempt = L.revealHint(ses.attempt); U.rerender(); } }
-      }, U.el('span', {}, [U.rich(U.T('explore.showHint')), '（' + (att.hintsShown + 1) + '/' + q.hints.length + '）'])));
-    }
-    panel.appendChild(hints);
-
-    if (ses.retry && !done) {
-      panel.appendChild(U.el('div', { class: 'feedback bad' }, [
-        U.R('div', 'verdict', U.T('retry')),
-        U.R('div', 'small muted', U.T('retryLeft'), { n: ses.retry.attemptsLeft })
-      ]));
-    }
+    panel.appendChild(answers);
+    if(!done)panel.appendChild(U.el('button',{class:'rn-button primary check-answer',text:R.checkAnswer,disabled:q.answerType==='choice'&&ses.selected==null,on:{click:function(){submit(q.answerType==='choice'?ses.selected:(ses.typed||''));}}}));
+    if(ses.retry&&!done)panel.appendChild(U.el('div',{class:'answer-feedback retry',attrs:{role:'status',tabindex:'-1'}},[
+      U.R('strong','',U.T('retry')),U.R('span','',U.T('retryLeft'),{n:ses.retry.attemptsLeft})
+    ]));
+    layout.appendChild(FF.lessonHelp({attempt:att},{explore:true,revealHint:function(){ses.attempt=L.revealHint(ses.attempt);U.rerender();}}));
 
     var complete = false;
     if (done && ses.outcome) {
       var o = ses.outcome, good = o.status === 'correct';
-      var fb = U.el('div', { class: 'feedback ' + (good ? 'good' : 'bad') });
-      fb.appendChild(U.R('div', 'verdict', good ? U.T('explore.correct') : U.T('explore.wrong')));
-      fb.appendChild(U.R('div', 'section-title', U.T('correctAnswer')));
-      fb.appendChild(U.el('div', { style: { fontWeight: '800', fontSize: '18px' } }, U.rich(o.correctAnswer)));
-      fb.appendChild(U.R('div', 'section-title', U.T('explanation')));
-      fb.appendChild(U.el('div', { class: 'pre' }, U.rich(o.explanation)));
-      panel.appendChild(fb);
+      panel.appendChild(U.el('div',{class:'answer-feedback '+(good?'good':'review'),attrs:{role:'status',tabindex:'-1'}},[
+        U.R('strong','',good?U.T('explore.correct'):U.T('explore.wrong'))
+      ]));
 
       // たどり着いた地点（宝箱・できごと）
       var a = ses.arrival;
@@ -479,7 +456,7 @@
       }
     }
 
-    var buttons = [U.el('button', { class: 'btn', rich: U.T('explore.backToMap'), on: { click: toMap } })];
+    var buttons = [U.el('button', { class: 'rn-button', rich: U.T('explore.backToMap'), on: { click: toMap } })];
     if (done && !complete && X.nextIsBoss(app.state, regionId)) {
       // ボスの手前にたどり着いた：次は問題ではなくボスとの戦闘
       var boss = X.bossNode(regionId);
@@ -487,11 +464,11 @@
     } else if (done && !complete) {
       var good2 = ses.outcome && ses.outcome.status === 'correct';
       buttons.push(U.el('button', {
-        class: 'btn primary', rich: good2 ? U.T('explore.nextChallenge') : U.T('explore.tryAgain'),
+        class: 'rn-button primary', rich: good2 ? U.T('explore.nextChallenge') : U.T('explore.tryAgain'),
         on: { click: function () { newQuestion(ses); U.rerender(); } }
       }));
     }
-    main.appendChild(U.el('div', { class: buttons.length > 1 ? 'grid2' : '' }, buttons));
+    panel.appendChild(U.el('div', { class: 'lesson-actions' }, buttons));
   }
 
   U.screens.explore = { render: render };

@@ -120,7 +120,7 @@
 
   // ---- 学年の解放 ----
   function unlockedGrade(state, subject) {
-    return state.learning.unlocked[subject] || bal().INITIAL_UNLOCKED_GRADE;
+    return Math.max(state.learning.unlocked[subject] || bal().INITIAL_UNLOCKED_GRADE, state.player.grade || 0);
   }
   function isGradeUnlocked(state, subject, grade) {
     return grade >= 1 && grade <= unlockedGrade(state, subject);
@@ -260,6 +260,8 @@
     }
 
     // 学習記録
+    L.questionResults = L.questionResults || {};
+    L.questionResults[q.id.replace(/#input$/, '')] = correct;
     cell.attempts++;
     cell[q.answerType].attempts++;
     if (correct) { cell.correct++; cell[q.answerType].correct++; }

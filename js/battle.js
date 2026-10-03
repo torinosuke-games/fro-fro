@@ -50,7 +50,8 @@
   function pickBattleQuestion(bank, state, battle, rng, now, b) {
     if (!battle || battle.result) return null;
     return X().pickRegionQuestion(bank, state, battle.regionId, rng, now, bal(b),
-      { forceInput: battle.missed, choiceShare: BT(b).CHOICE_SHARE });
+      { forceInput: battle.missed, choiceShare: BT(b).CHOICE_SHARE,
+        grade: state.player.grade || 1, difficulty: battle.boss ? 'advanced' : null });
   }
 
   // 勝ったとき：倒した記録、初めてなら報酬、ボスなら地域の完了（終点まで進める）
@@ -80,7 +81,7 @@
     return { state: w.s, reward: reward ? FF.util.clone(reward) : null, firstTime: firstTime, completed: completed };
   }
 
-  // 負けた・引き返したとき：何も失わない。まだ倒していないボスなら、負けた回数を数える（上限まで）
+  // HPが0になって負けたとき：まだ倒していないボスの敗北回数を数える（上限まで）。
   function loseBattle(state, regionId, enemyId, b) {
     var def = enemyDef(enemyId);
     var rs = X().regionState(state, regionId);
@@ -92,10 +93,10 @@
     return w.s;
   }
 
-  // 引き返す（戦闘の途中でやめる）。負けと同じ扱い。{ state, battle }
+  // 引き返す（戦闘の途中でやめる）。敗北回数を増やさず、敵へのダメージは持ち越さない。
   function retreatBattle(state, battle, b) {
     if (!battle || battle.result) return { state: state, battle: battle };
-    return { state: loseBattle(state, battle.regionId, battle.enemyId, b), battle: Object.assign({}, battle, { result: 'lose' }) };
+    return { state: state, battle: Object.assign({}, battle, { result: 'retreat' }) };
   }
 
   // 回答する。att は FF.learning.startAttempt で作ったもの。

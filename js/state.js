@@ -52,7 +52,8 @@
         streak: { current: 0, best: 0 },
         totalEarned: mapIds(defs.RESOURCES, function () { return 0; }),
         correctLog: {},
-        history: []
+        history: [],
+        questionResults: {}
       },
       exploration: defaultExploration(),
       // 勉強量ポイント（SPEC 8.4・14.2）：残高・累計・引換券の履歴
@@ -141,6 +142,9 @@
       cur.saveVersion = v;
     }
     var state = fillDefaults(cur, createDefaultState(now));
+    if(!cur.learning || !util.isPlainObject(cur.learning.questionResults)){
+      state.learning.history.forEach(function(h){if(typeof h.qid==='string')state.learning.questionResults[h.qid.replace(/#input$/, '')]=!!h.correct;});
+    }
     state.saveVersion = cfg.SAVE_VERSION;
     // 建物のレベルの整合（中央炉を超えるレベル、解放済みなのに Lv0 など）
     if (FF.buildings && FF.buildings.normalizeBuildings) state = FF.buildings.normalizeBuildings(state, now);

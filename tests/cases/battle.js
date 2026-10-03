@@ -236,13 +236,14 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(BA.startBattle(s, 'glacier', 'gl_boss_guardian').enemyHp, 60);
   });
 
-  test('引き返す：負けと同じ扱い（ボスなら負けの回数に数える。何も失わない）', () => {
+  test('引き返す：敗北には数えず、ボスのHPを弱体化しない', () => {
     const s = gate(base(3), 'snowfield');
     const bat = BA.startBattle(s, 'snowfield', 'sf_boss_wolf');
     const r1 = hit(s, bat, choiceQ, '2');
     const r = BA.retreatBattle(r1.state, r1.battle);
-    assert.strictEqual(r.battle.result, 'lose');
-    assert.strictEqual(X.regionState(r.state, 'snowfield').bossLosses, 1);
+    assert.strictEqual(r.battle.result, 'retreat');
+    assert.strictEqual(X.regionState(r.state, 'snowfield').bossLosses, 0);
+    assert.strictEqual(BA.startBattle(r.state, 'snowfield', 'sf_boss_wolf').enemyHp, bat.enemyHp);
     assert.deepStrictEqual(plain(r.state.resources), plain(s.resources));
     const side = BA.retreatBattle(s, BA.startBattle(s, 'snowfield', 'sf_enemy_fangs'));
     assert.strictEqual(X.regionState(side.state, 'snowfield').bossLosses, 0);
@@ -370,5 +371,43 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
       assert.ok(Math.abs(attempts / N - e.attempts) / e.attempts < 0.05, enemyId + " 挑戦 " + (attempts / N) + " / " + e.attempts);
       assert.ok(Math.abs(answers / N - e.answers) / e.answers < 0.05, enemyId + " 回答 " + (answers / N) + " / " + e.answers);
     }
+  });
+
+  test('通常戦闘は設定学年からランダムな教科を出題する', () => {
+    for(const grade of [1,4,9]){
+      const state=base();state.player.grade=grade;const subjects=new Set();
+      const battle={regionId:'snowfield',boss:false,missed:false,result:null};
+      for(let seed=1;seed<=200;seed++){
+        const q=BA.pickBattleQuestion(bank,state,battle,FF.util.makeRng(seed),T0);
+        assert.strictEqual(q.gradeLevel,grade);subjects.add(q.subject);
+      }
+      assert.strictEqual(subjects.size,5);
+    }
+  });
+  test('全地域のボス戦は設定学年の発展問題だけで、問題不足でも条件を下げない', () => {
+    for(const grade of [1,2,3,4,5,6,7,8,9])for(const regionId of ['snowfield','forest','glacier']){
+      const state=base();state.player.grade=grade;
+      for(const missed of [false,true])for(let seed=1;seed<=20;seed++){
+        const q=BA.pickBattleQuestion(bank,state,{regionId,boss:true,missed,result:null},FF.util.makeRng(seed),T0);
+        assert.ok(q);assert.strictEqual(q.gradeLevel,grade);assert.strictEqual(q.difficulty,'advanced');
+        if(missed)assert.strictEqual(q.answerType,'input');
+      }
+      const q=BA.pickBattleQuestion(FF.learning.createBank([]),state,{regionId,boss:true,result:null},FF.util.makeRng(42),T0);
+      assert.strictEqual(q.gradeLevel,grade);assert.strictEqual(q.difficulty,'advanced');
+    }
+  });
+  test('傷を負って引き返してもボスは弱らず、HP0の敗北後に限り弱体化する', () => {
+    let state=gate(base(3),'snowfield');const initial=BA.startBattle(state,'snowfield','sf_boss_wolf').enemyHp;
+    for(let i=0;i<20;i++){
+      const hurt=hit(state,BA.startBattle(state,'snowfield','sf_boss_wolf'),choiceQ,'1');
+      assert.ok(hurt.battle.playerHp>0);
+      const r=BA.retreatBattle(hurt.state,hurt.battle);state=r.state;
+      assert.strictEqual(X.regionState(state,'snowfield').bossLosses,0);
+      assert.strictEqual(BA.startBattle(state,'snowfield','sf_boss_wolf').enemyHp,initial);
+    }
+    const lost=loseAll(state,BA.startBattle(state,'snowfield','sf_boss_wolf'));
+    assert.strictEqual(lost.battle.playerHp,0);assert.strictEqual(X.regionState(lost.state,'snowfield').bossLosses,1);
+    assert.ok(BA.startBattle(lost.state,'snowfield','sf_boss_wolf').enemyHp<initial);
+    assert.strictEqual(BA.retreatBattle(lost.state,lost.battle).state,lost.state);
   });
 };

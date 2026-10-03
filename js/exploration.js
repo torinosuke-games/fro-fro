@@ -284,8 +284,10 @@
     var grade = weighted(grades, function (x) {
       return x >= r.grades[0] && x <= r.grades[1] ? ex.GRADE_WEIGHT.inRange : ex.GRADE_WEIGHT.outOfRange;
     }, rng);
+    if (opts && opts.grade) grade = opts.grade;
     var dw = ex.DIFFICULTY_WEIGHT[regionId];
     var difficulty = weighted(Object.keys(dw), function (d) { return dw[d]; }, rng);
+    if (opts && opts.difficulty) difficulty = opts.difficulty;
     var forceInput = opts ? !!opts.forceInput : regionState(state, regionId).missedHere;
     var share = opts && opts.choiceShare != null ? opts.choiceShare : ex.CHOICE_SHARE;
     var answerType = forceInput ? 'input' : (rng() < share ? 'choice' : 'input');
@@ -293,18 +295,19 @@
   }
 
   // 問題がない組み合わせのときに広げる順番：難易度 → 形式 → 別の教科（同じ学年。その教科で未解放なら解放済みの最高学年）→ 算数の自動生成
-  function fallbackSelections(state, sel, onlyInput) {
+  function fallbackSelections(state, sel, onlyInput, fixedGrade, fixedDifficulty) {
     var types = onlyInput ? ['input'] : [sel.answerType, sel.answerType === 'choice' ? 'input' : 'choice'];
     var diffs = [sel.difficulty].concat(FF.defs.DIFFICULTIES.map(function (d) { return d.id; }).filter(function (d) { return d !== sel.difficulty; }));
+    if (fixedDifficulty) diffs = [fixedDifficulty];
     var subjects = [sel.subject].concat(FF.defs.SUBJECTS.map(function (s) { return s.id; }).filter(function (s) { return s !== sel.subject; }));
     var out = [];
     subjects.forEach(function (subject) {
-      var grade = Math.min(sel.grade, FF.learning.unlockedGrade(state, subject));
+      var grade = fixedGrade || Math.min(sel.grade, FF.learning.unlockedGrade(state, subject));
       types.forEach(function (t) {
         diffs.forEach(function (d) { out.push({ subject: subject, grade: grade, difficulty: d, answerType: t }); });
       });
     });
-    out.push({ subject: 'math', grade: 1, difficulty: 'basic', answerType: types[0] });
+    out.push({ subject: 'math', grade: fixedGrade || 1, difficulty: fixedDifficulty || 'basic', answerType: types[0] });
     return out;
   }
 
@@ -317,7 +320,7 @@
     // 探索専用の「直近に出した問題」だけを避ける（学習の反復記録は使わない）
     var pb = Object.assign({}, b, { PICK: Object.assign({}, b.PICK, { AVOID_RECENT: b.EXPLORE.AVOID_RECENT }) });
     var ctx = { correctLog: {}, recentIds: (state.exploration && state.exploration.recentQuestionIds) || [], now: now, rng: rng };
-    var list = fallbackSelections(state, sel, sel.answerType === 'input' && forceInput);
+    var list = fallbackSelections(state, sel, sel.answerType === 'input' && forceInput, opts && opts.grade, opts && opts.difficulty);
     for (var i = 0; i < list.length; i++) {
       var q = FF.learning.pickQuestion(bank, list[i], ctx, pb);
       if (q) return q;
@@ -329,7 +332,9 @@
   function pickExploreQuestion(bank, state, regionId, rng, now, b) {
     b = bal(b);
     if (!isRegionUnlocked(state, regionId, b) || isComplete(state, regionId) || nextIsBoss(state, regionId)) return null;
-    return pickRegionQuestion(bank, state, regionId, rng, now, b);
+    return pickRegionQuestion(bank, state, regionId, rng, now, b, {
+      grade: state.player.grade || 1, forceInput: regionState(state, regionId).missedHere
+    });
   }
 
   // ---- 回答（SPEC_v0.2 3.1） ----

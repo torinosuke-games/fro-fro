@@ -119,9 +119,10 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.deepStrictEqual(plain(s.exploration), plain(S.defaultExploration()));
     for (const regionId of ['snowfield', 'forest']) assert.strictEqual(s.exploration.regions[regionId].position, 0);
     // v0.1 の部分はそのまま
-    for (const k of ['resources', 'buildings', 'tickets', 'learning', 'flags']) {
+    for (const k of ['resources', 'buildings', 'tickets', 'flags']) {
       assert.deepStrictEqual(plain(s[k]), src[k], k);
     }
+    assert.deepStrictEqual(plain(s.learning), Object.assign({}, src.learning, {questionResults:{}}));
     // 名前はそのまま、あとから足した学年・主人公の絵（判断198）は未設定（null）で補われる
     assert.deepStrictEqual(plain(s.player), Object.assign({}, src.player, { grade: null, avatar: null }));
     // 設定は元のまま、あとから足した項目（テーマ・交換レート・メールアドレス）だけ初期値で補われる
@@ -233,5 +234,19 @@ module.exports = ({ test, FF, assert, plain }) => {
     // 手動で切り替えたあとは変えない
     const manual = Object.assign({}, base, { settings: Object.assign({}, base.settings, { furigana: true, furiganaAuto: false }) });
     assert.strictEqual(S.setPlayerGrade(manual, 7).settings.furigana, true);
+  });
+
+  test('公開版の保存キーを維持し、試作版の保存は公開版がないときだけ引き継ぐ', () => {
+    assert.strictEqual(FF.config.SAVE_KEY,'frozenFrontier.save');
+    const store=fakeStorage(),trial=sampleState();
+    store.setItem('frozenFrontier.renewal.save',S.serialize(trial));
+    const migrated=FF.storage.load(T0,store);
+    assert.strictEqual(migrated.state.player.name,trial.player.name);
+    assert.ok(store.getItem('frozenFrontier.save'));
+    const published=sampleState();published.player.name='カイ';
+    store.setItem('frozenFrontier.save',S.serialize(published));
+    assert.strictEqual(FF.storage.load(T0,store).state.player.name,'カイ');
+    FF.storage.clear(store);
+    assert.strictEqual(FF.storage.load(T0,store).status,'new');
   });
 };

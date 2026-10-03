@@ -102,28 +102,12 @@
     basketEl.querySelector('.badge-n').textContent = n;
   }
   // 受け取った資源の絵を、上のバーの資源の欄へ飛ばす（動きを減らす設定では飛ばさない）
-  function flyToHud(fromEl, resId) {
-    if (!fromEl || fromEl.hidden || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
-    var idx = FF.defs.RESOURCES.map(function (r) { return r.id; }).indexOf(resId);
-    var chip = document.querySelectorAll('#hud .res-chip')[idx];
-    var src = fromEl.querySelector('img, .ico');
-    if (!chip || !src || !src.animate) return;
-    var a = src.getBoundingClientRect(), c = chip.getBoundingClientRect();
-    var ghost = src.cloneNode(true);
-    ghost.className = 'fly-res';
-    ghost.style.left = a.left + 'px'; ghost.style.top = a.top + 'px'; ghost.style.width = a.width + 'px'; ghost.style.height = a.height + 'px';
-    document.body.appendChild(ghost);
-    var dx = c.left + 8 - a.left, dy = c.top + c.height / 2 - a.height / 2 - a.top;
-    ghost.animate([
-      { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-      { transform: 'translate(' + dx * 0.5 + 'px, ' + (dy * 0.5 - 40) + 'px) scale(1.15)', opacity: 1, offset: 0.45 },
-      { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(0.7)', opacity: 0.2 }
-    ], { duration: 750, easing: 'ease-in' }).onfinish = function () { ghost.remove(); chip.classList.add('got'); setTimeout(function () { chip.classList.remove('got'); }, 400); };
-  }
   function afterCollectArt(r, ids) {
     var got = Object.keys(r.collected);
     if (!got.length) { U.toast(U.T('collectNone')); return; }
-    ids.forEach(function (id) { var d = producerOf(id); if (r.collected[d.produces]) flyToHud(bubbleEls[id], d.produces); });
+    var jobs = ids.filter(function(id){return r.collected[producerOf(id).produces];}).map(function(id){return {key:producerOf(id).produces,source:bubbleEls[id] && bubbleEls[id].querySelector('img, .ico')};});
+    var arrive = FF.rewardFlight.prepare(r.collected);
+    FF.rewardFlight.fly(jobs, arrive);
     FF.app.commit(r.state);
     U.toast(U.T('collected') + '：' + got.map(function (k) { return U.resDef(k).icon + ' +' + U.fmt(r.collected[k]); }).join('  '));
     updateBubbles();
@@ -176,7 +160,7 @@
       if (closeModal) closeModal();
       app.studySel = { resource: r, subject: null, grade: null, difficulty: FF.learning.RANDOM_DIFFICULTY, answerType: null, pickGrade: true };
       app.studyTab = 'learn';
-      U.show('study', { tab: 'learn' });
+      U.show('study', { tab: 'learn', resource: r });
     }
     var closeModal = U.modal({
       title: name + (bld.level > 0 ? '  Lv' + bld.level : ''),
@@ -355,7 +339,10 @@
         U.el('span', { class: 'nm' }, [
           U.rich(name), level ? U.el('span', { class: 'lv', text: ' Lv' + level }) : null, locked ? ' 🔒' : null,
           building ? U.el('span', { class: 'mark', text: ' 🔨' }) : ready ? U.el('span', { class: 'mark up', text: ' ▲' }) : null
-        ])
+        ]),
+        building ? U.el('span', { class: 'map-construction' }, [
+          U.R('span', 'construction-label', U.T('constructing')), remainingView(id, s, FF.app.now())
+        ]) : null
       ]);
       // 名札と、その右上に小さく重ねる収穫のアイコン（生産施設だけ。判断196・197）
       labels.push(U.el('span', { class: 'art-tag', style: { left: p.x + '%', top: p.y + '%' } }, [lab, ART_BUBBLES[id] ? bubbleView(id) : null]));

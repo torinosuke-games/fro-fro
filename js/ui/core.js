@@ -146,6 +146,7 @@
   function renderHud() {
     var hud = doc.getElementById('hud');
     if (!hud || !FF.app.state) return;
+    if (typeof FF.renewalHud === 'function') { FF.renewalHud(hud); return; }
     var s = FF.app.state, now = FF.app.now();
     hud.hidden = FF.app.screen === 'title';
     hud.classList.toggle('art', artOn());
@@ -165,6 +166,7 @@
       ptChip(s)
     ]));
   }
+
 
   // 勉強量ポイント（v0.4、DESIGN 14.4）：チケットの行の右の端。押すと引換所を開く。
   // 出題中（学習・昇格試験・実力診断・探索・戦闘）と引換所の画面では押せない（試験を途中で出ると不合格になるため。判断51）
@@ -201,6 +203,7 @@
   function renderNav() {
     var nav = doc.getElementById('nav');
     if (!nav) return;
+    if (typeof FF.renewalNav === 'function') { FF.renewalNav(nav); return; }
     nav.hidden = FF.app.screen === 'title';
     clear(nav);
     var active = navGroup(FF.app.screen);
@@ -228,6 +231,7 @@
   var screens = {};
   function show(name, params) {
     if (FF.app.leaveGuard && !FF.app.leaveGuard(name)) return;
+    if (FF.renewalBeforeShow) FF.renewalBeforeShow(name, params || {});
     FF.app.leaveGuard = null;
     FF.app.screen = name;
     FF.app.params = params || {};
@@ -236,6 +240,7 @@
   }
   function rerender() {
     applyTheme();
+    doc.body.setAttribute('data-screen', FF.app.screen);
     var main = doc.getElementById('screen');
     doc.body.classList.remove('typing');   // 入力欄ごと描き直すと blur が来ないことがあるため
     clear(main);
