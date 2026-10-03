@@ -83,7 +83,7 @@
     U.show('explore', regionId ? { region: regionId } : {});
   }
 
-  // 引き返す：負けと同じ扱い（ボスなら次の挑戦で弱る）。何も失わない
+  // 引き返す：敗北には数えず、ボスの弱体化も進めない。
   function retreat() {
     var app = FF.app, ses = app.battleSession;
     if (ses && !ses.battle.result) app.commit(BA.retreatBattle(app.state, ses.battle).state);
@@ -180,6 +180,7 @@
       var att = ses.attempt, q = att.question, done = att.done;
       if (!done && bat.missed && q.answerType === 'input') panel.appendChild(U.R('div', 'notice', U.T('battle.inputOnly')));
       panel.appendChild(U.el('div', { class: 'question' }, U.rich(q.question)));
+      if (q.diagram && FF.lessonFigure) panel.appendChild(FF.lessonFigure.render(q.diagram));
       if (q.answerType === 'choice') {
         panel.appendChild(U.el('div', { class: 'choices' }, att.choices.map(function (c) {
           var cls = 'choice';

@@ -202,10 +202,10 @@
     // HP・攻撃力・初めて倒したときの報酬は balance.js の BATTLE。ここには名前・文章・立ち絵だけを書く。
     // art：'svg:<名前>'（js/svg/ で描く）／'img:<ファイル名>'（img/ の画像。読み込めなければ svgFallback の SVG）
     ENEMIES: {
-      sf_enemy_fangs: { region: 'snowfield', boss: false, name: '{氷牙|ひょうが}のむれ', art: 'svg:fangs',
+      sf_enemy_fangs: { region: 'snowfield', boss: false, name: '{氷牙|ひょうが}のむれ', art: 'img:enemy-frost-wolf-pack.png', svgFallback: 'fangs',
         encounter: '{雪|ゆき}のくぼみから、{青白|あおじろ}い{目|め}がいくつものぞいている。{氷|こおり}の{牙|きば}をもつオオカミのむれだ。',
         victory: 'むれは{雪|ゆき}けむりを{上|あ}げて{散|ち}っていった。{遠|とお}くで、ひときわ{大|おお}きな{遠|とお}ぼえがひびいた。' },
-      sf_enemy_machine: { region: 'snowfield', boss: false, name: '{凍|こお}りついた{機械兵|きかいへい}', art: 'svg:machine',
+      sf_enemy_machine: { region: 'snowfield', boss: false, name: '{凍|こお}りついた{機械兵|きかいへい}', art: 'img:enemy-frozen-machine.png', svgFallback: 'machine',
         encounter: '{雪|ゆき}の{中|なか}の{鉄|てつ}の{影|かげ}が、きしみながら{動|うご}き{出|だ}した。{胸|むね}の{明|あ}かりが{赤|あか}く{光|ひか}る。',
         victory: '{機械兵|きかいへい}は{動|うご}きを{止|と}め、{雪|ゆき}の{上|うえ}にひざをついた。{背中|せなか}に、{見|み}なれない{紋章|もんしょう}がきざまれている。' },
       sf_boss_wolf: { region: 'snowfield', boss: true, name: '{氷牙|ひょうが}の{長|おさ}', art: 'img:boss_frost_wolf.png', svgFallback: 'wolf',

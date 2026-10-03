@@ -660,4 +660,31 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(FF.simulator.exploreGrade(sf, 2, B), 1.5);
     assert.ok(Math.abs(FF.simulator.exploreGrade(sf, 9, B) - 65 / 17) < 1e-9);
   });
+
+  test('探索は選択した学年を保ち、教科はランダムのまま', () => {
+    for (const grade of [4,9]) {
+      const state=base();state.player.grade=grade;
+      const subjects=new Set();
+      for(let seed=1;seed<=200;seed++){
+        const q=X.pickExploreQuestion(bank,state,'snowfield',FF.util.makeRng(seed),T0);
+        assert.strictEqual(q.gradeLevel,grade);subjects.add(q.subject);
+      }
+      assert.strictEqual(subjects.size,5);
+    }
+  });
+  test('探索の問題不足時も選択した学年から下げない', () => {
+    const state=base();state.player.grade=9;
+    const empty=FF.learning.createBank([]);
+    for(let seed=1;seed<=30;seed++){
+      const q=X.pickExploreQuestion(empty,state,'snowfield',FF.util.makeRng(seed),T0);
+      assert.ok(q);assert.strictEqual(q.gradeLevel,9);
+    }
+  });
+  test('探索の誤答後は選択した学年の書き問題を出す', () => {
+    const state=base();state.player.grade=9;state.exploration.regions.snowfield.missedHere=true;
+    for(let seed=1;seed<=30;seed++){
+      const q=X.pickExploreQuestion(bank,state,'snowfield',FF.util.makeRng(seed),T0);
+      assert.strictEqual(q.gradeLevel,9);assert.strictEqual(q.answerType,'input');
+    }
+  });
 };

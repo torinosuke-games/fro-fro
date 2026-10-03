@@ -140,6 +140,7 @@
       U.el('span', { class: 'small muted' }, head)
     ]));
     panel.appendChild(U.el('div', { class: 'question' }, U.rich(it.question.question)));
+    if (it.question.diagram && FF.lessonFigure) panel.appendChild(FF.lessonFigure.render(it.question.diagram));
 
     var answered = !!run.last;
     if (it.question.answerType === 'choice') {

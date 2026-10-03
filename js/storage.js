@@ -16,15 +16,21 @@
     var store = getLs(ls);
     var text = null;
     try { text = store ? store.getItem(key) : null; } catch (e) { text = null; }
+    if (text === null && store) {
+      (FF.config.SAVE_FALLBACK_KEYS || []).some(function (legacyKey) {
+        try { var old = store.getItem(legacyKey); if (old !== null) { text = old; key = legacyKey; return true; } } catch (e) { /* 続行 */ }
+        return false;
+      });
+    }
     if (text === null) return { state: FF.state.createDefaultState(now), status: 'new' };
     var r = FF.state.parseSave(text, now);
     if (!r.ok) {
       try { store.setItem(key + '.broken', text); } catch (e) { /* 退避できなくても続行する */ }
       return { state: FF.state.createDefaultState(now), status: 'error', error: r.error };
     }
-    if (r.migratedFrom < FF.config.SAVE_VERSION) {
+    if (key !== FF.config.SAVE_KEY || r.migratedFrom < FF.config.SAVE_VERSION) {
       // 移行したデータは、すぐに最新版（integrity 付き）で保存し直す
-      try { store.setItem(key, r.saveText); } catch (e) { /* 保存できなくても続行する（次の自動保存で付く） */ }
+      try { store.setItem(FF.config.SAVE_KEY, r.saveText); } catch (e) { /* 保存できなくても続行する（次の自動保存で付く） */ }
       return { state: r.state, status: 'migrated' };
     }
     return { state: r.state, status: 'loaded' };
@@ -45,7 +51,9 @@
   function clear(ls) {
     var store = getLs(ls);
     if (!store) return;
-    try { store.removeItem(FF.config.SAVE_KEY); } catch (e) { /* 何もしない */ }
+    [FF.config.SAVE_KEY].concat(FF.config.SAVE_FALLBACK_KEYS || []).forEach(function (key) {
+      try { store.removeItem(key); } catch (e) { /* 何もしない */ }
+    });
   }
 
   // 問題のレビューの記録（デバッグモードだけで使う。判断202）。セーブとは別のキーで、integrity は付けない
