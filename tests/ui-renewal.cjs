@@ -43,8 +43,9 @@ const out=process.env.FF_QA_OUTPUT||path.resolve(__dirname,'../../..','work','br
  await page.getByRole('button',{name:'学習する →',exact:true}).click();
  assert.equal(await page.locator('.subject-card').count(),5);
  await page.screenshot({path:path.join(out,'subjects.png'),fullPage:true});
- const avatarPosition=await page.locator('.subject-avatar').evaluate(el=>{const a=el.getBoundingClientRect(),b=el.parentNode.getBoundingClientRect();return Math.abs((a.top+a.bottom)/2-(b.top+b.bottom)/2);});
- assert.ok(avatarPosition<1,'Avatar is vertically centered');
+ const avatar=await page.locator('.subject-heading-avatar').boundingBox();
+ const grade=await page.locator('.subject-top-actions>.rn-button').last().boundingBox();
+ assert.ok(avatar.y>=grade.y+grade.height,'Avatar sits below the grade selector');
  await page.locator('.subject-math').click();
  const index=n=>page.locator('.index-item').filter({hasText:new RegExp('^'+n+'$')});
  await index(22).click();
