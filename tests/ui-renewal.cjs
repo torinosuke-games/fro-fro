@@ -120,9 +120,9 @@ const out=process.env.FF_QA_OUTPUT||path.resolve(__dirname,'../../..','work','br
  let answer=await page.evaluate(()=>FF.app.session.items[FF.app.session.currentId].attempt.question.answer);
  await page.getByRole('textbox',{name:'答えを入力'}).fill(answer);await page.getByRole('button',{name:/ヒントを見る/}).click();assert.equal(await page.getByRole('textbox',{name:'答えを入力'}).inputValue(),answer);
  await page.getByRole('button',{name:'答え合わせ',exact:true}).click();assert.equal(await page.locator('.answer-feedback.good').count(),1);assert.equal(await page.evaluate(()=>FF.app.state.tickets.count),inputBefore);
- // Save round trip, distinct original key, grade and real earned amount survive.
+ // Save round trip uses the production key; grade and earned amount survive.
  const saved=await page.evaluate(()=>({points:FF.app.state.studyPoints,resources:FF.app.state.resources}));
- await page.reload({waitUntil:'domcontentloaded'});assert.equal(await page.evaluate(()=>FF.app.state.player.grade),4);assert.deepEqual(await page.evaluate(()=>({points:FF.app.state.studyPoints,resources:FF.app.state.resources})),saved);assert.equal(await page.evaluate(()=>localStorage.getItem('frozenFrontier.save')),null);
+ await page.reload({waitUntil:'domcontentloaded'});assert.equal(await page.evaluate(()=>FF.app.state.player.grade),4);assert.deepEqual(await page.evaluate(()=>({points:FF.app.state.studyPoints,resources:FF.app.state.resources})),saved);assert.ok(await page.evaluate(()=>localStorage.getItem('frozenFrontier.save')));
  // All subjects start at selected grade. This runs at mobile width through real controls.
  for(const subject of ['japanese','science','social','english']){
   await page.getByRole('button',{name:'学習する →',exact:true}).click();await page.locator('.subject-'+subject).click();
@@ -137,7 +137,7 @@ const out=process.env.FF_QA_OUTPUT||path.resolve(__dirname,'../../..','work','br
  // Responsive navigation/settings/home remain within the viewport.
  for(const width of [360,390,768,1024,1440]){
   await page.setViewportSize({width,height:900});for(const screen of ['base','study','settings','redeem','records','exploration']){await page.evaluate(x=>FF.ui.show(x,{tab:'learn'}),screen);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),screen+' overflow '+width);
-   if(screen==='study')assert.ok(await page.locator('.subject-avatar').evaluate(el=>{const a=el.getBoundingClientRect(),b=el.parentNode.getBoundingClientRect();return Math.abs((a.top+a.bottom)/2-(b.top+b.bottom)/2)<1;}),'Avatar centered '+width);
+   if(screen==='study'){const a=await page.locator('.subject-heading-avatar').boundingBox(),g=await page.locator('.subject-top-actions>.rn-button').last().boundingBox();assert.ok(a.y>=g.y+g.height,'Avatar below grade '+width);}
    if(screen==='settings')assert.ok(await page.locator('.grade-chip').first().evaluate(el=>{const a=el.getBoundingClientRect(),b=el.querySelector('.title').getBoundingClientRect();return Math.abs((a.top+a.bottom)/2-(b.top+b.bottom)/2)<1;}),'Grade is centered '+width);
   }
  }
