@@ -1,5 +1,36 @@
 # 算数文章題55問への図の追加（判断223）
 
+
+
+## 第2弾：手作り小4算数17問（2026-10-04）
+
+`DIAGRAM_REQUESTS_2.md` の17問すべてに図を追加した。新しい共通図は4種類。
+必須項目と任意項目は `QUESTIONS_GUIDE.md` の「文章題の共通図」に記載した。
+
+| 種類 | 使った問題のID |
+| --- | --- |
+| `gridPoints` | `math_g4_hand_position_008`、`math_g4_hand_position_010`、`math_g4_hand_position_011`、`math_g4_hand_position_013`、`math_g4_hand_position_014`、`math_g4_hand_position_015`、`math_g4_hand_position_018` |
+| `solid3d` | `math_g4_hand_position_016`、`math_g4_hand_solid_014`、`math_g4_hand_solid_026`、`math_g4_hand_solid_027` |
+| `boxNet` | `math_g4_hand_solid_011`、`math_g4_hand_solid_021` |
+| `quadFigure` | `math_g4_hand_quad_004`、`math_g4_hand_quad_011`、`math_g4_hand_quad_023`、`math_g4_hand_quad_028` |
+
+問題文・ID・答え・選択肢・ヒント・解説・難易度・reviewed・inputFormは変更していない。
+全468問のdiagram以外と、対象外451問全体は、変更前のハッシュと比較するテストで保護した。
+saveVersion・セーブ項目・単元登録も変更していない。色は昼テーマの既存blue・ink・pale・orangeに合わせ、SVG要素で組み立てる。
+
+### 依頼書との差
+
+`position_008`・`position_014`・`position_015` は、未知のＣ／Ｄを正しい座標に「？」として置くと方眼から答えを読み取れるため、既知の点と辺だけを描き、未知の点名は図の外に「Ｃ：？」等と表示した。「答えを教えない」という原則を優先した変更で、問題文はそのまま。`quad_015`・`quad_016` の図は、平行・垂直の答えが見えてしまうためレビューで外した。使われなくなった `lines` の拡張も削除した。
+
+### 検証
+
+- `node tests/run.js`：520件成功、0件失敗。
+- `node tests/simulate.js`：すべて目標内。
+- `tests/cases/hand-diagrams.js`：点・線の範囲と整数、寸法の正値、形と任意項目の組合せ、答えを描かないデータ、対象外の不変性を検証。不正データの負例と、図を外した2問および書き問題に図がないことも検証。
+- `tests/ui-hand-diagrams.cjs`：17問×360・390・688・1024px＝68表示。昼テーマ。viewBox外に文字を出す負例を検出し、画面上の描画範囲も検査。文字の見切れ・重なり・横はみ出し・JavaScriptエラーなし。全68画面のスクリーンショットと390・1024pxの図34枚を保存。
+- 既存の `ui-math-word-diagrams.cjs`（55問×4幅）と `ui-renewal.cjs` も成功。
+
+実装は作業ブランチでPRにし、mainへはマージせずClaude・ユーザーの確認を待つ。
 2026-10-04。mainのPR #11取り込み済みコミット `e82fa03b6da8f4b294359c853e2f58ff09f0581c` を土台に、`codex/math-word-diagrams-55` で制作。
 
 ## 実装と変更ファイル
@@ -54,7 +85,7 @@
 
 - `node tests/run.js`：439件成功、失敗0。
 - `node tests/simulate.js`：すべて目標内。
-- `node tests/ui-math-word-diagrams.cjs`：55問×360/390/768/1024px＝220画面成功。SVG文字のgetBBoxとviewBoxによる見切れ、図内とページ全体の横はみ出し、ブラウザエラーはいずれも0。
+- `node tests/ui-math-word-diagrams.cjs`：55問×360/390/688/1024px＝220画面成功。SVG文字のgetBBoxとviewBoxによる見切れ、図内とページ全体の横はみ出し、ブラウザエラーはいずれも0。
 - `node tests/ui-renewal.cjs`：既存図解100問・開始画面・全教科・回答と報酬・再回答・フィルター・セーブ再読込・引換・試験の回帰検証成功。既存100問の390/1024pxでも見切れ・横はみ出し0。
 - Chromium（Google Chrome）、昼のテーマ、`file://.../index.html` で検証。ローカルサーバーなし。
 - 390/1024pxで全55問の図110枚を撮影。固定ヘッダーと下部ナビだけ撮影時に非表示にし、図への重なりを除去（レイアウト検査は通常の実画面で行う）。スクリーンショット・一覧HTML・results.jsonは作業報告の添付一式。
@@ -72,4 +103,3 @@
 - 図を付けなかった指定問題：なし。効果が薄いとして省略したB問題：なし。依頼表以外の35問への追加：なし。
 
 作業ブランチをGitHubに反映し、main向けPRで確認を待つ。mainへのマージ・Pagesの更新は今回行わない。
-
