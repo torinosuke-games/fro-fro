@@ -20,10 +20,10 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   else if(d.kind==='quadFigure'){assert.ok(['rectangle','parallelogram'].includes(d.shape));if(d.angle)assert.ok(Number.isFinite(d.angle)&&d.angle>0&&d.angle<90);if(d.diagonal)assert.ok(pos(d.diagonal)&&['ＡＯ','ＯＢ'].includes(d.unknown)&&d.unit);if(d.sides)assert.ok(d.sides.length===2&&d.sides.every(pos)&&d.unit);}
   else assert.fail(d.kind);
  }
- test('手作りの図：468問のdiagram以外の全項目と対象外の図は不変',()=>{
+ test('手作りの図：468問のdiagram以外の全項目と対象外の図は不変',()=>{   // 手作りの問題の本文・確認済みの印を直したら、下の2つのハッシュも更新する（判断241）
   assert.strictEqual(all.length,468);
-  assert.strictEqual(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'f51846dddb6139f3680d293d9106adf84859fcd3e9c8d4e2c6b618a8fe0125ce');
-  assert.strictEqual(hash(all.filter(q=>!ids.includes(q.id))),'270f1d627785b9d7af3f277c3caedb8624120f03c37c23ae8f99beb21a3d5e21');
+  assert.strictEqual(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'230a7b5c122ba9b5a72bdaf230e867fbc3abdd53d54515a918d29c6744f18cbb');
+  assert.strictEqual(hash(all.filter(q=>!ids.includes(q.id))),'e512dbbca9a5c3a7099cfffcdd26bd04bbbef0225d0221446e62724ffab95bb1');
  });
  test('手作りの図：依頼17問の網羅・caption・reviewed false・書き問題継承・除外2問',()=>{
   assert.strictEqual(ids.length,17);assert.strictEqual(qs.length,17);const bank=FF.learning.createBank(ctx.QUESTION_BANK);

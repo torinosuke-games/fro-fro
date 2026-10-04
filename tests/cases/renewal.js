@@ -1,13 +1,15 @@
 // 新しい学習導線・100問・報酬と保存の結合を検証する。
 module.exports=({test,FF,ctx,assert,plain})=>{
  const bank=FF.learning.createBank(ctx.QUESTION_BANK),qs=ctx.QUESTION_BANK.filter(q=>q.collection==='frontier100'),HAND=ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g4').length;
+ // デバッグ版のレビューでOKだった問題（確認済み。判断241）。独立した控えとして、データとは別にここにも書く
+ const REVIEWED_OK=new Set(['math_g4_hand_position_001','math_g4_hand_large_017','math_g4_hand_fraction_016','math_g4_hand_fraction_011','math_g4_hand_decimal_005','math_g4_hand_expression_009','math_g4_hand_expression_014','math_g4_hand_expression_026','math_g4_hand_table_009','math_g4_hand_ratio_003','math_g4_frontier_decimal_calc_004']);
  const now=1791000000000;
  test('リニューアル：18単元100問・連番・図解・人による確認前のフラグ',()=>{
   assert.strictEqual(qs.length,100);assert.strictEqual(FF.curriculum.units('math',4).length,18);
   assert.deepStrictEqual(plain(qs.map(q=>q.number)),Array.from({length:100},(_,i)=>i+1));
   const four=['position','change','table','ratio','abacus'];
   for(const u of FF.curriculum.units('math',4))assert.strictEqual(qs.filter(q=>q.unit===u.id).length,u.id==='area'?8:four.includes(u.id)?4:6,u.id);
-  for(const q of qs){if(q.diagram)assert.ok(q.diagram.kind&&q.diagram.caption,q.id);assert.strictEqual(q.reviewed,false);assert.strictEqual(q.choices.length,4);assert.ok(q.hints.length>=2);}
+  for(const q of qs){if(q.diagram)assert.ok(q.diagram.kind&&q.diagram.caption,q.id);assert.strictEqual(q.reviewed,REVIEWED_OK.has(q.id));assert.strictEqual(q.choices.length,4);assert.ok(q.hints.length>=2);}
  });
  test('リニューアル：学年設定後は、診断を受けず自分の学年を学べる',()=>{
   let s=FF.state.setPlayerGrade(FF.state.createDefaultState(now),4);
@@ -167,7 +169,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  });
  test('手作りの問題（判断227）：位置の表し方は基礎6・標準9・発展7問、直方体と立方体・垂直平行と四角形・折れ線グラフは基礎9・標準15・発展12問、小数のかけ算・わり算は基礎9・標準15・発展12問、分数は基礎10・標準17・発展12問、面積は基礎10・標準15・発展12問、式と計算は基礎10・標準15・発展12問、大きな数・がい数・わり算・小数・角は基礎9・標準15・発展12問、変わり方・倍の見方・整理のしかた・そろばんは基礎6・標準9・発展7問で、すべて reviewed:false',()=>{
   const hand=ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g4');
-  assert.ok(hand.every(q=>q.reviewed===false&&q.gradeLevel===4&&q.subject==='math'),'手作りは確認前');
+  assert.ok(hand.every(q=>q.reviewed===REVIEWED_OK.has(q.id)&&q.gradeLevel===4&&q.subject==='math'),'手作りは、レビューでOKだった問題だけ確認済み');
   assert.ok(hand.every(q=>new Set(q.choices).size===q.choices.length&&q.choices.includes(q.answer)),'選択肢');
   const c={};ctx.QUESTION_BANK.filter(q=>q.unit==='position').forEach(q=>{c[q.difficulty]=(c[q.difficulty]||0)+1;});
   assert.deepStrictEqual(c,{basic:6,standard:9,advanced:7});
