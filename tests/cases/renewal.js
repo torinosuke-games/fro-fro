@@ -165,11 +165,13 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   for(let i=0;i<60;i++){const q=FF.curriculum.pick(bank,sel,{now,correctLog:{},recentIds:seen.slice(-20),rng:FF.util.makeRng(i*7+3)});if(seen.slice(-10).includes(q.id))dup++;seen.push(q.id);}
   assert.ok(dup<=3,'直近10問の中の重複 '+dup);
  });
- test('手作りの問題（判断227）：位置の表し方は基礎6・標準9・発展7問で、すべて reviewed:false',()=>{
+ test('手作りの問題（判断227）：位置の表し方は基礎6・標準9・発展7問、直方体と立方体は基礎9・標準15・発展12問で、すべて reviewed:false',()=>{
   const hand=ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g4');
   assert.ok(hand.every(q=>q.reviewed===false&&q.gradeLevel===4&&q.subject==='math'),'手作りは確認前');
   assert.ok(hand.every(q=>new Set(q.choices).size===q.choices.length&&q.choices.includes(q.answer)),'選択肢');
   const c={};ctx.QUESTION_BANK.filter(q=>q.unit==='position').forEach(q=>{c[q.difficulty]=(c[q.difficulty]||0)+1;});
   assert.deepStrictEqual(c,{basic:6,standard:9,advanced:7});
+  const d={};ctx.QUESTION_BANK.filter(q=>q.unit==='solid').forEach(q=>{d[q.difficulty]=(d[q.difficulty]||0)+1;});
+  assert.deepStrictEqual(d,{basic:9,standard:15,advanced:12});
  });
 };
