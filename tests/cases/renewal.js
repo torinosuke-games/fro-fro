@@ -25,7 +25,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  });
  test('リニューアル：単元と難易度のフィルターから別の問題が混ざらない',()=>{
   const sel={subject:'math',grade:4,unit:'angle',difficulty:'standard',answerType:'choice'};
-  const list=FF.curriculum.pool(bank,sel);assert.strictEqual(list.length,3);
+  const list=FF.curriculum.pool(bank,sel);assert.strictEqual(list.length,ctx.QUESTION_BANK.filter(q=>q.unit==='angle'&&q.gradeLevel===4&&q.difficulty==='standard').length);assert.ok(list.length>=3);
   for(let i=0;i<30;i++){const q=FF.curriculum.pick(bank,sel,{now,correctLog:{},recentIds:[],rng:FF.util.makeRng(i+1)});assert.strictEqual(q.unit,'angle');assert.strictEqual(q.difficulty,'standard');assert.strictEqual(q.answerType,'choice');}
   const fr=FF.curriculum.pool(bank,{...sel,unit:'fraction',difficulty:'random',answerType:'input'});assert.ok(fr.length>0);
   for(const q of fr){assert.strictEqual(q.unit,'fraction');assert.strictEqual(q.answerType,'input');assert.strictEqual(q.gradeLevel,4);}
