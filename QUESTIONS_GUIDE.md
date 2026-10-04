@@ -43,3 +43,26 @@
 - `number`（省略できる）：単元の中での並び順。問題マップの番号は、教科・学年の中で「単元の順 → `number` → 難易度 → ID」の順に 1 から付く通し番号（答え方を変えても同じ番号）。
 - `collection`（省略できる）：問題のまとまりの名前（例：`frontier100`）。出題や集計には使わない（記録用）。
 - AI が作った問題は `reviewed: false`（これまでと同じ）。
+
+### 文章題の共通図（判断223）
+
+値や表示する数値は必ず問題の `diagram` に置く。未知の長さは `？` または `x` とし、合計・割合・交点・分けた後の個数を描かない。
+
+- `objects`（`item, groups, labels`）：たきぎ・あめ・パン・花・いす・人の個数。`sealed` で袋の中を隠し、`columns, mark, names` で列・印・名前を指定。
+- `clock`（`minute`）：時計の針。任意の `hour` と `toMinute, elapsed` で短針や長針の移動を指定。時刻の答えは文字で出さない。
+- `tape`（`values, labels`）：長さ・時間・道のりの帯。`notes, places, stacked` で補助表示・通過点・折り返しを指定。
+- `measure`（`capacity, values, labels, unit`）：容量と入っている量を目盛り付きのますに示す。
+- `balance`（`weights`）：2つの荷物の重さとはかり。はかりの合計表示は `？`。
+- `nestedRect`（`w, h, innerW, innerH, unit`）：土地と内側の小屋。`growth, area` で元の正方形を一方向ずつ広げる模式図にも使う。
+- `triangle`（`base, height, unit`）：底辺と点線の高さ。`right` なら直角三角形で斜辺を `？` にする。
+- `pie`（`numerators, denominators, labels`）：同じ大きさの円を分けて別々の分数を示す。合算しない。
+- `band`（`parts, labels, totalLabel`）：割合・比の帯。任意の `known` に既知量だけを表示する。
+- `doubleLine`（`labels, ends`）：時刻と経過時間・時間と道のり・地図の長さと縮尺の線。目盛りや換算の答えは出さない。
+- `circle`（`radius, unit`）：半径の図。`count, diameter` で円の列、`angle` でおうぎ形を指定。
+- `coordinate`（`a, b, power, xRange, yRange, formula`）：直線（`power: 1`）・放物線（`power: 2`）。目盛りを省略し、任意の `marks` は問題文に指定されたxだけにする。
+- `exterior`（`angle`）：1つの頂点の外角と辺の延長。多角形全体の辺数は示さない。
+- `inscribed`（`angle`）：同じ弧の円周角と、未知の中心角を示す。
+- `similarity`（`height, shadows, unit`）：棒・塔と影の相似の模式図。塔の高さは `？`。
+- 既存 `fractionSum` の `separate: true` は2つの量を別の帯で表示し、`whole` は1つ分の単位。既存の合算表示は維持する。
+- 既存 `rect` の `area` と `w/h: '？'` は面積だけ分かる正方形、`solid` の `w, depth, h, water, unit` は寸法と水深、`shape: 'triangularPrism', baseArea, h, unit` は三角柱。
+- 既存 `polygon` の `shape: 'pentagon'` は五角形、`shape: 'diagonals', w, h, unit, single: true` は寸法付きの長方形と対角線1本。既存 `numberline` の `marks, markLabels, directions, hideNegative` は問題文の既知点と向きだけを表示する。

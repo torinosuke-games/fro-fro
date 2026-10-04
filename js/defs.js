@@ -63,7 +63,22 @@
       axes: ['values'],
       graph: ['labels', 'values'],
       abacus: ['digits', 'labels'],
-      numberline: ['start', 'end', 'step']
+      numberline: ['start', 'end', 'step'],
+      objects: ['item', 'groups', 'labels'],
+      clock: ['minute'],
+      tape: ['values', 'labels'],
+      measure: ['capacity', 'values', 'labels', 'unit'],
+      balance: ['weights'],
+      nestedRect: ['w', 'h', 'innerW', 'innerH', 'unit'],
+      triangle: ['base', 'height', 'unit'],
+      pie: ['numerators', 'denominators', 'labels'],
+      band: ['parts', 'labels', 'totalLabel'],
+      doubleLine: ['labels', 'ends'],
+      circle: ['radius', 'unit'],
+      coordinate: ['a', 'b', 'power', 'xRange', 'yRange', 'formula'],
+      exterior: ['angle'],
+      inscribed: ['angle'],
+      similarity: ['height', 'shadows', 'unit']
     },
 
     RESOURCES: [
