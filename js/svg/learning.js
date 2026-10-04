@@ -38,7 +38,7 @@
    if(d.kind==='circuit'||d.kind==='apparatus'||d.kind==='scienceScene'||d.kind==='anatomy'||d.kind==='moonView'||d.kind==='starMap'||d.kind==='graph'&&d.science){
     // 共通の教材用線画。結果の矢印・動作の前後・解答ラベルは生成しない。
     function ellipse(x,y,rx,ry,fill){return S('ellipse',{cx:x,cy:y,rx:rx,ry:ry,fill:fill||'none',stroke:blue,'stroke-width':3});}
-    function panel(draw,i){var saved=nodes;nodes=[];draw();var children=nodes;nodes=saved;add(S('g',{transform:'translate(0,'+(i*330)+')'},children));}
+    function panel(draw,i,pitch){var saved=nodes;nodes=[];draw();var children=nodes;nodes=saved;add(S('g',{transform:'translate(0,'+(i*(pitch||330))+')'},children));}
     function water(x,y,w,hh){add(S('rect',{x:x,y:y,width:w,height:hh,fill:blue,'fill-opacity':.3}));}
     function dots(x,y,w,hh,r){for(var yy=y+14;yy<y+hh;yy+=24)for(var xx=x+14;xx<x+w;xx+=24)add(circle(xx,yy,r||2,'#fff'));}
     function flame(x,y){add(path('M'+x+','+y+' q-23,-22 0,-47 q22,25 0,47 Z',orange));}
@@ -123,9 +123,9 @@
      if(d.planisphere){add(circle(260,175,130,'#fff'),ellipse(260,205,115,72,pale));for(var j=0;j<24;j++){var p=point(260,175,130,j*15),q=point(260,175,118,j*15);add(line(p[0],p[1],q[0],q[1]));}add(text(260,342,'日付・時刻の目もり',24));}
      d.segments.forEach(function(s){var a=d.points[s[0]],b=d.points[s[1]];add(line(a[0],a[1],b[0],b[1]));});d.points.forEach(function(p,i){var tint=d.tints&&d.tints[i];add(circle(p[0],p[1],7,tint==='warm'?orange:tint==='blue'?blue:ink));if(d.labels[i])add(clearText(p[0],p[1]+35,d.labels[i],25));});
     }else if(d.kind==='graph'&&d.science){
-     var panels=d.panels||[{values:d.values,labels:d.labels}];h=panels.length*330+20;panels.forEach(function(p,i){panel(function(){add(line(70,270,455,270),line(70,270,70,65),text(75,37,'気温（℃）',24),text(260,336,'時こく',24));if(p.title)add(text(290,37,p.title,25));
+     var panels=d.panels||[{values:d.values,labels:d.labels}];h=panels.length*360;panels.forEach(function(p,i){panel(function(){add(line(70,270,455,270),line(70,270,70,65),text(75,37,'気温（℃）',24),text(260,336,'時こく',24));if(p.title)add(text(290,37,p.title,25));
       if(p.values.length){var max=d.panels?5:Math.max.apply(null,p.values)+5,pts=p.values.map(function(v,j){return [90+j*330/(p.values.length-1),250-v/max*180];});add(S('polyline',{points:pts.map(function(v){return v.join(',');}).join(' '),fill:'none',stroke:blue,'stroke-width':3}));pts.forEach(function(v,j){add(circle(v[0],v[1],5,orange));if(!d.panels){add(text(v[0],v[1]-18,p.values[j]+'℃',24),text(v[0],298,p.labels[j],24));}});}
-     },i);});
+     },i,360);});
     }
    }else if(d.kind==='polygon'&&d.panels){
     var count=d.panels.length,span=520/count,plotWidth=count===1?340:160,plotHeight=170;
