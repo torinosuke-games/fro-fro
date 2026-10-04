@@ -136,7 +136,7 @@
   var q=it.attempt.question,done=it.attempt.done,unit=C.unit(q.subject,q.gradeLevel,q.unit),no=C.numberOf(a.bank,q);
   if(done)card.classList.add('is-done');
   card.appendChild(E('div',{class:'question-meta'},[
-   E('span',{class:'question-badge',text:R.question+' '+(no?no+' / '+C.totalOf(a.bank,q.subject,q.gradeLevel):s.cursor+1)}),
+   E('span',{class:'question-badge',text:q.generated?R.drill:R.question+' '+(no?no+' / '+C.totalOf(a.bank,q.subject,q.gradeLevel):s.cursor+1)}),
    E('span',{class:'question-unit',text:unit?unit.name:U.plain(L.subjectName(q.subject,q.gradeLevel))}),
    E('span',{class:'difficulty-badge '+q.difficulty,text:'★ '+difficulty(q.difficulty)})
   ]));

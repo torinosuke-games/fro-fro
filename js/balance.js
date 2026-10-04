@@ -66,7 +66,10 @@
     PICK: {
       CANDIDATES: 6,              // 自動生成で候補を何問作って選ぶか
       AVOID_RECENT: 10,           // 直近に出した問題を何問ぶん避けるか
-      MATH_WORD_SHARE: 0.2        // 算数で文章題（問題データ）を出す割合
+      MATH_WORD_SHARE: 0.2,       // 算数で文章題（問題データ）を出す割合
+      UNIT_GEN_SHARE: 0.4,        // 単元を登録した学年で、単元を選んだとき、自動生成の問題を混ぜる割合（手作りの問題がある単元。判断226）
+      UNIT_GEN_SHARE_ALL: 0.3,    // 同じく「すべての単元」のとき
+      UNIT_GEN_FULL_POOL: 20      // 手作りの問題がこの数より少ないと、少ないぶんだけ自動生成の割合を上げる
     },
     HISTORY_LIMIT: 500,
     EXAM_HISTORY_LIMIT: 100,

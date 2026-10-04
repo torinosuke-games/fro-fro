@@ -24,18 +24,48 @@
   function usesGenerated(sel) {
     return !FF.units.has(sel.subject, sel.grade) && (!sel.unit || sel.unit === 'all');
   }
+  // 単元を登録した学年で、自動生成できる（単元 × 難易度）の組み合わせ（js/generators.js の UNIT_GEN。判断226）
+  function genCombos(sel) {
+    if (sel.subject !== 'math' || !FF.units.has(sel.subject, sel.grade)) return [];
+    var units = (!sel.unit || sel.unit === 'all') ? FF.generators.unitsWithGenerators(sel.grade) : [sel.unit];
+    var diffs = (!sel.difficulty || sel.difficulty === 'random') ? DIFF_ORDER : [sel.difficulty], out = [];
+    units.forEach(function (u) { diffs.forEach(function (d) { if (FF.generators.unitSupports(sel.grade, u, d)) out.push({ unit: u, difficulty: d }); }); });
+    return out;
+  }
+  function recentScore(q, ctx) {
+    return FF.rewards.countRecentCorrect(ctx.correctLog, q.id, ctx.now) * 10 + ((ctx.recentIds || []).indexOf(q.id) >= 0 ? 5 : 0);
+  }
+  function pickGenerated(sel, combos, ctx, rng) {
+    var best = null, min = Infinity, n = FF.balance.PICK.CANDIDATES;
+    for (var i = 0; i < n; i++) {
+      var c = combos[Math.floor(rng() * combos.length)];
+      var q = FF.generators.generateForUnit(sel.grade, c.unit, c.difficulty, sel.answerType, rng);
+      if (!q) continue;
+      var sc = recentScore(q, ctx);
+      if (sc < min) { min = sc; best = q; }
+    }
+    return best;
+  }
   function pick(bank, sel, ctx) {
     if (usesGenerated(sel) && sel.subject === 'math') return FF.learning.pickQuestion(bank, sel, ctx);
-    var list = pool(bank, sel), rng = ctx.rng || Math.random;
+    var list = pool(bank, sel), rng = ctx.rng || Math.random, combos = genCombos(sel), P = FF.balance.PICK;
+    if (combos.length) {
+      // 手作りの問題が少ないほど、自動生成を多く混ぜる（手作りが UNIT_GEN_FULL_POOL 問以上なら、決めた割合）
+      var base = (!sel.unit || sel.unit === 'all') ? P.UNIT_GEN_SHARE_ALL : P.UNIT_GEN_SHARE;
+      var share = list.length ? Math.max(base, 1 - list.length / P.UNIT_GEN_FULL_POOL) : 1;
+      if (rng() < share) { var g = pickGenerated(sel, combos, ctx, rng); if (g) return g; }
+    }
     if (!list.length) {
       if (usesGenerated(sel)) return FF.learning.pickQuestion(bank, sel, ctx);
       return null;
     }
     var best = [], min = Infinity;
     list.forEach(function (q) {
-      var n = FF.rewards.countRecentCorrect(ctx.correctLog, q.id, ctx.now) * 10 + ((ctx.recentIds || []).indexOf(q.id) >= 0 ? 5 : 0);
+      var n = recentScore(q, ctx);
       if (n < min) { min = n; best = [q]; } else if (n === min) best.push(q);
     });
+    // 手作りの問題が、直近に出した・24時間以内に正解した問題しか残っていないときは、自動生成で新しい問題を出す
+    if (min > 0 && combos.length) { var g2 = pickGenerated(sel, combos, ctx, rng); if (g2) return g2; }
     return best[Math.floor(rng() * best.length)];
   }
   function scarcest(state) { return FF.defs.RESOURCES.reduce(function (best, r) { return state.resources[r.id] < state.resources[best] ? r.id : best; }, 'wood'); }
@@ -73,8 +103,8 @@
       out.total++;
       if (results[key] === true) out.correct++; else if (results[key] === false) out.review++; else out.unanswered++;
     });
-    out.generated = subject === 'math' && !FF.units.has(subject, grade) &&
-      FF.defs.DIFFICULTIES.some(function (d) { return FF.generators.supports(subject, grade, d.id); });
+    out.generated = subject === 'math' && (FF.units.has(subject, grade) ? FF.generators.unitsWithGenerators(grade).length > 0 :
+      FF.defs.DIFFICULTIES.some(function (d) { return FF.generators.supports(subject, grade, d.id); }));
     return out;
   }
   // 単元ごとの問題数（書き問題の形は数えない）
@@ -87,7 +117,7 @@
     return questions(bank, subject, grade).filter(function (q) { return !!q.diagram; }).length;
   }
   FF.curriculum = {
-    pool: pool, pick: pick, numberOf: numberOf, totalOf: totalOf, scarcest: scarcest, progress: progress, unitCounts: unitCounts, diagramCount: diagramCount,
+    pool: pool, pick: pick, genCombos: genCombos, numberOf: numberOf, totalOf: totalOf, scarcest: scarcest, progress: progress, unitCounts: unitCounts, diagramCount: diagramCount,
     units: function (subject, grade) { return FF.units.list(subject, grade); },
     unit: function (subject, grade, id) { return FF.units.get(subject, grade, id); }
   };
