@@ -17,6 +17,7 @@ const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');const a
   await p.locator('.check-answer').click({force:true});await p.waitForTimeout(700);await p.evaluate(()=>window.scrollTo(0,0));
   const next=await p.evaluate(()=>{const r=document.querySelector('.lesson-actions').getBoundingClientRect();return r.bottom<=innerHeight+1&&r.top>=0;});
   assert.ok(next,'next button visible without scrolling '+w);
+  assert.equal(await p.evaluate(()=>getComputedStyle(document.querySelector('.hint-card')).display),'none','hint card is hidden after checking on phones '+w);   // 判断240
   assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'overflow '+w);
   await ctx.close();
  }
