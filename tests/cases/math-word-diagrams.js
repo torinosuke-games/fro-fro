@@ -6,13 +6,13 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  const qs=ctx.QUESTION_BANK.filter(q=>ids.includes(q.id));
  test('文章題の図：元の90問の全項目をdiagram以外は変更していない',()=>{
   const crypto=require('node:crypto');
-  const original=ctx.QUESTION_BANK.filter(q=>/^math_g\d_/.test(q.id)&&q.collection!=='frontier100'&&q.collection!=='hand_g4').map(q=>{const copy=plain(q);delete copy.diagram;return copy;});
+  const original=ctx.QUESTION_BANK.filter(q=>/^math_g\d_/.test(q.id)&&q.collection!=='frontier100'&&q.collection!=='hand_g4'&&q.collection!=='hand_g5').map(q=>{const copy=plain(q);delete copy.diagram;return copy;});
   assert.strictEqual(original.length,90);
   assert.strictEqual(crypto.createHash('sha256').update(JSON.stringify(original)).digest('hex'),'54351549ef7eec144c8414b09cc6e0ecc5ec277c7f90fe9111fab26a77bc314f');
  });
  test('文章題の図：依頼の55問だけに追加し、書き問題にも引き継ぐ',()=>{
   assert.strictEqual(ids.length,55);assert.strictEqual(qs.length,55);
-  const all=ctx.QUESTION_BANK.filter(q=>q.subject==='math'&&q.collection!=='frontier100'&&q.collection!=='hand_g4');
+  const all=ctx.QUESTION_BANK.filter(q=>q.subject==='math'&&q.collection!=='frontier100'&&q.collection!=='hand_g4'&&q.collection!=='hand_g5');
   assert.strictEqual(all.filter(q=>q.diagram).length,55);
   const bank=FF.learning.createBank(ctx.QUESTION_BANK);
   for(const q of qs){assert.ok(q.diagram.caption.trim(),q.id);assert.deepStrictEqual(plain(FF.learning.validateQuestion(q)),[],q.id);assert.strictEqual(q.reviewed,true,q.id);

@@ -1004,6 +1004,391 @@
   };
 
 
+  // ---- 小5の単元（判断243）。答えはすべて数（分数は mode: 'exact'）。メタ情報（meta）から、テストが独立に検算する ----
+  function mk5(op, key, text, ans, hints, expl, dis, meta, acc, mode) {
+    var m = { op: op };
+    Object.keys(meta || {}).forEach(function (k) { m[k] = meta[k]; });
+    return { key: key, text: text, answer: String(ans), mode: mode || 'number', accepted: acc || [], hints: hints, explanation: expl, distractors: uniq(dis, ans), meta: m };
+  }
+  var WARI = '{割合|わりあい}';
+
+  // 整数と小数
+  OPS.d5_scale = function (rng, P) {
+    var pl = ri(rng, 1, 3), V = ri(rng, 12, 998);
+    if (V % 10 === 0) V += 1;
+    var k = pick(rng, P.ks), up = k > 0, n = Math.abs(k), z = String(n).length - 1;
+    var x = dec(V, pl), ans = up ? dec(V * n, pl) : dec(V, pl + z);
+    var label = up ? n + '倍' : n + '分の1';
+    return mk5('d5_scale', [x, k], x + ' の ' + label + ' は いくつですか。', ans,
+      [up ? '位が ' + z + ' つ 上がる（小数点が 右へ ' + z + ' けた）' : '位が ' + z + ' つ 下がる（小数点が 左へ ' + z + ' けた）', x + ' の 小数点を うごかそう', '足りない けたには 0 を 書こう'],
+      x + ' の ' + label + ' は、小数点を ' + (up ? '右' : '左') + 'へ ' + z + ' けた うごかして ' + ans + ' です。',
+      [dec(V * n, pl + 1), dec(V, pl + z + 1), dec(V * n * 10, pl), dec(V, pl)], { x: x, k: k });
+  };
+  OPS.d5_digit = function (rng, P) {
+    var pl = pick(rng, P.places), n = ri(rng, 11, 999), u = dec(1, pl);
+    return mk5('d5_digit', [u, n], u + ' を ' + n + ' こ 集めた 数は いくつですか。', dec(n, pl),
+      [u + ' が 1 こ、10 こ、100 こ… と 考えよう', n + ' に ' + u + ' を かける ことだよ', n + ' の 小数点を、左へ ' + pl + ' けた うごかそう'],
+      u + ' × ' + n + ' = ' + dec(n, pl) + ' です。', [dec(n, pl + 1), dec(n, Math.max(1, pl - 1)), dec(n * 10, pl)], { u: u, n: n });
+  };
+  OPS.d5_maxdec = function (rng, P) {
+    var ds = FF.util.shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9], rng).slice(0, 3), seen = {}, list = [];
+    var perms = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
+    FF.util.shuffle(perms, rng).slice(0, 4).forEach(function (q) { list.push(ds[q[0]] + '.' + ds[q[1]] + ds[q[2]]); });
+    list.sort();   // 同じ4つの数は、同じ並びで出す（ID が同じなら問題も同じ）
+    var best = list.slice().sort(function (a, b) { return Number(b) - Number(a); })[0];
+    return mk5('d5_maxdec', list.slice().sort(), '次の 4つの 数で、いちばん 大きい 数を 答えましょう。' + list.join('、'), best,
+      ['一の位は すべて ちがう 数字（' + list.map(function (v) { return v.charAt(0); }).join('、') + '）だよ', '一の位が 同じなら、十分の一の位を くらべよう', '大きい 位から じゅんに くらべよう'],
+      list.join('、') + ' を くらべると、いちばん 大きい のは ' + best + ' です。', list.filter(function (v) { return v !== best; }), { list: list });
+  };
+
+  // 体積
+  OPS.vol_box = function (rng, P) {
+    var a = ri(rng, 2, P.max), b = ri(rng, 2, P.max), c = ri(rng, 2, P.max), u = pick(rng, ['cm', 'm']), ans = a * b * c;
+    return mk5('vol_box', [a, b, c, u], 'たて ' + a + u + '、横 ' + b + u + '、高さ ' + c + u + ' の 直方体の 体積は 何' + u + '³ ですか。', ans,
+      ['直方体の 体積 ＝ たて × 横 × 高さ', a + ' × ' + b + ' × ' + c + ' を 計算しよう', '答えの 単位は ' + u + '³ だよ'],
+      a + ' × ' + b + ' × ' + c + ' = ' + ans + '。' + ans + u + '³ です。', [a * b + c, (a + b + c) * 2, a * b * c + a, 2 * (a * b + b * c + a * c)], { a: a, b: b, c: c }, [ans + u + '³', ans + u + '3']);
+  };
+  OPS.vol_cube = function (rng, P) {
+    var s = ri(rng, 2, P.max), u = pick(rng, ['cm', 'm']), ans = s * s * s;
+    return mk5('vol_cube', [s, u], '1辺が ' + s + u + ' の 立方体の 体積は 何' + u + '³ ですか。', ans,
+      ['立方体の 体積 ＝ 1辺 × 1辺 × 1辺', s + ' × ' + s + ' × ' + s + ' を 計算しよう', '答えの 単位は ' + u + '³ だよ'],
+      s + ' × ' + s + ' × ' + s + ' = ' + ans + '。' + ans + u + '³ です。', [s * s, s * 6, s * 3, s * s * 6], { s: s }, [ans + u + '³', ans + u + '3']);
+  };
+  OPS.vol_side = function (rng, P) {
+    var a = ri(rng, 2, P.max), b = ri(rng, 2, P.max), c = ri(rng, 2, P.max), V = a * b * c;
+    return mk5('vol_side', [V, a, b], '体積が ' + V + 'cm³ の 直方体が あります。たてが ' + a + 'cm、横が ' + b + 'cm の とき、高さは 何cm ですか。', c,
+      ['体積 ＝ たて × 横 × 高さ だから、高さ ＝ 体積 ÷ （たて × 横）', 'たて × 横 ＝ ' + a * b, V + ' ÷ ' + a * b + ' を 計算しよう'],
+      a + ' × ' + b + ' = ' + a * b + '。' + V + ' ÷ ' + a * b + ' = ' + c + '。高さは ' + c + 'cm です。', [V / a, V / b, c + 1, c - 1, V - a * b], { V: V, a: a, b: b }, [c + 'cm']);
+  };
+  OPS.vol_unit = function (rng, P) {
+    var kind = pick(rng, P.kinds), k = ri(rng, 2, 9);
+    var K = { m3cm3: ['m³', 'cm³', 1000000, '1m³ は 1辺 100cm の 立方体 → 100 × 100 × 100'], Lcm3: ['L', 'cm³', 1000, '1L は 1辺 10cm の 立方体の 容積 → 10 × 10 × 10 ＝ 1000cm³'], m3L: ['m³', 'L', 1000, '1m³ ＝ 1000000cm³、1L ＝ 1000cm³ だから 1m³ ＝ 1000L'] }[kind];
+    var ans = k * K[2];
+    return mk5('vol_unit', [kind, k], k + K[0] + ' は 何' + K[1] + ' ですか。', ans,
+      [K[3], '1' + K[0] + ' ＝ ' + K[2] + K[1], k + ' × ' + K[2] + ' を 計算しよう'],
+      '1' + K[0] + ' ＝ ' + K[2] + K[1] + ' なので、' + k + ' × ' + K[2] + ' = ' + ans + '。', [k * K[2] * 10, k * K[2] / 10, k * 100, k * 1000, k * 10], { kind: kind, k: k }, [ans + K[1]]);
+  };
+
+  // 比例
+  OPS.prop_val = function (rng, P) {
+    var a = ri(rng, 2, 9), x1 = ri(rng, 2, 6), x2 = ri(rng, 7, 15), y1 = a * x1, ans = a * x2, what = pick(rng, [['水そうに 水を 入れる', '分', 'L'], ['ひもを 買う', 'm', '円'], ['歩く', '分', 'm']]);
+    var t = what[0] === 'ひもを 買う' ? '同じ ひもを ' + x1 + 'm 買うと ' + y1 + '円 です。比例する とき、' + x2 + 'm では 何円ですか。' : what[0] === '歩く' ? '一定の 速さで 歩いて、' + x1 + '分で ' + y1 + 'm 進みました。' + x2 + '分では 何m 進みますか。' : '一定の 割合で 水そうに 水を 入れます。' + x1 + '分で ' + y1 + 'L 入りました。' + x2 + '分では 何L 入りますか。';
+    return mk5('prop_val', [x1, y1, x2, what[2]], t, ans,
+      ['比例 → 1 あたりの 量は いつも 同じ', y1 + ' ÷ ' + x1 + ' ＝ ' + a + '（1 あたり）', a + ' × ' + x2 + ' を 計算しよう'],
+      y1 + ' ÷ ' + x1 + ' = ' + a + '。' + a + ' × ' + x2 + ' = ' + ans + ' です。', [y1 + x2 - x1, y1 * x2, x2 * (a + 1), ans + a], { x1: x1, y1: y1, x2: x2 }, [ans + what[2]]);
+  };
+  OPS.prop_x = function (rng, P) {
+    var a = ri(rng, 2, 9), x1 = ri(rng, 2, 6), x2 = ri(rng, 7, 15), y1 = a * x1, y2 = a * x2;
+    return mk5('prop_x', [x1, y1, y2], '□ が ○ に 比例 して いて、○ が ' + x1 + ' の とき □ は ' + y1 + ' です。□ が ' + y2 + ' の とき、○ は いくつですか。', x2,
+      ['□ ÷ ○ ＝ 決まった 数（比例）', y1 + ' ÷ ' + x1 + ' ＝ ' + a, y2 + ' ÷ ' + a + ' を 計算しよう'],
+      y1 + ' ÷ ' + x1 + ' = ' + a + '。□ ＝ ○ × ' + a + ' なので、○ ＝ ' + y2 + ' ÷ ' + a + ' = ' + x2 + ' です。', [x2 + 1, x2 - 1, y2 - y1 + x1, y2 / x1], { x1: x1, y1: y1, y2: y2 });
+  };
+
+  // 小数のかけ算・わり算（文章題）
+  OPS.decm_word = function (rng, P) {
+    var pr = pick(rng, [40, 60, 80, 120, 150, 200, 250]), V = ri(rng, 12, 99);
+    if (V % 10 === 0) V += 1;
+    var l = dec(V, 1), ans = pr * V / 10;
+    return mk5('decm_word', [pr, l], '1m が ' + pr + '円 の ひもを ' + l + 'm 買います。代金は 何円ですか。', ans,
+      ['代金 ＝ 1m の ねだん × 長さ', pr + ' × ' + l + ' を 計算しよう', pr + ' × ' + V + ' ＝ ' + pr * V + ' を 10 で わろう'],
+      pr + ' × ' + l + ' = ' + ans + '。代金は ' + ans + '円 です。', [pr * V, pr * V / 100, pr + V, ans + pr], { p: pr, l: l }, [ans + '円']);
+  };
+  OPS.decdiv_word = function (rng, P) {
+    var Q = ri(rng, 3, 40), d = pick(rng, [2, 3, 4, 5, 6, 8, 12, 15]), L = dec(Q * d, 1), D = dec(d, 1);
+    return mk5('decdiv_word', [L, D], L + 'm の リボンを ' + D + 'm ずつ に 切ります。何本 とれますか。', Q,
+      ['全体の 長さ ÷ 1本の 長さ', L + ' ÷ ' + D + ' を 計算しよう', '両方を 10 倍して ' + Q * d + ' ÷ ' + d + ' と 考えよう'],
+      L + ' ÷ ' + D + ' = ' + Q + '。' + Q + '本 とれます。', [Q * 10, Q + 1, Q - 1, dec(Q, 1)], { a: L, b: D }, [Q + '本']);
+  };
+  OPS.dec_div_round = function (rng, P) {
+    var B = pick(rng, [3, 7, 9, 11, 13]), A;
+    do { A = ri(rng, 10, 99); } while (A % B === 0);
+    var t = Math.floor((2 * A * 10 + B) / (2 * B)), ans = dec(t, 1);
+    return mk5('dec_div_round', [A, B], A + ' ÷ ' + B + ' の 商を 四捨五入して、小数第1位まで 求めましょう。', ans,
+      ['わりきれないので、小数第2位まで わって みよう', '小数第2位を 四捨五入するよ', A + ' ÷ ' + B + ' ＝ ' + (A / B).toFixed(3) + '…'],
+      A + ' ÷ ' + B + ' = ' + (A / B).toFixed(3) + '…。小数第2位を 四捨五入して ' + ans + ' です。', [dec(Math.floor(A * 10 / B), 1), dec(t + 1, 1), dec(t - 1, 1), dec(Math.round(A * 100 / B), 2)], { A: A, B: B });
+  };
+
+  // 図形の角
+  var POLY = { 3: '三角形', 4: '四角形', 5: '五角形', 6: '六角形', 7: '七角形', 8: '八角形', 9: '九角形', 10: '十角形', 12: '十二角形' };
+  OPS.poly_sum = function (rng, P) {
+    var n = ri(rng, P.n[0], P.n[1]), ans = 180 * (n - 2);
+    return mk5('poly_sum', [n], POLY[n] + 'の 角の 大きさの 和は 何度ですか。', ans,
+      ['多角形は、1つの 頂点から 対角線を ひいて 三角形に 分けられる', POLY[n] + ' は 三角形 ' + (n - 2) + ' こ分', '180 × ' + (n - 2) + ' を 計算しよう'],
+      POLY[n] + ' は 三角形 ' + (n - 2) + ' こ分なので、180 × ' + (n - 2) + ' = ' + ans + '° です。', [180 * n, 180 * (n - 1), 180 * (n - 3), 360 * (n - 2)], { n: n }, [ans + '°']);
+  };
+  OPS.poly_reg = function (rng, P) {
+    var n = pick(rng, P.ns), ans = 180 * (n - 2) / n;
+    return mk5('poly_reg', [n], '正' + POLY[n] + 'の 1つの 角の 大きさは 何度ですか。', ans,
+      ['まず ' + POLY[n] + ' の 角の 和を 求めよう（180 × ' + (n - 2) + '）', '正多角形は 角が 全部 同じ 大きさ', '角の和 ÷ ' + n + ' を 計算しよう'],
+      '角の 和は 180 × ' + (n - 2) + ' = ' + 180 * (n - 2) + '°。' + 180 * (n - 2) + ' ÷ ' + n + ' = ' + ans + '° です。', [180 * (n - 2), 360 / n, 180 - ans, ans + 10, ans - 10], { n: n }, [ans + '°']);
+  };
+  OPS.tri_third = function (rng, P) {
+    var a = ri(rng, 20, 90), b = ri(rng, 20, 160 - a), ans = 180 - a - b;
+    return mk5('tri_third', [a, b], '三角形の 2つの 角が ' + a + '° と ' + b + '° です。のこりの 角は 何度ですか。', ans,
+      ['三角形の 3つの 角の 和は 180°', a + ' + ' + b + ' を 先に 計算しよう', '180 から ひこう'],
+      a + ' + ' + b + ' = ' + (a + b) + '。180 − ' + (a + b) + ' = ' + ans + '° です。', [a + b, 360 - a - b, 180 - a, 180 - b, 90 - a], { a: a, b: b }, [ans + '°']);
+  };
+  OPS.quad_missing = function (rng, P) {
+    var a = ri(rng, 50, 120), b = ri(rng, 50, 120), c = ri(rng, 50, 120), ans = 360 - a - b - c;
+    return mk5('quad_missing', [a, b, c], '四角形の 3つの 角が ' + a + '°、' + b + '°、' + c + '° です。のこりの 角は 何度ですか。', ans,
+      ['四角形の 4つの 角の 和は 360°', a + ' + ' + b + ' + ' + c + ' を 先に 計算しよう', '360 から ひこう'],
+      a + ' + ' + b + ' + ' + c + ' = ' + (a + b + c) + '。360 − ' + (a + b + c) + ' = ' + ans + '° です。', [a + b + c, 180 - (a + b + c) % 180, 360 - a - b, ans + 10], { a: a, b: b, c: c }, [ans + '°']);
+  };
+
+  // 倍数と約数
+  OPS.mult_kth = function (rng, P) {
+    var n = ri(rng, 3, 9), k = ri(rng, 5, 15), ans = n * k;
+    return mk5('mult_kth', [n, k], n + ' の 倍数を 小さい じゅんに ならべた とき、' + k + '番目の 数は いくつですか。', ans,
+      ['倍数は ' + n + '、' + n * 2 + '、' + n * 3 + '… と ふえて いく', k + '番目は ' + n + ' の ' + k + ' 倍', n + ' × ' + k + ' を 計算しよう'],
+      k + '番目の 倍数は ' + n + ' × ' + k + ' = ' + ans + ' です。', [ans + n, ans - n, n + k, n * (k + 2)], { n: n, k: k });
+  };
+  OPS.gcd_ask = function (rng, P) {
+    var g, p1, q1;
+    do { g = ri(rng, 2, 9); p1 = ri(rng, 2, 9); q1 = ri(rng, 2, 9); } while (p1 === q1 || gcd(p1, q1) !== 1);
+    var a = g * p1, b = g * q1;
+    return mk5('gcd_ask', [a, b], a + ' と ' + b + ' の 最大公約数は いくつですか。', g,
+      [a + ' の 約数を 全部 書いて みよう', b + ' の 約数と くらべて、共通の 約数を さがそう', '共通の 約数のうち、いちばん 大きい 数が 答え'],
+      a + ' と ' + b + ' の 共通の 約数のうち、いちばん 大きい 数は ' + g + ' です。', [a - b, g * 2, p1, q1, 1, a + b], { a: a, b: b });
+  };
+  OPS.lcm_ask = function (rng, P) {
+    var a = ri(rng, P.min, P.max), b = ri(rng, P.min, P.max);
+    while (a === b || a % b === 0 || b % a === 0) b = ri(rng, P.min, P.max);
+    var L = lcm(a, b);
+    return mk5('lcm_ask', [a, b], a + ' と ' + b + ' の 最小公倍数は いくつですか。', L,
+      [a + ' の 倍数を 小さい じゅんに 書いて みよう（' + a + '、' + a * 2 + '、' + a * 3 + '…）', b + ' の 倍数と くらべて、共通の 倍数を さがそう', '共通の 倍数のうち、いちばん 小さい 数が 答え'],
+      a + ' と ' + b + ' の 共通の 倍数のうち、いちばん 小さい 数は ' + L + ' です。', [a * b, a + b, L * 2, gcd(a, b), Math.max(a, b)], { a: a, b: b });
+  };
+  OPS.div_count = function (rng, P) {
+    var n = pick(rng, [12, 16, 18, 20, 24, 28, 30, 36, 40, 42, 48]), c = 0;
+    for (var i = 1; i <= n; i++) if (n % i === 0) c++;
+    return mk5('div_count', [n], n + ' の 約数は 全部で 何こ ありますか。（1 と ' + n + ' も 入れます）', c,
+      [n + ' を わりきれる 数を 1 から じゅんに さがそう', '1 × ' + n + '、2 × ' + n / 2 + '… の ように ペアで 見つけよう', '見つけた 約数を 数えよう'],
+      n + ' の 約数は ' + (function () { var l = []; for (var j = 1; j <= n; j++) if (n % j === 0) l.push(j); return l.join('、'); })() + ' で、全部で ' + c + ' こ です。', [c + 1, c - 1, c * 2, n / 2], { n: n });
+  };
+
+  // 分数と小数・整数
+  OPS.frac_to_dec = function (rng, P) {
+    var d = pick(rng, [2, 4, 5, 8, 10, 20, 25]), n, ans;
+    do { n = ri(rng, 1, d * 2 - 1); } while (gcd(n, d) !== 1);
+    ans = dec(n * 1000 / d, 3);
+    return mk5('frac_to_dec', [n, d], n + '/' + d + ' を 小数に 直しましょう。', ans,
+      ['分数は 分子 ÷ 分母 だよ', n + ' ÷ ' + d + ' を 計算しよう', 'わりきれるまで わろう'],
+      n + '/' + d + ' = ' + n + ' ÷ ' + d + ' = ' + ans + ' です。', [dec(n * 10 / d * 1, 1), dec(Math.round(d * 100 / n), 2), dec(n * 100 / d + 5, 2)], { n: n, d: d });
+  };
+  OPS.dec_to_frac = function (rng, P) {
+    var pl = pick(rng, [1, 2]), V;
+    do { V = ri(rng, 1, pow10(pl) - 1); } while (pl === 2 && V % 10 === 0);
+    var x = dec(V, pl), r = frac(V, pow10(pl));
+    return mk5('dec_to_frac', [x], x + ' を 分数に 直しましょう。（約分して 答えよう）', fstr(r),
+      [x + ' は ' + (pl === 1 ? '10分の' + V : '100分の' + V) + ' だね', V + '/' + pow10(pl) + ' を 約分 できるか 見よう', '分子と 分母を 同じ 数で わろう'],
+      x + ' = ' + V + '/' + pow10(pl) + '。約分して ' + fstr(r) + ' です。', [V + '/' + pow10(pl), fstr(frac(V + 1, pow10(pl))), fstr(frac(V, pow10(pl) * 10))], { x: x }, [], 'exact');
+  };
+  OPS.frac_reduce = function (rng, P) {
+    var a, b, g;
+    do { b = ri(rng, 2, 9); a = ri(rng, 1, b - 1); g = ri(rng, 2, 7); } while (gcd(a, b) !== 1);
+    var n = a * g, d = b * g;
+    return mk5('frac_reduce', [n, d], n + '/' + d + ' を 約分しましょう。', a + '/' + b,
+      [n + ' と ' + d + ' の 公約数を さがそう', '最大公約数 ' + g + ' で 分子と 分母を わろう', n + ' ÷ ' + g + '、' + d + ' ÷ ' + g],
+      n + '/' + d + ' は 分子と 分母を ' + g + ' で わって ' + a + '/' + b + ' です。', [(n / 2 | 0) + '/' + (d / 2 | 0), a + '/' + d, n + '/' + b, fstr(frac(a + 1, b))], { x: n + '/' + d }, [], 'exact');
+  };
+  OPS.frac_common_num = function (rng, P) {
+    var d = ri(rng, 3, 9), m = ri(rng, 2, 4), n = ri(rng, 1, d - 1);
+    while (gcd(n, d) !== 1) n = ri(rng, 1, d - 1);
+    var L = d * m;
+    return mk5('frac_common_num', [n, d, L], n + '/' + d + ' を 分母が ' + L + ' の 分数に 直すと、分子は いくつですか。', n * m,
+      ['分母を ' + d + ' から ' + L + ' に するには 何倍？', L + ' ÷ ' + d + ' ＝ ' + m + '（' + m + ' 倍）', '分子も 同じ ' + m + ' 倍 しよう'],
+      '分母を ' + m + ' 倍したので、分子も ' + m + ' 倍して ' + n + ' × ' + m + ' = ' + n * m + '。' + n + '/' + d + ' = ' + n * m + '/' + L + ' です。', [n + m, n * m + 1, L - d + n, n], { n: n, d: d, L: L });
+  };
+  OPS.div_to_frac = function (rng, P) {
+    var a, b;
+    do { a = ri(rng, 1, 12); b = ri(rng, 2, 12); } while (a % b === 0 || a === b);
+    var r = frac(a, b);
+    return mk5('div_to_frac', [a, b], a + ' ÷ ' + b + ' の 商を 分数で 表しましょう。（約分して 答えよう）', fstr(r),
+      ['わり算の 商は 分数で 表せる', a + ' ÷ ' + b + ' ＝ ' + a + '/' + b, '約分 できるか 見よう'],
+      a + ' ÷ ' + b + ' = ' + a + '/' + b + '。約分して ' + fstr(r) + ' です。', [b + '/' + a, a + '/' + b, fstr(frac(a, b + 1))], { a: a, b: b }, fmixed(r), 'exact');
+  };
+  OPS.fracmix_add = function (rng, P) { return fracMixOp(rng, '+'); };
+  OPS.fracmix_sub = function (rng, P) { return fracMixOp(rng, '−'); };
+  function fracMixOp(rng, op) {
+    var x, y, X, Y;
+    for (var i = 0; i < 500; i++) {
+      var d1 = ri(rng, 2, 8), d2 = ri(rng, 2, 8), w1 = ri(rng, 1, 4), w2 = ri(rng, 1, 3), n1 = ri(rng, 1, d1 - 1), n2 = ri(rng, 1, d2 - 1);
+      if (d1 === d2 || gcd(n1, d1) !== 1 || gcd(n2, d2) !== 1) continue;
+      X = frac(w1 * d1 + n1, d1); Y = frac(w2 * d2 + n2, d2);
+      if (op === '−' && X.n * Y.d <= Y.n * X.d) continue;
+      x = w1 + 'と' + n1 + '/' + d1; y = w2 + 'と' + n2 + '/' + d2;
+      break;
+    }
+    var r = op === '+' ? fadd(X, Y) : fsub(X, Y);
+    return mk5('fracmix_' + (op === '+' ? 'add' : 'sub'), [x, op === '+' ? 'p' : 'm', y], x + ' ' + op + ' ' + y + ' = □' + FRAC_NOTE, fstr(r),
+      ['帯分数を 仮分数に 直して 通分しよう', x + ' ＝ ' + fstr(X) + '、' + y + ' ＝ ' + fstr(Y), '計算したら 約分して、帯分数に 直しても いいよ'],
+      x + ' ' + op + ' ' + y + ' = ' + fstr(X) + ' ' + op + ' ' + fstr(Y) + ' = ' + fstr(r) + ' です。', [fstr(frac(r.n + 1, r.d)), fstr(frac(r.n, r.d + 1)), fstr(frac(Math.abs(r.n - 1), r.d))], { x: x, y: y }, fmixed(r), 'exact');
+  }
+
+  // 平均
+  OPS.avg_n = function (rng, P) {
+    var n = pick(rng, P.ns), m = ri(rng, 10, 90), vals = [], sum = 0, i, dlt;
+    for (i = 0; i < n - 1; i++) { dlt = ri(rng, -8, 8); vals.push(m + dlt); sum += dlt; }
+    vals.push(m - sum);
+    return mk5('avg_n', vals, 'テストの 点数が ' + vals.join('点、') + '点 でした。平均は 何点 ですか。', m,
+      ['平均 ＝ 合計 ÷ 個数', 'まず 全部を たそう', '合計 ÷ ' + n + ' を 計算しよう'],
+      '合計は ' + vals.join(' + ') + ' = ' + m * n + '。' + m * n + ' ÷ ' + n + ' = ' + m + '。平均は ' + m + '点 です。', [m + 1, m - 1, m * n, Math.max.apply(null, vals)], { vals: vals }, [m + '点']);
+  };
+  OPS.avg_total = function (rng, P) {
+    var n = ri(rng, 4, 9), m = ri(rng, 6, 40);
+    return mk5('avg_total', [n, m], n + '日間の 1日の 平均が ' + m + '個 でした。' + n + '日間の 合計は 何個 ですか。', n * m,
+      ['平均 ＝ 合計 ÷ 日数 → 合計 ＝ 平均 × 日数', m + ' × ' + n + ' を 計算しよう', '単位は 個 だよ'],
+      m + ' × ' + n + ' = ' + n * m + '。合計は ' + n * m + '個 です。', [m + n, n * m + m, n * m - m, Math.round(n * m / 2)], { n: n, m: m }, [n * m + '個']);
+  };
+  OPS.avg_missing = function (rng, P) {
+    var n = ri(rng, 4, 6), m = ri(rng, 60, 90), vals = [], sum = 0, i;
+    for (i = 0; i < n - 1; i++) { var v = ri(rng, m - 15, m + 15); vals.push(v); sum += v; }
+    var ans = m * n - sum;
+    while (ans < 20 || ans > 100) { vals[0] += ans < 20 ? -3 : 3; sum = vals.reduce(function (a, b) { return a + b; }, 0); ans = m * n - sum; }
+    return mk5('avg_missing', vals.concat([m]), n + '回の テストで、はじめの ' + (n - 1) + '回は ' + vals.join('点、') + '点 でした。' + n + '回の 平均を ' + m + '点に するには、最後は 何点 取れば よいですか。', ans,
+      [n + '回の 合計が ' + m + ' × ' + n + ' ＝ ' + m * n + '（点）に なれば よい', 'はじめの ' + (n - 1) + '回の 合計を 計算しよう', m * n + ' から ひこう'],
+      '全部の 合計は ' + m + ' × ' + n + ' = ' + m * n + '。はじめの ' + (n - 1) + '回の 合計は ' + sum + '。' + m * n + ' − ' + sum + ' = ' + ans + '点 です。', [m, sum, Math.round(sum / (n - 1)), ans + 5, ans - 5], { vals: vals, m: m, n: n }, [ans + '点']);
+  };
+
+  // 単位量あたりの大きさ・速さ
+  OPS.rate_density = function (rng, P) {
+    var A = ri(rng, P.a[0], P.a[1]), q = ri(rng, P.q[0], P.q[1]), Pp = A * q;
+    return mk5('rate_density', [A, q], '面積が ' + A + 'km² の 町に ' + nin(Pp) + ' 住んで います。1km² あたり 何人 ですか。', q,
+      ['1km² あたり ＝ 人口 ÷ 面積', Pp + ' ÷ ' + A + ' を 計算しよう', '答えは 人数だよ'],
+      Pp + ' ÷ ' + A + ' = ' + q + '。1km² あたり ' + nin(q) + ' です。', [Pp * A, A + 1, q + A, Pp - A], { A: A, P: Pp }, [q + '人']);
+  };
+  OPS.rate_total = function (rng, P) {
+    var r = ri(rng, 3, 9), S = ri(rng, P.s[0], P.s[1]);
+    return mk5('rate_total', [r, S], '1m² の 畑から ' + r + 'kg の やさいが とれます。' + S + 'm² の 畑では 何kg とれますか。', r * S,
+      ['全体 ＝ 1 あたりの 量 × 広さ', r + ' × ' + S + ' を 計算しよう', '単位は kg だよ'],
+      r + ' × ' + S + ' = ' + r * S + '。' + r * S + 'kg とれます。', [r + S, S + 1, r * S + r, r * S - S], { r: r, S: S }, [r * S + 'kg']);
+  };
+  OPS.speed_v = function (rng, P) {
+    var v = ri(rng, 40, 120), t = ri(rng, 3, 15), d = v * t;
+    return mk5('speed_v', [d, t], d + 'm を ' + t + '分で 走りました。分速は 何m ですか。', v,
+      ['速さ ＝ 道のり ÷ 時間', d + ' ÷ ' + t + ' を 計算しよう', '分速 ＝ 1分間に 進む 道のり'],
+      d + ' ÷ ' + t + ' = ' + v + '。分速 ' + v + 'm です。', [d * t, d - t, v + t, v * 2], { d: d, t: t }, ['分速' + v + 'm', v + 'm']);
+  };
+  OPS.speed_d = function (rng, P) {
+    var v = ri(rng, 40, 120), t = ri(rng, 3, 15);
+    return mk5('speed_d', [v, t], '分速 ' + v + 'm で ' + t + '分間 歩きました。何m 進みましたか。', v * t,
+      ['道のり ＝ 速さ × 時間', v + ' × ' + t + ' を 計算しよう', '単位は m だよ'],
+      v + ' × ' + t + ' = ' + v * t + '。' + v * t + 'm 進みました。', [v + t, v * t + v, v * t - t, Math.round(v / t)], { v: v, t: t }, [v * t + 'm']);
+  };
+  OPS.speed_t = function (rng, P) {
+    var v = ri(rng, 40, 120), t = ri(rng, 3, 15), d = v * t;
+    return mk5('speed_t', [v, d], '分速 ' + v + 'm で ' + d + 'm 進むのに、何分 かかりますか。', t,
+      ['時間 ＝ 道のり ÷ 速さ', d + ' ÷ ' + v + ' を 計算しよう', '単位は 分 だよ'],
+      d + ' ÷ ' + v + ' = ' + t + '。' + t + '分 かかります。', [d * v, d - v, t + 1, t - 1], { v: v, d: d }, [t + '分']);
+  };
+  OPS.speed_conv = function (rng, P) {
+    var V = pick(rng, [6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 72, 90, 96, 120]), ans = V * 1000 / 60;
+    return mk5('speed_conv', [V], '時速 ' + V + 'km は、分速 何m ですか。', ans,
+      ['1km ＝ 1000m、1時間 ＝ 60分', '時速 ' + V + 'km ＝ 1時間に ' + V * 1000 + 'm', V * 1000 + ' ÷ 60 を 計算しよう'],
+      V + 'km ＝ ' + V * 1000 + 'm。1時間 ＝ 60分 なので ' + V * 1000 + ' ÷ 60 = ' + ans + '。分速 ' + ans + 'm です。', [V * 1000, V * 60, V / 60, ans * 10, V * 10], { V: V }, ['分速' + ans + 'm', ans + 'm']);
+  };
+
+  // 面積（三角形・四角形）
+  OPS.tri_area = function (rng, P) {
+    var b = ri(rng, 3, P.max), h = ri(rng, 2, P.max);
+    if ((b * h) % 2) h += 1;
+    var ans = b * h / 2;
+    return mk5('tri_area', [b, h], '底辺 ' + b + 'cm、高さ ' + h + 'cm の 三角形の 面積は 何cm² ですか。', ans,
+      ['三角形の 面積 ＝ 底辺 × 高さ ÷ 2', b + ' × ' + h + ' を 先に 計算しよう', 'それを 2 で わろう'],
+      b + ' × ' + h + ' ÷ 2 = ' + ans + '。' + ans + 'cm² です。', [b * h, b + h, (b + h) / 2, ans + b], { b: b, h: h }, [ans + 'cm²', ans + 'cm2']);
+  };
+  OPS.para_area = function (rng, P) {
+    var b = ri(rng, 3, P.max), h = ri(rng, 3, P.max), ans = b * h;
+    return mk5('para_area', [b, h], '底辺 ' + b + 'cm、高さ ' + h + 'cm の 平行四辺形の 面積は 何cm² ですか。', ans,
+      ['平行四辺形の 面積 ＝ 底辺 × 高さ', '高さは 斜めの 辺では なく、底辺に 垂直な 長さ', b + ' × ' + h + ' を 計算しよう'],
+      b + ' × ' + h + ' = ' + ans + '。' + ans + 'cm² です。', [b * h / 2, 2 * (b + h), b + h, ans + b], { b: b, h: h }, [ans + 'cm²', ans + 'cm2']);
+  };
+  OPS.trap_area = function (rng, P) {
+    var a = ri(rng, 2, 12), b = ri(rng, 3, 14), h = ri(rng, 2, 12);
+    if (((a + b) * h) % 2) h += 1;
+    var ans = (a + b) * h / 2;
+    return mk5('trap_area', [a, b, h], '上底 ' + a + 'cm、下底 ' + b + 'cm、高さ ' + h + 'cm の 台形の 面積は 何cm² ですか。', ans,
+      ['台形の 面積 ＝ （上底 ＋ 下底）× 高さ ÷ 2', '（' + a + ' + ' + b + '）を 先に 計算しよう', (a + b) + ' × ' + h + ' ÷ 2 を 計算しよう'],
+      '（' + a + ' + ' + b + '）× ' + h + ' ÷ 2 = ' + ans + '。' + ans + 'cm² です。', [(a + b) * h, a * b * h / 2, (a + b) / 2 * h + 1 | 0, ans + h], { a: a, b: b, h: h }, [ans + 'cm²', ans + 'cm2']);
+  };
+  OPS.rhombus_area = function (rng, P) {
+    var d1 = ri(rng, 3, 16), d2 = ri(rng, 2, 16);
+    if ((d1 * d2) % 2) d2 += 1;
+    var ans = d1 * d2 / 2;
+    return mk5('rhombus_area', [d1, d2], '対角線が ' + d1 + 'cm と ' + d2 + 'cm の ひし形の 面積は 何cm² ですか。', ans,
+      ['ひし形の 面積 ＝ 対角線 × 対角線 ÷ 2', d1 + ' × ' + d2 + ' を 計算しよう', 'それを 2 で わろう'],
+      d1 + ' × ' + d2 + ' ÷ 2 = ' + ans + '。' + ans + 'cm² です。', [d1 * d2, d1 + d2, 2 * (d1 + d2), ans + d1], { d1: d1, d2: d2 }, [ans + 'cm²', ans + 'cm2']);
+  };
+  OPS.tri_height = function (rng, P) {
+    var b = ri(rng, 3, 14), h = ri(rng, 2, 14);
+    if ((b * h) % 2) h += 1;
+    var A = b * h / 2;
+    return mk5('tri_height', [A, b], '面積が ' + A + 'cm² で、底辺が ' + b + 'cm の 三角形の 高さは 何cm ですか。', h,
+      ['三角形の 面積 ＝ 底辺 × 高さ ÷ 2', '面積 × 2 ＝ 底辺 × 高さ', A * 2 + ' ÷ ' + b + ' を 計算しよう'],
+      A + ' × 2 = ' + A * 2 + '。' + A * 2 + ' ÷ ' + b + ' = ' + h + '。高さは ' + h + 'cm です。', [A / b, A * 2 / b + 1, A - b, A * 2], { A: A, b: b }, [h + 'cm']);
+  };
+
+  // 割合（百分率）
+  var BASES = [20, 40, 60, 80, 100, 120, 160, 200, 240, 300, 400, 500];
+  var PCTS = [5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 75, 80];
+  OPS.pct_rate = function (rng, P) {
+    var base = pick(rng, BASES), pc = pick(rng, P.pcts || PCTS), v = base * pc / 100;
+    return mk5('pct_rate', [base, v], '定員が ' + nin(base) + 'の ホールに ' + nin(v) + ' います。定員に 対する 人数の ' + WARI + 'は 何% ですか。', pc,
+      [WARI + ' ＝ 比べる 量 ÷ もとにする 量', v + ' ÷ ' + base + ' を 計算しよう', '百分率に するには 100 倍しよう'],
+      v + ' ÷ ' + base + ' = ' + dec(pc, 2) + '。100 倍して ' + pc + '% です。', [dec(pc, 2), pc * 10, 100 - pc, base - v], { base: base, v: v }, [pc + '%']);
+  };
+  OPS.pct_value = function (rng, P) {
+    var base = pick(rng, BASES), pc = pick(rng, PCTS), v = base * pc / 100;
+    return mk5('pct_value', [base, pc], base + ' の ' + pc + '% は いくつ ですか。', v,
+      ['比べる 量 ＝ もとにする 量 × ' + WARI, pc + '% ＝ ' + dec(pc, 2), base + ' × ' + dec(pc, 2) + ' を 計算しよう'],
+      pc + '% ＝ ' + dec(pc, 2) + ' なので、' + base + ' × ' + dec(pc, 2) + ' = ' + v + ' です。', [v * 10, v / 10, base + v, base - v], { base: base, pc: pc });
+  };
+  OPS.pct_off = function (rng, P) {
+    var base = pick(rng, [200, 400, 500, 600, 800, 1000, 1200, 2000]), pc = pick(rng, [5, 10, 20, 25, 30, 40, 50]), off = base * pc / 100, ans = base - off;
+    return mk5('pct_off', [base, pc], '定価 ' + base + '円 の 品物が ' + pc + '% 引きで 売られて います。ねだんは 何円 ですか。', ans,
+      ['引かれる 金額は ' + base + ' の ' + pc + '%', base + ' × ' + dec(pc, 2) + ' ＝ ' + off, base + ' から 引こう'],
+      base + ' × ' + dec(pc, 2) + ' = ' + off + '。' + base + ' − ' + off + ' = ' + ans + '。' + ans + '円 です。', [off, base + off, ans + off, base * (100 - pc) / 10], { base: base, pc: pc }, [ans + '円']);
+  };
+  OPS.pct_base = function (rng, P) {
+    var base = pick(rng, BASES), pc = pick(rng, [10, 20, 25, 40, 50, 60, 75, 80]), v = base * pc / 100;
+    return mk5('pct_base', [v, pc], 'ある 数の ' + pc + '% が ' + v + ' です。ある 数は いくつ ですか。', base,
+      ['比べる 量 ＝ もとにする 量 × ' + WARI + ' → もとにする 量 ＝ 比べる 量 ÷ ' + WARI, pc + '% ＝ ' + dec(pc, 2), v + ' ÷ ' + dec(pc, 2) + ' を 計算しよう'],
+      pc + '% ＝ ' + dec(pc, 2) + ' なので、' + v + ' ÷ ' + dec(pc, 2) + ' = ' + base + ' です。', [v * pc, Math.round(v * pc / 100), v + pc, base + v, v * 10], { v: v, pc: pc });
+  };
+
+  // 円と正多角形・角柱と円柱
+  OPS.circ_len = function (rng, P) {
+    var d = ri(rng, P.d[0], P.d[1]);
+    return mk5('circ_len', [d], '直径が ' + d + 'cm の 円の 円周は 何cm ですか。（円周率は 3.14）', dec(d * 314, 2),
+      ['円周 ＝ 直径 × 円周率', d + ' × 3.14 を 計算しよう', '単位は cm だよ'],
+      d + ' × 3.14 = ' + dec(d * 314, 2) + '。' + dec(d * 314, 2) + 'cm です。', [dec(d * 314, 1), dec(d * d * 314, 2), dec(d * 157, 2), dec(d * 628, 2)], { d: d }, [dec(d * 314, 2) + 'cm']);
+  };
+  OPS.circ_r = function (rng, P) {
+    var r = ri(rng, 2, 20);
+    return mk5('circ_r', [r], '半径が ' + r + 'cm の 円の 円周は 何cm ですか。（円周率は 3.14）', dec(r * 628, 2),
+      ['直径 ＝ 半径 × 2', '円周 ＝ 直径 × 3.14', r * 2 + ' × 3.14 を 計算しよう'],
+      '直径は ' + r + ' × 2 = ' + r * 2 + 'cm。' + r * 2 + ' × 3.14 = ' + dec(r * 628, 2) + '。' + dec(r * 628, 2) + 'cm です。', [dec(r * 314, 2), dec(r * r * 314, 2), dec(r * 628, 1)], { r: r }, [dec(r * 628, 2) + 'cm']);
+  };
+  OPS.circ_diam = function (rng, P) {
+    var d = ri(rng, 2, 30), L = dec(d * 314, 2);
+    return mk5('circ_diam', [L], '円周が ' + L + 'cm の 円の 直径は 何cm ですか。（円周率は 3.14）', d,
+      ['円周 ＝ 直径 × 3.14 → 直径 ＝ 円周 ÷ 3.14', L + ' ÷ 3.14 を 計算しよう', '両方を 100 倍して ' + d * 314 + ' ÷ 314 と 考えよう'],
+      L + ' ÷ 3.14 = ' + d + '。直径は ' + d + 'cm です。', [d * 2, Math.round(d / 2) || d + 1, d + 1, d - 1], { L: L }, [d + 'cm']);
+  };
+  OPS.circ_poly = function (rng, P) {
+    var n = pick(rng, [5, 6, 8, 10]), a = ri(rng, 3, 15), names = { 5: '五', 6: '六', 8: '八', 10: '十' };
+    return mk5('circ_poly', [n, a], '1辺が ' + a + 'cm の 正' + names[n] + '角形の まわりの 長さは 何cm ですか。', n * a,
+      ['正多角形は 辺の 長さが 全部 同じ', '辺は ' + n + ' 本', a + ' × ' + n + ' を 計算しよう'],
+      a + ' × ' + n + ' = ' + n * a + '。' + n * a + 'cm です。', [a + n, n * a / 2, (n - 1) * a, (n + 1) * a], { n: n, a: a }, [n * a + 'cm']);
+  };
+  OPS.prism_count = function (rng, P) {
+    var n = ri(rng, 3, 9), w = pick(rng, P.what), names = { 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九' };
+    var W = { face: ['面', n + 2, '上と下の 2つの 面と、横の 面が ' + n + ' つ'], edge: ['辺', 3 * n, '上の ' + n + ' 本、下の ' + n + ' 本、たての ' + n + ' 本'], vert: ['頂点', 2 * n, '上の ' + n + ' こ、下の ' + n + ' こ'] }[w];
+    return mk5('prism_count', [n, w], names[n] + '角柱の ' + W[0] + 'の 数は いくつ ですか。', W[1],
+      [names[n] + '角柱の 底面は ' + names[n] + '角形 だよ', W[2], '数を たそう'],
+      names[n] + '角柱の ' + W[0] + 'の 数は、' + W[2] + ' で ' + W[1] + ' こ です。', [n, n * 2, n * 3, W[1] + 1, W[1] - 1], { n: n, what: w });
+  };
+
   // ---- 単元ごとの設定（小4。判断226） ----
   // UNIT_GEN[学年][単元 id][難易度] = [{ op, p }]。単元 id は js/units.js に登録した id。
   // 計算だけの問題と、数を入れかえる文章題を、単元ごとに自動で作る。図の問題・読み取りの問題は questions/ に手で作る。
@@ -1068,6 +1453,88 @@
         basic: [{ op: 'ratio_times', p: {} }],
         standard: [{ op: 'ratio_of', p: {} }],
         advanced: [{ op: 'ratio_of', p: { inv: true } }, { op: 'ratio_times', p: {} }]
+      }
+    },
+    5: {
+      intdec: {
+        basic: [{ op: 'd5_digit', p: { places: [1, 2] } }],
+        standard: [{ op: 'd5_scale', p: { ks: [10, 100, -10] } }, { op: 'd5_digit', p: { places: [2, 3] } }],
+        advanced: [{ op: 'd5_scale', p: { ks: [1000, -100, -1000] } }, { op: 'd5_maxdec', p: {} }]
+      },
+      volume: {
+        basic: [{ op: 'vol_box', p: { max: 9 } }, { op: 'vol_cube', p: { max: 6 } }],
+        standard: [{ op: 'vol_box', p: { max: 15 } }, { op: 'vol_cube', p: { max: 12 } }, { op: 'vol_unit', p: { kinds: ['Lcm3', 'm3L'] } }],
+        advanced: [{ op: 'vol_side', p: { max: 12 } }, { op: 'vol_unit', p: { kinds: ['m3cm3', 'Lcm3', 'm3L'] } }]
+      },
+      proportion: {
+        basic: [{ op: 'prop_val', p: {} }],
+        standard: [{ op: 'prop_val', p: {} }, { op: 'prop_x', p: {} }],
+        advanced: [{ op: 'prop_x', p: {} }]
+      },
+      decmul: {
+        basic: [{ op: 'dec_mul_int', p: { places: [1, 2], max: 9 } }],
+        standard: [{ op: 'dec_mul_dec', p: {} }],
+        advanced: [{ op: 'decm_word', p: {} }, { op: 'dec_mul_dec', p: {} }]
+      },
+      decdiv: {
+        basic: [{ op: 'dec_div', p: {} }],
+        standard: [{ op: 'decdiv_word', p: {} }, { op: 'dec_div', p: {} }],
+        advanced: [{ op: 'dec_div_round', p: {} }, { op: 'decdiv_word', p: {} }]
+      },
+      angle: {
+        basic: [{ op: 'tri_third', p: {} }],
+        standard: [{ op: 'poly_sum', p: { n: [4, 8] } }, { op: 'quad_missing', p: {} }],
+        advanced: [{ op: 'poly_reg', p: { ns: [5, 6, 8, 9, 10, 12] } }, { op: 'poly_sum', p: { n: [7, 10] } }, { op: 'quad_missing', p: {} }]
+      },
+      multiple: {
+        basic: [{ op: 'mult_kth', p: {} }],
+        standard: [{ op: 'gcd_ask', p: {} }, { op: 'lcm_ask', p: { min: 2, max: 9 } }],
+        advanced: [{ op: 'div_count', p: {} }, { op: 'lcm_ask', p: { min: 6, max: 15 } }]
+      },
+      fracrel: {
+        basic: [{ op: 'frac_to_dec', p: {} }],
+        standard: [{ op: 'frac_reduce', p: {} }, { op: 'frac_common_num', p: {} }, { op: 'div_to_frac', p: {} }],
+        advanced: [{ op: 'dec_to_frac', p: {} }, { op: 'div_to_frac', p: {} }]
+      },
+      fraction: {
+        basic: [{ op: 'frac_add', p: { maxDen: 9, same: true } }, { op: 'frac_sub', p: { maxDen: 9, same: true } }],
+        standard: [{ op: 'frac_add', p: { maxDen: 9 } }, { op: 'frac_sub', p: { maxDen: 9 } }],
+        advanced: [{ op: 'fracmix_add', p: {} }, { op: 'fracmix_sub', p: {} }]
+      },
+      average: {
+        basic: [{ op: 'avg_n', p: { ns: [3] } }],
+        standard: [{ op: 'avg_n', p: { ns: [4, 5] } }, { op: 'avg_total', p: {} }],
+        advanced: [{ op: 'avg_missing', p: {} }]
+      },
+      unit: {
+        basic: [{ op: 'rate_density', p: { a: [2, 9], q: [10, 99] } }],
+        standard: [{ op: 'rate_total', p: { s: [10, 60] } }, { op: 'rate_density', p: { a: [6, 40], q: [20, 300] } }],
+        advanced: [{ op: 'rate_total', p: { s: [50, 300] } }, { op: 'rate_density', p: { a: [12, 90], q: [50, 900] } }]
+      },
+      speed: {
+        basic: [{ op: 'speed_v', p: {} }],
+        standard: [{ op: 'speed_d', p: {} }, { op: 'speed_t', p: {} }],
+        advanced: [{ op: 'speed_conv', p: {} }]
+      },
+      area: {
+        basic: [{ op: 'tri_area', p: { max: 12 } }, { op: 'para_area', p: { max: 12 } }],
+        standard: [{ op: 'tri_area', p: { max: 20 } }, { op: 'trap_area', p: {} }],
+        advanced: [{ op: 'rhombus_area', p: {} }, { op: 'tri_height', p: {} }]
+      },
+      percent: {
+        basic: [{ op: 'pct_rate', p: { pcts: [10, 20, 25, 50] } }],
+        standard: [{ op: 'pct_value', p: {} }, { op: 'pct_off', p: {} }, { op: 'pct_rate', p: {} }],
+        advanced: [{ op: 'pct_base', p: {} }, { op: 'pct_off', p: {} }]
+      },
+      circle: {
+        basic: [{ op: 'circ_len', p: { d: [2, 15] } }],
+        standard: [{ op: 'circ_len', p: { d: [10, 30] } }, { op: 'circ_poly', p: {} }],
+        advanced: [{ op: 'circ_r', p: {} }, { op: 'circ_diam', p: {} }]
+      },
+      prism: {
+        basic: [{ op: 'prism_count', p: { what: ['face'] } }],
+        standard: [{ op: 'prism_count', p: { what: ['face', 'vert'] } }],
+        advanced: [{ op: 'prism_count', p: { what: ['edge', 'vert', 'face'] } }]
       }
     }
   };

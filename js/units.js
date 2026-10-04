@@ -28,6 +28,26 @@
         { id: 'table', name: '整理のしかた', description: '２つの観点で整理する表', icon: '▦' },
         { id: 'ratio', name: '倍の見方', description: '何倍・もとにする大きさ', icon: '×3' },
         { id: 'abacus', name: 'そろばん', description: '大きな数・小数', icon: '▤' }
+      ],
+      5: [
+        { id: 'intdec', name: '整数と小数', description: '位・10倍と10分の1', icon: '0.1' },
+        { id: 'volume', name: '体積', description: '直方体・立方体・単位', icon: '㎥' },
+        { id: 'proportion', name: '比例', description: '２つの量の変わり方', icon: '↗' },
+        { id: 'decmul', name: '小数のかけ算', description: '小数 × 整数・小数 × 小数', icon: '×' },
+        { id: 'congruent', name: '合同な図形', description: '重なる図形・対応', icon: '≅' },
+        { id: 'decdiv', name: '小数のわり算', description: '小数 ÷ 整数・小数 ÷ 小数', icon: '÷' },
+        { id: 'angle', name: '図形の角', description: '三角形・四角形・多角形', icon: '∠' },
+        { id: 'multiple', name: '倍数と約数', description: '公倍数・公約数', icon: '倍' },
+        { id: 'fracrel', name: '分数と小数・整数', description: '約分・通分・商と分数', icon: '⅗' },
+        { id: 'fraction', name: '分数のたし算・ひき算', description: '分母がちがう分数', icon: '½' },
+        { id: 'average', name: '平均', description: '平均の求め方・使い方', icon: 'avg' },
+        { id: 'unit', name: '単位量あたりの大きさ', description: '人口密度・1あたり', icon: '/' },
+        { id: 'speed', name: '速さ', description: '速さ・道のり・時間', icon: '→' },
+        { id: 'area', name: '面積', description: '三角形・平行四辺形・台形・ひし形', icon: '▽' },
+        { id: 'percent', name: '割合', description: '百分率・歩合', icon: '%' },
+        { id: 'graph', name: '帯グラフと円グラフ', description: '割合を表すグラフ', icon: '◔' },
+        { id: 'circle', name: '正多角形と円', description: '円周・正多角形', icon: '○' },
+        { id: 'prism', name: '角柱と円柱', description: '面・辺・頂点・展開図', icon: '▮' }
       ]
     }
   };
