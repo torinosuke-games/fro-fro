@@ -17,11 +17,12 @@ const assert=require('node:assert/strict'),path=require('node:path'),fs=require(
  await resource('鉄').click();await p.locator('.subject-math').click();await specified('iron');
  const before=await p.evaluate(()=>({...FF.app.state.resources}));
  let answer=await p.evaluate(()=>FF.app.session.items[FF.app.session.currentId].attempt.question.answer);
+ const drill=await p.evaluate(()=>!!FF.app.session.items[FF.app.session.currentId].attempt.question.generated);   // 自動生成のドリルは、問題数・正解数に数えない（判断226）
  await p.locator('.answer-option').filter({hasText:answer}).click();await p.getByRole('button',{name:'答え合わせ',exact:true}).click();
  const after=await p.evaluate(()=>({...FF.app.state.resources}));assert.ok(after.iron>before.iron);for(const key of ['wood','stone','food'])assert.equal(after[key],before[key]);
  await p.getByRole('button',{name:'次の問題 →',exact:true}).click();await specified('iron');
  await home();await study();assert.equal(await resource('指定なし').getAttribute('aria-pressed'),'true');
- assert.equal(await p.locator('.subject-math .progress-correct').innerText(),'正解 1問');
+ assert.equal(await p.locator('.subject-math .progress-correct').innerText(),drill?'正解 0問':'正解 1問');
  await resource('食料').click();await p.locator('.masthead-links').getByRole('button',{name:/設定/}).click();await home();await study();assert.equal(await resource('指定なし').getAttribute('aria-pressed'),'true');
  // A real building's shortage button preselects that resource.
  async function shortage(){await home();await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);for(const key of ['wood','iron','stone','food'])s.resources[key]=0;FF.app.commit(s);FF.ui.rerender();});await p.locator('.bld-card').first().click();const short=p.locator('.overlay .short.tap').first();const name=(await short.innerText()).includes('木材')?'木材':null;assert.equal(name,'木材');await short.click();assert.equal(await resource('木材').getAttribute('aria-pressed'),'true');}
