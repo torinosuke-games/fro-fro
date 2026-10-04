@@ -3,9 +3,10 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  const bank=FF.learning.createBank(ctx.QUESTION_BANK),qs=ctx.QUESTION_BANK.filter(q=>q.collection==='frontier100');
  const now=1791000000000;
  test('リニューアル：18単元100問・連番・図解・人による確認前のフラグ',()=>{
-  assert.strictEqual(qs.length,100);assert.strictEqual(FF.curriculum.units.length,18);
+  assert.strictEqual(qs.length,100);assert.strictEqual(FF.curriculum.units('math',4).length,18);
   assert.deepStrictEqual(plain(qs.map(q=>q.number)),Array.from({length:100},(_,i)=>i+1));
-  for(const u of FF.curriculum.units)assert.strictEqual(qs.filter(q=>q.unit===u.id).length,u.count,u.id);
+  const four=['position','change','table','ratio','abacus'];
+  for(const u of FF.curriculum.units('math',4))assert.strictEqual(qs.filter(q=>q.unit===u.id).length,u.id==='area'?8:four.includes(u.id)?4:6,u.id);
   for(const q of qs){assert.ok(q.diagram&&q.diagram.kind&&q.diagram.caption,q.id);assert.strictEqual(q.reviewed,false);assert.strictEqual(q.choices.length,4);assert.ok(q.hints.length>=2);}
  });
  test('リニューアル：学年設定後は、診断を受けず自分の学年を学べる',()=>{
@@ -25,8 +26,9 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  test('リニューアル：単元と難易度のフィルターから別の問題が混ざらない',()=>{
   const sel={subject:'math',grade:4,unit:'angle',difficulty:'standard',answerType:'choice'};
   const list=FF.curriculum.pool(bank,sel);assert.strictEqual(list.length,3);
-  for(let i=0;i<30;i++){const q=FF.curriculum.pick(bank,sel,{now,correctLog:{},recentIds:[],rng:FF.util.makeRng(i+1)});assert.strictEqual(q.unit,'angle');assert.strictEqual(q.difficulty,'standard');assert.strictEqual(q.collection,'frontier100');}
-  assert.strictEqual(FF.curriculum.pool(bank,{...sel,unit:'fraction',answerType:'input'}).length,0);
+  for(let i=0;i<30;i++){const q=FF.curriculum.pick(bank,sel,{now,correctLog:{},recentIds:[],rng:FF.util.makeRng(i+1)});assert.strictEqual(q.unit,'angle');assert.strictEqual(q.difficulty,'standard');assert.strictEqual(q.answerType,'choice');}
+  const fr=FF.curriculum.pool(bank,{...sel,unit:'fraction',difficulty:'random',answerType:'input'});assert.ok(fr.length>0);
+  for(const q of fr){assert.strictEqual(q.unit,'fraction');assert.strictEqual(q.answerType,'input');assert.strictEqual(q.gradeLevel,4);}
  });
  test('リニューアル：書き問題に変換した数値を正しく採点する',()=>{
   const inputs=qs.filter(q=>q.inputForm);assert.ok(inputs.length>=60);
@@ -48,9 +50,9 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   const loaded=FF.state.parseSave(FF.state.serialize(r.state),now);assert.ok(loaded.ok);assert.strictEqual(loaded.state.player.grade,4);assert.strictEqual(loaded.state.redeemHistory.length,1);
  });
  test('公開版：原作と同じ保存キーで記録を引き継ぐ',()=>{assert.strictEqual(FF.config.SAVE_KEY,'frozenFrontier.save');});
- test('教科カード：小4算数100問を重複なく集計し最新の正誤を表示する',()=>{
+ test('教科カード：小4算数（図解100問＋文章題10問）を重複なく集計し最新の正誤を表示する',()=>{
   const s=FF.state.createDefaultState(now);s.learning.questionResults[qs[0].id]=true;s.learning.questionResults[qs[1].id]=false;s.learning.questionResults['gen_math_g4_unused']=true;
-  assert.deepStrictEqual(plain(FF.curriculum.progress(bank,s,'math',4)),{total:100,correct:1,review:1,unanswered:98,generated:false});
+  assert.deepStrictEqual(plain(FF.curriculum.progress(bank,s,'math',4)),{total:110,correct:1,review:1,unanswered:108,generated:false});
   s.learning.questionResults[qs[1].id]=true;
   assert.strictEqual(FF.curriculum.progress(bank,s,'math',4).correct,2);
   assert.strictEqual(FF.curriculum.progress(bank,s,'math',4).review,0);
@@ -89,5 +91,45 @@ module.exports=({test,FF,ctx,assert,plain})=>{
    if(d.kind==='abacus')assert.ok(d.digits.every(n=>Number.isInteger(n)&&n>=0&&n<=9));
    if(d.kind==='cutout')assert.ok(d.w>d.cw&&d.h>d.ch);
   }
+ });
+ test('単元（判断221）：単元を登録した教科・学年の問題は、すべて登録した単元に入っている',()=>{
+  const ng=[];
+  for(const q of ctx.QUESTION_BANK){if(FF.units.has(q.subject,q.gradeLevel)&&!FF.units.get(q.subject,q.gradeLevel,q.unit))ng.push(q.id+'（'+q.unit+'）');}
+  assert.deepStrictEqual(ng,[]);
+  for(const subject of Object.keys(FF.units.DEFS))for(const grade of Object.keys(FF.units.DEFS[subject])){
+   const ids=FF.units.list(subject,+grade).map(u=>u.id);assert.strictEqual(new Set(ids).size,ids.length,subject+grade);
+   for(const u of FF.units.list(subject,+grade))assert.ok(u.id&&u.name&&u.description&&u.icon&&u.color,subject+grade+u.id);
+  }
+ });
+ test('単元（判断221）：図のない問題も、図解の問題と同じ単元・問題マップで出題する',()=>{
+  const claude=ctx.QUESTION_BANK.filter(q=>q.subject==='math'&&q.gradeLevel===4&&!q.diagram);assert.strictEqual(claude.length,10);
+  for(const q of claude){
+   const list=FF.curriculum.pool(bank,{subject:'math',grade:4,unit:q.unit,difficulty:'random',answerType:q.answerType});
+   assert.ok(list.some(x=>x.id===q.id),q.id);
+  }
+  const all=FF.curriculum.pool(bank,{subject:'math',grade:4,unit:'all',difficulty:'random',answerType:'choice'});
+  const order=all.map(q=>FF.units.order('math',4,q.unit));assert.ok(order.every((v,i)=>i===0||order[i-1]<=v));
+  // 単元を登録した学年は自動生成を出さない。登録のない学年は従来どおり自動生成も出す
+  for(let i=0;i<50;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:4,unit:'all',difficulty:'random',answerType:'input'},{now,correctLog:{},recentIds:[],rng:FF.util.makeRng(i+1)});assert.ok(!/^gen_/.test(q.id),q.id);}
+  let gen=0;for(let i=0;i<50;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:3,unit:'all',difficulty:'random',answerType:'input'},{now,correctLog:{},recentIds:[],rng:FF.util.makeRng(i+1)});if(/^gen_/.test(q.id))gen++;}
+  assert.ok(gen>0);
+ });
+ test('図（判断221）：種類と必須の項目を検証する',()=>{
+  const base={id:'t_diagram',subject:'math',gradeLevel:4,unit:'area',difficulty:'basic',answerType:'input',question:'q',answer:'1',validationMode:'number',hints:['h'],explanation:'e',reviewed:false};
+  assert.deepStrictEqual(plain(FF.learning.validateQuestion(base)),[]);
+  assert.deepStrictEqual(plain(FF.learning.validateQuestion({...base,diagram:{kind:'rect',w:3,h:2,caption:'c'}})),[]);
+  assert.ok(FF.learning.validateQuestion({...base,diagram:{kind:'photo',caption:'c'}}).some(m=>/diagram.kind/.test(m)));
+  assert.ok(FF.learning.validateQuestion({...base,diagram:{kind:'rect',w:3,caption:'c'}}).some(m=>/diagram.h/.test(m)));
+  assert.ok(FF.learning.validateQuestion({...base,diagram:{kind:'rect',w:3,h:2}}).some(m=>/caption/.test(m)));
+ });
+ test('単元（判断221）：問題の番号は教科・学年の中の通し番号で、答え方を変えても同じ',()=>{
+  assert.strictEqual(FF.curriculum.totalOf(bank,'math',4),110);
+  const nums=new Set();
+  for(const q of Object.values(bank.byId).filter(q=>q.subject==='math'&&q.gradeLevel===4)){
+   const n=FF.curriculum.numberOf(bank,q);assert.ok(n>=1&&n<=110,q.id);
+   if(q.derivedFrom)assert.strictEqual(n,FF.curriculum.numberOf(bank,bank.byId[q.derivedFrom]));else nums.add(n);
+  }
+  assert.strictEqual(nums.size,110);
+  assert.strictEqual(FF.curriculum.numberOf(bank,qs[0]),1);
  });
 };

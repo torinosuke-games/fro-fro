@@ -9,8 +9,9 @@
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
 - 仕様：`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 206）。関係する機能を変える前に、該当する判断を検索して読む
-- 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む）
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 222。206〜220 は ChatGPT（Codex）のリニューアル）。関係する機能を変える前に、該当する判断を検索して読む
+- 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
+- リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`
 - 完成報告：`REPORT.md`（v0.1）、`REPORT_v0.2.md`、`REPORT_v0.3.md`、`REPORT_v0.4.md`
 - 手動確認：`tests/MANUAL.md`（末尾に自動テストとの分類の表）
 
@@ -27,12 +28,13 @@
 
 ## 今の状態（2026-09-28）
 
-- v0.1〜v0.3（探索・戦闘・ボス・問題 1062問。レビューで直した 1問（判断205）だけ `reviewed: false`、残り 1061問は true）：完成・承認済み
+- 2026-10-04：ChatGPT（Codex）のリニューアル（PR #10。学習画面・小4算数の図解100問＝`reviewed: false`）を main に取り込み済み。判断221で、図解の問題と Claude の問題を教科・学年・単元で一緒に管理する形にした。今後、図付きの新しい問題は ChatGPT が作り、Claude は既存の問題に図を付ける（B）
+- v0.1〜v0.3（探索・戦闘・ボス・問題 1062問＋リニューアルの 100問＝1162問。レビューで直した 1問（判断205）だけ `reviewed: false`、残り 1061問は true）：完成・承認済み
 - v0.4（勉強量ポイントと引換所）：v0.4-1〜4 承認済み。v0.4-5（手動確認と完成報告）と「引換券を使うしくみ・メールの廃止」（判断173）は確認待ち
 - 見た目は昼だけ（夜のテーマは完成後に検討。判断176）。開始画面は試作の見た目（判断174、Google Fonts は判断175、丸文字は全画面＝判断193）。基地・資源・教科のアイコンは生成した絵の試作（判断177、基地の絵は建物のレベルで変わる＝判断180、Lv5 の食料庫は判断182、Lv2〜4 の絵は判断183、絵に煙は描かない＝判断184、Lv6〜10 の絵は先に用意だけ（最大レベルは 5 のまま）＝判断185、建物の画面の絵＝判断186、探索の画面の絵＝判断190・191、行き来する人＝判断194・195、受け取りのアイコンとかご＝判断196・197、主人公の絵・学年・「学ぶ」の整理＝判断198、主人公の絵は小学生用・中学生用の24人から学年で出し分け＝判断204、`config.ART_STYLE` で戻せる。絵は `img/art/`、元の絵は `img/test_img/`）
 - 選択問題を書き問題にも使う `inputForm`（判断200・201）：全教科の選択問題 459問のうち 305問に付けた（判断205のレビューで 4問は外し、6問は確認済み。残り 299問は確認待ち・reviewed: false）
 - 今後の検討課題：Lv1 の算数の出題範囲を広げる（判断161）。QR コード＋データベース（Supabase など）で引換券の使用済みを確かめる案（SPEC 14.5）。保護者用のロック（SPEC 14.4）
-- 自動テスト 410件すべて成功、`node tests/simulate.js` はすべて目標内
+- 自動テスト 435件すべて成功、`node tests/simulate.js` はすべて目標内
 
 ## テストの実行方法
 
@@ -45,7 +47,7 @@
 ## ファイル構成の要約
 
 - `index.html` … `<script>` の読み込み順はここが唯一の定義
-- `js/` ロジック（純粋関数）：`config.js`、`clock.js`、`balance.js`、`util.js`、`defs.js`（資源・建物・教科・地域・敵の定義）、`integrity.js`（セーブの指紋）、`theme.js`、`state.js`（初期状態・移行・読み込みの検証）、`storage.js`（localStorage はここだけ）、`tickets.js`、`rewards.js`、`buildings.js`（強化・工事の待ち時間・生産）、`answer.js`（判定）、`generators.js`（算数の自動生成）、`learning.js`（出題・回答・学習記録）、`exam.js`（昇格試験・実力診断）、`exploration.js`（探索）、`battle.js`（戦闘）、`points.js`（勉強量ポイント・引換・券を使う・引換券ID・QR コードの文字列）、`qrcode.js`（自作の QR コード）、`simulator.js`、`texts.js`（文言とふりがな辞書）
-- `js/ui/` 画面：`core.js`（部品・ふりがな・ヘッダー・ナビ・画面切替）、`title.js`、`base.js`、`study.js`、`quiz.js`、`exam.js`、`records.js`、`settings.js`、`exploration.js`、`battle.js`、`redeem.js`（引換所と券・印刷）。`js/svg/`（建物・風景・教科アイコン・敵の立ち絵）、`js/debug.js`（`?debug=1`）、`js/main.js`（起動・自動保存）
+- `js/` ロジック（純粋関数）：`config.js`、`clock.js`、`balance.js`、`util.js`、`defs.js`（資源・建物・教科・地域・敵・図の種類の定義）、`units.js`（教科・学年ごとの単元）、`integrity.js`（セーブの指紋）、`theme.js`、`state.js`（初期状態・移行・読み込みの検証）、`storage.js`（localStorage はここだけ）、`tickets.js`、`rewards.js`、`buildings.js`（強化・工事の待ち時間・生産）、`answer.js`（判定）、`generators.js`（算数の自動生成）、`learning.js`（出題・回答・学習記録）、`curriculum.js`（リニューアルの出題・単元の絞り込み・問題の番号）、`exam.js`（昇格試験・実力診断）、`exploration.js`（探索）、`battle.js`（戦闘）、`points.js`（勉強量ポイント・引換・券を使う・引換券ID・QR コードの文字列）、`qrcode.js`（自作の QR コード）、`simulator.js`、`texts.js`（文言とふりがな辞書）
+- `js/ui/` 画面：`core.js`（部品・ふりがな・ヘッダー・ナビ・画面切替）、`title.js`、`base.js`、`study.js`、`quiz.js`、`exam.js`、`records.js`、`settings.js`、`exploration.js`、`battle.js`、`redeem.js`（引換所と券・印刷）、`renewal.js`（リニューアルの学ぶ・問題画面）。`js/svg/learning.js`（問題の図）、`js/svg/`（建物・風景・教科アイコン・敵の立ち絵）、`js/debug.js`（`?debug=1`）、`js/main.js`（起動・自動保存）
 - `questions/` 問題データ（`window.QUESTION_BANK.push(...)`）、`img/` ボスの画像
 - `tests/` テスト（`index.html` からは読み込まない。`tests/lib/loader.js` が vm で読み込む）

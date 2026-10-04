@@ -84,12 +84,12 @@
  function changeFilter(k,v){var s=FF.app.session;s.sel[k]=v;chooseQuestion();U.rerender();root.scrollTo(0,0);}
  function selectField(label,value,options,onchange){return E('label',{class:'rn-field'},[E('span',{text:label}),E('select',{value:value,attrs:{'aria-label':label},on:{change:function(e){onchange(e.target.value);}}},options.map(function(o){return E('option',{value:o[0],attrs:{selected:o[0]===value?true:null},text:o[1]});}))]);}
  function unitsView(){
-  var a=FF.app,s=a.session,p=E('aside',{class:'lesson-sidebar'}),special=s.sel.subject==='math'&&s.sel.grade===4;
-  p.appendChild(E('div',{class:'side-title'},[E('h2',{text:R.units}),E('span',{class:'small muted',text:special?R.hundred:school(s.sel.grade)})]));
+  var a=FF.app,s=a.session,p=E('aside',{class:'lesson-sidebar'}),units=C.units(s.sel.subject,s.sel.grade),counts=C.unitCounts(a.bank,s.sel.subject,s.sel.grade);
+  p.appendChild(E('div',{class:'side-title'},[E('h2',{text:R.units}),E('span',{class:'small muted',text:units.length?R.totalQuestions.replace('{n}',C.progress(a.bank,a.state,s.sel.subject,s.sel.grade).total):school(s.sel.grade)})]));
   p.appendChild(button('⤨ '+R.allUnits,function(){changeFilter('unit','all');},'unit-row all'+(s.sel.unit==='all'?' active':''),false,{'aria-pressed':s.sel.unit==='all'}));
-  if(special)p.appendChild(E('div',{class:'unit-list'},C.units.map(function(u){
+  if(units.length)p.appendChild(E('div',{class:'unit-list'},units.map(function(u){
    return E('button',{class:'unit-row'+(s.sel.unit===u.id?' active':''),attrs:{type:'button','aria-pressed':s.sel.unit===u.id?'true':'false'},on:{click:function(){changeFilter('unit',u.id);}}},[
-    E('span',{class:'unit-icon',style:{background:u.color},text:u.icon}),E('span',{class:'unit-name',text:u.name}),E('small',{text:u.count}),E('span',{class:'unit-chevron',text:'›'})
+    E('span',{class:'unit-icon',style:{background:u.color},text:u.icon}),E('span',{class:'unit-name',text:u.name}),E('small',{text:counts[u.id]||0}),E('span',{class:'unit-chevron',text:'›'})
    ]);
   })));
   p.appendChild(E('div',{class:'side-settings'},[
@@ -102,8 +102,8 @@
   var s=FF.app.session,qs=C.pool(FF.app.bank,s.sel);
   var wrap=E('section',{class:'question-index'},[E('h2',{text:R.questionList}),E('p',{class:'small muted',text:R.listNote})]);
   var grid=E('div',{class:'index-grid'});
-  qs.forEach(function(q,i){var status=(FF.app.state.learning.questionResults||{})[q.id.replace(/#input$/,'')],cls=(s.currentId===q.id?' current':'')+(status===true?' solved':status===false?' missed':'');
-   grid.appendChild(button(String(q.number||i+1),function(){chooseQuestion(q.id);U.rerender();root.scrollTo(0,0);},'index-item'+cls,false,{'aria-label':R.question+' '+(q.number||i+1)+(status!==undefined?' '+(status?R.correct:R.review):''),'aria-current':s.currentId===q.id?'true':null}));
+  qs.forEach(function(q){var no=C.numberOf(FF.app.bank,q),status=(FF.app.state.learning.questionResults||{})[q.id.replace(/#input$/,'')],cls=(s.currentId===q.id?' current':'')+(status===true?' solved':status===false?' missed':'');
+   grid.appendChild(button(String(no),function(){chooseQuestion(q.id);U.rerender();root.scrollTo(0,0);},'index-item'+cls,false,{'aria-label':R.question+' '+no+(status!==undefined?' '+(status?R.correct:R.review):''),'aria-current':s.currentId===q.id?'true':null}));
   });wrap.appendChild(grid);return wrap;
  }
  function helpView(it,options){
@@ -133,9 +133,9 @@
   var layout=E('div',{class:'workbench'}),left=E('div',{class:'lesson-left'},[unitsView(),questionIndex()]);layout.appendChild(left);
   var card=E('section',{class:'question-card'});layout.appendChild(card);
   if(!it){card.appendChild(title(R.learning,R.empty,R.emptyHelp));card.appendChild(button(R.resetFilters,function(){s.sel.unit='all';s.sel.difficulty='random';s.sel.answerType=FF.tickets.recoverTickets(a.state.tickets,a.now()).count?'choice':'input';chooseQuestion();U.rerender();},'rn-button primary'));main.appendChild(layout);return;}
-  var q=it.attempt.question,done=it.attempt.done,unit=C.unit(q.unit);
+  var q=it.attempt.question,done=it.attempt.done,unit=C.unit(q.subject,q.gradeLevel,q.unit),no=C.numberOf(a.bank,q);
   card.appendChild(E('div',{class:'question-meta'},[
-   E('span',{class:'question-badge',text:R.question+' '+(q.number||s.cursor+1)+(q.collection==='frontier100'?' / 100':'')}),
+   E('span',{class:'question-badge',text:R.question+' '+(no?no+' / '+C.totalOf(a.bank,q.subject,q.gradeLevel):s.cursor+1)}),
    E('span',{class:'question-unit',text:unit?unit.name:U.plain(L.subjectName(q.subject,q.gradeLevel))}),
    E('span',{class:'difficulty-badge '+q.difficulty,text:'★ '+difficulty(q.difficulty)})
   ]));
@@ -179,7 +179,7 @@
   var draft=a.filterDraft||Object.assign({},a.session.sel);
   main.appendChild(button('‹ '+R.returnQuestion,function(){U.show('quiz');},'text-button'));
   var pane=E('section',{class:'filter-page panel'},[title(R.learning,R.conditions,R.filterIntro)]);
-  if(draft.subject==='math'&&draft.grade===4)pane.appendChild(selectField(R.units,draft.unit,[['all',R.allUnits]].concat(C.units.map(function(u){return [u.id,u.name];})),function(v){draft.unit=v;}));
+  if(C.units(draft.subject,draft.grade).length)pane.appendChild(selectField(R.units,draft.unit,[['all',R.allUnits]].concat(C.units(draft.subject,draft.grade).map(function(u){return [u.id,u.name];})),function(v){draft.unit=v;}));
   pane.appendChild(selectField(R.level,draft.difficulty,[['random',R.random],['basic',R.basic],['standard',R.standard],['advanced',R.advanced]],function(v){draft.difficulty=v;}));
   pane.appendChild(selectField(R.format,draft.answerType,[['choice',R.choice],['input',R.input]],function(v){draft.answerType=v;}));
   pane.appendChild(button(R.applyFilters,function(){a.session.sel=Object.assign({},draft);chooseQuestion();U.show('quiz');},'rn-button primary block'));
@@ -208,11 +208,11 @@
   var art={math:'math',japanese:'jp',science:'sci',social:'soc',english:'en'};
   var order=['math','japanese','science','social','english'];
   main.appendChild(E('div',{class:'subject-grid'},order.map(function(id){
-   var special=id==='math'&&g===4,progress=C.progress(a.bank,s,id,g);
+   var nUnits=C.units(id,g).length,nDiagrams=C.diagramCount(a.bank,id,g),progress=C.progress(a.bank,s,id,g);
    return E('button',{class:'subject-card subject-'+id,attrs:{type:'button'},on:{click:function(){makeSession(id);}}},[
-    U.artImg('subj-'+art[id],'subject-art'),E('div',{class:'subject-copy'},[E('span',{class:'eyebrow',text:school(g)}),E('h2',{text:U.plain(L.subjectName(id,g))}),E('p',{text:special?R.mathDescription:R.subjectDescription}),
+    U.artImg('subj-'+art[id],'subject-art'),E('div',{class:'subject-copy'},[E('span',{class:'eyebrow',text:school(g)}),E('h2',{text:U.plain(L.subjectName(id,g))}),E('p',{text:nUnits?R.unitDescription.replace('{n}',nUnits):R.subjectDescription}),
      E('div',{class:'subject-progress',attrs:{title:progress.generated?R.generatedNote:null}},[E('span',{class:'progress-total',text:R.totalQuestions.replace('{n}',progress.total)}),E('span',{class:'progress-correct',text:R.correctQuestions.replace('{n}',progress.correct)}),E('span',{class:'progress-review',text:R.reviewQuestions.replace('{n}',progress.review)})]),
-     special?E('span',{class:'new-badge',text:R.hundred}):null]),E('span',{class:'subject-arrow',text:'↗'})
+     nDiagrams?E('span',{class:'new-badge',text:R.diagramQuestions.replace('{n}',nDiagrams)}):null]),E('span',{class:'subject-arrow',text:'↗'})
    ]);
   })));
   main.appendChild(E('div',{class:'study-tools'},[

@@ -32,7 +32,9 @@ const path=require('node:path'),fs=require('node:fs');
  for(const key of ['wood','iron','stone','food'])assert.equal(await page.locator('[data-resource="'+key+'"] .resource-value').innerText(),String(await page.evaluate(k=>FF.app.state.resources[k],key)));
  await page.getByRole('button',{name:'学習する →',exact:true}).click();await page.locator('.subject-math').click();
  await page.getByLabel('答え方',{exact:true}).selectOption('input');
- const number=n=>page.locator('.index-item').filter({hasText:new RegExp('^'+n+'$')});
+ // 問題マップの番号は教科・学年の通し番号（判断221）。図解100問の57・58番が今の何番かを求める
+ const [n57,n58]=await page.evaluate(()=>[57,58].map(k=>FF.curriculum.numberOf(FF.app.bank,QUESTION_BANK.find(q=>q.collection==='frontier100'&&q.number===k))));
+ const number=n=>page.locator('.index-item').filter({hasText:new RegExp('^'+({57:n57,58:n58}[n])+'$')});
  await number(57).click();
  const answer=await page.evaluate(()=>FF.app.session.items[FF.app.session.currentId].attempt.question.answer);
  await page.getByRole('textbox',{name:'答えを入力'}).fill(answer);

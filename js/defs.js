@@ -40,6 +40,32 @@
       { id: 'input', name: '書き問題' }
     ],
 
+    // 問題の図（q.diagram。省略できる。判断221）。種類ごとに必須の項目。描き方は js/svg/learning.js
+    // すべての種類で caption（図の説明の文字列）も必須。書き方は QUESTIONS_GUIDE.md
+    DIAGRAM_KINDS: {
+      story: ['item', 'total', 'each'],
+      table: ['head', 'rows'],
+      cards: ['labels', 'values'],
+      bars: ['labels', 'values'],
+      rect: ['w', 'h'],
+      cutout: ['w', 'h', 'cw', 'ch'],
+      fraction: ['n', 'd'],
+      fractionSum: ['n', 'm', 'd'],
+      angle: ['deg'],
+      angleSplit: ['total', 'part'],
+      angleReflex: ['deg'],
+      protractor: ['deg'],
+      lines: ['mode'],
+      polygon: ['shape'],
+      solid: [],
+      net: [],
+      grid: ['x', 'y'],
+      axes: ['values'],
+      graph: ['labels', 'values'],
+      abacus: ['digits', 'labels'],
+      numberline: ['start', 'end', 'step']
+    },
+
     RESOURCES: [
       { id: 'wood', icon: '🪵', name: '木材' },
       { id: 'iron', icon: '⛏️', name: '鉄' },

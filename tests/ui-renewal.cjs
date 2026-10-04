@@ -47,7 +47,9 @@ const out=process.env.FF_QA_OUTPUT||path.resolve(__dirname,'../../..','work','br
  const grade=await page.locator('.subject-top-actions>.rn-button').last().boundingBox();
  assert.ok(avatar.y>=grade.y+grade.height,'Avatar sits below the grade selector');
  await page.locator('.subject-math').click();
- const index=n=>page.locator('.index-item').filter({hasText:new RegExp('^'+n+'$')});
+ // 問題マップの番号は教科・学年の通し番号（判断221）。図解100問の n 番が今の何番かを引いて押す
+ const nums=await page.evaluate(()=>Object.fromEntries([1,2,22].map(k=>[k,FF.curriculum.numberOf(FF.app.bank,QUESTION_BANK.find(q=>q.collection==='frontier100'&&q.number===k))])));
+ const index=n=>page.locator('.index-item').filter({hasText:new RegExp('^'+nums[n]+'$')});
  await index(22).click();
  // Wide desktop windows keep the lesson centered instead of stretching the question.
  for(const width of [1280,1440,1920,2560]){
