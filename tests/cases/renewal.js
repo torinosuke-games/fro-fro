@@ -52,7 +52,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  test('公開版：原作と同じ保存キーで記録を引き継ぐ',()=>{assert.strictEqual(FF.config.SAVE_KEY,'frozenFrontier.save');});
  test('教科カード：小4算数（図解100問＋文章題10問）を重複なく集計し最新の正誤を表示する',()=>{
   const s=FF.state.createDefaultState(now);s.learning.questionResults[qs[0].id]=true;s.learning.questionResults[qs[1].id]=false;s.learning.questionResults['gen_math_g4_unused']=true;
-  assert.deepStrictEqual(plain(FF.curriculum.progress(bank,s,'math',4)),{total:110,correct:1,review:1,unanswered:108,generated:false});
+  assert.deepStrictEqual(plain(FF.curriculum.progress(bank,s,'math',4)),{total:110,correct:1,review:1,unanswered:108,generated:true});
   s.learning.questionResults[qs[1].id]=true;
   assert.strictEqual(FF.curriculum.progress(bank,s,'math',4).correct,2);
   assert.strictEqual(FF.curriculum.progress(bank,s,'math',4).review,0);
@@ -110,9 +110,11 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   }
   const all=FF.curriculum.pool(bank,{subject:'math',grade:4,unit:'all',difficulty:'random',answerType:'choice'});
   const order=all.map(q=>FF.units.order('math',4,q.unit));assert.ok(order.every((v,i)=>i===0||order[i-1]<=v));
-  // 単元を登録した学年は自動生成を出さない。登録のない学年は従来どおり自動生成も出す
-  for(let i=0;i<50;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:4,unit:'all',difficulty:'random',answerType:'input'},{now,correctLog:{},recentIds:[],rng:FF.util.makeRng(i+1)});assert.ok(!/^gen_/.test(q.id),q.id);}
-  let gen=0;for(let i=0;i<50;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:3,unit:'all',difficulty:'random',answerType:'input'},{now,correctLog:{},recentIds:[],rng:FF.util.makeRng(i+1)});if(/^gen_/.test(q.id))gen++;}
+  // 単元を登録した学年は、手作りの問題に、単元ごとの自動生成（判断226）を混ぜる。登録のない学年は従来どおり
+  const rngOf=i=>FF.util.makeRng(i+1),ctx2=i=>({now,correctLog:{},recentIds:[],rng:rngOf(i)});
+  let gen=0;for(let i=0;i<200;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:4,unit:'all',difficulty:'random',answerType:'input'},ctx2(i));if(q.generated){gen++;assert.ok(FF.units.get('math',4,q.unit),q.id);}}
+  assert.ok(gen>30&&gen<110,'自動生成の割合 '+gen+'/200');
+  gen=0;for(let i=0;i<50;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:3,unit:'all',difficulty:'random',answerType:'input'},ctx2(i));if(/^gen_/.test(q.id))gen++;}
   assert.ok(gen>0);
  });
  test('図（判断221）：種類と必須の項目を検証する',()=>{
@@ -140,5 +142,27 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   assert.ok(!qs.some(q=>q.diagram&&q.diagram.kind==='cards'),'cards の図は使わない');
   assert.ok(!qs.some(q=>q.diagram&&q.diagram.noArt),'絵なしの札は使わない');
   for(const q of qs.filter(q=>!q.diagram)){assert.ok(q.question&&q.hints.length>=2&&q.choices.length===4,q.id);}
+ });
+ test('自動生成（判断226）：単元・難易度・形式の指定どおりに出て、元の採点・資源の経路で回答できる',()=>{
+  const ctxOf=i=>({now,correctLog:{},recentIds:[],rng:FF.util.makeRng(i+1)});
+  // 自動生成のない単元（図形・位置など）は、手作りの問題だけ
+  for(let i=0;i<60;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:4,unit:'quad',difficulty:'random',answerType:'choice'},ctxOf(i));assert.ok(!q.generated&&q.unit==='quad',q.id);}
+  // 単元と難易度を決めると、その単元・難易度の問題だけ。手作りの問題がない組み合わせは、すべて自動生成
+  let gen=0;
+  for(let i=0;i<120;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:4,unit:'angle',difficulty:'advanced',answerType:'input'},ctxOf(i));assert.strictEqual(q.unit,'angle');assert.strictEqual(q.difficulty,'advanced');assert.strictEqual(q.answerType,'input');if(q.generated)gen++;}
+  assert.ok(gen>=40,'angle 発展：自動生成 '+gen+'/120');
+  for(let i=0;i<30;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:4,unit:'position',difficulty:'standard',answerType:'choice'},ctxOf(i));assert.ok(q&&q.unit==='position'&&!q.generated);}
+  // 4択の自動生成：正解を含む4つの選択肢
+  for(let i=0;i<40;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:4,unit:'fraction',difficulty:'standard',answerType:'choice'},ctxOf(i));if(q.generated){assert.strictEqual(q.choices.length,4);assert.ok(q.choices.includes(q.answer));assert.strictEqual(q.unit,'fraction');}}
+  // 回答：正解で資源と熱量が増え、同じ問題（4択と書きで同じ ID）の記録が questionResults に残る
+  let st=FF.state.setPlayerGrade(FF.state.createDefaultState(now),4);
+  for(let i=0;i<20;i++){const q=FF.curriculum.pick(bank,{subject:'math',grade:4,unit:'decimal_calc',difficulty:'random',answerType:'input'},ctxOf(i+1000));st.tickets={count:20,lastRecoveredAt:now};
+   const r=FF.learning.submitAnswer(st,FF.learning.startAttempt(q),q.answer,{now:now+i*1000,resource:'wood'});assert.strictEqual(r.outcome.status,'correct',q.id);assert.ok(r.outcome.points>0);st=r.state;}
+  assert.ok(st.resources.wood>0&&st.studyPoints>0);
+ });
+ test('自動生成（判断226）：直近に出した問題を避け、同じ問題が続けて出ない',()=>{
+  const sel={subject:'math',grade:4,unit:'divide1',difficulty:'standard',answerType:'input'},seen=[];let dup=0;
+  for(let i=0;i<60;i++){const q=FF.curriculum.pick(bank,sel,{now,correctLog:{},recentIds:seen.slice(-20),rng:FF.util.makeRng(i*7+3)});if(seen.slice(-10).includes(q.id))dup++;seen.push(q.id);}
+  assert.ok(dup<=3,'直近10問の中の重複 '+dup);
  });
 };

@@ -8,7 +8,9 @@ module.exports = ({ test, FF, assert }) => {
   function R(n, d = 1) { if (d < 0) { n = -n; d = -d; } const g = gcd(n, d) || 1; return { n: n / g, d: d / g }; }
   function parse(s) {
     s = String(s);
-    let m = s.match(/^(-?\d+)\/(\d+)$/);
+    let m = s.match(/^(\d+)(?:と| )(\d+)\/(\d+)$/);
+    if (m) return R(Number(m[1]) * Number(m[3]) + Number(m[2]), Number(m[3]));
+    m = s.match(/^(-?\d+)\/(\d+)$/);
     if (m) return R(Number(m[1]), Number(m[2]));
     m = s.match(/^(-?)(\d*)\.?(\d*)$/);
     if (!m) throw new Error('数として読めない: ' + s);
@@ -51,8 +53,74 @@ module.exports = ({ test, FF, assert }) => {
     slope: m => div(I(m.y2 - m.y1), I(m.x2 - m.x1)),
     sqrt: m => x => x > 0 && x * x === m.a * m.b,
     quad: m => x => x * x + m.p * x + m.q === 0 && (-m.p - x) < x,   // 解であり、もう一方の解より大きい
-    pyth: m => x => x > 0 && (m.hyp ? x * x === m.a * m.a + m.b * m.b : m.a * m.a + x * x === m.c * m.c)
+    pyth: m => x => x > 0 && (m.hyp ? x * x === m.a * m.a + m.b * m.b : m.a * m.a + x * x === m.c * m.c),
+    // ---- 小4（単元別。判断226）----
+    big_read: m => I(m.a * m.big + m.b * m.mid),
+    big_scale: m => m.times ? I(m.n * m.k) : div(I(m.n), I(m.k)),
+    round_to: m => I(Math.floor((2 * m.n + m.k) / (2 * m.k)) * m.k),
+    round_top: m => I(Math.floor((2 * m.n + m.k) / (2 * m.k)) * m.k),
+    round_est: m => { const r = n => Math.floor((2 * n + m.k) / (2 * m.k)) * m.k; return I(m.plus ? r(m.a) + r(m.b) : r(m.a) - r(m.b)); },
+    round_range: m => { const r = n => Math.floor((2 * n + m.k) / (2 * m.k)) * m.k; return x => r(x) === m.X && (m.smallest ? r(x - 1) !== m.X : r(x + 1) !== m.X); },
+    div_tens: m => div(I(m.a), I(m.b)),
+    dec_mul_word: m => mul(parse(m.a), parse(m.b)),
+    dec_div_word: m => div(parse(m.a), parse(m.b)),
+    frac_same: m => m.op === 'frac_add' ? add(parse(m.x), parse(m.y)) : sub(parse(m.x), parse(m.y)),
+    divq: m => I(Math.floor(m.a / m.b)),
+    div_ceil: m => I(Math.ceil(m.a / m.b)),
+    dec_unit: m => m.inv ? I(m.n) : R(m.n, Math.pow(10, m.places)),
+    dec_max: m => { let best = parse(m.list[0]); for (const t of m.list) { const v = parse(t); if (v.n * best.d > best.n * v.d) best = v; } return best; },
+    dec_div_int: m => div(parse(m.a), parse(m.b)),
+    frac_to_mixed: m => R(m.n, m.d),
+    frac_to_improper: m => R(m.w * m.d + m.r, m.d),
+    frac_mixed_op: m => R((m.plus ? 1 : -1) * 0 + (m.plus ? (m.w1 * m.d + m.n1) + (m.w2 * m.d + m.n2) : (m.w1 * m.d + m.n1) - (m.w2 * m.d + m.n2)), m.d),
+    angle_comp: m => I(m.t - m.x),
+    angle_comp3: m => I(m.t - m.x - m.y),
+    angle_ruler: m => I(m.plus ? m.a + m.b : m.a - m.b),
+    angle_clock: m => I(6 * m.m),
+    area_rect: m => I(m.a * m.b),
+    area_side: m => I(m.S / m.a),
+    area_unit: m => I(m.k * m.f),
+    area_L: m => I(m.A * m.B - m.a * m.b),
+    calc_rule: m => I(m.a * m.b),
+    order3: m => ({ 'a/(b+c)*d': I(m.a / (m.b + m.c) * m.d), 'a-b/c': I(m.a - m.b / m.c), '(a+b)/c': I((m.a + m.b) / m.c) }[m.form]),
+    change_rule: m => I(m.s * m.a * m.n + m.b),
+    ratio_times: m => I(m.B / m.A),
+    ratio_of: m => m.inv ? I(m.a) : I(m.a * m.k)
   };
+
+  function verify(q, grade, difficulty, answerType, textById) {
+    const where = `${q.id} 「${q.question}」 答え ${q.answer}`;
+    const errors = FF.learning.validateQuestion(q);
+    if (errors.length) assert.fail(`${where}: ${errors.join(', ')}`);
+    if (/undefined|NaN|Infinity/.test(q.question + q.answer + q.explanation + q.hints.join('') + (q.choices || []).join('')))
+      assert.fail(`${where}: 文中に undefined / NaN がある`);
+    assert.strictEqual(q.hints.length, 3, `${where}: ヒントが3つでない`);
+    assert.strictEqual(q.gradeLevel, grade);
+    assert.strictEqual(q.difficulty, difficulty);
+
+    // 検算
+    const want = SOLVE[q.meta.op](q.meta);
+    const got = parse(q.answer);
+    if (typeof want === 'function') {
+      if (got.d !== 1 || !want(got.n)) assert.fail(`${where}: 答えが条件を満たさない`);
+    } else if (!eq(got, want)) {
+      assert.fail(`${where}: 正しい答えは ${want.n}/${want.d}`);
+    }
+    // 分数の答えは約分済み
+    if (/\//.test(q.answer)) assert.strictEqual(gcd(got.n, got.d), 1, `${where}: 約分されていない`);
+    // 正解・別解は正解と判定される
+    for (const a of [q.answer].concat(q.acceptedAnswers)) assert.ok(FF.answer.judgeInput(Object.assign({}, q, { answerType: 'input' }), a).correct, `${where}: ${a} が正解にならない`);
+    // 4択：誤答は不正解と判定される
+    if (answerType === 'choice') {
+      for (const c of q.choices) {
+        if (c === q.answer) continue;
+        if (FF.answer.judgeInput(Object.assign({}, q, { answerType: 'input' }), c).correct) assert.fail(`${where}: 誤答 ${c} が正解扱い`);
+      }
+    }
+    // 同じ ID は同じ問題
+    if (textById[q.id] !== undefined && textById[q.id] !== q.question) assert.fail(`${q.id}: 同じ ID で違う問題`);
+    textById[q.id] = q.question;
+  }
 
   const grades = Object.keys(G.GEN_CONFIG).map(Number);
 
@@ -74,37 +142,7 @@ module.exports = ({ test, FF, assert }) => {
             let q;
             try { q = G.generate(grade, difficulty, answerType, rng); }
             catch (e) { assert.fail(`生成でエラー（${i}問目）: ${e.message}`); }
-            const where = `${q.id} 「${q.question}」 答え ${q.answer}`;
-            const errors = FF.learning.validateQuestion(q);
-            if (errors.length) assert.fail(`${where}: ${errors.join(', ')}`);
-            if (/undefined|NaN|Infinity/.test(q.question + q.answer + q.explanation + q.hints.join('') + (q.choices || []).join('')))
-              assert.fail(`${where}: 文中に undefined / NaN がある`);
-            assert.strictEqual(q.hints.length, 3, `${where}: ヒントが3つでない`);
-            assert.strictEqual(q.gradeLevel, grade);
-            assert.strictEqual(q.difficulty, difficulty);
-
-            // 検算
-            const want = SOLVE[q.meta.op](q.meta);
-            const got = parse(q.answer);
-            if (typeof want === 'function') {
-              if (got.d !== 1 || !want(got.n)) assert.fail(`${where}: 答えが条件を満たさない`);
-            } else if (!eq(got, want)) {
-              assert.fail(`${where}: 正しい答えは ${want.n}/${want.d}`);
-            }
-            // 分数の答えは約分済み
-            if (/\//.test(q.answer)) assert.strictEqual(gcd(got.n, got.d), 1, `${where}: 約分されていない`);
-            // 正解・別解は正解と判定される
-            for (const a of [q.answer].concat(q.acceptedAnswers)) assert.ok(FF.answer.judgeInput(Object.assign({}, q, { answerType: 'input' }), a).correct, `${where}: ${a} が正解にならない`);
-            // 4択：誤答は不正解と判定される
-            if (answerType === 'choice') {
-              for (const c of q.choices) {
-                if (c === q.answer) continue;
-                if (FF.answer.judgeInput(Object.assign({}, q, { answerType: 'input' }), c).correct) assert.fail(`${where}: 誤答 ${c} が正解扱い`);
-              }
-            }
-            // 同じ ID は同じ問題
-            if (textById[q.id] !== undefined && textById[q.id] !== q.question) assert.fail(`${q.id}: 同じ ID で違う問題`);
-            textById[q.id] = q.question;
+            verify(q, grade, difficulty, answerType, textById);
           }
         });
       }
@@ -129,4 +167,36 @@ module.exports = ({ test, FF, assert }) => {
     const b = G.generate(3, 'standard', 'input', FF.util.makeRng(9));
     assert.strictEqual(a.id, b.id);
   });
+
+  // ---- 単元ごとの自動生成（小4。判断226）----
+  const UNITS = G.unitsWithGenerators(4);
+  test('小4：単元別の設定が、js/units.js に登録した単元だけを使い、3つの難易度がそろっている', () => {
+    const ids = FF.units.list('math', 4).map(u => u.id);
+    assert.ok(UNITS.length >= 12, UNITS.join(','));
+    for (const u of UNITS) {
+      assert.ok(ids.includes(u), '登録のない単元: ' + u);
+      for (const d of ['basic', 'standard', 'advanced']) { assert.ok(G.unitSupports(4, u, d), `${u} ${d}`); for (const e of G.UNIT_GEN[4][u][d]) assert.ok(SOLVE[e.op], `検算がない種類: ${e.op}`); }
+    }
+    assert.strictEqual(G.generateForUnit(4, 'quad', 'basic', 'input', FF.util.makeRng(1)), null);
+    assert.strictEqual(G.generateForUnit(5, 'large', 'basic', 'input', FF.util.makeRng(1)), null);
+  });
+  for (const unit of UNITS) {
+    for (const difficulty of ['basic', 'standard', 'advanced']) {
+      for (const answerType of ['input', 'choice']) {
+        test(`小4 ${unit} ${difficulty} ${answerType}：500問の答えが正しく、単元と構造が正しい`, () => {
+          const rng = FF.util.makeRng(4000 + unit.length * 7 + difficulty.length + answerType.length);
+          const textById = {};
+          const kinds = new Set();
+          for (let i = 0; i < 500; i++) {
+            const q = G.generateForUnit(4, unit, difficulty, answerType, rng);
+            assert.strictEqual(q.unit, unit);
+            assert.strictEqual(q.generated, true);
+            verify(q, 4, difficulty, answerType, textById);
+            kinds.add(q.id);
+          }
+          assert.ok(kinds.size >= 12, `${unit} ${difficulty}: 問題の種類が ${kinds.size} 通りしかない`);
+        });
+      }
+    }
+  }
 };
