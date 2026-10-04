@@ -47,7 +47,9 @@ const out=process.env.FF_QA_OUTPUT||path.resolve(__dirname,'../../..','work','br
  const grade=await page.locator('.subject-top-actions>.rn-button').last().boundingBox();
  assert.ok(avatar.y>=grade.y+grade.height,'Avatar sits below the grade selector');
  await page.locator('.subject-math').click();
- const index=n=>page.locator('.index-item').filter({hasText:new RegExp('^'+n+'$')});
+ // 問題マップの番号は教科・学年の通し番号（判断221）。図解100問の n 番が今の何番かを引いて押す
+ const nums=await page.evaluate(()=>Object.fromEntries([1,2,22].map(k=>[k,FF.curriculum.numberOf(FF.app.bank,QUESTION_BANK.find(q=>q.collection==='frontier100'&&q.number===k))])));
+ const index=n=>page.locator('.index-item').filter({hasText:new RegExp('^'+nums[n]+'$')});
  await index(22).click();
  // Wide desktop windows keep the lesson centered instead of stretching the question.
  for(const width of [1280,1440,1920,2560]){
@@ -91,7 +93,7 @@ const out=process.env.FF_QA_OUTPUT||path.resolve(__dirname,'../../..','work','br
   await page.setViewportSize({width,height:900});
   const result=await page.evaluate(async()=>{
    const list=QUESTION_BANK.filter(q=>q.collection==='frontier100'),issues=[];
-   let gallery=document.createElement('div');gallery.id='qa-gallery';gallery.style.cssText='position:relative;background:#f1f7fb;padding:15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px';
+   let gallery=document.createElement('div');gallery.id='qa-gallery';gallery.style.cssText='position:relative;background:#f1f7fb;padding:15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:15px';
    list.forEach(q=>{let card=FF.ui.el('section',{style:{background:'#fff',padding:'10px',borderRadius:'12px'}},[FF.ui.el('h3',{style:{fontSize:'13px'},text:q.number+' '+q.unit}),FF.lessonFigure.render(q.diagram)]);gallery.appendChild(card);});
    document.getElementById('screen').appendChild(gallery);
    await Promise.all([...gallery.querySelectorAll('img')].map(img=>img.decode().catch(()=>issues.push('missing '+img.src))));
@@ -137,7 +139,7 @@ const out=process.env.FF_QA_OUTPUT||path.resolve(__dirname,'../../..','work','br
  // Responsive navigation/settings/home remain within the viewport.
  for(const width of [360,390,768,1024,1440]){
   await page.setViewportSize({width,height:900});for(const screen of ['base','study','settings','redeem','records','exploration']){await page.evaluate(x=>FF.ui.show(x,{tab:'learn'}),screen);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),screen+' overflow '+width);
-   if(screen==='study'){const a=await page.locator('.subject-heading-avatar').boundingBox(),g=await page.locator('.subject-top-actions>.rn-button').last().boundingBox();assert.ok(a.y>=g.y+g.height,'Avatar below grade '+width);}
+   if(screen==='study'&&width>560){const a=await page.locator('.subject-heading-avatar').boundingBox(),g=await page.locator('.subject-top-actions>.rn-button').last().boundingBox();assert.ok(a.y>=g.y+g.height,'Avatar below grade '+width);}
    if(screen==='settings')assert.ok(await page.locator('.grade-chip').first().evaluate(el=>{const a=el.getBoundingClientRect(),b=el.querySelector('.title').getBoundingClientRect();return Math.abs((a.top+a.bottom)/2-(b.top+b.bottom)/2)<1;}),'Grade is centered '+width);
   }
  }

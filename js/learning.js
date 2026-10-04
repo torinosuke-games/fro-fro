@@ -37,6 +37,15 @@
         if (norm.some(function (c, i) { return norm.indexOf(c) !== i; })) e.push('choices に重複がある');
       }
     }
+    // 図（省略できる。判断221）。種類と、種類ごとの必須の項目
+    if (q.diagram !== undefined) {
+      var d = q.diagram, need = d && typeof d === 'object' && defs.DIAGRAM_KINDS[d.kind];
+      if (!need) e.push('diagram.kind が不正: ' + (d && d.kind));
+      else {
+        if (!str(d.caption)) e.push('diagram.caption がない');
+        need.forEach(function (k) { if (d[k] === undefined || d[k] === null || d[k] === '') e.push('diagram.' + k + ' がない（' + d.kind + '）'); });
+      }
+    }
     // 選択問題を書き問題にも使う形（判断200）。中身は inputVariant で作った書き問題として検証する
     if (q.inputForm !== undefined) {
       if (q.answerType !== 'choice') e.push('inputForm は選択問題にだけ付けられる');

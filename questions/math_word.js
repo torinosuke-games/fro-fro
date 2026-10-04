@@ -316,7 +316,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'math_g4_decimal_001', subject: 'math', gradeLevel: 4, unit: 'decimal',
+    id: 'math_g4_decimal_001', subject: 'math', gradeLevel: 4, unit: 'decimal_calc',
     difficulty: 'standard', answerType: 'input',
     question: '1{本|ぽん}に 2.4Lの {灯油|とうゆ}が {入|はい}った {容器|ようき}が 5{本|ほん} あります。{灯油|とうゆ}は {全部|ぜんぶ}で {何|なん}Lですか。（{数|かず}で {答|こた}えよう）',
     answer: '12', acceptedAnswers: ['12L'], validationMode: 'number',
@@ -325,7 +325,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'math_g4_division_001', subject: 'math', gradeLevel: 4, unit: 'division',
+    id: 'math_g4_division_001', subject: 'math', gradeLevel: 4, unit: 'divide1',
     difficulty: 'standard', answerType: 'input',
     question: '{缶詰|かんづめ}が 135{個|こ} あります。1{箱|はこ}に 8{個|こ}ずつ つめていきます。{全部|ぜんぶ}の {缶詰|かんづめ}を つめるには、{箱|はこ}は {何箱|なんはこ} いりますか。（{数|かず}で {答|こた}えよう）',
     answer: '17', acceptedAnswers: ['17箱'], validationMode: 'number',
@@ -355,7 +355,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'math_g4_largenum_001', subject: 'math', gradeLevel: 4, unit: 'largenum',
+    id: 'math_g4_largenum_001', subject: 'math', gradeLevel: 4, unit: 'large',
     difficulty: 'basic', answerType: 'input',
     question: '1まい 1000{円|えん}の チケットが 250まい {売|う}れました。{売|う}り{上|あ}げは {全部|ぜんぶ}で {何円|なんえん}ですか。（{数|かず}で {答|こた}えよう）',
     answer: '250000', acceptedAnswers: ['250000円', '25万円', '25万'], validationMode: 'number',
@@ -373,7 +373,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'math_g4_rounding_001', subject: 'math', gradeLevel: 4, unit: 'rounding',
+    id: 'math_g4_rounding_001', subject: 'math', gradeLevel: 4, unit: 'round',
     difficulty: 'standard', answerType: 'input',
     question: 'ある {日|ひ}の {雪|ゆき}まつりの {入場者|にゅうじょうしゃ}は 4827{人|にん}でした。{四捨五入|ししゃごにゅう}して {百|ひゃく}の{位|くらい}までの がい{数|すう}に すると {何人|なんにん}ですか。（{数|かず}で {答|こた}えよう）',
     answer: '4800', acceptedAnswers: ['4800人'], validationMode: 'number',
@@ -393,7 +393,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'math_g4_decimal_002', subject: 'math', gradeLevel: 4, unit: 'decimal',
+    id: 'math_g4_decimal_002', subject: 'math', gradeLevel: 4, unit: 'decimal_calc',
     difficulty: 'advanced', answerType: 'input',
     question: '{長|なが}さ 3.6mの リボンを、4{人|にん}で {同|おな}じ {長|なが}さずつ {分|わ}けます。ひとり{分|ぶん}は {何|なん}mですか。（{数|かず}で {答|こた}えよう）',
     answer: '0.9', acceptedAnswers: ['0.9m', '90cm'], validationMode: 'number',

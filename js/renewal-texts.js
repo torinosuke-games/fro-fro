@@ -10,7 +10,7 @@
   learning:'LEARNING ROOM',chooseGrade:'あなたの学年を教えてください',gradeIntro:'学年に合った問題から、すぐに始められます。あとから設定で変えられます。',
   start:'学習する',subjects:'教科を選ぶ',subjectHeading:'今日は、何を学ぼう？',subjectIntro:'教科を１つ選んで、雪原の町に新しい熱を届けよう。',
   smallSteps:'小さな「わかった」が、町の力になる。',todayHeat:'今日も、ひとつずつ。',subjectLead:'問題を解くと資材と熱量がたまります。自分のペースで進めよう。',
-  mathDescription:'18単元を、イラストと図で学ぼう。',subjectDescription:'学年に合った問題にチャレンジ。',hundred:'図解つき100問',
+  unitDescription:'{n}単元から、えらんで学ぼう。',subjectDescription:'学年に合った問題にチャレンジ。',diagramQuestions:'図解つき{n}問',
   units:'単元を選ぶ',allUnits:'すべての単元',level:'難易度',format:'答え方',random:'ランダム',basic:'基礎',standard:'標準',advanced:'発展',choice:'選択問題',input:'書き問題',
   question:'問題',questionList:'問題マップ',listNote:'緑は前回正解、黄は見直し。記録は保存されます。',completed:'問とりくみました',
   conditions:'単元・難易度',filterIntro:'ふだんはランダム。気になる単元をじっくり学ぶこともできます。',applyFilters:'この条件で学習する',returnQuestion:'問題にもどる',
