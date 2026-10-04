@@ -49,6 +49,20 @@
         { id: 'circle', name: '正多角形と円', description: '円周・正多角形', icon: '○' },
         { id: 'prism', name: '角柱と円柱', description: '面・辺・頂点・展開図', icon: '▮' }
       ]
+    },
+    science: {
+      4: [
+        { id: 'season', name: '季節と生き物', description: '動物・植物の1年', icon: '🌱' },
+        { id: 'weather', name: '天気と気温', description: '気温の変化・天気のようす', icon: '☀' },
+        { id: 'rain', name: '雨水のゆくえ', description: '流れ方・しみこみ方', icon: '☂' },
+        { id: 'water', name: '水のすがた', description: '氷・水・水蒸気・蒸発', icon: '💧' },
+        { id: 'air', name: '空気と水', description: 'とじこめた空気・水', icon: '◎' },
+        { id: 'heat', name: 'ものの温度とあたたまり方', description: '金属・水・空気の温度と体積', icon: '🌡' },
+        { id: 'electric', name: '電気のはたらき', description: 'かん電池・光電池・モーター', icon: '⚡' },
+        { id: 'body', name: '人の体のつくりと運動', description: '骨・きん肉・関節', icon: '🦴' },
+        { id: 'moon', name: '月の見え方', description: '月の形と動き', icon: '☾' },
+        { id: 'star', name: '星や星座', description: '星の明るさ・色・動き', icon: '★' }
+      ]
     }
   };
 
