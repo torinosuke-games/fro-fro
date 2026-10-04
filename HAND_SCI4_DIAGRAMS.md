@@ -53,3 +53,9 @@ captionは全種類で必須。study: trueを指定。新規6種類はcircuitか
 - 星の相対配置とオリオンの星の色はNASAの一次資料を参照：[夏の大三角](https://science.nasa.gov/solar-system/skywatching/night-sky-network/summer-triangle-corner-altair/)、[冬の大三角](https://science.nasa.gov/solar-system/what-are-asterisms/)、[オリオン座](https://science.nasa.gov/asset/hubble/orion-constellation/)。求める星は「？」または無名、問題文の既知の名前だけを表示。
 
 mainにはマージせず、PRでClaude・ユーザーの図と問題のレビューを待つ。
+
+## PR #36レビュー対応（判断251、2026-10-05）
+
+コメント5985380083の必須1点と任意3点すべてに対応。body_010・body_011に内側・外側のラベルを追加。4問のうでの筋肉は骨の両端につながる内外1本ずつで、姿勢によらず同じ形とする。頭の骨は目のあな・歯列・あごを示し、瞳・唇は描かない。電池の既知の＋極側に突出した端子を付け、導線を接続。electric_022の電池Bは左右対称・極の文字なしを維持する。
+
+変更ファイルはquestions/science_g4_hand.js（2問のdiagramのみ）、js/svg/learning.js、tests/cases/hand-diagrams-sci4.js、tests/ui-hand-diagrams-sci4.cjs、QUESTIONS_GUIDE.md、DECISIONS.md、CLAUDE.md、この報告。テスト631件成功・シミュレーションすべて目標内。87問×4幅＝348画面を再検査し、SVGそのものの筋肉の本数・形・ラベル・骨の目のあなと歯列・電池の端子数も検証する。333問の保護項目は変更前のハッシュと一致。全画面と390/1024pxの図174枚をレビュー用確認ページに保存。

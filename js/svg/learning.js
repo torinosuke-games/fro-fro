@@ -54,12 +54,12 @@
     }
     if(d.kind==='circuit'){
      h=d.panels.length*330;d.panels.forEach(function(p,i){panel(function(){
-      function battery(x,y,w,label,hide){add(box(x,y,w,38,'#fff'));if(!hide){add(text(x-16,y-12,'－',24),text(x+w+16,y-12,'＋',24));}if(label)add(text(x+w/2,y+75,label,25));}
-      if(p.layout==='unknown'){battery(70,100,150,'Ａ');battery(300,100,150,'Ｂ',true);add(line(240,119,300,119),text(290,84,'？',28));return;}
+      function battery(x,y,w,label,hide){add(box(x,y,w,38,'#fff'));if(!hide){add(S('rect',{x:x+w,y:y+12,width:10,height:14,rx:2,fill:'#fff',stroke:blue,'stroke-width':2,'data-part':'positive-terminal'}),text(x-16,y-12,'－',24),text(x+w+16,y-12,'＋',24));}if(label)add(text(x+w/2,y+75,label,25));}
+      if(p.layout==='unknown'){battery(70,100,150,'Ａ');battery(300,100,150,'Ｂ',true);add(line(230,119,300,119),text(290,84,'？',28));return;}
       var parallel=p.layout==='branches',single=p.layout==='single',ys=parallel?[65,135]:[80];
-      if(parallel){ys.forEach(function(y,j){battery(180,y,160);add(line(95,y+19,180,y+19),line(340,y+19,425,y+19));if(p.remove===j)add(text(260,y-12,'外す',24));});add(line(95,84,95,154),line(425,84,425,154));}
-      else if(single){battery(190,80,140);add(line(95,99,190,99),line(330,99,425,99));}
-      else{battery(90,80,140);battery(290,80,140);add(line(230,99,290,99));if(p.remove!==undefined)add(text(360,62,'外す',24));}
+      if(parallel){ys.forEach(function(y,j){battery(180,y,160);add(line(95,y+19,180,y+19),line(350,y+19,425,y+19));if(p.remove===j)add(text(260,y-12,'外す',24));});add(line(95,84,95,154),line(425,84,425,154));}
+      else if(single){battery(190,80,140);add(line(95,99,190,99),line(340,99,425,99));}
+      else{battery(105,80,125);battery(290,80,125);add(line(95,99,105,99),line(240,99,290,99));if(p.remove!==undefined)add(text(360,62,'外す',24));}
       if(p.device==='none')return;
       var by=parallel?84:99;
       add(path('M95,'+by+' V250 H220'),path('M300,250 H425 V'+(p.gap?150:by)));
@@ -110,9 +110,18 @@
      else if(d.scene==='slope'){add(path('M70,155 L450,280 H70 Z',pale),path('M75,65 h100 l-42,60 v32 h-16 v-32 Z','#fff'));}
     }else if(d.kind==='anatomy'){
      h=360;
-     if(d.part==='skull'){add(path('M140,265 Q100,195 145,100 Q195,45 290,70 Q340,85 340,140 L375,173 L342,182 V225 L303,245 L260,285 H165 Z','#fff'),ellipse(310,160,18,24),path('M330,215 l-40,9 m15,17 l-14,-13'));}
+     if(d.part==='skull'){
+      add(path('M150,245 Q105,215 125,135 Q140,65 225,60 Q305,55 335,110 L345,150 L365,170 L340,178 L335,213 H290 L275,245 L290,270 L340,260 V233 H355 V273 Q320,305 265,297 L235,263 Z','#fff'));
+      var socket=ellipse(306,151,23,28);socket.setAttribute('data-part','eye-socket');add(socket);
+      var teeth=path('M289,213 H335 M295,213 v13 m10,-13 v13 m10,-13 v13 m10,-13 v13 M295,226 H335');teeth.setAttribute('data-part','teeth');add(teeth);
+     }
      else if(d.part==='ribs'){add(line(260,65,260,285));for(var i=0;i<7;i++){var y=70+i*27,ww=95-i*6;add(path('M250,'+y+' Q'+(260-ww)+','+(y-20)+' '+(260-ww)+','+(y+16)+' Q'+(260-ww)+','+(y+42)+' 250,'+(y+29)),path('M270,'+y+' Q'+(260+ww)+','+(y-20)+' '+(260+ww)+','+(y+16)+' Q'+(260+ww)+','+(y+42)+' 270,'+(y+29)));}}
-     else{var bent=d.pose==='bent',joint=[250,210],end=bent?[385,100]:[360,335];add(path('M140,85 L250,210 L'+end.join(','),'none',ink),circle(joint[0],joint[1],15,'#fff'));add(path('M152,85 L260,205 M261,215 L'+(end[0]+7)+','+(end[1]+10),'none',blue));if(d.muscles){function muscle(a,b){var mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,nx=9,ny=-8;add(path('M'+a.join(',')+' Q'+(mx+nx)+','+(my+ny)+' '+b.join(',')+' Q'+(mx-nx)+','+(my-ny)+' '+a.join(',')+' Z',pale));}muscle([161,76],[262,188]);muscle([116,116],[214,228]);if(d.labels){add(text(330,60,d.labels[0],25),text(110,270,d.labels[1],25),line(300,70,213,147),line(123,246,155,183));}}}
+     else{var bent=d.pose==='bent',joint=[250,210],end=bent?[385,100]:[360,335];
+      // 筋肉は骨の両端へつなぎ、内外に1本ずつ。姿勢で太さや形を変えない。
+      if(d.muscles){['M145,85 Q257,105 250,210 Q234,125 145,85 Z','M145,85 Q129,195 250,210 Q148,178 145,85 Z'].forEach(function(shape,i){var m=path(shape,pale);m.setAttribute('data-part',i?'outer-muscle':'inner-muscle');add(m);});}
+      add(path('M140,85 L245,205 Q250,215 260,205 L152,76 Z','#fff',ink),path('M250,210 L'+end.join(',')+' L'+(end[0]+7)+','+(end[1]+10)+' L261,215 Z','#fff',ink),circle(joint[0],joint[1],13,'#fff'));
+      if(d.muscles&&d.labels){add(text(340,60,d.labels[0],25),text(105,270,d.labels[1],25),line(307,74,230,126),line(119,244,168,172));}
+     }
     }else if(d.kind==='moonView'){
      h=350;
      function moon(cx,cy,phase){if(phase==='full'||phase==='surface'){add(circle(cx,cy,86,'#fff'));if(phase==='surface')[[0,-30,20],[-35,20,14],[35,34,23],[40,-28,10]].forEach(function(v){add(circle(cx+v[0],cy+v[1],v[2],pale));});}else if(phase==='half'){add(circle(cx,cy,86,blue),path('M'+cx+','+(cy-86)+' A86,86 0 0 1 '+cx+','+(cy+86)+' Z','#fff'));}else if(phase==='crescent'){add(circle(cx,cy,86,blue),path('M'+cx+','+(cy-86)+' A86,86 0 0 1 '+cx+','+(cy+86)+' Q'+(cx+116)+','+cy+' '+cx+','+(cy-86)+' Z','#fff'));}}

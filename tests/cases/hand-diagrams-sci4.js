@@ -38,6 +38,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   assert.equal(get('electric_022').panels[0].layout,'unknown');
   for(const id of ['heat_014','heat_015'])assert.equal(get(id).panels[0].membrane,'flat');
   for(const id of ['body_010','body_011','body_013','body_023'])assert.ok(get(id).muscles);
+  for(const id of ['body_010','body_011','body_013','body_023'])assert.deepEqual(plain(get(id).labels),['内側','外側']);
  });
  test('小4理科の図：既知の量・読み取りの目もりだけを表示',()=>{
   assert.deepEqual(plain(get('air_010').panels[0].marks),[100]);assert.deepEqual(plain(get('air_024').panels[0].marks),[50,100]);

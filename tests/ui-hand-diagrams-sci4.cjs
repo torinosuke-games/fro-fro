@@ -46,6 +46,17 @@ fs.mkdirSync(out,{recursive:true});
    for(const width of [360,390,768,1024]){
     await page.setViewportSize({width,height:1000});await page.evaluate(id=>qaShowQuestion(id),q.id);await settled();
     const result=await page.locator('.lesson-figure').evaluate(el=>qaCheckFigure(el));
+    // レビューで直した箇所を、データだけでなく生成されたSVGでも保護する。
+    const structure=await page.evaluate(id=>{
+     const q=FF.app.bank.byId[id],svg=document.querySelector('.lesson-figure svg'),d=q.diagram;
+     if(d.kind==='anatomy'&&d.muscles)return {labels:[...svg.querySelectorAll('text')].map(t=>t.textContent),inner:[...svg.querySelectorAll('[data-part="inner-muscle"]')].map(p=>p.getAttribute('d')),outer:[...svg.querySelectorAll('[data-part="outer-muscle"]')].map(p=>p.getAttribute('d')),arrows:svg.querySelectorAll('[marker-end],[marker-start]').length};
+     if(d.kind==='circuit')return {terminals:svg.querySelectorAll('[data-part="positive-terminal"]').length,expected:d.panels.reduce((n,p)=>n+(p.layout==='single'||p.layout==='unknown'?1:2),0)};
+     if(d.kind==='anatomy'&&d.part==='skull')return {socket:svg.querySelectorAll('[data-part="eye-socket"]').length,teeth:svg.querySelectorAll('[data-part="teeth"]').length};
+     return null;
+    },q.id);
+    if(structure?.inner){assert.deepEqual(structure.labels,['内側','外側']);assert.deepEqual(structure.inner,['M145,85 Q257,105 250,210 Q234,125 145,85 Z']);assert.deepEqual(structure.outer,['M145,85 Q129,195 250,210 Q148,178 145,85 Z']);assert.equal(structure.arrows,0);}
+    if(structure?.terminals!==undefined)assert.equal(structure.terminals,structure.expected,'unknown battery B must not reveal its terminal');
+    if(structure?.socket!==undefined){assert.equal(structure.socket,1);assert.equal(structure.teeth,1);}
     checks.push({id:q.id,width,...result});
     if(q.id===qs[0].id){
      // 実際の文字をviewBoxの端をまたぐ／完全に外へ出す負例。検査後は元に戻す。
