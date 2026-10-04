@@ -171,7 +171,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   const hand=ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g4');
   assert.ok(hand.every(q=>q.reviewed===REVIEWED_OK.has(q.id)&&q.gradeLevel===4&&q.subject==='math'),'手作りは、レビューでOKだった問題だけ確認済み');
   assert.ok(hand.every(q=>new Set(q.choices).size===q.choices.length&&q.choices.includes(q.answer)),'選択肢');
-  const c={};ctx.QUESTION_BANK.filter(q=>q.unit==='position').forEach(q=>{c[q.difficulty]=(c[q.difficulty]||0)+1;});
+  const c={};ctx.QUESTION_BANK.filter(q=>q.unit==='position'&&q.gradeLevel===4).forEach(q=>{c[q.difficulty]=(c[q.difficulty]||0)+1;});
   assert.deepStrictEqual(c,{basic:6,standard:9,advanced:7});
   const d={};ctx.QUESTION_BANK.filter(q=>q.unit==='solid').forEach(q=>{d[q.difficulty]=(d[q.difficulty]||0)+1;});
   assert.deepStrictEqual(d,{basic:9,standard:15,advanced:12});
@@ -181,10 +181,18 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   assert.deepStrictEqual(g,{basic:9,standard:15,advanced:12});
   {const h={};ctx.QUESTION_BANK.filter(q=>q.unit==='decimal_calc').forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});assert.deepStrictEqual(h,{basic:9,standard:15,advanced:12},'decimal_calc');}
   {const h={};ctx.QUESTION_BANK.filter(q=>q.unit==='fraction').forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});assert.deepStrictEqual(h,{basic:10,standard:17,advanced:12},'fraction');}
-  {const h={};ctx.QUESTION_BANK.filter(q=>q.unit==='area').forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});assert.deepStrictEqual(h,{basic:10,standard:15,advanced:12},'area');}
+  {const h={};ctx.QUESTION_BANK.filter(q=>q.unit==='area'&&q.gradeLevel===4).forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});assert.deepStrictEqual(h,{basic:9,standard:15,advanced:12},'area');}
   {const h={};ctx.QUESTION_BANK.filter(q=>q.unit==='expression').forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});assert.deepStrictEqual(h,{basic:10,standard:15,advanced:12},'expression');}
-  for(const u of['large','round','divide1','divide2','decimal','angle']){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u).forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});for(const [k,n] of Object.entries({basic:9,standard:15,advanced:12}))assert.ok(h[k]>=n,u+' '+k+' '+h[k]);}
-  for(const u of['change','ratio']){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u).forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});for(const [k,n] of Object.entries({basic:6,standard:9,advanced:7}))assert.ok(h[k]>=n,u+' '+k+' '+h[k]);}
-  for(const u of['table','abacus']){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u).forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});assert.deepStrictEqual(h,{basic:6,standard:9,advanced:7},u);}
+  for(const u of['large','round','divide1','divide2','decimal','angle']){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u&&q.gradeLevel===4).forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});for(const [k,n] of Object.entries({basic:9,standard:15,advanced:12}))assert.ok(h[k]>=n,u+' '+k+' '+h[k]);}
+  for(const u of['change','ratio']){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u&&q.gradeLevel===4).forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});for(const [k,n] of Object.entries({basic:6,standard:9,advanced:7}))assert.ok(h[k]>=n,u+' '+k+' '+h[k]);}
+  for(const u of['table','abacus']){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u&&q.gradeLevel===4).forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});assert.deepStrictEqual(h,{basic:6,standard:9,advanced:7},u);}
+ });
+ test('手作りの問題（判断244）：小5算数の面積・体積・図形の角は基礎9・標準15・発展12問、合同な図形は基礎6・標準9・発展7問（原作の問題を合わせて）、手作りはすべて reviewed:false',()=>{
+  const hand=ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g5');
+  assert.ok(hand.length>=120);
+  assert.ok(hand.every(q=>q.reviewed===false&&q.gradeLevel===5&&q.subject==='math'),'手作りは reviewed:false');
+  assert.ok(hand.every(q=>new Set(q.choices).size===q.choices.length&&q.choices.includes(q.answer)),'選択肢');
+  const want={area:{basic:9,standard:15,advanced:12},volume:{basic:9,standard:15,advanced:12},angle:{basic:9,standard:15,advanced:12},congruent:{basic:6,standard:9,advanced:7}};
+  for(const u of Object.keys(want)){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u&&q.gradeLevel===5&&q.subject==='math').forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});for(const [k,n] of Object.entries(want[u]))assert.ok(h[k]>=n,u+' '+k+' '+h[k]);}
  });
 };
