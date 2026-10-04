@@ -90,3 +90,5 @@
 - `rect`・`bars` のstudy図はスマホで読める文字サイズを使用。`triangle`・`doubleLine`・`table` は既存の形式を再利用する。
 
 118問のIDと項目一覧、依頼表との差異、検証結果は `HAND_G5_DIAGRAMS.md`。
+
+PR #34レビュー対応（判断248）：`solid3d.baseView: 'front'` は三角柱の底面を正面に向けた見取り図。`fraction.rows[].pieceLabelsAtParts: true` は各部分の中央から引出線を出してラベルを置く。`measure.waterFill: 'blue'` は昼の既存の青を不透明度0.4で使う。割合を求める帯は `schematic` とcaptionで比例しないことを明示し、道のりの帯と時間の注記を混同しない。

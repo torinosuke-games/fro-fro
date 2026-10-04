@@ -20,6 +20,18 @@ fs.mkdirSync(out,{recursive:true});
     const issues=[],svg=el.querySelector('svg'),rect=el.getBoundingClientRect();let minText=Infinity;
     if(!svg){for(const cell of el.querySelectorAll('th,td')){const range=document.createRange();range.selectNodeContents(cell);for(const r of range.getClientRects())if(r.left<rect.left||r.right>rect.right)issues.push('table clipped '+cell.textContent);}return {issues,overflow:document.documentElement.scrollWidth>innerWidth+1,figureOverflow:el.scrollWidth>el.clientWidth+1};}
     const vb=svg.viewBox.baseVal,sr=svg.getBoundingClientRect();
+    const data=FF.app.bank.byId[FF.app.session.currentId].diagram;
+    // コメントの指摘を実際の描画でも保護する（図のデータだけでなく配置も検査）。
+    if(data.baseView==='front'){
+     const p=svg.querySelector('path'),v=[...p.getAttribute('d').matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m=>[+m[1],+m[2]]);
+     const area=Math.abs((v[1][0]-v[0][0])*(v[2][1]-v[0][1])-(v[2][0]-v[0][0])*(v[1][1]-v[0][1]))/2;
+     if(v.length!==3||area<1200||svg.querySelectorAll('line').length!==6)issues.push('triangular prism base/edges unclear');
+    }
+    if(data.kind==='fraction'&&data.rows[0].pieceLabelsAtParts){
+     const parts=[...svg.querySelectorAll('rect')].slice(1);
+     data.rows[0].pieceLabels.forEach((label,i)=>{const t=[...svg.querySelectorAll('text')].find(t=>t.textContent===label),r=parts[i];if(Math.abs(+t.getAttribute('x')-(+r.getAttribute('x')+ +r.getAttribute('width')/2))>.01)issues.push('fraction label misplaced '+label);});
+    }
+    if(data.waterFill==='blue'){for(const r of [...svg.querySelectorAll('rect')].filter((r,i)=>i%2)){if(r.getAttribute('fill-opacity')!== '0.4'||getComputedStyle(r).fill===getComputedStyle(el).backgroundColor)issues.push('water contrast missing');}}
     const ts=[...svg.querySelectorAll('text')];
     for(const t of ts){
      const b=t.getBBox(),cs=getComputedStyle(t),stroke=cs.stroke==='none'?0:parseFloat(cs.strokeWidth)/2;

@@ -14,14 +14,14 @@ module.exports=({test,FF,ctx,assert,plain})=>{
    assert.ok(['box','cube','prism','cylinder'].includes(d.shape));assert.ok(d.dimensions.length===3&&d.dimensions.every(positive));assert.deepEqual(plain(d.vertices),[]);
    if(d.cut!==undefined)assert.ok(positive(d.cut)&&d.dimensions.every(v=>v>=d.cut));if(d.block!==undefined)assert.ok(positive(d.block)&&d.dimensions.every(v=>v>=d.block));
    if(d.join)assert.ok(d.join.length===3&&d.join.every(positive));if(d.stack)assert.ok(d.dimensions.every(integer));
-   if(d.water!==undefined)assert.ok(positive(d.water)&&d.water+(d.rise||0)<=d.dimensions[2]);if(d.thickness!==undefined)assert.ok(positive(d.thickness)&&d.dimensions.every(v=>v>2*d.thickness));if(d.baseSides)assert.ok(integer(d.baseSides)&&d.baseSides>=3);
+   if(d.water!==undefined)assert.ok(positive(d.water)&&d.water+(d.rise||0)<=d.dimensions[2]);if(d.thickness!==undefined)assert.ok(positive(d.thickness)&&d.dimensions.every(v=>v>2*d.thickness));if(d.baseSides)assert.ok(integer(d.baseSides)&&d.baseSides>=3);if(d.baseView!==undefined)assert.ok(d.baseView==='front'&&d.shape==='prism'&&d.baseSides===3);
   }else if(d.kind==='band'){
    assert.ok(d.rows.length>0);for(const r of d.rows){assert.equal(r.parts.length,r.labels.length);assert.ok(r.parts.every(positive));if(r.scale)assert.ok(r.scale>=r.parts.reduce((a,b)=>a+b,0));}
   }else if(d.kind==='fraction'){
    for(const r of d.rows){assert.ok(integer(r.n)&&integer(r.d)&&r.n<=r.d);for(const f of r.pieces||[])assert.ok(f.length===2&&f.every(integer)&&f[0]<=f[1]);if(r.pieces){assert.equal(r.pieces.length,r.pieceLabels.length);assert.ok(r.pieces.reduce((s,f)=>s+f[0]/f[1],0)<=1);}if(r.used)assert.ok(r.used.every(integer)&&r.used[0]/r.used[1]<=r.n/r.d);}
   }else if(d.kind==='numberline'){
    assert.ok(Number.isFinite(d.start)&&d.end>d.start&&positive(d.step));for(const r of d.rows){assert.equal(r.marks.length,r.labels.length);assert.ok(r.marks.every(v=>Number.isFinite(v)&&v>=d.start&&v<=d.end));assert.ok(Number.isInteger(r.subdivisions)&&r.subdivisions>=0);}
-  }else if(d.kind==='measure'){assert.ok(positive(d.capacity)&&d.values.every(v=>positive(v)&&v<=d.capacity));assert.equal(d.values.length,d.labels.length);}
+  }else if(d.kind==='measure'){assert.ok(positive(d.capacity)&&d.values.every(v=>positive(v)&&v<=d.capacity));assert.equal(d.values.length,d.labels.length);if(d.waterFill!==undefined)assert.equal(d.waterFill,'blue');}
   else if(d.kind==='table'){assert.ok(d.head.length>=2);for(const row of d.rows)assert.equal(row.length,d.head.length);}
   else if(d.kind==='rect'){assert.ok(d.w==='？'||positive(d.w));assert.ok(positive(d.h));if(d.area!==undefined)assert.ok(positive(d.area));}
   else if(d.kind==='triangle'){assert.ok(positive(d.base)&&positive(d.height));}
@@ -56,9 +56,17 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   assert.deepEqual(plain(get('fracrel_010').rows[0].marks),[]);assert.equal(get('fracrel_022').rows[0].subdivisions,0);
   assert.ok(get('multiple_014').end<24);assert.ok(get('multiple_014').rows.every(r=>!r.marks.includes(24)));
   for(const id of ['decdiv_006','decdiv_009','decdiv_029'])assert.ok(get(id).schematic&&!get(id).partitions);
-  for(const id of ['graph_004','graph_022'])assert.ok(get(id).rows[0].schematic);
+  for(const id of ['graph_004','graph_022','percent_004','percent_007'])assert.ok(get(id).rows[0].schematic);
   assert.ok(get('graph_013').schematic);
   for(const q of qs)for(const forbidden of ['answer','result','average','density','remainder','solved'])assert.ok(!(forbidden in q.diagram),q.id+' '+forbidden);
+ });
+ test('小5の図：PR34の三角柱・道のり・分数ラベル・水位を保護',()=>{
+  const get=s=>qs.find(q=>q.id==='math_g5_hand_'+s).diagram;
+  for(const id of ['prism_004','prism_008','prism_020'])assert.equal(get(id).baseView,'front');
+  assert.ok(!get('prism_007').baseView);
+  assert.ok(get('speed_015').labels.every(s=>s.includes('道のり')));assert.deepEqual(plain(get('speed_015').values),[1,1]);
+  for(const id of ['fraction_027','fraction_031'])assert.ok(get(id).rows[0].pieceLabelsAtParts);
+  for(const id of ['average_012','decdiv_022','fraction_030'])assert.equal(get(id).waterFill,'blue');
  });
  test('小5の図：依頼表との相違は問題文の紙・五角柱に合わせる',()=>{
   assert.deepEqual(plain(qs.find(q=>q.id==='math_g5_hand_proportion_013').diagram.starts),['10まい','2mm']);
