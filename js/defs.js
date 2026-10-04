@@ -82,7 +82,13 @@
       coordinate: ['a', 'b', 'power', 'xRange', 'yRange', 'formula'],
       exterior: ['angle'],
       inscribed: ['angle'],
-      similarity: ['height', 'shadows', 'unit']
+      similarity: ['height', 'shadows', 'unit'],
+      circuit: ['panels'],
+      apparatus: ['panels'],
+      scienceScene: ['scene'],
+      anatomy: ['part', 'pose'],
+      moonView: ['mode'],
+      starMap: ['points', 'segments', 'labels']
     },
 
     RESOURCES: [

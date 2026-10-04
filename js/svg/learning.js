@@ -35,7 +35,108 @@
     else if(item==='bread')add(S('rect',{x:x-14,y:y-12,width:28,height:24,rx:9,fill:pale,stroke:blue,'stroke-width':2}),line(x-4,y-6,x-7,y+4),line(x+5,y-6,x+2,y+4));
     else add(circle(x,y,9,orange),path('M'+(x-9)+','+y+' l-7,-7 v14 Z M'+(x+9)+','+y+' l7,-7 v14 Z',pale));
    }
-   if(d.kind==='polygon'&&d.panels){
+   if(d.kind==='circuit'||d.kind==='apparatus'||d.kind==='scienceScene'||d.kind==='anatomy'||d.kind==='moonView'||d.kind==='starMap'||d.kind==='graph'&&d.science){
+    // 共通の教材用線画。結果の矢印・動作の前後・解答ラベルは生成しない。
+    function ellipse(x,y,rx,ry,fill){return S('ellipse',{cx:x,cy:y,rx:rx,ry:ry,fill:fill||'none',stroke:blue,'stroke-width':3});}
+    function panel(draw,i,pitch){var saved=nodes;nodes=[];draw();var children=nodes;nodes=saved;add(S('g',{transform:'translate(0,'+(i*(pitch||330))+')'},children));}
+    function water(x,y,w,hh){add(S('rect',{x:x,y:y,width:w,height:hh,fill:blue,'fill-opacity':.3}));}
+    function dots(x,y,w,hh,r){for(var yy=y+14;yy<y+hh;yy+=24)for(var xx=x+14;xx<x+w;xx+=24)add(circle(xx,yy,r||2,'#fff'));}
+    function flame(x,y){add(path('M'+x+','+y+' q-23,-22 0,-47 q22,25 0,47 Z',orange));}
+    function thermometer(x,y,hh,scale){add(box(x-9,y,18,hh,'#fff'),circle(x,y+hh,14,'#fff'),circle(x,y+hh,8,orange));var level=scale?scale.value/scale.max:.45;add(line(x,y+hh,x,y+hh-10-(hh-25)*level,orange));
+     if(scale)for(var v=scale.min;v<=scale.max;v++){var ty=y+hh-10-(hh-25)*v/scale.max;add(line(x+11,ty,x+(v%scale.step===0?27:18),ty));if(v%scale.step===0)add(text(x+38,ty+7,v,22,'start'));}
+    }
+    function beaker(p){var x=150,y=95,w=220,hh=145;water(x+3,160,w-6,hh-65);add(path('M'+x+','+y+' v'+hh+' h'+w+' v-'+hh+' l15,-10'));
+     if(p.ice){for(var i=0;i<3;i++)add(box(175+i*55,166,30,24,'#fff'));}
+     if(p.boiling){[190,240,295,330].forEach(function(x,i){add(circle(x,205-i%2*28,7,'#fff'));});}
+     if(p.heat)flame(p.edgeHeat?170:260,299);
+     if(p.therm)thermometer(p.scale?215:260,35,175,p.scale);
+     if(p.lid)add(line(130,85,395,85,p.lid==='glass'?blue:ink));
+    }
+    if(d.kind==='circuit'){
+     h=d.panels.length*330;d.panels.forEach(function(p,i){panel(function(){
+      function battery(x,y,w,label,hide){add(box(x,y,w,38,'#fff'));if(!hide){add(S('rect',{x:x+w,y:y+12,width:10,height:14,rx:2,fill:'#fff',stroke:blue,'stroke-width':2,'data-part':'positive-terminal'}),text(x-16,y-12,'－',24),text(x+w+16,y-12,'＋',24));}if(label)add(text(x+w/2,y+75,label,25));}
+      if(p.layout==='unknown'){battery(70,100,150,'Ａ');battery(300,100,150,'Ｂ',true);add(line(230,119,300,119),text(290,84,'？',28));return;}
+      var parallel=p.layout==='branches',single=p.layout==='single',ys=parallel?[65,135]:[80];
+      if(parallel){ys.forEach(function(y,j){battery(180,y,160);add(line(95,y+19,180,y+19),line(350,y+19,425,y+19));if(p.remove===j)add(text(260,y-12,'外す',24));});add(line(95,84,95,154),line(425,84,425,154));}
+      else if(single){battery(190,80,140);add(line(95,99,190,99),line(340,99,425,99));}
+      else{battery(105,80,125);battery(290,80,125);add(line(95,99,105,99),line(240,99,290,99));if(p.remove!==undefined)add(text(360,62,'外す',24));}
+      if(p.device==='none')return;
+      var by=parallel?84:99;
+      add(path('M95,'+by+' V250 H220'),path('M300,250 H425 V'+(p.gap?150:by)));
+      if(p.gap)add(line(425,by,425,125));
+      add(circle(260,250,39,'#fff'));
+      if(p.device==='bulb')add(path('M240,230 l40,40 M280,230 l-40,40'));
+      if(p.device==='motor')add(text(260,260,'Ｍ',28));
+      if(p.device==='meter'){add(path('M236,240 Q260,215 284,240'),line(260,271,p.needle==='right'?280:260,235),text(260,311,'けんりゅう計',24));}
+     },i);});
+    }else if(d.kind==='apparatus'){
+     h=d.panels.some(function(p){return p.scale;})?670:d.panels.length*330+d.panels.reduce(function(m,p){return Math.max(m,(p.notes||[]).length>2?60:0);},0);d.panels.forEach(function(p,i){panel(function(){
+      if(p.label)add(text(260,35,p.label,26));
+      if(p.tool==='syringe'){
+       var end=p.pressed?285:365,left=100,top=95,bottom=180;
+       if(p.contents==='water')water(left+2,top+2,end-left-4,bottom-top-4);
+       if(p.contents==='mixed'){water(left+2,138,end-left-4,40);dots(left,top,end-left,43);}
+       if(p.contents==='air')dots(left,top,end-left,bottom-top);
+       if(p.contents==='balloon')add(ellipse(225,139,46,26,pale),path('M269,144 l13,4 l-10,8'));
+       add(path('M100,95 H365 V180 H100 Z M100,120 H70 V155 H100'),line(60,116,60,160),line(end,95,end,180,ink),line(end,138,445,138,ink),line(445,103,445,174,ink));
+       if(p.hand)add(path('M447,132 q30,-20 38,0 v28 q-12,20 -38,5 M461,130 v23'));
+       (p.marks||[]).forEach(function(v,j){var x=(p.marks.length===1?end:left+(end-left)*(j+1)/p.marks.length);add(line(x,181,x,192),text(x,223,v+'mL',24));});
+      }else if(p.tool==='airgun'){add(path('M100,105 H425 V175 H100 Z'),line(55,140,145,140),line(55,115,55,165),circle(158,140,23,pale),circle(402,140,23,pale));dots(180,107,195,65);}
+      else if(p.tool==='tankCup'){water(90,95,340,160);add(path('M90,60 V255 H430 V60'),path('M185,200 V105 H335 V200','#fff'));dots(190,110,138,80);}
+      else if(p.tool==='beaker'){if(p.scale){water(153,450,214,158);add(path('M150,410 V610 H370 V410 l15,-10'));thermometer(215,35,540,p.scale);}else beaker(p);}
+      else if(p.tool==='flask'){add(path('M235,70 V120 Q150,150 170,235 Q260,270 350,235 Q370,150 285,120 V70 Z','#fff'));water(198,189,123,46);add(path('M251,30 V155 H269 V30'));flame(260,311);}
+      else if(p.tool==='rod'||p.tool==='plate'){add(box(80,125,365,p.tool==='rod'?23:75,'#fff'));flame(115,250);}
+      else if(p.tool==='ballRing'){add(circle(180,138,38,pale),line(180,100,180,55),ellipse(365,142,48,17),line(365,159,365,240));flame(180,247);}
+      else if(p.tool==='tubeBath'){water(110,165,300,95);add(path('M110,135 V260 H410 V135'),path('M240,70 V220 Q260,245 280,220 V70'),line(235,70,285,70,orange));if(p.bath==='ice')for(var j=0;j<3;j++)add(box(135+j*90,170,35,27,'#fff'));add(text(260,303,p.bath==='ice'?'氷水':'お湯',25));}
+      else if(p.tool==='bagBath'){water(120,170,280,90);add(path('M120,135 V260 H400 V135'),path('M250,90 q-75,120 -25,147 q35,20 70,-5 q30,-35 -35,-142 Z','#fff'),path('M240,88 l30,8 M258,96 v-30'));add(text(260,305,'お湯',25));}
+      else if(p.tool==='thermometer'){thermometer(170,55,210);if(p.eyes)[85,155,225].forEach(function(y){add(ellipse(355,y,25,12),circle(355,y,5,ink));});}
+      (p.notes||[]).forEach(function(t,j){add(text(260,(p.lid==='glass'?50:265)+j*42,t,24));});
+     },i);});
+    }else if(d.kind==='scienceScene'){
+     h=350;
+     if(d.scene==='kettle'){add(ellipse(240,220,115,25,pale),path('M125,220 Q125,110 240,110 Q355,110 355,220',pale),path('M155,130 Q115,40 310,95'),path('M342,145 L403,97 L421,119 L351,189',pale));[0,1,2].forEach(function(i){add(ellipse(410+i*18,82-i*17,17,12,'#fff'));});}
+     else if(d.scene==='coldCup'){water(185,130,150,145);add(path('M170,80 L190,285 H330 L350,80'),box(213,138,32,28,'#fff'),box(271,151,32,28,'#fff'));[130,175,220].forEach(function(y){add(ellipse(177,y,5,8,pale),ellipse(343,y+5,5,8,pale));});}
+     else if(d.scene==='window'){add(box(100,70,320,220,'#fff'),line(260,70,260,290),line(100,180,420,180));[125,170,220,280,330,380].forEach(function(x,i){add(ellipse(x,125+i%2*85,18,25,pale));});}
+     else if(d.scene==='room'){add(path('M70,285 V65 H450 V285 Z'),box(100,210,85,65,'#fff'));for(var i=0;i<4;i++)add(line(115+i*16,224,115+i*16,260,orange));}
+     else if(d.scene==='branch'){add(path('M120,285 L270,105 L335,55 M210,175 L135,120 M265,110 L380,115 M170,225 L95,220'));[[135,120],[335,55],[380,115],[95,220]].forEach(function(v){add(ellipse(v[0],v[1],9,16,orange));});}
+     else if(d.scene==='tree'){d.seasons.forEach(function(label,i){var x=80+i*120;add(path('M'+x+',260 v-90 m0,25 l-30,-45 m30,45 l32,-52'),text(x,305,label,25));if(i!==3){add(ellipse(x,160,42,50,i===2?orange:pale));}else for(var j=0;j<3;j++)add(circle(x-27+j*27,160,4,orange));});}
+     else if(d.scene==='thermLocations'){d.places.forEach(function(label,i){panel(function(){if(i===0)add(circle(100,65,28,orange));if(i===1)add(box(80,45,110,110,'#fff'),path('M195,160 H400'));if(i===2)add(path('M90,240 V65 H430 V240'));add(line(80,265,440,265));thermometer(290,i===0?180:110,75);add(text(260,311,label,26));},i);});h=990;}
+     else if(d.scene==='height'){add(line(75,275,440,275),circle(120,90,18,pale),path('M120,112 v85 m0,-50 l-35,45 m35,-45 l35,45 m-35,5 l-25,82 m25,-82 l25,82'));d.positions.forEach(function(p,i){var x=285+i*100,y=p.level==='ground'?215:110;thermometer(x,y,55);if(p.label)add(text(x,83,p.label,26));});}
+     else if(d.scene==='groundCompare'){[0,1].forEach(function(i){var x=80+i*240;add(line(x,260,x+170,260));thermometer(x+85,170,70);if(!i)add(circle(x+50,65,28,orange));else add(box(x+10,50,120,85,'#fff'));add(text(x+85,308,i?'日かげ':'日なた',25));});}
+     else if(d.scene==='terrain'){add(path('M65,110 Q180,150 250,235 Q335,280 455,180 L455,290 H65 Z',pale));}
+     else if(d.scene==='school'){add(box(80,70,120,200,'#fff'),text(140,310,'校舎',25),box(240,70,210,200,'#fff'),text(345,310,'運動場',25));if(d.trace)add(path('M320,90 q-32,30 5,65 q27,35 -20,90','none',blue));if(d.directions){add(text(400,45,d.directions[0],25),text(460,305,d.directions[1],25));}}
+     else if(d.scene==='soil'){d.materials.forEach(function(t,i){var x=80+i*240;add(box(x,155,150,110,'#fff'));dots(x,170,140,80,t==='すな'?5:2);add(text(x+75,310,t,26));if(d.pour){add(path('M'+(x+35)+',70 h85 v35 h-85 Z'),line(x+78,105,x+78,135,blue));}});}
+     else if(d.scene==='particles'){d.materials.forEach(function(t,i){var x=40+i*165;add(box(x,80,140,165,'#fff'));var rr=d.sizes[i];for(var yy=103;yy<235;yy+=rr*3)for(var xx=x+22;xx<x+129;xx+=rr*3)add(circle(xx,yy,rr,pale));add(text(x+70,298,t,25));});}
+     else if(d.scene==='slope'){add(path('M70,155 L450,280 H70 Z',pale),path('M75,65 h100 l-42,60 v32 h-16 v-32 Z','#fff'));}
+    }else if(d.kind==='anatomy'){
+     h=360;
+     if(d.part==='skull'){
+      add(path('M150,245 Q105,215 125,135 Q140,65 225,60 Q305,55 335,110 L345,150 L365,170 L340,178 L335,213 H290 L275,245 L290,270 L340,260 V233 H355 V273 Q320,305 265,297 L235,263 Z','#fff'));
+      var socket=ellipse(306,151,23,28);socket.setAttribute('data-part','eye-socket');add(socket);
+      var teeth=path('M289,213 H335 M295,213 v13 m10,-13 v13 m10,-13 v13 m10,-13 v13 M295,226 H335');teeth.setAttribute('data-part','teeth');add(teeth);
+     }
+     else if(d.part==='ribs'){add(line(260,65,260,285));for(var i=0;i<7;i++){var y=70+i*27,ww=95-i*6;add(path('M250,'+y+' Q'+(260-ww)+','+(y-20)+' '+(260-ww)+','+(y+16)+' Q'+(260-ww)+','+(y+42)+' 250,'+(y+29)),path('M270,'+y+' Q'+(260+ww)+','+(y-20)+' '+(260+ww)+','+(y+16)+' Q'+(260+ww)+','+(y+42)+' 270,'+(y+29)));}}
+     else{var bent=d.pose==='bent',joint=[250,210],end=bent?[385,100]:[360,335];
+      // 筋肉は骨の両端へつなぎ、内外に1本ずつ。姿勢で太さや形を変えない。
+      if(d.muscles){['M145,85 Q257,105 250,210 Q234,125 145,85 Z','M145,85 Q129,195 250,210 Q148,178 145,85 Z'].forEach(function(shape,i){var m=path(shape,pale);m.setAttribute('data-part',i?'outer-muscle':'inner-muscle');add(m);});}
+      add(path('M140,85 L245,205 Q250,215 260,205 L152,76 Z','#fff',ink),path('M250,210 L'+end.join(',')+' L'+(end[0]+7)+','+(end[1]+10)+' L261,215 Z','#fff',ink),circle(joint[0],joint[1],13,'#fff'));
+      if(d.muscles&&d.labels){add(text(340,60,d.labels[0],25),text(105,270,d.labels[1],25),line(307,74,230,126),line(119,244,168,172));}
+     }
+    }else if(d.kind==='moonView'){
+     h=350;
+     function moon(cx,cy,phase){if(phase==='full'||phase==='surface'){add(circle(cx,cy,86,'#fff'));if(phase==='surface')[[0,-30,20],[-35,20,14],[35,34,23],[40,-28,10]].forEach(function(v){add(circle(cx+v[0],cy+v[1],v[2],pale));});}else if(phase==='half'){add(circle(cx,cy,86,blue),path('M'+cx+','+(cy-86)+' A86,86 0 0 1 '+cx+','+(cy+86)+' Z','#fff'));}else if(phase==='crescent'){add(circle(cx,cy,86,blue),path('M'+cx+','+(cy-86)+' A86,86 0 0 1 '+cx+','+(cy+86)+' Q'+(cx+116)+','+cy+' '+cx+','+(cy-86)+' Z','#fff'));}}
+     if(d.mode==='shape'){if(d.phase==='invisible')[[130,90],[350,130],[225,240],[415,70]].forEach(function(p){add(circle(p[0],p[1],4,ink));});else moon(260,170,d.phase);}
+     else{add(text(260,38,d.sky,25));var dirs=d.directions||[];dirs.forEach(function(t,i){var x=65+i*130;add(line(x-42,285,x+42,285),text(x,323,t,25));if(d.position===t)add(circle(x,145,14,'#fff'));});if(d.position==='unplaced'){if(d.phase==='full'){add(circle(260,155,55,'#fff'),text(260,240,'方位はまだ決めない',24));}else add(circle(260,150,16,'#fff'));}}
+    }else if(d.kind==='starMap'){
+     h=370;if(d.sky)add(text(260,38,d.sky,25));if(d.horizon)add(line(60,320,460,320));
+     if(d.planisphere){add(circle(260,175,130,'#fff'),ellipse(260,205,115,72,pale));for(var j=0;j<24;j++){var p=point(260,175,130,j*15),q=point(260,175,118,j*15);add(line(p[0],p[1],q[0],q[1]));}add(text(260,342,'日付・時刻の目もり',24));}
+     d.segments.forEach(function(s){var a=d.points[s[0]],b=d.points[s[1]];add(line(a[0],a[1],b[0],b[1]));});d.points.forEach(function(p,i){var tint=d.tints&&d.tints[i];add(circle(p[0],p[1],7,tint==='warm'?orange:tint==='blue'?blue:ink));if(d.labels[i])add(clearText(p[0],p[1]+35,d.labels[i],25));});
+    }else if(d.kind==='graph'&&d.science){
+     var panels=d.panels||[{values:d.values,labels:d.labels}];h=panels.length*360;panels.forEach(function(p,i){panel(function(){add(line(70,270,455,270),line(70,270,70,65),text(75,37,'気温（℃）',24),text(260,336,'時こく',24));if(p.title)add(text(290,37,p.title,25));
+      if(p.values.length){var max=d.panels?5:Math.max.apply(null,p.values)+5,pts=p.values.map(function(v,j){return [90+j*330/(p.values.length-1),250-v/max*180];});add(S('polyline',{points:pts.map(function(v){return v.join(',');}).join(' '),fill:'none',stroke:blue,'stroke-width':3}));pts.forEach(function(v,j){add(circle(v[0],v[1],5,orange));if(!d.panels){add(text(v[0],v[1]-18,p.values[j]+'℃',24),text(v[0],298,p.labels[j],24));}});}
+     },i,360);});
+    }
+   }else if(d.kind==='polygon'&&d.panels){
     var count=d.panels.length,span=520/count,plotWidth=count===1?340:160,plotHeight=170;
     var ext=d.panels.map(function(p){var xs=p.points.map(function(v){return v[0];}),ys=p.points.map(function(v){return v[1];});return {xmin:Math.min.apply(null,xs),xmax:Math.max.apply(null,xs),ymin:Math.min.apply(null,ys),ymax:Math.max.apply(null,ys)};});
     var scale=Math.min.apply(null,ext.map(function(e){return Math.min(plotWidth/(e.xmax-e.xmin),plotHeight/(e.ymax-e.ymin));}));
@@ -374,7 +475,7 @@
    // 新しい図も昼のテーマの共通色を使う。既存の図の配色は変えない。
    if(d.study||['gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0){
     var paints={};paints[blue]='var(--rn-blue, '+blue+')';paints[ink]='var(--rn-navy, '+ink+')';paints[pale]='var(--rn-pale, '+pale+')';paints[orange]='var(--rn-warm, '+orange+')';
-    nodes.forEach(function(n){['fill','stroke'].forEach(function(a){var v=n.getAttribute(a);if(paints[v])n.setAttribute(a,paints[v]);});});
+    nodes.forEach(function(n){var all=[n].concat(Array.prototype.slice.call(n.querySelectorAll('*')));all.forEach(function(el){['fill','stroke'].forEach(function(a){var v=el.getAttribute(a);if(paints[v])el.setAttribute(a,paints[v]);});});});
    }
    var svg=S('svg',{viewBox:'0 0 520 '+h,role:'img','aria-label':d.caption||'問題を考えるための図'},[S('title',{},d.caption||'学習の図')].concat(nodes));
    // 個数が多い図は高さを制限すると絵と文字が小さくなるため、自然な縦横比で表示。

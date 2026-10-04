@@ -92,3 +92,19 @@
 118問のIDと項目一覧、依頼表との差異、検証結果は `HAND_G5_DIAGRAMS.md`。
 
 PR #34レビュー対応（判断248）：`solid3d.baseView: 'front'` は三角柱の底面を正面に向けた見取り図。`fraction.rows[].pieceLabelsAtParts: true` は各部分の中央から引出線を出してラベルを置く。`measure.waterFill: 'blue'` は昼の既存の青を不透明度0.4で使う。割合を求める帯は `schematic` とcaptionで比例しないことを明示し、道のりの帯と時間の注記を混同しない。
+
+### 小4理科の共通図（判断250）
+
+第6・7弾87問。全種類にcaptionとstudy: trueを指定し、結果・変化・動く向きの矢印は表示しない。値の範囲と負例はtests/cases/hand-diagrams-sci4.js、実際の問題画面はtests/ui-hand-diagrams-sci4.cjsで検査する。
+
+- `circuit`（必須panels）：1〜2枚の回路。layoutはsingle・row・branches・unknown、deviceはnone・bulb・motor・meter。gapは外れた導線、removeは外す電池の添字。needle: rightは既知の初期状態だけ。unknownは電池Bの極・端子を隠す。
+- `apparatus`（必須panels）：注射器・容器・温度計・加熱器具の共通線画。各toolはsyringe・airgun・tankCup・beaker・flask・rod・plate・ballRing・tubeBath・bagBath・thermometer。contents、marks、notes、heat、ice、lid、bath、pressed、eyesで既知の条件だけを指定。membraneはflatのみ。scaleのmin・max・step・valueは温度の読み取り問題だけで使い、液面の答えを文字にしない。
+- `scienceScene`（必須scene）：身近な現象・季節・気温測定・地形・土の共通線画。sceneはkettle・coldCup・window・room・branch・tree・thermLocations・height・groundCompare・terrain・school・soil・particles・slope。seasons・places・positions・materials・sizes・pour・trace・directionsは既知の状況だけを指定。粒のsizesは描画用の相対サイズで、数値として表示しない。
+- `anatomy`（必須part・pose）：skull・ribs・arm・legの模式線画、side・front・straight・bentの姿勢。musclesは筋肉の位置だけ、labelsは内側・外側。曲げても筋肉の収縮・太さの変化・力こぶを示さない。
+- `moonView`（必須mode）：shapeではphase（full・half・crescent・invisible・surface）、skyではsky・directions・positionで既知の空と方位を指定。未知の形は丸印、未知の方位はunplacedとして方位の列から分離する。
+- `starMap`（必須points・segments・labels）：星の位置、星の添字を結ぶ線、既知の星名（空文字可）。pointsとlabels、任意のtintsは同数。sky・horizon・planisphereで方位・地平線・星座早見を示す。探し方の補助線・移動の矢印は描かない。
+- 既存`graph`はvalues・labelsを保ってscience: trueを指定すると、既知の気温と時刻だけを表示する。panelsによる比較は共通尺度の模式図で、値の目もりを付けない。既存`table`は観察カードの空欄に使い、欄名も空文字にする。
+
+全使用ID・依頼との差・検証結果はHAND_SCI4_DIAGRAMS.md。
+
+PR #36レビュー対応（判断251）：電池は既知の＋極側だけ端子を突出させ、unknownの電池Bは左右対称のままにする。うでの筋肉は内外1本ずつ骨の両端につなぎ、曲げた図でも同じ形を使う。筋肉を示す4問はlabelsで内側・外側を必ず指定する。頭の骨は目のあなと歯列を残し、瞳・唇は描かない。
