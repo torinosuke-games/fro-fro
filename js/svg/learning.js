@@ -57,7 +57,7 @@
     if(d.block){var x=380,y=235,a=d.block*sc;add(path('M'+x+','+y+' h'+a+' l'+(a*.6)+','+(-a*.36)+' v'+(-a)+' h'+(-a)+' l'+(-a*.6)+','+(a*.36)+' Z',pale),path('M'+x+','+(y-a)+' h'+a+' v'+a+' M'+(x+a)+','+(y-a)+' l'+(a*.6)+','+(-a*.36)),text(x+a/2,283,d.block+d.unit,23),text(x+a/2,130,'積み木',23));}
     (d.notes||[]).forEach(function(t,i){add(text(260,310+i*44,t,25));});
    }else if(d.kind==='boxNet'){
-    h=340;var w=d.dimensions[0],dep=d.dimensions[1],ht=d.dimensions[2],sc=Math.min(400/(2*w+2*dep),230/(2*dep+ht)),x=(520-(2*w+2*dep)*sc)/2,y=45+dep*sc;
+    h=340;var w=d.dimensions[0],dep=d.dimensions[1],ht=d.dimensions[2],sc=Math.min(340/(2*w+2*dep),230/(2*dep+ht)),x=(520-(2*w+2*dep)*sc)/2,y=45+dep*sc;
     var widths=[dep,w,dep,w],xx=x;
     widths.forEach(function(v){add(S('rect',{x:xx,y:y,width:v*sc,height:ht*sc,fill:pale,stroke:blue,'stroke-width':2}));xx+=v*sc;});
     add(S('rect',{x:x+dep*sc,y:45,width:w*sc,height:dep*sc,fill:pale,stroke:blue,'stroke-width':2}),S('rect',{x:x+dep*sc,y:y+ht*sc,width:w*sc,height:dep*sc,fill:pale,stroke:blue,'stroke-width':2}));
@@ -212,10 +212,7 @@
     }
     add(S('circle',{cx:cx,cy:cy,r:4,fill:ink}));
    }else if(d.kind==='lines'){
-    if(d.mode==='threePerpendicular'||d.mode==='threeParallel'){
-     var parallel=d.mode==='threeParallel';add(line(105,85,415,85),line(105,185,415,185),line(260,45,260,230),text(75,93,'a',26),text(75,193,parallel?'b':'c',26),text(260,32,parallel?'c':'b',26),path('M260,67 h18 v18','none',orange));
-     if(parallel)add(text(158,91,'›',26),text(158,191,'›',26),text(296,174,'？',28));else add(path('M260,167 h18 v18','none',orange));
-    }else if(d.mode==='parallel') add(line(105,88,415,88),line(105,161,415,161),text(84,94,'a'),text(84,167,'b'));
+    if(d.mode==='parallel') add(line(105,88,415,88),line(105,161,415,161),text(84,94,'a'),text(84,167,'b'));
     else add(line(95,150,425,150),line(260,30,260,220),path('M260,129 h21 v21','none',orange));
    }else if(d.kind==='polygon'){
     var pts=d.shape==='pentagon'?[[260,40],[390,105],[345,200],[175,200],[130,105]]:d.shape==='trapezoid'?[[170,50],[345,50],[410,175],[110,175]]:d.shape==='diamond'?[[260,35],[410,120],[260,205],[110,120]]:d.shape==='parallelogram'?[[190,55],[400,55],[335,180],[125,180]]:d.w?[[100,65],[412,65],[412,65+312*d.h/d.w],[100,65+312*d.h/d.w]]:[[135,55],[385,55],[385,180],[135,180]];
@@ -265,7 +262,7 @@
     if(d.directions)add(text(55,183,d.directions[0],25),text(465,183,d.directions[1],25));
    }
    // 新しい図も昼のテーマの共通色を使う。既存の図の配色は変えない。
-   if(['gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0||/^three/.test(d.mode||'')){
+   if(['gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0){
     var paints={};paints[blue]='var(--rn-blue, '+blue+')';paints[ink]='var(--rn-navy, '+ink+')';paints[pale]='var(--rn-pale, '+pale+')';paints[orange]='var(--rn-warm, '+orange+')';
     nodes.forEach(function(n){['fill','stroke'].forEach(function(a){var v=n.getAttribute(a);if(paints[v])n.setAttribute(a,paints[v]);});});
    }

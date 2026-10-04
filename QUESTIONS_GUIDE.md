@@ -46,13 +46,12 @@
 
 ### 文章題の共通図（判断223）
 
-第2弾の手作り問題では、以下の共通図も使う（判断240。すべて `caption` 必須）。
+第2弾の手作り問題では、以下の共通図も使う（判断241。17問に図を追加。すべて `caption` 必須）。
 
 - `gridPoints`（`maxX, maxY, points, segments`）：整数の方眼。点は `{name, x, y}`、線は点の添字2つ。任意の `unknown, notes` は図の外に表示し、求める点を方眼に置かない。
 - `solid3d`（`shape, vertices`）：`box` または `cube` の見取り図。頂点は `{vertex: 'A'〜'H', label}`、空配列も可。任意の `dimensions: [横, 奥行き, 高さ], showLengths, unit, face: 'ABCD', block, notes` で既知の長さ・指定の面・積み木1こを表示。道すじや未知の頂点を強調しない。
 - `boxNet`（`dimensions, showLengths`）：直方体の6面の展開図。寸法は `[横, 奥行き, 高さ]`。`showLengths: false` なら数値を表示せず、立方体には `[1,1,1]` を使う。面の枚数やふちの組数は書かない。
 - `quadFigure`（`shape`）：`rectangle` または `parallelogram`。任意の `angle, diagonal, unknown, sides, unit` で角Ａの既知角度・対角線ＡＣの長さ・未知の線分名・辺ＡＢとＢＣの長さを表示。未知の角・長さは `？` とし、等分の印を付けない。
-- 既存 `lines` の `mode: 'threePerpendicular'` は既知の直角2つ、`mode: 'threeParallel'` は平行の矢じるしと既知の直角1つを表示する。求める関係の文字や直角の印は追加しない。
 
 値や表示する数値は必ず問題の `diagram` に置く。未知の長さは `？` または `x` とし、合計・割合・交点・分けた後の個数を描かない。
 

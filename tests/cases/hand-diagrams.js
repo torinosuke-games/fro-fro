@@ -1,4 +1,4 @@
-// 第2弾：依頼の19問、データ範囲、元データと解答を表示しない指定を検証。
+// 第2弾：依頼の17問、データ範囲、元データと解答を表示しない指定を検証。
 module.exports=({test,FF,ctx,assert,plain})=>{
  const fs=require('fs'),path=require('path'),crypto=require('crypto');
  const request=fs.readFileSync(path.join(__dirname,'../../DIAGRAM_REQUESTS_2.md'),'utf8');
@@ -18,19 +18,19 @@ module.exports=({test,FF,ctx,assert,plain})=>{
    const used=[];for(const v of d.vertices){assert.ok(/^[A-H]$/.test(v.vertex)&&v.label&&!used.includes(v.vertex));used.push(v.vertex);}if(d.face)assert.strictEqual(d.face,'ABCD');if(d.showLengths)assert.ok(d.dimensions&&d.unit);
   }else if(d.kind==='boxNet'){sz(d.dimensions);assert.strictEqual(typeof d.showLengths,'boolean');if(d.showLengths)assert.ok(d.unit);}
   else if(d.kind==='quadFigure'){assert.ok(['rectangle','parallelogram'].includes(d.shape));if(d.angle)assert.ok(Number.isFinite(d.angle)&&d.angle>0&&d.angle<90);if(d.diagonal)assert.ok(pos(d.diagonal)&&['ＡＯ','ＯＢ'].includes(d.unknown)&&d.unit);if(d.sides)assert.ok(d.sides.length===2&&d.sides.every(pos)&&d.unit);}
-  else if(d.kind==='lines')assert.ok(['threePerpendicular','threeParallel'].includes(d.mode));
   else assert.fail(d.kind);
  }
  test('手作りの図：468問のdiagram以外の全項目と対象外の図は不変',()=>{
   assert.strictEqual(all.length,468);
   assert.strictEqual(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'f51846dddb6139f3680d293d9106adf84859fcd3e9c8d4e2c6b618a8fe0125ce');
-  assert.strictEqual(hash(all.filter(q=>!ids.includes(q.id))),'8dab8f0e247f24e6b89198667418d185be5d979e956a05e1d2b7f1a7d3a5e0b8');
+  assert.strictEqual(hash(all.filter(q=>!ids.includes(q.id))),'270f1d627785b9d7af3f277c3caedb8624120f03c37c23ae8f99beb21a3d5e21');
  });
- test('手作りの図：依頼19問の網羅・caption・reviewed false・書き問題継承',()=>{
-  assert.strictEqual(ids.length,19);assert.strictEqual(qs.length,19);const bank=FF.learning.createBank(ctx.QUESTION_BANK);
+ test('手作りの図：依頼17問の網羅・caption・reviewed false・書き問題継承・除外2問',()=>{
+  assert.strictEqual(ids.length,17);assert.strictEqual(qs.length,17);const bank=FF.learning.createBank(ctx.QUESTION_BANK);
   for(const q of qs){assert.ok(q.diagram&&q.diagram.caption.trim(),q.id);assert.strictEqual(q.reviewed,false);assert.deepStrictEqual(plain(FF.learning.validateQuestion(q)),[],q.id);if(q.inputForm)assert.deepStrictEqual(plain(bank.byId[q.id+'#input'].diagram),plain(q.diagram));}
+  for(const id of ['math_g4_hand_quad_015','math_g4_hand_quad_016']){assert.ok(!ids.includes(id));assert.ok(!bank.byId[id].diagram);if(bank.byId[id+'#input'])assert.ok(!bank.byId[id+'#input'].diagram);}
  });
- test('手作りの図：共通4種類と直線のデータ範囲・不正値の検出',()=>{
+ test('手作りの図：共通4種類のデータ範囲・不正値の検出',()=>{
   qs.forEach(q=>range(q.diagram));
   const bad=plain(get('position_008'));bad.points[0].x=99;assert.throws(()=>range(bad));
   bad.points[0].x=1;bad.segments[0][1]=99;assert.throws(()=>range(bad));
