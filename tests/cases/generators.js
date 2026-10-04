@@ -38,6 +38,58 @@ module.exports = ({ test, FF, assert }) => {
     dec_mul_int: m => mul(parse(m.a), parse(m.b)),
     dec_mul_dec: m => mul(parse(m.a), parse(m.b)),
     dec_div: m => div(parse(m.a), parse(m.b)),
+    // ---- 小5の単元（判断243） ----
+    d5_scale: m => m.k > 0 ? mul(parse(m.x), I(m.k)) : div(parse(m.x), I(-m.k)),
+    d5_digit: m => mul(parse(m.u), I(m.n)),
+    d5_maxdec: m => m.list.map(parse).reduce((best, x) => (x.n * best.d > best.n * x.d ? x : best)),
+    vol_box: m => I(m.a * m.b * m.c),
+    vol_cube: m => I(m.s ** 3),
+    vol_side: m => R(m.V, m.a * m.b),
+    vol_unit: m => I(m.k * { m3cm3: 1000000, Lcm3: 1000, m3L: 1000 }[m.kind]),
+    prop_val: m => R(m.y1 * m.x2, m.x1),
+    prop_x: m => R(m.y2 * m.x1, m.y1),
+    decm_word: m => mul(I(m.p), parse(m.l)),
+    decdiv_word: m => div(parse(m.a), parse(m.b)),
+    dec_div_round: m => R(Math.floor(m.A * 10 / m.B + 0.5), 10),
+    poly_sum: m => I(180 * (m.n - 2)),
+    poly_reg: m => R(180 * (m.n - 2), m.n),
+    tri_third: m => I(180 - m.a - m.b),
+    quad_missing: m => I(360 - m.a - m.b - m.c),
+    mult_kth: m => I(m.n * m.k),
+    gcd_ask: m => I(gcd(m.a, m.b)),
+    lcm_ask: m => I(m.a * m.b / gcd(m.a, m.b)),
+    div_count: m => { let c = 0; for (let i = 1; i <= m.n; i++) if (m.n % i === 0) c++; return I(c); },
+    frac_to_dec: m => R(m.n, m.d),
+    dec_to_frac: m => parse(m.x),
+    frac_reduce: m => parse(m.x),
+    frac_common_num: m => I(m.n * m.L / m.d),
+    div_to_frac: m => R(m.a, m.b),
+    fracmix_add: m => add(parse(m.x), parse(m.y)),
+    fracmix_sub: m => sub(parse(m.x), parse(m.y)),
+    avg_n: m => R(m.vals.reduce((a, b) => a + b, 0), m.vals.length),
+    avg_total: m => I(m.n * m.m),
+    avg_missing: m => I(m.m * m.n - m.vals.reduce((a, b) => a + b, 0)),
+    rate_density: m => R(m.P, m.A),
+    rate_total: m => I(m.r * m.S),
+    speed_v: m => R(m.d, m.t),
+    speed_d: m => I(m.v * m.t),
+    speed_t: m => R(m.d, m.v),
+    speed_conv: m => R(m.V * 1000, 60),
+    tri_area: m => R(m.b * m.h, 2),
+    para_area: m => I(m.b * m.h),
+    trap_area: m => R((m.a + m.b) * m.h, 2),
+    rhombus_area: m => R(m.d1 * m.d2, 2),
+    tri_height: m => R(2 * m.A, m.b),
+    pct_rate: m => R(m.v * 100, m.base),
+    pct_value: m => R(m.base * m.pc, 100),
+    pct_off: m => R(m.base * (100 - m.pc), 100),
+    pct_base: m => R(m.v * 100, m.pc),
+    circ_len: m => mul(I(m.d), parse('3.14')),
+    circ_r: m => mul(I(2 * m.r), parse('3.14')),
+    circ_diam: m => div(parse(m.L), parse('3.14')),
+    circ_poly: m => I(m.n * m.a),
+    prism_count: m => I({ face: m.n + 2, edge: 3 * m.n, vert: 2 * m.n }[m.what]),
+
     order: m => I({ 'a+bc': m.a + m.b * m.c, '(a+b)c': (m.a + m.b) * m.c, 'a-bc': m.a - m.b * m.c, 'ab-c': m.a * m.b - m.c }[m.form]),
     frac_add: m => add(parse(m.x), parse(m.y)),
     frac_sub: m => sub(parse(m.x), parse(m.y)),
@@ -195,6 +247,38 @@ module.exports = ({ test, FF, assert }) => {
             kinds.add(q.id);
           }
           assert.ok(kinds.size >= 12, `${unit} ${difficulty}: 問題の種類が ${kinds.size} 通りしかない`);
+        });
+      }
+    }
+  }
+
+  // ---- 単元ごとの自動生成（小5。判断243）----
+  const UNITS5 = G.unitsWithGenerators(5);
+  test('小5：単元別の設定が、js/units.js に登録した単元だけを使い、3つの難易度がそろっている', () => {
+    const ids = FF.units.list('math', 5).map(u => u.id);
+    assert.ok(UNITS5.length >= 16, UNITS5.join(','));
+    for (const u of UNITS5) {
+      assert.ok(ids.includes(u), '登録のない単元: ' + u);
+      for (const d of ['basic', 'standard', 'advanced']) { assert.ok(G.unitSupports(5, u, d), `${u} ${d}`); for (const e of G.UNIT_GEN[5][u][d]) assert.ok(SOLVE[e.op], `検算がない種類: ${e.op}`); }
+    }
+    assert.strictEqual(G.generateForUnit(5, 'graph', 'basic', 'input', FF.util.makeRng(1)), null);
+    assert.strictEqual(G.generateForUnit(5, 'congruent', 'basic', 'input', FF.util.makeRng(1)), null);
+  });
+  for (const unit of UNITS5) {
+    for (const difficulty of ['basic', 'standard', 'advanced']) {
+      for (const answerType of ['input', 'choice']) {
+        test(`小5 ${unit} ${difficulty} ${answerType}：500問の答えが正しく、単元と構造が正しい`, () => {
+          const rng = FF.util.makeRng(5000 + unit.length * 7 + difficulty.length + answerType.length);
+          const textById = {};
+          const kinds = new Set();
+          for (let i = 0; i < 500; i++) {
+            const q = G.generateForUnit(5, unit, difficulty, answerType, rng);
+            assert.strictEqual(q.unit, unit);
+            assert.strictEqual(q.generated, true);
+            verify(q, 5, difficulty, answerType, textById);
+            kinds.add(q.id);
+          }
+          assert.ok(kinds.size >= (unit === 'prism' ? 7 : 12), `${unit} ${difficulty}: 問題の種類が ${kinds.size} 通りしかない`);
         });
       }
     }
