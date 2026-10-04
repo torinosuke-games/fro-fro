@@ -204,4 +204,13 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   const units=new Set(FF.units.list('science',4).map(x=>x.id));assert.strictEqual(units.size,10);
   assert.ok(ctx.QUESTION_BANK.filter(q=>q.subject==='science'&&q.gradeLevel===4).every(q=>units.has(q.unit)),'小4理科の問題の単元は、登録した単元');
  });
+ test('手作りの問題（判断252）：小4社会の都道府県・日本の地形と気候・水・ごみは、基礎9・標準15・発展12問（原作の問題を合わせて）、手作りはすべて reviewed:false',()=>{
+  const hand=ctx.QUESTION_BANK.filter(q=>q.collection==='hand_soc4');
+  assert.ok(hand.length>=120);
+  assert.ok(hand.every(q=>q.reviewed===false&&q.gradeLevel===4&&q.subject==='social'),'手作りは reviewed:false');
+  assert.ok(hand.every(q=>q.choices.length===4&&new Set(q.choices).size===4&&q.choices.includes(q.answer)),'選択肢');
+  for(const u of['prefecture','geography','water','garbage']){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u&&q.gradeLevel===4&&q.subject==='social').forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});for(const [k,n] of Object.entries({basic:9,standard:15,advanced:12}))assert.ok(h[k]>=n,u+' '+k+' '+h[k]);}
+  const units=new Set(FF.units.list('social',4).map(x=>x.id));assert.strictEqual(units.size,8);
+  assert.ok(ctx.QUESTION_BANK.filter(q=>q.subject==='social'&&q.gradeLevel===4).every(q=>units.has(q.unit)),'小4社会の問題の単元は、登録した単元');
+ });
 };

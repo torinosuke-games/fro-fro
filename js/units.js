@@ -63,6 +63,18 @@
         { id: 'moon', name: '月の見え方', description: '月の形と動き', icon: '☾' },
         { id: 'star', name: '星や星座', description: '星の明るさ・色・動き', icon: '★' }
       ]
+    },
+    social: {
+      4: [
+        { id: 'prefecture', name: '都道府県と地方', description: '47の都道府県・7つの地方', icon: '🗾' },
+        { id: 'geography', name: '日本の地形と気候', description: '山・川・平野・季節風', icon: '⛰' },
+        { id: 'water', name: 'くらしをささえる水', description: '水道・ダム・下水', icon: '💧' },
+        { id: 'electric', name: 'くらしをささえる電気', description: '発電・送電', icon: '⚡' },
+        { id: 'garbage', name: 'ごみの処理と利用', description: '分別・リサイクル', icon: '♻' },
+        { id: 'disaster', name: '自然災害からくらしを守る', description: 'そなえ・ハザードマップ', icon: '⚠' },
+        { id: 'tradition', name: '地いきの伝統・文化', description: '祭り・伝統工芸', icon: '🎎' },
+        { id: 'pioneer', name: '郷土をひらいた人々', description: '用水・開拓', icon: '🌾' }
+      ]
     }
   };
 
