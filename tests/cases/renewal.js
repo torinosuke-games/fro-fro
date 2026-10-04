@@ -1,6 +1,6 @@
 // 新しい学習導線・100問・報酬と保存の結合を検証する。
 module.exports=({test,FF,ctx,assert,plain})=>{
- const bank=FF.learning.createBank(ctx.QUESTION_BANK),qs=ctx.QUESTION_BANK.filter(q=>q.collection==='frontier100');
+ const bank=FF.learning.createBank(ctx.QUESTION_BANK),qs=ctx.QUESTION_BANK.filter(q=>q.collection==='frontier100'),HAND=ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g4').length;
  const now=1791000000000;
  test('リニューアル：18単元100問・連番・図解・人による確認前のフラグ',()=>{
   assert.strictEqual(qs.length,100);assert.strictEqual(FF.curriculum.units('math',4).length,18);
@@ -52,7 +52,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  test('公開版：原作と同じ保存キーで記録を引き継ぐ',()=>{assert.strictEqual(FF.config.SAVE_KEY,'frozenFrontier.save');});
  test('教科カード：小4算数（図解100問＋文章題10問）を重複なく集計し最新の正誤を表示する',()=>{
   const s=FF.state.createDefaultState(now);s.learning.questionResults[qs[0].id]=true;s.learning.questionResults[qs[1].id]=false;s.learning.questionResults['gen_math_g4_unused']=true;
-  assert.deepStrictEqual(plain(FF.curriculum.progress(bank,s,'math',4)),{total:110,correct:1,review:1,unanswered:108,generated:true});
+  assert.deepStrictEqual(plain(FF.curriculum.progress(bank,s,'math',4)),{total:110+HAND,correct:1,review:1,unanswered:108+HAND,generated:true});
   s.learning.questionResults[qs[1].id]=true;
   assert.strictEqual(FF.curriculum.progress(bank,s,'math',4).correct,2);
   assert.strictEqual(FF.curriculum.progress(bank,s,'math',4).review,0);
@@ -102,7 +102,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   }
  });
  test('単元（判断221）：図のない問題も、図解の問題と同じ単元・問題マップで出題する',()=>{
-  const claude=ctx.QUESTION_BANK.filter(q=>q.subject==='math'&&q.gradeLevel===4&&q.collection!=='frontier100');assert.strictEqual(claude.length,10);
+  const claude=ctx.QUESTION_BANK.filter(q=>q.subject==='math'&&q.gradeLevel===4&&q.collection!=='frontier100'&&q.collection!=='hand_g4');assert.strictEqual(claude.length,10);
   assert.strictEqual(claude.filter(q=>!q.diagram).length,4);
   for(const q of claude){
    const list=FF.curriculum.pool(bank,{subject:'math',grade:4,unit:q.unit,difficulty:'random',answerType:q.answerType});
@@ -126,13 +126,13 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   assert.ok(FF.learning.validateQuestion({...base,diagram:{kind:'rect',w:3,h:2}}).some(m=>/caption/.test(m)));
  });
  test('単元（判断221）：問題の番号は教科・学年の中の通し番号で、答え方を変えても同じ',()=>{
-  assert.strictEqual(FF.curriculum.totalOf(bank,'math',4),110);
+  assert.strictEqual(FF.curriculum.totalOf(bank,'math',4),110+HAND);
   const nums=new Set();
   for(const q of Object.values(bank.byId).filter(q=>q.subject==='math'&&q.gradeLevel===4)){
-   const n=FF.curriculum.numberOf(bank,q);assert.ok(n>=1&&n<=110,q.id);
+   const n=FF.curriculum.numberOf(bank,q);assert.ok(n>=1&&n<=110+HAND,q.id);
    if(q.derivedFrom)assert.strictEqual(n,FF.curriculum.numberOf(bank,bank.byId[q.derivedFrom]));else nums.add(n);
   }
-  assert.strictEqual(nums.size,110);
+  assert.strictEqual(nums.size,110+HAND);
   assert.strictEqual(FF.curriculum.numberOf(bank,qs[0]),1);
  });
  test('図（判断225）：図解100問のうち、問題文の数字を並べ直すだけの図・合わない絵の図を外した（70問に図、30問は図なし）',()=>{
@@ -164,5 +164,12 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   const sel={subject:'math',grade:4,unit:'divide1',difficulty:'standard',answerType:'input'},seen=[];let dup=0;
   for(let i=0;i<60;i++){const q=FF.curriculum.pick(bank,sel,{now,correctLog:{},recentIds:seen.slice(-20),rng:FF.util.makeRng(i*7+3)});if(seen.slice(-10).includes(q.id))dup++;seen.push(q.id);}
   assert.ok(dup<=3,'直近10問の中の重複 '+dup);
+ });
+ test('手作りの問題（判断227）：位置の表し方は基礎6・標準9・発展7問で、すべて reviewed:false',()=>{
+  const hand=ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g4');
+  assert.ok(hand.every(q=>q.reviewed===false&&q.gradeLevel===4&&q.subject==='math'),'手作りは確認前');
+  assert.ok(hand.every(q=>new Set(q.choices).size===q.choices.length&&q.choices.includes(q.answer)),'選択肢');
+  const c={};ctx.QUESTION_BANK.filter(q=>q.unit==='position').forEach(q=>{c[q.difficulty]=(c[q.difficulty]||0)+1;});
+  assert.deepStrictEqual(c,{basic:6,standard:9,advanced:7});
  });
 };

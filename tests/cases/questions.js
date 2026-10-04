@@ -169,7 +169,7 @@ module.exports = ({ test, FF, ctx, assert }) => {
     // v0.3（B案）で追加した702問は、ユーザーの承認で true にした（360 + 702 = 1062問）
     // 2026-10-02：japanese_g2_katakana_002 をレビューの指摘（判断205）で直したので、確認し直すまで false
     assert.strictEqual(bank.filter(q => q.reviewed === true).length, 1061);
-    assert.strictEqual(bank.filter(q => q.reviewed === false).length, 101); // 原作の1問＋リニューアルの100問
+    assert.strictEqual(bank.filter(q => q.reviewed === false && q.collection !== 'hand_g4').length, 101); // 原作の1問＋リニューアルの100問（手作りの hand_g4 は数えない。判断227）
   });
   test('選択問題の inputForm（書き問題としても出す。判断200）は、すべて書き問題として正しく、確認前は reviewed: false', () => {
     const withForm = bank.filter(q => q.inputForm);
