@@ -45,10 +45,22 @@
   a.session={renewal:true,sel:sel,recentIds:[],items:{},currentId:null,order:[],cursor:-1};
   chooseQuestion();U.show('quiz');
  }
+// デバッグモードのレビュー（判断202・203）：「確認前だけ」「レビュー済みを出さない」の設定を、出題に反映する
+ function reviewBank(bank){
+  if(!(FF.debugMode&&U.review))return bank;
+  var only=U.review.onlyUnreviewed(),hide=U.review.hideReviewed();
+  if(!only&&!hide)return bank;
+  var done=U.review.all(),byId={};
+  Object.keys(bank.byId).forEach(function(id){var q=bank.byId[id];if(only&&q.reviewed!==false)return;if(done[id]||done[id+'#input'])return;byId[id]=q;});
+  return {byId:byId,byKey:bank.byKey,invalid:[],duplicates:[],count:0};
+ }
+ // 「確認前だけ」で1問も残らないときは、ふつうの出題に戻す（「レビュー済みを出さない」だけのときは戻さない）
+ function reviewFallback(){return !!(FF.debugMode&&U.review&&U.review.onlyUnreviewed()&&!U.review.hideReviewed());}
  function chooseQuestion(id,force){
   var a=FF.app,s=a.session;
   if(id&&id===s.currentId&&!force)return;
-  var q=id?(a.bank.byId[id]||(s.items[id]&&s.items[id].attempt.question)):C.pick(a.bank,s.sel,{correctLog:a.state.learning.correctLog,recentIds:s.recentIds,now:a.now()});
+  var ctxPick={correctLog:a.state.learning.correctLog,recentIds:s.recentIds,now:a.now()};
+  var q=id?(a.bank.byId[id]||(s.items[id]&&s.items[id].attempt.question)):(C.pick(reviewBank(a.bank),s.sel,ctxPick)||(reviewFallback()?C.pick(a.bank,s.sel,ctxPick):null));
   if(!q){s.currentId=null;return;}
   // Visiting a question starts a fresh attempt. Persistent results live in the save.
   s.items[q.id]={attempt:L.startAttempt(q),outcome:null,picked:null,selected:null,typed:'',resource:s.sel.resource||C.scarcest(a.state)};
@@ -173,7 +185,9 @@
    button('‹ '+R.previous,function(){if(s.cursor>0){s.cursor--;chooseQuestion(s.order[s.cursor],true);U.rerender();}},'rn-button',s.cursor<=0),
    button(done?R.next+' →':R.skip+' →',next,done?'rn-button primary':'rn-button')
   ]));
-  layout.appendChild(helpView(it));main.appendChild(layout);
+  layout.appendChild(helpView(it));
+  if(FF.debugMode&&U.review)layout.appendChild(U.review.panel(q));   // 問題のレビュー（デバッグモードだけ。判断202）
+  main.appendChild(layout);
  }
  function renderFilters(main){
   var a=FF.app;if(!a.session||!a.session.renewal){U.show('study');return;}
