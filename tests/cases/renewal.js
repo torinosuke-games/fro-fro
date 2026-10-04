@@ -165,7 +165,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   for(let i=0;i<60;i++){const q=FF.curriculum.pick(bank,sel,{now,correctLog:{},recentIds:seen.slice(-20),rng:FF.util.makeRng(i*7+3)});if(seen.slice(-10).includes(q.id))dup++;seen.push(q.id);}
   assert.ok(dup<=3,'直近10問の中の重複 '+dup);
  });
- test('手作りの問題（判断227）：位置の表し方は基礎6・標準9・発展7問、直方体と立方体・垂直平行と四角形・折れ線グラフは基礎9・標準15・発展12問、小数のかけ算・わり算は基礎9・標準15・発展12問、整理のしかた・そろばんは基礎6・標準9・発展7問で、すべて reviewed:false',()=>{
+ test('手作りの問題（判断227）：位置の表し方は基礎6・標準9・発展7問、直方体と立方体・垂直平行と四角形・折れ線グラフは基礎9・標準15・発展12問、分数・小数のかけ算・わり算は基礎9・標準15・発展12問、整理のしかた・そろばんは基礎6・標準9・発展7問で、すべて reviewed:false',()=>{
   const hand=ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g4');
   assert.ok(hand.every(q=>q.reviewed===false&&q.gradeLevel===4&&q.subject==='math'),'手作りは確認前');
   assert.ok(hand.every(q=>new Set(q.choices).size===q.choices.length&&q.choices.includes(q.answer)),'選択肢');
@@ -178,6 +178,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   const g={};ctx.QUESTION_BANK.filter(q=>q.unit==='graph').forEach(q=>{g[q.difficulty]=(g[q.difficulty]||0)+1;});
   assert.deepStrictEqual(g,{basic:9,standard:15,advanced:12});
   {const h={};ctx.QUESTION_BANK.filter(q=>q.unit==='decimal_calc').forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});assert.deepStrictEqual(h,{basic:9,standard:15,advanced:12},'decimal_calc');}
+  for(const u of['fraction']){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u).forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});assert.deepStrictEqual(h,{basic:9,standard:15,advanced:12},u);}
   for(const u of['table','abacus']){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u).forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});assert.deepStrictEqual(h,{basic:6,standard:9,advanced:7},u);}
  });
 };
