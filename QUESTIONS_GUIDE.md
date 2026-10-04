@@ -73,3 +73,20 @@
 - 既存 `fractionSum` の `separate: true` は2つの量を別の帯で表示し、`whole` は1つ分の単位。既存の合算表示は維持する。
 - 既存 `rect` の `area` と `w/h: '？'` は面積だけ分かる正方形、`solid` の `w, depth, h, water, unit` は寸法と水深、`shape: 'triangularPrism', baseArea, h, unit` は三角柱。
 - 既存 `polygon` の `shape: 'pentagon'` は五角形、`shape: 'diagonals', w, h, unit, single: true` は寸法付きの長方形と対角線1本。既存 `numberline` の `marks, markLabels, directions, hideNegative` は問題文の既知点と向きだけを表示する。
+
+### 小5手作り問題の共通図拡張（判断247）
+
+新しいkindは追加しない。第3〜5弾118問では、従来の必須項目を保ったうえで、`study: true` と次の任意項目を使用する。データの範囲は `tests/cases/hand-diagrams-g5.js`、表示は `tests/ui-hand-diagrams-g5.cjs` で検証する。
+
+- `polygon.panels`：1〜2枚の座標形状。各 `points` は3〜12頂点、`names`・`angleLabels` は頂点と同数、`heights` は高さの2端点と直角印、`segments` は頂点番号の組。各枚の `notes` に既知の寸法だけを書く。共通縮尺で比較する。
+- `solid3d.dimensions`：横・奥行き・高さの正の3値。`vertices: []` を保ち、`cut`・`join`・`stack`・`open`・`thickness`・`water`・`rise`・`baseSides` で共通の立体を表す。寸法は `notes` の既知量だけを表示。
+- `band.rows`：複数の帯（parts・labelsは同数）。`scale` は共通の尺度、`schematic` は未知量を幅で教えない模式図。模式図であることをcaptionに書く。
+- `pie.sectors/sectorLabels`：全体100の円を一枚で区分する。`schematic` は未知の割合を角度で教えない等角度の模式図（captionに明記）。
+- `fraction.rows`：各帯のn・d・label。`pieces/pieceLabels` は同数の分数部分、`used/usedLabel` は既知の使用量。`people` は人数のみ、1人分の切り分けは描かない。
+- `numberline.rows`：marks・labelsが同数、marksはstart〜end内。`subdivisions` は非負整数（0は目盛りなし）。`title/note/endLabel` は既知の説明と途中省略用。比較の答えになる位置や、次に重なる時刻は打たない。
+- `coordinate.knownPoint/gridSteps`：問題文で指定された点と格子幅。グラフの範囲を既知点までに限定し、未知点の座標を図で求めさせない。
+- `tape.schematic`：全体と1つ分を省略した模式図。`stacked/notes` は複数段で、未知の本数・合計時間・換算値は描かない。
+- `measure` のstudy図は既知の容量と量だけを水位で示し、答えを数えられる目盛りは付けない。`circle.diameter` は半径ではなく問題文の直径ラベルを表示する。
+- `rect`・`bars` のstudy図はスマホで読める文字サイズを使用。`triangle`・`doubleLine`・`table` は既存の形式を再利用する。
+
+118問のIDと項目一覧、依頼表との差異、検証結果は `HAND_G5_DIAGRAMS.md`。

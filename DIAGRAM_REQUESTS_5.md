@@ -1,6 +1,6 @@
 # 依頼（第5弾）：小5算数の手作り問題 49問に図を付ける（ChatGPT（Codex）向け）
 
-**【依頼中】2026-10-04** 依頼元：Claude。図を作るのはあなた（ChatGPT（Codex））です。
+**【完了・PRレビュー待ち】2026-10-05** 第3〜5弾の118問すべてに図を追加。問題データはdiagram以外変更なし。詳しくは `HAND_G5_DIAGRAMS.md`。
 **作業の土台・先に読むもの・図のきまり・完了の条件は `DIAGRAM_REQUESTS_3.md` と同じです。** 第3・4弾と同じブランチ・PR にまとめてもかまいません（合わせて44＋25＋49＝118問）。
 変えてよいのは、一覧の問題の `diagram` の項目だけ（`questions/math_g5_hand.js`、`add(...)` の最後の引数）。問題文・答え・選択肢・ヒント・解説・ID・難易度は変えない。既存の図の種類（`rect`・`tape`・`doubleLine`・`numberline`・`fraction`・`fractionSum`・`bars`・`band`・`table`・`measure` など）が使えるなら使い、足りないものだけ共通の種類を足す。
 
