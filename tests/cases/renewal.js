@@ -102,7 +102,8 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   }
  });
  test('単元（判断221）：図のない問題も、図解の問題と同じ単元・問題マップで出題する',()=>{
-  const claude=ctx.QUESTION_BANK.filter(q=>q.subject==='math'&&q.gradeLevel===4&&!q.diagram);assert.strictEqual(claude.length,10);
+  const claude=ctx.QUESTION_BANK.filter(q=>q.subject==='math'&&q.gradeLevel===4&&q.collection!=='frontier100');assert.strictEqual(claude.length,10);
+  assert.strictEqual(claude.filter(q=>!q.diagram).length,4);
   for(const q of claude){
    const list=FF.curriculum.pool(bank,{subject:'math',grade:4,unit:q.unit,difficulty:'random',answerType:q.answerType});
    assert.ok(list.some(x=>x.id===q.id),q.id);

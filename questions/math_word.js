@@ -10,6 +10,7 @@ window.QUESTION_BANK.push(
   // ===== Lv1（小学1年）：たし算・ひき算 =====
   {
     id: 'math_g1_addsub_001', subject: 'math', gradeLevel: 1, unit: 'addsub',
+    diagram: {"kind":"objects","item":"wood","groups":[3,4],"labels":["3ぼん","4ほん"],"caption":"たきぎを あわせよう"},
     difficulty: 'basic', answerType: 'choice',
     question: 'たきぎが 3ぼん あります。4ほん もって くると、ぜんぶで なんぼんに なりますか。',
     choices: ['7ほん', '5ほん', '1ぽん', '12ほん'],
@@ -49,6 +50,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g1_order_001', subject: 'math', gradeLevel: 1, unit: 'order',
+    diagram: {"kind":"objects","item":"person","groups":[7],"labels":["← まえ"],"mark":3,"caption":"しるしの ひとが ゆきさんだよ"},
     difficulty: 'basic', answerType: 'choice',
     question: 'こどもが 1れつに 7にん ならんで います。ゆきさんは まえから 3ばんめです。ゆきさんは うしろから なんばんめですか。',
     choices: ['5ばんめ', '4ばんめ', '3ばんめ', '6ばんめ'],
@@ -78,6 +80,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g1_number_001', subject: 'math', gradeLevel: 1, unit: 'number',
+    diagram: {"kind":"objects","item":"candy","groups":[10,10,10,4],"labels":["10こ","10こ","10こ","ばら 4こ"],"sealed":[true,true,true,false],"caption":"ふくろと ばらの あめだよ"},
     difficulty: 'standard', answerType: 'input',
     question: 'あめが 10こ はいった ふくろが 3ふくろと、ばらの あめが 4こ あります。あめは ぜんぶで なんこですか。（かずで こたえよう）',
     answer: '34', acceptedAnswers: ['34こ'], validationMode: 'number',
@@ -87,6 +90,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g1_clock_001', subject: 'math', gradeLevel: 1, unit: 'clock',
+    diagram: {"kind":"clock","hour":3,"minute":30,"caption":"ながい はりと みじかい はりを みよう"},
     difficulty: 'standard', answerType: 'choice',
     question: 'とけいの みじかい はりが 3と 4の あいだ、ながい はりが 6を さして います。なんじなんぷんですか。',
     choices: ['3じはん', '6じ15ふん', '3じ', '4じはん'],
@@ -109,6 +113,7 @@ window.QUESTION_BANK.push(
   // ===== Lv2（小学2年）：かけ算・3けたの計算・長さ =====
   {
     id: 'math_g2_multiply_001', subject: 'math', gradeLevel: 2, unit: 'multiply',
+    diagram: {"kind":"objects","item":"candy","groups":[5,5,5,5],"labels":["5こ","5こ","5こ","5こ"],"caption":"5こずつの ふくろが 4つ あるよ"},
     difficulty: 'basic', answerType: 'choice',
     question: '1ふくろに あめが 5こずつ はいって います。4ふくろでは、あめは なんこに なりますか。',
     choices: ['20こ', '9こ', '15こ', '25こ'],
@@ -138,6 +143,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g2_length_001', subject: 'math', gradeLevel: 2, unit: 'length',
+    diagram: {"kind":"tape","values":[120,85],"labels":["1m20cm","85cm"],"caption":"2ほんの ロープを つなぐよ"},
     difficulty: 'advanced', answerType: 'input',
     question: 'ながさ 1m20cmの ロープと、ながさ 85cmの ロープを つなぎます。あわせて なんcmに なりますか。むすびめの ながさは かんがえません。（cmの かずで こたえよう）',
     answer: '205', acceptedAnswers: ['205cm', '2m5cm'], validationMode: 'number',
@@ -148,6 +154,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g2_multiply_003', subject: 'math', gradeLevel: 2, unit: 'multiply',
+    diagram: {"kind":"objects","item":"chair","groups":[3,3,3,3,3,3,3,3],"labels":["1れつ","2れつ","3れつ","4れつ","5れつ","6れつ","7れつ","8れつ"],"columns":1,"compact":true,"caption":"1れつに 3きゃくずつ ならんで いるよ"},
     difficulty: 'basic', answerType: 'choice',
     question: 'いすが 1れつに 3きゃくずつ、8れつ ならんで います。いすは ぜんぶで なんきゃくですか。',
     choices: ['24きゃく', '11きゃく', '21きゃく', '27きゃく'],
@@ -168,6 +175,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g2_time_001', subject: 'math', gradeLevel: 2, unit: 'time',
+    diagram: {"kind":"tape","values":[60,20],"labels":["1じかん","20ぷん"],"notes":["60ぷん",""],"caption":"1じかんと 20ぷんを つなごう"},
     difficulty: 'standard', answerType: 'input',
     question: 'えいがの ながさは 1じかん20ぷんです。これは なんぷんですか。（かずで こたえよう）',
     answer: '80', acceptedAnswers: ['80ぷん', '80分'], validationMode: 'number',
@@ -177,6 +185,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g2_volume_001', subject: 'math', gradeLevel: 2, unit: 'volume',
+    diagram: {"kind":"measure","capacity":10,"values":[10,3],"labels":["1L","3dL"],"unit":"dL","caption":"1Lは 10dL。めもりを みよう"},
     difficulty: 'standard', answerType: 'input',
     question: 'ジュースが 1L3dL あります。これは なんdLですか。（かずで こたえよう）',
     answer: '13', acceptedAnswers: ['13dL', '13dl'], validationMode: 'number',
@@ -186,6 +195,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g2_multiply_004', subject: 'math', gradeLevel: 2, unit: 'multiply',
+    diagram: {"kind":"objects","item":"person","groups":[4,4,4,4,4,4,3],"labels":["1くみ","2くみ","3くみ","4くみ","5くみ","6くみ","あまり"],"caption":"4にんずつの くみと あまりの ひとだよ"},
     difficulty: 'standard', answerType: 'choice',
     question: 'こどもが 4にんずつ 6くみ できて、3にん あまりました。こどもは ぜんぶで なんにんですか。',
     choices: ['27にん', '24にん', '13にん', '30にん'],
@@ -197,6 +207,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g2_length_002', subject: 'math', gradeLevel: 2, unit: 'length',
+    diagram: {"kind":"tape","values":[30,30,30,30,12],"labels":["30cm","30cm","30cm","30cm","12cm"],"wrap":3,"caption":"ものさしを つなげた ながさだよ。したの だんに つづくよ"},
     difficulty: 'advanced', answerType: 'input',
     question: '30cmの ものさしで つくえの よこの ながさを はかったら、ものさし 4つぶんと、さらに 12cm ありました。つくえの よこの ながさは なんcmですか。（cmの かずで こたえよう）',
     answer: '132', acceptedAnswers: ['132cm', '1m32cm'], validationMode: 'number',
@@ -208,6 +219,7 @@ window.QUESTION_BANK.push(
   // ===== Lv3（小学3年）：わり算・お金 =====
   {
     id: 'math_g3_division_001', subject: 'math', gradeLevel: 3, unit: 'division',
+    diagram: {"kind":"objects","item":"bread","groups":[24],"labels":["24こ"],"caption":"パンを 4人で わけよう"},
     difficulty: 'basic', answerType: 'choice',
     question: 'パンが 24{個|こ} あります。4{人|にん}で {同|おな}じ {数|かず}ずつ {分|わ}けると、ひとり{分|ぶん}は {何個|なんこ}ですか。',
     choices: ['6{個|こ}', '4{個|こ}', '8{個|こ}', '20{個|こ}'],
@@ -219,6 +231,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g3_division_002', subject: 'math', gradeLevel: 3, unit: 'division',
+    diagram: {"kind":"objects","item":"wood","groups":[29],"labels":["29本"],"caption":"4本ずつ たばにしよう"},
     difficulty: 'standard', answerType: 'input',
     question: 'たきぎが 29{本|ほん} あります。4{本|ほん}ずつ ひもで しばって たばに します。4{本|ほん}の たばは {何|なん}たば できますか。（{数|かず}で {答|こた}えよう）',
     answer: '7', acceptedAnswers: ['7たば'], validationMode: 'number',
@@ -247,6 +260,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g3_time_001', subject: 'math', gradeLevel: 3, unit: 'time',
+    diagram: {"kind":"doubleLine","labels":["時刻","歩く時間"],"starts":["午前9時45分","0分"],"ends":["？","30分"],"caption":"出発してから 30分 歩くよ"},
     difficulty: 'basic', answerType: 'choice',
     question: '{午前|ごぜん}9{時|じ}45{分|ふん}に {家|いえ}を {出|で}て、30{分|ぷん} {歩|ある}いて {公園|こうえん}に {着|つ}きました。{着|つ}いた {時刻|じこく}は {何時何分|なんじなんぷん}ですか。',
     choices: ['{午前|ごぜん}10{時|じ}15{分|ふん}', '{午前|ごぜん}9{時|じ}75{分|ふん}', '{午前|ごぜん}10{時|じ}45{分|ふん}', '{午前|ごぜん}9{時|じ}15{分|ふん}'],
@@ -267,6 +281,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g3_weight_001', subject: 'math', gradeLevel: 3, unit: 'weight',
+    diagram: {"kind":"balance","weights":["1kg200g","800g"],"caption":"2つの にもつを いっしょに のせるよ"},
     difficulty: 'standard', answerType: 'input',
     question: '{重|おも}さ 1kg200gの {荷物|にもつ}と、{重|おも}さ 800gの {荷物|にもつ}を いっしょに はかりに のせます。{全部|ぜんぶ}で {何|なん}kgですか。（{数|かず}で {答|こた}えよう）',
     answer: '2', acceptedAnswers: ['2kg', '2000g'], validationMode: 'number',
@@ -276,6 +291,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g3_length_001', subject: 'math', gradeLevel: 3, unit: 'length',
+    diagram: {"kind":"tape","values":[1300,900],"labels":["1km300m","900m"],"places":["家","駅","学校"],"caption":"家から 駅を とおって 学校へ"},
     difficulty: 'standard', answerType: 'input',
     question: '{家|いえ}から {駅|えき}までは 1km300m、{駅|えき}から {学校|がっこう}までは 900mです。{家|いえ}から {駅|えき}を {通|とお}って {学校|がっこう}まで {行|い}く {道|みち}のりは {何|なん}mですか。（{数|かず}で {答|こた}えよう）',
     answer: '2200', acceptedAnswers: ['2200m', '2km200m'], validationMode: 'number',
@@ -285,6 +301,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g3_division_004', subject: 'math', gradeLevel: 3, unit: 'division',
+    diagram: {"kind":"objects","item":"flower","groups":[32],"labels":["32本"],"caption":"花を 5本ずつ たばにしよう"},
     difficulty: 'standard', answerType: 'choice',
     question: '{花|はな}が 32{本|ほん} あります。5{本|ほん}ずつ たばに すると、どう なりますか。',
     choices: ['6たば できて、2{本|ほん} あまる', '6たば できて、あまりは ない', '7たば できて、3{本|ほん} {足|た}りない', '5たば できて、7{本|ほん} あまる'],
@@ -295,6 +312,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g3_circle_001', subject: 'math', gradeLevel: 3, unit: 'circle',
+    diagram: {"kind":"circle","radius":6,"count":4,"diameter":12,"unit":"cm","caption":"ボールが 1列に ぴったり 入っているよ"},
     difficulty: 'advanced', answerType: 'input',
     question: '{直径|ちょっけい} 12cmの ボールが 4{個|こ}、{箱|はこ}の {中|なか}に 1{列|れつ}に ぴったり {入|はい}って います。{箱|はこ}の {内側|うちがわ}の {長|なが}さは {何|なん}cmですか。（{数|かず}で {答|こた}えよう）',
     answer: '48', acceptedAnswers: ['48cm'], validationMode: 'number',
@@ -306,6 +324,7 @@ window.QUESTION_BANK.push(
   // ===== Lv4（小学4年）：面積・小数・わり算 =====
   {
     id: 'math_g4_area_001', subject: 'math', gradeLevel: 4, unit: 'area',
+    diagram: {"kind":"rect","w":12,"h":8,"unit":"m","caption":"畑の たてと よこの 長さ"},
     difficulty: 'basic', answerType: 'choice',
     question: 'たて 8m、よこ 12mの {長方形|ちょうほうけい}の {畑|はたけ}が あります。この {畑|はたけ}の {面積|めんせき}は {何|なん}m²ですか。',
     choices: ['96m²', '20m²', '40m²', '960m²'],
@@ -335,6 +354,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g4_area_002', subject: 'math', gradeLevel: 4, unit: 'area',
+    diagram: {"kind":"nestedRect","w":20,"h":20,"innerW":8,"innerH":5,"unit":"m","caption":"土地の 中に 小屋があるよ"},
     difficulty: 'advanced', answerType: 'input',
     question: '1{辺|ぺん}が 20mの {正方形|せいほうけい}の {土地|とち}が あります。その {中|なか}に、たて 5m、よこ 8mの {長方形|ちょうほうけい}の {小屋|こや}を {建|た}てました。{小屋|こや}の ないところの {面積|めんせき}は {何|なん}m²ですか。（{数|かず}で {答|こた}えよう）',
     answer: '360', acceptedAnswers: ['360m2', '360m²'], validationMode: 'number',
@@ -345,6 +365,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g4_angle_001', subject: 'math', gradeLevel: 4, unit: 'angle',
+    diagram: {"kind":"clock","minute":0,"toMinute":15,"elapsed":15,"caption":"長い はりが 15分間に 回るところ"},
     difficulty: 'basic', answerType: 'choice',
     question: '{時計|とけい}の {長|なが}い {針|はり}が 15{分間|ふんかん}に {回|まわ}る {角度|かくど}は {何度|なんど}ですか。',
     choices: ['90°', '15°', '180°', '45°'],
@@ -365,6 +386,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g4_fraction_001', subject: 'math', gradeLevel: 4, unit: 'fraction',
+    diagram: {"kind":"fractionSum","n":3,"m":4,"d":5,"separate":true,"whole":"1L","caption":"それぞれの 1Lを 5つに分けた図"},
     difficulty: 'standard', answerType: 'input',
     question: 'ジュースが 3/5L {入|はい}った びんと、4/5L {入|はい}った びんが あります。{合|あ}わせて {何|なん}Lですか。（{分数|ぶんすう}で {答|こた}えよう。{仮分数|かぶんすう}でも {帯分数|たいぶんすう}でも よい。{帯分数|たいぶんすう}は「1と1/3」のように {書|か}こう）',
     answer: '7/5', acceptedAnswers: ['1と2/5', '1 2/5', '7/5L', '1と2/5L'], validationMode: 'exact',
@@ -374,6 +396,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g4_rounding_001', subject: 'math', gradeLevel: 4, unit: 'round',
+    diagram: {"kind":"numberline","start":4800,"end":4900,"step":50,"marks":[4827],"caption":"4827が どこにあるか みよう"},
     difficulty: 'standard', answerType: 'input',
     question: 'ある {日|ひ}の {雪|ゆき}まつりの {入場者|にゅうじょうしゃ}は 4827{人|にん}でした。{四捨五入|ししゃごにゅう}して {百|ひゃく}の{位|くらい}までの がい{数|すう}に すると {何人|なんにん}ですか。（{数|かず}で {答|こた}えよう）',
     answer: '4800', acceptedAnswers: ['4800人'], validationMode: 'number',
@@ -383,6 +406,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g4_area_003', subject: 'math', gradeLevel: 4, unit: 'area',
+    diagram: {"kind":"rect","w":30,"h":30,"unit":"cm","caption":"正方形の タイルの 長さ"},
     difficulty: 'standard', answerType: 'choice',
     question: '1{辺|ぺん}が 30cmの {正方形|せいほうけい}の タイルが あります。このタイル 1まいの {面積|めんせき}は {何|なん}cm²ですか。',
     choices: ['900cm²', '120cm²', '60cm²', '9000cm²'],
@@ -405,6 +429,7 @@ window.QUESTION_BANK.push(
   // ===== Lv5（小学5年）：平均・割合・速さ・体積 =====
   {
     id: 'math_g5_average_001', subject: 'math', gradeLevel: 5, unit: 'average',
+    diagram: {"kind":"bars","values":[12,15,9],"labels":["1日目","2日目","3日目"],"caption":"3日間に つった 魚の数"},
     difficulty: 'basic', answerType: 'choice',
     question: '{3日間|みっかかん}で つった {魚|さかな}の {数|かず}は、12{匹|ひき}、15{匹|ひき}、9{匹|ひき}でした。1{日|にち}あたりの {平均|へいきん}は {何匹|なんびき}ですか。',
     choices: ['12{匹|ひき}', '11{匹|ひき}', '13{匹|ひき}', '36{匹|ひき}'],
@@ -416,6 +441,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g5_percent_001', subject: 'math', gradeLevel: 5, unit: 'percent',
+    diagram: {"kind":"band","parts":[30,10],"labels":["住んでいる 30人",""],"totalLabel":"定員 40人","caption":"住んでいる 人数と 定員を くらべよう"},
     difficulty: 'standard', answerType: 'input',
     question: '{定員|ていいん}が 40{人|にん}の {住宅|じゅうたく}に、30{人|にん}が {住|す}んで います。{住|す}んでいる {人数|にんずう}は {定員|ていいん}の {何|なん}％ですか。（{数|かず}で {答|こた}えよう）',
     answer: '75', acceptedAnswers: ['75%'], validationMode: 'number',
@@ -425,6 +451,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g5_speed_001', subject: 'math', gradeLevel: 5, unit: 'speed',
+    diagram: {"kind":"doubleLine","labels":["時間","道のり"],"starts":["0","0"],"ends":["2時間","36km"],"caption":"時間と 道のりの 関係を みよう"},
     difficulty: 'standard', answerType: 'input',
     question: '{犬|いぬ}ぞりが 2{時間|じかん}で 36km {進|すす}みました。この {犬|いぬ}ぞりの {速|はや}さは {時速|じそく}{何|なん}kmですか。（{数|かず}で {答|こた}えよう）',
     answer: '18', acceptedAnswers: ['18km', '時速18km'], validationMode: 'number',
@@ -434,6 +461,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g5_volume_001', subject: 'math', gradeLevel: 5, unit: 'volume',
+    diagram: {"kind":"solid","w":30,"depth":50,"h":40,"water":20,"unit":"cm","caption":"水そうの 長さと 水の深さ"},
     difficulty: 'advanced', answerType: 'input',
     question: '{内側|うちがわ}の {長|なが}さが、たて 50cm、よこ 30cm、{深|ふか}さ 40cmの {直方体|ちょくほうたい}の {水|みず}そうに、{深|ふか}さ 20cmまで {水|みず}が {入|はい}っています。{水|みず}は {何|なん}Lですか。（{数|かず}で {答|こた}えよう）',
     answer: '30', acceptedAnswers: ['30L'], validationMode: 'number',
@@ -444,6 +472,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g5_area_001', subject: 'math', gradeLevel: 5, unit: 'area',
+    diagram: {"kind":"triangle","base":8,"height":5,"unit":"cm","caption":"底辺と 点線の 高さを 使おう"},
     difficulty: 'basic', answerType: 'choice',
     question: '{底辺|ていへん}が 8cm、{高|たか}さが 5cmの {三角形|さんかくけい}の {旗|はた}が あります。この {旗|はた}の {面積|めんせき}は {何|なん}cm²ですか。',
     choices: ['20cm²', '40cm²', '13cm²', '26cm²'],
@@ -455,6 +484,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g5_percent_002', subject: 'math', gradeLevel: 5, unit: 'percent',
+    diagram: {"kind":"band","parts":[20,80],"labels":["20％引き","残り"],"totalLabel":"定価 800円（100％）","caption":"定価の 20％ぶんを 引くよ"},
     difficulty: 'basic', answerType: 'input',
     question: '{定価|ていか} 800{円|えん}の てぶくろが、{定価|ていか}の 20％{引|び}きで {売|う}られて います。ねだんは {何円|なんえん}ですか。（{数|かず}で {答|こた}えよう）',
     answer: '640', acceptedAnswers: ['640円'], validationMode: 'number',
@@ -482,6 +512,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g5_fraction_001', subject: 'math', gradeLevel: 5, unit: 'fraction',
+    diagram: {"kind":"pie","numerators":[1,1],"denominators":[2,3],"labels":["兄：1/2","弟：1/3"],"caption":"同じ大きさの ピザで それぞれの分を みよう"},
     difficulty: 'standard', answerType: 'choice',
     question: 'ピザの 1/2 を {兄|あに}が、1/3 を {弟|おとうと}が {食|た}べました。2{人|り}で {合|あ}わせて ピザの どれだけを {食|た}べましたか。',
     choices: ['5/6', '2/5', '1/6', '2/6'],
@@ -504,6 +535,7 @@ window.QUESTION_BANK.push(
   // ===== Lv6（小学6年）：比・分数・円の面積・比例 =====
   {
     id: 'math_g6_ratio_001', subject: 'math', gradeLevel: 6, unit: 'ratio',
+    diagram: {"kind":"band","parts":[3,2],"labels":["木材：3","石材：2"],"known":["15個","？個"],"totalLabel":"木材と 石材の 比","caption":"同じ1つ分で 比を あらわした帯"},
     difficulty: 'basic', answerType: 'choice',
     question: '{木材|もくざい}と {石材|せきざい}を 3：2の {割合|わりあい}で {使|つか}います。{木材|もくざい}を 15{個|こ} {使|つか}うとき、{石材|せきざい}は {何個|なんこ} {使|つか}いますか。',
     choices: ['10{個|こ}', '6{個|こ}', '14{個|こ}', '22{個|こ}'],
@@ -515,6 +547,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g6_fraction_001', subject: 'math', gradeLevel: 6, unit: 'fraction',
+    diagram: {"kind":"fraction","n":2,"d":3,"whole":"1kg","caption":"1kgを 3つに分けた 2つ分"},
     difficulty: 'standard', answerType: 'input',
     question: '2/3kgの {肉|にく}を 4{人|にん}で {同|おな}じ {重|おも}さずつ {分|わ}けます。ひとり{分|ぶん}は {何|なん}kgですか。（{分数|ぶんすう}で {答|こた}えよう。{約分|やくぶん}して {答|こた}えること。{例|れい}：3/5）',
     answer: '1/6', acceptedAnswers: ['1/6kg'], validationMode: 'exact',
@@ -524,6 +557,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g6_circle_001', subject: 'math', gradeLevel: 6, unit: 'circle',
+    diagram: {"kind":"circle","radius":5,"unit":"m","caption":"中心から 円周までが 半径だよ"},
     difficulty: 'standard', answerType: 'input',
     question: '{半径|はんけい}5mの {円|えん}の {形|かたち}をした {広場|ひろば}の {雪|ゆき}を かきます。{広場|ひろば}の {面積|めんせき}は {何|なん}m²ですか。{円周率|えんしゅうりつ}は 3.14と します。（{数|かず}で {答|こた}えよう）',
     answer: '78.5', acceptedAnswers: ['78.5m2', '78.5m²'], validationMode: 'number',
@@ -543,6 +577,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g6_case_001', subject: 'math', gradeLevel: 6, unit: 'case',
+    diagram: {"kind":"objects","item":"person","groups":[3],"labels":[""],"names":["A","B","C"],"caption":"3人の ならび方を 考えよう"},
     difficulty: 'basic', answerType: 'choice',
     question: 'A・B・Cの 3{人|にん}が 1{列|れつ}に ならびます。ならび{方|かた}は {全部|ぜんぶ}で {何通|なんとお}り ありますか。',
     choices: ['6{通|とお}り', '3{通|とお}り', '9{通|とお}り', '4{通|とお}り'],
@@ -563,6 +598,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g6_volume_001', subject: 'math', gradeLevel: 6, unit: 'volume',
+    diagram: {"kind":"solid","shape":"triangularPrism","baseArea":12,"h":5,"unit":"cm","caption":"三角形の 底面積と 柱の高さ"},
     difficulty: 'standard', answerType: 'input',
     question: '{底面積|ていめんせき}が 12cm²、{高|たか}さが 5cmの {三角柱|さんかくちゅう}の {体積|たいせき}は {何|なん}cm³ですか。（{数|かず}で {答|こた}えよう）',
     answer: '60', acceptedAnswers: ['60cm3', '60cm³'], validationMode: 'number',
@@ -581,6 +617,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g6_scale_001', subject: 'math', gradeLevel: 6, unit: 'scale',
+    diagram: {"kind":"doubleLine","labels":["地図","実際"],"ends":["4cm","？km"],"note":"縮尺 1：25000","caption":"地図と 実際の 長さの 対応を みよう。図の線は 縮尺どおりでは ないよ"},
     difficulty: 'standard', answerType: 'choice',
     question: '{縮尺|しゅくしゃく} 1：25000の {地図|ちず}で、4cmの {長|なが}さは、{実際|じっさい}には {何|なん}kmですか。',
     choices: ['1km', '100m', '10km', '4km'],
@@ -592,6 +629,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g6_ratio_002', subject: 'math', gradeLevel: 6, unit: 'ratio',
+    diagram: {"kind":"band","parts":[5,3],"labels":["姉：5","妹：3"],"totalLabel":"全体 120cm","caption":"リボンを 同じ1つ分の 5：3に 分けるよ"},
     difficulty: 'advanced', answerType: 'input',
     question: '{長|なが}さ 120cmの リボンを、{姉|あね}と {妹|いもうと}で {長|なが}さの {比|ひ}が 5：3に なるように {分|わ}けます。{姉|あね}の リボンは {何|なん}cmですか。（{数|かず}で {答|こた}えよう）',
     answer: '75', acceptedAnswers: ['75cm'], validationMode: 'number',
@@ -603,6 +641,7 @@ window.QUESTION_BANK.push(
   // ===== Lv7（中学1年）：正負の数・一次方程式 =====
   {
     id: 'math_g7_integer_001', subject: 'math', gradeLevel: 7, unit: 'integer',
+    diagram: {"kind":"numberline","start":-10,"end":5,"step":5,"marks":[-8,3],"markLabels":["朝 −8℃","昼 3℃"],"caption":"朝と昼の気温の位置"},
     difficulty: 'basic', answerType: 'choice',
     question: '{朝|あさ}の {気温|きおん}は −8℃、{昼|ひる}の {気温|きおん}は 3℃でした。{昼|ひる}の {気温|きおん}は {朝|あさ}より {何|なん}℃{高|たか}いですか。',
     choices: ['11℃', '5℃', '−5℃', '−11℃'],
@@ -642,6 +681,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g7_integer_002', subject: 'math', gradeLevel: 7, unit: 'integer',
+    diagram: {"kind":"numberline","start":-5,"end":5,"step":5,"hideNegative":true,"marks":[5],"markLabels":["＋5m"],"directions":["西","東"],"caption":"0を基準に東を正とする"},
     difficulty: 'basic', answerType: 'choice',
     question: '{東|ひがし}へ 5m {進|すす}むことを ＋5m と {表|あらわ}すとき、−5m は どのような ことを {表|あらわ}すか。',
     choices: ['{西|にし}へ 5m {進|すす}む', '{東|ひがし}へ 5m {進|すす}む', '{北|きた}へ 5m {進|すす}む', 'その {場|ば}に 5{分|ふん} とまる'],
@@ -671,6 +711,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g7_proportion_001', subject: 'math', gradeLevel: 7, unit: 'proportion',
+    diagram: {"kind":"table","head":["x","y"],"rows":[[4,12],[7,"？"]],"caption":"比例するxとyの対応"},
     difficulty: 'standard', answerType: 'input',
     question: 'y は x に {比例|ひれい}し、x＝4 のとき y＝12 である。x＝7 のときの y の {値|あたい}を {求|もと}めなさい。',
     answer: '21', validationMode: 'number',
@@ -680,6 +721,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g7_data_001', subject: 'math', gradeLevel: 7, unit: 'data',
+    diagram: {"kind":"table","head":["人","得点"],"rows":[["A",3],["B",7],["C",5],["D",9],["E",6]],"caption":"元の順序の得点（点）"},
     difficulty: 'standard', answerType: 'choice',
     question: '5{人|にん}の {小|しょう}テストの {得点|とくてん}は 3、7、5、9、6（{点|てん}）だった。{中央値|ちゅうおうち}（メジアン）は どれか。',
     choices: ['6{点|てん}', '5{点|てん}', '7{点|てん}', '30{点|てん}'],
@@ -691,6 +733,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g7_sector_001', subject: 'math', gradeLevel: 7, unit: 'sector',
+    diagram: {"kind":"circle","radius":6,"angle":60,"unit":"cm","caption":"半径と中心角を示したおうぎ形"},
     difficulty: 'advanced', answerType: 'input',
     question: '{半径|はんけい} 6cm、{中心角|ちゅうしんかく} 60°の おうぎ{形|がた}の {弧|こ}の {長|なが}さは {何|なん}cmか。{円周率|えんしゅうりつ}は 3.14 と して、{数|かず}で {答|こた}えなさい。',
     answer: '6.28', acceptedAnswers: ['6.28cm'], validationMode: 'number',
@@ -702,6 +745,7 @@ window.QUESTION_BANK.push(
   // ===== Lv8（中学2年）：確率・連立方程式・一次関数 =====
   {
     id: 'math_g8_probability_001', subject: 'math', gradeLevel: 8, unit: 'probability',
+    diagram: {"kind":"table","head":["大＼小",1,2,3,4,5,6],"rows":[[1,"□","□","□","□","□","□"],[2,"□","□","□","□","□","□"],[3,"□","□","□","□","□","□"],[4,"□","□","□","□","□","□"],[5,"□","□","□","□","□","□"],[6,"□","□","□","□","□","□"]],"caption":"大・小の目の組合せ。和は書いていない"},
     difficulty: 'basic', answerType: 'choice',
     question: '2つの さいころを {同時|どうじ}に {投|な}げます。{出|で}た {目|め}の {和|わ}が 7に なる {確率|かくりつ}を {求|もと}めなさい。',
     choices: ['1/6', '1/12', '7/36', '1/3'],
@@ -741,6 +785,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g8_angle_001', subject: 'math', gradeLevel: 8, unit: 'angle',
+    diagram: {"kind":"polygon","shape":"pentagon","caption":"五角形の5つの頂点"},
     difficulty: 'basic', answerType: 'choice',
     question: '{五角形|ごかくけい}の {内角|ないかく}の {和|わ}は {何度|なんど}か。',
     choices: ['540°', '360°', '720°', '900°'],
@@ -770,6 +815,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g8_probability_002', subject: 'math', gradeLevel: 8, unit: 'probability',
+    diagram: {"kind":"cards","labels":["赤玉","白玉"],"values":[3,2],"balls":true,"caption":"ふくろの中の赤玉3個と白玉2個"},
     difficulty: 'standard', answerType: 'input',
     question: 'ふくろの {中|なか}に {赤玉|あかだま}が 3{個|こ}、{白玉|しろだま}が 2{個|こ} {入|はい}っている。この {中|なか}から 1{個|こ} {取|と}り{出|だ}すとき、{赤玉|あかだま}が {出|で}る {確率|かくりつ}を {求|もと}めなさい。（{分数|ぶんすう}で {答|こた}えなさい。{例|れい}：1/3）',
     answer: '3/5', validationMode: 'exact',
@@ -779,6 +825,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g8_linear_003', subject: 'math', gradeLevel: 8, unit: 'linear',
+    diagram: {"kind":"coordinate","a":-2,"b":6,"power":1,"xRange":[-1,5],"yRange":[-4,8],"formula":"y＝−2x＋6","caption":"直線の形。目盛りは省略している"},
     difficulty: 'standard', answerType: 'choice',
     question: '{直線|ちょくせん} y＝−2x＋6 が x{軸|じく}と {交|まじ}わる {点|てん}の x{座標|ざひょう}は どれか。',
     choices: ['3', '6', '−2', '−3'],
@@ -790,6 +837,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g8_angle_002', subject: 'math', gradeLevel: 8, unit: 'angle',
+    diagram: {"kind":"exterior","angle":30,"caption":"1つの頂点の外角。辺の延長は点線"},
     difficulty: 'advanced', answerType: 'input',
     question: '1つの {外角|がいかく}が 30°の {正多角形|せいたかくけい}は、{正何角形|せいなんかくけい}か。（{数|かず}で {答|こた}えなさい）',
     answer: '12', acceptedAnswers: ['12角形', '正12角形', '正十二角形'], validationMode: 'number',
@@ -801,6 +849,7 @@ window.QUESTION_BANK.push(
   // ===== Lv9（中学3年）：三平方の定理・二次方程式・相似・関数 y＝ax² =====
   {
     id: 'math_g9_pythagoras_001', subject: 'math', gradeLevel: 9, unit: 'pythagoras',
+    diagram: {"kind":"triangle","base":8,"height":6,"right":true,"unit":"m","caption":"直角をはさむ2辺と斜辺"},
     difficulty: 'basic', answerType: 'choice',
     question: '{直角|ちょっかく}を はさむ 2{辺|へん}の {長|なが}さが 6mと 8mの {直角三角形|ちょっかくさんかくけい}の {形|かたち}をした {土地|とち}が あります。{斜辺|しゃへん}の {長|なが}さは {何|なん}mですか。',
     choices: ['10m', '14m', '12m', '7m'],
@@ -812,6 +861,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g9_quadratic_001', subject: 'math', gradeLevel: 9, unit: 'quadratic',
+    diagram: {"kind":"nestedRect","w":"x＋3","h":"x＋3","innerW":"x","innerH":"x","growth":3,"area":64,"unit":"m","caption":"たてと よこを それぞれ3m広げた畑"},
     difficulty: 'standard', answerType: 'input',
     question: '{正方形|せいほうけい}の {畑|はたけ}が あります。たても よこも 3mずつ {広|ひろ}げたら、{面積|めんせき}が 64m²に なりました。もとの {畑|はたけ}の 1{辺|ぺん}は {何|なん}mですか。（{数|かず}で {答|こた}えよう）',
     answer: '5', acceptedAnswers: ['5m'], validationMode: 'number',
@@ -821,6 +871,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g9_similarity_001', subject: 'math', gradeLevel: 9, unit: 'similarity',
+    diagram: {"kind":"similarity","height":2,"shadows":[1.5,6],"unit":"m","caption":"同じ時刻の棒と塔の影（模式図）"},
     difficulty: 'standard', answerType: 'input',
     question: '{長|なが}さ 2mの {棒|ぼう}を {地面|じめん}に まっすぐ {立|た}てたら、{影|かげ}の {長|なが}さは 1.5mでした。{同|おな}じ {時刻|じこく}に、{見張|みは}り{塔|とう}の {影|かげ}の {長|なが}さは 6mでした。{見張|みは}り{塔|とう}の {高|たか}さは {何|なん}mですか。（{数|かず}で {答|こた}えよう）',
     answer: '8', acceptedAnswers: ['8m'], validationMode: 'number',
@@ -840,6 +891,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g9_sqrt_001', subject: 'math', gradeLevel: 9, unit: 'sqrt',
+    diagram: {"kind":"rect","w":"？","h":"？","area":50,"unit":"m","caption":"面積が分かっている正方形"},
     difficulty: 'basic', answerType: 'choice',
     question: '{面積|めんせき}が 50m²の {正方形|せいほうけい}の {土地|とち}が ある。この {土地|とち}の 1{辺|ぺん}の {長|なが}さは どれか。',
     choices: ['5√2 m', '25 m', '2√5 m', '10 m'],
@@ -860,6 +912,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g9_circle_001', subject: 'math', gradeLevel: 9, unit: 'circle',
+    diagram: {"kind":"inscribed","angle":35,"caption":"同じ弧に対する円周角と中心角"},
     difficulty: 'standard', answerType: 'input',
     question: '{円|えん}で、ある {弧|こ}に {対|たい}する {円周角|えんしゅうかく}が 35°のとき、{同|おな}じ {弧|こ}に {対|たい}する {中心角|ちゅうしんかく}は {何度|なんど}か。（{数|かず}で {答|こた}えなさい）',
     answer: '70', acceptedAnswers: ['70°', '70度'], validationMode: 'number',
@@ -878,6 +931,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g9_function_002', subject: 'math', gradeLevel: 9, unit: 'function',
+    diagram: {"kind":"coordinate","a":2,"b":0,"power":2,"xRange":[-3.5,3.5],"yRange":[-2,26],"marks":[1,3],"formula":"y＝2x²","caption":"x＝1とx＝3の点。変化の割合は示していない"},
     difficulty: 'standard', answerType: 'choice',
     question: '{関数|かんすう} y＝2x² で、x の {値|あたい}が 1 から 3 まで {増加|ぞうか}するときの {変化|へんか}の {割合|わりあい}は どれか。',
     choices: ['8', '4', '16', '2'],
@@ -889,6 +943,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g9_pythagoras_002', subject: 'math', gradeLevel: 9, unit: 'pythagoras',
+    diagram: {"kind":"polygon","shape":"diagonals","w":12,"h":5,"single":true,"unit":"cm","caption":"長方形のたて・よこと対角線"},
     difficulty: 'advanced', answerType: 'input',
     question: 'たて 5cm、よこ 12cmの {長方形|ちょうほうけい}の {対角線|たいかくせん}の {長|なが}さは {何|なん}cmか。（{数|かず}で {答|こた}えなさい）',
     answer: '13', acceptedAnswers: ['13cm'], validationMode: 'number',
