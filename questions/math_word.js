@@ -617,7 +617,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g6_scale_001', subject: 'math', gradeLevel: 6, unit: 'scale',
-    diagram: {"kind":"doubleLine","labels":["地図","実際"],"ends":["4cm","？km"],"note":"縮尺 1：25000（同じ長さを表す）","caption":"地図と 実際の 長さの 対応を みよう。図の線は 縮尺どおりでは ないよ"},
+    diagram: {"kind":"doubleLine","labels":["地図","実際"],"ends":["4cm","？km"],"note":"縮尺 1：25000","caption":"地図と 実際の 長さの 対応を みよう。図の線は 縮尺どおりでは ないよ"},
     difficulty: 'standard', answerType: 'choice',
     question: '{縮尺|しゅくしゃく} 1：25000の {地図|ちず}で、4cmの {長|なが}さは、{実際|じっさい}には {何|なん}kmですか。',
     choices: ['1km', '100m', '10km', '4km'],

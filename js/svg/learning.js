@@ -126,7 +126,7 @@
     var p=point(cx,cy,65,d.angle);add(path('M'+(cx+65)+','+cy+' A65,65 0 0 0 '+p.join(','),'none',orange),text(cx+130,cy-16,d.angle+'°',28));
    }else if(d.kind==='inscribed'){
     h=310;var cx=260,cy=153,r=123,a=point(cx,cy,r,270-d.angle),b=point(cx,cy,r,270+d.angle),p=point(cx,cy,r,90);
-    add(circle(cx,cy,r,'#fff'),line(p[0],p[1],a[0],a[1]),line(p[0],p[1],b[0],b[1]),line(cx,cy,a[0],a[1],orange),line(cx,cy,b[0],b[1],orange),path('M'+a.join(',')+' A'+r+','+r+' 0 0 0 '+b.join(','),'none',orange),clearText(cx,p[1]+80,d.angle+'°',26),text(cx,cy+47,'？',28));
+    add(circle(cx,cy,r,'#fff'),line(p[0],p[1],a[0],a[1]),line(p[0],p[1],b[0],b[1]),line(cx,cy,a[0],a[1],orange),line(cx,cy,b[0],b[1],orange),path('M'+a.join(',')+' A'+r+','+r+' 0 0 0 '+b.join(','),'none',orange),text(cx,p[1]+110,d.angle+'°',24),text(cx,cy+47,'？',28));
    }else if(d.kind==='similarity'){
     h=280;var sx=[100,290],heights=[68,170],widths=[51,128];d.shadows.forEach(function(v,i){var x=sx[i],y=220;add(line(x,y,x,y-heights[i]),line(x,y,x+widths[i],y,orange),line(x,y-heights[i],x+widths[i],y,ink,'6 6'),text(x-13,y-heights[i]/2,i===0?d.height+d.unit:'？',27,'end'),text(x+widths[i]/2,255,v+d.unit,28));});
    }else if(d.kind==='cards'){
@@ -187,7 +187,8 @@
     if(d.shape==='diamond')pts.forEach(function(p,i){var p2=pts[(i+1)%4],mx=(p[0]+p2[0])/2,my=(p[1]+p2[1])/2;add(line(mx-4,my-7,mx+4,my+7,orange));});
    }else if(d.kind==='solid'){
     if(d.shape==='triangularPrism'){
-     h=300;add(path('M285,140 L395,140 L335,50 Z',pale),path('M145,205 L285,140 M195,115 L335,50','none',blue),path('M145,205 L255,205 L195,115 Z',pale),line(255,205,395,140,orange),text(353,202,d.h+d.unit,28),text(200,260,'底面積 '+d.baseArea+d.unit+'²',26));
+     // 奥の底面は手前の底面を(170,-65)だけ平行移動。隠れる3辺は点線。
+     h=320;add(path('M180,100 L350,35 L420,155 L250,220 Z',pale),path('M110,220 L250,220 L180,100 Z',pale),path('M110,220 L280,155 L350,35 M280,155 L420,155','none',blue,'6 6'),line(250,220,420,155,orange),text(365,212,d.h+d.unit,28),text(180,278,'底面積 '+d.baseArea+d.unit+'²',26));
     }else{
     var a=d.cube?130:210,x=(520-a-65)/2,y=93,z=108;
     if(d.water!==undefined){var waterH=z*d.water/d.h;add(path('M'+x+','+(y+z-waterH)+' l65,-50 h'+a+' l-65,50 Z',pale),box(x,y+z-waterH,a,waterH));}
