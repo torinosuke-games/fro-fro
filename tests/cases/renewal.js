@@ -195,4 +195,13 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   const want={area:{basic:9,standard:15,advanced:12},volume:{basic:9,standard:15,advanced:12},angle:{basic:9,standard:15,advanced:12},congruent:{basic:6,standard:9,advanced:7},proportion:{basic:6,standard:9,advanced:7},graph:{basic:6,standard:9,advanced:7},circle:{basic:6,standard:9,advanced:7},prism:{basic:6,standard:9,advanced:7},decmul:{basic:9,standard:15,advanced:12},decdiv:{basic:9,standard:15,advanced:12},fraction:{basic:9,standard:15,advanced:12},intdec:{basic:6,standard:9,advanced:7},multiple:{basic:6,standard:9,advanced:7},fracrel:{basic:6,standard:9,advanced:7},average:{basic:6,standard:9,advanced:7},unit:{basic:6,standard:9,advanced:7},speed:{basic:6,standard:9,advanced:7},percent:{basic:6,standard:9,advanced:7}};
   for(const u of Object.keys(want)){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u&&q.gradeLevel===5&&q.subject==='math').forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});for(const [k,n] of Object.entries(want[u]))assert.ok(h[k]>=n,u+' '+k+' '+h[k]);}
  });
+ test('手作りの問題（判断249）：小4理科の10単元は、すべて基礎9・標準15・発展12問（原作の問題を合わせて）、手作りはすべて reviewed:false',()=>{
+  const hand=ctx.QUESTION_BANK.filter(q=>q.collection==='hand_sci4');
+  assert.ok(hand.length>=330);
+  assert.ok(hand.every(q=>q.reviewed===false&&q.gradeLevel===4&&q.subject==='science'),'手作りは reviewed:false');
+  assert.ok(hand.every(q=>q.choices.length===4&&new Set(q.choices).size===4&&q.choices.includes(q.answer)),'選択肢');
+  for(const u of['season','weather','rain','water','air','heat','electric','body','moon','star']){const h={};ctx.QUESTION_BANK.filter(q=>q.unit===u&&q.gradeLevel===4&&q.subject==='science').forEach(q=>{h[q.difficulty]=(h[q.difficulty]||0)+1;});for(const [k,n] of Object.entries({basic:9,standard:15,advanced:12}))assert.ok(h[k]>=n,u+' '+k+' '+h[k]);}
+  const units=new Set(FF.units.list('science',4).map(x=>x.id));assert.strictEqual(units.size,10);
+  assert.ok(ctx.QUESTION_BANK.filter(q=>q.subject==='science'&&q.gradeLevel===4).every(q=>units.has(q.unit)),'小4理科の問題の単元は、登録した単元');
+ });
 };
