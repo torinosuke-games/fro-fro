@@ -1,5 +1,37 @@
 # 算数文章題55問への図の追加（判断223）
 
+
+
+## 第2弾：手作り小4算数19問（2026-10-04）
+
+`DIAGRAM_REQUESTS_2.md` の19問すべてに図を追加した。既存 `lines` を2問で再利用し、新しい共通図は4種類。
+必須項目と任意項目は `QUESTIONS_GUIDE.md` の「文章題の共通図」に記載した。
+
+| 種類 | 使った問題のID |
+| --- | --- |
+| `gridPoints` | `math_g4_hand_position_008`、`math_g4_hand_position_010`、`math_g4_hand_position_011`、`math_g4_hand_position_013`、`math_g4_hand_position_014`、`math_g4_hand_position_015`、`math_g4_hand_position_018` |
+| `solid3d` | `math_g4_hand_position_016`、`math_g4_hand_solid_014`、`math_g4_hand_solid_026`、`math_g4_hand_solid_027` |
+| `boxNet` | `math_g4_hand_solid_011`、`math_g4_hand_solid_021` |
+| `quadFigure` | `math_g4_hand_quad_004`、`math_g4_hand_quad_011`、`math_g4_hand_quad_023`、`math_g4_hand_quad_028` |
+| `lines` | `math_g4_hand_quad_015`、`math_g4_hand_quad_016` |
+
+問題文・ID・答え・選択肢・ヒント・解説・難易度・reviewed・inputFormは変更していない。
+全468問のdiagram以外と、対象外449問全体は、変更前のハッシュと比較するテストで保護した。
+saveVersion・セーブ項目・単元登録も変更していない。色は昼テーマの既存blue・ink・pale・orangeに合わせ、SVG要素で組み立てる。
+
+### 依頼書との差
+
+`position_008`・`position_014`・`position_015` は、未知のＣ／Ｄを正しい座標に「？」として置くと方眼から答えを読み取れるため、既知の点と辺だけを描き、未知の点名は図の外に「Ｃ：？」等と表示した。「答えを教えない」という原則を優先した変更で、問題文はそのまま。省略した問題はない。
+
+### 検証
+
+- `node tests/run.js`：520件成功、0件失敗。
+- `node tests/simulate.js`：すべて目標内。
+- `tests/cases/hand-diagrams.js`：点・線の範囲と整数、寸法の正値、形と任意項目の組合せ、答えを描かないデータ、対象外の不変性を検証。不正データの負例も検証。
+- `tests/ui-hand-diagrams.cjs`：19問×360・390・768・1024px＝76表示。昼テーマ、文字の見切れ・重なり・横はみ出し・JavaScriptエラーなし。全76画面のスクリーンショットと390・1024pxの図38枚を保存。
+- 既存の `ui-math-word-diagrams.cjs`（55問×4幅）と `ui-renewal.cjs` も成功。
+
+実装は作業ブランチでPRにし、mainへはマージせずClaude・ユーザーの確認を待つ。
 2026-10-04。mainのPR #11取り込み済みコミット `e82fa03b6da8f4b294359c853e2f58ff09f0581c` を土台に、`codex/math-word-diagrams-55` で制作。
 
 ## 実装と変更ファイル
@@ -72,4 +104,3 @@
 - 図を付けなかった指定問題：なし。効果が薄いとして省略したB問題：なし。依頼表以外の35問への追加：なし。
 
 作業ブランチをGitHubに反映し、main向けPRで確認を待つ。mainへのマージ・Pagesの更新は今回行わない。
-

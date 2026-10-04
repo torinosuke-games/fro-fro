@@ -35,7 +35,41 @@
     else if(item==='bread')add(S('rect',{x:x-14,y:y-12,width:28,height:24,rx:9,fill:pale,stroke:blue,'stroke-width':2}),line(x-4,y-6,x-7,y+4),line(x+5,y-6,x+2,y+4));
     else add(circle(x,y,9,orange),path('M'+(x-9)+','+y+' l-7,-7 v14 Z M'+(x+9)+','+y+' l7,-7 v14 Z',pale));
    }
-   if(d.kind==='objects'&&d.compact){
+   if(d.kind==='gridPoints'){
+    h=355+(d.notes?d.notes.length*42:0)+(d.unknown?35:0);
+    function gx(v){return 100+v*330/d.maxX;}function gy(v){return 300-v*240/d.maxY;}
+    for(var i=0;i<=d.maxX;i++)add(line(gx(i),60,gx(i),300,'#c0d7e4'),text(gx(i),330,i,22));
+    for(var i=0;i<=d.maxY;i++)add(line(100,gy(i),430,gy(i),'#c0d7e4'),text(74,gy(i)+7,i,22));
+    d.segments.forEach(function(s){var a=d.points[s[0]],b=d.points[s[1]];add(line(gx(a.x),gy(a.y),gx(b.x),gy(b.y)));});
+    d.points.forEach(function(p){var end=p.x>=d.maxX-1;add(circle(gx(p.x),gy(p.y),5,orange),clearText(gx(p.x)+(end?-12:12),gy(p.y)-12,p.name,24,end?'end':'start'));});
+    add(text(48,55,'上',23),text(465,308,'右',23));
+    (d.notes||[]).forEach(function(t,i){add(text(260,366+i*42,t,23));});
+    if(d.unknown)add(text(260,377+(d.notes?d.notes.length*42:0),d.unknown+'：？',26));
+   }else if(d.kind==='solid3d'){
+    h=d.notes?395:320;
+    var dims=d.dimensions||(d.shape==='cube'?[1,1,1]:[4,3,3]),sc=d.block?25:Math.min(180/dims[0],100/dims[1],130/dims[2]);
+    var bx=d.block?80:110,by=245,bw=dims[0]*sc,bz=dims[2]*sc,dx=dims[1]*sc*.6,dy=-dims[1]*sc*.36;
+    var vp=[[bx,by],[bx+bw,by],[bx+bw+dx,by+dy],[bx+dx,by+dy],[bx,by-bz],[bx+bw,by-bz],[bx+bw+dx,by-bz+dy],[bx+dx,by-bz+dy]],names='ABCDEFGH';
+    if(d.face){var face=path('M'+d.face.split('').map(function(n){return vp[names.indexOf(n)].join(',');}).join(' L')+' Z',orange);face.setAttribute('fill-opacity','0.24');add(face);}
+    [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].forEach(function(e){var a=vp[e[0]],b=vp[e[1]],hidden=e[0]===3||e[1]===3;add(line(a[0],a[1],b[0],b[1],blue,hidden?'6 6':null));});
+    d.vertices.forEach(function(v){var p=vp[names.indexOf(v.vertex)],end=v.vertex==='C'||v.vertex==='G';add(circle(p[0],p[1],5,orange),clearText(p[0]+(end?13:-13),p[1]+(v.vertex==='A'||v.vertex==='B'?27:-12),v.label,24,end?'start':'end'));});
+    if(d.showLengths)add(text(bx+bw/2,283,'横 '+dims[0]+d.unit,23),text(bx+bw+dx+10,by+dy/2+18,'たて '+dims[1]+d.unit,23),text(42,by-bz/2-15,'高さ',23),text(42,by-bz/2+22,dims[2]+d.unit,23));
+    if(d.block){var x=380,y=235,a=d.block*sc;add(path('M'+x+','+y+' h'+a+' l'+(a*.6)+','+(-a*.36)+' v'+(-a)+' h'+(-a)+' l'+(-a*.6)+','+(a*.36)+' Z',pale),path('M'+x+','+(y-a)+' h'+a+' v'+a+' M'+(x+a)+','+(y-a)+' l'+(a*.6)+','+(-a*.36)),text(x+a/2,283,d.block+d.unit,23),text(x+a/2,130,'積み木',23));}
+    (d.notes||[]).forEach(function(t,i){add(text(260,310+i*44,t,25));});
+   }else if(d.kind==='boxNet'){
+    h=340;var w=d.dimensions[0],dep=d.dimensions[1],ht=d.dimensions[2],sc=Math.min(400/(2*w+2*dep),230/(2*dep+ht)),x=(520-(2*w+2*dep)*sc)/2,y=45+dep*sc;
+    var widths=[dep,w,dep,w],xx=x;
+    widths.forEach(function(v){add(S('rect',{x:xx,y:y,width:v*sc,height:ht*sc,fill:pale,stroke:blue,'stroke-width':2}));xx+=v*sc;});
+    add(S('rect',{x:x+dep*sc,y:45,width:w*sc,height:dep*sc,fill:pale,stroke:blue,'stroke-width':2}),S('rect',{x:x+dep*sc,y:y+ht*sc,width:w*sc,height:dep*sc,fill:pale,stroke:blue,'stroke-width':2}));
+    if(d.showLengths)add(text(x+dep*sc+w*sc/2,32,w+d.unit,24),text(x+dep*sc-12,45+dep*sc/2+8,dep+d.unit,24,'end'),text(xx+12,y+ht*sc/2+8,ht+d.unit,24,'start'));
+   }else if(d.kind==='quadFigure'){
+    h=d.diagonal?370:310;var shear=d.shape==='rectangle'?0:d.angle?155/Math.tan(d.angle*Math.PI/180):65,qa=[[100,210],[340,210],[340+shear,55],[100+shear,55]];
+    add(path('M'+qa.map(function(p){return p.join(',');}).join(' L')+' Z',pale));
+    qa.forEach(function(p,i){add(text(p[0],p[1]+(i<2?30:-14),'ＡＢＣＤ'[i],25));});
+    if(d.angle){var a=qa[0],c=qa[2],p=point(a[0],a[1],38,d.angle);add(path('M'+(a[0]+38)+','+a[1]+' A38,38 0 0 0 '+p.join(','),'none',orange),text(a[0]+57,a[1]-23,d.angle+'°',26),text(c[0]-43,c[1]+38,'？',28));}
+    if(d.diagonal){var a=qa[0],b=qa[1],c=qa[2],e=qa[3],ox=(a[0]+c[0])/2,oy=(a[1]+c[1])/2;add(line(a[0],a[1],c[0],c[1]),line(b[0],b[1],e[0],e[1]),clearText(ox+19,oy+4,'Ｏ',24),text(260,288,'ＡＣ＝'+d.diagonal+d.unit,26),text(260,330,d.unknown+'：？',26));}
+    if(d.sides)add(text(220,280,'ＡＢ＝'+d.sides[0]+d.unit,25),text(451,154,'ＢＣ＝'+d.sides[1]+d.unit,23));
+   }else if(d.kind==='objects'&&d.compact){
     h=35+d.groups.length*51;
     d.groups.forEach(function(count,i){var y=35+i*51;add(text(145,y+9,d.labels[i],28,'end'));for(var j=0;j<count;j++)icon(225+j*65,y,d.item);});
    }else if(d.kind==='objects'){
@@ -178,7 +212,10 @@
     }
     add(S('circle',{cx:cx,cy:cy,r:4,fill:ink}));
    }else if(d.kind==='lines'){
-    if(d.mode==='parallel') add(line(105,88,415,88),line(105,161,415,161),text(84,94,'a'),text(84,167,'b'));
+    if(d.mode==='threePerpendicular'||d.mode==='threeParallel'){
+     var parallel=d.mode==='threeParallel';add(line(105,85,415,85),line(105,185,415,185),line(260,45,260,230),text(75,93,'a',26),text(75,193,parallel?'b':'c',26),text(260,32,parallel?'c':'b',26),path('M260,67 h18 v18','none',orange));
+     if(parallel)add(text(158,91,'›',26),text(158,191,'›',26),text(296,174,'？',28));else add(path('M260,167 h18 v18','none',orange));
+    }else if(d.mode==='parallel') add(line(105,88,415,88),line(105,161,415,161),text(84,94,'a'),text(84,167,'b'));
     else add(line(95,150,425,150),line(260,30,260,220),path('M260,129 h21 v21','none',orange));
    }else if(d.kind==='polygon'){
     var pts=d.shape==='pentagon'?[[260,40],[390,105],[345,200],[175,200],[130,105]]:d.shape==='trapezoid'?[[170,50],[345,50],[410,175],[110,175]]:d.shape==='diamond'?[[260,35],[410,120],[260,205],[110,120]]:d.shape==='parallelogram'?[[190,55],[400,55],[335,180],[125,180]]:d.w?[[100,65],[412,65],[412,65+312*d.h/d.w],[100,65+312*d.h/d.w]]:[[135,55],[385,55],[385,180],[135,180]];
@@ -227,9 +264,14 @@
     (d.marks||[]).forEach(function(v,i){var xx=55+(v-d.start)/(d.end-d.start)*410;add(circle(xx,100,5,orange),text(xx,70,d.markLabels?d.markLabels[i]:v,24));});
     if(d.directions)add(text(55,183,d.directions[0],25),text(465,183,d.directions[1],25));
    }
+   // 新しい図も昼のテーマの共通色を使う。既存の図の配色は変えない。
+   if(['gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0||/^three/.test(d.mode||'')){
+    var paints={};paints[blue]='var(--rn-blue, '+blue+')';paints[ink]='var(--rn-navy, '+ink+')';paints[pale]='var(--rn-pale, '+pale+')';paints[orange]='var(--rn-warm, '+orange+')';
+    nodes.forEach(function(n){['fill','stroke'].forEach(function(a){var v=n.getAttribute(a);if(paints[v])n.setAttribute(a,paints[v]);});});
+   }
    var svg=S('svg',{viewBox:'0 0 520 '+h,role:'img','aria-label':d.caption||'問題を考えるための図'},[S('title',{},d.caption||'学習の図')].concat(nodes));
    // 個数が多い図は高さを制限すると絵と文字が小さくなるため、自然な縦横比で表示。
-   if(['objects','tape','measure'].indexOf(d.kind)>=0)svg.style.maxHeight='none';
+   if(['objects','tape','measure','gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0)svg.style.maxHeight='none';
    fig.appendChild(svg);
   }
   if(d.caption)fig.appendChild(U.el('figcaption',{text:d.caption}));
