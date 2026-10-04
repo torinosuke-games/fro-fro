@@ -92,7 +92,7 @@ const out=process.env.FF_QA_OUTPUT||path.resolve(__dirname,'../../..','work','br
  for(const width of [1024,390]){
   await page.setViewportSize({width,height:900});
   const result=await page.evaluate(async()=>{
-   const list=QUESTION_BANK.filter(q=>q.collection==='frontier100'),issues=[];
+   const list=QUESTION_BANK.filter(q=>q.collection==='frontier100'&&q.diagram),issues=[];
    let gallery=document.createElement('div');gallery.id='qa-gallery';gallery.style.cssText='position:relative;background:#f1f7fb;padding:15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:15px';
    list.forEach(q=>{let card=FF.ui.el('section',{style:{background:'#fff',padding:'10px',borderRadius:'12px'}},[FF.ui.el('h3',{style:{fontSize:'13px'},text:q.number+' '+q.unit}),FF.lessonFigure.render(q.diagram)]);gallery.appendChild(card);});
    document.getElementById('screen').appendChild(gallery);

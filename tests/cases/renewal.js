@@ -7,7 +7,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   assert.deepStrictEqual(plain(qs.map(q=>q.number)),Array.from({length:100},(_,i)=>i+1));
   const four=['position','change','table','ratio','abacus'];
   for(const u of FF.curriculum.units('math',4))assert.strictEqual(qs.filter(q=>q.unit===u.id).length,u.id==='area'?8:four.includes(u.id)?4:6,u.id);
-  for(const q of qs){assert.ok(q.diagram&&q.diagram.kind&&q.diagram.caption,q.id);assert.strictEqual(q.reviewed,false);assert.strictEqual(q.choices.length,4);assert.ok(q.hints.length>=2);}
+  for(const q of qs){if(q.diagram)assert.ok(q.diagram.kind&&q.diagram.caption,q.id);assert.strictEqual(q.reviewed,false);assert.strictEqual(q.choices.length,4);assert.ok(q.hints.length>=2);}
  });
  test('リニューアル：学年設定後は、診断を受けず自分の学年を学べる',()=>{
   let s=FF.state.setPlayerGrade(FF.state.createDefaultState(now),4);
@@ -32,7 +32,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  });
  test('リニューアル：書き問題に変換した数値を正しく採点する',()=>{
   const inputs=qs.filter(q=>q.inputForm);assert.ok(inputs.length>=60);
-  for(const q of inputs){const v=FF.learning.inputVariant(q);assert.deepStrictEqual(plain(FF.learning.validateQuestion(v)),[]);assert.ok(FF.answer.judgeInput(v,v.answer).correct);assert.ok(v.diagram);}
+  for(const q of inputs){const v=FF.learning.inputVariant(q);assert.deepStrictEqual(plain(FF.learning.validateQuestion(v)),[]);assert.ok(FF.answer.judgeInput(v,v.answer).correct);assert.strictEqual(!!v.diagram,!!q.diagram);}
  });
  test('リニューアル：誤答・回答済み再送で資源や熱量を増やさない',()=>{
   const s=FF.state.setPlayerGrade(FF.state.createDefaultState(now),4),q=qs[0];
@@ -85,7 +85,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   assert.deepStrictEqual(plain(loaded.state.learning.questionResults),{old:false,other:true});
  });
  test('リニューアル：図のデータの範囲を検証する',()=>{
-  for(const q of qs){const d=q.diagram;
+  for(const q of qs){const d=q.diagram;if(!d)continue;
    if(d.kind==='fraction')assert.ok(d.d>=2&&d.n>0&&Number.isInteger(d.n)&&Number.isInteger(d.d));
    if(d.kind==='graph')assert.strictEqual(d.values.length,d.labels.length);
    if(d.kind==='abacus')assert.ok(d.digits.every(n=>Number.isInteger(n)&&n>=0&&n<=9));
@@ -132,5 +132,13 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   }
   assert.strictEqual(nums.size,110);
   assert.strictEqual(FF.curriculum.numberOf(bank,qs[0]),1);
+ });
+ test('図（判断225）：図解100問のうち、問題文の数字を並べ直すだけの図・合わない絵の図を外した（70問に図、30問は図なし）',()=>{
+  const noFig=[1,2,3,4,6,7,8,9,12,15,17,19,20,21,23,24,25,27,29,32,33,34,36,60,73,74,75,76,78,94];
+  assert.deepStrictEqual(plain(qs.filter(q=>!q.diagram).map(q=>q.number)),noFig);
+  assert.strictEqual(qs.filter(q=>q.diagram).length,70);
+  assert.ok(!qs.some(q=>q.diagram&&q.diagram.kind==='cards'),'cards の図は使わない');
+  assert.ok(!qs.some(q=>q.diagram&&q.diagram.noArt),'絵なしの札は使わない');
+  for(const q of qs.filter(q=>!q.diagram)){assert.ok(q.question&&q.hints.length>=2&&q.choices.length===4,q.id);}
  });
 };
