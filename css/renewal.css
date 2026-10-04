@@ -253,3 +253,47 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 @media(max-width:1180px){.explore-workbench{grid-template-columns:minmax(0,1fr) 225px}}
 @media(max-width:760px){.explore-workbench{display:flex;flex-direction:column}}
 .battle-art img[src$="enemy-frost-wolf-pack.png"],.battle-art img[src$="enemy-frozen-machine.png"]{object-position:center 10%}
+
+/* スマホ（幅 560px 以下）：スクロールを減らすためにコンパクトにする（判断222）。広い画面の見た目は変えない */
+@media(max-width:560px){
+ /* ホーム：見出し・説明の余計な折り返し（「つ。」だけが次の行になる等）をなくし、上の余白を詰める */
+ /* 上部の資材欄：幅が足りなくても右や左に切れないよう、4列を等分して数字を右寄せにする */
+ .resource-strip{grid-template-columns:repeat(4,minmax(0,1fr));padding-inline:4px;gap:4px}
+ .resource-item{min-width:0;padding-inline:2px;gap:3px;justify-content:flex-start}
+ .resource-item .ico{width:22px;height:22px;flex:none}
+ .resource-item .resource-value{flex:1 1 0;width:auto;min-width:0;text-align:right;font-size:.9375rem;overflow:visible}
+ .heat-item,.ticket-item{min-width:0}
+ main#screen{padding-top:12px}
+ .home-mission{margin-bottom:10px;padding:0 0 2px;gap:0}
+ .home-mission h1{font-size:1.25rem;line-height:1.45;margin:0 0 4px;text-wrap:balance;word-break:keep-all;overflow-wrap:anywhere}
+ .home-mission p{font-size:.8125rem;line-height:1.6;margin:0;text-wrap:balance}
+ .home-mission .home-start{min-height:46px;padding:9px 16px;margin-top:10px;font-size:1.0625rem}
+ /* 下のナビ：「遊びチケット」などが2行に折り返さないようにする */
+ .nav-label{white-space:nowrap;font-size:.75rem}
+ body[data-screen="base"] .head-with-avatar .greeting{text-wrap:pretty}
+
+ /* 学ぶ（教科の選択）：見出しを1〜2行にして、カードを低くする */
+ .subject-top{min-height:0;margin-bottom:10px}
+ .subject-top .rn-heading{padding-right:0}
+ .subject-top .rn-heading>.eyebrow{display:none}
+ .subject-top .rn-heading h1{margin:0 0 2px;font-size:1.25rem;line-height:1.4}
+ .subject-top .rn-heading p{display:none}
+ .subject-heading-avatar{display:none}
+ .subject-top-actions{position:static;justify-content:flex-end;gap:6px;margin:0 0 6px}
+ .subject-top-actions>.rn-button{height:36px;min-height:36px;padding:3px 10px}
+ .subject-top-actions .study-resource-button{padding:3px 8px}
+ .subject-top-actions .study-resource-button .ico{width:22px;height:22px}
+ .subject-grid{gap:8px}
+ .subject-grid .subject-card{grid-template-columns:60px minmax(0,1fr);align-items:center;gap:12px;padding:10px 36px 10px 12px;min-height:0}
+ .subject-grid .subject-card .subject-art{width:60px;height:60px;align-self:center;border-radius:12px}
+ .subject-grid .subject-card .subject-copy{min-height:0;padding:0!important;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:3px 8px}
+ .subject-grid .subject-card .subject-copy>.eyebrow{display:none}
+ .subject-grid .subject-card .subject-copy h2{flex:0 0 100%;margin:0;font-size:1.25rem;line-height:1.3}
+ .subject-grid .subject-card .subject-copy p{display:none}
+ .subject-grid .subject-card .subject-progress{position:static;margin:0;font-size:.75rem;line-height:1.4;gap:3px}
+ .subject-grid .subject-card .new-badge{margin:0;padding:2px 6px;font-size:.6875rem;line-height:1.4}
+ .subject-grid .subject-card .subject-arrow{top:50%;bottom:auto;right:10px;transform:translateY(-50%)}
+ .study-tools{margin-top:12px}
+}
+/* タブレット幅：資材欄が右にはみ出さないよう、余白を少し詰める */
+@media(min-width:561px) and (max-width:1180px){.resource-strip{padding-inline:8px}.resource-item,.heat-item,.ticket-item{padding-inline:6px;gap:6px}}
