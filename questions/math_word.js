@@ -50,7 +50,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g1_order_001', subject: 'math', gradeLevel: 1, unit: 'order',
-    diagram: {"kind":"objects","item":"person","groups":[7],"labels":["まえ →"],"mark":3,"caption":"しるしの ひとが ゆきさんだよ"},
+    diagram: {"kind":"objects","item":"person","groups":[7],"labels":["← まえ"],"mark":3,"caption":"しるしの ひとが ゆきさんだよ"},
     difficulty: 'basic', answerType: 'choice',
     question: 'こどもが 1れつに 7にん ならんで います。ゆきさんは まえから 3ばんめです。ゆきさんは うしろから なんばんめですか。',
     choices: ['5ばんめ', '4ばんめ', '3ばんめ', '6ばんめ'],
@@ -154,7 +154,7 @@ window.QUESTION_BANK.push(
   // --- v0.3 で追加（B案：各学年10問） ---
   {
     id: 'math_g2_multiply_003', subject: 'math', gradeLevel: 2, unit: 'multiply',
-    diagram: {"kind":"objects","item":"chair","groups":[3,3,3,3,3,3,3,3],"labels":["1れつ","2れつ","3れつ","4れつ","5れつ","6れつ","7れつ","8れつ"],"columns":1,"caption":"1れつに 3きゃくずつ ならんで いるよ"},
+    diagram: {"kind":"objects","item":"chair","groups":[3,3,3,3,3,3,3,3],"labels":["1れつ","2れつ","3れつ","4れつ","5れつ","6れつ","7れつ","8れつ"],"columns":1,"compact":true,"caption":"1れつに 3きゃくずつ ならんで いるよ"},
     difficulty: 'basic', answerType: 'choice',
     question: 'いすが 1れつに 3きゃくずつ、8れつ ならんで います。いすは ぜんぶで なんきゃくですか。',
     choices: ['24きゃく', '11きゃく', '21きゃく', '27きゃく'],
@@ -207,7 +207,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g2_length_002', subject: 'math', gradeLevel: 2, unit: 'length',
-    diagram: {"kind":"tape","values":[30,30,30,30,12],"labels":["30cm","30cm","30cm","30cm","12cm"],"stacked":true,"caption":"ものさし 4つぶんと 12cmだよ"},
+    diagram: {"kind":"tape","values":[30,30,30,30,12],"labels":["30cm","30cm","30cm","30cm","12cm"],"wrap":3,"caption":"ものさしを つなげた ながさだよ。したの だんに つづくよ"},
     difficulty: 'advanced', answerType: 'input',
     question: '30cmの ものさしで つくえの よこの ながさを はかったら、ものさし 4つぶんと、さらに 12cm ありました。つくえの よこの ながさは なんcmですか。（cmの かずで こたえよう）',
     answer: '132', acceptedAnswers: ['132cm', '1m32cm'], validationMode: 'number',
@@ -451,7 +451,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g5_speed_001', subject: 'math', gradeLevel: 5, unit: 'speed',
-    diagram: {"kind":"doubleLine","labels":["時間","道のり"],"ends":["2時間","36km"],"caption":"時間と 道のりの 関係を みよう"},
+    diagram: {"kind":"doubleLine","labels":["時間","道のり"],"starts":["0","0"],"ends":["2時間","36km"],"caption":"時間と 道のりの 関係を みよう"},
     difficulty: 'standard', answerType: 'input',
     question: '{犬|いぬ}ぞりが 2{時間|じかん}で 36km {進|すす}みました。この {犬|いぬ}ぞりの {速|はや}さは {時速|じそく}{何|なん}kmですか。（{数|かず}で {答|こた}えよう）',
     answer: '18', acceptedAnswers: ['18km', '時速18km'], validationMode: 'number',
@@ -617,7 +617,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g6_scale_001', subject: 'math', gradeLevel: 6, unit: 'scale',
-    diagram: {"kind":"doubleLine","labels":["地図","縮尺"],"ends":["4cm","1：25000"],"caption":"地図の 長さと 縮尺を みよう"},
+    diagram: {"kind":"doubleLine","labels":["地図","実際"],"ends":["4cm","？km"],"note":"縮尺 1：25000（同じ長さを表す）","caption":"地図と 実際の 長さの 対応を みよう。図の線は 縮尺どおりでは ないよ"},
     difficulty: 'standard', answerType: 'choice',
     question: '{縮尺|しゅくしゃく} 1：25000の {地図|ちず}で、4cmの {長|なが}さは、{実際|じっさい}には {何|なん}kmですか。',
     choices: ['1km', '100m', '10km', '4km'],
@@ -815,7 +815,7 @@ window.QUESTION_BANK.push(
   },
   {
     id: 'math_g8_probability_002', subject: 'math', gradeLevel: 8, unit: 'probability',
-    diagram: {"kind":"cards","labels":["赤玉","白玉"],"values":["● ● ●","○ ○"],"caption":"ふくろの中の赤玉3個と白玉2個"},
+    diagram: {"kind":"cards","labels":["赤玉","白玉"],"values":[3,2],"balls":true,"caption":"ふくろの中の赤玉3個と白玉2個"},
     difficulty: 'standard', answerType: 'input',
     question: 'ふくろの {中|なか}に {赤玉|あかだま}が 3{個|こ}、{白玉|しろだま}が 2{個|こ} {入|はい}っている。この {中|なか}から 1{個|こ} {取|と}り{出|だ}すとき、{赤玉|あかだま}が {出|で}る {確率|かくりつ}を {求|もと}めなさい。（{分数|ぶんすう}で {答|こた}えなさい。{例|れい}：1/3）',
     answer: '3/5', validationMode: 'exact',
