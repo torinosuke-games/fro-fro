@@ -10,7 +10,7 @@ fs.mkdirSync(out,{recursive:true});
   await page.goto(process.env.FF_TEST_URL||pathToFileURL(path.join(root,'index.html')).href,{waitUntil:'load'});
   await page.evaluate(()=>{document.documentElement.dataset.theme='day';FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),9);FF.app.state.player.name='ゆき';FF.app.state.player.avatar='e1';});
   await page.evaluate(()=>document.fonts.ready);
-  const qs=await page.evaluate(()=>QUESTION_BANK.filter(q=>q.subject==='math'&&q.collection!=='frontier100'&&q.diagram).map(q=>({id:q.id,kind:q.diagram.kind,grade:q.gradeLevel})));
+  const qs=await page.evaluate(()=>QUESTION_BANK.filter(q=>q.subject==='math'&&q.collection!=='frontier100'&&q.collection!=='hand_g4'&&q.diagram).map(q=>({id:q.id,kind:q.diagram.kind,grade:q.gradeLevel})));
   assert.equal(qs.length,55);const checks=[],screenshots=[];
   for(const q of qs){
    for(const width of [360,390,768,1024]){

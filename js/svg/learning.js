@@ -209,7 +209,7 @@
     add(line(165,187,423,187),line(165,187,165,30),line(165,187,305,58),text(446,195,'右',17),text(165,22,'高さ',17),text(330,57,'奥',17));
     add(text(305,218,'右 '+d.values[0],18),text(88,90,'高さ '+d.values[2],18),text(325,105,'奥 '+d.values[1],18));
    }else if(d.kind==='graph'){
-    var maxV=Math.max.apply(null,d.values),step=maxV>8?2:1,top=Math.ceil(maxV/step)*step;h=270;
+    var maxV=Math.max.apply(null,d.values),step=[1,2,5,10,20,50,100,200,500,1000].filter(function(c){return Math.ceil(maxV/c)<=8;})[0]||1000,top=Math.ceil(maxV/step)*step;h=270;
     for(var v=0;v<=top;v+=step){var yy=220-v/top*175;add(line(65,yy,472,yy,'#d0e1eb'),text(48,yy+5,v,15));}
     var points=d.values.map(function(v,i){return [75+i*380/(d.values.length-1),220-v/top*175];});
     add(S('polyline',{points:points.map(function(p){return p.join(',');}).join(' '),fill:'none',stroke:blue,'stroke-width':3}));

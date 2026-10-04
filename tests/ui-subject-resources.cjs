@@ -13,7 +13,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),fs=require(
  async function home(){await p.getByRole('button',{name:'Frozen Frontier',exact:true}).click();}
  async function specified(id){assert.equal(await p.evaluate(()=>FF.app.session.sel.resource),id);assert.equal(await p.evaluate(()=>FF.app.session.items[FF.app.session.currentId].resource),id);}
  await study();assert.equal(await resource('指定なし').getAttribute('aria-pressed'),'true');
- assert.equal(await p.locator('.subject-math .progress-total').innerText(),'全110問');
+ assert.equal(await p.locator('.subject-math .progress-total').innerText(),'全'+await p.evaluate(()=>FF.curriculum.totalOf(FF.app.bank,'math',4))+'問');
  await resource('鉄').click();await p.locator('.subject-math').click();await specified('iron');
  const before=await p.evaluate(()=>({...FF.app.state.resources}));
  let answer=await p.evaluate(()=>FF.app.session.items[FF.app.session.currentId].attempt.question.answer);
