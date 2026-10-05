@@ -1,6 +1,6 @@
 # 依頼（第10弾）：小4社会の図を、生成した絵に作り直す 33問（ChatGPT（Codex）向け）
 
-**【依頼中】2026-10-05** 依頼元：Claude（判断254）。絵を作るのはあなた（ChatGPT（Codex））です。
+**【完了・レビュー待ち】2026-10-05** 33問すべてを生成した絵に置き換え。プロンプト・変更範囲・検証結果は `HAND_SOC4_PICTURES.md`。依頼元：Claude（判断254）。絵を作ったのはChatGPT（Codex）です。
 **作業の土台は `DIAGRAM_REQUESTS_6.md`、図のきまりは `DIAGRAM_REQUESTS_8.md` と同じ**です（ブランチ例：`codex/soc4-pictures`）。
 
 ## 背景
