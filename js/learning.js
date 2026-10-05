@@ -305,9 +305,16 @@
 
   // ---- 手書きの自己採点（判断266）----
   // 漢字で答える書き問題（国語。答えが漢字をふくみ、判定が exact）は、手で書いて、お手本とくらべて、自分で採点できる
-  function canHandwrite(q) {
-    return !!q && q.subject === 'japanese' && q.answerType === 'input' && q.validationMode === 'exact' && /[\u4e00-\u9fff]/.test(String(q.answer));
+  // 手書きにできる書き問題：国語は、漢字をふくむ答え。英語は、英語の単語（ハイフン・あきで2語まで、12文字まで。判断282）。どちらも exact
+  var EN_WORD = /^[A-Za-z]+(?:[ -][A-Za-z]+)?$/;
+  function handwriteKind(q) {
+    if (!q || q.answerType !== 'input' || q.validationMode !== 'exact') return null;
+    var a = String(q.answer);
+    if (q.subject === 'japanese' && /[\u4e00-\u9fff]/.test(a)) return 'kanji';
+    if (q.subject === 'english' && a.length >= 2 && a.length <= 12 && EN_WORD.test(a)) return 'english';
+    return null;
   }
+  function canHandwrite(q) { return handwriteKind(q) !== null; }
   // 資源・勉強量ポイントを割合 rate にする（rate が省略か 1 以上なら、そのまま。0 より大きい分は、最低1）
   function scaleReward(v, rate) {
     if (rate == null || rate >= 1 || v <= 0) return v;
@@ -381,6 +388,7 @@
     submitAnswer: submitAnswer,
     submitSelfCheck: submitSelfCheck,
     canHandwrite: canHandwrite,
+    handwriteKind: handwriteKind,
     shouldRecommendLower: shouldRecommendLower,
     subjectSummary: subjectSummary,
     progressLine: progressLine

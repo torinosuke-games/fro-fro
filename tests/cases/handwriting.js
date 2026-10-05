@@ -66,4 +66,44 @@ module.exports = ({ test, ctx, FF, assert, plain }) => {
     }
     assert.ok(ok >= 80, '手書きにできる問題が、少なくとも80問ある（いま ' + ok + '問）');
   });
+
+  test('英語の手書き（判断282）：答えが英語の単語（2〜12文字）の書き問題だけ。1文字・数字・文・ほかの教科・exact 以外はできない', () => {
+    const en = (o) => Object.assign({ subject: 'english', gradeLevel: 4, unit: 'animal', difficulty: 'basic', answerType: 'input', question: '「いぬ」を 英語で 書こう。', answer: 'dog', validationMode: 'exact' }, o);
+    assert.equal(L.canHandwrite(en()), true);
+    assert.equal(L.handwriteKind(en()), 'english');
+    assert.equal(L.canHandwrite(en({ answer: 'twenty-one' })), true);
+    assert.equal(L.canHandwrite(en({ answer: 'ice cream' })), true);
+    assert.equal(L.handwriteKind(mk()), 'kanji');
+    assert.equal(L.canHandwrite(en({ answer: 'B' })), false);                       // 1文字
+    assert.equal(L.canHandwrite(en({ answer: 'Yes, I do.' })), false);              // 文
+    assert.equal(L.canHandwrite(en({ answer: 'I like apples.' })), false);
+    assert.equal(L.canHandwrite(en({ answer: 'international' })), false);           // 13文字
+    assert.equal(L.canHandwrite(en({ answer: '12', validationMode: 'number' })), false);
+    assert.equal(L.canHandwrite(en({ answer: 'ねこ', validationMode: 'kana-insensitive' })), false);
+    assert.equal(L.canHandwrite(en({ subject: 'math' })), false);
+    assert.equal(L.canHandwrite(en({ answerType: 'choice', choices: ['dog', 'cat', 'pig', 'cow'] })), false);
+  });
+  test('英語の自己採点：「書けた」は、半分のポイント。「まちがえた」は、不正解で終わる', () => {
+    const q = { id: 'hw_en_1', subject: 'english', gradeLevel: 2, unit: 'animal', difficulty: 'basic', answerType: 'input', question: '「いぬ」を 英語で 書こう。', answer: 'dog', validationMode: 'exact', hints: ['ドッグ'], explanation: '「いぬ」は「dog」です。', reviewed: false };
+    const s0 = newState();
+    const typed = L.submitAnswer(s0, L.startAttempt(q, rng()), 'DOG', cx());
+    const self = L.submitSelfCheck(s0, L.startAttempt(q, rng()), true, cx());
+    assert.equal(typed.outcome.status, 'correct');
+    assert.equal(self.outcome.status, 'correct');
+    assert.equal(self.outcome.method, 'self');
+    assert.equal(self.outcome.reward, Math.max(1, Math.round(typed.outcome.reward * 0.5)));
+    const ng = L.submitSelfCheck(s0, L.startAttempt(q, rng()), false, cx());
+    assert.equal(ng.outcome.status, 'wrong');
+    assert.equal(ng.state.studyPoints, s0.studyPoints);
+  });
+  test('小4・小5英語の手作りの「書き問題の形」：英語の単語の答えは、手書きにできる', () => {
+    let can = 0;
+    for (const q of ctx.QUESTION_BANK.filter(x => (x.collection === 'hand_en4' || x.collection === 'hand_en5') && x.inputForm)) {
+      const v = L.inputVariant(q), a = String(v.answer);
+      const expect = /^[A-Za-z]+(?:[ -][A-Za-z]+)?$/.test(a) && a.length >= 2 && a.length <= 12 && v.validationMode === 'exact';
+      assert.equal(L.canHandwrite(v), expect, q.id + ' ' + a);
+      if (expect) can++;
+    }
+    assert.ok(can >= 50, '手書きにできる英語の問題が、少なくとも50問ある（いま ' + can + '問）');
+  });
 };

@@ -1,4 +1,4 @@
-// 手書きの欄（判断266）。漢字の書き取りを、指・タッチペン・マウスで書いて、お手本とくらべて、自分で採点する。
+// 手書きの欄（判断266・282）。漢字の書き取り（国語）と、英語の単語のつづりを、指・タッチペン・マウスで書いて、お手本とくらべて、自分で採点する。
 // 書いた線（it.strokes）は問題の状態に持つ。画面を作りなおしても、線が消えない。
 (function (root) {
   'use strict';
@@ -14,12 +14,22 @@
     for (var i = 0; i < n; i++) out.push({ x: x0 + i * side, y: y0, s: side });
     return out;
   }
-  function redraw(cv, strokes, answer) {
+  // 英語のノートの、四本線（上の線・まん中の点線・ベースライン・下の線）。横に長く書ける
+  function englishLines(c) {
+    var ys = [{ y: 70, dash: false, w: 2 }, { y: 140, dash: true, w: 2 }, { y: 210, dash: false, w: 3 }, { y: 270, dash: false, w: 2 }];
+    ys.forEach(function (l) {
+      c.setLineDash(l.dash ? [10, 8] : []); c.lineWidth = l.w;
+      c.beginPath(); c.moveTo(20, l.y); c.lineTo(W - 20, l.y); c.stroke();
+    });
+    c.setLineDash([]);
+  }
+  function redraw(cv, strokes, answer, kind) {
     var c = cv.getContext('2d');
     c.setTransform(1, 0, 0, 1, 0, 0);
     c.fillStyle = '#fff'; c.fillRect(0, 0, W, H);
     c.strokeStyle = GUIDE; c.lineWidth = 2;
-    boxes(answer).forEach(function (b) {
+    if (kind === 'english') englishLines(c);
+    else boxes(answer).forEach(function (b) {
       c.setLineDash([]); c.strokeRect(b.x + 1, b.y + 1, b.s - 2, b.s - 2);
       c.setLineDash([8, 8]);
       c.beginPath(); c.moveTo(b.x + b.s / 2, b.y + 4); c.lineTo(b.x + b.s / 2, b.y + b.s - 4);
@@ -35,11 +45,11 @@
     });
   }
 
-  // 書く欄。it：問題の状態（it.strokes に線を持つ）、answer：お手本（わくの数を決める）、disabled：採点後は書けない
-  function pad(it, answer, disabled) {
+  // 書く欄。it：問題の状態（it.strokes に線を持つ）、answer：お手本（わくの数を決める）、disabled：採点後は書けない、kind：'english'なら四本線
+  function pad(it, answer, disabled, kind) {
     it.strokes = it.strokes || [];
     var cv = E('canvas', { class: 'hw-canvas', attrs: { width: String(W), height: String(H), role: 'img', 'aria-label': 'てがきの欄' } });
-    redraw(cv, it.strokes, answer);
+    redraw(cv, it.strokes, answer, kind);
     if (disabled) return cv;
     var cur = null, penSeen = false;
     function pt(e) {
@@ -54,20 +64,20 @@
       try { cv.setPointerCapture(e.pointerId); } catch (x) { /* とれなくても書ける */ }
       cur = [pt(e)];
       it.strokes.push(cur);
-      redraw(cv, it.strokes, answer);
+      redraw(cv, it.strokes, answer, kind);
     });
     cv.addEventListener('pointermove', function (e) {
       if (!cur) return;
       e.preventDefault();
       var evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
       (evs.length ? evs : [e]).forEach(function (ev) { cur.push(pt(ev)); });
-      redraw(cv, it.strokes, answer);
+      redraw(cv, it.strokes, answer, kind);
     });
     function end() { cur = null; }
     cv.addEventListener('pointerup', end);
     cv.addEventListener('pointercancel', end);
     cv.addEventListener('pointerleave', end);
-    cv.redraw = function () { redraw(cv, it.strokes, answer); };
+    cv.redraw = function () { redraw(cv, it.strokes, answer, kind); };
     return cv;
   }
 
