@@ -69,8 +69,8 @@ const out=process.env.FF_QA_OUTPUT||path.resolve(__dirname,'../../..','work','br
  assert.equal(await page.locator('.hint-step').count(),1);
  const right=await page.evaluate(()=>FF.app.session.items[FF.app.session.currentId].attempt.question.answer);
  await page.locator('.answer-option').filter({hasText:right}).click();
- assert.equal(await page.evaluate(()=>FF.app.state.studyPoints),before.points,'Selection alone does not submit');
- await page.getByRole('button',{name:'答え合わせ',exact:true}).click();
+ // 選択問題は、選んだ時点で判定に進む（答え合わせのボタンはない）
+ assert.equal(await page.locator('.check-answer').count(),0,'Choice questions have no check button');
  assert.equal(await page.locator('.reward-flight').count(),2,'Material and heat fly from the reward');
  assert.equal(await page.locator('#hud [data-resource="'+before.resource+'"] .resource-value').innerText(),String(before.amount),'Counter waits for arrival');
  await page.waitForTimeout(1000);
@@ -80,13 +80,12 @@ const out=process.env.FF_QA_OUTPUT||path.resolve(__dirname,'../../..','work','br
  assert.equal(await page.locator('.explanation-text').count(),1);
  await page.waitForTimeout(750);await page.screenshot({path:path.join(out,'tablet-after.png'),fullPage:true});
  await index(1).click();await index(22).click();assert.equal(await page.evaluate(()=>FF.app.state.studyPoints),after.points);
- assert.equal(await page.locator('.check-answer').count(),1,'Revisiting creates a fresh attempt');
+ assert.ok(await page.locator('.answer-option:not([disabled])').count()>0,'Revisiting creates a fresh attempt');
  assert.equal(await page.locator('.explanation-text').count(),0);
  assert.ok(await index(22).evaluate(el=>el.classList.contains('solved')),'Latest result survives a fresh attempt');
  await index(2).click();
  const wrong=await page.evaluate(()=>{let q=FF.app.session.items[FF.app.session.currentId].attempt.question;return q.choices.find(x=>x!==q.answer);});
- await page.locator('.answer-option').filter({hasText:new RegExp('^.'+wrong+'$')}).click();
- await page.getByRole('button',{name:'答え合わせ',exact:true}).click();assert.equal(await page.evaluate(()=>FF.app.state.studyPoints),after.points);
+ await page.locator('.answer-option').filter({hasText:new RegExp('^.'+wrong+'$')}).click();assert.equal(await page.evaluate(()=>FF.app.state.studyPoints),after.points);
  // Check every question diagram and figure at two device sizes. No crop, no missing asset.
  const diagramResults=[];
  for(const width of [1024,390]){
