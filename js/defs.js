@@ -96,6 +96,8 @@
       similarity: ['height', 'shadows', 'unit'],
       circuit: ['panels'],
       apparatus: ['panels'],
+      biology: ['part', 'labels'],
+      pendulum: ['panels'],
       scienceScene: ['scene'],
       anatomy: ['part', 'pose'],
       moonView: ['mode'],
