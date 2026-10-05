@@ -1,0 +1,94 @@
+# 小5社会の絵（プロンプト）
+
+ブランチ: grok/soc5-pictures
+依頼: DIAGRAM_REQUESTS_18.md
+見本: img/diagrams/soc4_*.webp・img/diagrams/sci5_*.webp と img/lesson-*.jpg
+
+共通の指定: warm anime-style educational illustration, clear scene that shows the place and work at a glance, painterly soft shading, natural colors, not photoreal. No text, no letters, no numbers, no signs, no logos, no arrows, no speech bubbles, no watermark. People small or from behind.
+
+## 絵（描くものは依頼書の表。プロンプトは、作ったあと、ここに書き足す）
+- soc5_position_029.webp: 太平洋に、ぽつんと浮かぶ小さな島。島のまわりを、コンクリートの護岸が、ぐるりと囲んでいる。波、青い海、空。
+- soc5_terrain_006.webp: まわりを山に囲まれた、平らな盆地。まんなかに町と田畑。
+- soc5_terrain_007.webp: 雪をかぶった高い山々が連なる景色（日本アルプス風）。谷間に川。
+- soc5_terrain_009.webp: 山が海にせまり、入り江が入り組んだ海岸。小さな港と漁船。
+- soc5_terrain_015.webp: 山のふもとで川が平地に出て、土や石が扇形に広がった土地。果樹園の列と家が少し。
+- soc5_terrain_016.webp: 川が海に出る河口。枝分かれした川に囲まれた、三角形に近い平らな土地と町。
+- soc5_terrain_017.webp: まわりより一段高い、平らな台地。畑が広がり、がけの下は低い土地と川。
+- soc5_terrain_033.webp: 日本海ぞいの、風でできた砂の丘（砂丘）。砂の風紋。人は、ごく小さく。
+- soc5_terrain_034.webp: 火山の大きな火口のくぼ地（カルデラ）。その中に町と田畑。まわりを山がかこむ。
+- soc5_climate_012.webp: 瀬戸内の田園。丸い小さなため池がいくつもあり、遠くに島のうかぶおだやかな海。
+- soc5_climate_019.webp: 雪が積もった町の道路。道路の中央から水が出て、雪がとけている。屋根にも雪。
+- soc5_landlife_001.webp: 川に囲まれた低い土地を、堤防でぐるりと囲んだ集落と田畑（上から見た図）。
+- soc5_landlife_003.webp: 川ぞいの農家。高い石垣の上に、小さな倉のような建物（水屋）と、軒下の小舟。
+- soc5_landlife_004.webp: 夏の高原のキャベツ畑・レタス畑。遠くに山。涼しげな青空。
+- soc5_landlife_007.webp: 雪の積もる北国の家の窓。窓が二重になっていて、部屋の中が暖かそう。
+- soc5_landlife_008.webp: 夜のライトアップされた、大きな雪像がならぶ雪まつり。見物の人は小さく。
+- soc5_landlife_009.webp: 沖縄のサトウキビ畑。背の高い緑の畑と青い空、遠くに海。
+- soc5_landlife_016.webp: 雪の多い地方の、急な傾斜の屋根から、雪が落ちている家。
+- soc5_landlife_018.webp: 北海道の広い牧場。乳牛が草を食べている。遠くにサイロ。
+- soc5_landlife_020.webp: 沖縄の伝統的な家。赤いかわら屋根、しっくいで固めたかわら、まわりの石垣、屋根のシーサー。
+- soc5_landlife_021.webp: 沖縄の家の屋根の上の、白い貯水タンク。青空。
+- soc5_landlife_028.webp: 雪の高原のスキー場。リフトと斜面。スキーヤーは、ごく小さく。
+- soc5_landlife_031.webp: 雪の山あいの集落。急な角度の屋根をもつ、大きな合掌造りの家々。
+- soc5_landlife_032.webp: ビニールハウスの中で、ピーマンやなすが、実っている。外は冬の景色。
+- soc5_rice_002.webp: 春の田。トラクターが土をほり起こしている。
+- soc5_rice_003.webp: 水をはった田をトラクターが平らにならしている。水面に空がうつる。
+- soc5_rice_004.webp: 田植機が、水をはった田に苗を植えていく。
+- soc5_rice_005.webp: 秋の黄金色の稲田を、コンバインが刈り取っている。
+- soc5_rice_006.webp: もみすり機。もみがらと、玄米（茶色の米）。
+- soc5_rice_007.webp: 川から引いた用水路が、田に水を運んでいる。
+- soc5_rice_008.webp: 種もみの入った袋と、苗を育てる箱。
+- soc5_rice_011.webp: 塩水を入れたボウル（バケツ）と、種もみ。種もみを入れる前のようす。
+- soc5_rice_015.webp: 整然と四角く区画された広い田と、まっすぐな農道。
+- soc5_rice_034.webp: 雑草が生いしげった、荒れた農地。遠くに山。
+- soc5_food_003.webp: 大都市のビルを背景に、手前に野菜畑。収穫のようす。
+- soc5_food_004.webp: りんご畑。赤いりんごが実っている。
+- soc5_food_005.webp: 海が見える段々畑のみかん畑。
+- soc5_food_013.webp: ぶどう棚とももの果樹園。
+- soc5_food_024.webp: ビニールハウスの中の、いちご。赤い実が棚にたくさん。
+- soc5_food_034.webp: 農産物の直売所の店先。新鮮な野菜がならぶ。人は小さく。
+- soc5_food_009.webp: 食べ残された料理や、売れ残った食べものが、ごみ袋に捨てられている。
+- soc5_fishery_002.webp: 朝の漁港。小型の漁船が、海岸近くで漁をしている。
+- soc5_fishery_003.webp: 大型の漁船が、大海原へ出ていく。
+- soc5_fishery_010.webp: 日本の近くの海を走る、中型の漁船。水平線。
+- soc5_fishery_005.webp: 海に並ぶ、四角い養殖いけす。魚が、見える。
+- soc5_fishery_006.webp: バケツから、稚魚を海に放している。
+- soc5_fishery_007.webp: 島がうかぶおだやかな海の、カキのいかだ養殖。
+- soc5_fishery_008.webp: 海にならぶ、ノリ養殖の網の列。
+- soc5_fishery_011.webp: 船が、魚の群れを、大きな網で囲んでいる。
+- soc5_fishery_012.webp: 漁師が、一ぴきずつ、カツオをつり上げている。
+- soc5_fishery_013.webp: 船が海底に網をおろして、引いている（海の断面）。
+- soc5_fishery_014.webp: 海岸近くにしかけた定置網を、船から引き上げる。
+- soc5_fishery_015.webp: マグロ漁船から、長いなわ（はえなわ）が海へのびる。
+- soc5_fishery_017.webp: 魚市場。魚の箱がならび、せりをしている。
+- soc5_industry_001.webp: 製鉄所。高炉と、赤く熱い鉄。
+- soc5_industry_009.webp: 自動車工場の組み立てライン。ロボットと、車体が、ベルトコンベヤーで流れる。
+- soc5_industry_003.webp: 石油化学コンビナート。煙突・タンク・配管。夕景。
+- soc5_industry_004.webp: パンの工場。ベルトコンベヤーをパンが流れる。
+- soc5_industry_018.webp: プレス機が、鉄の板を、自動車のドアの形に打ち抜く。
+- soc5_industry_036.webp: ロボットが、火花を出して、車体をようせつしている。
+- soc5_industry_017.webp: 町工場。職人が、機械で小さな部品をつくっている。
+- soc5_industry_014.webp: 海ぞいの工場地帯。船、港のクレーン、コンテナ、煙突。
+- soc5_industry_015.webp: 高速道路ぞいの、内陸の工場と、トラック。
+- soc5_industry_023.webp: 車いすのまま乗れる、福祉車両。スロープ。
+- soc5_info_001.webp: テレビ放送局のスタジオ。カメラ、キャスターの席、照明。
+- soc5_info_002.webp: 記者とカメラマンが現場で取材している。マイクとカメラ。
+- soc5_info_003.webp: 編集室で、大きなモニターを見ながら映像を編集する。
+- soc5_info_006.webp: 停電した避難所で、人々が小さなラジオをかこんでいる。
+- soc5_info_009.webp: 朝の玄関に、新聞がとどけられる。新聞の大きな見出しの文字は描かない。
+- soc5_info_018.webp: コンビニのレジ。バーコードを読み取るようす。
+- soc5_info_021.webp: 宅配便のトラックと、荷物を受け取る家族。
+- soc5_info_022.webp: 病院で、医師がタブレットで診療の記録を見ている。
+- soc5_info_031.webp: 畑の上を、ドローンが飛び、農家がタブレットを見ている。
+- soc5_environment_001.webp: 整然と並ぶ、まっすぐなスギの人工林。
+- soc5_environment_002.webp: 自然のままの、ブナの原生林。
+- soc5_environment_004.webp: 山の斜面で、苗木を植えている人。
+- soc5_environment_010.webp: 苗木のまわりの草を刈る（下刈り）。
+- soc5_environment_011.webp: 木が混みすぎた林で、一部の木を切っている。日光が差しこむ。
+- soc5_environment_012.webp: 木の下の枝を切り落としている（枝打ち）。
+- soc5_environment_005.webp: 森林から、川に水が流れ出す。
+- soc5_environment_026.webp: 手入れされず、細い木がぎっしり密集して暗い人工林。地面はむき出し。
+- soc5_environment_007.webp: むかしの工場地帯。煙突から、黒いけむり。
+- soc5_environment_023.webp: 太陽光パネルと風力発電の風車。
+- soc5_environment_032.webp: 洗って、くり返し使う牛乳びんが、ならんでいる。
+- soc5_environment_033.webp: 分別されて、集められた、缶とペットボトル。
