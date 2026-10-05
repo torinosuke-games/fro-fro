@@ -73,7 +73,8 @@
         { id: 'garbage', name: 'ごみの処理と利用', description: '分別・リサイクル', icon: '♻' },
         { id: 'disaster', name: '自然災害からくらしを守る', description: 'そなえ・ハザードマップ', icon: '⚠' },
         { id: 'tradition', name: '地いきの伝統・文化', description: '祭り・伝統工芸', icon: '🎎' },
-        { id: 'pioneer', name: '郷土をひらいた人々', description: '用水・開拓', icon: '🌾' }
+        { id: 'pioneer', name: '郷土をひらいた人々', description: '用水・開拓', icon: '🌾' },
+        { id: 'industry', name: '県の特色と産業', description: '農業・水産業・工業・観光', icon: '🏭' }
       ]
     }
   };
