@@ -18,7 +18,7 @@ fs.mkdirSync(out,{recursive:true});
    };
    window.qaCheckFigure=el=>{
     const issues=[],svg=el.querySelector('svg'),rect=el.getBoundingClientRect();let minText=Infinity;
-    if(!svg){for(const cell of el.querySelectorAll('th,td')){const range=document.createRange();range.selectNodeContents(cell);for(const r of range.getClientRects())if(r.left<rect.left||r.right>rect.right)issues.push('table clipped '+cell.textContent);}return {issues,overflow:document.documentElement.scrollWidth>innerWidth+1,figureOverflow:el.scrollWidth>el.clientWidth+1};}
+    if(!svg){const img=el.querySelector('.figure-picture');if(img){const r=img.getBoundingClientRect();if(!img.complete||!img.naturalWidth)issues.push('image not loaded');if(img.naturalWidth/img.naturalHeight!==1.5)issues.push('image aspect ratio');if(r.left<rect.left||r.right>rect.right||r.top<rect.top||r.bottom>rect.bottom)issues.push('image clipped');if(getComputedStyle(img).objectFit!=='contain')issues.push('image must not crop');}for(const cell of el.querySelectorAll('th,td,figcaption')){const range=document.createRange();range.selectNodeContents(cell);for(const r of range.getClientRects())if(r.left<rect.left||r.right>rect.right)issues.push('text clipped '+cell.textContent);}return {issues,overflow:document.documentElement.scrollWidth>innerWidth+1,figureOverflow:el.scrollWidth>el.clientWidth+1,figureWidth:rect.width};}
     const vb=svg.viewBox.baseVal,sr=svg.getBoundingClientRect();
     const ts=[...svg.querySelectorAll('text')];
     function svgBox(t){const b=t.getBBox(),m=svg.getCTM().inverse().multiply(t.getCTM()),ps=[[b.x,b.y],[b.x+b.width,b.y],[b.x,b.y+b.height],[b.x+b.width,b.y+b.height]].map(([x,y])=>new DOMPoint(x,y).matrixTransform(m)),x=Math.min(...ps.map(p=>p.x)),y=Math.min(...ps.map(p=>p.y));return {x,y,width:Math.max(...ps.map(p=>p.x))-x,height:Math.max(...ps.map(p=>p.y))-y};}
@@ -44,7 +44,7 @@ fs.mkdirSync(out,{recursive:true});
     return {issues,minText:Number.isFinite(minText)?minText:null,overflow:document.documentElement.scrollWidth>innerWidth+1,figureOverflow:el.scrollWidth>el.clientWidth+1,figureWidth:rect.width};
    };
   });
-  const settled=()=>page.evaluate(async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
+  const settled=()=>page.evaluate(async()=>{await document.fonts.ready;for(const img of document.querySelectorAll('.figure-picture')){img.loading='eager';await img.decode();}await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
   const requested=[8,9].flatMap(n=>[...fs.readFileSync(path.join(root,'DIAGRAM_REQUESTS_'+n+'.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'social_g4_hand_'+m[1]));
   const qs=await page.evaluate(ids=>QUESTION_BANK.filter(q=>ids.includes(q.id)).map(q=>({id:q.id,kind:q.diagram.kind})),requested);
   assert.equal(requested.length,70);assert.equal(qs.length,70);const checks=[],screenshots=[],negativeChecks=[];
@@ -55,6 +55,7 @@ fs.mkdirSync(out,{recursive:true});
     // レビューで直した箇所を、データだけでなく生成されたSVGでも保護する。
     const structure=await page.evaluate(()=>{
      const svg=document.querySelector('.lesson-figure svg');
+     if(!svg)return {labels:[],arrows:0,parts:[],regional:false,landFills:[]};
      const q=FF.app.bank.byId[FF.app.session.currentId],d=q.diagram;
      const count=s=>svg.querySelectorAll(s).length;
      const parts=[...svg.querySelectorAll('[data-part]')].map(s=>({part:s.dataset.part,box:s.getBoundingClientRect().toJSON(),stroke:s.getAttribute('stroke-width')}));
@@ -69,6 +70,15 @@ fs.mkdirSync(out,{recursive:true});
     if(['riverMouth','fan','delta'].includes(structure.scene))assert.equal(structure.mountains,1);
     if(['social_g4_hand_industry_013','social_g4_hand_industry_014'].includes(q.id)){assert.ok(!structure.parts.find(p=>p.part==='port'),'port scene was removed (decision 254)');}
     checks.push({id:q.id,width,...result});
+    if(q.id==='social_g4_hand_water_007'){
+     // 画像でも、はみ出しと切り抜き表示の負例を検出する。
+     const negative=await page.locator('.lesson-figure').evaluate(el=>{
+      const img=el.querySelector('.figure-picture'),old=img.getAttribute('style');let clipped,cropped;
+      try{img.style.transform='translateX(20px)';clipped=qaCheckFigure(el).issues;img.style.transform='';img.style.objectFit='cover';cropped=qaCheckFigure(el).issues;}finally{if(old===null)img.removeAttribute('style');else img.setAttribute('style',old);}
+      return [{issues:clipped},{issues:cropped}];
+     });
+     assert.ok(negative[0].issues.includes('image clipped'));assert.ok(negative[1].issues.includes('image must not crop'));negativeChecks.push({width,image:true,cases:negative});
+    }
     if(q.id===qs[0].id){
      // 実際の文字をviewBoxの端をまたぐ／完全に外へ出す負例。検査後は元に戻す。
      const negative=await page.locator('.lesson-figure').evaluate(el=>{

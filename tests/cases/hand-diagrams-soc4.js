@@ -4,6 +4,8 @@ module.exports=({test,ctx,FF,assert,plain})=>{
  const root=path.resolve(__dirname,'../..');
  const ids=[8,9].flatMap(n=>[...fs.readFileSync(path.join(root,'DIAGRAM_REQUESTS_'+n+'.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'social_g4_hand_'+m[1]));
  const all=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_soc4')),qs=all.filter(q=>ids.includes(q.id));
+ // 第10弾で絵に置き換えるscene。残るSVGの検証は省略せず、旧sceneとの対応も保護する。
+ const pictures={terrain:{geography_006:'riverMouth',geography_027:'fan',geography_028:'delta',pioneer_005:'levees'},facility:{water_007:'reservoir',water_009:'settling',water_010:'filter',garbage_001:'landfill',garbage_004:'truck',electric_003:'wind',electric_004:'solar',electric_005:'pylons',electric_006:'substation',electric_015:'geothermal',pioneer_014:'aqueduct',pioneer_025:'sluice'},disaster:{disaster_003:'flood',disaster_004:'landslide',disaster_005:'storm',disaster_006:'ash',disaster_011:'bag',disaster_014:'seaWall',disaster_015:'sabo',disaster_026:'hydrant'},culture:{tradition_001:'dollFloat',tradition_002:'poleFloat',tradition_004:'lacquer',tradition_007:'kettle',tradition_014:'castle',tradition_033:'lanternPole'},industry:{industry_006:'dairy',industry_012:'greenhouse',industry_015:'fishCage'}};
  test('社会図：依頼書の70問だけに追加・キャプション必須',()=>{
   assert.equal(ids.length,70);assert.equal(new Set(ids).size,70);assert.equal(qs.length,70);
   assert.equal(all.filter(q=>q.diagram).length,70);
@@ -26,16 +28,17 @@ module.exports=({test,ctx,FF,assert,plain})=>{
  });
  const allowed={"terrain":["riverMouth","basin","fan","delta","levees","lakeTunnel"],"facility":["sewer","sewagePlant","reservoir","settling","filter","hydro","supply","hillSupply","landfill","truck","incinerator","gasFilter","compost","bottles","wind","solar","pylons","substation","geothermal","thermal","aqueduct","sluice"],"disaster":["flood","landslide","storm","ash","bag","seaWall","sabo","hydrant"],"culture":["dollFloat","poleFloat","lacquer","kettle","castle","houseFront","lanternPole"],"industry":["citrus","dairy","carFactory","greenhouse","fishCage","hotBath","coastOrchard","basinOrchard"]};
  for(const [kind,scenes] of Object.entries(allowed))test('社会図：'+kind+'のsceneの範囲を検証',()=>{
-  const subset=qs.filter(q=>q.diagram.kind===kind);assert.ok(subset.length);
+  const subset=qs.filter(q=>q.diagram.kind===kind);
   for(const q of subset){assert.ok(scenes.includes(q.diagram.scene),q.id);if(q.diagram.tint)assert.ok(/^#[0-9a-f]{6}$/i.test(q.diagram.tint));}
-  assert.deepEqual([...new Set(subset.map(q=>q.diagram.scene))].sort(),scenes.slice().sort());
+  for(const id of Object.keys(pictures[kind]))assert.equal(qs.find(q=>q.id==='social_g4_hand_'+id).diagram.kind,'image',id);
+  assert.deepEqual([...new Set(subset.map(q=>q.diagram.scene).concat(Object.values(pictures[kind])))].sort(),scenes.slice().sort());
  });
  test('社会図：図に答えの語・ラベル・方向・結果を入れない',()=>{
   function walk(v){if(!v||typeof v!=='object')return;for(const [k,a] of Object.entries(v)){assert.ok(!['answer','labels','name','result','direction','arrow','flow'].includes(k),k);walk(a);}}
   for(const q of qs){walk(q.diagram);assert.ok(!q.diagram.caption.includes(q.answer),q.id);}
   const get=id=>qs.find(q=>q.id==='social_g4_hand_'+id).diagram;
   assert.equal(get('prefecture_006').marks.length,0);assert.equal(get('prefecture_016').routes.length,0);assert.equal(get('prefecture_022').routes.length,0);
-  assert.equal(get('electric_021').scene,'thermal');assert.equal(get('disaster_011').scene,'bag');
+  assert.equal(get('electric_021').scene,'thermal');assert.equal(get('disaster_011').src,'img/diagrams/soc4_disaster_011.webp');
   assert.equal(get('tradition_024').scene,'houseFront');assert.equal(get('industry_025').scene,'coastOrchard');
   for(const id of ['geography_010','geography_011'])assert.ok(get(id).routes.some(r=>r.type==='river'));
   for(const id of ['industry_013','industry_014']){assert.equal(get(id).marks.length,1);assert.equal(get(id).port,undefined);}
