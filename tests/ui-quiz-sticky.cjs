@@ -1,4 +1,4 @@
-// スマホ（判断224）：答えを選んだら、スクロールせずに「答え合わせ」を押せる。答え合わせのあとも「次の問題」が画面の下に残る。
+// スマホ（判断224）：答えを選ぶとすぐ判定に進む（判断287）。判定のあとも「次の問題」が画面の下に残る。
 const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');const assert=require('node:assert/strict');
 (async()=>{
  const b=await chromium.launch({headless:true,executablePath:process.env.FF_BROWSER_PATH}),errors=[];
@@ -11,10 +11,7 @@ const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');const a
   const m=await p.evaluate(()=>({mast:document.querySelector('.masthead').getBoundingClientRect().height,head:document.querySelector('.lesson-heading').getBoundingClientRect().height,hudTop:getComputedStyle(document.querySelector('#hud')).top}));
   assert.ok(m.mast<=48.5,'masthead '+m.mast+' '+w);assert.ok(m.head<=46,'lesson heading is one row '+m.head+' '+w);assert.equal(m.hudTop,'-48px');
   await p.locator('.answer-option').first().click({force:true});
-  await p.evaluate(()=>window.scrollTo(0,0));
-  const fits=await p.evaluate(()=>{const r=document.querySelector('.check-answer').getBoundingClientRect();return r.bottom<=innerHeight+1&&r.top>=0;});
-  assert.ok(fits,'check button visible without scrolling '+w);
-  await p.locator('.check-answer').click({force:true});await p.waitForTimeout(700);await p.evaluate(()=>window.scrollTo(0,0));
+  await p.waitForTimeout(700);await p.evaluate(()=>window.scrollTo(0,0));
   const next=await p.evaluate(()=>{const r=document.querySelector('.lesson-actions').getBoundingClientRect();return r.bottom<=innerHeight+1&&r.top>=0;});
   assert.ok(next,'next button visible without scrolling '+w);
   assert.equal(await p.evaluate(()=>getComputedStyle(document.querySelector('.hint-card')).display),'none','hint card is hidden after checking on phones '+w);   // 判断240
