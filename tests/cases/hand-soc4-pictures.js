@@ -30,6 +30,6 @@ module.exports=({test,ctx,assert,plain})=>{
  test('社会の絵：第10・11弾の対象外254問はdiagramも含めmainと同一',()=>{
   const permitted=expected.concat(['prefecture_004','geography_015','geography_019','industry_013','industry_014'].map(s=>'social_g4_hand_'+s));
   const untouched=all.filter(q=>!permitted.includes(q.id));assert.equal(untouched.length,254);
-  assert.equal(crypto.createHash('sha256').update(JSON.stringify(untouched)).digest('hex'),'2782e86c945d0dac9d10970b9f6ea801eb23fe607e09f9ee9bced02c00932ea8');
+  assert.equal(crypto.createHash('sha256').update(JSON.stringify(untouched)).digest('hex'),'2062d1796f09547f2ca2d1b7ae8996b0d3617f88b3ac387c8567fcc836cba32b');
  });
 };

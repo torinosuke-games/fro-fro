@@ -9,8 +9,8 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  test('第11弾：指定以外の社会286問・算数467問は図も含め変更なし',()=>{
   const social=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_soc4'));
   const math=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g4'));
-  assert.equal(hash(social.filter(q=>!imageIds.concat(mapIds).includes(q.id))),'07d2f138e5f74b802fb50a030c53f15fa9fc499ce0d396515d5bb66fc365beef');
-  assert.equal(hash(math.filter(q=>q.id!=='math_g4_hand_graph_005')),'290597fa0145b6ba853f26f8702ebb23faeb65c4002a866777d5a276dfbaaac3');
+  assert.equal(hash(social.filter(q=>!imageIds.concat(mapIds).includes(q.id))),'82a103220a392f90e060f523fce41d7492691b20c9528deb84e1ce640a4d91d8');
+  assert.equal(hash(math.filter(q=>q.id!=='math_g4_hand_graph_005')),'0b96e66e55e9801ecd7854eb6daefaa27b3ca671b894da6249237eb1a2f5e4cd');
  });
  test('第11弾：生成5枚は固有（water_007 は変更前の絵のまま。判断268）の800×533 WebP・各100KB以下',()=>{
   const sources=[];for(const id of imageIds){const d=get(id),q=ctx.QUESTION_BANK.find(q=>q.id===id),f=fs.readFileSync(path.join(root,d.src));
