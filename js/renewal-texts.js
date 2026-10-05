@@ -142,4 +142,9 @@
   '手本':'てほん','自己採点':'じこさいてん','半分':'はんぶん','手書き':'てがき'
  };
  Object.keys(jp4).forEach(function(k){if(!root.FF.FURIGANA[k])root.FF.FURIGANA[k]=jp4[k];});
+ // 小5国語の語（判断267）
+ var jp5 = {
+  '尊敬語':'そんけいご','謙譲語':'けんじょうご','丁寧語':'ていねいご','二重敬語':'にじゅうけいご','敬語':'けいご','訪ねる':'{訪|たず}ねる'
+ };
+ Object.keys(jp5).forEach(function(k){if(!root.FF.FURIGANA[k])root.FF.FURIGANA[k]=jp5[k];});
 })(this);

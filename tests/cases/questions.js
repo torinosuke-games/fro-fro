@@ -28,7 +28,7 @@ module.exports = ({ test, FF, ctx, assert }) => {
   test('国語・理科・社会・英語：各学年9問以上（基礎2・標準5・発展2）、半分以上が自由入力、標準の自由入力3問以上', () => {
     const errors = [];
     for (const s of TEXT_SUBJECTS) for (const g of GRADES) {
-      const qs = bank.filter(q => q.subject === s && q.gradeLevel === g && q.collection !== 'hand_sci4' && q.collection !== 'hand_soc4' && q.collection !== 'hand_jp4');   // 手作りの hand_sci4 は別のテストで数える（判断249）
+      const qs = bank.filter(q => q.subject === s && q.gradeLevel === g && q.collection !== 'hand_sci4' && q.collection !== 'hand_soc4' && q.collection !== 'hand_jp4' && q.collection !== 'hand_jp5');   // 手作りの hand_sci4 は別のテストで数える（判断249）
       const n = d => qs.filter(q => q.difficulty === d).length;
       const input = qs.filter(q => q.answerType === 'input').length;
       const stdInput = qs.filter(q => q.difficulty === 'standard' && q.answerType === 'input').length;
@@ -45,7 +45,7 @@ module.exports = ({ test, FF, ctx, assert }) => {
   test(`B案の問題数：${B_PLAN_DONE.join('・')} は各学年27問以上（基礎6・標準15・発展6）、半分以上が自由入力、標準の自由入力9問以上`, () => {
     const errors = [];
     for (const s of B_PLAN_DONE) for (const g of GRADES) {
-      const qs = bank.filter(q => q.subject === s && q.gradeLevel === g && q.collection !== 'hand_sci4' && q.collection !== 'hand_soc4' && q.collection !== 'hand_jp4');   // 手作りの hand_sci4 は別のテストで数える（判断249）
+      const qs = bank.filter(q => q.subject === s && q.gradeLevel === g && q.collection !== 'hand_sci4' && q.collection !== 'hand_soc4' && q.collection !== 'hand_jp4' && q.collection !== 'hand_jp5');   // 手作りの hand_sci4 は別のテストで数える（判断249）
       const n = d => qs.filter(q => q.difficulty === d).length;
       const input = qs.filter(q => q.answerType === 'input').length;
       const stdInput = qs.filter(q => q.difficulty === 'standard' && q.answerType === 'input').length;
@@ -170,7 +170,7 @@ module.exports = ({ test, FF, ctx, assert }) => {
     // 2026-10-04：デバッグ版のレビューでOKだった問題（手作り10問・リニューアル1問）を true にした（判断241）
     // 2026-10-02：japanese_g2_katakana_002 をレビューの指摘（判断205）で直したので、確認し直すまで false
     assert.strictEqual(bank.filter(q => q.reviewed === true).length, 1072);   // 2026-10-04：デバッグ版のレビューでOKだった手作り10問＋リニューアル1問を確認済みにした（判断241）
-    assert.strictEqual(bank.filter(q => q.reviewed === false && q.collection !== 'hand_g4' && q.collection !== 'hand_g5' && q.collection !== 'hand_sci4' && q.collection !== 'hand_soc4' && q.collection !== 'hand_jp4').length, 100); // 原作の1問＋リニューアルの99問（手作りの hand_g4 は数えない。判断227）
+    assert.strictEqual(bank.filter(q => q.reviewed === false && q.collection !== 'hand_g4' && q.collection !== 'hand_g5' && q.collection !== 'hand_sci4' && q.collection !== 'hand_soc4' && q.collection !== 'hand_jp4' && q.collection !== 'hand_jp5').length, 100); // 原作の1問＋リニューアルの99問（手作りの hand_g4 は数えない。判断227）
   });
   test('選択問題の inputForm（書き問題としても出す。判断200）は、すべて書き問題として正しく、確認前は reviewed: false', () => {
     const withForm = bank.filter(q => q.inputForm);
