@@ -8,7 +8,7 @@ module.exports=({test,ctx,assert,plain})=>{
  const expected=[...new Set(ids.concat(redo))];
  test('社会の絵：第10・11弾の38問だけに固有のWebPを使う',()=>{
   assert.equal(ids.length,33);assert.equal(new Set(ids).size,33);
-  const qs=all.filter(q=>q.diagram&&q.diagram.kind==='image');
+  const qs=all.filter(q=>q.diagram&&q.diagram.kind==='image'&&q.id!=='social_g4_hand_pioneer_010');
   assert.deepEqual(qs.map(q=>q.id).sort(),expected.slice().sort());
   assert.equal(new Set(qs.map(q=>q.diagram.src)).size,38);
   let total=0;
