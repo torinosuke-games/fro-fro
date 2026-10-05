@@ -343,3 +343,5 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .review-dock>:nth-child(4){grid-column:1 / -1}
 .review-dock>:nth-child(5){grid-column:1 / -1}
 .review-dock .review-note{min-height:0;height:38px;padding:6px 8px;font-size:0.875rem}
+.review-dock .grid2.has-prev{grid-template-columns:auto 1fr 1fr}
+.review-dock .review-prev{white-space:nowrap}
