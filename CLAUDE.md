@@ -38,7 +38,7 @@
 - 小5算数（判断243）：単元を18登録し、16単元の自動生成を作った（手作りは10問のまま。これから単元ごとに足す。目標：約564問・図付き約3割）。手作りは面積・体積・図形の角・合同な図形の126問、比例・帯グラフと円グラフ・正多角形と円・角柱と円柱の88問、残りの10単元の248問を `questions/math_g5_hand.js` に書いた（判断244〜246。計462問で全単元の目標数がそろった、reviewed: false。図の依頼は `DIAGRAM_REQUESTS_3.md`＝44問、`_4.md`＝25問、`_5.md`＝49問）
 - 小4理科（判断249）：単元を10登録し、10単元すべての手作り333問を `questions/science_g4_hand.js` に書いた（reviewed: false。原作と合わせて360問、10単元とも基礎9・標準15・発展12。図の依頼は `DIAGRAM_REQUESTS_6.md`＝39問、`_7.md`＝48問）
 - 小4社会（判断252）：単元を9登録し、9単元すべての手作り295問を `questions/social_g4_hand.js` に書いた（reviewed: false。原作と合わせて322問、9単元とも基礎9・標準15・発展12。図の依頼は `DIAGRAM_REQUESTS_8.md`＝33問、`_9.md`＝37問）
-- 小4社会の図70問（第8・9弾）は判断253・`HAND_SOC4_DIAGRAMS.md`。共通6種類の図を追加し、問題データはdiagram以外を維持。mainにはマージせずPRでレビュー待ち。
+- 小4社会の図70問（第8・9弾、PR #38）は main に取り込み済み（判断253・`HAND_SOC4_DIAGRAMS.md`。日本地図は Natural Earth の実データ＝`js/japan-map.js`）。施設・災害・文化などの線画は、判断254で「生成した絵」（`diagram.kind: 'image'`、`img/diagrams/*.webp`）に作り直す方針にした。第10弾の依頼（33問）は `DIAGRAM_REQUESTS_10.md`（ChatGPT 待ち）。地図・算数の図・表・グラフは SVG のまま
 - 自動テスト 645件すべて成功、`node tests/simulate.js` はすべて目標内。小5の図118問（第3〜5弾）は `HAND_G5_DIAGRAMS.md`。小4理科87問（第6・7弾）は判断250・`HAND_SCI4_DIAGRAMS.md`、図を追加してPRでレビュー待ち。
 
 ## テストの実行方法

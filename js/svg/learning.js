@@ -23,6 +23,9 @@
     U.el('thead',{},U.el('tr',{},d.head.map(function(t){return U.el('th',{attrs:{scope:'col'},text:t});}))),
     U.el('tbody',{},d.rows.map(function(row){return U.el('tr',{},row.map(function(t,i){return U.el(i===0?'th':'td',{attrs:i===0?{scope:'row'}:{},text:t});}));}))
    ])));
+  }else if(d.kind==='image'){
+   // 生成した絵（PNG・JPEG・WebP）。img/ に置き、src は 'img/…' の相対パス。文字は絵に入れない（判断254）
+   fig.appendChild(U.el('img',{class:'figure-picture',attrs:{src:d.src,alt:d.alt||d.caption||'問題を考えるための絵',loading:'lazy',decoding:'async'}}));
   }else{
    var nodes=[],h=245;
    function add(){Array.prototype.forEach.call(arguments,function(n){nodes.push(n);});}

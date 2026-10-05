@@ -121,3 +121,7 @@ PR #36レビュー対応（判断251）：電池は既知の＋極側だけ端�
 - `industry`（必須scene）：citrus・dairy・carFactory・greenhouse・fishCage・hotBath・coastOrchard・basinOrchard。作物名・産地名・栽培法を書かず、気温の変化を示さない。coastOrchardは木と海のみで太陽や畑の形を出さない。
 
 模式図の形・反復は描画用で、数量や実寸の読み取りには使わない。全使用ID・依頼との差・検証結果はHAND_SOC4_DIAGRAMS.md。
+
+### 生成した絵の図（判断254）
+- `diagram:{kind:'image', src:'img/diagrams/<名前>.webp', alt, caption, study:true}`。`src` と `caption` が必須（`alt` は省略すると caption を使う）。絵は横3：2・WebP・約200KB 以下、`img/diagrams/` に置く（テストは400KBまで）。
+- 絵の中に文字・数字・看板を入れない。答えの名前を描かない。ものの見た目を見せる図に使い、数・形を合わせる図（算数の図・表・グラフ）と地図（`japanMap`）は SVG のままにする。依頼の書き方は `DIAGRAM_REQUESTS_10.md`。

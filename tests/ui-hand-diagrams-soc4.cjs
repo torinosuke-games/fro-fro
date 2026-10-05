@@ -67,7 +67,7 @@ fs.mkdirSync(out,{recursive:true});
     if(structure.scene==='coastOrchard')assert.equal(structure.polygons,0,'terraces must not be drawn');
     if(structure.scene==='pylons')assert.equal(structure.polygons,0,'mountain silhouette must not be drawn');
     if(['riverMouth','fan','delta'].includes(structure.scene))assert.equal(structure.mountains,1);
-    if(['social_g4_hand_industry_013','social_g4_hand_industry_014'].includes(q.id)){const port=structure.parts.find(p=>p.part==='port');assert.ok(port);assert.ok(structure.parts.filter(p=>p.part==='coast').every(p=>p.box.bottom<port.box.top),'port must be separate from map');}
+    if(['social_g4_hand_industry_013','social_g4_hand_industry_014'].includes(q.id)){assert.ok(!structure.parts.find(p=>p.part==='port'),'port scene was removed (decision 254)');}
     checks.push({id:q.id,width,...result});
     if(q.id===qs[0].id){
      // 実際の文字をviewBoxの端をまたぐ／完全に外へ出す負例。検査後は元に戻す。

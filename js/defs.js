@@ -45,6 +45,7 @@
     DIAGRAM_KINDS: {
       story: ['item', 'total', 'each'],
       table: ['head', 'rows'],
+      image: ['src'],
       cards: ['labels', 'values'],
       bars: ['labels', 'values'],
       rect: ['w', 'h'],
