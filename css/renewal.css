@@ -345,3 +345,8 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .review-dock .review-note{min-height:0;height:38px;padding:6px 8px;font-size:0.875rem}
 .review-dock .grid2.has-prev{grid-template-columns:auto 1fr 1fr}
 .review-dock .review-prev{white-space:nowrap}
+/* 手書きの欄（判断266） */
+.hw{display:grid;gap:10px}.hw-canvas{display:block;width:100%;height:auto;aspect-ratio:2/1;touch-action:none;background:#fff;border:2px solid #b8d3e3;border-radius:12px;cursor:crosshair;user-select:none;-webkit-user-select:none}
+.hw-actions{display:flex;gap:8px}.hw-actions .rn-button{flex:1}.hw-switch{align-self:start;font-size:0.8125rem;min-height:36px;padding:6px 12px}
+.hw-model{background:#fffbf1;border:1px solid #efdfbb;border-radius:12px;padding:12px 14px;text-align:center}.hw-answer{display:block;font-size:3rem;line-height:1.3;margin:4px 0;color:#21465c;font-family:'UD Digital Kyokasho NK-R','UD デジタル 教科書体 NK-R','Kyokasho ICA','HG教科書体','Hiragino Mincho ProN','Yu Mincho',serif;letter-spacing:.08em}.hw-model p{margin:0;font-size:0.875rem;line-height:1.7;color:#766342}
+.hw-judge .rn-button{min-height:52px;font-size:1.0625rem}

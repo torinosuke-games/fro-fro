@@ -256,12 +256,12 @@
         recent: cell.recent            // 今回の回答を記録する前の直近
       };
       breakdown = FF.rewards.rewardBreakdown(params, b);
-      reward = breakdown.total;
+      reward = scaleReward(breakdown.total, ctx.rewardRate);
       s.resources[ctx.resource] = (s.resources[ctx.resource] || 0) + reward;
       L.totalEarned[ctx.resource] = (L.totalEarned[ctx.resource] || 0) + reward;
       // 勉強量ポイント（SPEC 8.4）：同じ反復回数・直近の正答で計算する（施設・重点教科・形式はかからない）
       pointsBreakdown = FF.points.pointsBreakdown(params, b);
-      points = pointsBreakdown.total;
+      points = scaleReward(pointsBreakdown.total, ctx.rewardRate);
       FF.points.addPoints(s, points);
       L.correctLog = FF.rewards.recordCorrect(L.correctLog, q.id, now, b);
     } else {
@@ -296,9 +296,34 @@
         pointsBreakdown: pointsBreakdown,
         attempts: attemptNo,
         correctAnswer: displayAnswer(q),
-        explanation: q.explanation
+        explanation: q.explanation,
+        method: ctx.rewardRate == null ? 'typed' : 'self',
+        rate: ctx.rewardRate == null ? 1 : ctx.rewardRate
       }
     };
+  }
+
+  // ---- 手書きの自己採点（判断266）----
+  // 漢字で答える書き問題（国語。答えが漢字をふくみ、判定が exact）は、手で書いて、お手本とくらべて、自分で採点できる
+  function canHandwrite(q) {
+    return !!q && q.subject === 'japanese' && q.answerType === 'input' && q.validationMode === 'exact' && /[\u4e00-\u9fff]/.test(String(q.answer));
+  }
+  // 資源・勉強量ポイントを割合 rate にする（rate が省略か 1 以上なら、そのまま。0 より大きい分は、最低1）
+  function scaleReward(v, rate) {
+    if (rate == null || rate >= 1 || v <= 0) return v;
+    return Math.max(1, Math.round(v * rate));
+  }
+  // ok：自分で「書けた」と採点したか。「まちがえた」は、答えを見ているので、やり直しにせず、不正解で終える
+  function submitSelfCheck(state, att, ok, ctx, b) {
+    b = bal(b);
+    var q = att.question;
+    if (att.done) return { state: state, attempt: att, outcome: { status: 'error', error: 'finished' } };
+    if (!canHandwrite(q)) return { state: state, attempt: att, outcome: { status: 'error', error: 'notHandwrite' } };
+    if (!isGradeUnlocked(state, q.subject, q.gradeLevel)) return { state: state, attempt: att, outcome: { status: 'error', error: 'locked' } };
+    var s = FF.util.clone(state);
+    var c2 = Object.assign({}, ctx, { rewardRate: b.HANDWRITING.REWARD_RATE });
+    var a2 = ok ? att : Object.assign({}, att, { wrong: att.wrong + 1 });
+    return finish(s, a2, !!ok, att.wrong + 1, c2, b);
   }
 
   // ---- 推奨表示・集計 ----
@@ -354,6 +379,8 @@
     startAttempt: startAttempt,
     revealHint: revealHint,
     submitAnswer: submitAnswer,
+    submitSelfCheck: submitSelfCheck,
+    canHandwrite: canHandwrite,
     shouldRecommendLower: shouldRecommendLower,
     subjectSummary: subjectSummary,
     progressLine: progressLine

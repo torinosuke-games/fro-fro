@@ -85,6 +85,22 @@
   if(value==null||!String(value).trim()){it.error=R.selectAnswer;U.rerender();return;}
   var result=L.submitAnswer(a.state,it.attempt,value,{now:a.now(),resource:it.resource});
   if(result.outcome.status==='error') {it.error=result.outcome.error==='noTicket'?R.noTickets:R.selectAnswer;if(result.state!==a.state)a.commit(result.state);U.rerender();return;}
+  applyResult(it,result,value);
+ }
+ // 手書きの欄で、お手本を見たあとの自己採点（判断266）。「書けた」は、ポイントが半分
+ function revealHandwriting(){
+  var it=current();if(!it||it.attempt.done)return;
+  if(!(it.strokes&&it.strokes.length)){it.error=R.hwWriteFirst;U.rerender();return;}
+  it.error=null;it.revealed=true;U.rerender();
+ }
+ function selfCheck(ok){
+  var a=FF.app,it=current();if(!it||it.attempt.done||!it.revealed)return;
+  var result=L.submitSelfCheck(a.state,it.attempt,ok,{now:a.now(),resource:it.resource});
+  if(result.outcome.status==='error'){it.error=R.selectAnswer;U.rerender();return;}
+  applyResult(it,result,ok?it.attempt.question.answer:null);
+ }
+ function applyResult(it,result,value){
+  var a=FF.app;
   it.attempt=result.attempt;it.picked=value;it.error=null;
   var arrive=null;
   if(result.outcome.status==='retry'){
@@ -103,6 +119,26 @@
    FF.rewardFlight.fly([{key:it.resource,source:document.querySelector('.reward-resource .ico')},{key:'heat',source:document.querySelector('.reward-heat img')}],arrive);
   }
   setTimeout(function(){var fb=document.querySelector('.answer-feedback');if(fb)fb.focus({preventScroll:true});},0);
+ }
+ // 手書きの欄：書く→お手本を見る→「書けた」「まちがえた」を自分で選ぶ（判断266）
+ function handwriteView(it,q,done){
+  var locked=done||!!it.revealed,cv=FF.handwriting.pad(it,q.answer,locked);
+  var box=E('div',{class:'hw'},[E('div',{class:'input-label'},[E('span',{text:R.hwHelp})]),cv]);
+  if(!locked){
+   box.appendChild(E('div',{class:'hw-actions'},[
+    button(R.hwUndo,function(){if(it.strokes.length){it.strokes.pop();cv.redraw();}},'rn-button'),
+    button(R.hwClear,function(){it.strokes=[];cv.redraw();},'rn-button')
+   ]));
+   box.appendChild(button(R.hwUseKeyboard,function(){it.mode='key';it.error=null;U.rerender();},'rn-button hw-switch'));
+  }
+  if(it.revealed||done){
+   box.appendChild(E('div',{class:'hw-model'},[E('span',{class:'eyebrow',text:R.hwModel}),E('strong',{class:'hw-answer',text:q.answer}),E('p',{text:R.hwCompare})]));
+   if(!done)box.appendChild(E('div',{class:'hw-actions hw-judge'},[
+    button('○ '+R.hwOk,function(){selfCheck(true);},'rn-button primary hw-ok'),
+    button('× '+R.hwNg,function(){selfCheck(false);},'rn-button hw-ng')
+   ]));
+  }
+  return box;
  }
  function next(){chooseQuestion();U.rerender();root.scrollTo({top:0,behavior:'smooth'});}
  function showFilters(){FF.app.filterDraft=Object.assign({},FF.app.session.sel);U.show('lessonFilters');}
@@ -173,14 +209,19 @@
     answers.appendChild(E('button',{class:cls,disabled:done,attrs:{type:'button','aria-pressed':it.selected===c?'true':'false'},on:{click:function(e){it.selected=c;it.error=null;U.rerender();if(e.detail===0){var check=document.querySelector('.check-answer');if(check)check.focus({preventScroll:true});}}}},[E('span',{class:'option-mark',text:done&&c===q.answer?'✓':String.fromCharCode(65+i)}),U.R('span','option-text',c)]));
    });
   }else{
+   var hwOn=L.canHandwrite(q)&&it.mode!=='key';
+   if(hwOn){answers.appendChild(handwriteView(it,q,done));}else{
    var input=E('input',{class:'renewal-input',value:it.typed,disabled:done,attrs:{type:'text',inputmode:q.validationMode==='number'?'decimal':'text',autocomplete:'off',placeholder:R.inputPlaceholder,'aria-label':R.inputPlaceholder},on:{input:function(e){it.typed=e.target.value;},keydown:function(e){if(e.key==='Enter'&&!e.isComposing)submit();}}});
    answers.appendChild(E('label',{class:'input-label'},[E('span',{text:R.yourAnswer}),input]));
    U.keepInView(input);
+   if(L.canHandwrite(q)&&!done)answers.appendChild(button(R.hwUsePen,function(){it.mode='pen';it.error=null;U.rerender();},'rn-button hw-switch'));
+   }
   }
   card.appendChild(answers);
   if(it.error)card.appendChild(E('div',{class:'answer-feedback retry',attrs:{role:'status',tabindex:'-1'},text:it.error}));
   if(!done){
-   card.appendChild(button(R.checkAnswer,submit,'rn-button primary check-answer',q.answerType==='choice'&&it.selected===null));
+   if(L.canHandwrite(q)&&it.mode!=='key'){if(!it.revealed)card.appendChild(button(R.hwReveal,revealHandwriting,'rn-button primary check-answer'));}
+   else card.appendChild(button(R.checkAnswer,submit,'rn-button primary check-answer',q.answerType==='choice'&&it.selected===null));
    if(q.answerType==='choice'&&FF.tickets.recoverTickets(a.state.tickets,a.now()).count<1)card.appendChild(E('div',{class:'no-ticket-box'},[E('p',{text:R.noTickets}),button(R.switchInput,function(){changeFilter('answerType','input');},'rn-button')]));
   }else if(it.outcome){
    var good=it.outcome.status==='correct',fb=E('div',{class:'answer-feedback '+(good?'good':'review'),attrs:{role:'status',tabindex:'-1'}},[
@@ -192,7 +233,9 @@
    ]);card.appendChild(fb);
    var det=E('details',{class:'reward-details'},[E('summary',{text:R.rewardDetails})]);
    if(good){var bd=it.outcome.breakdown;det.appendChild(E('p',{text:R.rewardFormula.replace('{accuracy}',String(Math.round(bd.accuracy*100))).replace('{repeat}',String(Math.round(bd.repeat*100))).replace('{hint}',String(Math.round(bd.hint*100)))}));}
-   else det.appendChild(E('p',{text:R.noReward}));card.appendChild(det);
+   else det.appendChild(E('p',{text:R.noReward}));
+   if(it.outcome.method==='self'&&good)det.appendChild(E('p',{text:R.hwHalf}));
+   card.appendChild(det);
   }
   card.appendChild(E('div',{class:'lesson-actions'},[
    button('‹ '+R.previous,function(){if(s.cursor>0){s.cursor--;chooseQuestion(s.order[s.cursor],true);U.rerender();}},'rn-button',s.cursor<=0),
