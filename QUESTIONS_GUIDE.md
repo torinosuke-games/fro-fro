@@ -108,3 +108,16 @@ PR #34レビュー対応（判断248）：`solid3d.baseView: 'front'` は三角�
 全使用ID・依頼との差・検証結果はHAND_SCI4_DIAGRAMS.md。
 
 PR #36レビュー対応（判断251）：電池は既知の＋極側だけ端子を突出させ、unknownの電池Bは左右対称のままにする。うでの筋肉は内外1本ずつ骨の両端につなぎ、曲げた図でも同じ形を使う。筋肉を示す4問はlabelsで内側・外側を必ず指定する。頭の骨は目のあなと歯列を残し、瞳・唇は描かない。
+
+### 小4社会の共通図（判断253）
+
+第8・9弾70問。全種類にcaptionとstudy: trueを指定する。図に答えの語・数・地名・施設名や流れの矢印を表示しない。略地図の「北」だけは方位の補助表示。値の範囲はtests/cases/hand-diagrams-soc4.js、実際の問題画面はtests/ui-hand-diagrams-soc4.cjsで検査する。
+
+- `japanMap`（必須bounds・marks・areas・routes）：boundsは[西端経度,南端緯度,東端経度,北端緯度]、marksは[経度,緯度]の配列、areasは3頂点以上の範囲。routesは{type: riverまたはridge, points}。任意のlakesは湖の頂点、mountainは山の位置、portは県の地図の下に港の線画を置く。県名・港名や、問われていない港の位置を出さない。略図を切り出した端を海岸線として描かない。
+- `terrain`（必須scene）：riverMouth・basin・fan・delta・levees・lakeTunnelの地形・河川・水路の模式線画。
+- `facility`（必須scene）：sewer・sewagePlant・reservoir・settling・filter・hydro・supply・hillSupply・landfill・truck・incinerator・gasFilter・compost・bottles・wind・solar・pylons・substation・geothermal・thermal・aqueduct・sluice。発電・送電も施設として共有し、thermalは管の中身を隠す。清掃工場の発電機を排ガス管につながない。
+- `disaster`（必須scene）：flood・landslide・storm・ash・bag・seaWall・sabo・hydrant。第9弾で指定された災害の現状は描くが、名前・数を書かず、bagの中身は隠す。
+- `culture`（必須scene）：dollFloat・poleFloat・lacquer・kettle・castle・houseFront・lanternPole。名前のない祭り・工芸品・建物の線画。houseFrontは窓と入口のみで屋根の形を出さない。任意のtintは#RRGGBB形式の材料色（赤いうるし）。
+- `industry`（必須scene）：citrus・dairy・carFactory・greenhouse・fishCage・hotBath・coastOrchard・basinOrchard。作物名・産地名・栽培法を書かず、気温の変化を示さない。coastOrchardは木と海のみで太陽や畑の形を出さない。
+
+模式図の形・反復は描画用で、数量や実寸の読み取りには使わない。全使用ID・依頼との差・検証結果はHAND_SOC4_DIAGRAMS.md。
