@@ -1120,7 +1120,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g5_vocab_001', subject: 'japanese', gradeLevel: 5, unit: 'vocab',
+    id: 'japanese_g5_vocab_001', subject: 'japanese', gradeLevel: 5, unit: 'word',
     difficulty: 'standard', answerType: 'choice',
     question: '{漢語|かんご}（{漢字|かんじ}を {音読|おんよ}みする ことば）は どれかな。',
     choices: ['{出発|しゅっぱつ}', '{出|で}かける', 'スタート', '{旅立|たびだ}ち'],
@@ -1160,7 +1160,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g5_vocab_002', subject: 'japanese', gradeLevel: 5, unit: 'vocab',
+    id: 'japanese_g5_vocab_002', subject: 'japanese', gradeLevel: 5, unit: 'word',
     difficulty: 'basic', answerType: 'choice',
     question: '{外来語|がいらいご}（{外国|がいこく}から {入|はい}って きた ことば）は どれかな。',
     choices: ['ノート', '{帳面|ちょうめん}', '{手帳|てちょう}', '{紙|かみ}'],
@@ -1264,7 +1264,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g5_vocab_003', subject: 'japanese', gradeLevel: 5, unit: 'vocab',
+    id: 'japanese_g5_vocab_003', subject: 'japanese', gradeLevel: 5, unit: 'word',
     difficulty: 'standard', answerType: 'choice',
     question: '{和語|わご}（もともと {日本|にほん}に あった ことば）は どれかな。',
     choices: ['{宿屋|やどや}', '{旅館|りょかん}', 'ホテル', '{民宿|みんしゅく}'],
@@ -1274,7 +1274,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g5_yoji_001', subject: 'japanese', gradeLevel: 5, unit: 'yoji',
+    id: 'japanese_g5_yoji_001', subject: 'japanese', gradeLevel: 5, unit: 'proverb',
     difficulty: 'standard', answerType: 'choice',
     question: '{四字熟語|よじじゅくご}「{十人十色|じゅうにんといろ}」の {意味|いみ}は どれかな。',
     choices: ['{考|かんが}えや {好|この}みは、{人|ひと}に よって それぞれ ちがう', '{十人|じゅうにん}で {力|ちから}を {合|あ}わせれば、なんでも できる', 'いろいろな {色|いろ}を まぜると きれいに なる', '{人|ひと}の {数|かず}が {多|おお}いほど {時間|じかん}が かかる'],
@@ -1312,7 +1312,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g5_compound_001', subject: 'japanese', gradeLevel: 5, unit: 'compound',
+    id: 'japanese_g5_compound_001', subject: 'japanese', gradeLevel: 5, unit: 'word',
     difficulty: 'advanced', answerType: 'choice',
     question: '「□{常識|じょうしき}」の □に {入|はい}る、{打|う}ち{消|け}しの {意味|いみ}の {漢字|かんじ}は どれかな。',
     choices: ['{非|ひ}', '{不|ふ}', '{無|む}', '{未|み}'],

@@ -63,6 +63,20 @@
         { id: 'conjunction', name: 'つなぎ言葉・指示語', description: 'つなぎ方・こそあど言葉', icon: '接' },
         { id: 'story', name: '物語文の読み取り', description: '場面・気持ちの変化', icon: '物' },
         { id: 'explain', name: '説明文の読み取り', description: '話題・まとめ・理由', icon: '説' }
+      ],
+      5: [
+        { id: 'kanji_read', name: '漢字の読み', description: '５年の漢字', icon: '読' },
+        { id: 'kanji_write', name: '漢字の書き取り', description: '５年の漢字・同じ形の字', icon: '書' },
+        { id: 'okurigana', name: '送りがな', description: '動詞・形容詞の送りがな', icon: 'あ' },
+        { id: 'homonym', name: '同音異義語・同訓異字', description: '使い分け', icon: '同' },
+        { id: 'word', name: '熟語・類義語・対義語', description: '熟語の組み立て・言葉の意味', icon: '言' },
+        { id: 'idiom', name: '慣用句', description: '体の部分・動物の言葉', icon: '慣' },
+        { id: 'proverb', name: 'ことわざ・故事成語・四字熟語', description: '意味と使い方', icon: '諺' },
+        { id: 'keigo', name: '敬語', description: '尊敬語・謙譲語・丁寧語', icon: '敬' },
+        { id: 'grammar', name: '文の組み立て', description: '主語・述語・修飾語', icon: '文' },
+        { id: 'conjunction', name: 'つなぎ言葉・指示語', description: 'つなぎ方・こそあど言葉', icon: '接' },
+        { id: 'story', name: '物語文の読み取り', description: '場面・気持ちの変化', icon: '物' },
+        { id: 'explain', name: '説明文の読み取り', description: '話題・まとめ・理由', icon: '説' }
       ]
     },
     science: {
