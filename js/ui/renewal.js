@@ -223,7 +223,7 @@
   var answers=E('div',{class:'lesson-answers'});
   if(q.answerType==='choice'){
    it.attempt.choices.forEach(function(c,i){var cls='answer-option'+(it.selected===c?' selected':'');if(done&&c===q.answer)cls+=' correct';else if(done&&it.picked===c)cls+=' incorrect';
-    answers.appendChild(E('button',{class:cls,disabled:done,attrs:{type:'button','aria-pressed':it.selected===c?'true':'false'},on:{click:function(e){it.selected=c;it.error=null;U.rerender();if(e.detail===0){var check=document.querySelector('.check-answer');if(check)check.focus({preventScroll:true});}}}},[E('span',{class:'option-mark',text:done&&c===q.answer?'✓':String.fromCharCode(65+i)}),U.R('span','option-text',c)]));
+    answers.appendChild(E('button',{class:cls,disabled:done,attrs:{type:'button','aria-pressed':it.selected===c?'true':'false'},on:{click:function(){it.selected=c;it.error=null;submit();}}},[E('span',{class:'option-mark',text:done&&c===q.answer?'✓':String.fromCharCode(65+i)}),U.R('span','option-text',c)]));
    });
   }else{
    var hwOn=L.canHandwrite(q)&&it.mode!=='key';
@@ -239,7 +239,7 @@
   if(it.error)card.appendChild(E('div',{class:'answer-feedback retry',attrs:{role:'status',tabindex:'-1'},text:it.error}));
   if(!done){
    if(L.canHandwrite(q)&&it.mode!=='key'){if(!it.revealed)card.appendChild(button(R.hwReveal,revealHandwriting,'rn-button primary check-answer'));}
-   else card.appendChild(button(R.checkAnswer,submit,'rn-button primary check-answer',q.answerType==='choice'&&it.selected===null));
+   else if(q.answerType!=='choice')card.appendChild(button(R.checkAnswer,submit,'rn-button primary check-answer'));
    if(q.answerType==='choice'&&FF.tickets.recoverTickets(a.state.tickets,a.now()).count<1)card.appendChild(E('div',{class:'no-ticket-box'},[E('p',{text:R.noTickets}),button(R.switchInput,function(){changeFilter('answerType','input');},'rn-button')]));
   }else if(it.outcome){
    var good=it.outcome.status==='correct',fb=E('div',{class:'answer-feedback '+(good?'good':'review'),attrs:{role:'status',tabindex:'-1'}},[
