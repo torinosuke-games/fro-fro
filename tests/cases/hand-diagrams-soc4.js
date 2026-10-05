@@ -4,8 +4,11 @@ module.exports=({test,ctx,FF,assert,plain})=>{
  const root=path.resolve(__dirname,'../..');
  const ids=[8,9].flatMap(n=>[...fs.readFileSync(path.join(root,'DIAGRAM_REQUESTS_'+n+'.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'social_g4_hand_'+m[1]));
  const all=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_soc4')),qs=all.filter(q=>ids.includes(q.id));
- // 第10弾で絵に置き換えるscene。残るSVGの検証は省略せず、旧sceneとの対応も保護する。
+ // 第10・11弾で絵に置き換えるscene。残るSVGの検証は省略せず、旧sceneとの対応も保護する。
  const pictures={terrain:{geography_006:'riverMouth',geography_027:'fan',geography_028:'delta',pioneer_005:'levees'},facility:{water_007:'reservoir',water_009:'settling',water_010:'filter',garbage_001:'landfill',garbage_004:'truck',electric_003:'wind',electric_004:'solar',electric_005:'pylons',electric_006:'substation',electric_015:'geothermal',pioneer_014:'aqueduct',pioneer_025:'sluice'},disaster:{disaster_003:'flood',disaster_004:'landslide',disaster_005:'storm',disaster_006:'ash',disaster_011:'bag',disaster_014:'seaWall',disaster_015:'sabo',disaster_026:'hydrant'},culture:{tradition_001:'dollFloat',tradition_002:'poleFloat',tradition_004:'lacquer',tradition_007:'kettle',tradition_014:'castle',tradition_033:'lanternPole'},industry:{industry_006:'dairy',industry_012:'greenhouse',industry_015:'fishCage'}};
+ Object.assign(pictures.terrain,{pioneer_012:'lakeTunnel'});
+ Object.assign(pictures.facility,{water_004:'sewagePlant',water_013:'hydro',water_021:'supply'});
+ Object.assign(pictures.industry,{industry_007:'carFactory'});
  test('社会図：依頼書の70問だけに追加・キャプション必須',()=>{
   assert.equal(ids.length,70);assert.equal(new Set(ids).size,70);assert.equal(qs.length,70);
   assert.equal(all.filter(q=>q.diagram).length,70);

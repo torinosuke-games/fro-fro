@@ -59,11 +59,11 @@
     function pylon(x,y,scale){group(x,y,scale,function(){add(path('M-35,0 L0,-155 L35,0 Z M-27,-30 H27 M-20,-65 H20 M-12,-100 H12 M-25,-30 L20,-65 M25,-30 L-20,-65 M-20,-65 L12,-100 M20,-65 L-12,-100'),line(-42,-105,42,-105),line(-30,-135,30,-135));});}
     function bottle(x,y,fill){add(path('M'+(x-6)+','+y+' h12 v15 l10,12 v47 h-32 v-47 l10,-12 Z',fill));}
     if(d.kind==='japanMap'){
-     h=d.port?540:430;
+     h=d.regionBoundaries?570:d.port?540:430;
      // 公開の物理海岸線データを静的に同梱。地域を切り出す端は海岸線にしない。
      var coasts=FF.japanMapData.coasts;
-     var b=d.bounds,sy=340/(b[3]-b[1]),sx=440/((b[2]-b[0])*.79),scale=Math.min(sx,sy);
-     function project(p){return [260+(p[0]-(b[0]+b[2])/2)*.79*scale,215-(p[1]-(b[1]+b[3])/2)*scale];}
+     var mapHeight=d.regionBoundaries?570:430,b=d.bounds,sy=(mapHeight-90)/(b[3]-b[1]),sx=440/((b[2]-b[0])*.79),scale=Math.min(sx,sy);
+     function project(p){return [260+(p[0]-(b[0]+b[2])/2)*.79*scale,mapHeight/2-(p[1]-(b[1]+b[3])/2)*scale];}
      function clip(ps){
       [[0,b[0],1],[0,b[2],-1],[1,b[1],1],[1,b[3],-1]].forEach(function(edge){var out=[];ps.forEach(function(q,i){var p=ps[(i+ps.length-1)%ps.length],ip=(p[edge[0]]-edge[1])*edge[2]>=0,iq=(q[edge[0]]-edge[1])*edge[2]>=0;if(ip!==iq){var t=(edge[1]-p[edge[0]])/(q[edge[0]]-p[edge[0]]);out.push([p[0]+t*(q[0]-p[0]),p[1]+t*(q[1]-p[1])]);}if(iq)out.push(q);});ps=out;});return ps;
      }
@@ -73,14 +73,20 @@
       return [project([p[0]+lo*dx,p[1]+lo*dy]),project([p[0]+hi*dx,p[1]+hi*dy])];
      }
      var landId='social-map-land-'+(++socialMapSerial),landCuts=[];
-     coasts.forEach(function(ps,index){var cut=clip(ps);if(cut.length>=3){var land=poly(cut.map(project),b[2]-b[0]>20?'#fff':'none');land.setAttribute('stroke','none');land.setAttribute('data-part','land');add(land);landCuts.push(poly(cut.map(project),'#fff'));}var segments=[];ps.forEach(function(p,i){var seg=coastSegment(p,ps[(i+1)%ps.length]);if(seg)segments.push('M'+seg[0].join(',')+'L'+seg[1].join(','));});if(segments.length){var coast=path(segments.join(' '));coast.setAttribute('stroke-width','1.5');coast.setAttribute('data-part','coast');coast.setAttribute('data-coast-index',index);add(coast);}});
+     coasts.forEach(function(ps,index){var cut=clip(ps);if(cut.length>=3){var land=poly(cut.map(project),d.regionBoundaries||b[2]-b[0]>20?'#fff':'none');land.setAttribute('stroke','none');land.setAttribute('data-part','land');add(land);landCuts.push(poly(cut.map(project),'#fff'));}var segments=[];ps.forEach(function(p,i){var seg=coastSegment(p,ps[(i+1)%ps.length]);if(seg)segments.push('M'+seg[0].join(',')+'L'+seg[1].join(','));});if(segments.length){var coast=path(segments.join(' '));coast.setAttribute('stroke-width','1.5');coast.setAttribute('data-part','coast');coast.setAttribute('data-coast-index',index);add(coast);}});
      add(S('defs',{},S('clipPath',{id:landId},landCuts)));
-     d.areas.forEach(function(ps){var area=poly(clip(ps).map(project),orange);area.setAttribute('fill-opacity','.3');area.setAttribute('stroke-width','1.5');area.setAttribute('clip-path','url(#'+landId+')');add(area);});
+     d.areas.forEach(function(ps){var area=poly(clip(ps).map(project),orange);area.setAttribute('fill-opacity','.3');area.setAttribute('stroke-width','1.5');area.setAttribute('clip-path','url(#'+landId+')');area.setAttribute('data-part','area');add(area);});
+     if(d.regionBoundaries)FF.japanMapData.regionBoundaries.forEach(function(ps){var segments=[];for(var i=1;i<ps.length;i++){var seg=coastSegment(ps[i-1],ps[i]);if(seg)segments.push('M'+seg[0].join(',')+'L'+seg[1].join(','));}if(segments.length){var border=path(segments.join(' '),null,ink);border.setAttribute('stroke-width','1.2');border.setAttribute('clip-path','url(#'+landId+')');border.setAttribute('data-part','region-boundary');add(border);}});
      (d.lakes||[FF.japanMapData.lake]).forEach(function(ps){var cut=clip(ps);if(cut.length>=3){var lake=poly(cut.map(project),pale);lake.setAttribute('stroke-width','1.5');lake.setAttribute('data-part','lake');add(lake);}});
      d.routes.forEach(function(r){var ps=r.points.map(project),route=path(ps.map(function(p,i){return(i?'L':'M')+p.join(',');}).join(' '),null,r.type==='ridge'?ink:blue);route.setAttribute('stroke-width',r.type==='river'?'5':'3');route.setAttribute('data-part',r.type);add(route);});
      d.marks.forEach(function(p){var q=project(p);add(circle(q[0],q[1],7,orange));});
      if(d.mountain){var p=project(d.mountain);add(poly([[p[0]-12,p[1]+9],[p[0],p[1]-12],[p[0]+12,p[1]+9]],orange));}
-     add(text(475,52,'北',32),line(475,65,475,91,ink));
+     if(!d.insetOnly)add(text(475,52,'北',32),line(475,65,475,91,ink));
+     if(d.inset){
+      var frame=d.inset.frame,inset=render({kind:'japanMap',bounds:d.inset.bounds,marks:[],areas:[],routes:[],insetOnly:true,study:true}).querySelector('svg'),insetScale=Math.min(frame[2]/520,frame[3]/430);
+      var insetGroup=S('g',{transform:'translate('+(frame[0]+(frame[2]-520*insetScale)/2)+','+(frame[1]+(frame[3]-430*insetScale)/2)+') scale('+insetScale+')','data-part':'island-inset'},Array.prototype.slice.call(inset.childNodes));
+      add(box(frame[0],frame[1],frame[2],frame[3],'#fff'),insetGroup);
+     }
      if(d.port){group(0,440,1,function(){add(line(35,60,485,60),box(35,63,450,25,pale),path('M220,63 h165 l-24,22 H245 Z','#fff'),box(280,44,55,19,'#fff'),line(92,5,92,60),line(92,5,180,25),line(180,25,180,47));});nodes[nodes.length-1].setAttribute('data-part','port');}
     }else if(d.kind==='terrain'){
      if(d.scene==='basin'){add(poly([[30,315],[30,150],[105,70],[175,235],[345,235],[420,70],[490,150],[490,315]],pale),line(175,235,345,235,ink));house(235,212,.35);}
@@ -603,11 +609,13 @@
     add(line(165,187,423,187),line(165,187,165,30),line(165,187,305,58),text(446,195,'右',17),text(165,22,'高さ',17),text(330,57,'奥',17));
     add(text(305,218,'右 '+d.values[0],18),text(88,90,'高さ '+d.values[2],18),text(325,105,'奥 '+d.values[1],18));
    }else if(d.kind==='graph'){
-    var maxV=Math.max.apply(null,d.values),step=[1,2,5,10,20,50,100,200,500,1000].filter(function(c){return Math.ceil(maxV/c)<=8;})[0]||1000,top=Math.ceil(maxV/step)*step;h=270;
-    for(var v=0;v<=top;v+=step){var yy=220-v/top*175;add(line(65,yy,472,yy,'#d0e1eb'),text(48,yy+5,v,15));}
-    var points=d.values.map(function(v,i){return [75+i*380/(d.values.length-1),220-v/top*175];});
+    var maxV=Math.max.apply(null,d.values),step=[1,2,5,10,20,50,100,200,500,1000].filter(function(c){return Math.ceil(maxV/c)<=8;})[0]||1000,top=Math.ceil(maxV/step)*step;
+    var detailed=Number.isFinite(d.minorStep)&&d.minorStep>0&&d.minorStep<step&&top/d.minorStep<=1000,bottom=detailed?300:220,plotHeight=detailed?255:175;h=detailed?360:270;
+    if(detailed)for(var minor=d.minorStep;minor<top;minor+=d.minorStep){if(Math.abs(minor/step-Math.round(minor/step))<1e-8)continue;var grid=line(65,bottom-minor/top*plotHeight,472,bottom-minor/top*plotHeight,'#d0e1eb');grid.setAttribute('stroke-width','1');grid.setAttribute('data-part','minor-grid');add(grid);}
+    for(var v=0;v<=top;v+=step){var yy=bottom-v/top*plotHeight;add(line(65,yy,472,yy,'#d0e1eb'),text(48,yy+(detailed?8:5),v,detailed?24:15));}
+    var points=d.values.map(function(v,i){return [75+i*380/(d.values.length-1),bottom-v/top*plotHeight];});
     add(S('polyline',{points:points.map(function(p){return p.join(',');}).join(' '),fill:'none',stroke:blue,'stroke-width':3}));
-    points.forEach(function(p,i){add(S('circle',{cx:p[0],cy:p[1],r:5,fill:orange,stroke:'#fff','stroke-width':2}),text(p[0],249,d.labels[i],15));});
+    points.forEach(function(p,i){add(S('circle',{cx:p[0],cy:p[1],r:5,fill:orange,stroke:'#fff','stroke-width':2}),text(p[0],detailed?333:249,d.labels[i],detailed?24:15));});
    }else if(d.kind==='abacus'){
     h=270;add(box(135,15,250,223,'#f8eedc'),line(150,97,370,97,'#8e6742'));
     d.digits.forEach(function(n,i){var x=205+i*110;add(line(x,25,x,225,'#aa8764'),text(x,260,d.labels[i],17));
@@ -628,7 +636,7 @@
    }
    var svg=S('svg',{viewBox:'0 0 520 '+h,role:'img','aria-label':d.caption||'問題を考えるための図'},[S('title',{},d.caption||'学習の図')].concat(nodes));
    // 個数が多い図は高さを制限すると絵と文字が小さくなるため、自然な縦横比で表示。
-   if(d.study||['objects','tape','measure','gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0)svg.style.maxHeight='none';
+   if(d.study||d.kind==='graph'&&d.minorStep||['objects','tape','measure','gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0)svg.style.maxHeight='none';
    fig.appendChild(svg);
   }
   if(d.caption)fig.appendChild(U.el('figcaption',{text:d.caption}));
