@@ -23,7 +23,8 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  test('手作りの図：468問のdiagram以外の全項目と対象外の図は不変',()=>{   // 手作りの問題の本文・確認済みの印を直したら、下の2つのハッシュも更新する（判断241）
   assert.strictEqual(all.length,468);
   assert.strictEqual(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'f79a5173725b3c52ab9a39b11b1cbc4a2327428c3848d0ec04018ca47e739563');
-  assert.strictEqual(hash(all.filter(q=>!ids.includes(q.id))),'e045ce47d8c8d0a26b9964d5db86bde4fb26405c7af10c7cf39235fa6a4eecff');
+  // 第11弾でgraph_005にだけ追加した任意の補助線指定を除き、旧データと一致。
+  assert.strictEqual(hash(all.filter(q=>!ids.includes(q.id)).map(q=>{const v=plain(q);if(v.id==='math_g4_hand_graph_005')delete v.diagram.minorStep;return v;})),'e045ce47d8c8d0a26b9964d5db86bde4fb26405c7af10c7cf39235fa6a4eecff');
  });
  test('手作りの図：依頼17問の網羅・caption・reviewed false・書き問題継承・除外2問',()=>{
   assert.strictEqual(ids.length,17);assert.strictEqual(qs.length,17);const bank=FF.learning.createBank(ctx.QUESTION_BANK);

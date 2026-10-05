@@ -297,3 +297,72 @@ Scene:
 | industry_006 | img/diagrams/soc4_industry_006.webp | 142668 | 草地と牛のようす |
 | industry_012 | img/diagrams/soc4_industry_012.webp | 151260 | 野菜を育てる建物 |
 | industry_015 | img/diagrams/soc4_industry_015.webp | 140064 | 海の中のあみと魚 |
+
+## 第11弾：レビューで要改善になった11問（判断258）
+
+完了・レビュー待ち。依頼はDIAGRAM_REQUESTS_11.md。main `6c7c9f6` から `codex/redo-diagrams-11` を作成。指定11問と同時調整指定のindustry_014に対応し、mainにはマージしない。
+
+### 変更範囲と生成方法
+
+- 社会11問（A6問・地図4問・industry_014）と算数graph_005のdiagramのみ。社会297問・算数468問のそれ以外の項目はハッシュで変更前と一致。対象外の社会286問・算数467問は図も完全一致。
+- 6枚をimagegenスキル・組み込みimage_genで個別に新規生成。pioneer_012だけ初版の断面を組み込み画像編集で修正。CLI/APIは使わない。
+- sharpで `resize(800,533).webp({quality,effort:6})` による縮小と形式変換だけを実施。容量に応じてqualityを調整（70・54・70・78・58・78）。切り抜き・合成・描き直しは変換処理で行わない。6枚合計570,724 bytes、最大99,804 bytes、すべて100,000 bytes以下。
+- water_007は芝生の屋根を持つ地中のコンクリート施設。キャッシュ対策でsrcをsoc4_water_007_v2.webpへ変更し、旧画像は削除しない。用水の初版の露出断面を自然な山の斜面へ直し、トンネル内部を描かない。
+- 地図は既存海岸線を保持し、地方境界・別枠・投影の指定だけを追加。富士山は山の印だけ、半島の色は元の海岸頂点、港2問は海岸まで寄せる。地名・港の印を足さない。出典はSOCIAL_MAP_DATA.md。
+- graph_005だけminorStep:1。1ごとの補助線と、この図だけ大きくした描画範囲・ラベル。値やラベルは不変、26を文字にせず点の中心が補助線に乗る。inputFormへ同じ図を継承。新しいkindなし、既存image・japanMap・graphを利用。
+- ゲームの変更ファイル：questions/social_g4_hand.js、questions/math_g4_hand.js（diagramのみ）、js/japan-map.js、js/svg/learning.js、上記6枚のWebP。依頼書の完了条件により、テスト・SOCIAL_MAP_DATA.md・この記録・DIAGRAM_REQUESTS_11.md・DECISIONS.mdも更新。CSS・defs・単元・セーブは変更しない。
+
+### 検証結果
+
+- `node tests/run.js`：654件成功、失敗0。
+- `node tests/simulate.js`：すべて目標内。
+- `tests/ui-hand-diagrams-soc4.cjs`：社会70問＋graph_005の選択・入力形式＝72形式×360・390・768・1024px＝288表示成功。文字・図形の見切れ、重なり、横はみ出し、例外なし。SVG・画像の負例16件を検出。graph_005の24本の補助線と点の中心、他のグラフに補助線がないことも実SVGで検査。
+- `tests/ui-social-map-geography.cjs`：地名集の参照33点・全図と地域図17枚成功。能登の原海岸頂点5点に十字を追加し、色との一致を確認。
+- 6枚の画像を問題文・答えと並べて確認。文字・数字・看板・ロゴ・答えの名前なし。390・1024pxのスクリーンショットを保存。指定された対象の姿は描くが、名称・水圧の説明・流れの矢印・県や港の名前を出さない。
+- スクリーンショット・検証JSON・12問の比較ギャラリーはローカル `outputs/redo-diagrams-11/`。industry_014の同時調整とpioneer_012の断面省略は依頼の内容に沿った対応で、対象の省略はない。
+
+### 第11弾の共通プロンプト
+
+以下の共通先頭に、各Sceneをそのまま続けて個別に生成。
+
+> Use case: scientific-educational. Asset type: one scene illustration for a Japanese grade-4 social-studies question in FROZEN FRONTIER. Warm polished anime game illustration, sunny daytime, clear simple forms, restrained soft shading and blue/green/amber natural colors, scenic background rather than white. Landscape 3:2 composition, safe margins for an 800x533px final WebP shown at smartphone size. No text, letters, numerals, writing-like patterns, signs, labels, logos, trademarks, watermark, arrows, UI, infographic callouts or readable displays anywhere. Do not add facility names or place names. Main structures fully within the frame.
+
+### 第11弾 water_007
+
+保存先：`img/diagrams/soc4_water_007_v2.webp`。800×533px、98460 bytes。
+
+> A realistically recognizable Japanese hillside drinking-water storage facility: a LARGE LOW RECTANGULAR REINFORCED-CONCRETE CISTERN partly buried in the hill, with a continuous grassy roof, exposed concrete retaining wall, a modest small access door and fence. It is a covered protected reservoir, NOT a tall cylindrical metallic tank, NOT an oil or fuel tank, NOT a swimming pool. A thick pipe leaves the hillside structure and descends along the slope toward a modest Japanese town below; town roofs, sky and hill visible. Three-quarter hillside view close enough that grass-covered buried concrete structure is unmistakable. No text or signage.
+
+### 第11弾 water_004
+
+保存先：`img/diagrams/soc4_water_004.webp`。800×533px、99804 bytes。
+
+> Bird's-eye oblique view of a Japanese wastewater treatment facility beside a town and river. Several clearly visible large rectangular settling/aeration basins and circular clarifier basins, a small plain management building, connecting pipes. Water is gently brownish in some basins and clearer bluish water is visible at an outlet joining the adjacent river; no directional arrows, labels or before/after panels. Realistic organized treatment site, not an abstract set of boxes; main basins large and legible on a phone. No words naming the facility.
+
+### 第11弾 water_013
+
+保存先：`img/diagrams/soc4_water_013.webp`。800×533px、95326 bytes。
+
+> A concrete dam spanning a narrow forested mountain valley with a broad calm reservoir lake behind it. At the dam foot a small plain powerhouse building. A realistically plausible thick steel penstock runs down the valley side from an intake tower near the lake to the powerhouse. One transmission tower with wires nearby. Dam, lake, penstock and small building all easy to distinguish, no cutaway turbine or spinning arrows and no labels naming generation method.
+
+### 第11弾 water_021
+
+保存先：`img/diagrams/soc4_water_021.webp`。800×533px、91556 bytes。
+
+> A clear educational scenic cutaway illustration: on a hill, a low rectangular concrete drinking-water cistern partly buried in ground with grassy roof; beneath the sloping ground a single continuous thick water pipe descends from the cistern to a Japanese town house. One house is opened in a simple cutaway view, exposing a kitchen sink and a tap with a clear vigorous stream of water falling into the basin. Pipe physically connected to the tap, no arrows, pressure numbers, motion labels, equations or explanatory words. Keep the small kitchen visible at smartphone size, show only the arrangement and water emerging, not a labeled explanation. Friendly anime illustration rather than abstract SVG.
+
+### 第11弾 pioneer_012
+
+保存先：`img/diagrams/soc4_pioneer_012.webp`。800×533px、99592 bytes。
+
+> A scenic historical water channel across a mountain: a calm lake surrounded by wooded mountains at higher altitude, a small stone-lined water-tunnel portal at the mountain foot on the open-plain side, a narrow irrigation channel emerges from the portal and continues through rice paddies and fields on a broad sunny plain. The lake and plain are visibly separated by the mountain, water cannot simply spill openly across the top. A modest unobtrusive cutaway sliver of hillside may show the water tunnel connecting the lake to the portal; no road or train tunnel and no modern dam. Generic scene, no identifiable landmarks, lake names, place names, writing or arrows.
+
+初版の不自然な露出断面だけを直す編集プロンプト（組み込み画像編集）：
+
+> Use case: precise-object-edit. Edit this warm anime educational scene for a Japanese grade-4 social-studies game. Change ONLY the unnatural exposed horizontal cutaway trench and small waterfall at the lake edge in the upper-left/middle of the scene: replace that entire exposed cutaway with a continuous natural wooded mountain slope and a closed, calm natural lakeshore. The underground water tunnel must remain hidden by the mountain, not visible as a sliced-open wall or waterfall. KEEP the calm mountain lake behind the ridge, the stone tunnel portal at the mountain foot, the small irrigation channel emerging from that portal, the rice paddies/plain, composition, light and warm anime style. The result shows a lake behind a mountain and water emerging from a stone-lined tunnel on the plain side; no need to show tunnel interior. No new objects, people, text, numbers, arrows, signs, logos, place names or watermark. Maintain landscape 3:2 and safe margins.
+
+### 第11弾 industry_007
+
+保存先：`img/diagrams/soc4_industry_007.webp`。800×533px、85986 bytes。
+
+> A bright modern automobile assembly factory interior, large articulated robot arms assembling plain unbranded car bodies on a conveyor production line, a few completed cars further along. Robot tools physically near chassis panels. Clear recognizable car shapes and robotic arms, uncluttered educational composition for a fourth grader, warm anime game art, not photorealistic. No manufacturer's logo, car name, number plates, warning signs, writing, control-panel characters or readable displays. Depict only a generic assembly scene with no location or brand clues.

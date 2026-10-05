@@ -12,13 +12,13 @@ fs.mkdirSync(out,{recursive:true});
    document.documentElement.dataset.theme='day';FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),9);FF.app.state.player.name='ゆき';FF.app.state.player.avatar='e1';
    window.qaShowQuestion=id=>{
     const q=FF.app.bank.byId[id];FF.app.state.player.grade=q.gradeLevel;
-    FF.app.session={renewal:true,sel:{subject:'social',grade:q.gradeLevel,unit:'all',difficulty:'random',answerType:q.answerType,resource:'wood'},recentIds:[],items:{},currentId:q.id,order:[q.id],cursor:0};
+    FF.app.session={renewal:true,sel:{subject:q.subject,grade:q.gradeLevel,unit:'all',difficulty:'random',answerType:q.answerType,resource:'wood'},recentIds:[],items:{},currentId:q.id,order:[q.id],cursor:0};
     FF.app.session.items[q.id]={attempt:FF.learning.startAttempt(q),outcome:null,picked:null,selected:null,typed:'',resource:'wood'};
     FF.ui.show('quiz');scrollTo(0,0);
    };
    window.qaCheckFigure=el=>{
     const issues=[],svg=el.querySelector('svg'),rect=el.getBoundingClientRect();let minText=Infinity;
-    if(!svg){const img=el.querySelector('.figure-picture');if(img){const r=img.getBoundingClientRect();if(!img.complete||!img.naturalWidth)issues.push('image not loaded');if(img.naturalWidth/img.naturalHeight!==1.5)issues.push('image aspect ratio');if(r.left<rect.left||r.right>rect.right||r.top<rect.top||r.bottom>rect.bottom)issues.push('image clipped');if(getComputedStyle(img).objectFit!=='contain')issues.push('image must not crop');}for(const cell of el.querySelectorAll('th,td,figcaption')){const range=document.createRange();range.selectNodeContents(cell);for(const r of range.getClientRects())if(r.left<rect.left||r.right>rect.right)issues.push('text clipped '+cell.textContent);}return {issues,overflow:document.documentElement.scrollWidth>innerWidth+1,figureOverflow:el.scrollWidth>el.clientWidth+1,figureWidth:rect.width};}
+    if(!svg){const img=el.querySelector('.figure-picture');if(img){const r=img.getBoundingClientRect();if(!img.complete||!img.naturalWidth)issues.push('image not loaded');if(img.naturalWidth/img.naturalHeight!==1.5&&!(img.naturalWidth===800&&img.naturalHeight===533))issues.push('image aspect ratio');if(r.left<rect.left||r.right>rect.right||r.top<rect.top||r.bottom>rect.bottom)issues.push('image clipped');if(getComputedStyle(img).objectFit!=='contain')issues.push('image must not crop');}for(const cell of el.querySelectorAll('th,td,figcaption')){const range=document.createRange();range.selectNodeContents(cell);for(const r of range.getClientRects())if(r.left<rect.left||r.right>rect.right)issues.push('text clipped '+cell.textContent);}return {issues,overflow:document.documentElement.scrollWidth>innerWidth+1,figureOverflow:el.scrollWidth>el.clientWidth+1,figureWidth:rect.width};}
     const vb=svg.viewBox.baseVal,sr=svg.getBoundingClientRect();
     const ts=[...svg.querySelectorAll('text')];
     function svgBox(t){const b=t.getBBox(),m=svg.getCTM().inverse().multiply(t.getCTM()),ps=[[b.x,b.y],[b.x+b.width,b.y],[b.x,b.y+b.height],[b.x+b.width,b.y+b.height]].map(([x,y])=>new DOMPoint(x,y).matrixTransform(m)),x=Math.min(...ps.map(p=>p.x)),y=Math.min(...ps.map(p=>p.y));return {x,y,width:Math.max(...ps.map(p=>p.x))-x,height:Math.max(...ps.map(p=>p.y))-y};}
@@ -46,8 +46,8 @@ fs.mkdirSync(out,{recursive:true});
   });
   const settled=()=>page.evaluate(async()=>{await document.fonts.ready;for(const img of document.querySelectorAll('.figure-picture')){img.loading='eager';await img.decode();}await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
   const requested=[8,9].flatMap(n=>[...fs.readFileSync(path.join(root,'DIAGRAM_REQUESTS_'+n+'.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'social_g4_hand_'+m[1]));
-  const qs=await page.evaluate(ids=>QUESTION_BANK.filter(q=>ids.includes(q.id)).map(q=>({id:q.id,kind:q.diagram.kind})),requested);
-  assert.equal(requested.length,70);assert.equal(qs.length,70);const checks=[],screenshots=[],negativeChecks=[];
+  const qs=await page.evaluate(ids=>Object.values(FF.app.bank.byId).filter(q=>ids.includes(q.id)).map(q=>({id:q.id,kind:q.diagram.kind})),requested.concat(['math_g4_hand_graph_005','math_g4_hand_graph_005#input']));
+  assert.equal(requested.length,70);assert.equal(qs.length,72);const checks=[],screenshots=[],negativeChecks=[];
   for(const q of qs){
    for(const width of [360,390,768,1024]){
     await page.setViewportSize({width,height:1000});await page.evaluate(id=>qaShowQuestion(id),q.id);await settled();
@@ -59,9 +59,15 @@ fs.mkdirSync(out,{recursive:true});
      const q=FF.app.bank.byId[FF.app.session.currentId],d=q.diagram;
      const count=s=>svg.querySelectorAll(s).length;
      const parts=[...svg.querySelectorAll('[data-part]')].map(s=>({part:s.dataset.part,box:s.getBoundingClientRect().toJSON(),stroke:s.getAttribute('stroke-width')}));
-     return {labels:[...svg.querySelectorAll('text')].map(t=>t.textContent),arrows:count('[marker-end],[marker-start]'),polygons:count('polygon'),circles:count('circle'),mountains:count('[data-part="mountain"]'),parts,scene:d.scene,regional:d.kind==='japanMap'&&d.bounds[2]-d.bounds[0]<20,landFills:[...svg.querySelectorAll('[data-part="land"]')].map(p=>p.getAttribute('fill'))};
+     return {labels:[...svg.querySelectorAll('text')].map(t=>t.textContent),arrows:count('[marker-end],[marker-start]'),polygons:count('polygon'),circles:count('circle'),mountains:count('[data-part="mountain"]'),parts,scene:d.scene,regional:d.kind==='japanMap'&&!d.regionBoundaries&&d.bounds[2]-d.bounds[0]<20,landFills:[...svg.querySelectorAll('[data-part="land"]')].map(p=>p.getAttribute('fill'))};
     });
-    assert.ok(structure.labels.every(t=>t==='北'));assert.equal(structure.arrows,0);
+    if(q.kind==='graph')assert.deepEqual(structure.labels,['0','5','10','15','20','25','30','月','火','水','木','金','土']);else assert.ok(structure.labels.every(t=>t==='北'));assert.equal(structure.arrows,0);
+    if(q.kind==='graph'){
+     const graph=await page.evaluate(()=>{const s=document.querySelector('.lesson-figure svg'),lines=[...s.querySelectorAll('[data-part="minor-grid"]')],p=s.querySelectorAll('circle')[1];return {minorLines:lines.length,onLine:lines.some(l=>Math.abs(+l.getAttribute('y1')-+p.getAttribute('cy'))<1e-8),otherMinor:FF.lessonFigure.render(FF.app.bank.byId['math_g4_hand_graph_011'].diagram).querySelectorAll('[data-part="minor-grid"]').length};});
+     assert.equal(graph.minorLines,24);assert.equal(graph.onLine,true);assert.equal(graph.otherMinor,0);assert.ok(result.minText>=11,'graph labels readable on a phone');
+    }
+    if(q.id==='social_g4_hand_prefecture_004'){assert.equal(structure.parts.filter(p=>p.part==='region-boundary').length,5);assert.equal(structure.parts.filter(p=>p.part==='island-inset').length,1);}
+    if(q.id==='social_g4_hand_geography_015')assert.equal(structure.circles,0,'no prefecture dots around the mountain');
     if(structure.regional)assert.ok(structure.landFills.every(f=>f==='none'),'regional crops must not paint a rectangular cut edge');
     if(['social_g4_hand_geography_010','social_g4_hand_geography_011'].includes(q.id)){const rivers=structure.parts.filter(p=>p.part==='river');assert.ok(rivers.length);assert.ok(rivers.every(r=>r.box.width>20&&r.box.height>20&&+r.stroke>=5));}
     if(structure.scene==='houseFront')assert.equal(structure.polygons,0,'roof shape must not be drawn');
@@ -94,8 +100,8 @@ fs.mkdirSync(out,{recursive:true});
     if(width===390||width===1024)await page.locator('.lesson-figure').screenshot({path:path.join(out,q.id+'-figure-'+width+'.png'),style:'#hud, #nav { visibility:hidden !important; }'});
    }
   }
-  const report={count:70,widths:[360,390,768,1024],checks,negativeChecks,screenshots,errors};fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));
+  const report={count:72,widths:[360,390,768,1024],checks,negativeChecks,screenshots,errors};fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));
   for(const c of checks){assert.deepEqual(c.issues,[],c.id+' width '+c.width);assert.equal(c.overflow,false,c.id+' overflow '+c.width);assert.equal(c.figureOverflow,false,c.id+' figure overflow '+c.width);}
-  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',questions:70,renders:checks.length,negativeFixtures:negativeChecks.length*2,screenshots:screenshots.length,errors},null,2));
+  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',questions:72,renders:checks.length,negativeFixtures:negativeChecks.length*2,screenshots:screenshots.length,errors},null,2));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
