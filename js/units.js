@@ -119,6 +119,20 @@
         { id: 'pioneer', name: '郷土をひらいた人々', description: '用水・開拓', icon: '🌾' },
         { id: 'industry', name: '県の特色と産業', description: '農業・水産業・工業・観光', icon: '🏭' }
       ]
+    },
+    english: {
+      4: [
+        { id: 'alphabet', name: 'アルファベット', description: '大文字・小文字・じゅんばん', icon: 'Aa' },
+        { id: 'number', name: '数', description: '1〜100の英語', icon: '123' },
+        { id: 'greeting', name: 'あいさつ・自己紹介・気持ち', description: 'Hello・名前・年れい・気持ち', icon: '👋' },
+        { id: 'color', name: '色・形', description: 'red・blue・circle', icon: '🎨' },
+        { id: 'animal', name: '動物', description: 'dog・cat・elephant', icon: '🐶' },
+        { id: 'food', name: '食べもの・飲みもの', description: 'apple・milk・I like ～', icon: '🍎' },
+        { id: 'school', name: '学校・文房具・教科', description: 'pencil・book・math', icon: '✏' },
+        { id: 'week', name: '曜日・月・季節', description: 'Monday・January・spring', icon: '📅' },
+        { id: 'time', name: '時こく・天気', description: "What time is it?・It's sunny.", icon: '⏰' },
+        { id: 'phrase', name: '会話の言い方', description: "What's this?・Can you ～?", icon: '💬' }
+      ]
     }
   };
 

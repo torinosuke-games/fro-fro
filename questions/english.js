@@ -832,7 +832,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'english_g4_weather_001', subject: 'english', gradeLevel: 4, unit: 'weather',
+    id: 'english_g4_weather_001', subject: 'english', gradeLevel: 4, unit: 'time',
     difficulty: 'standard', answerType: 'input',
     question: '「It\'s rainy.」は どんな {天気|てんき}かな。ひらがなで {書|か}こう。',
     answer: 'あめ', acceptedAnswers: ['雨'], validationMode: 'kana-insensitive',
@@ -869,7 +869,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'english_g4_word_001', subject: 'english', gradeLevel: 4, unit: 'word',
+    id: 'english_g4_word_001', subject: 'english', gradeLevel: 4, unit: 'school',
     difficulty: 'standard', answerType: 'choice',
     question: '「pencil」は どれかな。',
     choices: ['えんぴつ', 'けしゴム', 'ノート', 'じょうぎ'],
@@ -901,7 +901,7 @@ window.QUESTION_BANK.push(
   },
   // --- v0.3 で追加（B案：各学年27問） ---
   {
-    id: 'english_g4_weather_002', subject: 'english', gradeLevel: 4, unit: 'weather',
+    id: 'english_g4_weather_002', subject: 'english', gradeLevel: 4, unit: 'time',
     difficulty: 'basic', answerType: 'choice',
     question: '「It\'s sunny.」は どんな {天気|てんき}かな。',
     choices: ['{晴|は}れ', '{雨|あめ}', 'くもり', '{雪|ゆき}'],
@@ -932,7 +932,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'english_g4_word_002', subject: 'english', gradeLevel: 4, unit: 'word',
+    id: 'english_g4_word_002', subject: 'english', gradeLevel: 4, unit: 'school',
     difficulty: 'basic', answerType: 'input',
     question: '「eraser（イレイサー）」は {何|なに}かな。ひらがなか カタカナで {書|か}こう。',
     answer: 'けしゴム', acceptedAnswers: ['けしごむ', '消しゴム', 'ケシゴム'], validationMode: 'kana-insensitive',
@@ -959,7 +959,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'english_g4_weather_003', subject: 'english', gradeLevel: 4, unit: 'weather',
+    id: 'english_g4_weather_003', subject: 'english', gradeLevel: 4, unit: 'time',
     difficulty: 'standard', answerType: 'input',
     question: '「It\'s snowy.」は どんな {天気|てんき}かな。ひらがなで {書|か}こう。',
     answer: 'ゆき', acceptedAnswers: ['雪'], validationMode: 'kana-insensitive',
@@ -968,7 +968,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'english_g4_word_003', subject: 'english', gradeLevel: 4, unit: 'word',
+    id: 'english_g4_word_003', subject: 'english', gradeLevel: 4, unit: 'school',
     difficulty: 'standard', answerType: 'input',
     question: '「library（ライブラリー）」は どんな {場所|ばしょ}かな。ひらがなで {書|か}こう。',
     answer: 'としょかん', acceptedAnswers: ['図書館', 'としょしつ', '図書室'], validationMode: 'kana-insensitive',
@@ -1005,7 +1005,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'english_g4_word_004', subject: 'english', gradeLevel: 4, unit: 'word',
+    id: 'english_g4_word_004', subject: 'english', gradeLevel: 4, unit: 'school',
     difficulty: 'standard', answerType: 'choice',
     question: '「classroom（クラスルーム）」は どこかな。',
     choices: ['{教室|きょうしつ}', '{体育館|たいいくかん}', '{音楽室|おんがくしつ}', '{校庭|こうてい}'],
