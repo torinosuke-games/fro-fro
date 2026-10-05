@@ -24,10 +24,12 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   for(const p of dem.references)assert.equal(inside(p.point,ps),p.within,p.id);
   for(const p of ps){assert.equal(p.length,2);assert.ok(p.every(Number.isFinite));assert.ok(p[0]>=d.bounds[0]&&p[0]<=d.bounds[2]&&p[1]>=d.bounds[1]&&p[1]<=d.bounds[3]);}
  });
- test('第13弾：疏水は既存の湖岸から京都の東山を経て・広域の海岸も入る',()=>{
-  const d=get('pioneer_010'),lake=plain(FF.japanMapData.lake),r=d.routes[0];assert.deepEqual(d.lakes,[lake]);assert.equal(d.marks.length,1);assert.deepEqual(d.marks,[[135.768,35.011]]);assert.equal(d.routes.length,1);assert.equal(r.type,'river');
-  assert.ok(lake.some(p=>JSON.stringify(p)===JSON.stringify(r.points[0])));assert.ok(r.points.some(p=>p[0]>135.78&&p[0]<135.8&&p[1]>35&&p[1]<35.02));
-  assert.deepEqual(d.inset.routes,d.routes);assert.deepEqual(d.inset.lakes,d.lakes);assert.equal(d.inset.marks,undefined);
-  for(const p of [[135.2,35.6],[135.3,34.5],[136.7,34.7]])assert.ok(p[0]>d.bounds[0]&&p[0]<d.bounds[2]&&p[1]>d.bounds[1]&&p[1]<d.bounds[3]);
+ test('第15弾：疏水は地図をやめて、まちへ水を引く絵',()=>{
+  const d=get('pioneer_010');
+  assert.equal(d.kind,'image');
+  assert.equal(d.src,'img/diagrams/soc4_pioneer_010.webp');
+  assert.equal(d.caption,'山をぬけて、まちへ水を引く水路');
+  assert.equal(d.study,true);
+  assert.ok(!d.caption.includes('琵琶湖疏水')&&!d.alt.includes('琵琶湖疏水'));
  });
 };
