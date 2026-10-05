@@ -25,7 +25,7 @@
    ])));
   }else if(d.kind==='image'){
    // 生成した絵（PNG・JPEG・WebP）。img/ に置き、src は 'img/…' の相対パス。文字は絵に入れない（判断254）
-   fig.appendChild(U.el('img',{class:'figure-picture',attrs:{src:d.src,alt:d.alt||d.caption||'問題を考えるための絵',loading:'lazy',decoding:'async'}}));
+   fig.appendChild(U.el('img',{class:'figure-picture',attrs:{src:d.src,alt:d.alt||d.caption||'問題を考えるための絵',width:960,height:640,decoding:'async'}}));
   }else{
    var nodes=[],h=245;
    function add(){Array.prototype.forEach.call(arguments,function(n){nodes.push(n);});}
