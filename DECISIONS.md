@@ -713,7 +713,7 @@
 - 探索の問題（`js/ui/exploration.js`）も同じにした（選んだらその場で判定。まちがえて「もう一度」になったときは、選択を空にして、別の選択肢を選べる）。昇格試験・実力診断・戦闘は、もともと選んだらその場で判定なので、変えていない。
 - 画面テスト（`tests/ui-renewal.cjs`・`ui-rewards`・`ui-speech`・`ui-subject-resources`・`ui-quiz-sticky`・`ui-image-prefetch`）を、この動きに合わせて直した。`ui-renewal.cjs` の「Current HUD flashes at arrival」は、この変更の前から時間の都合で失敗する（別件）。
 
-## 判断288：小5理科61問のSVG図（第16弾）
+## 判断289：小5理科61問のSVG図（第16弾）
 - mainからcodex/hand-diagrams-sci5を作り、依頼表の61問のdiagramだけを追加した。324問の本文・答え・選択肢・ヒント・解説・ID・難易度・inputForm・reviewedは不変。第17弾の16問と画像、セーブ項目・saveVersionには手を入れていない。
 - 小4のapparatus・circuit・scienceScene・graphを拡張・共有し、新しい種類はbiology（part・labels）とpendulum（panels）の二つにまとめた。地理のjapanMapの輪郭も天気図で共有する。
 - 名前は記号、実験は条件だけ。巻き数の線は省略し、ふりこの角度・おもりの大きさは数値を表示しない。weather_031の東への矢印とelectromagnet_030の方位磁針N側だけは依頼表と問題文で既知の状態を表示する。求める極・天気・速さ・周期・重量・実験結果は描かない。
