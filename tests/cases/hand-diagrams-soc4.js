@@ -24,7 +24,7 @@ module.exports=({test,ctx,FF,assert,plain})=>{
    if(d.port!==undefined)assert.equal(typeof d.port,'boolean');
   }
  });
- const allowed={"terrain":["riverMouth","basin","fan","delta","levees","lakeTunnel"],"facility":["sewer","sewagePlant","reservoir","settling","filter","hydro","supply","hillSupply","landfill","truck","incinerator","gasFilter","compost","bottles","wind","solar","pylons","substation","geothermal","thermal","aqueduct","sluice"],"disaster":["flood","landslide","storm","ash","bag","seaWall","sabo","hydrant"],"culture":["dollFloat","poleFloat","lacquer","kettle","castle","thatchedHouse","lanternPole"],"industry":["citrus","dairy","carFactory","greenhouse","fishCage","hotBath","terraces","basinOrchard"]};
+ const allowed={"terrain":["riverMouth","basin","fan","delta","levees","lakeTunnel"],"facility":["sewer","sewagePlant","reservoir","settling","filter","hydro","supply","hillSupply","landfill","truck","incinerator","gasFilter","compost","bottles","wind","solar","pylons","substation","geothermal","thermal","aqueduct","sluice"],"disaster":["flood","landslide","storm","ash","bag","seaWall","sabo","hydrant"],"culture":["dollFloat","poleFloat","lacquer","kettle","castle","houseFront","lanternPole"],"industry":["citrus","dairy","carFactory","greenhouse","fishCage","hotBath","coastOrchard","basinOrchard"]};
  for(const [kind,scenes] of Object.entries(allowed))test('社会図：'+kind+'のsceneの範囲を検証',()=>{
   const subset=qs.filter(q=>q.diagram.kind===kind);assert.ok(subset.length);
   for(const q of subset){assert.ok(scenes.includes(q.diagram.scene),q.id);if(q.diagram.tint)assert.ok(/^#[0-9a-f]{6}$/i.test(q.diagram.tint));}
@@ -36,6 +36,8 @@ module.exports=({test,ctx,FF,assert,plain})=>{
   const get=id=>qs.find(q=>q.id==='social_g4_hand_'+id).diagram;
   assert.equal(get('prefecture_006').marks.length,0);assert.equal(get('prefecture_016').routes.length,0);assert.equal(get('prefecture_022').routes.length,0);
   assert.equal(get('electric_021').scene,'thermal');assert.equal(get('disaster_011').scene,'bag');
+  assert.equal(get('tradition_024').scene,'houseFront');assert.equal(get('industry_025').scene,'coastOrchard');
+  for(const id of ['geography_010','geography_011'])assert.ok(get(id).routes.some(r=>r.type==='river'));
   for(const id of ['industry_013','industry_014']){assert.equal(get(id).marks.length,1);assert.equal(get(id).port,true);}
  });
 };

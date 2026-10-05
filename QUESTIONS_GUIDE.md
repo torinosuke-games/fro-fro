@@ -117,7 +117,7 @@ PR #36レビュー対応（判断251）：電池は既知の＋極側だけ端�
 - `terrain`（必須scene）：riverMouth・basin・fan・delta・levees・lakeTunnelの地形・河川・水路の模式線画。
 - `facility`（必須scene）：sewer・sewagePlant・reservoir・settling・filter・hydro・supply・hillSupply・landfill・truck・incinerator・gasFilter・compost・bottles・wind・solar・pylons・substation・geothermal・thermal・aqueduct・sluice。発電・送電も施設として共有し、thermalは管の中身を隠す。清掃工場の発電機を排ガス管につながない。
 - `disaster`（必須scene）：flood・landslide・storm・ash・bag・seaWall・sabo・hydrant。第9弾で指定された災害の現状は描くが、名前・数を書かず、bagの中身は隠す。
-- `culture`（必須scene）：dollFloat・poleFloat・lacquer・kettle・castle・thatchedHouse・lanternPole。名前のない祭り・工芸品・建物の線画。任意のtintは#RRGGBB形式の材料色（赤いうるし）。
-- `industry`（必須scene）：citrus・dairy・carFactory・greenhouse・fishCage・hotBath・terraces・basinOrchard。作物名・産地名・栽培法を書かず、気温の変化を示さない。
+- `culture`（必須scene）：dollFloat・poleFloat・lacquer・kettle・castle・houseFront・lanternPole。名前のない祭り・工芸品・建物の線画。houseFrontは窓と入口のみで屋根の形を出さない。任意のtintは#RRGGBB形式の材料色（赤いうるし）。
+- `industry`（必須scene）：citrus・dairy・carFactory・greenhouse・fishCage・hotBath・coastOrchard・basinOrchard。作物名・産地名・栽培法を書かず、気温の変化を示さない。coastOrchardは木と海のみで太陽や畑の形を出さない。
 
 模式図の形・反復は描画用で、数量や実寸の読み取りには使わない。全使用ID・依頼との差・検証結果はHAND_SOC4_DIAGRAMS.md。

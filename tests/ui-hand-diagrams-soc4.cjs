@@ -55,9 +55,19 @@ fs.mkdirSync(out,{recursive:true});
     // レビューで直した箇所を、データだけでなく生成されたSVGでも保護する。
     const structure=await page.evaluate(()=>{
      const svg=document.querySelector('.lesson-figure svg');
-     return {labels:[...svg.querySelectorAll('text')].map(t=>t.textContent),arrows:svg.querySelectorAll('[marker-end],[marker-start]').length};
+     const q=FF.app.bank.byId[FF.app.session.currentId],d=q.diagram;
+     const count=s=>svg.querySelectorAll(s).length;
+     const parts=[...svg.querySelectorAll('[data-part]')].map(s=>({part:s.dataset.part,box:s.getBoundingClientRect().toJSON(),stroke:s.getAttribute('stroke-width')}));
+     return {labels:[...svg.querySelectorAll('text')].map(t=>t.textContent),arrows:count('[marker-end],[marker-start]'),polygons:count('polygon'),circles:count('circle'),mountains:count('[data-part="mountain"]'),parts,scene:d.scene,regional:d.kind==='japanMap'&&d.bounds[2]-d.bounds[0]<20,landFills:[...svg.querySelectorAll('[data-part="land"]')].map(p=>p.getAttribute('fill'))};
     });
     assert.ok(structure.labels.every(t=>t==='北'));assert.equal(structure.arrows,0);
+    if(structure.regional)assert.ok(structure.landFills.every(f=>f==='none'),'regional crops must not paint a rectangular cut edge');
+    if(['social_g4_hand_geography_010','social_g4_hand_geography_011'].includes(q.id)){const rivers=structure.parts.filter(p=>p.part==='river');assert.ok(rivers.length);assert.ok(rivers.every(r=>r.box.width>20&&r.box.height>20&&+r.stroke>=5));}
+    if(structure.scene==='houseFront')assert.equal(structure.polygons,0,'roof shape must not be drawn');
+    if(structure.scene==='coastOrchard')assert.equal(structure.polygons,0,'terraces must not be drawn');
+    if(structure.scene==='pylons')assert.equal(structure.polygons,0,'mountain silhouette must not be drawn');
+    if(['riverMouth','fan','delta'].includes(structure.scene))assert.equal(structure.mountains,1);
+    if(['social_g4_hand_industry_013','social_g4_hand_industry_014'].includes(q.id)){const port=structure.parts.find(p=>p.part==='port');assert.ok(port);assert.ok(structure.parts.filter(p=>p.part==='coast').every(p=>p.box.bottom<port.box.top),'port must be separate from map');}
     checks.push({id:q.id,width,...result});
     if(q.id===qs[0].id){
      // 実際の文字をviewBoxの端をまたぐ／完全に外へ出す負例。検査後は元に戻す。

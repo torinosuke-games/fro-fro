@@ -42,13 +42,13 @@
 
 必須の種類別項目：scene（任意tint）。
 
-`tradition_001`（dollFloat）、`tradition_002`（poleFloat）、`tradition_004`（lacquer）、`tradition_007`（kettle）、`tradition_014`（castle）、`tradition_024`（thatchedHouse）、`tradition_033`（lanternPole）。
+`tradition_001`（dollFloat）、`tradition_002`（poleFloat）、`tradition_004`（lacquer）、`tradition_007`（kettle）、`tradition_014`（castle）、`tradition_024`（houseFront）、`tradition_033`（lanternPole）。
 
 ### industry（8問）
 
 必須の種類別項目：scene。
 
-`industry_003`（citrus）、`industry_006`（dairy）、`industry_007`（carFactory）、`industry_012`（greenhouse）、`industry_015`（fishCage）、`industry_020`（hotBath）、`industry_025`（terraces）、`industry_026`（basinOrchard）。
+`industry_003`（citrus）、`industry_006`（dairy）、`industry_007`（carFactory）、`industry_012`（greenhouse）、`industry_015`（fishCage）、`industry_020`（hotBath）、`industry_025`（coastOrchard）、`industry_026`（basinOrchard）。
 
 ## 答えを表示しないための扱い
 
@@ -94,3 +94,12 @@ node tests/ui-hand-diagrams-soc4.cjs
 ```
 
 位置の確認に用いた資料：[国土地理院の学校向け白地図](https://maps.gsi.go.jp/help/intro/school/blankmap.html)、[国交省・信濃川](https://www.mlit.go.jp/river/toukei_chousa/kasen/jiten/nihon_kawa/0405_shinano/0405_shinano_00.html)、[国交省・利根川流域](https://www.ktr.mlit.go.jp/river/bousai/river_bousai00000009.html)、[国交省・石狩川](https://www.mlit.go.jp/river/toukei_chousa/kasen/jiten/nihon_kawa/0109_ishikari/0109_ishikari_00.html)、[京都市・琵琶湖疏水](https://www.city.kyoto.lg.jp/suido/page/0000006469.html)。
+## PR #38のコメント3件への修正（判断254）
+
+上の初回報告のうち屋根・段々畑を描く判断は撤回し、tradition_024は窓と入口だけ、industry_025は木と海だけに変更した。信濃川・利根川の線を太くし、鉄塔の背景の山を削除。地形の山は1つ、港は地図と分離、渦は日本と離す。
+
+海岸線と湖を公開の物理地理データへ置換。島・岬を増やし、地域図の切り口の塗りをなくす。元データ・座標検証の詳細はSOCIAL_MAP_DATA.md。北海道の位置の印の中心も陸上へ直した。
+
+修正後はnode tests/run.js 645件成功、simulate.jsすべて目標内。70問×4幅＝280画面の見切れ・横はみ出し・例外0、負例8件検出。地名集33点の位置検査、全図1枚＋地域図13枚の参照座標画像も保存。問題297問のdiagram以外は同じハッシュを維持。
+
+更新した確認ページはローカルoutputs/hand-diagrams-soc4-review/gallery.html。全図・地域図の参照画像はgeography.html。画像は同ディレクトリのscreenshots。再生成はtests/ui-hand-diagrams-soc4.cjsとtests/ui-social-map-geography.cjs。同じPRに反映しmainへはマージしない。
