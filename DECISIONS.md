@@ -657,3 +657,10 @@
 - 第1弾は `questions/english_g4_hand.js`（collection：`hand_en4`、reviewed: false）に、アルファベット・数・あいさつ・色と形・動物の5単元を22問ずつ（基礎6・標準9・発展7）、計110問。残りの5単元（食べもの・学校・曜日と月・時こくと天気・会話）はこれから。小4英語は、原作と合わせて137問。
 - 英語の答えの判定は、大文字・小文字を区別しない（`answer.js` の `normalize`）。そのため、大文字と小文字の見分けは選択問題だけにして、書き問題の形は付けない。英語の答えは `exact`、日本語の答えは `kana-insensitive`、数は `number`。
 - 小4で習わない漢字（郎・誕・獣）は、ひらがなかカタカナにした。
+
+## 判断279：小4英語の手作り問題（第2弾・全10単元がそろう）
+- `questions/english_g4_hand.js` に、食べもの・飲みもの、学校・文房具・教科、曜日・月・季節、時こく・天気、会話の言い方の5単元を、22問ずつ（基礎6・標準9・発展7）、計110問足した。第1弾（判断278）と合わせて、10単元すべてが基礎6・標準9・発展7（計220問、reviewed: false）。小4英語は、原作と合わせて 247問。
+- 内容：食べもの（apple・milk・Do you like ～?）、学校（pencil・教科・Open your book）、曜日と月と季節（Monday〜Sunday・January〜December・spring〜winter）、時こくと天気（sunny・What time is it?・o'clock・half past）、会話（What's this?・Can you ～?・Do you have ～?・on／in／under・How many ～?・Let's ～）。「Do you ～?」「Can you ～?」への答え方の使い分けを問う問題を足した。
+- 時こくの問題（「It's seven o'clock.」など）は、書き問題の形の答えを数字（`number`）にして、「7時」も正解にした（`inputForm.answer` を、選択肢の答えとは別に指定できる形にした）。
+- 小4で習わない漢字（授）は、ひらがなにした。英語の問題は、音の聞き取りは出せないため（音声なし）、ヒントにカタカナの読みを付けた。
+
