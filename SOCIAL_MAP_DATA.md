@@ -18,3 +18,13 @@ PR #38のコメント5987134861・5987146967・5987165836への対応。
 - 問題の印は中心が陸上にあることを検査する。prefecture_022の北海道の印は札幌付近141.35,43.06へ直し、海側へのずれを修正。
 - tests/ui-social-map-geography.cjsは全図1枚と地域図13枚に参照座標の十字を重ねる。これは検証専用で、実際の問題の図には十字・名前・座標を加えない。
 - tests/ui-hand-diagrams-soc4.cjsは70問×360・390・768・1024px、文字・図形の見切れと横はみ出しを検査。川の実SVG、港の分離、山の数、屋根や段々畑を描かないこと、地域図の塗りなしも保護する。
+
+## 第11弾：地方の境界と地域図の拡大
+
+- 原海岸線328輪郭・2957頂点は変更しない。能登半島の色は、本州の輪郭の連続した32頂点と閉点から作る。西岸136.7606,36.8706から東岸136.9877,36.871まで半島の先端側を取り出し、付け根はこの2点を直線で結ぶ。土地のclipPathも同じ海岸線から作るので、海を塗らない。
+- 地方の境界の原データは [Natural Earth 1:10m Admin 1 – States, Provinces](https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-1-states-provinces/)（[public domain](https://www.naturalearthdata.com/about/terms-of-use/)）。[GeoJSONの固定revision ca96624a56bd078437bca8184e78163e5039ad19](https://github.com/nvkelso/natural-earth-vector/blob/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_10m_admin_1_states_provinces.geojson)、blob SHA 4a8438f98ac7dfec7dc1739b1eaf91398ad33f22。
+- 日本の47都道府県（iso_3166_2 JP-01〜47）を、北海道／東北（02〜07）／関東（08〜14）／中部（15〜23）／近畿（24〜30）／中国・四国（31〜39）／九州（40〜47）に分類。7地方の区分は [札幌市教育委員会の教材](https://www.city.sapporo.jp/kyoiku/shido/documents/1_6_2_31.pdf) と同じ。ゲームには地方名・県名を描かない。
+- 原境界の端点を小数6桁で比較し、両側の県が別の地方に属する共有辺476本だけを選ぶ。端点をつないで5本の境界線に整理し、Ramer–Douglas–Peucker法の許容0.005度で簡略化、小数4桁へ丸めた199頂点をregionBoundariesへ静的に同梱。県内・同地方内の県境や、海を横断する架空の境界は足さない。海岸線と同じ投影・土地のclipPathを使い、細い線で描く。
+- prefecture_004だけ本図を520×570のviewBoxへ広げ、boundsを128.6,30,146.3,45.7へ絞る。南西の島々は122.7,24,130,30の別枠。縮尺・位置関係が本図とは別であることをcaptionに記す。ほかの全図・地域図は従来の投影を維持する。
+- 富士山の図は山の印だけ。静岡・千葉の漁港の問題は県の海岸まで拡大するが、印は従来の県の位置だけで、答えの港を打たない。
+- tests/ui-social-map-geography.cjsは変更後の地域図を含む17枚に参照座標の十字を重ねる。能登の色の端には原海岸頂点5点の青い十字も重ねる。これは検証画像だけで、問題画面には出さない。社会70問と折れ線グラフの選択・入力形式を合わせた72形式×4幅も検査する。

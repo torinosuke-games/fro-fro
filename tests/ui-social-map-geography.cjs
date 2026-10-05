@@ -20,17 +20,21 @@ const root=path.resolve(__dirname,'..'),out=process.env.FF_QA_OUTPUT||path.resol
   const views=[{id:'full',diagram:{kind:'japanMap',bounds:[122,23.5,150,46],marks:[],areas:[],routes:[],caption:'検証用：地名集の位置を重ねた日本全図',study:true}},...maps.filter(q=>q.diagram.bounds[2]-q.diagram.bounds[0]<20)];
   const images=[];
   for(const v of views){
-   const b=v.diagram.bounds,visible=checks.filter(p=>p.point[0]>=b[0]&&p.point[0]<=b[2]&&p.point[1]>=b[1]&&p.point[1]<=b[3]).map(p=>({...p,xy:project(p.point,b)}));
-   await page.evaluate(({d,points,id,source})=>{
+   const b=v.diagram.bounds,visible=checks.filter(p=>p.point[0]>=b[0]&&p.point[0]<=b[2]&&p.point[1]>=b[1]&&p.point[1]<=b[3]).map(p=>({...p,xy:project(p.point,b,v.diagram.regionBoundaries?570:430)}));
+   // 色の輪郭が実際の原海岸頂点を通るか、検証画像だけに青い十字を置く。
+   const coastReferences=v.id==='social_g4_hand_geography_019'?v.diagram.areas[0].filter((p,i)=>[0,6,11,20,31].includes(i)).map(p=>project(p,b)):[];
+   await page.evaluate(({d,points,id,source,coastReferences})=>{
     document.documentElement.dataset.theme='day';document.body.replaceChildren();
     const host=document.createElement('main');host.style.cssText='max-width:820px;margin:20px auto;padding:20px;background:#fff;color:#21465c;font:16px/1.5 sans-serif';
     const title=document.createElement('h1');title.textContent=id+'：地理の確認用（ゲームには出ない印）';host.append(title);
     const figure=FF.lessonFigure.render(d);host.append(figure);
     const svg=figure.querySelector('svg');svg.style.maxWidth='780px';svg.style.width='100%';
     for(const p of points){const [x,y]=p.xy;const mark=FF.ui.svg('path',{d:'M'+(x-4)+','+y+'H'+(x+4)+'M'+x+','+(y-4)+'V'+(y+4),fill:'none',stroke:'#ab2850','stroke-width':1.5,'data-reference':p.id});svg.append(mark);}
+    for(const [x,y] of coastReferences)svg.append(FF.ui.svg('path',{d:'M'+(x-5)+','+y+'H'+(x+5)+'M'+x+','+(y-5)+'V'+(y+5),fill:'none',stroke:'#075b9e','stroke-width':2,'data-coast-reference':'true'}));
     const legend=document.createElement('p');legend.textContent='赤い十字＝国土地理院の参照座標。'+points.map(p=>p.name+' ('+p.point.join(', ')+')').join(' ／ ');host.append(legend);
+    if(coastReferences.length){const note=document.createElement('p');note.textContent='青い十字＝色の境界に使った原海岸線の頂点。';host.append(note);}
     const a=document.createElement('a');a.href=source;a.textContent='参照：国土地理院 地名集日本2021';host.append(a);document.body.append(host);
-   },{d:v.diagram,points:visible,id:v.id,source});
+   },{d:v.diagram,points:visible,id:v.id,source,coastReferences});
    await page.evaluate(()=>document.fonts.ready);
    const result=await page.evaluate(()=>({marks:document.querySelectorAll('[data-reference]').length,overflow:document.documentElement.scrollWidth>innerWidth+1}));
    assert.equal(result.marks,visible.length);assert.equal(result.overflow,false);
