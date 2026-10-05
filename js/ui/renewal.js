@@ -60,12 +60,24 @@
   var a=FF.app,s=a.session;
   if(id&&id===s.currentId&&!force)return;
   var ctxPick={correctLog:a.state.learning.correctLog,recentIds:s.recentIds,now:a.now()};
-  var q=id?(a.bank.byId[id]||(s.items[id]&&s.items[id].attempt.question)):(C.pick(reviewBank(a.bank),s.sel,ctxPick)||(reviewFallback()?C.pick(a.bank,s.sel,ctxPick):null));
+  var peeked=!id&&s.nextQ&&s.nextSelKey===JSON.stringify(s.sel)?s.nextQ:null;
+  s.nextQ=null;
+  var q=id?(a.bank.byId[id]||(s.items[id]&&s.items[id].attempt.question)):(peeked||C.pick(reviewBank(a.bank),s.sel,ctxPick)||(reviewFallback()?C.pick(a.bank,s.sel,ctxPick):null));
   if(!q){s.currentId=null;return;}
   // Visiting a question starts a fresh attempt. Persistent results live in the save.
   s.items[q.id]={attempt:L.startAttempt(q),outcome:null,picked:null,selected:null,typed:'',resource:s.sel.resource||C.scarcest(a.state)};
   s.currentId=q.id;s.recentIds=s.recentIds.concat([q.id]).slice(-20);
   if(s.order[s.cursor]!==q.id){s.order=s.order.slice(0,s.cursor+1);s.order.push(q.id);s.cursor=s.order.length-1;}
+ }
+ // 次の問題を先に選び、絵（diagram.kind==='image'）を裏で読み込む。答え合わせの解説を読んでいる間に読み込みが終わり、「次へ」で待たせない（判断256）
+ function prepareNext(){
+  var a=FF.app,s=a.session;
+  if(!s||!s.renewal)return;
+  var ctxPick={correctLog:a.state.learning.correctLog,recentIds:s.recentIds,now:a.now()};
+  var q=C.pick(reviewBank(a.bank),s.sel,ctxPick);
+  if(!q)return;
+  s.nextQ=q;s.nextSelKey=JSON.stringify(s.sel);
+  if(q.diagram&&q.diagram.kind==='image'&&q.diagram.src&&root.Image){var img=new root.Image();img.decoding='async';img.src=q.diagram.src;}
  }
  function submit(){
   var a=FF.app,it=current();if(!it||it.attempt.done)return;
@@ -83,6 +95,7 @@
    it.outcome=result.outcome;a.session.completed=(a.session.completed||0)+1;
    if(result.outcome.status==='correct'){var changes={heat:result.outcome.points};changes[it.resource]=result.outcome.reward;arrive=FF.rewardFlight.prepare(changes);}
    a.commit(result.state);
+   prepareNext();
   }
   U.rerender();
   if(arrive){

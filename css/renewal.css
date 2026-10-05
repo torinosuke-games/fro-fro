@@ -331,5 +331,5 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
  /* 答え合わせのあとは、ヒントの欄を出さない（解説までスクロールしやすくする。判断240。タブレット・ウェブでは出す） */
  .question-card.is-done ~ .lesson-help .hint-card{display:none}
 }
-.figure-image{background:#eaf3f9}.figure-image .figure-picture{display:block;width:100%;height:auto;max-height:320px;object-fit:contain;margin:0 auto}
+.figure-image{background:#eaf3f9}.figure-image .figure-picture{display:block;width:100%;height:auto;aspect-ratio:3/2;max-height:320px;object-fit:contain;margin:0 auto}
 @media(max-width:760px){.figure-image .figure-picture{max-height:240px}}
