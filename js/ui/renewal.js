@@ -199,7 +199,7 @@
    button(done?R.next+' →':R.skip+' →',next,done?'rn-button primary':'rn-button')
   ]));
   layout.appendChild(helpView(it));
-  if(FF.debugMode&&U.review){var dock=U.review.panel(q);dock.classList.add('review-dock');layout.classList.add('has-review-dock');layout.appendChild(dock);}   // 問題のレビュー（デバッグモードだけ。判断202）。画面の下にいつも出す（判断258）
+  if(FF.debugMode&&U.review){var dock=U.review.panel(q,function(){next();});dock.classList.add('review-dock');layout.classList.add('has-review-dock');layout.appendChild(dock);}   // 問題のレビュー（デバッグモードだけ。判断202）。画面の下にいつも出す（判断258）
   main.appendChild(layout);
  }
  function renderFilters(main){

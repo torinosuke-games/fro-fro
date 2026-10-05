@@ -374,7 +374,8 @@
       });
       return { byKey: byKey, byId: bank.byId, invalid: [], duplicates: [], count: 0 };
     }
-    function panel(q) {
+    // onMarked（省略できる）：「レビューOK」「要改善」を押して記録したあとに呼ぶ（学習画面は、すぐ次の問題へ進む。判断260）
+    function panel(q, onMarked) {
       connect();
       var rec = all()[q.id];
       var note = U.el('textarea', { class: 'field review-note', attrs: { rows: '2', placeholder: 'メモ（要改善のときは、どこを直すか）' }, value: rec ? rec.note : '' });
@@ -384,7 +385,7 @@
         status.textContent = cur ? (cur.status === 'ok' ? '✅ レビューOK' : '🛠 要改善') + '（' + new Date(cur.at).toLocaleString('ja-JP') + '）' : 'まだレビューしていない';
       }
       showStatus();
-      function mark(st) { set(q, st, note.value.trim()); showStatus(); U.toast(st === 'ok' ? 'レビューOK にした' : '要改善 にした'); }
+      function mark(st) { set(q, st, note.value.trim()); showStatus(); U.toast(st === 'ok' ? 'レビューOK にした' : '要改善 にした'); if (onMarked) onMarked(st); }
       return U.el('div', { class: 'panel stack review-panel' }, [
         U.el('div', { class: 'row between' }, [U.el('strong', { text: '問題のレビュー（デバッグ）' }), U.el('span', { class: 'small muted', text: q.reviewed ? '確認済み' : '確認前' })]),
         U.el('div', { class: 'small muted', text: q.id + (q.derivedFrom ? '（選択問題 ' + q.derivedFrom + ' から作った書き問題）' : '') }),
