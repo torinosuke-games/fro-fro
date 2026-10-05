@@ -333,3 +333,13 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 }
 .figure-image{background:#eaf3f9}.figure-image .figure-picture{display:block;width:100%;height:auto;aspect-ratio:3/2;max-height:320px;object-fit:contain;margin:0 auto}
 @media(max-width:760px){.figure-image .figure-picture{max-height:240px}}
+/* デバッグモードのレビュー：画面の下に固定して、スクロールしなくても付けられるようにする（判断258） */
+.workbench.has-review-dock{padding-bottom:150px}
+.review-dock{position:fixed;left:0;right:0;bottom:0;z-index:40;margin:0 auto;max-width:900px;border-radius:12px 12px 0 0;border:2px dashed #b08a2a;border-bottom:0;background:#fffdf3;padding:8px 12px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -4px 14px #0002;display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;align-items:center}
+.review-dock>*{margin:0}
+.review-dock>:nth-child(1){display:none}
+.review-dock>:nth-child(2){grid-column:1;padding-left:62px;font-size:0.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.review-dock>:nth-child(3){grid-column:2;text-align:right;font-size:0.75rem}
+.review-dock>:nth-child(4){grid-column:1 / -1}
+.review-dock>:nth-child(5){grid-column:1 / -1}
+.review-dock .review-note{min-height:0;height:38px;padding:6px 8px;font-size:0.875rem}
