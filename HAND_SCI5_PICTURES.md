@@ -23,3 +23,22 @@
 - sci5_electromagnet_015.webp: 導線をまいた鉄のくぎ（電磁石）のそばに置いた、方位磁針。針は真北を向いている。かん電池につないである
 - sci5_electromagnet_022.webp: 電磁石を使った、おもちゃのクレーン。クレーンのうでの先に電磁石、下に、鉄のくぎやクリップが山になっている
 - sci5_method_018.webp: 同じ種類の苗が２つ。左は日当たりのよい庭の、土の量が多い鉢。右は日かげの、土の量が少ない鉢。苗の大きさは、どちらも同じ
+
+作ったプロンプト（共通指定に加えて）:
+- sci5_weather_003: summer afternoon blue sky, one huge vertical white-gray cloud, small town below, no rain no lightning
+- sci5_weather_015: whole sky thick dark gray cloud, small town, no raindrops no lightning
+- sci5_weather_016: blue sky, several fluffy white clouds, distant meadow, no rain
+- sci5_river_012: two soil slopes, left gentle right steep, watering can at each top, no flow and no erosion
+- sci5_river_014: river leaving mountains onto a fan of sediment, a few fields and houses
+- sci5_river_015: river mouth splitting into channels, flat triangular deposit, small town
+- sci5_life_008: enlarged newly hatched medaka with belly yolk sac, clear water
+- sci5_life_009: two medaka in profile, dorsal and anal fins visible, unlabeled
+- sci5_life_019: aquarium by a window, sand, plants, several medaka, no eggs
+- sci5_flower_013: loofah vine bud covered by a small white bag, leaves and vine, field
+- sci5_plant_034: petri dish with damp cotton and kidney bean seeds, no sprouts
+- sci5_dissolve_030: evaporating dish of clear salt water on low flame, tripod, gauze, goggles, no crystals
+- sci5_electromagnet_001: nail coil connected to battery and closed switch, nothing attracted
+- sci5_electromagnet_015: nail coil and compass with needle pointing north, not deflected
+- sci5_electromagnet_022: toy crane with electromagnet above a pile of nails and clips, not lifting
+- sci5_method_018: same-size seedlings; large sunny pot with much soil, small shaded pot with little soil
+

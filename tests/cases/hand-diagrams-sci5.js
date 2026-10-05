@@ -43,7 +43,9 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  }
  test('小5理科：324問のdiagram以外が不変、対象61問のみ追加',()=>{
   assert.equal(all.length,324);assert.equal(new Set(ids).size,61);assert.equal(qs.length,61);
-  assert.equal(hash(all.map(q=>{const v=plain(q);if(ids.includes(q.id))delete v.diagram;return v;})),'2a2bae11d0ae1788be047e20f7c300b00e8eb3a0ddee1d5286a974f79058d47b');
+  assert.equal(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'2a2bae11d0ae1788be047e20f7c300b00e8eb3a0ddee1d5286a974f79058d47b');
+  // mainで追加された第17弾16画像を含め、対象外263問のdiagramも変更しない。
+  assert.equal(hash(all.filter(q=>!ids.includes(q.id)).map(q=>[q.id,q.diagram?plain(q.diagram):null])),'ded741f9fe20ae52f30f44c7928e506b23d21962f8d4e606b6286aef8f2e3643');
  });
  test('小5理科：61問の範囲検証と書き問題の図の継承',()=>{
   const bank=FF.learning.createBank(ctx.QUESTION_BANK);for(const q of qs){range(q.diagram);assert.deepEqual(plain(FF.learning.validateQuestion(q)),[]);if(q.inputForm)assert.deepEqual(plain(bank.byId[q.id+'#input'].diagram),plain(q.diagram));}

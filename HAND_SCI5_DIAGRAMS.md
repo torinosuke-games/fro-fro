@@ -1,6 +1,6 @@
 # 小5理科の手作り問題：第16弾61問のSVG図
 
-2026-10-06。`main`（開始時aa08e03）から `codex/hand-diagrams-sci5`。作業中に更新されたmain（dd53ea8、PR #67）を取り込み、最終確認済み。実装・検証は完了したが、GitHubへの通信エラーによりpush・PR作成は未完了。mainには未反映。
+2026-10-06。`main`（開始時aa08e03）から `codex/hand-diagrams-sci5`。最新main（868b74c、PR #67・#66）を取り込み、第17弾の16画像をすべて維持した。判断番号は289。実装・検証完了、PRレビュー待ち。mainには未反映。
 
 ## 変更の範囲
 
@@ -73,4 +73,4 @@ $env:FF_QA_OUTPUT='スクリーンショット出力先'
 node tests/ui-hand-diagrams-sci5.cjs
 ```
 
-GitのpushはGitHub:443の接続失敗、GitHub接続機能もHTTP送信エラーとなった。接続回復後、最新mainを確認してpushとPR作成を行う。PRの説明案はローカルのwork/sci5-pr.mdに保存済み。PRレビュー後に指摘を直す。mainのマージ・公開は行わない。
+前回の通信エラーから復旧後、最新mainを統合し、第17弾16画像を含む対象外263問のdiagramの不変性もテストに追加した。PRレビュー後に指摘を直す。mainのマージ・公開は行わない。
