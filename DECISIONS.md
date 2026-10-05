@@ -712,3 +712,9 @@
 - 選びなおしはできなくなる（まちがえたら、解説と「次の問題」へ）。券がないとき（`noTicket`）は、これまでどおりメッセージと「入力に切りかえる」を出す。
 - 探索の問題（`js/ui/exploration.js`）も同じにした（選んだらその場で判定。まちがえて「もう一度」になったときは、選択を空にして、別の選択肢を選べる）。昇格試験・実力診断・戦闘は、もともと選んだらその場で判定なので、変えていない。
 - 画面テスト（`tests/ui-renewal.cjs`・`ui-rewards`・`ui-speech`・`ui-subject-resources`・`ui-quiz-sticky`・`ui-image-prefetch`）を、この動きに合わせて直した。`ui-renewal.cjs` の「Current HUD flashes at arrival」は、この変更の前から時間の都合で失敗する（別件）。
+
+## 判断288：小5理科の絵16枚を付ける（2026-10-06）
+
+- 判断286の依頼（DIAGRAM_REQUESTS_17.md）どおり、main から grok/sci5-pictures を作成。science_g5_hand の16問の diagram だけを image にした。問題文・答え・選択肢・ヒント・解説・ID・難易度・inputForm は変えていない。
+- 絵は img/diagrams/sci5_*.webp（800×533、各100KB以下）。文字・数字・矢印は入れず、実験の結果（けずれた土、結晶、クリップを引きつける、針のふれ、育ち方のちがい）は描いていない。プロンプトは HAND_SCI5_PICTURES.md。
+- node tests/run.js は 684件成功。
