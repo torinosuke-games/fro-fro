@@ -1,4 +1,4 @@
-// 第16弾：61問だけを変更し、条件と記号以外の解答・結果を描かない。
+// 第16弾：58問だけを変更し、条件と記号以外の解答・結果を描かない。
 module.exports=({test,FF,ctx,assert,plain})=>{
  const fs=require('fs'),path=require('path'),crypto=require('crypto');
  const ids=[...fs.readFileSync(path.join(__dirname,'../../DIAGRAM_REQUESTS_16.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'science_g5_hand_'+m[1]);
@@ -41,17 +41,17 @@ module.exports=({test,FF,ctx,assert,plain})=>{
    if(d.eastArrow)assert.equal(d.scene,'cloudMap');
   }else{assert.equal(d.kind,'graph');assert.equal(d.blankAxes,true);assert.equal(d.science,true);assert.deepEqual(plain(d.values),[]);assert.deepEqual(plain(d.labels),[]);}
  }
- test('小5理科：324問のdiagram以外が不変、対象61問のみ追加',()=>{
-  assert.equal(all.length,324);assert.equal(new Set(ids).size,61);assert.equal(qs.length,61);
-  assert.equal(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'2a2bae11d0ae1788be047e20f7c300b00e8eb3a0ddee1d5286a974f79058d47b');
-  // mainで追加された第17弾16画像を含め、対象外263問のdiagramも変更しない。
-  assert.equal(hash(all.filter(q=>!ids.includes(q.id)).map(q=>[q.id,q.diagram?plain(q.diagram):null])),'ded741f9fe20ae52f30f44c7928e506b23d21962f8d4e606b6286aef8f2e3643');
+ test('小5理科：324問のdiagram以外が不変、対象58問のみ追加',()=>{
+  assert.equal(all.length,324);assert.equal(new Set(ids).size,58);assert.equal(qs.length,58);
+  assert.equal(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'6773c75c86a6c22f2ca28a54816f19868238c233afcdfe922ed8ba12998fd547');
+  // 第17弾の16画像（electromagnet_022 は直し済み）と、図を外した3問（plant_012・river_005・river_007）を含め、対象外266問のdiagramも変更しない。
+  assert.equal(hash(all.filter(q=>!ids.includes(q.id)).map(q=>[q.id,q.diagram?plain(q.diagram):null])),'cd356fc41acc738fd59dd3d0a45b5dbb8bd90bdbefde9df5c15e884e79767114');
  });
- test('小5理科：61問の範囲検証と書き問題の図の継承',()=>{
+ test('小5理科：58問の範囲検証と書き問題の図の継承',()=>{
   const bank=FF.learning.createBank(ctx.QUESTION_BANK);for(const q of qs){range(q.diagram);assert.deepEqual(plain(FF.learning.validateQuestion(q)),[]);if(q.inputForm)assert.deepEqual(plain(bank.byId[q.id+'#input'].diagram),plain(q.diagram));}
  });
  test('小5理科：新しい種類と拡張部品の不正値を検出',()=>{
-  for(const [id,change]of [['plant_004',d=>d.labels.pop()],['flower_001',d=>d.part='answer'],['pendulum_003',d=>d.panels[0].labels.pop()],['pendulum_028',d=>d.panels[0].length=0],['pendulum_017',d=>d.panels[0].angle=90],['plant_012',d=>d.panels[0].wet='sprouted'],['flower_020',d=>d.panels[0].magnifications=[400]],['dissolve_003',d=>d.panels[0].solute.amount=-1],['electromagnet_014',d=>d.panels[0].turns=0],['weather_001',d=>d.covered=11],['weather_010',d=>d.trackLabels.pop()],['river_033',d=>d.labels.pop()],['method_030',d=>d.values=[1]]]){const d=plain(get(id));change(d);assert.throws(()=>range(d));}
+  for(const [id,change]of [['plant_004',d=>d.labels.pop()],['flower_001',d=>d.part='answer'],['pendulum_003',d=>d.panels[0].labels.pop()],['pendulum_028',d=>d.panels[0].length=0],['pendulum_017',d=>d.panels[0].angle=90],['flower_020',d=>d.panels[0].magnifications=[400]],['dissolve_003',d=>d.panels[0].solute.amount=-1],['electromagnet_014',d=>d.panels[0].turns=0],['weather_001',d=>d.covered=11],['weather_010',d=>d.trackLabels.pop()],['river_033',d=>d.labels.pop()],['method_030',d=>d.values=[1]]]){const d=plain(get(id));change(d);assert.throws(()=>range(d));}
  });
  test('小5理科：解答の名前・実験結果・求める数をデータに入れない',()=>{
   const forbidden=['answer','result','after','growth','germinated','attracted','speed','period','pole','current','erosion','deposition','correct'];
