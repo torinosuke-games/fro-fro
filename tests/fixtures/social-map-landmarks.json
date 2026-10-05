@@ -1,0 +1,336 @@
+{
+  "source": "https://www.gsi.go.jp/common/000238259.pdf",
+  "note": "Gazetteer of Japan 2021, degree/minute coordinates; PDF page numbers. Gazetteer positions are reference locations, not cadastral coast surveys.",
+  "landmarks": [
+    {
+      "id": 1,
+      "name": "足摺岬",
+      "point": [
+        133.016667,
+        32.716667
+      ],
+      "type": "cape",
+      "page": 13
+    },
+    {
+      "id": 2,
+      "name": "室戸岬",
+      "point": [
+        134.183333,
+        33.25
+      ],
+      "type": "cape",
+      "page": 62
+    },
+    {
+      "id": 3,
+      "name": "佐田岬",
+      "point": [
+        132.016667,
+        33.35
+      ],
+      "type": "cape",
+      "page": 80
+    },
+    {
+      "id": 4,
+      "name": "襟裳岬",
+      "point": [
+        143.25,
+        41.916667
+      ],
+      "type": "cape",
+      "page": 19
+    },
+    {
+      "id": 5,
+      "name": "知床岬",
+      "point": [
+        145.333333,
+        44.35
+      ],
+      "type": "cape",
+      "page": 88
+    },
+    {
+      "id": 6,
+      "name": "潮岬",
+      "point": [
+        135.766667,
+        33.45
+      ],
+      "type": "cape",
+      "page": 87
+    },
+    {
+      "id": 7,
+      "name": "大間崎",
+      "point": [
+        140.916667,
+        41.55
+      ],
+      "type": "cape",
+      "page": 74
+    },
+    {
+      "id": 8,
+      "name": "犬吠埼",
+      "point": [
+        140.866667,
+        35.7
+      ],
+      "type": "cape",
+      "page": 33
+    },
+    {
+      "id": 9,
+      "name": "石廊崎",
+      "point": [
+        138.85,
+        34.6
+      ],
+      "type": "cape",
+      "page": 33
+    },
+    {
+      "id": 10,
+      "name": "入道崎",
+      "point": [
+        139.7,
+        40
+      ],
+      "type": "cape",
+      "page": 70
+    },
+    {
+      "id": 11,
+      "name": "魹ヶ崎",
+      "point": [
+        142.066667,
+        39.55
+      ],
+      "type": "cape",
+      "page": 97
+    },
+    {
+      "id": 12,
+      "name": "御前崎",
+      "point": [
+        138.233333,
+        34.6
+      ],
+      "type": "cape",
+      "page": 74
+    },
+    {
+      "id": 13,
+      "name": "佐多岬",
+      "point": [
+        130.666667,
+        31
+      ],
+      "type": "cape",
+      "page": 82
+    },
+    {
+      "id": 14,
+      "name": "野間岬",
+      "point": [
+        130.116667,
+        31.416667
+      ],
+      "type": "cape",
+      "page": 69
+    },
+    {
+      "id": 15,
+      "name": "札幌市",
+      "point": [
+        141.35,
+        43.066667
+      ],
+      "type": "city",
+      "page": 82
+    },
+    {
+      "id": 16,
+      "name": "東京都",
+      "point": [
+        139.7,
+        35.683333
+      ],
+      "type": "city",
+      "page": 98
+    },
+    {
+      "id": 17,
+      "name": "福岡市",
+      "point": [
+        130.4,
+        33.583333
+      ],
+      "type": "city",
+      "page": 20
+    },
+    {
+      "id": 18,
+      "name": "高知市",
+      "point": [
+        133.533333,
+        33.566667
+      ],
+      "type": "city",
+      "page": 47
+    },
+    {
+      "id": 19,
+      "name": "佐渡島",
+      "point": [
+        138.383333,
+        38.033333
+      ],
+      "type": "island",
+      "page": 80
+    },
+    {
+      "id": 20,
+      "name": "淡路島",
+      "point": [
+        134.816667,
+        34.316667
+      ],
+      "type": "island",
+      "page": 13
+    },
+    {
+      "id": 21,
+      "name": "対馬",
+      "point": [
+        129.416667,
+        34.4
+      ],
+      "type": "island",
+      "page": 102
+    },
+    {
+      "id": 22,
+      "name": "五島市",
+      "point": [
+        128.833333,
+        32.7
+      ],
+      "type": "island",
+      "page": 22
+    },
+    {
+      "id": 23,
+      "name": "隠岐諸島",
+      "point": [
+        133.05,
+        36.2
+      ],
+      "type": "island",
+      "page": 73
+    },
+    {
+      "id": 24,
+      "name": "伊豆大島",
+      "point": [
+        139.4,
+        34.75
+      ],
+      "type": "island",
+      "page": 76
+    },
+    {
+      "id": 25,
+      "name": "種子島",
+      "point": [
+        131,
+        30.616667
+      ],
+      "type": "island",
+      "page": 95
+    },
+    {
+      "id": 26,
+      "name": "屋久島",
+      "point": [
+        130.516667,
+        30.35
+      ],
+      "type": "island",
+      "page": 106
+    },
+    {
+      "id": 27,
+      "name": "奄美大島",
+      "point": [
+        129.383333,
+        28.283333
+      ],
+      "type": "island",
+      "page": 76
+    },
+    {
+      "id": 28,
+      "name": "石垣島",
+      "point": [
+        124.2,
+        24.416667
+      ],
+      "type": "island",
+      "page": 34
+    },
+    {
+      "id": 29,
+      "name": "宮古島",
+      "point": [
+        125.3,
+        24.783333
+      ],
+      "type": "island",
+      "page": 59
+    },
+    {
+      "id": 30,
+      "name": "国後島",
+      "point": [
+        145.85,
+        44.133333
+      ],
+      "type": "island",
+      "page": 51
+    },
+    {
+      "id": 31,
+      "name": "択捉島",
+      "point": [
+        147.783333,
+        45.083333
+      ],
+      "type": "island",
+      "page": 19
+    },
+    {
+      "id": 32,
+      "name": "琵琶湖",
+      "point": [
+        136.083333,
+        35.25
+      ],
+      "type": "lake",
+      "page": 14
+    },
+    {
+      "id": 33,
+      "name": "国東半島",
+      "point": [
+        131.616667,
+        33.533333
+      ],
+      "type": "city",
+      "page": 51
+    }
+  ]
+}

@@ -88,7 +88,13 @@
       scienceScene: ['scene'],
       anatomy: ['part', 'pose'],
       moonView: ['mode'],
-      starMap: ['points', 'segments', 'labels']
+      starMap: ['points', 'segments', 'labels'],
+      japanMap: ['bounds', 'marks', 'areas', 'routes'],
+      terrain: ['scene'],
+      facility: ['scene'],
+      disaster: ['scene'],
+      culture: ['scene'],
+      industry: ['scene']
     },
 
     RESOURCES: [
