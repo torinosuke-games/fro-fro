@@ -706,3 +706,9 @@
 ## 判断286：小5理科の図を、SVG（ChatGPT）と絵（Grok）に分ける
 - ユーザーが「理科の図は Grok に頼む」と決めた。Grok は絵（文字を入れない生成画像）を作るので、77問の依頼（判断285）を、①記号（ア・イ・ウ）・数字・目もり・グラフが要る61問（SVG。ChatGPT。`DIAGRAM_REQUESTS_16.md`）と、②文字がなくても絵で見せられる16問（生成した絵 `diagram.kind: 'image'`。Grok。`DIAGRAM_REQUESTS_17.md`、プロンプトの記録は `HAND_SCI5_PICTURES.md`）に分けた。
 - ②は、天気の雲3問・川の地形4問・メダカ3問・ヘチマのつぼみ・発芽・蒸発皿・電磁石3問・育て方の比べ方。答えが絵の形そのものになるもの（V字谷・上流下流の石・台風の目・体の断面の部分の名前）は、絵にしない。
+
+## 判断287：小5理科の絵16枚を付ける（2026-10-06）
+
+- 判断286の依頼（DIAGRAM_REQUESTS_17.md）どおり、main から grok/sci5-pictures を作成。science_g5_hand の16問の diagram だけを image にした。問題文・答え・選択肢・ヒント・解説・ID・難易度・inputForm は変えていない。
+- 絵は img/diagrams/sci5_*.webp（800×533、各100KB以下）。文字・数字・矢印は入れず、実験の結果（けずれた土、結晶、クリップを引きつける、針のふれ、育ち方のちがい）は描いていない。プロンプトは HAND_SCI5_PICTURES.md。
+- node tests/run.js は 684件成功。
