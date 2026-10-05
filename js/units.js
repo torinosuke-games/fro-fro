@@ -133,6 +133,20 @@
         { id: 'time', name: '時こく・天気', description: "What time is it?・It's sunny.", icon: '⏰' },
         { id: 'phrase', name: '会話の言い方', description: "What's this?・Can you ～?", icon: '💬' },
         { id: 'listening', name: '聞き取り', description: '音を聞いて えらぶ（読み上げ）', icon: '🔊' }
+      ],
+      5: [
+        { id: 'spell', name: '単語のつづり', description: '正しいつづり・書く', icon: 'abc' },
+        { id: 'self', name: '自己紹介・好きなこと', description: 'I like ～.・favorite', icon: '🙂' },
+        { id: 'month', name: '誕生日・月・日付', description: 'first・May 5th', icon: '🎂' },
+        { id: 'can', name: 'できること', description: 'I can ～.・Can you ～?', icon: '💪' },
+        { id: 'daily', name: '一日の生活', description: 'get up・at seven', icon: '⏰' },
+        { id: 'direction', name: '道案内・場所', description: 'Turn right.・library', icon: '🧭' },
+        { id: 'want', name: '買い物・ほしいもの', description: 'I want ～.・How much?', icon: '🛒' },
+        { id: 'job', name: '職業・なりたいもの', description: 'I want to be ～.', icon: '👩‍🔬' },
+        { id: 'country', name: '国・行きたい国', description: 'Japan・I want to go to ～.', icon: '🌏' },
+        { id: 'school', name: '学校・教科・時間割', description: 'math・What subject?', icon: '📚' },
+        { id: 'reading', name: '読んでみよう', description: '短い文を読む', icon: '📖' },
+        { id: 'listening', name: '聞き取り', description: '音を聞いて えらぶ（読み上げ）', icon: '🔊' }
       ]
     }
   };

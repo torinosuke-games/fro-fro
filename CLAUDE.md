@@ -9,7 +9,7 @@
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
 - 仕様：`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 281。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 282。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
 - リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`。算数の文章題55問への図（判断223）：`MATH_WORD_DIAGRAMS.md`（図の種類・使った問題）、依頼の記録は `DIAGRAM_REQUESTS.md`（完了）
 - 完成報告：`REPORT.md`（v0.1）、`REPORT_v0.2.md`、`REPORT_v0.3.md`、`REPORT_v0.4.md`
@@ -46,6 +46,7 @@
 - 琵琶湖疏水（pioneer_010）の地図は、「なんの図かわからない」との指摘で、生成した絵に作り直した（判断276・277。依頼は `DIAGRAM_REQUESTS_15.md`。Grok が `soc4_pioneer_010.webp` を作った）
 - 小6国語（判断272〜274）：単元を12登録し、全12単元の手作り336問を `questions/japanese_g6_hand.js` に書いた（reviewed: false。各単元とも基礎8・標準12・発展8。原作と合わせて363問）。絵（Grok）はまだ付けていない
 - 小4英語（判断278〜280）：外国語活動の内容に合わせて単元を11登録し、手作り242問を `questions/english_g4_hand.js` に書いた（reviewed: false。原作と合わせて269問）。**英語の読み上げ**（`js/speech.js`。ブラウザの `speechSynthesis`。問題のスピーカーのボタン・設定のオン・オフと速さ）と、**聞き取りの単元**（`listen` の項目。22問）を付けた。声は、スマホで聞いて確かめてもらう（この環境では出せない）
+- 小5英語（判断281）：教科の外国語（読む・書くが加わる）に合わせて単元を12登録し、手作りの第1弾（つづり・自己紹介・誕生日と日付・できること・一日の生活・道案内の132問）を `questions/english_g5_hand.js` に書いた（reviewed: false。原作と合わせて159問）。残りの6単元（買い物・職業・国・学校・読む・聞き取り）はこれから
 - 漢字の書き取りの手書き（判断266）：国語で、答えが漢字の書き問題は、手書きの欄に書いて、お手本とくらべて、自分で「かけた」「まちがえた」を選ぶ（ポイントは半分＝`balance.HANDWRITING.REWARD_RATE`）。`js/ui/handwriting.js`。AI での判定は、サーバーを持つときの課題
 - 自動テスト 663件すべて成功、`node tests/simulate.js` はすべて目標内。小5の図118問（第3〜5弾）は `HAND_G5_DIAGRAMS.md`。小4理科87問（第6・7弾）は判断250・`HAND_SCI4_DIAGRAMS.md`、図を追加してPRでレビュー待ち。
 
