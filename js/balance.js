@@ -53,6 +53,7 @@
 
     // ---- 学習 ----
     INPUT_MAX_ATTEMPTS: 3,
+    HANDWRITING: { REWARD_RATE: 0.5 },   // 手書きの自己採点で「書けた」を選んだときの、資源・勉強量ポイントの割合（判断266）
     INITIAL_UNLOCKED_GRADE: 2,
     FURIGANA_AUTO_MAX_GRADE: 3,   // 学年を入れたとき、ふりがなを自動でオンにするのはこの学年まで（判断198）
     MAX_GRADE: 9,
