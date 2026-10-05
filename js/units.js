@@ -105,6 +105,17 @@
         { id: 'body', name: '人の体のつくりと運動', description: '骨・きん肉・関節', icon: '🦴' },
         { id: 'moon', name: '月の見え方', description: '月の形と動き', icon: '☾' },
         { id: 'star', name: '星や星座', description: '星の明るさ・色・動き', icon: '★' }
+      ],
+      5: [
+        { id: 'plant', name: '植物の発芽と成長', description: '発芽の条件・成長に必要なもの', icon: '🌱' },
+        { id: 'flower', name: '花から実へ', description: '花のつくり・受粉・実と種子', icon: '🌼' },
+        { id: 'life', name: '動物の誕生', description: 'メダカ・人の誕生', icon: '🐟' },
+        { id: 'weather', name: '天気の変化と台風', description: '雲・天気の予想・台風', icon: '🌀' },
+        { id: 'river', name: '流れる水のはたらき', description: 'しん食・運ぱん・たい積', icon: '🏞' },
+        { id: 'dissolve', name: 'もののとけ方', description: '水にとけるもの・とける量・ろ過', icon: '🧂' },
+        { id: 'pendulum', name: 'ふりこの運動', description: '周期・長さ・おもり', icon: '⏱' },
+        { id: 'electromagnet', name: '電磁石', description: 'コイル・巻き数・電流の強さ', icon: '🧲' },
+        { id: 'method', name: '実験の方法と考え方', description: '条件をそろえる・記録・グラフ', icon: '🔬' }
       ]
     },
     social: {
