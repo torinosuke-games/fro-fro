@@ -919,7 +919,7 @@
       accepted: [(inv ? a : N) + 'm'],
       hints: inv ? ['もとの 長さ × ' + k + ' ＝ ' + N + ' だよ', N + ' ÷ ' + k + ' を 計算しよう', '求めた 数に ' + k + ' を かけて 確かめよう'] : ['「' + k + '倍」は ' + k + ' 回ぶんの 大きさ', a + ' × ' + k + ' を 計算しよう', '答えの 単位は m だよ'],
       explanation: inv ? N + ' ÷ ' + k + ' ＝ ' + a + '。もとの 長さは ' + a + 'm です。' : a + ' × ' + k + ' ＝ ' + N + '。' + N + 'm です。',
-      distractors: uniq(inv ? [N * k, N - k, a + 1, a - 1, k] : [a + k, N + a, N - a, a / k, N * 2], inv ? a : N),
+      distractors: uniq(inv ? [a + 1, a - 1, a + 2, N - k, k] : [N + a, N - a, N + 10, N - 10, a + k], inv ? a : N),
       meta: { op: 'ratio_of', a: a, k: k, inv: inv }
     };
   };
