@@ -176,11 +176,26 @@
   if(!done&&!options.explore)hint.appendChild(E('p',{class:'micro',text:R.hintReward}));
   aside.appendChild(hint);
   var explain=E('section',{class:'explanation-card'},[E('h2',{},[E('img',{class:'help-heading-icon',attrs:{src:'img/art/subj-en.jpg',alt:''}}),E('span',{text:R.explanation})])]);
-  if(done){explain.appendChild(E('div',{class:'answer-label',text:R.answer}));explain.appendChild(U.R('div','answer-value',L.displayAnswer(q)));explain.appendChild(U.R('p','explanation-text',q.explanation));}
+  if(done){explain.appendChild(E('div',{class:'answer-label',text:R.answer}));explain.appendChild(U.R('div','answer-value',L.displayAnswer(q)));if(FF.speech&&FF.speech.supported()&&FF.speech.enabled()){var at=FF.speech.answerTextFor(q)||(q.listen?String(q.listen):'');if(at)explain.appendChild(E('div',{class:'speak-row'},[speakButton(at,R.speakAnswer,'small')]));}explain.appendChild(U.R('p','explanation-text',q.explanation));}
   else explain.appendChild(E('div',{class:'locked-explanation'},[E('span',{class:'lock-mark',text:'◇'}),E('p',{text:R.answerAfter})]));
   aside.appendChild(explain);
   aside.appendChild(E('div',{class:'encourage'},[U.artImg('avatar-'+(FF.app.state.player.avatar||'e1')+'.jpg','mentor-avatar'),E('p',{text:done?R.encourageDone:(q.diagram?R.encourage:'あせらなくて大丈夫。問題をよく読んで考えてみよう。')})]));
   return aside;
+ }
+ // 英語の読み上げ（判断280）：スピーカーのボタン。聞き取りの問題（q.listen）は、大きなボタンで、読み上げができないときは英語の文字を見せる
+ function speakButton(text,label,cls){
+  return E('button',{class:'speak-button '+(cls||''),attrs:{type:'button','aria-label':label},on:{click:function(){FF.speech.speak(text);}}},[E('span',{class:'speak-icon',text:'🔊'}),E('span',{text:label})]);
+ }
+ function speakView(q,done){
+  if(!FF.speech||q.subject!=='english')return null;
+  var text=FF.speech.textFor(q);if(!text)return null;
+  var can=FF.speech.supported()&&FF.speech.enabled();
+  if(q.listen){
+   if(can)return E('div',{class:'speak-row listen'},[speakButton(text,R.speakListen,'big'),E('span',{class:'speak-note',text:R.speakNote})]);
+   return E('div',{class:'speak-row listen no-sound'},[E('span',{class:'speak-note',text:R.speakNoSound}),E('strong',{class:'speak-text',text:'「'+text+'」'})]);
+  }
+  if(!can)return null;
+  return E('div',{class:'speak-row'},[speakButton(text,R.speakAgain,'small')]);
  }
  FF.lessonHelp=helpView;
  function renderQuiz(main){
@@ -202,6 +217,7 @@
    E('span',{class:'difficulty-badge '+q.difficulty,text:'★ '+difficulty(q.difficulty)})
   ]));
   card.appendChild(U.R('div','lesson-question',q.question));
+  var speakRow=speakView(q,done);if(speakRow)card.appendChild(speakRow);
   if(q.diagram)card.appendChild(FF.lessonFigure.render(q.diagram));
   var answers=E('div',{class:'lesson-answers'});
   if(q.answerType==='choice'){

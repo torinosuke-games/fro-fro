@@ -314,6 +314,12 @@
     furigana: 'ふりがな表示',
     soundEffect: '正解の{音|おと}',
     soundStyle: '{音|おと}の{種類|しゅるい}（{押|お}すと{鳴|な}ります）',
+    speechEffect: '{英語|えいご}の{読|よ}み{上|あ}げ',
+    speechRateTitle: '{読|よ}み{上|あ}げの{速|はや}さ',
+    speechSlow: 'ゆっくり',
+    speechNormal: 'ふつう',
+    speechFast: '{速|はや}い',
+    speechTest: '{聞|き}いてみる',
     on: 'オン',
     off: 'オフ',
     // 保護者の方へ（v0.4、SPEC 14.4）

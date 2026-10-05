@@ -284,4 +284,35 @@
   ph('advanced','「in the box」は どういう 意味かな。','はこの 中',['はこの 上','はこの 下','はこの よこ'],['「in」は「中」だよ。','「on」「under」と くらべてみよう。'],'「in the box」は「はこの中に」です。');
   ph('advanced','「Where is my bag?」は どういう 意味かな。','わたしの かばんは どこですか',['わたしの かばんは だれの ものですか','わたしの かばんは いくつですか','わたしの かばんは 何色ですか'],['「where」は「どこ」だよ。','ものの 場所を たずねる 文だよ。'],'「Where is my bag?」は「わたしのかばんはどこですか。」です。');
   ph('advanced','「Do you like dogs?」と 聞かれました。「はい、とても 好きです」と 答えるのは どれかな。','Yes, I do. I like dogs very much.',['Yes, I can. I like dogs.','No, I don\'t.','Yes, I am.'],['「Do you ～?」と 聞かれたら、「do」で 答えるよ。','「very much」は「とても」だよ。'],'「Do you like dogs?」に、「Yes, I do.」と 答えて、「I like dogs very much.（とても好きです）」と つづけます。');
+
+  // ---- 聞き取り（音を聞こう）：基礎6・標準9・発展7。q.listen の英語を、読み上げて聞かせる。問題文には、英語を書かない ----
+  // 読み上げができない端末では、英語を文字で見せる（renewal.js の speakView）。
+  function ls(diff,listen,answer,wrong,hint2,expl){
+    var n=serial.listening=(serial.listening||0)+1;
+    bank.push({id:'english_g4_hand_listening_'+('00'+n).slice(-3),subject:'english',gradeLevel:4,unit:'listening',difficulty:diff,answerType:'choice',
+      question:'音を 聞いて、あてはまる ものを えらぼう。',listen:listen,answer:answer,choices:[answer].concat(wrong),
+      hints:['ボタンを おして、もういちど 聞いてみよう。',hint2],explanation:expl||('英語は「'+listen+'」です。「'+answer+'」という 意味です。'),reviewed:false,collection:'hand_en4'});
+  }
+  ls('basic','apple','りんご',['みかん','バナナ','ぶどう'],'くだものの 名前だよ。');
+  ls('basic','dog','いぬ',['ねこ','とり','さかな'],'「ワン」と なく 動物だよ。');
+  ls('basic','red','赤',['青','黄色','緑'],'色の 名前だよ。りんごの 色だよ。');
+  ls('basic','five','5',['4','6','15'],'数の 名前だよ。手の ゆびの 数だよ。');
+  ls('basic','Monday','月曜日',['火曜日','日曜日','金曜日'],'曜日の 名前だよ。週の はじめだよ。');
+  ls('basic','Hello.','こんにちは',['おはよう','おやすみ','さようなら'],'人に 会ったときの あいさつだよ。');
+  ls('standard','cat','ねこ',['いぬ','うさぎ','さる'],'「ニャー」と なく 動物だよ。');
+  ls('standard','milk','ぎゅうにゅう',['みず','ジュース','おちゃ'],'牛から とれる 飲みものだよ。');
+  ls('standard','blue','青',['赤','緑','黄色'],'空や 海の 色だよ。');
+  ls('standard','twelve','12',['2','20','10'],'1年は 何か月かな。');
+  ls('standard','Thursday','木曜日',['水曜日','金曜日','土曜日'],'金曜日の 前の 日だよ。');
+  ls('standard','Good morning.','おはよう',['こんにちは','おやすみ','ありがとう'],'朝の あいさつだよ。');
+  ls('standard','Thank you.','ありがとう',['ごめんなさい','さようなら','こんにちは'],'おれいの 言葉だよ。');
+  ls('standard','It\'s rainy.','雨',['はれ','くもり','雪'],'天気の 話だよ。かさが いるよ。','英語は「It\'s rainy.」です。「雨です」という 意味です。');
+  ls('standard','pencil','えんぴつ',['けしゴム','ノート','じょうぎ'],'字を 書く 道具だよ。');
+  ls('advanced','It\'s a rabbit.','うさぎ',['さる','ねこ','いぬ'],'耳が 長い 動物だよ。','英語は「It\'s a rabbit.」です。「それはうさぎです」という 意味です。');
+  ls('advanced','I like pizza.','わたしは ピザが 好きです',['わたしは ピザが きらいです','わたしは ピザを 食べました','わたしは ピザを 作りました'],'「like」は どんな 気もちを 表す 言葉かな。','英語は「I like pizza.」です。「わたしはピザが好きです。」という 意味です。');
+  ls('advanced','It\'s seven o\'clock.','7時',['6時','8時','11時'],'時間の 話だよ。','英語は「It\'s seven o\'clock.」です。「7時です」という 意味です。');
+  ls('advanced','thirty','30',['13','3','300'],'数の 名前だよ。「ティーン」では なく「ティ」と おわるよ。');
+  ls('advanced','Can you swim?','およげますか',['およぎたいですか','およぎましたか','およいでいますか'],'「Can you ～?」は「～できますか」と たずねる 言い方だよ。','英語は「Can you swim?」です。「およげますか」という 意味です。');
+  ls('advanced','What\'s your name?','名前は 何ですか',['年れいは 何才ですか','どこから 来ましたか','元気ですか'],'「name」は「名前」の いみだよ。','英語は「What\'s your name?」です。「名前は何ですか」という 意味です。');
+  ls('advanced','Sit down.','すわってください',['立ってください','見てください','聞いてください'],'「Stand up.」の 反対の 言葉だよ。');
 })(window);

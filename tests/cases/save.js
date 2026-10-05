@@ -30,7 +30,7 @@ module.exports = ({ test, FF, assert, plain }) => {
     s.learning.stats.math = { 3: { attempts: 4, correct: 3, choice: { attempts: 1, correct: 1 }, input: { attempts: 3, correct: 2 }, hintsUsed: 1, recent: [1, 0, 1, 1] } };
     s.learning.correctLog = { q1: [T0] };
     s.learning.history.push({ at: T0, qid: 'q1', correct: true });
-    s.settings = { furigana: false, furiganaAuto: false, themeMode: 'day', sound: true, soundStyle: 'bright', pointsPerHour: 2400 };
+    s.settings = { furigana: false, furiganaAuto: false, themeMode: 'day', sound: true, soundStyle: 'bright', speech: true, speechRate: 'normal', pointsPerHour: 2400 };
     s.studyPoints = 1234;
     s.studyPointsEarnedTotal = 5678;
     s.redeemHistory = [{ id: 'K7QX-3M9P', issuedAt: T0, points: 4444, minutes: 90, pointsPerHour: 3000, method: 'print' }];
@@ -126,7 +126,7 @@ module.exports = ({ test, FF, assert, plain }) => {
     // 名前はそのまま、あとから足した学年・主人公の絵（判断198）は未設定（null）で補われる
     assert.deepStrictEqual(plain(s.player), Object.assign({}, src.player, { grade: null, avatar: null }));
     // 設定は元のまま、あとから足した項目（テーマ・交換レート・メールアドレス）だけ初期値で補われる
-    assert.deepStrictEqual(plain(s.settings), Object.assign({}, src.settings, { themeMode: 'day', sound: true, soundStyle: 'bright', pointsPerHour: 3000 }));
+    assert.deepStrictEqual(plain(s.settings), Object.assign({}, src.settings, { themeMode: 'day', sound: true, soundStyle: 'bright', speech: true, speechRate: 'normal', pointsPerHour: 3000 }));
     // 勉強量ポイント（v0.4）は空の状態で補われる
     assert.strictEqual(s.studyPoints, 0);
     assert.strictEqual(s.studyPointsEarnedTotal, 0);

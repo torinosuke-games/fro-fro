@@ -131,7 +131,8 @@
         { id: 'school', name: '学校・文房具・教科', description: 'pencil・book・math', icon: '✏' },
         { id: 'week', name: '曜日・月・季節', description: 'Monday・January・spring', icon: '📅' },
         { id: 'time', name: '時こく・天気', description: "What time is it?・It's sunny.", icon: '⏰' },
-        { id: 'phrase', name: '会話の言い方', description: "What's this?・Can you ～?", icon: '💬' }
+        { id: 'phrase', name: '会話の言い方', description: "What's this?・Can you ～?", icon: '💬' },
+        { id: 'listening', name: '聞き取り', description: '音を聞いて えらぶ（読み上げ）', icon: '🔊' }
       ]
     }
   };

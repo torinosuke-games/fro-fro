@@ -9,7 +9,7 @@
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
 - 仕様：`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 280。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 281。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
 - リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`。算数の文章題55問への図（判断223）：`MATH_WORD_DIAGRAMS.md`（図の種類・使った問題）、依頼の記録は `DIAGRAM_REQUESTS.md`（完了）
 - 完成報告：`REPORT.md`（v0.1）、`REPORT_v0.2.md`、`REPORT_v0.3.md`、`REPORT_v0.4.md`
@@ -45,7 +45,7 @@
 - ChatGPT の第13弾（地図3問の直し。PR #54）を取り込み済み（判断275）：阿蘇（geography_008）・関東平野（geography_005。国土地理院の標高データから切り出し）・琵琶湖疏水（pioneer_010）
 - 琵琶湖疏水（pioneer_010）の地図は、「なんの図かわからない」との指摘で、生成した絵に作り直した（判断276・277。依頼は `DIAGRAM_REQUESTS_15.md`。Grok が `soc4_pioneer_010.webp` を作った）
 - 小6国語（判断272〜274）：単元を12登録し、全12単元の手作り336問を `questions/japanese_g6_hand.js` に書いた（reviewed: false。各単元とも基礎8・標準12・発展8。原作と合わせて363問）。絵（Grok）はまだ付けていない
-- 小4英語（判断278・279）：外国語活動の内容に合わせて単元を10登録し、全10単元の手作り220問を `questions/english_g4_hand.js` に書いた（reviewed: false。各単元とも基礎6・標準9・発展7。原作と合わせて247問）。音声はなし（ヒントにカタカナの読みを付けた）
+- 小4英語（判断278〜280）：外国語活動の内容に合わせて単元を11登録し、手作り242問を `questions/english_g4_hand.js` に書いた（reviewed: false。原作と合わせて269問）。**英語の読み上げ**（`js/speech.js`。ブラウザの `speechSynthesis`。問題のスピーカーのボタン・設定のオン・オフと速さ）と、**聞き取りの単元**（`listen` の項目。22問）を付けた。声は、スマホで聞いて確かめてもらう（この環境では出せない）
 - 漢字の書き取りの手書き（判断266）：国語で、答えが漢字の書き問題は、手書きの欄に書いて、お手本とくらべて、自分で「かけた」「まちがえた」を選ぶ（ポイントは半分＝`balance.HANDWRITING.REWARD_RATE`）。`js/ui/handwriting.js`。AI での判定は、サーバーを持つときの課題
 - 自動テスト 663件すべて成功、`node tests/simulate.js` はすべて目標内。小5の図118問（第3〜5弾）は `HAND_G5_DIAGRAMS.md`。小4理科87問（第6・7弾）は判断250・`HAND_SCI4_DIAGRAMS.md`、図を追加してPRでレビュー待ち。
 
@@ -60,7 +60,7 @@
 ## ファイル構成の要約
 
 - `index.html` … `<script>` の読み込み順はここが唯一の定義
-- `js/` ロジック（純粋関数）：`config.js`、`clock.js`、`balance.js`、`util.js`、`defs.js`（資源・建物・教科・地域・敵・図の種類の定義）、`units.js`（教科・学年ごとの単元）、`integrity.js`（セーブの指紋）、`theme.js`、`state.js`（初期状態・移行・読み込みの検証）、`storage.js`（localStorage はここだけ）、`tickets.js`、`rewards.js`、`buildings.js`（強化・工事の待ち時間・生産）、`answer.js`（判定）、`generators.js`（算数の自動生成）、`learning.js`（出題・回答・学習記録）、`curriculum.js`（リニューアルの出題・単元の絞り込み・問題の番号）、`exam.js`（昇格試験・実力診断）、`exploration.js`（探索）、`battle.js`（戦闘）、`points.js`（勉強量ポイント・引換・券を使う・引換券ID・QR コードの文字列）、`qrcode.js`（自作の QR コード）、`simulator.js`、`texts.js`（文言とふりがな辞書）
+- `js/` ロジック（純粋関数）：`config.js`、`clock.js`、`balance.js`、`util.js`、`defs.js`（資源・建物・教科・地域・敵・図の種類の定義）、`units.js`（教科・学年ごとの単元）、`integrity.js`（セーブの指紋）、`theme.js`、`state.js`（初期状態・移行・読み込みの検証）、`storage.js`（localStorage はここだけ）、`tickets.js`、`rewards.js`、`buildings.js`（強化・工事の待ち時間・生産）、`answer.js`（判定）、`generators.js`（算数の自動生成）、`learning.js`（出題・回答・学習記録）、`curriculum.js`（リニューアルの出題・単元の絞り込み・問題の番号）、`exam.js`（昇格試験・実力診断）、`exploration.js`（探索）、`battle.js`（戦闘）、`points.js`（勉強量ポイント・引換・券を使う・引換券ID・QR コードの文字列）、`qrcode.js`（自作の QR コード）、`simulator.js`、`texts.js`（文言とふりがな辞書）、`speech.js`（英語の読み上げ）
 - `js/ui/` 画面：`core.js`（部品・ふりがな・ヘッダー・ナビ・画面切替）、`title.js`、`base.js`、`study.js`、`quiz.js`、`exam.js`、`records.js`、`settings.js`、`exploration.js`、`battle.js`、`redeem.js`（引換所と券・印刷）、`renewal.js`（リニューアルの学ぶ・問題画面）。`js/svg/learning.js`（問題の図）、`js/svg/`（建物・風景・教科アイコン・敵の立ち絵）、`js/debug.js`（`?debug=1`）、`js/main.js`（起動・自動保存）
 - `questions/` 問題データ（`window.QUESTION_BANK.push(...)`）、`img/` ボスの画像
 - `tests/` テスト（`index.html` からは読み込まない。`tests/lib/loader.js` が vm で読み込む）
