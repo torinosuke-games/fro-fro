@@ -1325,7 +1325,7 @@ window.QUESTION_BANK.push(
 
   // ===== Lv6（小学6年） =====
   {
-    id: 'japanese_g6_compound_001', subject: 'japanese', gradeLevel: 6, unit: 'compound',
+    id: 'japanese_g6_compound_001', subject: 'japanese', gradeLevel: 6, unit: 'word',
     difficulty: 'basic', answerType: 'choice',
     question: '「□{関係|かんけい}」の □に {入|はい}る、{打|う}ち{消|け}しの {意味|いみ}の {漢字|かんじ}は どれかな。',
     choices: ['{無|む}', '{不|ふ}', '{非|ひ}', '{未|み}'],
@@ -1363,7 +1363,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g6_yoji_001', subject: 'japanese', gradeLevel: 6, unit: 'yoji',
+    id: 'japanese_g6_yoji_001', subject: 'japanese', gradeLevel: 6, unit: 'proverb',
     difficulty: 'standard', answerType: 'input',
     question: '「{一生|いっしょう}に {一度|いちど}だけの {出会|であ}い」という {意味|いみ}の {四字熟語|よじじゅくご}「いちごいちえ」を {漢字|かんじ}で {書|か}こう。',
     answer: '一期一会', validationMode: 'exact',
@@ -1403,7 +1403,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g6_kojiseigo_001', subject: 'japanese', gradeLevel: 6, unit: 'kojiseigo',
+    id: 'japanese_g6_kojiseigo_001', subject: 'japanese', gradeLevel: 6, unit: 'proverb',
     difficulty: 'advanced', answerType: 'choice',
     question: '{故事成語|こじせいご}「{矛盾|むじゅん}」の {意味|いみ}は どれかな。',
     choices: ['{話|はなし}の つじつまが {合|あ}わない こと', 'しなくて よい {心配|しんぱい}を する こと', '{争|あらそ}いに {勝|か}って {利益|りえき}を {得|え}る こと', 'よけいな ものを つけ{加|くわ}える こと'],
@@ -1490,7 +1490,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g6_yoji_002', subject: 'japanese', gradeLevel: 6, unit: 'yoji',
+    id: 'japanese_g6_yoji_002', subject: 'japanese', gradeLevel: 6, unit: 'proverb',
     difficulty: 'standard', answerType: 'input',
     question: '「{自分|じぶん}で {自分|じぶん}の ことを ほめる こと」を あらわす {四字熟語|よじじゅくご}「じがじさん」を {漢字|かんじ}で {書|か}こう。',
     answer: '自画自賛', validationMode: 'exact',
@@ -1519,7 +1519,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g6_kojiseigo_002', subject: 'japanese', gradeLevel: 6, unit: 'kojiseigo',
+    id: 'japanese_g6_kojiseigo_002', subject: 'japanese', gradeLevel: 6, unit: 'proverb',
     difficulty: 'standard', answerType: 'choice',
     question: '{故事成語|こじせいご}「{蛇足|だそく}」の {意味|いみ}は どれかな。',
     choices: ['よけいな つけたし', 'しなくて よい {心配|しんぱい}', 'つじつまが {合|あ}わない こと', 'だいたい {同|おな}じで、ちがいが {少|すく}ない こと'],
@@ -1529,7 +1529,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g6_vocab_001', subject: 'japanese', gradeLevel: 6, unit: 'vocab',
+    id: 'japanese_g6_vocab_001', subject: 'japanese', gradeLevel: 6, unit: 'word',
     difficulty: 'standard', answerType: 'choice',
     question: '「{準備|じゅんび}」と にた {意味|いみ}の ことば（{類義語|るいぎご}）は どれかな。',
     choices: ['{用意|ようい}', '{整理|せいり}', '{計画|けいかく}', '{完成|かんせい}'],
@@ -1560,7 +1560,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g6_vocab_002', subject: 'japanese', gradeLevel: 6, unit: 'vocab',
+    id: 'japanese_g6_vocab_002', subject: 'japanese', gradeLevel: 6, unit: 'word',
     difficulty: 'advanced', answerType: 'input',
     question: '「{賛成|さんせい}」の {対義語|たいぎご}（{意味|いみ}が {逆|ぎゃく}に なる ことば）を {漢字|かんじ}2{字|じ}で {書|か}こう。',
     answer: '反対', acceptedAnswers: ['はんたい'], validationMode: 'exact',
