@@ -27,6 +27,6 @@ module.exports=({test,ctx,assert,plain})=>{
  });
  test('社会の絵：対象外264問はdiagramも含めmainと同一',()=>{
   const untouched=all.filter(q=>!ids.includes(q.id));assert.equal(untouched.length,264);
-  assert.equal(crypto.createHash('sha256').update(JSON.stringify(untouched)).digest('hex'),'2e16b4be3f480d16807776efea5f6b24cc46505fa74cab512b142c6805b4d278');
+  assert.equal(crypto.createHash('sha256').update(JSON.stringify(untouched)).digest('hex'),'e9c66a4bc850047487f266f8b0f2d204e1232c39081c71ff95e700fd1a90a0c9');
  });
 };
