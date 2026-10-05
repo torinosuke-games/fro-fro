@@ -78,13 +78,13 @@
      d.areas.forEach(function(ps){var area=poly(clip(ps).map(project),orange);area.setAttribute('fill-opacity','.3');area.setAttribute('stroke-width','1.5');area.setAttribute('clip-path','url(#'+landId+')');area.setAttribute('data-part','area');add(area);});
      if(d.regionBoundaries)FF.japanMapData.regionBoundaries.forEach(function(ps){var segments=[];for(var i=1;i<ps.length;i++){var seg=coastSegment(ps[i-1],ps[i]);if(seg)segments.push('M'+seg[0].join(',')+'L'+seg[1].join(','));}if(segments.length){var border=path(segments.join(' '),null,ink);border.setAttribute('stroke-width','1.2');border.setAttribute('clip-path','url(#'+landId+')');border.setAttribute('data-part','region-boundary');add(border);}});
      (d.lakes||[FF.japanMapData.lake]).forEach(function(ps){var cut=clip(ps);if(cut.length>=3){var lake=poly(cut.map(project),pale);lake.setAttribute('stroke-width','1.5');lake.setAttribute('data-part','lake');add(lake);}});
-     d.routes.forEach(function(r){var ps=r.points.map(project),route=path(ps.map(function(p,i){return(i?'L':'M')+p.join(',');}).join(' '),null,r.type==='ridge'?ink:blue);route.setAttribute('stroke-width',r.type==='river'?'5':'3');route.setAttribute('data-part',r.type);add(route);});
+     d.routes.forEach(function(r){var ps=r.points.map(project),route=path(ps.map(function(p,i){return(i?'L':'M')+p.join(',');}).join(' '),null,r.type==='ridge'?ink:blue);route.setAttribute('stroke-width',r.type==='river'?(d.insetOnly?'12':'5'):'3');route.setAttribute('data-part',r.type);add(route);});
      d.marks.forEach(function(p){var q=project(p);add(circle(q[0],q[1],7,orange));});
-     if(d.mountain){var p=project(d.mountain);add(poly([[p[0]-12,p[1]+9],[p[0],p[1]-12],[p[0]+12,p[1]+9]],orange));}
+     if(d.mountain){var p=project(d.mountain),peak=poly([[p[0]-12,p[1]+9],[p[0],p[1]-12],[p[0]+12,p[1]+9]],orange);peak.setAttribute('data-part','mountain');add(peak);}
      if(!d.insetOnly)add(text(475,52,'北',32),line(475,65,475,91,ink));
      if(d.inset){
-      var frame=d.inset.frame,inset=render({kind:'japanMap',bounds:d.inset.bounds,marks:[],areas:[],routes:[],insetOnly:true,study:true}).querySelector('svg'),insetScale=Math.min(frame[2]/520,frame[3]/430);
-      var insetGroup=S('g',{transform:'translate('+(frame[0]+(frame[2]-520*insetScale)/2)+','+(frame[1]+(frame[3]-430*insetScale)/2)+') scale('+insetScale+')','data-part':'island-inset'},Array.prototype.slice.call(inset.childNodes));
+      var frame=d.inset.frame,inset=render({kind:'japanMap',bounds:d.inset.bounds,marks:[],areas:[],routes:d.inset.routes||[],lakes:d.inset.lakes,insetOnly:true,study:true}).querySelector('svg'),insetScale=Math.min(frame[2]/520,frame[3]/430);
+      var insetGroup=S('g',{transform:'translate('+(frame[0]+(frame[2]-520*insetScale)/2)+','+(frame[1]+(frame[3]-430*insetScale)/2)+') scale('+insetScale+')','data-part':d.inset.routes?'route-inset':'island-inset'},Array.prototype.slice.call(inset.childNodes));
       add(box(frame[0],frame[1],frame[2],frame[3],'#fff'),insetGroup);
      }
      if(d.port){group(0,440,1,function(){add(line(35,60,485,60),box(35,63,450,25,pale),path('M220,63 h165 l-24,22 H245 Z','#fff'),box(280,44,55,19,'#fff'),line(92,5,92,60),line(92,5,180,25),line(180,25,180,47));});nodes[nodes.length-1].setAttribute('data-part','port');}

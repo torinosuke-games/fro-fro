@@ -6,10 +6,11 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  const imageIds=['water_004','water_013','water_021','pioneer_012','industry_007'].map(s=>'social_g4_hand_'+s);
  const mapIds=['prefecture_004','geography_015','geography_019','industry_013','industry_014'].map(s=>'social_g4_hand_'+s);
  const hash=v=>crypto.createHash('sha256').update(JSON.stringify(v)).digest('hex');
- test('第11弾：指定以外の社会286問・算数467問は図も含め変更なし',()=>{
+ test('第11・13弾：指定以外の社会284問・算数467問は図も含め変更なし',()=>{
   const social=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_soc4'));
   const math=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g4'));
-  assert.equal(hash(social.filter(q=>!imageIds.concat(mapIds).includes(q.id))),'82a103220a392f90e060f523fce41d7492691b20c9528deb84e1ce640a4d91d8');
+  const maps13=['geography_005','geography_008','pioneer_010'].map(s=>'social_g4_hand_'+s);
+  assert.equal(hash(social.filter(q=>!imageIds.concat(mapIds,maps13).includes(q.id))),'7183263fc0db3b868da1e4d72263650e9086dd6e79218311610ae79811557db4');
   assert.equal(hash(math.filter(q=>q.id!=='math_g4_hand_graph_005')),'0b96e66e55e9801ecd7854eb6daefaa27b3ca671b894da6249237eb1a2f5e4cd');
  });
  test('第11弾：生成5枚は固有（water_007 は変更前の絵のまま。判断268）の800×533 WebP・各100KB以下',()=>{

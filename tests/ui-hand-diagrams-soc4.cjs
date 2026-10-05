@@ -68,6 +68,12 @@ fs.mkdirSync(out,{recursive:true});
     }
     if(q.id==='social_g4_hand_prefecture_004'){assert.equal(structure.parts.filter(p=>p.part==='region-boundary').length,5);assert.equal(structure.parts.filter(p=>p.part==='island-inset').length,1);}
     if(q.id==='social_g4_hand_geography_015')assert.equal(structure.circles,0,'no prefecture dots around the mountain');
+    if(q.id==='social_g4_hand_geography_008'){assert.equal(structure.circles,0);assert.equal(structure.mountains,1);}
+    if(q.id==='social_g4_hand_pioneer_010'){assert.equal(structure.circles,1);const r=structure.parts.filter(p=>p.part==='river');assert.equal(r.length,2);assert.ok(r.some(p=>p.box.width>=30&&+p.stroke>=5));assert.ok(structure.parts.some(p=>p.part==='lake'));assert.equal(structure.parts.filter(p=>p.part==='route-inset').length,1);}
+    if(q.id==='social_g4_hand_geography_005'){
+     const cut=await page.evaluate(()=>{const s=document.querySelector('.lesson-figure svg'),a=s.querySelector('[data-part="area"]'),c=s.querySelector('clipPath');return {reference:a.getAttribute('clip-path'),id:c.id,landShapes:c.children.length,vertices:a.points.numberOfItems};});
+     assert.equal(cut.reference,'url(#'+cut.id+')');assert.ok(cut.landShapes>0);assert.equal(cut.vertices,1229);
+    }
     if(structure.regional)assert.ok(structure.landFills.every(f=>f==='none'),'regional crops must not paint a rectangular cut edge');
     if(['social_g4_hand_geography_010','social_g4_hand_geography_011'].includes(q.id)){const rivers=structure.parts.filter(p=>p.part==='river');assert.ok(rivers.length);assert.ok(rivers.every(r=>r.box.width>20&&r.box.height>20&&+r.stroke>=5));}
     if(structure.scene==='houseFront')assert.equal(structure.polygons,0,'roof shape must not be drawn');

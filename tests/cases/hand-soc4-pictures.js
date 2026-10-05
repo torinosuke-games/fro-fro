@@ -27,9 +27,9 @@ module.exports=({test,ctx,assert,plain})=>{
   }
   assert.ok(total<=7*1024*1024,'total exceeds 7MB');
  });
- test('社会の絵：第10・11弾の対象外254問はdiagramも含めmainと同一',()=>{
-  const permitted=expected.concat(['prefecture_004','geography_015','geography_019','industry_013','industry_014'].map(s=>'social_g4_hand_'+s));
-  const untouched=all.filter(q=>!permitted.includes(q.id));assert.equal(untouched.length,254);
-  assert.equal(crypto.createHash('sha256').update(JSON.stringify(untouched)).digest('hex'),'2062d1796f09547f2ca2d1b7ae8996b0d3617f88b3ac387c8567fcc836cba32b');
+ test('社会の絵：第10・11・13弾の対象外251問はdiagramも含めmainと同一',()=>{
+  const permitted=expected.concat(['prefecture_004','geography_015','geography_019','industry_013','industry_014','geography_005','geography_008','pioneer_010'].map(s=>'social_g4_hand_'+s));
+  const untouched=all.filter(q=>!permitted.includes(q.id));assert.equal(untouched.length,251);
+  assert.equal(crypto.createHash('sha256').update(JSON.stringify(untouched)).digest('hex'),'70cdba2f16404fd927e5cc2a5c1c627617950d9a690f8e045ebeddb446dcfd0e');
  });
 };
