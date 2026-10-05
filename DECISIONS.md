@@ -732,3 +732,11 @@
 - Grok が直した `sci5_electromagnet_022.webp`（クレーンの先が、U字の永久磁石から、鉄しんに銅線を巻いた電磁石に）を取り込んだ（`HAND_SCI5_PICTURES.md` も合わせた）。
 - 気になる点は直さなかった：`dissolve_006` のろ紙の上のとけ残りの点は、答え（とけ残ったつぶ）を軽く見せるが、そのまま使う。
 
+
+## 判断291：小5社会の手作り問題（全10単元）
+- 小5社会の単元を10登録した（`js/units.js`）：国土の位置と領土（`position`）、国土の地形（`terrain`）、国土の気候（`climate`）、地形・気候とくらし（`landlife`。輪中・高原野菜・北国・沖縄）、米づくり（`rice`）、食料生産と食料自給率（`food`）、水産業（`fishery`）、工業生産と自動車（`industry`。工業地域・中小工場・自動車・貿易）、情報と産業（`info`）、森林と環境（`environment`。林業・公害・3R）。
+- `questions/social_g5_hand.js` に360問（各単元とも基礎9・標準15・発展12 ＝ 36問。`reviewed: false`、`collection: 'hand_soc5'`）。数・短いことばで答える問題には、書き問題の形（`inputForm`）を付けた。
+- 原作の小5社会12問（`questions/social.js`。もとの単元 `territory`・`geography`・`agriculture`・`trade` が、登録した単元に入っていなかった）は、`unit` だけを移した：`territory`→`position`、`geography`→`terrain`、`agriculture`→`rice`（米・田植え・二毛作）と `food`（小麦の自給率・畜産）、`trade`→`industry`。`climate`・`fishery`・`industry`・`info`・`environment` は、もとのまま。問題の中身は変えていない。
+- 数字は、年によって変わるので「約」で示した（食料自給率 約38%、米の収穫量の1位は新潟県、木材の自給率 約4割 など）。レビューのとき、教科書の数字と、ずれがないか確かめてほしい。
+- 小5までに習わない漢字（領土・排他的経済水域・緯度・択捉・暖流・暖かい・稲刈り・収穫・畜産・排水・公害・水俣・著作権など）は、ふりがなの辞書（`js/renewal-texts.js` の `soc5`・`soc5b`・`soc5c`）か、ひらがなで対応した。
+- 図は付けていない（地図・グラフなど、図があると考えやすい問題を選んで、あとで依頼書を作る。日本地図は `js/japan-map.js` が使える）。
