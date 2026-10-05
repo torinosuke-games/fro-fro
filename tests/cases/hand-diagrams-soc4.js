@@ -20,7 +20,7 @@ module.exports=({test,ctx,FF,assert,plain})=>{
   assert.equal(crypto.createHash('sha256').update(JSON.stringify(original)).digest('hex'),'ca40e5b1247f6446217b4b362c74be93502c6f88f1ace947b4bce419d64cf8ac');
  });
  test('社会図：地図の座標・範囲・印・線の入力を検証',()=>{
-  const maps=qs.filter(q=>q.diagram.kind==='japanMap');assert.equal(maps.length,18);
+  const maps=qs.filter(q=>q.diagram.kind==='japanMap');assert.equal(maps.length,17); // pioneer_010 は第15弾で絵に変更
   for(const q of maps){const d=q.diagram,b=d.bounds;assert.equal(b.length,4);assert.ok(b.every(Number.isFinite));assert.ok(b[0]<b[2]&&b[1]<b[3]);
    function point(p){assert.equal(p.length,2);assert.ok(p.every(Number.isFinite));assert.ok(p[0]>=b[0]&&p[0]<=b[2]&&p[1]>=b[1]&&p[1]<=b[3],q.id+' '+p);}
    assert.ok(Array.isArray(d.marks)&&Array.isArray(d.areas)&&Array.isArray(d.routes));d.marks.forEach(point);
