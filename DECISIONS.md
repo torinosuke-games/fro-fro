@@ -706,3 +706,10 @@
 ## 判断286：小5理科の図を、SVG（ChatGPT）と絵（Grok）に分ける
 - ユーザーが「理科の図は Grok に頼む」と決めた。Grok は絵（文字を入れない生成画像）を作るので、77問の依頼（判断285）を、①記号（ア・イ・ウ）・数字・目もり・グラフが要る61問（SVG。ChatGPT。`DIAGRAM_REQUESTS_16.md`）と、②文字がなくても絵で見せられる16問（生成した絵 `diagram.kind: 'image'`。Grok。`DIAGRAM_REQUESTS_17.md`、プロンプトの記録は `HAND_SCI5_PICTURES.md`）に分けた。
 - ②は、天気の雲3問・川の地形4問・メダカ3問・ヘチマのつぼみ・発芽・蒸発皿・電磁石3問・育て方の比べ方。答えが絵の形そのものになるもの（V字谷・上流下流の石・台風の目・体の断面の部分の名前）は、絵にしない。
+
+## 判断288：小5理科61問のSVG図（第16弾）
+- mainからcodex/hand-diagrams-sci5を作り、依頼表の61問のdiagramだけを追加した。324問の本文・答え・選択肢・ヒント・解説・ID・難易度・inputForm・reviewedは不変。第17弾の16問と画像、セーブ項目・saveVersionには手を入れていない。
+- 小4のapparatus・circuit・scienceScene・graphを拡張・共有し、新しい種類はbiology（part・labels）とpendulum（panels）の二つにまとめた。地理のjapanMapの輪郭も天気図で共有する。
+- 名前は記号、実験は条件だけ。巻き数の線は省略し、ふりこの角度・おもりの大きさは数値を表示しない。weather_031の東への矢印とelectromagnet_030の方位磁針N側だけは依頼表と問題文で既知の状態を表示する。求める極・天気・速さ・周期・重量・実験結果は描かない。
+- plant_012は依頼表通りの二条件の図が正解選択肢の比べ方と一致するため、問題を変更せずPRで相談する。pendulum_002の正解表現「ふれはばの中心」も変更せず相談する。詳細はHAND_SCI5_DIAGRAMS.md。
+- tests/cases/hand-diagrams-sci5.jsで不変性・61問・入力範囲の負例・既知量・書き問題の継承を保護。tests/ui-hand-diagrams-sci5.cjsで61問＋書き9問を4幅表示し、文字の端・重なり・横はみ出し・表示ラベルを検査する。全結果とスクリーンショットはHAND_SCI5_DIAGRAMS.md。

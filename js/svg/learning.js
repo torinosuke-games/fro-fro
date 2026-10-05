@@ -190,7 +190,7 @@
       add(poly([[30,310],[30,150],[115,66],[202,190],[340,204],[422,80],[490,150],[490,345],[30,345]],pale),poly([[123,215],[210,190],[359,290],[90,290]],'#fff'));[[150,225],[239,230],[326,254]].forEach(function(p){tree(p[0],p[1],true);});for(var i=0;i<8;i++)add(circle(130+i*38,318+i%2*8,4,ink));ground(354);
      }
     }
-   }else if(d.kind==='circuit'||d.kind==='apparatus'||d.kind==='scienceScene'||d.kind==='anatomy'||d.kind==='moonView'||d.kind==='starMap'||d.kind==='graph'&&d.science){
+   }else if(d.kind==='circuit'||d.kind==='apparatus'||d.kind==='biology'||d.kind==='pendulum'||d.kind==='scienceScene'||d.kind==='anatomy'||d.kind==='moonView'||d.kind==='starMap'||d.kind==='graph'&&d.science){
     // 共通の教材用線画。結果の矢印・動作の前後・解答ラベルは生成しない。
     function ellipse(x,y,rx,ry,fill){return S('ellipse',{cx:x,cy:y,rx:rx,ry:ry,fill:fill||'none',stroke:blue,'stroke-width':3});}
     function panel(draw,i,pitch){var saved=nodes;nodes=[];draw();var children=nodes;nodes=saved;add(S('g',{transform:'translate(0,'+(i*(pitch||330))+')'},children));}
@@ -206,6 +206,7 @@
      if(p.heat)flame(p.edgeHeat?170:260,299);
      if(p.therm)thermometer(p.scale?215:260,35,175,p.scale);
      if(p.lid)add(line(130,85,395,85,p.lid==='glass'?blue:ink));
+     if(p.solute){add(path('M390,135 h110 v100 h-110 Z','#fff'));add(text(445,173,p.solute.label,20));if(p.solute.amount!==undefined)add(text(445,222,p.solute.amount+p.solute.unit,22));}
     }
     if(d.kind==='circuit'){
      h=d.panels.length*330;d.panels.forEach(function(p,i){panel(function(){
@@ -219,7 +220,13 @@
       var by=parallel?84:99;
       add(path('M95,'+by+' V250 H220'),path('M300,250 H425 V'+(p.gap?150:by)));
       if(p.gap)add(line(425,by,425,125));
-      add(circle(260,250,39,'#fff'));
+      if(p.device==='coil'){
+       add(box(226,235,68,30,pale));var maxTurns=Math.max.apply(null,d.panels.map(function(v){return v.turns||1;})),turns=p.turns?Math.round(2+8*p.turns/maxTurns):6,coil='M220,250 L224,270';
+       for(var k=0;k<turns;k++){var xx=224+k*72/(turns-1);coil+=' L'+xx+',270 q-10,-42 0,-42 q10,42 0,42';}add(path(coil+' L300,250','none',orange));
+       if(p.turns)add(text(260,315,p.turns+'回',25));
+       if(p.clipBox){add(box(445,166,57,118,'#fff'));[190,225,260].forEach(function(y){add(path('M457,'+y+' v15 q7,12 14,0 v-15 q-7,-8 -7,0 v15','none',ink));});}
+       if(p.compass){add(circle(380,290,25,'#fff'),line(380,290,360,277,orange),line(380,290,400,303),text(346,275,'N',24));}
+      }else add(circle(260,250,39,'#fff'));
       if(p.device==='bulb')add(path('M240,230 l40,40 M280,230 l-40,40'));
       if(p.device==='motor')add(text(260,260,'Ｍ',28));
       if(p.device==='meter'){add(path('M236,240 Q260,215 284,240'),line(260,271,p.needle==='right'?280:260,235),text(260,311,'けんりゅう計',24));}
@@ -245,6 +252,29 @@
       else if(p.tool==='tubeBath'){water(110,165,300,95);add(path('M110,135 V260 H410 V135'),path('M240,70 V220 Q260,245 280,220 V70'),line(235,70,285,70,orange));if(p.bath==='ice')for(var j=0;j<3;j++)add(box(135+j*90,170,35,27,'#fff'));add(text(260,303,p.bath==='ice'?'氷水':'お湯',25));}
       else if(p.tool==='bagBath'){water(120,170,280,90);add(path('M120,135 V260 H400 V135'),path('M250,90 q-75,120 -25,147 q35,20 70,-5 q30,-35 -35,-142 Z','#fff'),path('M240,88 l30,8 M258,96 v-30'));add(text(260,305,'お湯',25));}
       else if(p.tool==='thermometer'){thermometer(170,55,210);if(p.eyes)[85,155,225].forEach(function(y){add(ellipse(355,y,25,12),circle(355,y,5,ink));});}
+      else if(p.tool==='seedCup'){
+       if(p.location==='fridge')add(box(92,55,336,190,'#fff'),line(92,97,428,97),line(412,112,412,142));
+       add(path('M170,105 L188,235 H332 L350,105','#fff'),ellipse(260,218,69,10,'#fff'));
+       if(p.wet!=='dry')water(193,p.wet==='submerged'?145:211,134,p.wet==='submerged'?79:13);
+       add(ellipse(246,203,21,12,pale),ellipse(285,210,21,12,pale));
+      }else if(p.tool==='plantPot'){
+       add(path('M175,174 L195,237 H325 L345,174 Z',pale),ellipse(260,174,85,13,'#fff'),line(260,171,260,104),ellipse(235,120,27,11,pale),ellipse(284,105,27,11,pale));
+      }else if(p.tool==='microscope'){
+       add(path('M195,65 l20,-20 l73,72 l-20,20 Z','#fff'),path('M270,130 l21,-17 l28,38 l-22,17 Z',pale),path('M263,124 Q187,130 200,236 L235,255 H360 V277 H150 V255 H180 Q137,153 222,100','#fff'),line(252,193,357,193),line(295,193,295,228),circle(214,157,16,pale));
+       var marks=p.labels||[];[[100,64,207,60],[420,160,310,155],[420,227,327,193]].forEach(function(v,j){if(marks[j])add(text(v[0],v[1],marks[j],26),line(v[0]+(j?-25:25),v[1]-7,v[2],v[3]));});
+       if(p.magnifications){add(text(92,73,p.magnifications[0]+'倍',25),line(142,67,207,60),text(426,155,p.magnifications[1]+'倍',25),line(373,148,310,155));}
+      }else if(p.tool==='cylinder'){
+       water(171,155,58,89);add(path('M169,65 V245 H231 V65'),ellipse(200,155,29,5),box(148,245,104,13,'#fff'));
+       for(var k=0;k<8;k++)add(line(170,85+k*20,185+(k%2?0:9),85+k*20));
+       (p.eyes||[]).forEach(function(label,j){var yy=85+j*70;add(ellipse(350,yy,25,12),circle(350,yy,5,ink),text(423,yy+8,label,26));});
+      }else if(p.tool==='filter'){
+       var stem=p.stem==='touch'?340:285;
+       add(path('M170,151 V239 H340 V151 l12,-8'),path('M195,79 H'+(stem+57)+' L'+stem+',141 V178 H'+(stem-10)+' V141 Z','#fff'));
+       add(path('M210,84 H'+(stem+40)+' L'+(stem-5)+',128 Z','none',p.paperGap?orange:blue));
+       if(p.residue)[235,255,275].forEach(function(xx,j){add(circle(xx,104+j%2*9,4,orange));});
+       if(p.pour){add(path('M88,65 l20,-18 l69,45 l-20,22 Z','#fff'),line(160,103,225,123));if(p.pour==='rod')add(line(157,85,257,141,ink));}
+       else add(line(180,55,262,116,ink));
+      }
       (p.notes||[]).forEach(function(t,j){add(text(260,(p.lid==='glass'?50:265)+j*42,t,24));});
      },i);});
     }else if(d.kind==='scienceScene'){
@@ -263,6 +293,72 @@
      else if(d.scene==='soil'){d.materials.forEach(function(t,i){var x=80+i*240;add(box(x,155,150,110,'#fff'));dots(x,170,140,80,t==='すな'?5:2);add(text(x+75,310,t,26));if(d.pour){add(path('M'+(x+35)+',70 h85 v35 h-85 Z'),line(x+78,105,x+78,135,blue));}});}
      else if(d.scene==='particles'){d.materials.forEach(function(t,i){var x=40+i*165;add(box(x,80,140,165,'#fff'));var rr=d.sizes[i];for(var yy=103;yy<235;yy+=rr*3)for(var xx=x+22;xx<x+129;xx+=rr*3)add(circle(xx,yy,rr,pale));add(text(x+70,298,t,25));});}
      else if(d.scene==='slope'){add(path('M70,155 L450,280 H70 Z',pale),path('M75,65 h100 l-42,60 v32 h-16 v-32 Z','#fff'));}
+     else if(d.scene==='cloudCover'){
+      for(var i=0;i<d.total;i++){var xx=55+i%5*82,yy=70+Math.floor(i/5)*100;add(box(xx,yy,82,100,'#fff'));if(i<d.covered){var cloud=path('M'+(xx+10)+','+(yy+66)+' q-12,-20 10,-28 q3,-23 25,-15 q25,-7 27,16 q17,19 -4,27 Z',pale);cloud.setAttribute('data-part','cloud-cell');add(cloud);}}
+     }else if(d.scene==='cloudMap'){
+      // 地理用の同じ海岸線を縮小して使い、向きや翌日の予想は付け足さない。
+      var map=render({kind:'japanMap',bounds:[128,30,146,46],marks:[],areas:[],routes:[],insetOnly:true,study:true,caption:''});
+      var mapSvg=map.querySelector('svg');if(mapSvg)add(S('g',{transform:'translate(145,5) scale(.65)'},Array.prototype.slice.call(mapSvg.childNodes)));
+      if(d.westCloud)add(path('M55,190 q-25,-32 12,-48 q-3,-30 32,-29 q25,-29 52,0 q43,-2 43,38 q25,31 -12,42 Z',pale));
+      if(d.track){add(S('polyline',{points:d.track.map(function(p){return p.join(',');}).join(' '),fill:'none',stroke:orange,'stroke-width':4,'stroke-dasharray':'8 7'}));[d.track[0],d.track[d.track.length-1]].forEach(function(p,j){add(circle(p[0],p[1],6,orange),text(p[0]+27,p[1]+9,d.trackLabels[j],26));});}
+      if(d.eastArrow){var arrow=path('M96,205 H143 m-14,-10 l14,10 l-14,10','none',orange);arrow.setAttribute('data-part','east-arrow');add(arrow);}
+     }else if(d.scene==='typhoon'){
+      h=660;panel(function(){for(var j=0;j<4;j++)add(ellipse(260,165,55+j*29,45+j*22,pale));add(ellipse(260,165,35,30,'#fff'),text(260,176,d.labels[0],26),text(447,75,d.labels[1],26),line(425,83,355,105));},0);
+      panel(function(){add(path('M75,250 Q60,175 98,120 Q104,57 149,85 Q191,40 208,127 L218,250 Z',pale),path('M302,250 L312,127 Q329,40 371,85 Q416,57 422,120 Q460,175 445,250 Z',pale),text(260,210,d.labels[0],26),text(465,67,d.labels[1],26),line(445,78,383,127));},1);
+     }else if(d.scene==='riverValley'){
+      add(path('M45,85 L140,140 L253,266 L267,266 L380,140 L475,85 V310 H45 Z',pale),path('M231,240 H289 L267,266 H253 Z',blue));
+     }else if(d.scene==='riverStones'){
+      [0,1].forEach(function(side){var x=side?350:125;add(text(x,310,d.places[side],25));for(var j=0;j<4;j++){var xx=x-43+j%2*77,yy=110+Math.floor(j/2)*95;if(!side)add(path('M'+(xx-30)+','+yy+' l20,-27 l32,7 l15,33 l-37,20 Z',pale));else add(ellipse(xx,yy,19-j*2,13-j,pale));}});
+     }else if(d.scene==='riverBend'){
+      add(path('M90,65 C450,65 450,275 90,275 L90,215 C335,215 335,125 90,125 Z',pale));
+      if(d.labels[0])add(text(475,180,d.labels[0],26),line(455,172,360,170));
+      if(d.labels[1])add(text(257,180,d.labels[1],26),line(280,172,273,170));
+     }else if(d.scene==='riverStraight'){
+      add(S('rect',{x:180,y:60,width:160,height:240,fill:pale}),line(180,60,180,300),line(340,60,340,300),text(260,146,d.labels[0],26),circle(260,162,4,orange),text(192,242,d.labels[1],26),circle(192,258,4,orange));
+     }else if(d.scene==='riverWidth'){
+      add(path('M220,60 H300 V145 Q300,210 390,280 H130 Q220,210 220,145 Z',pale),text(350,103,d.labels[0],26),line(330,104,260,104),text(443,265,d.labels[1],26),line(420,259,280,259));
+     }else if(d.scene==='riverSection'){
+      add(path('M60,132 H110 Q135,255 260,255 Q385,255 410,132 H460 V305 H60 Z',pale),path('M115,150 H405 Q378,249 260,249 Q142,249 115,150 Z',blue));
+      [140,260,380].forEach(function(xx,j){add(text(xx,113,d.labels[j],26),line(xx,121,xx,159),circle(xx,163,4,orange));});
+     }
+    }else if(d.kind==='biology'){
+     h=360;
+     function mark(j,x,y,tx,ty){if(d.labels[j])add(text(x,y,d.labels[j],27),line(x+(x<tx?20:x>tx?-20:0),y-8,tx,ty),circle(tx,ty,4,orange));}
+     if(d.part==='seed'){
+      add(path('M315,73 Q172,34 136,139 Q93,264 233,294 Q361,317 389,213 Q410,143 346,121 Q297,100 315,73 Z',pale),path('M313,85 Q182,52 148,144 Q110,253 236,282 Q350,301 376,210 Q395,154 339,134 Q289,112 313,85 Z','#fff'),path('M318,173 Q287,160 276,184 Q274,211 309,230 Q286,204 307,197 Q325,190 318,173 Z',orange));
+      mark(0,78,83,150,123);mark(1,94,300,204,216);mark(2,448,194,301,185);
+     }else if(d.part==='flower'){
+      add(path('M243,291 Q132,241 100,79 Q190,93 244,208 L276,208 Q330,93 420,79 Q388,241 277,291 Z',pale),path('M244,283 Q186,274 176,250 Q207,251 239,263 M278,283 Q334,274 344,250 Q313,251 281,263 Z','#fff'),path('M248,282 Q235,255 249,231 L253,140 Q240,123 250,113 Q260,102 270,113 Q280,123 267,140 L271,231 Q285,255 272,282 Z','#fff'),line(260,283,260,329));
+      [211,309].forEach(function(xx){add(line(xx,264,xx,174),ellipse(xx,170,12,20,orange));});
+      mark(0,85,194,211,170);mark(1,440,d.focus==='base'?283:130,260,d.focus==='base'?255:121);mark(2,77,60,141,139);mark(3,441,312,328,259);
+     }else if(d.part==='stamen'){
+      add(line(260,155,260,304),ellipse(239,117,25,57,pale),ellipse(281,117,25,57,pale));mark(0,418,106,285,114);
+     }else if(d.part==='pregnancy'){
+      add(path('M173,41 Q77,58 91,176 Q85,293 207,314 L233,336 H287 L313,314 Q435,293 429,176 Q443,58 347,41 Q326,85 260,86 Q194,85 173,41 Z',pale),path('M176,66 Q105,81 114,179 Q110,279 211,290 Q260,314 309,290 Q410,279 406,179 Q415,81 344,66 Q329,110 260,108 Q191,110 176,66 Z','#fff'));
+      var fluid=path('M176,66 Q105,81 114,179 Q110,279 211,290 Q260,314 309,290 Q410,279 406,179 Q415,81 344,66 Q329,110 260,108 Q191,110 176,66 Z',blue);fluid.setAttribute('fill-opacity','.22');add(fluid,ellipse(394,158,14,61,orange));
+      add(circle(235,170,25,'#fff'),path('M217,192 Q199,225 237,251 Q279,275 310,243 Q329,219 296,199 Q271,188 265,212 Q281,235 292,225 M237,251 Q229,222 247,223 M296,242 Q268,257 267,233','#fff'),path('M292,211 Q345,249 349,203 Q339,161 381,163','none',orange));
+      mark(0,61,72,121,106);mark(1,63,242,163,214);mark(2,460,270,346,216);mark(3,460,98,394,149);
+     }
+    }else if(d.kind==='pendulum'){
+     h=d.panels.length*360;
+     var maxLength=Math.max.apply(null,d.panels.map(function(p){return p.length||1;}));
+     d.panels.forEach(function(p,i){panel(function(){
+      var len=p.length?220*p.length/maxLength:200,cy=65+len,r=p.size||20,angle=(p.angle||30)*Math.PI/180;
+      if(p.label)add(text(260,35,p.label,26));
+      add(line(175,61,345,61),circle(260,65,5,ink));
+      if(p.mode==='lengthCandidates'){
+       add(line(260,65,260,cy),circle(260,cy,r,'#fff'));
+       [cy,cy-r,cy+r].forEach(function(y,j){var xx=120+j*50;add(line(xx,65,xx,y),line(xx-6,65,xx+6,65),line(xx-6,y,xx+6,y),text(xx,320,p.labels[j],26));});
+      }else if(p.mode==='positions'||p.mode==='amplitude'){
+       var aa=p.mode==='positions'?Math.PI/5:angle;
+       if(p.mode==='positions'){var ex=len*Math.sin(aa),ey=65+len*Math.cos(aa);add(path('M'+(260-ex)+','+ey+' A'+len+','+len+' 0 0 0 '+(260+ex)+','+ey,'none',blue,'7 6'));}
+       [-aa,0,aa].forEach(function(a,j){var x=260+len*Math.sin(a),y=65+len*Math.cos(a);var thread=line(260,65,x,y);if(j!==1)thread.setAttribute('stroke-dasharray','7 6');add(thread,circle(x,y,r,j===1?'#fff':pale));if(p.mode==='positions'&&p.labels[j])add(text(x,y+r+36,p.labels[j],26));});
+       if(p.mode==='amplitude'){var rx=50*Math.sin(aa),ry=65+50*Math.cos(aa);add(path('M'+(260-rx)+','+ry+' A50,50 0 0 0 '+(260+rx)+','+ry,'none',orange));if(p.labels&&p.labels[0])add(text(340,121,p.labels[0],26),line(319,114,277,110));}
+      }else{
+       add(line(260,65,260,p.mode==='sliding'?310:cy),circle(260,cy,r,'#fff'));
+       if(p.length)add(text(360,65+len/2,p.length+p.unit,26),line(330,65,330,cy),line(324,65,336,65),line(324,cy,336,cy));
+      }
+     },i,360);});
     }else if(d.kind==='anatomy'){
      h=360;
      if(d.part==='skull'){
@@ -287,9 +383,12 @@
      if(d.planisphere){add(circle(260,175,130,'#fff'),ellipse(260,205,115,72,pale));for(var j=0;j<24;j++){var p=point(260,175,130,j*15),q=point(260,175,118,j*15);add(line(p[0],p[1],q[0],q[1]));}add(text(260,342,'日付・時刻の目もり',24));}
      d.segments.forEach(function(s){var a=d.points[s[0]],b=d.points[s[1]];add(line(a[0],a[1],b[0],b[1]));});d.points.forEach(function(p,i){var tint=d.tints&&d.tints[i];add(circle(p[0],p[1],7,tint==='warm'?orange:tint==='blue'?blue:ink));if(d.labels[i])add(clearText(p[0],p[1]+35,d.labels[i],25));});
     }else if(d.kind==='graph'&&d.science){
+     if(d.blankAxes){h=350;add(line(70,280,455,280),line(70,280,70,60));for(var gx=70;gx<=455;gx+=55)add(line(gx,60,gx,286,pale));for(var gy=60;gy<=280;gy+=44)add(line(64,gy,455,gy,pale));add(line(70,60,455,60),line(455,60,455,280));}
+     else{
      var panels=d.panels||[{values:d.values,labels:d.labels}];h=panels.length*360;panels.forEach(function(p,i){panel(function(){add(line(70,270,455,270),line(70,270,70,65),text(75,37,'気温（℃）',24),text(260,336,'時こく',24));if(p.title)add(text(290,37,p.title,25));
       if(p.values.length){var max=d.panels?5:Math.max.apply(null,p.values)+5,pts=p.values.map(function(v,j){return [90+j*330/(p.values.length-1),250-v/max*180];});add(S('polyline',{points:pts.map(function(v){return v.join(',');}).join(' '),fill:'none',stroke:blue,'stroke-width':3}));pts.forEach(function(v,j){add(circle(v[0],v[1],5,orange));if(!d.panels){add(text(v[0],v[1]-18,p.values[j]+'℃',24),text(v[0],298,p.labels[j],24));}});}
      },i,360);});
+     }
     }
    }else if(d.kind==='polygon'&&d.panels){
     var count=d.panels.length,span=520/count,plotWidth=count===1?340:160,plotHeight=170;
