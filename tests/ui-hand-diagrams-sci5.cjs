@@ -56,9 +56,11 @@ fs.mkdirSync(out,{recursive:true});
       if(p.solute){allowed.push(p.solute.label);if(p.solute.amount!==undefined)allowed.push(p.solute.amount+p.solute.unit);}
      }
      if(d.kind==='circuit')allowed.push('＋','－');
-     return {unexpected:[...svg.querySelectorAll('text')].map(t=>t.textContent).filter(s=>!allowed.includes(s)),clouds:svg.querySelectorAll('[data-part="cloud-cell"]').length,expectedClouds:d.covered,arrows:svg.querySelectorAll('[data-part="east-arrow"]').length,expectedArrows:d.eastArrow?1:0};
+     const lengths=(d.panels||[]).filter(p=>p.length).map(p=>p.length+p.unit);
+     return {unexpected:[...svg.querySelectorAll('text')].map(t=>t.textContent).filter(s=>!allowed.includes(s)),lengthClear:[...svg.querySelectorAll('text')].filter(t=>lengths.includes(t.textContent)).every(t=>t.getBBox().x>345),clouds:svg.querySelectorAll('[data-part="cloud-cell"]').length,expectedClouds:d.covered,arrows:svg.querySelectorAll('[data-part="east-arrow"]').length,expectedArrows:d.eastArrow?1:0};
     },q.id);
     assert.deepEqual(visible.unexpected,[],q.id+' unexpected answer/label');assert.equal(visible.arrows,visible.expectedArrows);
+    assert.equal(visible.lengthClear,true,q.id+' length text overlaps dimension line');
     if(visible.expectedClouds!==undefined)assert.equal(visible.clouds,visible.expectedClouds);
     if(result.minText!==null)assert.ok(result.minText>=11,q.id+' text too small '+width);
     const structure=await page.evaluate(id=>{

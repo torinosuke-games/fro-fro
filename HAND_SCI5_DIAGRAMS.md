@@ -1,6 +1,6 @@
 # 小5理科の手作り問題：第16弾61問のSVG図
 
-2026-10-06。`main`（開始時aa08e03）から `codex/hand-diagrams-sci5`。PRレビュー待ち、mainには未反映。
+2026-10-06。`main`（開始時aa08e03）から `codex/hand-diagrams-sci5`。作業中に更新されたmain（dd53ea8、PR #67）を取り込み、最終確認する。PRレビュー待ち、mainには未反映。
 
 ## 変更の範囲
 
@@ -33,7 +33,7 @@ IDの接頭辞はすべて `science_g5_hand_`。caption・study: trueを全図�
 
 ### 小4の種類の使い回し
 
-- apparatus：既存beakerの容器・水を再利用し、solute（袋）を追加。seedCup・plantPotは発芽や成長を描かず、microscopeはレンズ二つの倍率のみ。filterの二つの方法は同じ大きさ・色、正解を示さない。cylinderは番号のない目もりと三つの目の位置。
+- apparatus：既存beakerの容器・水を再利用し、solute（食塩はさじの山、ミョウバンは袋）を追加。seedCup・plantPotは発芽や成長を描かず、microscopeはレンズ二つの倍率のみ。filterの二つの方法は同じ大きさ・色、正解を示さない。cylinderは番号のない目もりと三つの目の位置。
 - circuit：電池・極表示・配線・1枚330の共通配置をそのまま使い、device: coilを追加。コイルは鉄しんとつながった巻き線。巻き数の実線は省略した模式図で、数字はturnsから表示する。
 - scienceScene：cloudCoverは10ます中の5・9・8ます。cloudMapは既存japanMapと同じ日本の輪郭。川は流れの矢印や岸の変化を示さず、既知の位置だけを記号にする。
 - graph：blankAxesは空の軸・枠・目もりのみ。軸の名前・数値・測定結果・折れ線を描かない。
@@ -56,6 +56,7 @@ IDの接頭辞はすべて `science_g5_hand_`。caption・study: trueを全図�
 ## 検証とスクリーンショット
 
 - `node tests/run.js`：689件成功、失敗0。追加5テストで324問の不変性、61問、書き問題の継承、データ範囲と13種類の負例、非表示項目、問題文との既知量の一致を検証。
+- `node tests/simulate.js`：すべて目標内。共通部品の回帰確認 `tests/ui-hand-diagrams-sci4.cjs`：87問×4幅＝348表示、見切れ・重なり・横はみ出し・ページエラーなし。
 - `tests/ui-hand-diagrams-sci5.cjs`：昼のテーマ、Chromium（Google Chrome）、file://で実際の問題画面。61選択問＋9書き問、幅360・390・768・1024＝**280表示**。
 - SVG文字の塗り・縁取りをviewBox/画面/figureの端で検査、文字同士の重なり、ページと図の横はみ出しを検査。画面の文字はdiagramで指定した記号・既知条件だけ、雲のます数と東矢印の数も検証。文字がviewBoxをまたぐ/完全に出る負例8件を検出。
 - 問題と図のスクリーンショット280枚＋図のみ140枚（390・1024、書き問題込み）。撮影中だけHUD/ナビを隠し、回答ボタンのstickyを解除して長い図に重ならないようにする。通常表示のCSSは変更しない。

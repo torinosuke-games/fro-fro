@@ -206,7 +206,7 @@
      if(p.heat)flame(p.edgeHeat?170:260,299);
      if(p.therm)thermometer(p.scale?215:260,35,175,p.scale);
      if(p.lid)add(line(130,85,395,85,p.lid==='glass'?blue:ink));
-     if(p.solute){add(path('M390,135 h110 v100 h-110 Z','#fff'));add(text(445,173,p.solute.label,20));if(p.solute.amount!==undefined)add(text(445,222,p.solute.amount+p.solute.unit,22));}
+     if(p.solute){if(p.solute.label==='食塩')add(ellipse(437,131,30,8,'#fff'),path('M410,130 Q437,99 464,130 Z','#fff'),line(463,132,498,103));else add(path('M390,135 h110 v100 h-110 Z','#fff'));add(text(445,173,p.solute.label,20));if(p.solute.amount!==undefined)add(text(445,222,p.solute.amount+p.solute.unit,22));}
     }
     if(d.kind==='circuit'){
      h=d.panels.length*330;d.panels.forEach(function(p,i){panel(function(){
@@ -356,7 +356,7 @@
        if(p.mode==='amplitude'){var rx=50*Math.sin(aa),ry=65+50*Math.cos(aa);add(path('M'+(260-rx)+','+ry+' A50,50 0 0 0 '+(260+rx)+','+ry,'none',orange));if(p.labels&&p.labels[0])add(text(340,121,p.labels[0],26),line(319,114,277,110));}
       }else{
        add(line(260,65,260,p.mode==='sliding'?310:cy),circle(260,cy,r,'#fff'));
-       if(p.length)add(text(360,65+len/2,p.length+p.unit,26),line(330,65,330,cy),line(324,65,336,65),line(324,cy,336,cy));
+       if(p.length)add(text(365,65+len/2,p.length+p.unit,26,'start'),line(330,65,330,cy),line(324,65,336,65),line(324,cy,336,cy));
       }
      },i,360);});
     }else if(d.kind==='anatomy'){
@@ -383,7 +383,7 @@
      if(d.planisphere){add(circle(260,175,130,'#fff'),ellipse(260,205,115,72,pale));for(var j=0;j<24;j++){var p=point(260,175,130,j*15),q=point(260,175,118,j*15);add(line(p[0],p[1],q[0],q[1]));}add(text(260,342,'日付・時刻の目もり',24));}
      d.segments.forEach(function(s){var a=d.points[s[0]],b=d.points[s[1]];add(line(a[0],a[1],b[0],b[1]));});d.points.forEach(function(p,i){var tint=d.tints&&d.tints[i];add(circle(p[0],p[1],7,tint==='warm'?orange:tint==='blue'?blue:ink));if(d.labels[i])add(clearText(p[0],p[1]+35,d.labels[i],25));});
     }else if(d.kind==='graph'&&d.science){
-     if(d.blankAxes){h=350;add(line(70,280,455,280),line(70,280,70,60));for(var gx=70;gx<=455;gx+=55)add(line(gx,60,gx,286,pale));for(var gy=60;gy<=280;gy+=44)add(line(64,gy,455,gy,pale));add(line(70,60,455,60),line(455,60,455,280));}
+     if(d.blankAxes){h=350;for(var gx=70;gx<=455;gx+=55)add(line(gx,60,gx,280,pale),line(gx,280,gx,287));for(var gy=60;gy<=280;gy+=44)add(line(70,gy,455,gy,pale),line(63,gy,70,gy));add(line(70,280,455,280),line(70,280,70,60),line(70,60,455,60),line(455,60,455,280));}
      else{
      var panels=d.panels||[{values:d.values,labels:d.labels}];h=panels.length*360;panels.forEach(function(p,i){panel(function(){add(line(70,270,455,270),line(70,270,70,65),text(75,37,'気温（℃）',24),text(260,336,'時こく',24));if(p.title)add(text(290,37,p.title,25));
       if(p.values.length){var max=d.panels?5:Math.max.apply(null,p.values)+5,pts=p.values.map(function(v,j){return [90+j*330/(p.values.length-1),250-v/max*180];});add(S('polyline',{points:pts.map(function(v){return v.join(',');}).join(' '),fill:'none',stroke:blue,'stroke-width':3}));pts.forEach(function(v,j){add(circle(v[0],v[1],5,orange));if(!d.panels){add(text(v[0],v[1]-18,p.values[j]+'℃',24),text(v[0],298,p.labels[j],24));}});}

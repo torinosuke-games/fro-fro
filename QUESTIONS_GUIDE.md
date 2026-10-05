@@ -113,7 +113,7 @@ PR #34レビュー対応（判断248）：`solid3d.baseView: 'front'` は三角�
 
 - `biology`（新規、必須part・labels）：seed・flower・stamen・pregnancyの模式断面。labelsは順に、種子の外・大きい内部・小さい内部、花の四つの部分、拡大した先端、体内の壁・液体・管・付着した部分。必要数は3・4・1・4、空文字で省略可。flowerのfocusはall・tip・base・outside。名前は描かない。
 - `pendulum`（新規、必須panels）：1〜4枚。modeはcompare・positions・amplitude・lengthCandidates・sliding。labelsは位置3個または角度1個、labelは比較用の記号。length・unitは既知の長さ、size・angleは模式図の相対寸法だけ。矢印・速さ・周期・元の位置は描かない。
-- 既存`apparatus`（必須panels）にseedCup・plantPot・microscope・filter・cylinderを追加。wet・location・notesは既知の条件、magnificationsは二つの倍率、labels・eyesは記号。stem・pour・paperGapは比較対象の配置、residueは依頼表の既存の粒だけ。beakerのsoluteは袋のlabelと任意のamount・unit。結果や正誤を示さない。
+- 既存`apparatus`（必須panels）にseedCup・plantPot・microscope・filter・cylinderを追加。wet・location・notesは既知の条件、magnificationsは二つの倍率、labels・eyesは記号。stem・pour・paperGapは比較対象の配置、residueは依頼表の既存の粒だけ。beakerのsoluteはlabelと任意のamount・unit（食塩はさじ、ミョウバンは袋）。結果や正誤を示さない。
 - 既存`circuit`（必須panels）のdeviceにcoilを追加。turnsは既知の巻き数（線は省略）、clipBoxは未使用のクリップの箱、compass: towardは問題文で与えられたN側の向きだけ。コイルのN・Sや引きつけた数は描かない。
 - 既存`scienceScene`（必須scene）にcloudCover・cloudMap・typhoon・riverValley・riverStones・riverBend・riverStraight・riverWidth・riverSectionを追加。total・coveredは空のます数、track・trackLabelsは既知の進路、labels・placesは記号や既知の位置。eastArrowはweather_031の既知の移動だけに使用。日本の輪郭は既存japanMapの海岸線を共有する。
 - 既存`graph`（必須labels・values）のscience: true＋blankAxes: trueは空の枠・軸・目もりだけ。labels・valuesは空配列とし、名前・数・結果の点や折れ線を出さない。
