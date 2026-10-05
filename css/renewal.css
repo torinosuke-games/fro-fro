@@ -360,4 +360,8 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .speak-note{font-size:0.8125rem;color:#7d99aa;line-height:1.7}
 .speak-row.no-sound{background:#fff7e5;border:1px solid #efdfbb;border-radius:10px;padding:10px 12px}
 .speak-text{font-size:1.25rem;color:#294c67}
+/* 手書きの案内・英語（判断282） */
+.hw-tip{font-size:0.8125rem;color:#7d99aa;line-height:1.8;margin:0}
+.hw-answer.en{font-family:'Nunito',var(--font);letter-spacing:.06em;font-size:2rem}
+.hw-model .speak-button{margin-top:8px}
 

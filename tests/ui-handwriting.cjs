@@ -75,6 +75,34 @@ const { chromium } = require(process.env.FF_PLAYWRIGHT_MODULE || 'playwright');
   await show('japanese_g4_hand_kanji_read_001#input');
   assert.equal(await page.locator('.hw-canvas').count(), 0);
   assert.equal(await page.locator('.renewal-input').count(), 1);
+  // 英語の単語（判断282）：四本線の手書きの欄。お手本は、英語の大きな文字。「書けた」で、半分のポイント
+  await page.evaluate(() => { FF.app.state = FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()), 5); });
+  const showEn = id => page.evaluate(id => {
+    const q = FF.app.bank.byId[id];
+    FF.app.session = { renewal: true, sel: { subject: 'english', grade: 5, unit: 'all', difficulty: 'random', answerType: 'input', resource: 'wood' }, recentIds: [], items: {}, currentId: q.id, order: [q.id], cursor: 0 };
+    FF.app.session.items[q.id] = { attempt: FF.learning.startAttempt(q), outcome: null, picked: null, selected: null, typed: '', resource: 'wood' };
+    FF.ui.show('quiz');
+  }, id);
+  await showEn('english_g5_hand_spell_001#input');            // 「たいよう」を英語で書こう → sun
+  await page.waitForSelector('.hw-canvas');
+  assert.ok(await page.locator('.hw-en').count() === 1, '英語の手書きの欄');
+  assert.ok((await page.locator('.hw-tip').first().textContent()).includes('てがき入力'));
+  await draw();
+  await page.getByRole('button', { name: 'お手本を見る' }).click();
+  assert.equal((await page.locator('.hw-answer').textContent()), 'sun');
+  assert.equal(await page.locator('.hw-answer.en').count(), 1);
+  const bEn = await page.evaluate(() => FF.app.state.studyPoints);
+  await page.locator('.hw-ok').click();
+  await page.waitForSelector('.answer-feedback.good');
+  assert.ok(await page.evaluate(() => FF.app.state.studyPoints) > bEn);
+  // 英語の書き問題でも、キーボードの入力に、切りかえられて、案内が出る
+  await showEn('english_g5_hand_spell_002#input');
+  await page.getByRole('button', { name: 'キーボードで入力する' }).click();
+  assert.equal(await page.locator('.renewal-input').count(), 1);
+  assert.ok((await page.locator('.hw-tip').textContent()).includes('てがき入力'));
+  // 英語でも、答えが1文字（アルファベット）や文の問題には、手書きの欄が出ない
+  await showEn('english_g4_hand_alphabet_005#input');
+  assert.equal(await page.locator('.hw-canvas').count(), 0);
   assert.deepEqual(errors, []);
   await page.screenshot({ path: process.env.FF_SHOT || '/tmp/hw.png' });
   await browser.close();

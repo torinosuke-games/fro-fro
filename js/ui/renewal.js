@@ -122,17 +122,18 @@
  }
  // 手書きの欄：書く→お手本を見る→「書けた」「まちがえた」を自分で選ぶ（判断266）
  function handwriteView(it,q,done){
-  var locked=done||!!it.revealed,cv=FF.handwriting.pad(it,q.answer,locked);
-  var box=E('div',{class:'hw'},[E('div',{class:'input-label'},[E('span',{text:R.hwHelp})]),cv]);
+  var kind=L.handwriteKind(q),en=kind==='english',locked=done||!!it.revealed,cv=FF.handwriting.pad(it,q.answer,locked,kind);
+  var box=E('div',{class:'hw'+(en?' hw-en':'')},[E('div',{class:'input-label'},[E('span',{text:en?R.hwHelpEn:R.hwHelp})]),cv]);
   if(!locked){
    box.appendChild(E('div',{class:'hw-actions'},[
     button(R.hwUndo,function(){if(it.strokes.length){it.strokes.pop();cv.redraw();}},'rn-button'),
     button(R.hwClear,function(){it.strokes=[];cv.redraw();},'rn-button')
    ]));
    box.appendChild(button(R.hwUseKeyboard,function(){it.mode='key';it.error=null;U.rerender();},'rn-button hw-switch'));
+   box.appendChild(E('p',{class:'hw-tip',text:R.hwTip}));
   }
   if(it.revealed||done){
-   box.appendChild(E('div',{class:'hw-model'},[E('span',{class:'eyebrow',text:R.hwModel}),E('strong',{class:'hw-answer',text:q.answer}),E('p',{text:R.hwCompare})]));
+   box.appendChild(E('div',{class:'hw-model'},[E('span',{class:'eyebrow',text:R.hwModel}),E('strong',{class:'hw-answer'+(en?' en':''),text:q.answer}),E('p',{text:R.hwCompare})].concat(en&&FF.speech&&FF.speech.supported()&&FF.speech.enabled()?[speakButton(q.answer,R.speakAnswer,'small')]:[])));
    if(!done)box.appendChild(E('div',{class:'hw-actions hw-judge'},[
     button('○ '+R.hwOk,function(){selfCheck(true);},'rn-button primary hw-ok'),
     button('× '+R.hwNg,function(){selfCheck(false);},'rn-button hw-ng')
@@ -231,6 +232,7 @@
    answers.appendChild(E('label',{class:'input-label'},[E('span',{text:R.yourAnswer}),input]));
    U.keepInView(input);
    if(L.canHandwrite(q)&&!done)answers.appendChild(button(R.hwUsePen,function(){it.mode='pen';it.error=null;U.rerender();},'rn-button hw-switch'));
+   if(L.canHandwrite(q)&&!done)answers.appendChild(E('p',{class:'hw-tip',text:R.hwTipKey}));
    }
   }
   card.appendChild(answers);
