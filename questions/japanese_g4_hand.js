@@ -119,7 +119,27 @@
 
   // ---- 同音異義語・同訓異字：基礎8・標準12・発展8（原作の1問を合わせて 8/12/9）。選択肢は、４年までに習う字だけで作る。場面がわかる問題には、あとで絵を付ける ----
   function hm(diff,sentence,kana,answer,wrong,hints,explanation){
-    add('homonym',diff,'「'+sentence+'」の「'+kana+'」にあてはまる漢字は何ですか。',answer,wrong,hints,explanation,null,/[ぁ-ん]$/.test(answer)?'o':'k');
+    add('homonym',diff,'「'+sentence+'」の「'+kana+'」にあてはまる漢字は何ですか。',answer,wrong,hints,explanation,homPic(sentence),/[ぁ-ん]$/.test(answer)?'o':'k');
+  }
+  function pic(src,alt,caption){return {kind:'image',src:src,alt:alt,caption:caption,study:true};}
+  function homPic(sentence){
+    var m={
+      '火事を、しょうかする。':pic('img/diagrams/jp4_homonym_005.webp','夜の雪の町で、消防士が火事に水をかけている絵','火事を消している場面'),
+      'きしゃが、駅にとまる。':pic('img/diagrams/jp4_homonym_007.webp','雪の駅に、蒸気の汽車が入ってくる絵','汽車が駅に入る場面'),
+      'まちがいを、なおす。':pic('img/diagrams/jp4_homonym_015.webp','机で、ノートのまちがいを消しゴムで消している絵','まちがいを直している場面'),
+      'けがを、なおす。':pic('img/diagrams/jp4_homonym_016.webp','部屋で、ひざにほうたいを巻いてもらっている絵','けがの手当てをしている場面'),
+      '朝が、はやい。':pic('img/diagrams/jp4_homonym_017.webp','夜明け前の雪の村に、人影が一つ出ている絵','朝のはやい場面'),
+      '走るのが、はやい。':pic('img/diagrams/jp4_homonym_018.webp','雪の野原を、少年が走りぬける絵','速く走っている場面'),
+      '運動会で、きょうそうに出る。':pic('img/diagrams/jp4_homonym_019.webp','雪どけの運動場で、子どもたちが走っている絵','かけっこの場面'),
+      'ゲームで、友だちときょうそうする。':pic('img/diagrams/jp4_homonym_020.webp','こたつで、二人の子がトランプをしている絵','ゲームで競っている場面'),
+      'ここに、大きな家がたつ。':pic('img/diagrams/jp4_homonym_021.webp','雪原に、家の骨組みが立ち上がっていく絵','家が建っていく場面'),
+      '席を、たつ。':pic('img/diagrams/jp4_homonym_022.webp','教室で、一人の子が席から立ち上がっている絵','席を立っている場面'),
+      '雨がふってきたので、かさをさす。':pic('img/diagrams/jp4_homonym_024.webp','雨の町で、女の子がかさを広げている絵','かさをさしている場面'),
+      '地図で、行き先をさす。':pic('img/diagrams/jp4_homonym_025.webp','机の地図を、子どもが指さしている絵','地図を指さしている場面'),
+      'はかりで、重さをはかる。':pic('img/diagrams/jp4_homonym_026.webp','台所のはかりに、こをのせて重さをはかる絵','重さをはかっている場面'),
+      'ストップウォッチで、時間をはかる。':pic('img/diagrams/jp4_homonym_027.webp','雪の校庭を走る子どもと、ストップウォッチをもつ先生の絵','時間をはかっている場面')
+    };
+    return m[sentence]||null;
   }
   hm('basic','工場で、大きなきかいが動いている。','きかい','機械',['機会','期会','気会'],['人の代わりに仕事をする、しかけのある道具です。','「械」は「きへん」の字です。'],'「機械」は、しかけのある道具のことです。「機会」は、ちょうどよい時やチャンスのことです。');
   hm('basic','雨の日いがいは、外で遊ぶ。','いがい','以外',['意外','以害','医外'],['「それをのぞく」という意味です。','「以」は、「ム」の形をふくむ字です。'],'「以外」は「それをのぞいた、ほか」という意味です。「意外」は「思いがけない」という意味です。');
@@ -320,7 +340,22 @@
 
   // ---- 物語文の読み取り：基礎8・標準12・発展8。短い文章を読んで答える。同じ文章の問いには、同じ場面の絵をあとで付ける（DIAGRAM_REQUESTS_12.md）----
   function st(diff,passage,ask,answer,wrong,hints,explanation,inp){
-    add('story',diff,'次の文章を読んで、問いに答えましょう。\n\n'+passage+'\n\n問い：'+ask,answer,wrong,hints,explanation,null,inp||null);
+    add('story',diff,'次の文章を読んで、問いに答えましょう。\n\n'+passage+'\n\n問い：'+ask,answer,wrong,hints,explanation,storyPic(passage),inp||null);
+  }
+  function storyPic(passage){
+    var m=[
+      ['朝、はるとが目をさますと',pic('img/diagrams/jp4_story_p1.webp','雪の朝に、少年が庭へとび出す絵','雪の朝の場面')],
+      ['ゆきは、お母さんがあんでくれた',pic('img/diagrams/jp4_story_p2.webp','雪の中で、女の子がしょんぼり立っている絵','雪の中でさがしている場面')],
+      ['丘の上から、かいとはそり',pic('img/diagrams/jp4_story_p3.webp','雪の丘を、そりですべりおりる少年の絵','そりですべる場面')],
+      ['雪のふる帰り道、みちこは',pic('img/diagrams/jp4_story_p4.webp','夕暮れの雪道で、子ねこと女の子がいる絵','雪道の子ねこの場面')],
+      ['大雪の次の日、ぼくは',pic('img/diagrams/jp4_story_p5.webp','家の前で雪かきをする少年と、歩いてくるおじさんの絵','雪かきの場面')],
+      ['ひろしは、一人で大きな雪だるま',pic('img/diagrams/jp4_story_p6.webp','二人の子どもが、雪玉を雪だるまの頭にのせようとしている絵','雪だるまを作っている場面')],
+      ['ゆうたは、はじめて一人でおつかい',pic('img/diagrams/jp4_story_p7.webp','パン屋の前で、お金をにぎって立つ男の子の絵','はじめてのおつかいの場面')],
+      ['夕方、まさおは、雪の降る',pic('img/diagrams/jp4_story_p8.webp','雪の夕方、あたたかい光の玄関に立つ少年の絵','夕方の玄関の場面')],
+      ['雪の山のふもとに、小さな村',pic('img/diagrams/jp4_story_p9.webp','雪の山のふもとの村から、子どもたちが山へ向かう絵','雪の村の場面')]
+    ];
+    for(var i=0;i<m.length;i++) if(passage.indexOf(m[i][0])===0) return m[i][1];
+    return null;
   }
   var P1='朝、はるとが目をさますと、まどの外は雪で真っ白だった。はるとはいそいで上着を着て、外へとび出した。「わあ、すごい。」白い息をはきながら、はるとは大きな声でさけんだ。';
   st('basic',P1,'この場面は、いつですか。','朝',['夜','昼','夕方'],['文章の、はじめの言葉に注目します。','「目をさますと」とあります。'],'文章の最初に「朝」とあるので、この場面は朝です。',['あさ','朝']);
@@ -361,7 +396,22 @@
 
   // ---- 説明文の読み取り：基礎8・標準12・発展8。短い説明文を読んで答える。同じ文章の問いには、あとで絵を付ける ----
   function ex(diff,passage,ask,answer,wrong,hints,explanation,inp){
-    add('explain',diff,'次の文章を読んで、問いに答えましょう。\n\n'+passage+'\n\n問い：'+ask,answer,wrong,hints,explanation,null,inp||null);
+    add('explain',diff,'次の文章を読んで、問いに答えましょう。\n\n'+passage+'\n\n問い：'+ask,answer,wrong,hints,explanation,explainPic(passage,ask),inp||null);
+  }
+  function explainPic(passage,ask){
+    if(ask.indexOf('いくつのかど')===0) return null;
+    if(ask.indexOf('何色に見えますか')>=0) return null;
+    var m=[
+      ['雪のけっしょうは、よく見ると',pic('img/diagrams/jp4_explain_e1.webp','黒い手ぶくろの上の、雪のけっしょうを見ている絵','雪のけっしょうの場面')],
+      ['かまくらの中は、外よりも',pic('img/diagrams/jp4_explain_e2.webp','夕方の雪景色に、あたたかい光のかまくらがある絵','かまくら場面')],
+      ['ホッキョクグマの毛は、',pic('img/diagrams/jp4_explain_e3.webp','北極の氷原に、ホッキョクグマが立っている絵','北極の氷原の場面')],
+      ['こおった湖の上でも、魚は',pic('img/diagrams/jp4_explain_e4.webp','こおった湖の断面と、氷の下の魚の絵','こおった湖の場面')],
+      ['ゆきおこしの道具には',pic('img/diagrams/jp4_explain_e5.webp','雪の道に、スコップ、ほうき、雪を運ぶ小型トラックが並ぶ絵','雪をかたづける道具の場面')],
+      ['冬になると、クマは、あなの中で',pic('img/diagrams/jp4_explain_e6.webp','雪の斜面のあなに、クマが丸くなってねむっている絵','冬のあなの場面')],
+      ['雪がとけると、水になる',pic('img/diagrams/jp4_explain_e7.webp','山の雪どけ水が川になり、海へ注ぐ景色','雪どけ水の景色')]
+    ];
+    for(var i=0;i<m.length;i++) if(passage.indexOf(m[i][0])===0) return m[i][1];
+    return null;
   }
   var E1='雪のけっしょうは、よく見ると、六つのかどをもった形をしている。これは、空の上で、水のつぶがこおるとき、六角形になりやすいからである。けっしょうの形は、気温や、空気にふくまれる水分の量によって、いろいろに変わる。';
   ex('basic',E1,'この文章は、何について説明していますか。','雪のけっしょうの形',['雪がふるわけ','雪かきの方法','雪だるまの作り方'],['文章の、はじめの文に注目します。','何の形について書かれていますか。'],'この文章は、雪のけっしょうの形について説明しています。',['雪のけっしょう','けっしょうの形','雪のけっしょうの形']);
