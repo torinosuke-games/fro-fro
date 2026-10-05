@@ -26,4 +26,20 @@ module.exports = ({ test, ctx, assert }) => {
     }
     assert.deepStrictEqual(bad, []);
   });
+  // 読み取りの文章（物語文・説明文）も、読点を重ねない（判断271）
+  test('手作りの読み取りの文章の1文に、読点が3つ以上ない・助詞のあとの読点が3つ以上ない', () => {
+    const bad = [], seen = new Set();
+    for (const q of hand) {
+      if (!q.question.includes('次の文章を読んで')) continue;
+      const passage = q.question.split('\n\n')[1];
+      if (seen.has(passage)) continue;
+      seen.add(passage);
+      for (const sent of passage.split(/(?<=。)/)) {
+        const c = (sent.match(/、/g) || []).length, p = (sent.match(PART) || []).length;
+        if (c >= 3 || p >= 3) bad.push(q.id + ': ' + sent.trim().slice(0, 40));
+      }
+    }
+    assert.ok(seen.size >= 30);
+    assert.deepStrictEqual(bad, []);
+  });
 };
