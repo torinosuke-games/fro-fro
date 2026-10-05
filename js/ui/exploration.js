@@ -358,7 +358,7 @@
     ses.attempt = r.attempt;
     app.commit(r.state);
     if (o.status === 'retry') {
-      ses.retry = o; ses.typed = '';
+      ses.retry = o; ses.typed = ''; ses.selected = null;
       U.rerender();
       focusInput();
       return;
@@ -420,7 +420,7 @@
       att.choices.forEach(function(c,i){
         var cls='answer-option'+(ses.selected===c?' selected':'');
         if(done&&c===q.answer)cls+=' correct';else if(done&&c===ses.picked)cls+=' incorrect';
-        answers.appendChild(U.el('button',{class:cls,disabled:done,attrs:{type:'button','aria-pressed':ses.selected===c?'true':'false'},on:{click:function(e){ses.selected=c;U.rerender();if(e.detail===0){var check=document.querySelector('.check-answer');if(check)check.focus();}}}},[
+        answers.appendChild(U.el('button',{class:cls,disabled:done,attrs:{type:'button','aria-pressed':ses.selected===c?'true':'false'},on:{click:function(){ses.selected=c;submit(c);}}},[
           U.el('span',{class:'option-mark',text:done&&c===q.answer?'✓':String.fromCharCode(65+i)}),U.R('span','option-text',c)
         ]));
       });
@@ -429,7 +429,7 @@
       U.keepInView(input);answers.appendChild(U.el('label',{class:'input-label'},[U.el('span',{text:R.yourAnswer}),input]));
     }
     panel.appendChild(answers);
-    if(!done)panel.appendChild(U.el('button',{class:'rn-button primary check-answer',text:R.checkAnswer,disabled:q.answerType==='choice'&&ses.selected==null,on:{click:function(){submit(q.answerType==='choice'?ses.selected:(ses.typed||''));}}}));
+    if(!done&&q.answerType!=='choice')panel.appendChild(U.el('button',{class:'rn-button primary check-answer',text:R.checkAnswer,on:{click:function(){submit(ses.typed||'');}}}));
     if(ses.retry&&!done)panel.appendChild(U.el('div',{class:'answer-feedback retry',attrs:{role:'status',tabindex:'-1'}},[
       U.R('strong','',U.T('retry')),U.R('span','',U.T('retryLeft'),{n:ses.retry.attemptsLeft})
     ]));

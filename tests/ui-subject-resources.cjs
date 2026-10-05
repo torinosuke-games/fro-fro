@@ -18,7 +18,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),fs=require(
  const before=await p.evaluate(()=>({...FF.app.state.resources}));
  let answer=await p.evaluate(()=>FF.app.session.items[FF.app.session.currentId].attempt.question.answer);
  const drill=await p.evaluate(()=>!!FF.app.session.items[FF.app.session.currentId].attempt.question.generated);   // 自動生成のドリルは、問題数・正解数に数えない（判断226）
- await p.locator('.answer-option').filter({hasText:answer}).click();await p.getByRole('button',{name:'答え合わせ',exact:true}).click();
+ await p.locator('.answer-option').filter({hasText:answer}).click();
  const after=await p.evaluate(()=>({...FF.app.state.resources}));assert.ok(after.iron>before.iron);for(const key of ['wood','stone','food'])assert.equal(after[key],before[key]);
  await p.getByRole('button',{name:'次の問題 →',exact:true}).click();await specified('iron');
  await home();await study();assert.equal(await resource('指定なし').getAttribute('aria-pressed'),'true');

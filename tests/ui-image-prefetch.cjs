@@ -20,8 +20,8 @@ const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');
   const attr=img?{w:img.getAttribute('width'),h:img.getAttribute('height'),lazy:img.getAttribute('loading')}:null;
   const before=!!FF.app.session.nextQ;
   const imgQ=FF.app.bank.byId[ids[5]];const origPick=FF.curriculum.pick;FF.curriculum.pick=()=>imgQ; // 次の問題を絵の問題に固定する
-  FF.app.session.items[q.id].selected=q.answer;FF.ui.rerender();
-  document.querySelector('.check-answer').click();await new Promise(r=>setTimeout(r,100));
+  FF.ui.rerender();
+  [...document.querySelectorAll('.answer-option')].find(b=>b.textContent.indexOf(q.answer)>=0).click();await new Promise(r=>setTimeout(r,100));
   const nq=FF.app.session.nextQ;
   const out={ids:ids.length,attr,before,hasNext:!!nq,nextIsImage:!!(nq&&nq.diagram&&nq.diagram.kind==='image'),prefetched:made.filter(i=>nq&&nq.diagram&&i.src.endsWith(nq.diagram.src)).length};
   const nextId=nq&&nq.id;

@@ -53,7 +53,7 @@ const path=require('node:path'),fs=require('node:fs');
  assert.ok(await number(57).evaluate(el=>el.classList.contains('solved')),'Result survives home and reload, across formats');
  await number(57).click();
  const wrong=await page.evaluate(()=>{const q=FF.app.session.items[FF.app.session.currentId].attempt.question;return q.choices.find(x=>x!==q.answer);});
- await page.locator('.answer-option').filter({hasText:new RegExp('^.'+wrong+'$')}).click();await page.getByRole('button',{name:'答え合わせ',exact:true}).click();
+ await page.locator('.answer-option').filter({hasText:new RegExp('^.'+wrong+'$')}).click();
  assert.ok(await number(57).evaluate(el=>el.classList.contains('missed')));
  await page.reload();await page.getByRole('button',{name:'学習する →',exact:true}).click();await page.locator('.subject-math').click();
  assert.ok(await number(57).evaluate(el=>el.classList.contains('missed')),'Mistake replaces saved correct result');

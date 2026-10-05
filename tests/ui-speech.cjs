@@ -45,7 +45,6 @@ const { chromium } = require(process.env.FF_PLAYWRIGHT_MODULE || 'playwright');
   spoken = await page.evaluate(() => window.__spoken);
   assert.equal(spoken[spoken.length - 1].text, 'apple');
   await page.getByRole('button', { name: 'りんご' }).click();
-  await page.getByRole('button', { name: '答え合わせ' }).click();
   assert.ok((await page.locator('.explanation-card .speak-button').count()) >= 1);
   await page.locator('.explanation-card .speak-button').click();
   spoken = await page.evaluate(() => window.__spoken);
