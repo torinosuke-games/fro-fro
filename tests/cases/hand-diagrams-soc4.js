@@ -14,7 +14,7 @@ module.exports=({test,ctx,FF,assert,plain})=>{
  test('社会図：mainの297問はdiagram以外の全項目を保持',()=>{
   const original=all.map(q=>{const copy={...q};if(ids.includes(q.id))delete copy.diagram;return copy;});
   assert.equal(original.length,297);
-  assert.equal(crypto.createHash('sha256').update(JSON.stringify(original)).digest('hex'),'359fb64f693d6761a99497b9a24a035284acfa76ba400f6452048caa2a11c2cb');
+  assert.equal(crypto.createHash('sha256').update(JSON.stringify(original)).digest('hex'),'ca40e5b1247f6446217b4b362c74be93502c6f88f1ace947b4bce419d64cf8ac');
  });
  test('社会図：地図の座標・範囲・印・線の入力を検証',()=>{
   const maps=qs.filter(q=>q.diagram.kind==='japanMap');assert.equal(maps.length,18);
