@@ -44,8 +44,8 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.equal(back2.state.settings.speechRate, 'normal');
   });
 
-  test('聞き取りの問題：22問（基礎6・標準9・発展7）。読み上げる英語は英語のみで、問題文に英語を書かず、選択肢は日本語（数字）', () => {
-    const ls = ctx.QUESTION_BANK.filter(x => x.unit === 'listening' && x.subject === 'english' && x.gradeLevel === 4);
+  for (const g of [4, 5]) test('小' + g + '英語の聞き取りの問題：22問（基礎6・標準9・発展7）。読み上げる英語は英語のみで、問題文に英語を書かず、選択肢は日本語（数字）', () => {
+    const ls = ctx.QUESTION_BANK.filter(x => x.unit === 'listening' && x.subject === 'english' && x.gradeLevel === g);
     assert.equal(ls.length, 22);
     const n = d => ls.filter(x => x.difficulty === d).length;
     assert.deepStrictEqual([n('basic'), n('standard'), n('advanced')], [6, 9, 7]);
@@ -60,6 +60,11 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.equal(new Set(ls.map(x => x.listen)).size, 22);
   });
 
+  test('小5英語の手作り問題：264問（12単元×22）。読み上げる英語が取れる問題が、たくさんある', () => {
+    const hand = ctx.QUESTION_BANK.filter(x => x.collection === 'hand_en5');
+    assert.equal(hand.length, 264);
+    assert.ok(hand.filter(x => S.textFor(x)).length >= 150);
+  });
   test('小4英語の手作り問題：読み上げる英語が取れる問題が、たくさんある', () => {
     const hand = ctx.QUESTION_BANK.filter(x => x.collection === 'hand_en4');
     assert.equal(hand.length, 242);
