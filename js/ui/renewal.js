@@ -93,7 +93,7 @@
    retryState.learning.questionResults[it.attempt.question.id.replace(/#input$/,'')]=false;a.commit(retryState);
   }else {
    it.outcome=result.outcome;a.session.completed=(a.session.completed||0)+1;
-   if(result.outcome.status==='correct'){var changes={heat:result.outcome.points};changes[it.resource]=result.outcome.reward;arrive=FF.rewardFlight.prepare(changes);}
+   if(result.outcome.status==='correct'){if(FF.sound)FF.sound.correct();var changes={heat:result.outcome.points};changes[it.resource]=result.outcome.reward;arrive=FF.rewardFlight.prepare(changes);}
    a.commit(result.state);
    prepareNext();
   }
@@ -199,7 +199,7 @@
    button(done?R.next+' →':R.skip+' →',next,done?'rn-button primary':'rn-button')
   ]));
   layout.appendChild(helpView(it));
-  if(FF.debugMode&&U.review)layout.appendChild(U.review.panel(q));   // 問題のレビュー（デバッグモードだけ。判断202）
+  if(FF.debugMode&&U.review){var dock=U.review.panel(q,{onMarked:function(){next();},onPrev:function(){if(s.cursor>0){s.cursor--;chooseQuestion(s.order[s.cursor],true);U.rerender();root.scrollTo({top:0,behavior:'smooth'});}},canPrev:s.cursor>0});dock.classList.add('review-dock');layout.classList.add('has-review-dock');layout.appendChild(dock);}   // 問題のレビュー（デバッグモードだけ。判断202）。画面の下にいつも出す（判断258）
   main.appendChild(layout);
  }
  function renderFilters(main){

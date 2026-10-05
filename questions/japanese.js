@@ -845,7 +845,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g4_compound_001', subject: 'japanese', gradeLevel: 4, unit: 'compound',
+    id: 'japanese_g4_compound_001', subject: 'japanese', gradeLevel: 4, unit: 'word',
     difficulty: 'standard', answerType: 'choice',
     question: '「{売買|ばいばい}（{売|う}る・{買|か}う）」と {同|おな}じ {組|く}み{立|た}ての {熟語|じゅくご}は どれかな。',
     choices: ['{左右|さゆう}', '{学習|がくしゅう}', '{海水|かいすい}', '{登山|とざん}'],
@@ -979,7 +979,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g4_compound_002', subject: 'japanese', gradeLevel: 4, unit: 'compound',
+    id: 'japanese_g4_compound_002', subject: 'japanese', gradeLevel: 4, unit: 'word',
     difficulty: 'standard', answerType: 'choice',
     question: '「{岩石|がんせき}（{岩|いわ}・{石|いし}）」と {同|おな}じ {組|く}み{立|た}ての {熟語|じゅくご}は どれかな。',
     choices: ['{森林|しんりん}', '{上下|じょうげ}', '{読書|どくしょ}', '{青空|あおぞら}'],
@@ -1010,7 +1010,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g4_radical_001', subject: 'japanese', gradeLevel: 4, unit: 'radical',
+    id: 'japanese_g4_radical_001', subject: 'japanese', gradeLevel: 4, unit: 'kanji_write',
     difficulty: 'standard', answerType: 'choice',
     question: '「{持|も}つ」「{投|な}げる」「{指|ゆび}」に {共通|きょうつう}する {部首|ぶしゅ}は どれかな。',
     choices: ['てへん', 'きへん', 'にんべん', 'ぎょうにんべん'],
@@ -1021,7 +1021,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'japanese_g4_yoji_001', subject: 'japanese', gradeLevel: 4, unit: 'yoji',
+    id: 'japanese_g4_yoji_001', subject: 'japanese', gradeLevel: 4, unit: 'proverb',
     difficulty: 'advanced', answerType: 'input',
     question: '{四字熟語|よじじゅくご}「{一石二鳥|}」の {読|よ}み{方|かた}を ひらがなで {書|か}こう。',
     answer: 'いっせきにちょう', validationMode: 'kana-insensitive',
