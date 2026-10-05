@@ -4,10 +4,10 @@ module.exports = ({ test, ctx, assert, plain }) => {
   const root = path.resolve(__dirname, '../..');
   const qs = plain(ctx.QUESTION_BANK.filter(q => q.collection === 'hand_jp4'));
   const pics = qs.filter(q => q.diagram);
-  test('小4国語の絵：67問に絵が付き、絵のファイルは30枚で、1枚100KB以下', () => {
-    assert.equal(pics.length, 67);
+  test('小4国語の絵：63問に絵が付き、絵のファイルは29枚で、1枚100KB以下', () => {
+    assert.equal(pics.length, 63);
     const srcs = new Set(pics.map(q => q.diagram.src));
-    assert.equal(srcs.size, 30);
+    assert.equal(srcs.size, 29);
     for (const s of srcs) {
       assert.match(s, /^img\/diagrams\/jp4_(story_p[1-9]|explain_e[1-7]|homonym_\d{3})\.webp$/);
       assert.ok(fs.statSync(path.join(root, s)).size <= 100 * 1024, s);
@@ -19,7 +19,7 @@ module.exports = ({ test, ctx, assert, plain }) => {
       assert.equal(qs.find(q => q.id === id).diagram, undefined, id);
     }
   });
-  test('小4国語の絵：同じ文章の問いは、同じ絵（物語文9本・説明文7本）', () => {
+  test('小4国語の絵：同じ文章の問いは、同じ絵（物語文9本・説明文7本（かまくらの文章は、絵を作り直し中））', () => {
     const byPassage = new Map();
     for (const q of qs.filter(q => q.unit === 'story' || q.unit === 'explain')) {
       const passage = q.question.split('\n\n')[1];
