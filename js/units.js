@@ -129,6 +129,18 @@
         { id: 'tradition', name: '地いきの伝統・文化', description: '祭り・伝統工芸', icon: '🎎' },
         { id: 'pioneer', name: '郷土をひらいた人々', description: '用水・開拓', icon: '🌾' },
         { id: 'industry', name: '県の特色と産業', description: '農業・水産業・工業・観光', icon: '🏭' }
+      ],
+      5: [
+        { id: 'position', name: '国土の位置と領土', description: '緯度・経度・島・排他的経済水域', icon: '🧭' },
+        { id: 'terrain', name: '国土の地形', description: '山地・平野・川・海', icon: '🗻' },
+        { id: 'climate', name: '国土の気候', description: '季節風・梅雨・台風・雪', icon: '🌀' },
+        { id: 'landlife', name: '地形・気候とくらし', description: '低い土地・高い土地・寒い土地・あたたかい土地', icon: '🏘' },
+        { id: 'rice', name: '米づくり', description: '米づくりの一年・工夫・産地', icon: '🌾' },
+        { id: 'food', name: '食料生産と食料自給率', description: '野菜・果物・畜産・輸入・自給率', icon: '🥬' },
+        { id: 'fishery', name: '水産業', description: 'とる漁業・育てる漁業・漁場', icon: '🐟' },
+        { id: 'industry', name: '工業生産と自動車', description: '工業地域・中小工場・自動車・貿易', icon: '🏭' },
+        { id: 'info', name: '情報と産業', description: '放送・新聞・インターネット・情報の生かし方', icon: '📡' },
+        { id: 'environment', name: '森林と環境', description: '森林・公害・環境を守る', icon: '🌲' }
       ]
     },
     english: {

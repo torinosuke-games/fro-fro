@@ -1070,7 +1070,7 @@ window.QUESTION_BANK.push(
 
   // ===== Lv5（小学5年） =====
   {
-    id: 'social_g5_territory_001', subject: 'social', gradeLevel: 5, unit: 'territory',
+    id: 'social_g5_territory_001', subject: 'social', gradeLevel: 5, unit: 'position',
     difficulty: 'basic', answerType: 'choice',
     question: '{日本|にほん}の いちばん {北|きた}の はしに ある {島|しま}は どれかな。',
     choices: ['{択捉島|えとろふとう}', '{沖ノ鳥島|おきのとりしま}', '{与那国島|よなぐにじま}', '{南鳥島|みなみとりしま}'],
@@ -1081,7 +1081,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g5_geography_001', subject: 'social', gradeLevel: 5, unit: 'geography',
+    id: 'social_g5_geography_001', subject: 'social', gradeLevel: 5, unit: 'terrain',
     difficulty: 'basic', answerType: 'input',
     question: '{日本|にほん}で いちばん {高|たか}い {山|やま}は {何|なん}かな。',
     answer: '富士山', acceptedAnswers: ['ふじさん', '富士'], validationMode: 'kana-insensitive',
@@ -1090,7 +1090,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g5_agriculture_001', subject: 'social', gradeLevel: 5, unit: 'agriculture',
+    id: 'social_g5_agriculture_001', subject: 'social', gradeLevel: 5, unit: 'rice',
     difficulty: 'standard', answerType: 'input',
     question: '2023{年|ねん}の {統計|とうけい}で、{米|こめ}の {生産量|せいさんりょう}が {日本|にほん}で いちばん {多|おお}い {都道府県|とどうふけん}は どこかな。（{県|けん}の {名前|なまえ}で {答|こた}えよう）',
     answer: '新潟県', acceptedAnswers: ['新潟', 'にいがた', 'にいがたけん'], validationMode: 'kana-insensitive',
@@ -1108,7 +1108,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g5_trade_001', subject: 'social', gradeLevel: 5, unit: 'trade',
+    id: 'social_g5_trade_001', subject: 'social', gradeLevel: 5, unit: 'industry',
     difficulty: 'standard', answerType: 'input',
     question: '{外国|がいこく}から {品物|しなもの}を {買|か}い{入|い}れる ことを {何|なん}と いうかな。{漢字|かんじ}2{文字|もじ}か ひらがなで {答|こた}えよう。',
     answer: '輸入', acceptedAnswers: ['ゆにゅう'], validationMode: 'kana-insensitive',
@@ -1148,7 +1148,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g5_agriculture_002', subject: 'social', gradeLevel: 5, unit: 'agriculture',
+    id: 'social_g5_agriculture_002', subject: 'social', gradeLevel: 5, unit: 'food',
     difficulty: 'advanced', answerType: 'choice',
     question: '2022{年度|ねんど}の {統計|とうけい}で、{次|つぎ}の {食料|しょくりょう}の うち {日本|にほん}の {食料自給率|しょくりょうじきゅうりつ}（{国内|こくない}で まかなえる {割合|わりあい}）が いちばん {低|ひく}いのは どれかな。',
     choices: ['{小麦|こむぎ}', '{米|こめ}', '{野菜|やさい}', '{鶏卵|けいらん}'],
@@ -1159,7 +1159,7 @@ window.QUESTION_BANK.push(
   },
   // --- v0.3 で追加（B案：各学年27問） ---
   {
-    id: 'social_g5_territory_002', subject: 'social', gradeLevel: 5, unit: 'territory',
+    id: 'social_g5_territory_002', subject: 'social', gradeLevel: 5, unit: 'position',
     difficulty: 'basic', answerType: 'choice',
     question: '{日本|にほん}の {国土|こくど}の うち、{山地|さんち}（{山|やま}や {丘|おか}）は およそ どれくらいを しめて いるかな。',
     choices: ['{約|やく}4{分|ぶん}の3', '{約|やく}4{分|ぶん}の1', '{約|やく}2{分|ぶん}の1', 'ほとんど ない'],
@@ -1169,7 +1169,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g5_agriculture_003', subject: 'social', gradeLevel: 5, unit: 'agriculture',
+    id: 'social_g5_agriculture_003', subject: 'social', gradeLevel: 5, unit: 'rice',
     difficulty: 'basic', answerType: 'choice',
     question: '{米|こめ}づくりで、{春|はる}に {育|そだ}てた {苗|なえ}を {水|みず}を はった {田|た}に {植|う}える {作業|さぎょう}は どれかな。',
     choices: ['{田植|たう}え', '{稲|いね}かり', 'だっこく', '{種|たね}もみの {選別|せんべつ}'],
@@ -1180,7 +1180,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g5_territory_003', subject: 'social', gradeLevel: 5, unit: 'territory',
+    id: 'social_g5_territory_003', subject: 'social', gradeLevel: 5, unit: 'position',
     difficulty: 'basic', answerType: 'input',
     question: '{日本|にほん}の いちばん {南|みなみ}の はしに ある {島|しま}は どこかな。',
     answer: '沖ノ鳥島', acceptedAnswers: ['おきのとりしま', '沖の鳥島'], validationMode: 'kana-insensitive',
@@ -1216,7 +1216,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g5_trade_002', subject: 'social', gradeLevel: 5, unit: 'trade',
+    id: 'social_g5_trade_002', subject: 'social', gradeLevel: 5, unit: 'industry',
     difficulty: 'standard', answerType: 'input',
     question: '{原料|げんりょう}を {輸入|ゆにゅう}し、それを {加工|かこう}して つくった {製品|せいひん}を {輸出|ゆしゅつ}する {貿易|ぼうえき}の しかたを {何|なん}と いうかな。',
     answer: '加工貿易', acceptedAnswers: ['かこうぼうえき'], validationMode: 'kana-insensitive',
@@ -1234,7 +1234,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g5_agriculture_004', subject: 'social', gradeLevel: 5, unit: 'agriculture',
+    id: 'social_g5_agriculture_004', subject: 'social', gradeLevel: 5, unit: 'food',
     difficulty: 'standard', answerType: 'input',
     question: '{牛|うし}・ぶた・にわとりなどの {家畜|かちく}を {育|そだ}てて、{肉|にく}や {牛乳|ぎゅうにゅう}、たまごなどを {生産|せいさん}する {農業|のうぎょう}を {何|なん}と いうかな。',
     answer: '畜産', acceptedAnswers: ['ちくさん', '畜産業', 'ちくさんぎょう', 'らくのう', '酪農'], validationMode: 'kana-insensitive',
@@ -1252,7 +1252,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g5_territory_004', subject: 'social', gradeLevel: 5, unit: 'territory',
+    id: 'social_g5_territory_004', subject: 'social', gradeLevel: 5, unit: 'position',
     difficulty: 'standard', answerType: 'choice',
     question: '{沿岸|えんがん}の {国|くに}が {魚|さかな}や {海底|かいてい}の {資源|しげん}を {利用|りよう}できる「{排他的経済水域|はいたてきけいざいすいいき}」は、{海岸線|かいがんせん}から {何海里|なんかいり}までの {海|うみ}かな。',
     choices: ['200{海里|かいり}', '12{海里|かいり}', '100{海里|かいり}', '50{海里|かいり}'],
@@ -1294,7 +1294,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g5_agriculture_005', subject: 'social', gradeLevel: 5, unit: 'agriculture',
+    id: 'social_g5_agriculture_005', subject: 'social', gradeLevel: 5, unit: 'rice',
     difficulty: 'advanced', answerType: 'input',
     question: '{同|おな}じ {田|た}や {畑|はたけ}で、1{年|ねん}の {間|あいだ}に ちがう しゅるいの {作物|さくもつ}を 2{回|かい} つくる ことを {何|なん}と いうかな。（{例|れい}：{米|こめ}を かった あとに {麦|むぎ}を つくる）',
     answer: '二毛作', acceptedAnswers: ['にもうさく'], validationMode: 'kana-insensitive',
