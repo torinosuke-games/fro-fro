@@ -62,7 +62,7 @@
       redeemHistory: [],
       // themeMode：いつも 'day'（判断176。前のセーブの 'night'・'auto' も読み込み時に 'day' に直す）
       // pointsPerHour：交換レート（この pt で1時間。SPEC 14.4）
-      settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE, sound: true, soundStyle: 'bright', pointsPerHour: b.STUDY_POINTS.PER_HOUR_DEFAULT },
+      settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE, sound: true, soundStyle: 'bright', speech: true, speechRate: 'normal', pointsPerHour: b.STUDY_POINTS.PER_HOUR_DEFAULT },
       flags: { introSeen: false, diagnosisOffered: false, unlockNoticesSeen: [] }
     };
   }
@@ -162,6 +162,9 @@
     state.settings.sound = state.settings.sound !== false;
     // 正解の音の種類：知らない値は初めの 'bright'（判断262）
     state.settings.soundStyle = FF.defs.SOUND_STYLES.some(function (x) { return x.id === state.settings.soundStyle; }) ? state.settings.soundStyle : 'bright';
+    // 英語の読み上げ：オン・オフ（ない・知らない値はオン）と、速さ（知らない値は 'normal'。判断280）
+    state.settings.speech = state.settings.speech !== false;
+    state.settings.speechRate = ['slow', 'normal', 'fast'].indexOf(state.settings.speechRate) >= 0 ? state.settings.speechRate : 'normal';
     return { ok: true, state: state, migratedFrom: from, saveText: serialize(state) };
   }
 

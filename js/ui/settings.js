@@ -133,6 +133,36 @@
       }))
     ]));
 
+    // 英語の読み上げ（判断280）：オン・オフと速さ。この端末で読み上げが使えないときは、見せない
+    if (FF.speech && FF.speech.supported()) {
+      var speechOn = s.settings.speech !== false, curRate = FF.speech.rateId();
+      function setSpeech(patch) {
+        app.commit(Object.assign({}, app.state, { settings: Object.assign({}, app.state.settings, patch) }));
+        U.rerender();
+      }
+      main.appendChild(U.el('div', { class: 'panel row between' }, [
+        U.R('h3', '', U.T('speechEffect')),
+        U.el('div', { class: 'switch', attrs: { role: 'group' } }, [
+          U.el('button', { class: speechOn ? 'on' : '', rich: U.T('on'), attrs: { 'aria-pressed': speechOn ? 'true' : 'false' }, on: { click: function () { setSpeech({ speech: true }); } } }),
+          U.el('button', { class: speechOn ? '' : 'on', rich: U.T('off'), attrs: { 'aria-pressed': speechOn ? 'false' : 'true' }, on: { click: function () { setSpeech({ speech: false }); } } })
+        ])
+      ]));
+      var rateNames = { slow: 'speechSlow', normal: 'speechNormal', fast: 'speechFast' };
+      main.appendChild(U.el('div', { class: 'panel stack' }, [
+        U.R('h3', '', U.T('speechRateTitle')),
+        U.el('div', { class: 'grid2' }, ['slow', 'normal', 'fast'].map(function (id) {
+          return U.el('button', {
+            class: 'btn small' + (curRate === id ? ' primary' : ''), text: (curRate === id ? '✓ ' : '') + FF.util.plainText(U.T(rateNames[id])), attrs: { type: 'button', 'aria-pressed': curRate === id ? 'true' : 'false' },
+            on: { click: function () {
+              app.commit(Object.assign({}, app.state, { settings: Object.assign({}, app.state.settings, { speechRate: id }) }));
+              FF.speech.speak('Hello. Nice to meet you.');   // どんな速さか、聞こえるように読み上げる
+              U.rerender();
+            } }
+          });
+        }))
+      ]));
+    }
+
     // 保護者の方へ：交換レートとメールアドレス（v0.4、SPEC 14.4・DESIGN 14.4）
     main.appendChild(parentPanel());
 
