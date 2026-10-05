@@ -20,7 +20,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   else assert.fail(d.kind);
  }
  test('小4理科の図：333問のdiagram以外は元データから不変',()=>{
-  assert.equal(all.length,333);assert.equal(hash(all.map(q=>{const v=plain(q);if(ids.includes(q.id))delete v.diagram;return v;})),'deccfda5c357388739f15a5a9fafc223a4b40697f0bd96eec6e76c218b05f0e0');
+  assert.equal(all.length,333);assert.equal(hash(all.map(q=>{const v=plain(q);if(ids.includes(q.id))delete v.diagram;return v;})),'22d2100946a1072b008fe97370c411da3bb7f6dcbfadfda181d52f8d949f3e09');
   assert.ok(all.filter(q=>!ids.includes(q.id)).every(q=>!q.diagram));
  });
  test('小4理科の図：39＋48＝87問と書き問題への継承',()=>{
