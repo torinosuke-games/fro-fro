@@ -1,4 +1,4 @@
-// Chromium QA: file://で実際の問題画面を61問×4幅表示する。ゲームにテスト用コードを入れない。
+// Chromium QA: file://で実際の問題画面を58問×4幅表示する。ゲームにテスト用コードを入れない。
 const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),{pathToFileURL}=require('node:url');
 const root=path.resolve(__dirname,'..'),out=process.env.FF_QA_OUTPUT||path.resolve(root,'../hand-diagrams-sci5-qa');
@@ -41,7 +41,7 @@ fs.mkdirSync(out,{recursive:true});
   const settled=()=>page.evaluate(async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
   const requested=[16].flatMap(n=>[...fs.readFileSync(path.join(root,'DIAGRAM_REQUESTS_'+n+'.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'science_g5_hand_'+m[1]));
   const qs=await page.evaluate(ids=>QUESTION_BANK.filter(q=>ids.includes(q.id)).map(q=>({id:q.id,kind:q.diagram.kind})),requested);
-  assert.equal(requested.length,61);assert.equal(qs.length,61);const checks=[],screenshots=[],negativeChecks=[]; const inputIds=await page.evaluate(ids=>ids.filter(id=>FF.app.bank.byId[id+'#input']).map(id=>id+'#input'),requested);const forms=qs.concat(inputIds.map(id=>({id})));
+  assert.equal(requested.length,58);assert.equal(qs.length,58);const checks=[],screenshots=[],negativeChecks=[]; const inputIds=await page.evaluate(ids=>ids.filter(id=>FF.app.bank.byId[id+'#input']).map(id=>id+'#input'),requested);const forms=qs.concat(inputIds.map(id=>({id})));
   for(const q of forms){
    for(const width of [360,390,768,1024]){
     await page.setViewportSize({width,height:1000});await page.evaluate(id=>qaShowQuestion(id),q.id);await settled();
@@ -91,8 +91,8 @@ fs.mkdirSync(out,{recursive:true});
     if(width===390||width===1024)await page.locator('.lesson-figure').screenshot({path:path.join(out,q.id+'-figure-'+width+'.png'),style:shotStyle});
    }
   }
-  const report={count:61,inputForms:inputIds.length,widths:[360,390,768,1024],checks,negativeChecks,screenshots,errors};fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));
+  const report={count:58,inputForms:inputIds.length,widths:[360,390,768,1024],checks,negativeChecks,screenshots,errors};fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));
   for(const c of checks){assert.deepEqual(c.issues,[],c.id+' width '+c.width);assert.equal(c.overflow,false,c.id+' overflow '+c.width);assert.equal(c.figureOverflow,false,c.id+' figure overflow '+c.width);}
-  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',questions:61,inputForms:inputIds.length,renders:checks.length,negativeFixtures:negativeChecks.length*2,screenshots:screenshots.length,errors},null,2));
+  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',questions:58,inputForms:inputIds.length,renders:checks.length,negativeFixtures:negativeChecks.length*2,screenshots:screenshots.length,errors},null,2));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

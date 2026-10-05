@@ -39,6 +39,6 @@
 - sci5_dissolve_030: evaporating dish of clear salt water on low flame, tripod, gauze, goggles, no crystals
 - sci5_electromagnet_001: nail coil connected to battery and closed switch, nothing attracted
 - sci5_electromagnet_015: nail coil and compass with needle pointing north, not deflected
-- sci5_electromagnet_022: toy crane with electromagnet above a pile of nails and clips, not lifting
+- sci5_electromagnet_022: toy crane; end of arm is an iron core wrapped in copper coil, wires along the arm to a battery and switch in the body; nails and clips rest below, not lifted. Redraw: no horseshoe magnet.
 - sci5_method_018: same-size seedlings; large sunny pot with much soil, small shaded pot with little soil
 
