@@ -22,4 +22,17 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.equal(back2.ok, true);
     assert.equal(back2.state.settings.sound, true);
   });
+  test('音の種類の設定：初期値は bright。知らない値は bright にもどる。選んだ種類は保存・読み込みで残る', () => {
+    const ids = FF.defs.SOUND_STYLES.map(x => x.id);
+    assert.ok(ids.length >= 6 && new Set(ids).size === ids.length && ids.includes('pinpon'));
+    assert.equal(FF.state.createDefaultState(T0).settings.soundStyle, 'bright');
+    for (const id of ids) {
+      const s = plain(FF.state.createDefaultState(T0));
+      s.settings.soundStyle = id;
+      assert.equal(FF.state.parseSave(FF.state.serialize(s), T0).state.settings.soundStyle, id);
+    }
+    const bad = plain(FF.state.createDefaultState(T0));
+    bad.settings.soundStyle = 'ない音';
+    assert.equal(FF.state.parseSave(FF.state.serialize(bad), T0).state.settings.soundStyle, 'bright');
+  });
 };

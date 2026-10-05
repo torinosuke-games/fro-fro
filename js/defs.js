@@ -29,6 +29,16 @@
       { id: 'english', name: '英語' }
     ],
 
+    // 正解の音の種類（判断262）。鳴らし方は js/ui/sound.js。初めは 'bright'
+    SOUND_STYLES: [
+      { id: 'bright', name: 'あかるい3音' },
+      { id: 'pinpon', name: 'ぴんぽーん' },
+      { id: 'piko', name: 'ぴこん' },
+      { id: 'sparkle', name: 'きらきら' },
+      { id: 'coin', name: 'コイン' },
+      { id: 'bell', name: 'ベル' }
+    ],
+
     DIFFICULTIES: [
       { id: 'basic', name: '基礎' },
       { id: 'standard', name: '標準' },

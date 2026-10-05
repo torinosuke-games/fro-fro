@@ -117,6 +117,22 @@
       ])
     ]));
 
+    // 正解の音の種類（判断262）：押すと、その音が鳴る
+    var curStyle = FF.defs.SOUND_STYLES.some(function (x) { return x.id === s.settings.soundStyle; }) ? s.settings.soundStyle : 'bright';
+    main.appendChild(U.el('div', { class: 'panel stack' }, [
+      U.R('h3', '', U.T('soundStyle')),
+      U.el('div', { class: 'grid2' }, FF.defs.SOUND_STYLES.map(function (x) {
+        return U.el('button', {
+          class: 'btn small' + (curStyle === x.id ? ' primary' : ''), text: (curStyle === x.id ? '✓ ' : '') + x.name, attrs: { type: 'button', 'aria-pressed': curStyle === x.id ? 'true' : 'false' },
+          on: { click: function () {
+            app.commit(Object.assign({}, app.state, { settings: Object.assign({}, app.state.settings, { soundStyle: x.id }) }));
+            if (FF.sound) FF.sound.play(x.id);
+            U.rerender();
+          } }
+        });
+      }))
+    ]));
+
     // 保護者の方へ：交換レートとメールアドレス（v0.4、SPEC 14.4・DESIGN 14.4）
     main.appendChild(parentPanel());
 
