@@ -1,6 +1,6 @@
 # 依頼（第13弾）：レビューで「要改善」になった地図3問の直し（ChatGPT（Codex）向け）
 
-**【依頼前】2026-10-05** 依頼元：Claude（判断264の続き）。**第11弾（`DIAGRAM_REQUESTS_11.md`）の PR のあとで**、同じ土台で進めてください（ブランチ例：`codex/redo-maps-13`）。
+**【依頼前】2026-10-05** 依頼元：Claude（判断264の続き）。**第11弾（`DIAGRAM_REQUESTS_11.md`）は main に取り込み済み**（判断268）。最新の `main` から作業用ブランチを作って進めてください（ブランチ例：`codex/redo-maps-13`）。第11弾で `prefecture_004`・`geography_015`・`geography_019` などの地図の描画（`js/svg/learning.js`・`js/japan-map.js`）を直しているので、その続きの形で。
 図のきまりと、変えてよい範囲は、第8・11弾と同じです。地図は SVG のまま直します（`js/svg/learning.js` の `japanMap`・`js/japan-map.js`・問題の `diagram` の中だけ）。
 
 | 問題ID（`social_g4_hand_` の後ろ） | ユーザーの指摘 | 直すこと |
