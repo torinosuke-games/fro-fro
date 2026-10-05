@@ -102,6 +102,21 @@
       ])
     ]));
 
+    // 正解の音（判断259）
+    var soundOn = s.settings.sound !== false;
+    function setSound(v) {
+      app.commit(Object.assign({}, app.state, { settings: Object.assign({}, app.state.settings, { sound: v }) }));
+      if (v && FF.sound) FF.sound.correct();   // オンにしたとき、どんな音か聞こえるように鳴らす
+      U.rerender();
+    }
+    main.appendChild(U.el('div', { class: 'panel row between' }, [
+      U.R('h3', '', U.T('soundEffect')),
+      U.el('div', { class: 'switch', attrs: { role: 'group' } }, [
+        U.el('button', { class: soundOn ? 'on' : '', rich: U.T('on'), attrs: { 'aria-pressed': soundOn ? 'true' : 'false' }, on: { click: function () { setSound(true); } } }),
+        U.el('button', { class: soundOn ? '' : 'on', rich: U.T('off'), attrs: { 'aria-pressed': soundOn ? 'false' : 'true' }, on: { click: function () { setSound(false); } } })
+      ])
+    ]));
+
     // 保護者の方へ：交換レートとメールアドレス（v0.4、SPEC 14.4・DESIGN 14.4）
     main.appendChild(parentPanel());
 

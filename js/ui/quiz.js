@@ -41,6 +41,7 @@
     }
     ses.retry = null;
     ses.outcome = o;
+    if (o.status === 'correct' && FF.sound) FF.sound.correct();
     ses.picked = input;
     app.commit(r.state);
     U.rerender();

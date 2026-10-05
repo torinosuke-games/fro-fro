@@ -93,7 +93,7 @@
    retryState.learning.questionResults[it.attempt.question.id.replace(/#input$/,'')]=false;a.commit(retryState);
   }else {
    it.outcome=result.outcome;a.session.completed=(a.session.completed||0)+1;
-   if(result.outcome.status==='correct'){var changes={heat:result.outcome.points};changes[it.resource]=result.outcome.reward;arrive=FF.rewardFlight.prepare(changes);}
+   if(result.outcome.status==='correct'){if(FF.sound)FF.sound.correct();var changes={heat:result.outcome.points};changes[it.resource]=result.outcome.reward;arrive=FF.rewardFlight.prepare(changes);}
    a.commit(result.state);
    prepareNext();
   }

@@ -312,6 +312,7 @@
     change: '変更する',
     nameChanged: '名前を変更した。',
     furigana: 'ふりがな表示',
+    soundEffect: '正解の{音|おと}',
     on: 'オン',
     off: 'オフ',
     // 保護者の方へ（v0.4、SPEC 14.4）

@@ -62,7 +62,7 @@
       redeemHistory: [],
       // themeMode：いつも 'day'（判断176。前のセーブの 'night'・'auto' も読み込み時に 'day' に直す）
       // pointsPerHour：交換レート（この pt で1時間。SPEC 14.4）
-      settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE, pointsPerHour: b.STUDY_POINTS.PER_HOUR_DEFAULT },
+      settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE, sound: true, pointsPerHour: b.STUDY_POINTS.PER_HOUR_DEFAULT },
       flags: { introSeen: false, diagnosisOffered: false, unlockNoticesSeen: [] }
     };
   }
@@ -158,6 +158,8 @@
     state.player.avatar = normalizeAvatar(state.player.avatar);
     // テーマの設定：ない・知らない値は初期値の昼（補完はここまでに済ませ、integrity は最後の saveText で計算する）
     if (FF.theme) state.settings.themeMode = FF.theme.normalizeMode(state.settings.themeMode);
+    // 効果音（正解の音）のオン・オフ：ない・知らない値はオン（判断259。saveVersion は上げない）
+    state.settings.sound = state.settings.sound !== false;
     return { ok: true, state: state, migratedFrom: from, saveText: serialize(state) };
   }
 
