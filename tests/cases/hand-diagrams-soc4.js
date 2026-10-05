@@ -38,6 +38,6 @@ module.exports=({test,ctx,FF,assert,plain})=>{
   assert.equal(get('electric_021').scene,'thermal');assert.equal(get('disaster_011').scene,'bag');
   assert.equal(get('tradition_024').scene,'houseFront');assert.equal(get('industry_025').scene,'coastOrchard');
   for(const id of ['geography_010','geography_011'])assert.ok(get(id).routes.some(r=>r.type==='river'));
-  for(const id of ['industry_013','industry_014']){assert.equal(get(id).marks.length,1);assert.equal(get(id).port,true);}
+  for(const id of ['industry_013','industry_014']){assert.equal(get(id).marks.length,1);assert.equal(get(id).port,undefined);}
  });
 };
