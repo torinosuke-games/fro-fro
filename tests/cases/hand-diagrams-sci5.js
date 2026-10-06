@@ -1,4 +1,4 @@
-// 第16弾：58問だけを変更し、条件と記号以外の解答・結果を描かない。
+// 第16弾：57問だけを変更（当初58問。river_026 は判断312で外した）し、条件と記号以外の解答・結果を描かない。
 module.exports=({test,FF,ctx,assert,plain})=>{
  const fs=require('fs'),path=require('path'),crypto=require('crypto');
  const ids=[...fs.readFileSync(path.join(__dirname,'../../DIAGRAM_REQUESTS_16.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'science_g5_hand_'+m[1]);
@@ -41,13 +41,13 @@ module.exports=({test,FF,ctx,assert,plain})=>{
    if(d.eastArrow)assert.equal(d.scene,'cloudMap');
   }else{assert.equal(d.kind,'graph');assert.equal(d.blankAxes,true);assert.equal(d.science,true);assert.deepEqual(plain(d.values),[]);assert.deepEqual(plain(d.labels),[]);}
  }
- test('小5理科：324問のdiagram以外が不変、対象58問のみ追加',()=>{
-  assert.equal(all.length,324);assert.equal(new Set(ids).size,58);assert.equal(qs.length,58);
-  assert.equal(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'bb5c0d9d7dac12f900f258fbbe9bdfc8de3404c7c2c8bc525d278f2dc1f65833');
-  // 第17弾の16画像（electromagnet_022 は直し済み）と、図を外した3問（plant_012・river_005・river_007）を含め、対象外266問のdiagramも変更しない。
-  assert.equal(hash(all.filter(q=>!ids.includes(q.id)).map(q=>[q.id,q.diagram?plain(q.diagram):null])),'cd356fc41acc738fd59dd3d0a45b5dbb8bd90bdbefde9df5c15e884e79767114');
+ test('小5理科：324問のdiagram以外が不変、対象57問のみ追加',()=>{
+  assert.equal(all.length,324);assert.equal(new Set(ids).size,57);assert.equal(qs.length,57);
+  assert.equal(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'227c500586e5e6db67e84ce212ab60b10f3c61d0c522e32ee6e68879bf0dc59a');
+  // 第17弾の16画像（electromagnet_022 は直し済み）と、図を外した3問（plant_012・river_005・river_007）と river_026 を含め、対象外267問のdiagramも変更しない（river_026 も、絵が付くまで図なし。判断312）。
+  assert.equal(hash(all.filter(q=>!ids.includes(q.id)).map(q=>[q.id,q.diagram?plain(q.diagram):null])),'ffbf219a4e637af1c7e1dc4bcdfe57bcc6184057838c957ce79587ab5520b7c5');
  });
- test('小5理科：58問の範囲検証と書き問題の図の継承',()=>{
+ test('小5理科：57問の範囲検証と書き問題の図の継承',()=>{
   const bank=FF.learning.createBank(ctx.QUESTION_BANK);for(const q of qs){range(q.diagram);assert.deepEqual(plain(FF.learning.validateQuestion(q)),[]);if(q.inputForm)assert.deepEqual(plain(bank.byId[q.id+'#input'].diagram),plain(q.diagram));}
  });
  test('小5理科：新しい種類と拡張部品の不正値を検出',()=>{
