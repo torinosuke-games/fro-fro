@@ -48,3 +48,10 @@
 依頼は `DIAGRAM_REQUESTS_20.md`。`science_g5_hand_river_026` に1枚。
 
 - `sci5_river_026.webp`: Warm anime-style educational illustration for a Japanese elementary textbook, matching sci5 river pictures: soft painterly shading, natural colors, clear shapes, 3:2 landscape. One river seen from a high oblique angle. Upstream the river is squeezed into a clearly narrow channel between close rocky cliffs. Downstream the same river opens onto a flat plain and becomes clearly much wider, with broad gravel banks. Water is the same calm even blue in both places: no whitewater, no spray, no rapids, no flow lines, no arrows. A few trees, grass, and stones. No people, no boats, no bridge, no dam, no buildings, no text, no numbers, no symbols, no signs, no speech bubbles, no watermark.
+
+
+## 描き直し（PR 89 レビュー）
+
+真上から見下ろす構図に差し替え。遠近法で手前が広く見える斜め絵はやめた。
+
+- `sci5_river_026.webp`: Top-down map illustration, Japanese elementary textbook, painterly anime, 3:2. One river runs left to right. Left side: a thin calm blue channel pinched between rocky cliffs, about one third or less of the wide side. Right side: the same river opens into a broad calm blue channel with gravel banks and flat green land. Sections connect smoothly. Identical calm blue water, no whitewater, no foam, no arrows, no text, no people, no boats, no buildings.
