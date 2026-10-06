@@ -4,12 +4,13 @@ const { chromium } = require(process.env.FF_PLAYWRIGHT_MODULE || 'playwright');
 const OUT = process.env.FF_SHOT_DIR || null;
 (async () => {
   const browser = await chromium.launch({ headless: true, executablePath: process.env.FF_BROWSER_PATH || undefined });
-  const page = await browser.newPage({ viewport: { width: 390, height: 900 } }), errors = [];
+  const ctxA = await browser.newContext({ viewport: { width: 390, height: 900 } });   // 端末A（保存先を分けるため、別の context）
+  const page = await ctxA.newPage(), errors = [];
   page.on('pageerror', e => errors.push(e.message));
   // 偽の保管庫（supabase/*.sql と同じ振る舞い）
   const profiles = {}, calls = [];
   const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'POST, OPTIONS' };
-  await page.route('https://ivylealwkoatewbcxdeg.supabase.co/**', async route => {
+  const handler = async route => {
     const req = route.request();
     if (req.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
     const name = req.url().split('/rpc/')[1], a = JSON.parse(req.postData() || '{}');
@@ -24,8 +25,10 @@ const OUT = process.env.FF_SHOT_DIR || null;
     else if (name === 'ff_delete_profile') { delete profiles[h(a.p_key)]; res = { ok: true }; }
     else res = { ok: false, error: 'unknown' };
     await route.fulfill({ status: 200, contentType: 'application/json', headers: CORS, body: JSON.stringify(res) });
-  });
-  const shot = async n => { if (OUT) await page.screenshot({ path: path.join(OUT, n + '.png'), fullPage: false }); };
+  };
+  const HOST = 'https://ivylealwkoatewbcxdeg.supabase.co/**';
+  await ctxA.route(HOST, handler);
+  const shot = async (n, pg) => { if (OUT) await (pg || page).screenshot({ path: path.join(OUT, n + '.png'), fullPage: false }); };
   const url = pathToFileURL(path.resolve(__dirname, '../index.html')).href + '?debug=1';
   await page.goto(url, { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => { document.documentElement.dataset.theme = 'day'; FF.app.state = FF.state.setPlayerGrade(FF.state.withUpdated(FF.state.createDefaultState(FF.app.now()), FF.app.now()), 4); FF.app.state.flags.introSeen = true; FF.app.save(); FF.ui.show('settings'); });
@@ -42,7 +45,7 @@ const OUT = process.env.FF_SHOT_DIR || null;
   const code = (await page.locator('.sync-code').innerText()).trim();
   assert.match(code, /^[A-Z2-9]{4}(-[A-Z2-9]{4}){3}$/);
   await shot('sync-3-code');
-  await page.locator('.modal .btn').first().click();
+  await page.locator('.modal .actions .btn').first().click();
   await page.waitForFunction(() => FF.storage.loadSync().rev === 1, null, { timeout: 8000 });
   assert.equal(Object.values(profiles)[0].rev, 1);
   assert.ok(!JSON.stringify(profiles).includes(code.replace(/-/g, '')), 'コードそのものは保管庫に送らない');
@@ -68,6 +71,61 @@ const OUT = process.env.FF_SHOT_DIR || null;
   await page.evaluate(() => FF.ui.show('settings'));
   await page.waitForSelector('.sync-panel');
   await shot('sync-6-backup');
+  // コードの印刷：印刷用のカードだけが紙に出る
+  await page.evaluate(() => { window.__printed = 0; window.print = () => { window.__printed++; }; FF.ui.show('settings'); });
+  await page.waitForSelector('.sync-panel');
+  await page.locator('.sync-panel .btn', { hasText: 'コードを見る' }).click();
+  await page.locator('.sync-print').click();
+  assert.equal(await page.evaluate(() => window.__printed), 1);
+  assert.equal(await page.locator('.code-card').count(), 1);
+  assert.equal((await page.locator('.code-card-code').innerText()).trim(), code);
+  assert.equal(await page.locator('.code-card').isVisible(), false, '画面では見えない');
+  await page.keyboard.press('Escape');
+  await page.emulateMedia({ media: 'print' });
+  assert.equal(await page.locator('.code-card').isVisible(), true, '印刷では見える');
+  assert.equal(await page.locator('#hud').isVisible(), false);
+  assert.equal(await page.locator('.sync-panel').isVisible(), false);
+  const box = await page.locator('.code-card').boundingBox();
+  assert.ok(box.width > 300 && box.width < 400, '名刺の大きさ');
+  await shot('sync-7-print');
+  await page.emulateMedia({ media: 'screen' });
+
+  // 別の端末B：コードを入れて引き継ぐ
+  const ctxB = await browser.newContext({ viewport: { width: 390, height: 900 } });
+  await ctxB.route(HOST, handler);
+  const b = await ctxB.newPage();
+  b.on('pageerror', e => errors.push(e.message));
+  await b.goto(url, { waitUntil: 'domcontentloaded' });
+  await b.evaluate(() => { document.documentElement.dataset.theme = 'day'; FF.app.state = FF.state.setPlayerGrade(FF.state.withUpdated(FF.state.createDefaultState(FF.app.now()), FF.app.now()), 4); FF.app.state.flags.introSeen = true; FF.app.save(); FF.ui.show('settings'); });
+  await b.waitForSelector('.sync-panel');
+  await b.locator('.sync-panel .btn', { hasText: '引き継ぐ' }).first().click();
+  await b.waitForSelector('.sync-link-input');
+  const go = b.locator('.modal .actions .btn.primary');
+  await b.locator('.sync-link-input').fill('ABCD');
+  await go.click();
+  assert.match(await b.locator('.sync-link-msg').innerText(), /形|かたち/);
+  await b.locator('.sync-link-input').fill('ABCD-EFGH-JKMN-PQRS');   // 形は正しいが、保管庫にない
+  await go.click();
+  await b.waitForFunction(() => /見つかりません|みつかりません/.test(document.querySelector('.sync-link-msg').innerText), null, { timeout: 8000 });
+  assert.equal(await b.evaluate(() => FF.storage.loadSync().enabled), false);
+  await shot('sync-8-link', b);
+  await b.locator('.sync-link-input').fill(code.toLowerCase());   // 小文字・ハイフンつきでも通る
+  await go.click();
+  await b.waitForSelector('.sync-conflict-info, .modal .actions .btn:has-text("ほかの")', { timeout: 8000 });
+  const txtB = await b.locator('.modal').innerText();
+  assert.match(txtB, /すでにデータ/); assert.match(txtB, /777/);
+  const reco = await b.locator('.modal .actions .btn.primary').innerText();
+  assert.match(reco, /ほかの/, 'まっさらな端末では、保管庫のデータがおすすめ');
+  await shot('sync-9-first-link', b);
+  await b.locator('.modal .actions .btn.primary').click();
+  await b.waitForFunction(() => FF.app.state.studyPointsEarnedTotal === 777 && FF.app.state.player.name === 'ほかの端末', null, { timeout: 8000 });
+  assert.equal(await b.evaluate(() => FF.storage.loadSync().code), code.replace(/-/g, ''));
+  assert.equal(await b.evaluate(() => FF.storage.loadSync().enabled), true);
+  // 引き継いだ直後は、変更がないので、送り返さない
+  const before = calls.filter(c => c === 'ff_push_save').length;
+  await b.evaluate(() => FF.syncApp.sync({ force: true }));
+  assert.equal(calls.filter(c => c === 'ff_push_save').length, before);
+
   // オフにすると通信しない
   await page.evaluate(() => FF.syncApp.disable());
   const n = calls.length;

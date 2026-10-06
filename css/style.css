@@ -868,6 +868,10 @@ a.btn { text-decoration: none; }
   font-weight: 800; font-size: 1.125rem; padding: 4px 10px; white-space: nowrap; border-radius: 4px;
 }
 
+/* ---- 引き継ぎコードのカード（判断302）：画面では見えず、印刷のときだけ、紙の左上に名刺の大きさで出る ---- */
+.code-card { display: none; }
+.sync-link-input { text-transform: uppercase; letter-spacing: 0.05em; font-family: monospace; }
+
 /* ---- 引換券の印刷（DESIGN 14.5）：券面だけを、紙の左上に名刺の大きさ（91 × 55mm）で出す ---- */
 @media print {
   @page { size: A4 portrait; margin: 12mm; }
@@ -876,7 +880,7 @@ a.btn { text-decoration: none; }
   .snowfall, #hud, nav.tabs, .debug-flag, .toast, .overlay { display: none !important; }
   #app { max-width: none !important; margin: 0 !important; padding: 0 !important; }
   main#screen { padding: 0 !important; }
-  main#screen > :not(.ticket-card) { display: none !important; }
+  main#screen > :not(.ticket-card):not(.code-card) { display: none !important; }
   .ticket-card {
     box-sizing: border-box; width: 91mm; height: 55mm; max-width: none; margin: 0; padding: 3mm 3.5mm;
     border: 0.35mm dashed #000000; border-radius: 0; color: #000000; overflow: hidden;
@@ -895,6 +899,14 @@ a.btn { text-decoration: none; }
   .ticket-fields dd { font-size: 10pt; }
   .ticket-cost { font-size: 6.5pt; margin-top: 1.5mm; color: #333333; }
   .ticket-used-stamp { font-size: 11pt; border-width: 0.8mm; padding: 1mm 3mm; }
+  .code-card {
+    box-sizing: border-box; width: 91mm; height: 55mm; margin: 0; padding: 3mm 3.5mm; color: #000000;
+    border: 0.35mm dashed #000000; overflow: hidden; break-inside: avoid; page-break-inside: avoid;
+    display: flex; flex-direction: column; justify-content: space-between; background: #ffffff;
+  }
+  .code-card-brand { font-size: 8pt; font-weight: bold; border-bottom: 0.3mm solid #000000; padding-bottom: 1mm; }
+  .code-card-code { font-family: monospace; font-size: 14pt; font-weight: bold; text-align: center; white-space: nowrap; letter-spacing: 0.04em; }
+  .code-card-note { font-size: 6.5pt; line-height: 1.45; }
 }
 
 /* ---- 絵の見た目（判断177。config.ART_STYLE = 'art'）：生成した絵を使う基地の風景・資源・教科のアイコン ---- */
