@@ -872,6 +872,23 @@ a.btn { text-decoration: none; }
 .code-card { display: none; }
 .sync-link-input { text-transform: uppercase; letter-spacing: 0.05em; font-family: monospace; }
 
+/* ---- 保護者の記録（判断304） ---- */
+.parent-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.parent-tile { background: var(--badge-bg, rgba(31,111,163,0.08)); border-radius: 10px; padding: 8px 10px; }
+.parent-tile-value { font-size: 1.25rem; font-weight: 800; }
+.parent-chart { width: 100%; height: auto; display: block; }
+.parent-legend { display: inline-flex; align-items: center; gap: 4px; margin-right: 12px; }
+.parent-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.parent-swatch.good { background: var(--good); }
+.parent-swatch.bad { background: var(--bad); }
+.parent-table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+.parent-table th, .parent-table td { text-align: right; padding: 2px 6px; border-bottom: 1px solid rgba(0,0,0,0.08); }
+.parent-table th:first-child, .parent-table td:first-child { text-align: left; }
+.parent-rate-row { display: grid; gap: 3px; }
+.parent-rate-bar { height: 6px; border-radius: 3px; background: rgba(0,0,0,0.08); overflow: hidden; }
+.parent-rate-fill { height: 100%; border-radius: 3px; background: var(--good); }
+.parent-missed { padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+
 /* ---- 引換券の印刷（DESIGN 14.5）：券面だけを、紙の左上に名刺の大きさ（91 × 55mm）で出す ---- */
 @media print {
   @page { size: A4 portrait; margin: 12mm; }

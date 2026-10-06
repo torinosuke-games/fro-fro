@@ -163,6 +163,7 @@
         })
       ]));
     }
+    kids.push(U.el('button', { class: 'btn small sync-parent-open', rich: U.T('guardian.open'), on: { click: function () { U.openParentReport(); } } }));
     if (rec.code) {
       kids.push(U.el('button', {
         class: 'btn danger small', rich: U.T('sync.deleteRemote'), on: { click: function () {
