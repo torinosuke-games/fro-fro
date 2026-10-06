@@ -296,7 +296,7 @@
    return E('button',{class:'subject-card subject-'+id+(focus?' daily-focus':''),attrs:{type:'button','data-subject':id,'data-resource':entry&&entry.resource||null,'aria-label':U.plain(L.subjectName(id,g))+'：'+R.todayResource+' '+(entry&&entry.random?R.dailyRandomHelp:rname)},on:{click:function(){makeSession(id);}}},[
     entry?resourceBadge(entry,'subject-daily'):null,
     U.artImg('subj-'+art[id],'subject-art'),E('div',{class:'subject-copy'},[E('span',{class:'eyebrow',text:school(g)}),E('h2',{text:U.plain(L.subjectName(id,g))}),E('p',{text:nUnits?R.unitDescription.replace('{n}',nUnits):R.subjectDescription}),
-     E('div',{class:'subject-progress',attrs:{title:progress.generated?R.generatedNote:null}},[E('span',{class:'progress-total',text:R.totalQuestions.replace('{n}',progress.total)}),E('span',{class:'progress-correct',text:R.correctQuestions.replace('{n}',progress.correct)}),E('span',{class:'progress-review',text:R.reviewQuestions.replace('{n}',progress.review)})])]),E('span',{class:'subject-arrow',text:'↗'})
+     E('div',{class:'subject-progress',attrs:{title:progress.generated?R.generatedNote:null}},[E('span',{class:'progress-total',text:R.totalQuestions.replace('{n}',progress.total)}),E('span',{class:'progress-correct',text:R.correctQuestions.replace('{n}',progress.correct)}),E('span',{class:'progress-review',text:R.reviewQuestions.replace('{n}',progress.review)})])])
    ]);
   })));
   if(a.learningFocus){var fc=main.querySelector('.daily-focus');if(fc)setTimeout(function(){try{fc.focus({preventScroll:true});fc.scrollIntoView({block:'nearest'});}catch(e){}},0);}

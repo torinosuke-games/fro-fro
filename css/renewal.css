@@ -402,10 +402,10 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .daily-badge .ico{width:26px;height:26px;object-fit:contain}
 .daily-badge .daily-star{color:#c7821d;font-size:1rem;line-height:1}
 .daily-badge.is-random{border-color:#efc27a;background:#fff8ea}
-.subject-card .subject-daily{position:absolute;right:34px;bottom:8px;z-index:2;flex-direction:column;gap:2px;padding:0;border:0;background:none}.subject-card .subject-daily .ico{width:46px!important;height:46px!important;border-radius:50%;object-fit:cover;background:#fff}.subject-card .subject-copy>p{padding-right:60px}
+.subject-card .subject-daily{position:absolute;right:16px;bottom:8px;z-index:2;flex-direction:column;gap:2px;padding:0;border:0;background:none}.subject-card .subject-daily .ico{width:46px!important;height:46px!important;border-radius:50%;object-fit:cover;background:#fff}.subject-card .subject-copy>p{padding-right:56px}
 .daily-random-label{display:inline-flex;align-items:center;justify-content:center;color:#a8680f;background:#fff8ea;border:2px solid #efc27a;border-radius:50%;width:46px;height:46px}.daily-random-label .daily-star-svg{display:block;width:26px;height:26px}.quiz-resource-button .daily-random-label{width:32px;height:32px;border-width:1px}.quiz-resource-button .daily-random-label .daily-star-svg{width:20px;height:20px}.subject-top .rn-heading p.daily-note{margin:4px 0 0;text-align:left;text-wrap:balance;font-size:min(.8125rem,3vw);line-height:1.4;color:#43657d;font-weight:700;min-width:0}
 .subject-card.daily-focus{outline:4px solid #efa64b;outline-offset:3px;box-shadow:0 0 0 6px rgba(239,166,75,.28)}
 .quiz-resource-button.daily-badge{padding:3px 8px 3px 5px;min-height:36px;font-size:.75rem;cursor:default}
 .quiz-resource-button.daily-badge .ico{width:26px;height:26px}
 
-@media(max-width:380px){.subject-card .subject-daily{right:30px}.subject-card .subject-daily .ico,.daily-random-label{width:40px!important;height:40px!important}.daily-random-label .daily-star-svg{width:23px;height:23px}}
+@media(max-width:380px){.subject-card .subject-daily{right:12px}.subject-card .subject-daily .ico,.daily-random-label{width:40px!important;height:40px!important}.daily-random-label .daily-star-svg{width:23px;height:23px}}
