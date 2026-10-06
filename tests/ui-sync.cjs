@@ -8,7 +8,7 @@ const OUT = process.env.FF_SHOT_DIR || null;
   const page = await ctxA.newPage(), errors = [];
   page.on('pageerror', e => errors.push(e.message));
   // 偽の保管庫（supabase/*.sql と同じ振る舞い）
-  const profiles = {}, calls = [];
+  const profiles = {}, calls = [], attempts = {};
   const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'POST, OPTIONS' };
   const handler = async route => {
     const req = route.request();
@@ -22,6 +22,7 @@ const OUT = process.env.FF_SHOT_DIR || null;
     else if (!p) res = { ok: false, error: 'not_found' };
     else if (name === 'ff_pull') res = { ok: true, rev: p.rev, save_json: p.save };
     else if (name === 'ff_push_save') { if (p.rev !== a.p_base_rev) res = { ok: false, error: 'conflict', rev: p.rev, save_json: p.save }; else { p.rev++; p.save = a.p_save; res = { ok: true, rev: p.rev }; } }
+    else if (name === 'ff_push_attempts') { const t = attempts[h(a.p_key)] = attempts[h(a.p_key)] || {}; let n = 0; for (const r of a.p_rows) if (!(r.attempt_id in t)) { t[r.attempt_id] = r; n++; } res = { ok: true, inserted: n }; }
     else if (name === 'ff_delete_profile') { delete profiles[h(a.p_key)]; res = { ok: true }; }
     else res = { ok: false, error: 'unknown' };
     await route.fulfill({ status: 200, contentType: 'application/json', headers: CORS, body: JSON.stringify(res) });
@@ -51,13 +52,30 @@ const OUT = process.env.FF_SHOT_DIR || null;
   assert.ok(!JSON.stringify(profiles).includes(code.replace(/-/g, '')), 'コードそのものは保管庫に送らない');
   await page.waitForSelector('.sync-panel');
   await shot('sync-4-on');
+  // 本物の回答（learning.submitAnswer → app.commit）の履歴が、サーバーに1問ずつ届く
+  const answered = await page.evaluate(() => {
+    const app = FF.app;
+    const q = Object.values(app.bank.byId).find(x => x.answerType === 'choice' && FF.learning.isGradeUnlocked(app.state, x.subject, x.gradeLevel));
+    const att = FF.learning.startAttempt(q);
+    const r = FF.learning.submitAnswer(app.state, att, att.choices ? att.question.answer : '', { now: app.now(), resource: 'wood' });
+    app.commit(r.state);
+    return { qid: q.id, pending: FF.syncApp.pending().count, hist: app.state.learning.history.length };
+  });
+  assert.ok(answered.hist >= 1 && answered.pending >= 1, JSON.stringify(answered));
+  await page.evaluate(() => FF.syncApp.sync({ force: true }));
+  const mine = Object.values(Object.values(attempts)[0] || {});
+  assert.equal(mine.length, answered.hist);
+  assert.ok(mine.some(r => r.qid === answered.qid && typeof r.correct === 'boolean' && r.subject));
+  assert.equal(await page.evaluate(() => FF.syncApp.pending().count), 0);
+
   // 競合：ほかの端末が先に保管庫を更新し、この端末も変えた
   const other = await page.evaluate(() => { const s = JSON.parse(JSON.stringify(FF.app.state)); s.studyPointsEarnedTotal = 777; s.studyPoints = 777; s.player.name = 'ほかの端末'; s.updatedAt += 5000; return JSON.parse(FF.state.serialize(s)); });
-  Object.values(profiles)[0].rev = 2; Object.values(profiles)[0].save = other;
+  Object.values(profiles)[0].rev += 1; Object.values(profiles)[0].save = other;
   await page.evaluate(() => { const s = JSON.parse(JSON.stringify(FF.app.state)); s.studyPointsEarnedTotal = 5; FF.app.commit(s); });
   await page.evaluate(() => FF.ui.show('settings'));
   await page.waitForSelector('.sync-panel');
-  await page.locator('.sync-panel .btn.primary').first().click();   // いますぐ同期
+  // いますぐ同期（裏の自動の同期が先に競合を見つけて、選択画面がすでに出ていることもある）
+  if (!(await page.locator('.modal').count())) await page.locator('.sync-panel .btn.primary').first().click({ timeout: 3000 }).catch(() => {});
   await page.waitForSelector('.modal');
   const txt = await page.locator('.modal').innerText();
   assert.match(txt, /ほかの端末/); assert.match(txt, /777/);
@@ -66,7 +84,7 @@ const OUT = process.env.FF_SHOT_DIR || null;
   assert.equal(buttons.length, 3);
   await page.locator('.modal .actions .btn', { hasText: 'ほかの' }).click();
   await page.waitForFunction(() => FF.app.state.studyPointsEarnedTotal === 777, null, { timeout: 8000 });
-  assert.equal(await page.evaluate(() => FF.storage.loadSync().rev), 2);
+  assert.equal(await page.evaluate(() => FF.storage.loadSync().rev), 3);
   assert.ok(await page.evaluate(() => !!FF.storage.loadSyncBackup()), '使わなかったほうの控えが残る');
   await page.evaluate(() => FF.ui.show('settings'));
   await page.waitForSelector('.sync-panel');

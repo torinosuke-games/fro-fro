@@ -145,6 +145,8 @@
     } else {
       kids.push(U.R('div', 'small', U.T('sync.on')));
       kids.push(U.R('div', 'small muted', U.T('sync.lastSync') + '：' + (rec.lastSyncAt ? whenText(rec.lastSyncAt) : U.plain(U.T('sync.never')))));
+      var pend = FF.syncApp.pending();
+      if (pend.count || pend.dropped) kids.push(U.R('div', 'small muted', U.T('sync.pending') + (pend.dropped ? U.T('sync.droppedNote') : ''), { count: pend.count, dropped: pend.dropped }));
       if (rec.lastError) kids.push(U.R('div', 'small', U.T('sync.syncFailed'), { error: errorText(rec.lastError) }));
       var syncBtn = U.el('button', { class: 'btn small primary', rich: U.T('sync.syncNow') });
       syncBtn.addEventListener('click', function () { runSync(syncBtn); });

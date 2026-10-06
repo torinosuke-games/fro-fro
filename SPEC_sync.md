@@ -1,6 +1,6 @@
 # SPEC_sync.md：データの保存（サーバー同期）と学習の履歴（設計。判断299）
 
-状態：S-1〜S-4 まで完了（S-3：通信の層・セーブの同期・競合の画面＝判断301、S-4：コードの印刷・コードで引き継ぐ＝判断302）。S-5 以降はこれから。
+状態：S-1〜S-5 まで完了（S-3：通信の層・セーブの同期・競合の画面＝判断301、S-4：コードの印刷・コードで引き継ぐ＝判断302、S-5：学習の履歴の送信＝判断303）。S-6 以降はこれから。
 
 ## 1. 目的と決まっていること
 
@@ -40,7 +40,7 @@ attempts   (profile_id → profiles, attempt_id text, at bigint, qid text, subje
             primary key (profile_id, attempt_id))
 ```
 
-- `attempt_id`：端末で作る（`at` と端末ID と連番）。**同じ ID は二重に入らない**（`on conflict do nothing`）ので、再送しても安全。
+- `attempt_id`：履歴の中身だけで決める（`at-qid-attempts`。端末の ID は入れない。別の端末から同じ履歴が来ても1件になる）。**同じ ID は二重に入らない**（`on conflict do nothing`）ので、再送しても安全。
 - `attempts` の列は、いまの `learning.history` の項目（`at, qid, subject, grade, difficulty, type, correct, attempts, hints, resource, reward, points`）と同じ。端末側の 500 件の上限（`HISTORY_LIMIT`）は変えない。**サーバーは全件**を持つ。
 - 名前・メール・住所は列にない。ただし `save_json` に主人公の名前（ニックネーム）と学年が入る。同期をオンにする画面で、「本名は入れないでね」と保護者に示す。
 

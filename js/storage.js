@@ -93,14 +93,28 @@
     if (!store) return false;
     try { if (text === null) store.removeItem(backupKey()); else store.setItem(backupKey(), text); return true; } catch (e) { return false; }
   }
+  // 未送信の学習の履歴（サーバー同期。判断303）
+  function outboxKey() { return FF.config.SAVE_KEY + '.syncOutbox'; }
+  function loadOutbox(ls) {
+    var store = getLs(ls);
+    try { return FF.sync.normalizeOutbox(JSON.parse(store ? store.getItem(outboxKey()) || 'null' : 'null')); }
+    catch (e) { return FF.sync.normalizeOutbox(null); }
+  }
+  function saveOutbox(o, ls) {
+    var store = getLs(ls);
+    if (!store) return false;
+    try { store.setItem(outboxKey(), JSON.stringify(o)); return true; } catch (e) { return false; }
+  }
+
   function clearSync(ls) {
     var store = getLs(ls);
     if (!store) return;
-    [syncKey(), backupKey()].forEach(function (k) { try { store.removeItem(k); } catch (e) { /* 何もしない */ } });
+    [syncKey(), backupKey(), outboxKey()].forEach(function (k) { try { store.removeItem(k); } catch (e) { /* 何もしない */ } });
   }
 
   FF.storage = {
     load: load, save: save, clear: clear, loadReviews: loadReviews, saveReviews: saveReviews,
-    loadSync: loadSync, saveSync: saveSync, loadSyncBackup: loadSyncBackup, saveSyncBackup: saveSyncBackup, clearSync: clearSync
+    loadSync: loadSync, saveSync: saveSync, loadSyncBackup: loadSyncBackup, saveSyncBackup: saveSyncBackup, clearSync: clearSync,
+    loadOutbox: loadOutbox, saveOutbox: saveOutbox
   };
 })(this);
