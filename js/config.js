@@ -20,10 +20,10 @@
     // 'classic' ＝ これまでの SVG・絵文字。戻すときは 'classic' にする。元の画像は img/test_img/（img/art/ は縮めた写し）
     ART_STYLE: 'art',
     ART_DIR: 'img/art/',
-    // データの保存（サーバー同期。SPEC_sync.md・判断299）。ENABLED が false の間は、通信を一切しない（既定）。
+    // データの保存（サーバー同期。SPEC_sync.md・判断299）。ENABLED が true なら、設定に「データの保存」が出る（判断310。それまでは ?debug=1 のときだけ）。同期は、おうちの方が同意してオンにした端末だけが行う（オンにするまで通信は一切しない）。
     // ANON_KEY は公開用（anon）だけ。service_role・secret キーは絶対に置かない
     SYNC: {
-      ENABLED: false,
+      ENABLED: true,
       PUBLIC_URL: 'https://torinosuke-games.github.io/fro-fro/',   // 引き継ぎコードの QR コードに入れる、ゲームの公開の URL
       URL: 'https://ivylealwkoatewbcxdeg.supabase.co',
       ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2eWxlYWx3a29hdGV3YmN4ZGVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTQzMDcsImV4cCI6MjEwNjgzMDMwN30.mMRiCd3mSzsegrGFvrKtzhQTBC5Qa6NAbQs18fHAxss'
