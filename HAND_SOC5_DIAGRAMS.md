@@ -86,3 +86,33 @@ node tests/ui-hand-diagrams-soc5.cjs
 - 海流の向き：[海上保安庁の教材](https://www6.kaiho.mlit.go.jp/watersafety/canoe/08_tenki/)。図は問題文の向きだけを示す模式的な経路で、実時刻の海流観測図ではない。
 
 PRのレビューを待って止まる。mainのマージ・公開は行わない。
+
+## PR #74後の修正：県の形を使う9問（判断297）
+
+PR #74は作業開始時にマージ済みだった。main b2772d2からcodex/redo-soc5-areasを作成し、以下9問のdiagramだけを直した。新しいPRはマージせず、レビューを待つ。
+
+| ID（social_g5_hand_省略） | 原県データの選択 | 色の形 |
+|---|---|---|
+| industry_006 | 愛知・三重 | 伊勢湾に接する細い沿岸帯を県境で切る |
+| industry_010 | 東京・神奈川 | 東京湾の西・北岸に接する沿岸帯を県境で切る |
+| industry_011 | 大阪・兵庫 | 大阪湾の北・東岸に接する沿岸帯を県境で切る |
+| industry_012 | 岡山・広島 | 対象の海に接する沿岸帯を県境で切る |
+| industry_013 | 群馬・栃木・埼玉 | 3県の本土の輪郭 |
+| climate_011 | 岡山・広島・山口、徳島・香川・愛媛 | 中国・四国の対象沿岸だけを県境で切る |
+| climate_013 | 長野・山梨 | 2県の輪郭 |
+| climate_024 | 秋田・山形・新潟・富山・石川・福井 | 島も含む6県の全体の形。任意の青森は含めない |
+| terrain_022 | 原県ポリゴンから陸を除いた海面 | 3開口部で外海と区切る連続海面。島をマスクで除く |
+
+ユーザーの具体的な指定（判断298）に合わせ、工業4問は図の幅に対して約1.5%の同じ細さ、瀬戸内の気候は約2.3%のやや広い帯にした。県境の外へ色を広げず、海岸線から内陸へ県の形に沿って切り出す。内陸と日本海側の県全体の図は同じ色の県を結合し、境界を目立たせない。正式な工業・気候分布の境界や測距の図ではない。新しい点や、地名・数字・方位以外のSVG文字は足さない。
+
+今回の更新ではjs/svg/learning.jsにareaOutline・marineOutlineの任意指定だけを追加し、tests/ui-hand-diagrams-soc5.cjsで実際のSVGの輪郭線が非表示か検査する。それ以外の描画や原海岸線は維持する。
+
+変更したファイルはquestions/social_g5_hand.js、js/svg/learning.js、tests/cases/redo-soc5-areas.js、tests/ui-hand-diagrams-soc5.cjs、tests/fixtures/soc5-prefecture-areas.json、tests/tools/build-soc5-prefecture-areas.py、SOCIAL_MAP_DATA.md、QUESTIONS_GUIDE.md、DECISIONS.md、本書。defs・原海岸線・CSS・画像・セーブは変更しない。描画コードは指定された塗りの輪郭線を非表示にする任意項目だけ。
+
+- `node tests/run.js`：700件成功、失敗0。新規5テストで9問だけの変更、全360問のdiagram以外の不変性、対象外351問の不変性、指定23県の包含、隣県・別の湾の除外、海面と陸・島・外海の区別、4つの帯の細さの一致、県全体・点なし・輪郭非表示を確認。
+- `tests/ui-hand-diagrams-soc5.cjs`：全48問＋書き1問×360・390・768・1024px＝196表示、成功。見切れ・横はみ出し・文字の重なり・ページ例外なし。
+- 9問の390px図を一覧で目視し、代表の地域図を390/1024pxの問題画面で確認。全48問の再表示により、対象外の図の回帰も確認する。
+- 標準出力による再生成結果はquestionに入れた9問の座標と一致する。ゲームにはShapelyやPythonの依存を追加しない。
+- ローカルoutputs/redo-soc5-areas/gallery.htmlは9問の4幅の画像と、PR #74の修正前の画像を比較できる。results.jsonと各PNGも同じフォルダ。初回48問のスクリーンショットは元のoutputs/hand-diagrams-soc5に維持する。
+
+未対応や問題本文の変更はない。元360問のdiagram以外のハッシュは5b2a31ef42e27265d110cd1b81ee27e1ba480c0f8de146ca087d9718b8bce661、対象外351問の全項目のハッシュは98446cf2c5a2df6c9ef3dcc5bc441b75a6940b2400e4b67435b85b64f28e740aで変更前と一致する。
