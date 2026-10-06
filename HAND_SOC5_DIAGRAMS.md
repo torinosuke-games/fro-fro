@@ -86,3 +86,31 @@ node tests/ui-hand-diagrams-soc5.cjs
 - 海流の向き：[海上保安庁の教材](https://www6.kaiho.mlit.go.jp/watersafety/canoe/08_tenki/)。図は問題文の向きだけを示す模式的な経路で、実時刻の海流観測図ではない。
 
 PRのレビューを待って止まる。mainのマージ・公開は行わない。
+
+## PR #74後の修正：県の形を使う9問（判断297）
+
+PR #74は作業開始時にマージ済みだった。main b2772d2からcodex/redo-soc5-areasを作成し、以下9問のdiagramだけを直した。新しいPRはマージせず、レビューを待つ。
+
+| ID（social_g5_hand_省略） | 原県データの選択 | 色の形 |
+|---|---|---|
+| industry_006 | 愛知・三重 | 伊勢・三河湾に接する沿岸帯を県境で切る |
+| industry_010 | 東京・神奈川 | 東京湾の西・北岸に接する沿岸帯を県境で切る |
+| industry_011 | 大阪・兵庫 | 大阪湾の北・東岸に接する沿岸帯を県境で切る |
+| industry_012 | 岡山・広島 | 対象の海に接する沿岸帯を県境で切る |
+| industry_013 | 群馬・栃木・埼玉 | 3県の本土の輪郭 |
+| climate_011 | 岡山・広島・山口、徳島・香川・愛媛 | 中国・四国の対象沿岸だけを県境で切る |
+| climate_013 | 長野・山梨 | 2県の輪郭 |
+| climate_024 | 青森・秋田・山形・新潟・富山・石川・福井 | 日本海側の沿岸帯を県境で切る。太平洋側を除く |
+| terrain_022 | 原県ポリゴンから陸を除いた海面 | 3開口部で外海と区切る連続海面。島をマスクで除く |
+
+沿岸帯は約20kmを目安にした位置表示用の模式図で、正式な工業地帯・気候の境界ではない。県全体を沿岸地域と誤認させないようにした。県境の外へ色を広げず、海岸線に沿った形を使用する。地名・県名・数字は引き続き表示しない。詳しい出典と再生成手順はSOCIAL_MAP_DATA.md。
+
+変更したファイルはquestions/social_g5_hand.js、tests/cases/redo-soc5-areas.js、tests/fixtures/soc5-prefecture-areas.json、tests/tools/build-soc5-prefecture-areas.py、SOCIAL_MAP_DATA.md、QUESTIONS_GUIDE.md、DECISIONS.md、本書。描画コード・defs・原海岸線・CSS・画像・セーブは変更しない。
+
+- `node tests/run.js`：699件成功、失敗0。新規4テストで9問だけの変更、全360問のdiagram以外の不変性、対象外351問の不変性、指定24県の包含、隣県・別の沿岸の除外、海面と陸・島・外海の区別を確認。
+- `tests/ui-hand-diagrams-soc5.cjs`：全48問＋書き1問×360・390・768・1024px＝196表示、成功。見切れ・横はみ出し・文字の重なり・ページ例外なし。
+- 9問の390px図を一覧で目視し、代表の地域図を390/1024pxの問題画面で確認。全48問の再表示により、対象外の図の回帰も確認する。
+- 標準出力による再生成結果はquestionに入れた9問の座標と一致する。ゲームにはShapelyやPythonの依存を追加しない。
+- ローカルoutputs/redo-soc5-areas/gallery.htmlは9問の4幅の画像と、PR #74の修正前の画像を比較できる。results.jsonと各PNGも同じフォルダ。初回48問のスクリーンショットは元のoutputs/hand-diagrams-soc5に維持する。
+
+未対応や問題本文の変更はない。元360問のdiagram以外のハッシュは5b2a31ef42e27265d110cd1b81ee27e1ba480c0f8de146ca087d9718b8bce661、対象外351問の全項目のハッシュは98446cf2c5a2df6c9ef3dcc5bc441b75a6940b2400e4b67435b85b64f28e740aで変更前と一致する。

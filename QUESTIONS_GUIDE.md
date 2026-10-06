@@ -145,6 +145,8 @@ PR #36レビュー対応（判断251）：電池は既知の＋極側だけ端�
 
 48問の全ID・参考資料・検証結果・依頼との差はHAND_SOC5_DIAGRAMS.md。
 
+県の形を使う範囲（判断297）：指定県のNatural Earth admin-1ポリゴンを使用し、手描きの四角・五角形にしない。沿岸を表す図は対象の海に接する海岸からの模式的な帯を県境で切り、内陸の県を問う図は県全体の形を使用する。県名・数字を表示せず、沿岸帯は正式な工業地域・気候の境界ではないことをcaptionの「模式図」で明示する。海の範囲は実海岸線と同じマスクで陸や島を除く。作成手順・参照形状はSOCIAL_MAP_DATA.mdとtests/fixtures/soc5-prefecture-areas.json。
+
 ### 生成した絵の図（判断254）
 - `diagram:{kind:'image', src:'img/diagrams/<名前>.webp', alt, caption, study:true}`。`src` と `caption` が必須（`alt` は省略すると caption を使う）。絵は横3：2・WebP・約200KB 以下、`img/diagrams/` に置く（テストは400KBまで）。
 - 絵の中に文字・数字・看板を入れない。答えの名前を描かない。ものの見た目を見せる図に使い、数・形を合わせる図（算数の図・表・グラフ）と地図（`japanMap`）は SVG のままにする。依頼の書き方は `DIAGRAM_REQUESTS_10.md`。
