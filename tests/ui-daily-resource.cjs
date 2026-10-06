@@ -10,7 +10,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  // 各教科のカードに、その日の資材が出る。ランダムな教科だけ ☆ が付く
  for(const s of ['math','japanese','science','social','english']){
   const card=p.locator('.subject-card[data-subject="'+s+'"]');
-  assert.equal(await card.getAttribute('data-resource'),today.bySubject[s].resource,s);
+  assert.equal(await card.getAttribute('data-resource'),today.bySubject[s].resource,s);   // ランダムの教科は null（属性なし）
   assert.equal(await card.locator('.daily-badge .daily-random-label').count(),today.bySubject[s].random?1:0,s);
  }
  assert.equal(await p.locator('.subject-card .daily-random-label').count(),1);
@@ -18,14 +18,16 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  // 資材の欄を押しても、資材は選べない
  await p.evaluate(()=>FF.ui.show('study',{tab:'learn'}));
  assert.equal(await p.locator('#hud button.resource-item').count(),0);
- // 教科を選ぶと、その日の資材がその教科の問題の報酬になる（見出しのバッジにも出る）
- for(const s of ['math','english']){
+ // 教科を選ぶと、その日の資材がその教科の問題の報酬になる（ランダムの教科は、問題ごとに4つのうちのどれか）
+ for(const s of ['math','japanese','science','social','english']){
   await p.evaluate(()=>FF.ui.show('study',{tab:'learn'}));
   await p.locator('.subject-card[data-subject="'+s+'"]').click();
-  assert.equal(await p.evaluate(()=>FF.app.session.sel.resource),today.bySubject[s].resource);
-  assert.equal(await p.evaluate(()=>FF.app.session.items[FF.app.session.currentId].resource),today.bySubject[s].resource);
-  assert.ok((await p.locator('.quiz-resource-button').getAttribute('aria-label')).includes(await p.evaluate(r=>FF.ui.plain(FF.ui.resDef(r).name),today.bySubject[s].resource)));
+  const want=today.bySubject[s].resource,got=await p.evaluate(()=>FF.app.session.items[FF.app.session.currentId].resource);
+  if(want)assert.equal(got,want,s);else{assert.equal(await p.evaluate(()=>FF.app.session.sel.resource),null);assert.ok(['wood','iron','stone','food'].includes(got),s);assert.equal(await p.locator('.quiz-resource-button .daily-random-label').count(),1);}
  }
+ // ランダムの教科は、くり返すと、いろいろな資材になる
+ const rs=await p.evaluate(()=>{const subj=Object.keys(FF.daily.today(FF.app.now()).bySubject).find(k=>FF.daily.today(FF.app.now()).bySubject[k].random);const seen={};for(let i=0;i<60;i++){FF.ui.show('study',{tab:'learn'});document.querySelector('.subject-card[data-subject="'+subj+'"]').click();seen[FF.app.session.items[FF.app.session.currentId].resource]=1;}return Object.keys(seen);});
+ assert.ok(rs.length>=3,'ランダム '+rs.join());
  // 設備の画面で足りない資材を押すと、その資材が決まっている教科（☆でないほう）にカーソルが当たる
  for(const r of ['wood','iron','stone','food']){
   await p.evaluate(res=>FF.ui.show('study',{tab:'learn',resource:res}),r);

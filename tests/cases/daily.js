@@ -4,7 +4,7 @@ module.exports = ({ test, FF, assert }) => {
   const keys = [];
   for (let d = 1; d <= 60; d++) keys.push('2026-10-' + String(d % 28 + 1).padStart(2, '0') + '#' + d);
 
-  test('割り当て：4資材は教科に1つずつ、あまる1教科はランダムな資材（☆）', () => {
+  test('割り当て：4資材は教科に1つずつ、あまる1教科は「ランダム」（☆。資材は決めない）', () => {
     keys.forEach(k => {
       const a = FF.daily.assign(k);
       assert.deepStrictEqual(Object.keys(a.bySubject).sort(), SUBJ.slice().sort());
@@ -12,6 +12,7 @@ module.exports = ({ test, FF, assert }) => {
       assert.strictEqual(fixed.length, 4, k);
       assert.deepStrictEqual(fixed.map(s => a.bySubject[s].resource).sort(), RES.slice().sort(), k);   // 全資材が、かならずどれかに割り当てられる
       assert.strictEqual(SUBJ.filter(s => a.bySubject[s].random).length, 1, k);
+      SUBJ.filter(s => a.bySubject[s].random).forEach(s => assert.strictEqual(a.bySubject[s].resource, null, k));   // ランダムの教科は、資材を決めない
       RES.forEach(r => assert.strictEqual(a.bySubject[a.subjectOf[r]].resource, r));
       RES.forEach(r => assert.strictEqual(a.bySubject[a.subjectOf[r]].random, false));
     });
@@ -20,8 +21,9 @@ module.exports = ({ test, FF, assert }) => {
     assert.deepStrictEqual(FF.daily.assign('2026-10-06'), FF.daily.assign('2026-10-06'));
     const seen = new Set(keys.map(k => JSON.stringify(FF.daily.assign(k).bySubject)));
     assert.ok(seen.size > 30, '60日で ' + seen.size + ' 通り');
-    // どの教科にも、どの資材が当たる日がある
+    // どの教科にも、どの資材が当たる日がある。どの教科も、ランダムになる日がある
     SUBJ.forEach(s => RES.forEach(r => assert.ok(keys.some(k => FF.daily.assign(k).bySubject[s].resource === r), s + '→' + r)));
+    SUBJ.forEach(s => assert.ok(keys.some(k => FF.daily.assign(k).bySubject[s].random), s + ' がランダムの日'));
   });
   test('日付の区切りは朝4時（時差0で確かめる）', () => {
     const t = (y, mo, d, h, mi) => Date.UTC(y, mo - 1, d, h, mi);

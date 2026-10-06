@@ -6,8 +6,6 @@
  FF.renewalBeforeShow=function(name,params){
   var a=FF.app,isLearn=name==='study'&&(!params.tab||params.tab==='learn');
   if(a.screen==='quiz'&&name!=='quiz'&&a.session&&a.session.renewal){
-   a.session.sel.resource=null;if(a.filterDraft)a.filterDraft.resource=null;
-   var it=current();if(it&&!it.attempt.done)it.resource=C.scarcest(a.state);
   }
   // 設備の画面で足りない資材を押して来たとき：その日にその資材が決まっている教科にカーソルを当てる（判断319）
   a.learningFocus=null;
@@ -22,18 +20,25 @@
  // その日の資材は教科で決まる（判断319）。教科から資材を引く。☆は、その日ランダムに決まった教科
  function dailyEntry(subject){return FF.daily.today(FF.app.now()).bySubject[subject]||null;}
  function resourceBadge(entry,cls){
+  if(entry.random)return E('span',{class:'daily-badge is-random'+(cls?' '+cls:''),attrs:{title:R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[E('b',{text:'☆'}),E('small',{text:R.dailyRandomShort})])]);
   var r=U.resDef(entry.resource);
-  return E('span',{class:'daily-badge'+(cls?' '+cls:'')+(entry.random?' is-random':''),attrs:{title:U.plain(r.name)+(entry.random?'（'+R.dailyRandom+'）':'')}},[entry.random?E('span',{class:'daily-random-label',text:'☆ '+R.dailyRandomShort}):null,U.resIcon(r)]);
+  return E('span',{class:'daily-badge'+(cls?' '+cls:''),attrs:{title:U.plain(r.name)}},[U.resIcon(r)]);
+ }
+ // 問題ごとに獲得する資材：教科で決まる。ランダムの教科は、問題ごとに4つのうちのどれか
+ function rollResource(subject){
+  var entry=dailyEntry(subject);
+  if(entry&&entry.random){var list=FF.defs.RESOURCES;return list[Math.floor(Math.random()*list.length)].id;}
+  return entry&&entry.resource||C.scarcest(FF.app.state);
  }
  function quizResourceButton(){
-  var s=FF.app.session,entry=dailyEntry(s.sel.subject),r=U.resDef(s.sel.resource||(entry&&entry.resource)||C.scarcest(FF.app.state)),random=!!(entry&&entry.random&&entry.resource===r.id);
-  return E('span',{class:'quiz-resource-button daily-badge'+(random?' is-random':''),attrs:{role:'img','aria-label':R.todayResource+'：'+U.plain(r.name)+(random?'（'+R.dailyRandom+'）':'')}},[
-   U.resIcon(r),random?E('span',{class:'daily-star',text:'☆'}):null
-  ]);
+  var s=FF.app.session,entry=dailyEntry(s.sel.subject);
+  if(entry&&entry.random)return E('span',{class:'quiz-resource-button daily-badge is-random',attrs:{role:'img','aria-label':R.todayResource+'：'+R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[E('b',{text:'☆'}),E('small',{text:R.dailyRandomShort})])]);
+  var r=U.resDef((entry&&entry.resource)||s.sel.resource||C.scarcest(FF.app.state));
+  return E('span',{class:'quiz-resource-button daily-badge',attrs:{role:'img','aria-label':R.todayResource+'：'+U.plain(r.name)}},[U.resIcon(r)]);
  }
  function makeSession(subject){
   var a=FF.app,s=a.state,g=s.player.grade||2;
-  var sel={subject:subject,grade:g,unit:'all',difficulty:'random',answerType:FF.tickets.recoverTickets(s.tickets,a.now()).count?'choice':'input',resource:(dailyEntry(subject)||{}).resource||null};
+  var sel={subject:subject,grade:g,unit:'all',difficulty:'random',answerType:FF.tickets.recoverTickets(s.tickets,a.now()).count?'choice':'input',resource:null};
   if(!C.pool(a.bank,sel).length&&subject!=='math')sel.answerType='input';
   a.session={renewal:true,sel:sel,recentIds:[],items:{},currentId:null,order:[],cursor:-1};
   chooseQuestion();U.show('quiz');
@@ -58,7 +63,7 @@
   var q=id?(a.bank.byId[id]||(s.items[id]&&s.items[id].attempt.question)):(peeked||C.pick(reviewBank(a.bank),s.sel,ctxPick)||(reviewFallback()?C.pick(a.bank,s.sel,ctxPick):null));
   if(!q){s.currentId=null;return;}
   // Visiting a question starts a fresh attempt. Persistent results live in the save.
-  s.items[q.id]={attempt:L.startAttempt(q),outcome:null,picked:null,selected:null,typed:'',resource:s.sel.resource||C.scarcest(a.state)};
+  s.items[q.id]={attempt:L.startAttempt(q),outcome:null,picked:null,selected:null,typed:'',resource:rollResource(s.sel.subject)};
   s.currentId=q.id;s.recentIds=s.recentIds.concat([q.id]).slice(-20);
   if(s.order[s.cursor]!==q.id){s.order=s.order.slice(0,s.cursor+1);s.order.push(q.id);s.cursor=s.order.length-1;}
  }
@@ -279,8 +284,8 @@
   var order=['math','japanese','science','social','english'];
   main.appendChild(E('div',{class:'subject-grid'},order.map(function(id){
    var nUnits=C.units(id,g).length,progress=C.progress(a.bank,s,id,g);
-   var entry=dailyEntry(id),focus=!!(a.learningFocus&&entry&&!entry.random&&entry.resource===a.learningFocus),rname=entry?U.plain(U.resDef(entry.resource).name):'';
-   return E('button',{class:'subject-card subject-'+id+(focus?' daily-focus':''),attrs:{type:'button','data-subject':id,'data-resource':entry?entry.resource:null,'aria-label':U.plain(L.subjectName(id,g))+'：'+R.todayResource+' '+rname+(entry&&entry.random?'（'+R.dailyRandom+'）':'')},on:{click:function(){makeSession(id);}}},[
+   var entry=dailyEntry(id),focus=!!(a.learningFocus&&entry&&!entry.random&&entry.resource===a.learningFocus),rname=entry&&entry.resource?U.plain(U.resDef(entry.resource).name):'';
+   return E('button',{class:'subject-card subject-'+id+(focus?' daily-focus':''),attrs:{type:'button','data-subject':id,'data-resource':entry&&entry.resource||null,'aria-label':U.plain(L.subjectName(id,g))+'：'+R.todayResource+' '+(entry&&entry.random?R.dailyRandomHelp:rname)},on:{click:function(){makeSession(id);}}},[
     entry?resourceBadge(entry,'subject-daily'):null,
     U.artImg('subj-'+art[id],'subject-art'),E('div',{class:'subject-copy'},[E('span',{class:'eyebrow',text:school(g)}),E('h2',{text:U.plain(L.subjectName(id,g))}),E('p',{text:nUnits?R.unitDescription.replace('{n}',nUnits):R.subjectDescription}),
      E('div',{class:'subject-progress',attrs:{title:progress.generated?R.generatedNote:null}},[E('span',{class:'progress-total',text:R.totalQuestions.replace('{n}',progress.total)}),E('span',{class:'progress-correct',text:R.correctQuestions.replace('{n}',progress.correct)}),E('span',{class:'progress-review',text:R.reviewQuestions.replace('{n}',progress.review)})])]),E('span',{class:'subject-arrow',text:'↗'})

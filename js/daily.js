@@ -1,5 +1,5 @@
 // その日に獲得できる資材の割り当て（判断319）。純粋関数：DOM・localStorage に触れない。
-// 5つの教科に、4つの資材を1つずつ割り当て、あまる1教科には、ランダムな資材を1つ割り当てる（「☆」）。
+// 5つの教科のうち4つに、4つの資材を1つずつ割り当て、あまる1教科は「ランダム」（「☆」。獲得できる資材は、問題ごとに4つのうちのどれか、その場で決まる）。
 // 割り当ては「日付」だけから決まる（朝4時で切りかわる）。同じ日なら、どの端末でも同じになる。
 (function (root) {
   'use strict';
@@ -40,9 +40,9 @@
   }
 
   // key：dayKey の文字列。返す値：
-  //   { day, bySubject: { math: { resource, random }, ... }, subjectOf: { wood: 'math', ... }（その資材が決まっている教科）}
+  //   { day, bySubject: { math: { resource, random }, ... }（random の教科は resource が null）, subjectOf: { wood: 'math', ... }（その資材が決まっている教科）}
   function assign(key) {
-    var rand = rng(seedOf('ff-daily-resource:' + key));
+    var rand = rng(seedOf('ff-daily-resource:' + key));   // ランダムの教科の資材は、ここでは決めない（問題ごとに決める）
     var resources = FF.defs.RESOURCES.map(function (r) { return r.id; });
     var subjects = shuffle(SUBJECT_IDS, rand), rs = shuffle(resources, rand);
     var bySubject = {}, subjectOf = {};
@@ -50,12 +50,12 @@
       bySubject[subjects[i]] = { resource: rs[i], random: false };
       subjectOf[rs[i]] = subjects[i];
     }
-    bySubject[subjects[rs.length]] = { resource: resources[Math.floor(rand() * resources.length)], random: true };
+    bySubject[subjects[rs.length]] = { resource: null, random: true };
     return { day: key, bySubject: bySubject, subjectOf: subjectOf };
   }
 
   function today(now, tzOffset) { return assign(dayKey(now, tzOffset)); }
-  // その日、その教科で獲得できる資材の id
+  // その日、その教科で獲得できる資材の id（ランダムの教科は null）
   function resourceFor(subject, now, tzOffset) { var e = today(now, tzOffset).bySubject[subject]; return e ? e.resource : null; }
 
   FF.daily = { dayKey: dayKey, assign: assign, today: today, resourceFor: resourceFor, SUBJECT_IDS: SUBJECT_IDS };
