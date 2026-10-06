@@ -19,8 +19,15 @@
  function current(){var ses=FF.app.session;return ses&&ses.currentId?ses.items[ses.currentId]:null;}
  // その日の資材は教科で決まる（判断319）。教科から資材を引く。☆は、その日ランダムに決まった教科
  function dailyEntry(subject){return FF.daily.today(FF.app.now()).bySubject[subject]||null;}
+ // ☆は文字ではなく図で描く（文字だと、字体によって、円の中央からずれるため）
+ function starIcon(){
+  var ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),poly=document.createElementNS(ns,'polygon');
+  svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('class','daily-star-svg');svg.setAttribute('aria-hidden','true');
+  poly.setAttribute('points','12.00,2.95 14.53,9.47 21.51,9.86 16.09,14.28 17.88,21.04 12.00,17.25 6.12,21.04 7.91,14.28 2.49,9.86 9.47,9.47');poly.setAttribute('fill','none');poly.setAttribute('stroke','currentColor');poly.setAttribute('stroke-width','2');poly.setAttribute('stroke-linejoin','round');
+  svg.appendChild(poly);return svg;
+ }
  function resourceBadge(entry,cls){
-  if(entry.random)return E('span',{class:'daily-badge is-random'+(cls?' '+cls:''),attrs:{title:R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[E('b',{text:'☆'})])]);
+  if(entry.random)return E('span',{class:'daily-badge is-random'+(cls?' '+cls:''),attrs:{title:R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[starIcon()])]);
   var r=U.resDef(entry.resource);
   return E('span',{class:'daily-badge'+(cls?' '+cls:''),attrs:{title:U.plain(r.name)}},[U.resIcon(r)]);
  }
@@ -32,7 +39,7 @@
  }
  function quizResourceButton(){
   var s=FF.app.session,entry=dailyEntry(s.sel.subject);
-  if(entry&&entry.random)return E('span',{class:'quiz-resource-button daily-badge is-random',attrs:{role:'img','aria-label':R.todayResource+'：'+R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[E('b',{text:'☆'})])]);
+  if(entry&&entry.random)return E('span',{class:'quiz-resource-button daily-badge is-random',attrs:{role:'img','aria-label':R.todayResource+'：'+R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[starIcon()])]);
   var r=U.resDef((entry&&entry.resource)||s.sel.resource||C.scarcest(FF.app.state));
   return E('span',{class:'quiz-resource-button daily-badge',attrs:{role:'img','aria-label':R.todayResource+'：'+U.plain(r.name)}},[U.resIcon(r)]);
  }
