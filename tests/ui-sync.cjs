@@ -82,6 +82,7 @@ const OUT = process.env.FF_SHOT_DIR || null;
   await page.locator('.sync-parent-open').click();
   await page.waitForSelector('.parent-tiles', { timeout: 8000 });
   assert.match(await page.locator('.parent-tiles').innerText(), /回答/);
+  assert.equal(await page.locator('.parent-chips .btn.mine').count(), 1, '自分のプレイヤーコードは、先頭の「自分」');
   assert.equal(await page.locator('.parent-chart rect').count() > 0, true);
   await page.locator('.redeem-head .btn').click();   // もどる
 

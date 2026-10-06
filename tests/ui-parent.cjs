@@ -135,6 +135,14 @@ const CODE2_OK = 'TUVWXYZ23456789A';
   await page.waitForFunction(() => document.querySelector('.parent-chips') && /そうた/.test(document.querySelector('.parent-chips').innerText), null, { timeout: 8000 });
   assert.equal((await page.evaluate(() => FF.storage.loadGuardians())).length, 2);
 
+  // ---- 6b. 自分のコードがある端末：先頭に「自分」、そのあとに、記録を見る人たち ----
+  await page.evaluate(() => { document.documentElement.dataset.theme = 'day'; FF.app.state.flags.introSeen = true; const r = FF.sync.newRecord(); r.enabled = true; r.code = 'ZZZZZZZZZZZZZZZZ'.replace(/Z/g, 'K'); FF.storage.saveSync(r); FF.app.state.player.name = 'おや'; FF.ui.show('parent', {}); });
+  await page.waitForSelector('.parent-chips');
+  assert.equal(await page.locator('.parent-chips .btn.mine').count(), 1);
+  assert.equal(await page.locator('.parent-chips .btn').first().getAttribute('class').then(c => /mine/.test(c)), true, '自分が先頭');
+  assert.equal(await page.locator('.parent-chips .btn:not(.ghost)').count(), 3, '自分＋保存した2人');
+  await page.evaluate(() => FF.storage.clearSync());
+
   // ---- 7. 全データのリセットで、保存したコードも消える ----
   await page.evaluate(() => FF.app.resetAll());
   assert.deepEqual(await page.evaluate(() => FF.storage.loadGuardians()), []);
