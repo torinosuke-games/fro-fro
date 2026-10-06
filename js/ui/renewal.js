@@ -316,6 +316,9 @@
   ]));
   originalBase(main);
   var cta=main.querySelector('.base-cta');if(cta)cta.remove();
+  // スマホでは、上の見出しと説明を出さず、「学習する」を、風景（フィールドマップ）の下に置く（判断315。PC では、上のボタンだけを出す）
+  var scene=main.querySelector('.scene');
+  if(scene&&scene.parentNode)scene.parentNode.insertBefore(button(R.start+' →',function(){U.show('study',{tab:'learn'});},'rn-button primary home-start-mobile'),scene.nextSibling);
   main.appendChild(E('section',{class:'home-steps'},[
    E('div',{},[E('span',{text:'01'}),E('strong',{text:R.stepLearn}),E('p',{text:R.stepLearnDesc})]),
    E('div',{},[E('span',{text:'02'}),E('strong',{text:R.stepTown}),E('p',{text:R.stepTownDesc})]),
