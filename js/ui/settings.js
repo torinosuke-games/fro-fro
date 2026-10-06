@@ -166,6 +166,9 @@
     // 保護者の方へ：交換レートとメールアドレス（v0.4、SPEC 14.4・DESIGN 14.4）
     main.appendChild(parentPanel());
 
+    // データの保存（サーバー同期。判断299）：設定で有効にしたときと、デバッグモードのときだけ
+    if (U.syncAvailable && U.syncAvailable()) main.appendChild(U.syncPanel());
+
     // エクスポート
     var out = U.el('textarea', { attrs: { readonly: true, 'aria-label': FF.util.plainText(U.T('exportTitle')) }, value: FF.state.serialize(app.state) });
     main.appendChild(U.el('div', { class: 'panel stack' }, [

@@ -73,6 +73,14 @@
       UNIT_GEN_FULL_POOL: 20      // 手作りの問題がこの数より少ないと、少ないぶんだけ自動生成の割合を上げる
     },
     HISTORY_LIMIT: 500,
+    // データの保存（サーバー同期。SPEC_sync.md・判断299）
+    SYNC: {
+      INTERVAL_MS: 60000,         // 変更があったとき、前回の同期からこれだけたったら送る
+      TIMEOUT_MS: 10000,          // 1回の通信の待ち時間
+      BACKOFF_BASE_MS: 30000,     // 失敗したあとの待ち時間（失敗のたびに2倍）
+      BACKOFF_MAX_MS: 1800000,    // 待ち時間の上限（30分）
+      CONFLICT_DEFER_MS: 600000   // 競合の選択を「あとで」にしたとき、次に聞くまで
+    },
     EXAM_HISTORY_LIMIT: 100,
 
     // ---- 建物（SPEC 9.2・9.3） ----

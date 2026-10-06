@@ -44,6 +44,7 @@
 
     resetAll: function () {
       FF.storage.clear();
+      FF.storage.clearSync();   // 全データのリセットでは、同期もオフにする（空のデータで保管庫を上書きしないため。保管庫のデータは残る）
       app.session = null;
       app.studySel = null;
       app.examRun = null;
@@ -75,6 +76,46 @@
     });
     if (r.completed.length && app.screen === 'base') U.rerender();
     return true;
+  }
+
+  // ---- データの保存（サーバー同期。判断299）：オンにしたときだけ、裏で動く。通信できなくても遊びは止まらない ----
+  function setupSync() {
+    if (typeof root.fetch !== 'function' || !FF.config.SYNC) return;
+    app.syncBusyUi = function () { return !!(app.session || app.examRun || app.exploreSession || app.screen === 'quiz' || app.screen === 'battle'); };
+    FF.syncApp = FF.sync.createEngine({
+      fetch: root.fetch.bind(root), cfg: FF.config.SYNC, balance: FF.balance.SYNC,
+      now: function () { return app.now(); },
+      randomBytes: function (n) {
+        var a = new Uint8Array(n);
+        root.crypto.getRandomValues(a);
+        return Array.prototype.slice.call(a);
+      },
+      loadRec: function () { return FF.storage.loadSync(); },
+      saveRec: function (r) { FF.storage.saveSync(r); },
+      saveBackup: function (t) { FF.storage.saveSyncBackup(t); },
+      getState: function () { return app.state; },
+      applyRemote: function (st) {
+        st.tickets = FF.tickets.recoverTickets(st.tickets, app.now());
+        app.state = st;
+        FF.storage.save(app.state);   // commit は使わない（更新時刻をいまにしない）
+        app.session = null; app.studySel = null; app.examRun = null; app.exploreSession = null; app.leaveGuard = null;
+        U.renderHud();
+        U.show(app.state.flags.introSeen ? 'base' : 'title');
+        U.toast(U.T('imported'));
+      },
+      decideConflict: function (info) { return U.askSyncConflict(info); },
+      canInterrupt: function () { return !app.syncBusyUi(); }
+    });
+    // timer のときは、前回の同期から変わっていなければ通信しない（変更があったときだけ送る。SPEC_sync.md 5章）
+    function auto(force, timer) {
+      var rec = FF.syncApp.record();
+      if (timer && rec.rev !== null && app.state.updatedAt === rec.pushedAt) return;
+      FF.syncApp.sync({ force: !!force }).then(function () { if (app.screen === 'settings' && !document.querySelector('.overlay')) U.rerender(); });
+    }
+    setTimeout(function () { auto(true); }, 2000);
+    setInterval(function () { auto(false, true); }, FF.balance.SYNC.INTERVAL_MS);
+    // 隠れるとき：送る。戻ってきたとき：ほかの端末の変更を受け取る
+    document.addEventListener('visibilitychange', function () { auto(false); });
   }
 
   function boot() {
@@ -114,6 +155,7 @@
       else { recoverTickets(); completeBuilds(); U.rerender(); }
     });
     root.addEventListener('pagehide', app.save);
+    setupSync();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
