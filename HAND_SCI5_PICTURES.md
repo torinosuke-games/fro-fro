@@ -42,3 +42,9 @@
 - sci5_electromagnet_022: toy crane; end of arm is an iron core wrapped in copper coil, wires along the arm to a battery and switch in the body; nails and clips rest below, not lifted. Redraw: no horseshoe magnet.
 - sci5_method_018: same-size seedlings; large sunny pot with much soil, small shaded pot with little soil
 
+
+## 描き直し（grok/sci5-river-026）
+
+依頼は `DIAGRAM_REQUESTS_20.md`。`science_g5_hand_river_026` に1枚。
+
+- `sci5_river_026.webp`: Warm anime-style educational illustration for a Japanese elementary textbook, matching sci5 river pictures: soft painterly shading, natural colors, clear shapes, 3:2 landscape. One river seen from a high oblique angle. Upstream the river is squeezed into a clearly narrow channel between close rocky cliffs. Downstream the same river opens onto a flat plain and becomes clearly much wider, with broad gravel banks. Water is the same calm even blue in both places: no whitewater, no spray, no rapids, no flow lines, no arrows. A few trees, grass, and stones. No people, no boats, no bridge, no dam, no buildings, no text, no numbers, no symbols, no signs, no speech bubbles, no watermark.
