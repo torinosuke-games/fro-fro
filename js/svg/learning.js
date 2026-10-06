@@ -39,7 +39,7 @@
     else if(item==='bread')add(S('rect',{x:x-14,y:y-12,width:28,height:24,rx:9,fill:pale,stroke:blue,'stroke-width':2}),line(x-4,y-6,x-7,y+4),line(x+5,y-6,x+2,y+4));
     else add(circle(x,y,9,orange),path('M'+(x-9)+','+y+' l-7,-7 v14 Z M'+(x+9)+','+y+' l7,-7 v14 Z',pale));
    }
-   if(['japanMap','terrain','facility','disaster','culture','industry'].indexOf(d.kind)>=0){
+   if(['japanMap','earthScene','terrain','facility','disaster','culture','industry'].indexOf(d.kind)>=0){
     // 社会の共通線画。地名・施設名・答えの語、結果の矢印は表示しない。
     h=400;
     function poly(ps,fill,color){return S('polygon',{points:ps.map(function(p){return p.join(',');}).join(' '),fill:fill||pale,stroke:color||blue,'stroke-width':3,'stroke-linejoin':'round'});}
@@ -75,10 +75,22 @@
      var landId='social-map-land-'+(++socialMapSerial),landCuts=[];
      coasts.forEach(function(ps,index){var cut=clip(ps);if(cut.length>=3){var land=poly(cut.map(project),d.regionBoundaries||b[2]-b[0]>20?'#fff':'none');land.setAttribute('stroke','none');land.setAttribute('data-part','land');add(land);landCuts.push(poly(cut.map(project),'#fff'));}var segments=[];ps.forEach(function(p,i){var seg=coastSegment(p,ps[(i+1)%ps.length]);if(seg)segments.push('M'+seg[0].join(',')+'L'+seg[1].join(','));});if(segments.length){var coast=path(segments.join(' '));coast.setAttribute('stroke-width','1.5');coast.setAttribute('data-part','coast');coast.setAttribute('data-coast-index',index);add(coast);}});
      add(S('defs',{},S('clipPath',{id:landId},landCuts)));
+     if(d.marineAreas){
+      // 海域の色は陸を塗らない。行政上の境界や距離は示さない模式的な範囲。
+      var seaId=landId+'-sea',seaCuts=coasts.map(function(ps){var cut=clip(ps),shape=poly(cut.map(project),'#000');shape.setAttribute('stroke','none');return shape;});
+      add(S('defs',{},S('mask',{id:seaId,maskUnits:'userSpaceOnUse',x:0,y:0,width:520,height:mapHeight},[S('rect',{x:0,y:0,width:520,height:mapHeight,fill:'#fff'})].concat(seaCuts))));
+      d.marineAreas.forEach(function(ps){var area=poly(clip(ps).map(project),orange);area.setAttribute('fill-opacity','.4');area.setAttribute('stroke-width','1.5');area.setAttribute('mask','url(#'+seaId+')');area.setAttribute('data-part','marine-area');add(area);});
+     }
      d.areas.forEach(function(ps){var area=poly(clip(ps).map(project),orange);area.setAttribute('fill-opacity','.3');area.setAttribute('stroke-width','1.5');area.setAttribute('clip-path','url(#'+landId+')');area.setAttribute('data-part','area');add(area);});
      if(d.regionBoundaries)FF.japanMapData.regionBoundaries.forEach(function(ps){var segments=[];for(var i=1;i<ps.length;i++){var seg=coastSegment(ps[i-1],ps[i]);if(seg)segments.push('M'+seg[0].join(',')+'L'+seg[1].join(','));}if(segments.length){var border=path(segments.join(' '),null,ink);border.setAttribute('stroke-width','1.2');border.setAttribute('clip-path','url(#'+landId+')');border.setAttribute('data-part','region-boundary');add(border);}});
      (d.lakes||[FF.japanMapData.lake]).forEach(function(ps){var cut=clip(ps);if(cut.length>=3){var lake=poly(cut.map(project),pale);lake.setAttribute('stroke-width','1.5');lake.setAttribute('data-part','lake');add(lake);}});
      d.routes.forEach(function(r){var ps=r.points.map(project),route=path(ps.map(function(p,i){return(i?'L':'M')+p.join(',');}).join(' '),null,r.type==='ridge'?ink:blue);route.setAttribute('stroke-width',r.type==='river'?(d.insetOnly?'12':'5'):'3');route.setAttribute('data-part',r.type);add(route);});
+     if(d.meridian!==undefined){var a=project([d.meridian,b[1]]),z=project([d.meridian,b[3]]),meridian=line(a[0],a[1],z[0],z[1],orange,'8 7');meridian.setAttribute('data-part','meridian');add(meridian);}
+     (d.currents||[]).forEach(function(c){
+      var ps=c.points.map(project),tint=c.tone==='warm'?'var(--bad)':blue,route=path(ps.map(function(p,i){return(i?'L':'M')+p.join(',');}).join(' '),null,tint);route.setAttribute('stroke-width','9');route.setAttribute('data-part','current');route.setAttribute('data-tone',c.tone);add(route);
+      var tip=ps[ps.length-1],prev=ps[ps.length-2],dx=tip[0]-prev[0],dy=tip[1]-prev[1],ll=Math.sqrt(dx*dx+dy*dy),ux=dx/ll,uy=dy/ll;
+      var arrow=poly([tip,[tip[0]-18*ux+9*uy,tip[1]-18*uy-9*ux],[tip[0]-18*ux-9*uy,tip[1]-18*uy+9*ux]],tint,tint);arrow.setAttribute('data-part','current-arrow');arrow.setAttribute('data-tone',c.tone);add(arrow);
+     });
      d.marks.forEach(function(p){var q=project(p);add(circle(q[0],q[1],7,orange));});
      if(d.mountain){var p=project(d.mountain),peak=poly([[p[0]-12,p[1]+9],[p[0],p[1]-12],[p[0]+12,p[1]+9]],orange);peak.setAttribute('data-part','mountain');add(peak);}
      if(!d.insetOnly)add(text(475,52,'北',32),line(475,65,475,91,ink));
@@ -88,6 +100,22 @@
       add(box(frame[0],frame[1],frame[2],frame[3],'#fff'),insetGroup);
      }
      if(d.port){group(0,440,1,function(){add(line(35,60,485,60),box(35,63,450,25,pale),path('M220,63 h165 l-24,22 H245 Z','#fff'),box(280,44,55,19,'#fff'),line(92,5,92,60),line(92,5,180,25),line(180,25,180,47));});nodes[nodes.length-1].setAttribute('data-part','port');}
+    }else if(d.kind==='earthScene'){
+     // 緯線・経線・海域・海底は同じ名前のない模式図として共有する。
+     if(d.scene==='equator'||d.scene==='latitude'||d.scene==='longitude'){
+      add(circle(260,200,150,'#fff'));
+      if(d.scene==='equator'){var equator=line(110,200,410,200,orange);equator.setAttribute('stroke-width','7');add(equator);}
+      if(d.scene==='latitude'){var globeId='social-globe-'+(++socialMapSerial);add(S('defs',{},S('clipPath',{id:globeId},circle(260,200,150,'#fff'))));[-100,-50,0,50,100].forEach(function(y){var rr=Math.sqrt(150*150-y*y);add(S('ellipse',{cx:260,cy:200+y,rx:rr,ry:12,fill:'none',stroke:blue,'stroke-width':3,'clip-path':'url(#'+globeId+')'}));});}
+      if(d.scene==='longitude'){[45,90,125].forEach(function(rx){add(S('ellipse',{cx:260,cy:200,rx:rx,ry:150,fill:'none',stroke:blue,'stroke-width':3}));});add(line(260,50,260,350));}
+     }else if(d.scene==='seaZones'){
+      add(path('M40,60 H140 Q170,110 140,155 Q110,210 145,255 Q170,300 140,340 H40 Z',pale));
+      var near=path('M140,60 H215 Q245,110 215,155 Q185,210 220,255 Q245,300 215,340 H140 Q170,300 145,255 Q110,210 140,155 Q170,110 140,60 Z',d.focus==='near'?orange:blue),outer=path('M215,60 H480 V340 H215 Q245,300 220,255 Q185,210 215,155 Q245,110 215,60 Z',d.focus==='outer'?orange:blue);
+      near.setAttribute('fill-opacity','.35');outer.setAttribute('fill-opacity','.22');add(near,outer,path('M140,60 Q170,110 140,155 Q110,210 145,255 Q170,300 140,340','none',ink));
+      near.setAttribute('data-part','near-band');outer.setAttribute('data-part','outer-band');
+     }else if(d.scene==='shelf'){
+      add(path('M150,130 H490 V340 H420 L365,195 L150,145 Z',pale),path('M30,100 H120 L150,145 L365,195 L420,340 H490 V370 H30 Z','#fff'));
+      var shelf=path('M150,145 L365,195 L373,215 L150,165 Z',orange);shelf.setAttribute('data-part','shallow-floor');add(shelf,line(150,130,490,130));
+     }
     }else if(d.kind==='terrain'){
      if(d.scene==='basin'){add(poly([[30,315],[30,150],[105,70],[175,235],[345,235],[420,70],[490,150],[490,315]],pale),line(175,235,345,235,ink));house(235,212,.35);}
      else if(d.scene==='levees'){add(poly([[35,310],[35,230],[125,230],[150,145],[180,145],[210,280],[310,280],[340,145],[370,145],[395,230],[485,230],[485,310]],pale),box(216,230,88,46,pale));}

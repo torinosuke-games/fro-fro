@@ -21,7 +21,14 @@ module.exports=({test,FF,ctx,assert})=>{
   assert.ok(inside(landmarks.find(p=>p.type==='lake').point,lake));
   assert.ok(!coasts.some(r=>inside([130.96,33.945],r)),'関門海峡の海を残す');
  });
- test('社会地図：問題の地域の印が海へずれない',()=>{
-  for(const q of ctx.QUESTION_BANK.filter(q=>q.diagram&&q.diagram.kind==='japanMap'))for(const p of q.diagram.marks)assert.ok(coasts.some(r=>inside(p,r)),q.id+' '+p);
+ test('社会地図：印は陸上か検証済みの海岸・離島位置',()=>{
+  // 第19弾：細い島の端点・湾は簡略海岸の海側になり得る。
+  // 沖ノ鳥島・南鳥島は既存データの範囲外。7地点だけ参照座標に固定する。
+  const coastal={position_007:[122.9325,24.4514],position_008:[148.7522,45.5572],position_018:[131.8667,37.2333],position_019:[123.5,25.75],position_027:[136.0697,20.4253],position_028:[153.9867,24.2831],environment_017:[130.383,32.206]};
+  for(const q of ctx.QUESTION_BANK.filter(q=>q.diagram&&q.diagram.kind==='japanMap'))for(const p of q.diagram.marks){
+   const ref=coastal[q.id.replace(/^social_g5_hand_/,'')];
+   if(q.id.startsWith('social_g5_hand_')&&ref){assert.equal(p[0],ref[0]);assert.equal(p[1],ref[1]);if(!q.id.endsWith('position_027')&&!q.id.endsWith('position_028'))assert.ok(distance(p,coasts)<=.1,q.id+' coastal reference');}
+   else assert.ok(coasts.some(r=>inside(p,r)),q.id+' '+p);
+  }
  });
 };
