@@ -2,7 +2,7 @@ const {inside,distance}=require('../lib/social-map-geometry');
 module.exports=({test,ctx,FF,assert,plain})=>{
  const crypto=require('crypto'),source=require('../fixtures/soc5-prefecture-areas.json');
  const ids=['industry_006','industry_010','industry_011','industry_012','industry_013','climate_011','climate_013','climate_024','terrain_022'].map(id=>'social_g5_hand_'+id);
- const all=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_soc5'));
+ const all=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_soc5'&&!q.id.startsWith('social_g5_stat_')));
  const get=id=>all.find(q=>q.id==='social_g5_hand_'+id).diagram;
  const hash=a=>crypto.createHash('sha256').update(JSON.stringify(a)).digest('hex');
  const inArea=(p,d)=>d.areas.some(r=>inside(p,r));

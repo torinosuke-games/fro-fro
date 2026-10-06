@@ -62,6 +62,7 @@
 - `balance`（`weights`）：2つの荷物の重さとはかり。はかりの合計表示は `？`。
 - `nestedRect`（`w, h, innerW, innerH, unit`）：土地と内側の小屋。`growth, area` で元の正方形を一方向ずつ広げる模式図にも使う。
 - `triangle`（`base, height, unit`）：底辺と点線の高さ。`right` なら直角三角形で斜辺を `？` にする。
+- `graph.showValues: true`：折れ線の点の上に数字を出す（統計のグラフ。判断316）。
 - `pie`（`numerators, denominators, labels`）：同じ大きさの円を分けて別々の分数を示す。合算しない。
 - `band`（`parts, labels, totalLabel`）：割合・比の帯。任意の `known` に既知量だけを表示する。
 - `doubleLine`（`labels, ends`）：時刻と経過時間・時間と道のり・地図の長さと縮尺の線。目盛りや換算の答えは出さない。
