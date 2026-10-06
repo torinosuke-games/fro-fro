@@ -176,8 +176,19 @@
           U.R('div', 'pre small', U.T('sync.conflictRow'), { when: whenText(x.updatedAt), name: x.name, points: U.fmt(x.points), levels: x.levels })
         ]);
       }
-      // おすすめ：最初の引き継ぎは、ポイントの多いほう（まっさらな端末なら、保管庫）。それ以外は、新しいほう
-      var recommendRemote = info.firstLink ? info.remote.points >= info.local.points : info.remote.updatedAt > info.local.updatedAt;
+      // おすすめ：最初の引き継ぎは、いつも「ほかの端末（保管庫）」（この端末で保管庫を置き換えるのは、おすすめにしない）。それ以外は、新しいほう
+      var recommendRemote = info.firstLink ? true : info.remote.updatedAt > info.local.updatedAt;
+      // 最初の引き継ぎで「この端末を使う」を選ぶと、保管庫のデータを置き換えてしまう（別の人のコードを入れたときは、その人のデータが消える）。確認を1段はさむ
+      function useHere(close) {
+        if (!info.firstLink) { close(); resolve('local'); return; }
+        U.modal({
+          title: U.T('sync.overwriteTitle'), body: U.T('sync.overwriteBody'), dismissible: false,
+          buttons: [
+            { label: U.T('sync.overwriteCancel'), class: 'primary' },
+            { label: U.T('sync.overwriteOk'), class: 'danger', onClick: function () { close(); resolve('local'); } }
+          ]
+        });
+      }
       U.modal({
         title: U.T('sync.conflictTitle'),
         dismissible: false,
@@ -190,7 +201,7 @@
         buttons: [
           { label: U.T('sync.later'), class: 'ghost', onClick: function () { resolve(null); } },
           { label: U.T('sync.useThere'), class: recommendRemote ? 'primary' : '', onClick: function () { resolve('remote'); } },
-          { label: U.T('sync.useHere'), class: recommendRemote ? '' : 'primary', onClick: function () { resolve('local'); } }
+          { label: U.T('sync.useHere'), class: recommendRemote ? '' : 'primary', keepOpen: true, onClick: useHere }
         ]
       });
     });
@@ -236,7 +247,7 @@
       kids.push(U.R('div', 'small muted', U.T('sync.help')));
       kids.push(U.el('div', { class: 'row' }, [
         U.el('button', { class: 'btn small primary', rich: U.T('sync.turnOn'), on: { click: turnOn } }),
-        rec.code ? null : U.el('button', { class: 'btn small', rich: U.T('sync.link'), on: { click: openLink } })
+        rec.code ? null : U.el('button', { class: 'btn small sync-link-open', rich: U.T('sync.link'), on: { click: openLink } })
       ]));
       if (!rec.code) kids.push(U.R('div', 'small muted', U.T('sync.linkHelp')));
     } else {

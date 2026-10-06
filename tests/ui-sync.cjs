@@ -135,7 +135,7 @@ const OUT = process.env.FF_SHOT_DIR || null;
   await b.goto(url, { waitUntil: 'domcontentloaded' });
   await b.evaluate(() => { document.documentElement.dataset.theme = 'day'; FF.app.state = FF.state.setPlayerGrade(FF.state.withUpdated(FF.state.createDefaultState(FF.app.now()), FF.app.now()), 4); FF.app.state.flags.introSeen = true; FF.app.save(); FF.ui.show('settings'); });
   await b.waitForSelector('.sync-panel');
-  await b.locator('.sync-panel .btn', { hasText: '引き継ぐ' }).first().click();
+  await b.locator('.sync-link-open').click();
   await b.waitForSelector('.sync-link-input');
   const go = b.locator('.modal .actions .btn.primary');
   await b.locator('.sync-link-input').fill('ABCD');
@@ -162,6 +162,35 @@ const OUT = process.env.FF_SHOT_DIR || null;
   const before = calls.filter(c => c === 'ff_push_save').length;
   await b.evaluate(() => FF.syncApp.sync({ force: true }));
   assert.equal(calls.filter(c => c === 'ff_push_save').length, before);
+
+  // 端末C（コードを持たない端末）：最初の引き継ぎで「この端末を使う」を選ぶと、保管庫を置き換える前に確認が出る
+  const ctxC = await browser.newContext({ viewport: { width: 390, height: 900 } });
+  await ctxC.route(HOST, handler);
+  const c = await ctxC.newPage();
+  c.on('pageerror', e => errors.push(e.message));
+  await c.goto(url, { waitUntil: 'domcontentloaded' });
+  await c.evaluate(() => { document.documentElement.dataset.theme = 'day'; FF.app.state = FF.state.setPlayerName(FF.state.withUpdated(FF.state.createDefaultState(FF.app.now()), FF.app.now()), 'Cくん'); FF.app.state.flags.introSeen = true; FF.app.save(); FF.ui.show('settings'); });
+  await c.waitForSelector('.sync-panel');
+  await c.locator('.sync-link-open').click();
+  await c.locator('.sync-link-input').fill(code);
+  await c.locator('.modal .actions .btn.primary').click();
+  await c.waitForSelector('.modal .actions .btn:nth-child(3)');
+  assert.match(await c.locator('.modal .actions .btn.primary').innerText(), /ほかの/, '最初の引き継ぎのおすすめは、いつも保管庫');
+  const serverBefore = JSON.stringify(Object.values(profiles)[0].save.player);
+  await c.locator('.modal .actions .btn:nth-child(3)').click();   // この端末を使う
+  await c.waitForFunction(() => document.querySelectorAll('.modal').length === 2, null, { timeout: 5000 });
+  await shot('sync-10-overwrite', c);
+  await c.locator('.modal').last().locator('.actions .btn.primary').click();   // もどる
+  await c.waitForFunction(() => document.querySelectorAll('.modal').length === 1, null, { timeout: 5000 });
+  await c.waitForTimeout(300);
+  assert.equal(JSON.stringify(Object.values(profiles)[0].save.player), serverBefore, 'もどるなら、保管庫は変わらない');
+  await c.locator('.modal .actions .btn:nth-child(3)').click();
+  await c.waitForFunction(() => document.querySelectorAll('.modal').length === 2);
+  await c.locator('.modal').last().locator('.actions .btn.danger').click();   // 置き換える
+  await c.waitForFunction(() => !!FF.storage.loadSyncBackup(), null, { timeout: 8000 });
+  await c.waitForFunction(() => document.querySelectorAll('.modal').length === 0);
+  assert.equal(Object.values(profiles)[0].save.player.name, 'Cくん', '置き換えると、保管庫がこの端末のデータになる');
+  assert.equal(JSON.parse(await c.evaluate(() => FF.storage.loadSyncBackup())).player.name, 'ほかの端末', '置き換えられたデータは、控えに残る');
 
   // オフにすると通信しない
   await page.evaluate(() => FF.syncApp.disable());
