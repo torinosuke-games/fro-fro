@@ -6,7 +6,7 @@
   wantResource:'欲しい資材',noResource:'指定なし',resourceAutoHelp:'指定なしの場合は、不足している資材を自動で選びます。',
   rewardSpecified:'今回の資材：{resource}。選んだ資材を獲得します。',
   totalQuestions:'全{n}問',correctQuestions:'正解 {n}問',reviewQuestions:'要復習 {n}問',generatedNote:'登録問題の進み具合。計算問題は自動生成でも出題します。',
-  todayResource:'きょうの資材',dailyRandomShort:'ランダム',dailyNote1:'{手|て}に{入|はい}る資材は毎日かわります。',dailyNote2:'☆はランダムです。',dailyRandomHelp:'ランダム（4つの資材のどれかがもらえる）',brandCaption:'{君|きみ}の{学|まな}びの熱量で 町に雪解けを',home:'ホーム',town:'町',settings:'設定',records:'学習記録',explore:'探索',
+  todayResource:'きょうの資材',dailyRandomShort:'ランダム',dailyNote:'{手|て}に{入|はい}る資材は教科ごとに毎日{変|か}わります（☆はランダムです）',dailyRandomHelp:'ランダム（4つの資材のどれかがもらえる）',brandCaption:'{君|きみ}の{学|まな}びの熱量で 町に雪解けを',home:'ホーム',town:'町',settings:'設定',records:'学習記録',explore:'探索',
   learning:'LEARNING ROOM',chooseGrade:'あなたの学年を教えてください',gradeIntro:'学年に合った問題から、すぐに始められます。あとから設定で変えられます。',
   start:'学習する',subjects:'教科を選ぶ',subjectHeading:'今日は、何を学ぼう？',subjectIntro:'教科を１つ選んで、雪原の町に新しい熱を届けよう。',
   smallSteps:'小さな「わかった」が、町の力になる。',todayHeat:'今日も、ひとつずつ。',subjectLead:'問題を解くと、資材と熱量がたまります。自分のペースで進めよう。',

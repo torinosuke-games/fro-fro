@@ -284,8 +284,9 @@
   if(params.tab&&params.tab!=='learn'){originalStudy(main,params);return;}
   FF.app.studyTab='learn';var a=FF.app,s=a.state,g=s.player.grade;
   if(!g){main.appendChild(title(R.learning,R.chooseGrade,R.gradeIntro));main.appendChild(U.gradePicker(null,function(n){a.commit(FF.state.setPlayerGrade(a.state,n));U.rerender();}));return;}
-  main.appendChild(E('div',{class:'subject-top'},[title(R.learning,R.subjectHeading,R.subjectLead),E('div',{class:'subject-top-actions'},[
-   E('p',{class:'daily-note'},[E('span',{rich:R.dailyNote1}),E('span',{rich:R.dailyNote2})]),button(school(g)+'  ⚙',function(){U.show('settings');},'rn-button')
+  var subjectHead=title(R.learning,R.subjectHeading,R.subjectLead);subjectHead.appendChild(E('p',{class:'daily-note',rich:R.dailyNote}));   // 手に入る資材の説明（判断319）
+  main.appendChild(E('div',{class:'subject-top'},[subjectHead,E('div',{class:'subject-top-actions'},[
+   button(school(g)+'  ⚙',function(){U.show('settings');},'rn-button')
   ]),U.artImg('avatar-'+(s.player.avatar||'e1')+'.jpg','subject-avatar subject-heading-avatar')]));
   var art={math:'math',japanese:'jp',science:'sci',social:'soc',english:'en'};
   var order=['math','japanese','science','social','english'];
