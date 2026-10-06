@@ -123,11 +123,10 @@
 
   // ---- 見られる子ども（この端末に保存したコード＋この端末の同期のコード）----
   function entries() {
-    var list = FF.storage.loadGuardians().map(function (g) { return { code: g.code, name: g.name, saved: true }; });
-    var rec = FF.syncApp ? FF.syncApp.record() : null;
-    if (rec && rec.code && !list.some(function (g) { return g.code === rec.code; })) {
-      list.unshift({ code: rec.code, name: FF.app.state.player.name, saved: false });
-    }
+    var rec = FF.syncApp ? FF.syncApp.record() : null, mine = rec && rec.code ? rec.code : null;
+    // 1人に1つのプレイヤーコード。この端末の持ち主（自分）が先頭、そのあとに、記録を見るためにコードを入れた人たち
+    var list = FF.storage.loadGuardians().filter(function (g) { return g.code !== mine; }).map(function (g) { return { code: g.code, name: g.name, saved: true, mine: false }; });
+    if (mine) list.unshift({ code: mine, name: FF.app.state.player.name, saved: false, mine: true });
     return list;
   }
 
@@ -194,7 +193,7 @@
     // 子どもの切り替え（1人でも、名前を出す）
     var chips = list.map(function (g) {
       return U.el('button', {
-        class: 'btn small' + (g.code === code ? ' primary' : ''), text: g.name || U.plain(U.T('guardian.noName')), attrs: { type: 'button', 'aria-pressed': g.code === code ? 'true' : 'false' },
+        class: 'btn small' + (g.code === code ? ' primary' : '') + (g.mine ? ' mine' : ''), text: (g.name || U.plain(U.T('guardian.noName'))) + (g.mine ? U.plain(U.T('guardian.me')) : ''), attrs: { type: 'button', 'aria-pressed': g.code === code ? 'true' : 'false' },
         on: { click: function () { if (g.code !== code) U.show('parent', { code: g.code }); } }
       });
     });
