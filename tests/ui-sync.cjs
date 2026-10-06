@@ -74,7 +74,8 @@ const OUT = process.env.FF_SHOT_DIR || null;
   await page.evaluate(() => { const s = JSON.parse(JSON.stringify(FF.app.state)); s.studyPointsEarnedTotal = 5; FF.app.commit(s); });
   await page.evaluate(() => FF.ui.show('settings'));
   await page.waitForSelector('.sync-panel');
-  await page.locator('.sync-panel .btn.primary').first().click();   // いますぐ同期
+  // いますぐ同期（裏の自動の同期が先に競合を見つけて、選択画面がすでに出ていることもある）
+  if (!(await page.locator('.modal').count())) await page.locator('.sync-panel .btn.primary').first().click({ timeout: 3000 }).catch(() => {});
   await page.waitForSelector('.modal');
   const txt = await page.locator('.modal').innerText();
   assert.match(txt, /ほかの端末/); assert.match(txt, /777/);
