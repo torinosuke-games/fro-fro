@@ -103,6 +103,7 @@
       moonView: ['mode'],
       starMap: ['points', 'segments', 'labels'],
       japanMap: ['bounds', 'marks', 'areas', 'routes'],
+      earthScene: ['scene'],
       terrain: ['scene'],
       facility: ['scene'],
       disaster: ['scene'],

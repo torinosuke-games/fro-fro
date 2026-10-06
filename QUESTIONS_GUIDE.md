@@ -135,6 +135,16 @@ PR #36レビュー対応（判断251）：電池は既知の＋極側だけ端�
 
 模式図の形・反復は描画用で、数量や実寸の読み取りには使わない。全使用ID・依頼との差・検証結果はHAND_SOC4_DIAGRAMS.md。
 
+### 小5社会の位置・地球・海域の図（判断296）
+
+第19弾48問。全図にcaption・study: trueを指定。地名・線の名前・数字は表示せず、地図の文字は方位「北」だけ。図の位置合わせ用の経緯度は表示しない。
+
+- 既存`japanMap`（必須bounds・marks・areas・routes）を42問に再利用。小4の同じ海岸線・湖・川・山の略線を使い、必要な地域を拡大する。areasは同じ土地のclipPathで陸だけを色付けし、余分な地方の境界や県の印は足さない。
+- `japanMap.meridian`は点線1本の位置合わせ用の経度。数値・名前を出さない。`currents`は{tone: warmまたはcold, points}の配列で、問題文の既知の海流だけ太い矢印にする。warmは昼の既存--badの赤、coldは既存blue。`marineAreas`は海域の模式的な範囲で、同じ海岸線の反転マスクにより陸を塗らない。行政境界や距離を示さない。
+- 新規`earthScene`（必須scene）：latitude・longitude・equatorの地球の円と線、seaZonesの海岸と二つの帯、shelfの海底の断面。seaZonesのfocusはnearまたはouter。凡例・地名・線の名前・数字・距離・深さを描かない。帯の幅や傾斜は実測値を読み取らせない模式図。
+
+48問の全ID・参考資料・検証結果・依頼との差はHAND_SOC5_DIAGRAMS.md。
+
 ### 生成した絵の図（判断254）
 - `diagram:{kind:'image', src:'img/diagrams/<名前>.webp', alt, caption, study:true}`。`src` と `caption` が必須（`alt` は省略すると caption を使う）。絵は横3：2・WebP・約200KB 以下、`img/diagrams/` に置く（テストは400KBまで）。
 - 絵の中に文字・数字・看板を入れない。答えの名前を描かない。ものの見た目を見せる図に使い、数・形を合わせる図（算数の図・表・グラフ）と地図（`japanMap`）は SVG のままにする。依頼の書き方は `DIAGRAM_REQUESTS_10.md`。

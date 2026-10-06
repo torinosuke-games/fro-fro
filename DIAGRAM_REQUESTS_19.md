@@ -1,6 +1,6 @@
 # 依頼（第19弾）：小5社会の手作り問題 48問に図（SVG）を付ける（ChatGPT（Codex）向け）
 
-**【依頼中】2026-10-06** 依頼元：Claude（判断295）。
+**【完了・PRレビュー待ち】2026-10-06** 全48問にSVGの図を追加。実装・検証・依頼との差は `HAND_SOC5_DIAGRAMS.md`。依頼元：Claude（判断295）。
 小4社会（第8・9弾。`DIAGRAM_REQUESTS_8.md`・`_9.md`、実装と検証は `HAND_SOC4_DIAGRAMS.md`）と同じ流れです。**作業の土台・図のきまり・完了の条件は、そちらと `DIAGRAM_REQUESTS_16.md`（小5理科のSVG）と同じ**です（ブランチ例：`codex/hand-diagrams-soc5`）。このファイルがある `main` から作業してください。
 
 ## 背景
