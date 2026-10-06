@@ -23,6 +23,7 @@ const OUT = process.env.FF_SHOT_DIR || null;
     else if (name === 'ff_pull') res = { ok: true, rev: p.rev, save_json: p.save };
     else if (name === 'ff_push_save') { if (p.rev !== a.p_base_rev) res = { ok: false, error: 'conflict', rev: p.rev, save_json: p.save }; else { p.rev++; p.save = a.p_save; res = { ok: true, rev: p.rev }; } }
     else if (name === 'ff_push_attempts') { const t = attempts[h(a.p_key)] = attempts[h(a.p_key)] || {}; let n = 0; for (const r of a.p_rows) if (!(r.attempt_id in t)) { t[r.attempt_id] = r; n++; } res = { ok: true, inserted: n }; }
+    else if (name === 'ff_read_attempts') { const t = Object.values(attempts[h(a.p_key)] || {}).filter(r => r.at > (a.p_since || 0)).sort((x, y) => x.at - y.at).slice(0, Math.min(a.p_limit || 500, 1000)); res = { ok: true, rows: t }; }
     else if (name === 'ff_delete_profile') { delete profiles[h(a.p_key)]; res = { ok: true }; }
     else res = { ok: false, error: 'unknown' };
     await route.fulfill({ status: 200, contentType: 'application/json', headers: CORS, body: JSON.stringify(res) });
@@ -67,6 +68,15 @@ const OUT = process.env.FF_SHOT_DIR || null;
   assert.equal(mine.length, answered.hist);
   assert.ok(mine.some(r => r.qid === answered.qid && typeof r.correct === 'boolean' && r.subject));
   assert.equal(await page.evaluate(() => FF.syncApp.pending().count), 0);
+
+  // 保護者の記録：設定から開く（この端末はコードを持っている）
+  await page.evaluate(() => FF.ui.show('settings'));
+  await page.waitForSelector('.sync-panel');
+  await page.locator('.sync-parent-open').click();
+  await page.waitForSelector('.parent-tiles', { timeout: 8000 });
+  assert.match(await page.locator('.parent-tiles').innerText(), /回答/);
+  assert.equal(await page.locator('.parent-chart rect').count() > 0, true);
+  await page.locator('.redeem-head .btn').click();   // もどる
 
   // 競合：ほかの端末が先に保管庫を更新し、この端末も変えた
   const other = await page.evaluate(() => { const s = JSON.parse(JSON.stringify(FF.app.state)); s.studyPointsEarnedTotal = 777; s.studyPoints = 777; s.player.name = 'ほかの端末'; s.updatedAt += 5000; return JSON.parse(FF.state.serialize(s)); });

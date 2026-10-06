@@ -450,7 +450,31 @@
     return { sync: sync, enable: enable, link: link, disable: disable, deleteRemote: deleteRemote, record: rec, collect: collect, pending: pending };
   }
 
+  // 保護者の記録用：コードの履歴を、すべて読む（1000件ずつ）。同期がオンでなくても使える。
+  // 返す値：{ ok: true, rows } か { ok: false, error }。onProgress(読んだ件数) は省略可
+  function fetchAttempts(fetchFn, cfg, balance, codeText, onProgress) {
+    var code = normalizeCode(codeText);
+    if (!code) return Promise.resolve({ ok: false, error: 'bad_code' });
+    var key = keyOf(code), byId = {}, count = 0, pages = 0;
+    function next(since) {
+      return rpc(fetchFn, cfg, 'ff_read_attempts', { p_key: key, p_since: since, p_limit: balance.READ_PAGE }, balance.TIMEOUT_MS * 3).then(function (res) {
+        if (!res.ok) return { ok: false, error: res.error || 'read' };
+        var page = Array.isArray(res.rows) ? res.rows : [], fresh = 0;
+        page.forEach(function (r) { if (r && typeof r.attempt_id === 'string' && !byId[r.attempt_id]) { byId[r.attempt_id] = r; count++; fresh++; } });
+        if (onProgress) onProgress(count);
+        pages++;
+        // 同じ時刻の履歴がページの境目に重ならないよう、最後の時刻の1つ手前から読む。新しい行がなければ（進まなければ）終わる
+        if (page.length < balance.READ_PAGE || !fresh || pages >= balance.READ_MAX_PAGES) {
+          return { ok: true, rows: Object.keys(byId).map(function (k) { return byId[k]; }) };
+        }
+        return next(page[page.length - 1].at - 1);
+      });
+    }
+    return next(0);
+  }
+
   FF.sync = {
+    fetchAttempts: fetchAttempts,
     sha256Hex: sha256Hex, ALPHABET: ALPHABET, CODE_LENGTH: CODE_LENGTH,
     generateCode: generateCode, normalizeCode: normalizeCode, formatCode: formatCode, keyOf: keyOf,
     newRecord: newRecord, normalizeRecord: normalizeRecord, summarize: summarize, attemptRow: attemptRow, normalizeOutbox: normalizeOutbox,
