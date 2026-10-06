@@ -20,7 +20,7 @@
  // その日の資材は教科で決まる（判断319）。教科から資材を引く。☆は、その日ランダムに決まった教科
  function dailyEntry(subject){return FF.daily.today(FF.app.now()).bySubject[subject]||null;}
  function resourceBadge(entry,cls){
-  if(entry.random)return E('span',{class:'daily-badge is-random'+(cls?' '+cls:''),attrs:{title:R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[E('b',{text:'☆'}),E('small',{text:R.dailyRandomShort})])]);
+  if(entry.random)return E('span',{class:'daily-badge is-random'+(cls?' '+cls:''),attrs:{title:R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[E('b',{text:'☆'})])]);
   var r=U.resDef(entry.resource);
   return E('span',{class:'daily-badge'+(cls?' '+cls:''),attrs:{title:U.plain(r.name)}},[U.resIcon(r)]);
  }
@@ -32,7 +32,7 @@
  }
  function quizResourceButton(){
   var s=FF.app.session,entry=dailyEntry(s.sel.subject);
-  if(entry&&entry.random)return E('span',{class:'quiz-resource-button daily-badge is-random',attrs:{role:'img','aria-label':R.todayResource+'：'+R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[E('b',{text:'☆'}),E('small',{text:R.dailyRandomShort})])]);
+  if(entry&&entry.random)return E('span',{class:'quiz-resource-button daily-badge is-random',attrs:{role:'img','aria-label':R.todayResource+'：'+R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[E('b',{text:'☆'})])]);
   var r=U.resDef((entry&&entry.resource)||s.sel.resource||C.scarcest(FF.app.state));
   return E('span',{class:'quiz-resource-button daily-badge',attrs:{role:'img','aria-label':R.todayResource+'：'+U.plain(r.name)}},[U.resIcon(r)]);
  }
@@ -278,7 +278,7 @@
   FF.app.studyTab='learn';var a=FF.app,s=a.state,g=s.player.grade;
   if(!g){main.appendChild(title(R.learning,R.chooseGrade,R.gradeIntro));main.appendChild(U.gradePicker(null,function(n){a.commit(FF.state.setPlayerGrade(a.state,n));U.rerender();}));return;}
   main.appendChild(E('div',{class:'subject-top'},[title(R.learning,R.subjectHeading,R.subjectLead),E('div',{class:'subject-top-actions'},[
-   button(school(g)+'  ⚙',function(){U.show('settings');},'rn-button')
+   E('p',{class:'daily-note'},[E('span',{rich:R.dailyNote1}),E('span',{rich:R.dailyNote2})]),button(school(g)+'  ⚙',function(){U.show('settings');},'rn-button')
   ]),U.artImg('avatar-'+(s.player.avatar||'e1')+'.jpg','subject-avatar subject-heading-avatar')]));
   var art={math:'math',japanese:'jp',science:'sci',social:'soc',english:'en'};
   var order=['math','japanese','science','social','english'];
