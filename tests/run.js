@@ -21,9 +21,10 @@ for (const file of fs.readdirSync(casesDir).filter(f => f.endsWith('.js')).sort(
 
 let passed = 0;
 const failed = [];
+(async () => {
 for (const t of tests) {
   try {
-    t.fn();
+    await t.fn();   // async のテスト（同期の通信など）も待つ
     passed++;
   } catch (e) {
     failed.push({ name: t.name, reason: e && e.message ? e.message : String(e) });
@@ -38,3 +39,4 @@ for (const f of failed) {
 }
 console.log(`\n成功 ${passed} / 失敗 ${failed.length}（全 ${tests.length} 件）`);
 process.exitCode = failed.length === 0 ? 0 : 1;
+})();

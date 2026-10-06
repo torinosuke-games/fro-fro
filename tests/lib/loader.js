@@ -17,7 +17,7 @@ const QUESTION_FILES = LOGIC_FILES.filter(f => f.startsWith('questions/'));
 
 // files: ROOT からの相対パスの配列（省略時はロジック層すべて）
 function load(files) {
-  const context = { console: console };
+  const context = { console: console, setTimeout: setTimeout, clearTimeout: clearTimeout };
   context.window = context;
   vm.createContext(context);
   for (const f of files || LOGIC_FILES) {
