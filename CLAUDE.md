@@ -9,7 +9,7 @@
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
 - 仕様：`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 317。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 319。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
 - リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`。算数の文章題55問への図（判断223）：`MATH_WORD_DIAGRAMS.md`（図の種類・使った問題）、依頼の記録は `DIAGRAM_REQUESTS.md`（完了）
 - 完成報告：`REPORT.md`（v0.1）、`REPORT_v0.2.md`、`REPORT_v0.3.md`、`REPORT_v0.4.md`、`REPORT_sync.md`（データの保存）

@@ -368,11 +368,30 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 
 /* 題名「Frozen Frontier」の下の、小さな一行（判断314）。どの幅でも出す */
 .brand-text{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0;text-align:left}
-.brand .brand-caption{display:block;font:700 clamp(.625rem,2.7vw,.8125rem)/1.3 Nunito,var(--font);letter-spacing:.08em;color:#d6eaf5;white-space:normal}
+.brand .brand-caption{display:block;font:700 clamp(.5625rem,2.9vw,.8125rem)/1.3 Nunito,var(--font);letter-spacing:.02em;color:#d6eaf5;white-space:normal;word-break:keep-all}
 
 /* ホーム：スマホでは、上の見出し・説明・ボタンを出さず、風景の下の「学習する」ボタンを出す（判断315） */
 .home-start-mobile{display:none}
 @media(max-width:760px){
  .home-mission{display:none}
  .home-start-mobile{display:block;width:100%;min-height:52px;margin:12px 0 14px;padding:11px 16px;font-size:1.1875rem}
+}
+
+/* タブレット・パソコン（幅 561px 以上）：上の帯と資材欄を低くして、学習の画面を広く取る（判断318） */
+@media(min-width:561px){
+ .masthead{min-height:0;padding-block:6px}
+ .brand-snowflake{width:34px;height:34px}
+ .brand{font-size:1.375rem;gap:10px}
+ .brand .brand-caption{font-size:.75rem;line-height:1.2}
+ .masthead-link{min-height:34px;padding:5px 12px}
+ .resource-strip{min-height:0;padding-block:3px}
+ .resource-item{min-height:32px}
+ .heat-item,.ticket-item{min-height:28px}
+}
+
+/* タブレット・パソコン：問題の画面の、資材欄の下の余白（上の余白と、見出しの行の高さ）も詰める（判断318） */
+@media(min-width:561px){
+ body[data-screen="quiz"] main#screen{padding-top:8px}
+ body[data-screen="quiz"] .lesson-heading{margin-bottom:8px;min-height:0}
+ body[data-screen="quiz"] .lesson-heading .btn,body[data-screen="quiz"] .lesson-heading button{min-height:34px;padding-block:3px}
 }
