@@ -79,7 +79,10 @@
       TIMEOUT_MS: 10000,          // 1回の通信の待ち時間
       BACKOFF_BASE_MS: 30000,     // 失敗したあとの待ち時間（失敗のたびに2倍）
       BACKOFF_MAX_MS: 1800000,    // 待ち時間の上限（30分）
-      CONFLICT_DEFER_MS: 600000   // 競合の選択を「あとで」にしたとき、次に聞くまで
+      CONFLICT_DEFER_MS: 600000,  // 競合の選択を「あとで」にしたとき、次に聞くまで
+      ATTEMPT_BATCH: 200,         // 学習の履歴を1回に送る件数（サーバーの上限と同じ）
+      ATTEMPT_BATCHES_PER_SYNC: 5, // 1回の同期で送る回数の上限（たまっていても、1回で通信しすぎない）
+      OUTBOX_LIMIT: 5000          // 未送信の履歴をためておく上限（超えたら古い順に捨てる）
     },
     EXAM_HISTORY_LIMIT: 100,
 

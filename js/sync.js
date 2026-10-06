@@ -135,6 +135,28 @@
     };
   }
 
+  // ---- 学習の履歴（attempts）----
+  // 履歴の1件（learning.history の要素）→ サーバーに送る1行。使えない形なら null。
+  // attempt_id は中身だけで決める（端末の ID は入れない）：同じ履歴が別の端末から来ても、サーバーで1件になる
+  function str(v, n) { return typeof v === 'string' ? v.slice(0, n) : null; }
+  function int(v) { return typeof v === 'number' && isFinite(v) ? Math.floor(v) : null; }
+  function attemptRow(h, deviceId) {
+    if (!h || typeof h !== 'object' || typeof h.qid !== 'string' || !h.qid || typeof h.at !== 'number' || !isFinite(h.at) || typeof h.correct !== 'boolean') return null;
+    var at = Math.floor(h.at);
+    return {
+      attempt_id: at + '-' + h.qid.slice(0, 80) + '-' + (int(h.attempts) === null ? 0 : int(h.attempts)),
+      at: at, qid: h.qid.slice(0, 80), subject: str(h.subject, 24), grade: int(h.grade), difficulty: int(h.difficulty),
+      type: str(h.type, 16), correct: h.correct, attempts: int(h.attempts), hints: int(h.hints),
+      resource: str(h.resource, 24), reward: int(h.reward), points: int(h.points), device_id: deviceId || null
+    };
+  }
+  function normalizeOutbox(o) {
+    var rows = o && Array.isArray(o.rows) ? o.rows.filter(function (r) { return r && typeof r.attempt_id === 'string'; }) : [];
+    var known = o && Array.isArray(o.known) ? o.known.filter(function (k) { return typeof k === 'string'; }) : [];
+    // known：箱に入れた（または、ほかの端末が送った）履歴の attempt_id。新しい順に、上限まで覚える
+    return { rows: rows, dropped: o && typeof o.dropped === 'number' && o.dropped > 0 ? Math.floor(o.dropped) : 0, known: known.slice(-2000) };
+  }
+
   // ---- 通信（Supabase の RPC） ----
   // 失敗しても例外は投げず、{ ok: false, error } を返す
   function rpc(fetchFn, cfg, name, args, timeoutMs) {
@@ -171,6 +193,68 @@
 
     function rec() { return normalizeRecord(deps.loadRec()); }
     function put(r) { deps.saveRec(r); return r; }
+    function outbox() { return normalizeOutbox(deps.loadOutbox ? deps.loadOutbox() : null); }
+    function putOutbox(o) { if (deps.saveOutbox) deps.saveOutbox(o); }
+
+    // 新しい回答の履歴を、未送信の箱に入れる（同期がオンのときだけ）。入れた件数を返す。
+    // 時刻の比べっこはしない（端末の時計がずれていても取りこぼさないため）。箱に入れた履歴の ID（known）で、新しいかどうかを決める。
+    // known がないとき（オンにした直後）は、端末にある履歴すべてが新しい＝さかのぼって送る
+    function collect(state) {
+      var r = rec();
+      if (!r.enabled || !r.code || !state || !state.learning || !Array.isArray(state.learning.history)) return 0;
+      var hist = state.learning.history;
+      if (!hist.length) return 0;
+      var o = outbox();
+      var known = {};
+      o.known.forEach(function (k) { known[k] = true; });
+      var lastRow = attemptRow(hist[hist.length - 1], r.deviceId);
+      if (lastRow && known[lastRow.attempt_id]) return 0;   // いちばん新しい履歴が、もう知っているものなら、何も増えていない
+      var added = 0;
+      for (var i = 0; i < hist.length; i++) {
+        var row = attemptRow(hist[i], r.deviceId);
+        if (row && !known[row.attempt_id]) { known[row.attempt_id] = true; o.known.push(row.attempt_id); o.rows.push(row); added++; }
+      }
+      if (o.rows.length > B.OUTBOX_LIMIT) { o.dropped += o.rows.length - B.OUTBOX_LIMIT; o.rows = o.rows.slice(o.rows.length - B.OUTBOX_LIMIT); }
+      o.known = o.known.slice(-2000);
+      if (added) putOutbox(o);
+      return added;
+    }
+
+    // 受け取ったセーブの履歴は、ほかの端末が送っている。「知っている」ことにして、送り直さない
+    function markKnown(state) {
+      var hist = state && state.learning && state.learning.history;
+      if (!hist || !hist.length) return;
+      var o = outbox();
+      var known = {};
+      o.known.forEach(function (k) { known[k] = true; });
+      hist.forEach(function (h) {
+        var row = attemptRow(h, null);
+        if (row && !known[row.attempt_id]) { known[row.attempt_id] = true; o.known.push(row.attempt_id); }
+      });
+      o.known = o.known.slice(-2000);
+      putOutbox(o);
+    }
+
+    // 未送信の履歴を、サーバーへ送る（200件ずつ、1回に最大 ATTEMPT_BATCHES_PER_SYNC 回）。失敗したら箱に残す
+    function flush(r, key) {
+      var n = 0;
+      function next() {
+        var o = outbox();
+        if (!o.rows.length || n >= B.ATTEMPT_BATCHES_PER_SYNC) return Promise.resolve(null);
+        n++;
+        var batch = o.rows.slice(0, B.ATTEMPT_BATCH);
+        return rpc(deps.fetch, deps.cfg, 'ff_push_attempts', { p_key: key, p_rows: batch }, B.TIMEOUT_MS).then(function (res) {
+          if (!res.ok) return res.error || 'attempts';
+          var sent = {};
+          batch.forEach(function (x) { sent[x.attempt_id] = true; });
+          var now = outbox();   // 通信している間に増えた分を消さないよう、読み直す
+          now.rows = now.rows.filter(function (x) { return !sent[x.attempt_id]; });
+          putOutbox(now);
+          return next();
+        });
+      }
+      return next();
+    }
 
     function fail(r, code) {
       r.failures += 1;
@@ -209,6 +293,7 @@
 
     function adoptRemote(r, remoteState, serverRev) {
       deps.applyRemote(remoteState);
+      markKnown(remoteState);
       r.rev = serverRev;
       r.pushedAt = remoteState.updatedAt;
     }
@@ -248,6 +333,7 @@
       busy = true;
       var key = keyOf(r.code);
       var local = deps.getState();
+      collect(local);
       var chain = rpc(deps.fetch, deps.cfg, 'ff_pull', { p_key: key }, B.TIMEOUT_MS).then(function (pull) {
         if (!pull.ok && pull.error === 'not_found') {
           return rpc(deps.fetch, deps.cfg, 'ff_create_profile', { p_key: key }, B.TIMEOUT_MS).then(function (c) {
@@ -298,6 +384,14 @@
           return succeed(r, 'pulled');
         }
         return resolveConflict(r, key, local, pull, remote, false);
+      }).then(function (out) {
+        // セーブの同期のあと、未送信の履歴を送る（セーブが「あとで」「先のばし」でも送る。通信できなかったときは送らない）
+        if (out.status === 'error' || !outbox().rows.length) return out;
+        var r2 = rec();
+        return flush(r2, key).then(function (err) {
+          if (err) return fail(r2, err);
+          return out;
+        });
       }).then(function (out) { busy = false; return out; }, function (e) { busy = false; return fail(r, 'exception'); });
       return chain;
     }
@@ -346,18 +440,20 @@
       var r = rec();
       if (!r.code) return Promise.resolve({ ok: true });
       return rpc(deps.fetch, deps.cfg, 'ff_delete_profile', { p_key: keyOf(r.code) }, B.TIMEOUT_MS).then(function (res) {
-        if (res.ok || res.error === 'not_found') { put(newRecord()); return { ok: true }; }
+        if (res.ok || res.error === 'not_found') { deps.saveRec(newRecord()); putOutbox({ rows: [], dropped: 0, known: [] }); return { ok: true }; }
         return { ok: false, error: res.error || 'delete' };
       });
     }
 
-    return { sync: sync, enable: enable, link: link, disable: disable, deleteRemote: deleteRemote, record: rec };
+    function pending() { var o = outbox(); return { count: o.rows.length, dropped: o.dropped }; }
+
+    return { sync: sync, enable: enable, link: link, disable: disable, deleteRemote: deleteRemote, record: rec, collect: collect, pending: pending };
   }
 
   FF.sync = {
     sha256Hex: sha256Hex, ALPHABET: ALPHABET, CODE_LENGTH: CODE_LENGTH,
     generateCode: generateCode, normalizeCode: normalizeCode, formatCode: formatCode, keyOf: keyOf,
-    newRecord: newRecord, normalizeRecord: normalizeRecord, summarize: summarize,
+    newRecord: newRecord, normalizeRecord: normalizeRecord, summarize: summarize, attemptRow: attemptRow, normalizeOutbox: normalizeOutbox,
     rpc: rpc, createEngine: createEngine
   };
 })(this);

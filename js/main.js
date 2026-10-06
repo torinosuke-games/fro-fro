@@ -24,6 +24,7 @@
     commit: function (s) {
       app.state = FF.state.withUpdated(s, app.now());
       app.save();
+      if (FF.syncApp) FF.syncApp.collect(app.state);   // 新しい回答の履歴を、サーバーへ送る箱に入れる（同期がオンのときだけ）
       U.renderHud();
     },
 
@@ -93,6 +94,8 @@
       loadRec: function () { return FF.storage.loadSync(); },
       saveRec: function (r) { FF.storage.saveSync(r); },
       saveBackup: function (t) { FF.storage.saveSyncBackup(t); },
+      loadOutbox: function () { return FF.storage.loadOutbox(); },
+      saveOutbox: function (o) { FF.storage.saveOutbox(o); },
       getState: function () { return app.state; },
       applyRemote: function (st) {
         st.tickets = FF.tickets.recoverTickets(st.tickets, app.now());
@@ -109,7 +112,7 @@
     // timer のときは、前回の同期から変わっていなければ通信しない（変更があったときだけ送る。SPEC_sync.md 5章）
     function auto(force, timer) {
       var rec = FF.syncApp.record();
-      if (timer && rec.rev !== null && app.state.updatedAt === rec.pushedAt) return;
+      if (timer && rec.rev !== null && app.state.updatedAt === rec.pushedAt && !FF.syncApp.pending().count) return;
       FF.syncApp.sync({ force: !!force }).then(function () { if (app.screen === 'settings' && !document.querySelector('.overlay')) U.rerender(); });
     }
     setTimeout(function () { auto(true); }, 2000);
