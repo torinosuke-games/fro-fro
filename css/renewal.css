@@ -277,7 +277,7 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
  .subject-top .rn-heading{padding-right:0}
  .subject-top .rn-heading>.eyebrow{display:none}
  .subject-top .rn-heading h1{margin:0 0 2px;font-size:1.25rem;line-height:1.4}
- .subject-top .rn-heading p{display:none}
+ .subject-top .rn-heading p:not(.daily-note){display:none}
  .subject-heading-avatar{display:none}
  .subject-top-actions{position:static;justify-content:flex-end;gap:6px;margin:0 0 6px}
  .subject-top-actions>.rn-button{height:36px;min-height:36px;padding:3px 10px}
@@ -395,3 +395,20 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
  body[data-screen="quiz"] .lesson-heading{margin-bottom:8px;min-height:0}
  body[data-screen="quiz"] .lesson-heading .btn,body[data-screen="quiz"] .lesson-heading button{min-height:34px;padding-block:3px}
 }
+
+/* その日に獲得できる資材（教科で決まる。☆はランダム。判断319） */
+.subject-card{position:relative}
+.daily-badge{display:inline-flex;align-items:center;gap:3px;border-radius:999px;background:#fff;border:2px solid #d3e3ee;color:#43657d;font-weight:800}
+.daily-badge .ico{width:26px;height:26px;object-fit:contain}
+.daily-badge .daily-star{color:#c7821d;font-size:1rem;line-height:1}
+.daily-badge.is-random{border-color:#efc27a;background:#fff8ea}
+.subject-card .subject-daily{position:absolute;right:16px;bottom:8px;z-index:2;flex-direction:column;gap:2px;padding:0;border:0;background:none}.subject-card .subject-daily .ico{width:46px!important;height:46px!important;border-radius:50%;object-fit:cover;background:#fff}.subject-card .subject-copy>p{padding-right:56px}
+.daily-random-label{display:inline-flex;align-items:center;justify-content:center;color:#a8680f;background:#fff8ea;border:2px solid #efc27a;border-radius:50%;width:46px;height:46px}.daily-random-label .daily-star-svg{display:block;width:26px;height:26px}.quiz-resource-button .daily-random-label{width:32px;height:32px;border-width:1px}.quiz-resource-button .daily-random-label .daily-star-svg{width:20px;height:20px}.subject-top .rn-heading p.daily-note{margin:4px 0 0;text-align:left;text-wrap:balance;font-size:min(.8125rem,3vw);line-height:1.4;color:#43657d;font-weight:700;min-width:0}
+.subject-card.daily-focus{outline:4px solid #efa64b;outline-offset:3px;box-shadow:0 0 0 6px rgba(239,166,75,.28)}
+.quiz-resource-button.daily-badge{padding:3px 8px 3px 5px;min-height:36px;font-size:.75rem;cursor:default}
+.quiz-resource-button.daily-badge .ico{width:26px;height:26px}
+
+@media(max-width:380px){.subject-card .subject-daily{right:12px}.subject-card .subject-daily .ico,.daily-random-label{width:40px!important;height:40px!important}.daily-random-label .daily-star-svg{width:23px;height:23px}}
+
+/* タブレット・パソコン：資材のアイコンの下の縁を、カードの説明（「○単元から、えらんで学ぼう。」）の下の縁にそろえる（判断319） */
+@media(min-width:561px){.subject-card .subject-daily{bottom:19px}}

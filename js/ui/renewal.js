@@ -6,41 +6,46 @@
  FF.renewalBeforeShow=function(name,params){
   var a=FF.app,isLearn=name==='study'&&(!params.tab||params.tab==='learn');
   if(a.screen==='quiz'&&name!=='quiz'&&a.session&&a.session.renewal){
-   a.session.sel.resource=null;if(a.filterDraft)a.filterDraft.resource=null;
-   var it=current();if(it&&!it.attempt.done)it.resource=C.scarcest(a.state);
   }
-  if(!isLearn)a.learningResource=null;
-  else if(params.resource&&FF.defs.RESOURCES.some(function(r){return r.id===params.resource;}))a.learningResource=params.resource;
+  // 設備の画面で足りない資材を押して来たとき：その日にその資材が決まっている教科にカーソルを当てる（判断319）
+  a.learningFocus=null;
+  if(isLearn&&params.resource&&FF.defs.RESOURCES.some(function(r){return r.id===params.resource;}))a.learningFocus=params.resource;
  };
  function button(label,fn,cls,disabled,attrs){return E('button',{class:cls||'rn-button',text:label,disabled:!!disabled,attrs:Object.assign({type:'button'},attrs||{}),on:{click:fn}});}
- function title(kicker,heading,sub){return E('div',{class:'rn-heading'},[E('div',{class:'eyebrow',text:kicker}),E('h1',{text:heading}),sub?E('p',{text:sub}):null]);}
+ function title(kicker,heading,sub){return E('div',{class:'rn-heading'},[E('div',{class:'eyebrow',text:kicker}),E('h1',{text:heading}),sub?E('p',{rich:sub}):null]);}
  function school(g){var d=FF.defs.GRADES.filter(function(x){return x.level===g;})[0];return d?d.school:R.chooseGrade;}
  function difficulty(id){return id==='random'?R.random:U.plain(U.nameOf(FF.defs.DIFFICULTIES,id));}
  function doneCount(s){return s.completed||0;}
  function current(){var ses=FF.app.session;return ses&&ses.currentId?ses.items[ses.currentId]:null;}
- function setQuizResource(id){
-  var s=FF.app.session;if(!s||!s.renewal||FF.app.screen!=='quiz')return;
-  s.sel.resource=id||null;var it=current();if(it&&!it.attempt.done)it.resource=id||C.scarcest(FF.app.state);
-  U.rerender();
+ // その日の資材は教科で決まる（判断319）。教科から資材を引く。☆は、その日ランダムに決まった教科
+ function dailyEntry(subject){return FF.daily.today(FF.app.now()).bySubject[subject]||null;}
+ // ☆は文字ではなく図で描く（文字だと、字体によって、円の中央からずれるため）
+ function starIcon(){
+  var ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),poly=document.createElementNS(ns,'polygon');
+  svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('class','daily-star-svg');svg.setAttribute('aria-hidden','true');
+  poly.setAttribute('points','12.00,2.95 14.53,9.47 21.51,9.86 16.09,14.28 17.88,21.04 12.00,17.25 6.12,21.04 7.91,14.28 2.49,9.86 9.47,9.47');poly.setAttribute('fill','none');poly.setAttribute('stroke','currentColor');poly.setAttribute('stroke-width','2');poly.setAttribute('stroke-linejoin','round');
+  svg.appendChild(poly);return svg;
  }
- function resourceMenu(){
-  var s=FF.app.session,close,body=E('div',{class:'quiz-resource-options'});
-  [{id:null,name:R.noResource}].concat(FF.defs.RESOURCES).forEach(function(r){
-   body.appendChild(E('button',{class:'rn-button',attrs:{type:'button','aria-label':U.plain(r.name),'aria-pressed':s.sel.resource===r.id?'true':'false'},on:{click:function(){close();setQuizResource(r.id);document.querySelector('.quiz-resource-button').focus();}}},[
-    r.id?U.resIcon(r):E('span',{text:'⤨'}),E('span',{text:U.plain(r.name)})
-   ]));
-  });
-  close=U.modal({title:R.wantResource,body:body});
+ function resourceBadge(entry,cls){
+  if(entry.random)return E('span',{class:'daily-badge is-random'+(cls?' '+cls:''),attrs:{title:R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[starIcon()])]);
+  var r=U.resDef(entry.resource);
+  return E('span',{class:'daily-badge'+(cls?' '+cls:''),attrs:{title:U.plain(r.name)}},[U.resIcon(r)]);
+ }
+ // 問題ごとに獲得する資材：教科で決まる。ランダムの教科は、問題ごとに4つのうちのどれか
+ function rollResource(subject){
+  var entry=dailyEntry(subject);
+  if(entry&&entry.random){var list=FF.defs.RESOURCES;return list[Math.floor(Math.random()*list.length)].id;}
+  return entry&&entry.resource||C.scarcest(FF.app.state);
  }
  function quizResourceButton(){
-  var s=FF.app.session,id=s.sel.resource||C.scarcest(FF.app.state),r=U.resDef(id);
-  return E('button',{class:'rn-button quiz-resource-button',attrs:{type:'button',title:R.wantResource,'aria-label':R.wantResource+'：'+U.plain(r.name)+'（'+(s.sel.resource?'固定':'自動')+'）'},on:{click:resourceMenu}},[
-   U.resIcon(r),E('span',{text:s.sel.resource?'固定':'自動'})
-  ]);
+  var s=FF.app.session,entry=dailyEntry(s.sel.subject);
+  if(entry&&entry.random)return E('span',{class:'quiz-resource-button daily-badge is-random',attrs:{role:'img','aria-label':R.todayResource+'：'+R.dailyRandomHelp}},[E('span',{class:'daily-random-label'},[starIcon()])]);
+  var r=U.resDef((entry&&entry.resource)||s.sel.resource||C.scarcest(FF.app.state));
+  return E('span',{class:'quiz-resource-button daily-badge',attrs:{role:'img','aria-label':R.todayResource+'：'+U.plain(r.name)}},[U.resIcon(r)]);
  }
  function makeSession(subject){
   var a=FF.app,s=a.state,g=s.player.grade||2;
-  var sel={subject:subject,grade:g,unit:'all',difficulty:'random',answerType:FF.tickets.recoverTickets(s.tickets,a.now()).count?'choice':'input',resource:a.learningResource||null};
+  var sel={subject:subject,grade:g,unit:'all',difficulty:'random',answerType:FF.tickets.recoverTickets(s.tickets,a.now()).count?'choice':'input',resource:null};
   if(!C.pool(a.bank,sel).length&&subject!=='math')sel.answerType='input';
   a.session={renewal:true,sel:sel,recentIds:[],items:{},currentId:null,order:[],cursor:-1};
   chooseQuestion();U.show('quiz');
@@ -65,7 +70,7 @@
   var q=id?(a.bank.byId[id]||(s.items[id]&&s.items[id].attempt.question)):(peeked||C.pick(reviewBank(a.bank),s.sel,ctxPick)||(reviewFallback()?C.pick(a.bank,s.sel,ctxPick):null));
   if(!q){s.currentId=null;return;}
   // Visiting a question starts a fresh attempt. Persistent results live in the save.
-  s.items[q.id]={attempt:L.startAttempt(q),outcome:null,picked:null,selected:null,typed:'',resource:s.sel.resource||C.scarcest(a.state)};
+  s.items[q.id]={attempt:L.startAttempt(q),outcome:null,picked:null,selected:null,typed:'',resource:rollResource(s.sel.subject)};
   s.currentId=q.id;s.recentIds=s.recentIds.concat([q.id]).slice(-20);
   if(s.order[s.cursor]!==q.id){s.order=s.order.slice(0,s.cursor+1);s.order.push(q.id);s.cursor=s.order.length-1;}
  }
@@ -279,31 +284,22 @@
   if(params.tab&&params.tab!=='learn'){originalStudy(main,params);return;}
   FF.app.studyTab='learn';var a=FF.app,s=a.state,g=s.player.grade;
   if(!g){main.appendChild(title(R.learning,R.chooseGrade,R.gradeIntro));main.appendChild(U.gradePicker(null,function(n){a.commit(FF.state.setPlayerGrade(a.state,n));U.rerender();}));return;}
-  function openStudyResources(){
-   var choices=E('div',{class:'resource-choices',attrs:{role:'group','aria-label':R.wantResource}}),close;
-   [{id:null,name:R.noResource}].concat(FF.defs.RESOURCES).forEach(function(r){
-    choices.appendChild(E('button',{class:'resource-choice'+(a.learningResource===r.id||(!a.learningResource&&!r.id)?' selected':''),attrs:{type:'button','aria-label':U.plain(r.name),'aria-pressed':(a.learningResource||null)===r.id?'true':'false'},on:{click:function(){close();a.learningResource=r.id;U.rerender();document.querySelector('.study-resource-button').focus();}}},[
-     r.id?U.resIcon(r):null,E('span',{text:U.plain(r.name)})
-    ]));
-   });
-   close=U.modal({body:choices});
-  }
-  var selectedResource=U.resDef(a.learningResource||C.scarcest(a.state));
-  main.appendChild(E('div',{class:'subject-top'},[title(R.learning,R.subjectHeading,R.subjectLead),E('div',{class:'subject-top-actions'},[
-   E('button',{class:'rn-button study-resource-button',attrs:{type:'button','aria-label':R.wantResource+'：'+U.plain(selectedResource.name)+'（'+(a.learningResource?'固定':'自動')+'）','aria-haspopup':'dialog'},on:{click:openStudyResources}},[
-    U.resIcon(selectedResource),E('span',{text:a.learningResource?'固定':'自動'})
-   ]),button(school(g)+'  ⚙',function(){U.show('settings');},'rn-button')
+  var subjectHead=title(R.learning,R.subjectHeading,R.subjectLead);subjectHead.appendChild(E('p',{class:'daily-note',rich:R.dailyNote}));   // 手に入る資材の説明（判断319）
+  main.appendChild(E('div',{class:'subject-top'},[subjectHead,E('div',{class:'subject-top-actions'},[
+   button(school(g)+'  ⚙',function(){U.show('settings');},'rn-button')
   ]),U.artImg('avatar-'+(s.player.avatar||'e1')+'.jpg','subject-avatar subject-heading-avatar')]));
   var art={math:'math',japanese:'jp',science:'sci',social:'soc',english:'en'};
   var order=['math','japanese','science','social','english'];
   main.appendChild(E('div',{class:'subject-grid'},order.map(function(id){
-   var nUnits=C.units(id,g).length,nDiagrams=C.diagramCount(a.bank,id,g),progress=C.progress(a.bank,s,id,g);
-   return E('button',{class:'subject-card subject-'+id,attrs:{type:'button'},on:{click:function(){makeSession(id);}}},[
+   var nUnits=C.units(id,g).length,progress=C.progress(a.bank,s,id,g);
+   var entry=dailyEntry(id),focus=!!(a.learningFocus&&entry&&!entry.random&&entry.resource===a.learningFocus),rname=entry&&entry.resource?U.plain(U.resDef(entry.resource).name):'';
+   return E('button',{class:'subject-card subject-'+id+(focus?' daily-focus':''),attrs:{type:'button','data-subject':id,'data-resource':entry&&entry.resource||null,'aria-label':U.plain(L.subjectName(id,g))+'：'+R.todayResource+' '+(entry&&entry.random?R.dailyRandomHelp:rname)},on:{click:function(){makeSession(id);}}},[
+    entry?resourceBadge(entry,'subject-daily'):null,
     U.artImg('subj-'+art[id],'subject-art'),E('div',{class:'subject-copy'},[E('span',{class:'eyebrow',text:school(g)}),E('h2',{text:U.plain(L.subjectName(id,g))}),E('p',{text:nUnits?R.unitDescription.replace('{n}',nUnits):R.subjectDescription}),
-     E('div',{class:'subject-progress',attrs:{title:progress.generated?R.generatedNote:null}},[E('span',{class:'progress-total',text:R.totalQuestions.replace('{n}',progress.total)}),E('span',{class:'progress-correct',text:R.correctQuestions.replace('{n}',progress.correct)}),E('span',{class:'progress-review',text:R.reviewQuestions.replace('{n}',progress.review)})]),
-     nDiagrams?E('span',{class:'new-badge',text:R.diagramQuestions.replace('{n}',nDiagrams)}):null]),E('span',{class:'subject-arrow',text:'↗'})
+     E('div',{class:'subject-progress',attrs:{title:progress.generated?R.generatedNote:null}},[E('span',{class:'progress-total',text:R.totalQuestions.replace('{n}',progress.total)}),E('span',{class:'progress-correct',text:R.correctQuestions.replace('{n}',progress.correct)}),E('span',{class:'progress-review',text:R.reviewQuestions.replace('{n}',progress.review)})])])
    ]);
   })));
+  if(a.learningFocus){var fc=main.querySelector('.daily-focus');if(fc)setTimeout(function(){try{fc.focus({preventScroll:true});fc.scrollIntoView({block:'nearest'});}catch(e){}},0);}
   main.appendChild(E('div',{class:'study-tools'},[
    button(R.records,function(){U.show('study',{tab:'records'});},'text-button'),button(R.exam,function(){U.show('study',{tab:'exam'});},'text-button'),button(R.diagnosis,function(){U.show('study',{tab:'diagnosis'});},'text-button'),button(R.redeem,function(){U.openRedeem();},'text-button')
   ]));
@@ -360,7 +356,7 @@
   ]));
   var strip=E('div',{class:'resource-strip'});
   FF.defs.RESOURCES.forEach(function(r){
-   var selectable=a.screen==='quiz'&&a.session&&a.session.renewal;
+   var selectable=false;   // 資材は教科で決まるので、資材欄からは選べない（判断319）
    strip.appendChild(E(selectable?'button':'div',{class:'resource-item'+(selectable?' resource-selectable':''),attrs:{type:selectable?'button':null,'data-resource':r.id,'aria-label':U.plain(r.name)+' '+U.fmt(s.resources[r.id])+(selectable?'・この資材を獲得する':''),'aria-pressed':selectable?(a.session.sel.resource===r.id?'true':'false'):null},on:selectable?{click:function(){setQuizResource(r.id);}}:{}},[U.resIcon(r),E('span',{class:'resource-label',text:U.plain(r.name)}),countSpan(r.id,s.resources[r.id])]));
   });
   strip.appendChild(E('div',{class:'heat-item',attrs:{'aria-label':R.heat+' '+s.studyPoints}},[E('img',{class:'heat-illustration',attrs:{src:'img/heat.svg',alt:''}}),E('span',{class:'resource-label',text:R.heat}),countSpan('heat',s.studyPoints),E('small',{text:'pt'})]));
