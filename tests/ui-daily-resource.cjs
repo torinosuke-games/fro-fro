@@ -11,9 +11,9 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  for(const s of ['math','japanese','science','social','english']){
   const card=p.locator('.subject-card[data-subject="'+s+'"]');
   assert.equal(await card.getAttribute('data-resource'),today.bySubject[s].resource,s);
-  assert.equal(await card.locator('.daily-badge .daily-star').count(),today.bySubject[s].random?1:0,s);
+  assert.equal(await card.locator('.daily-badge .daily-random-label').count(),today.bySubject[s].random?1:0,s);
  }
- assert.equal(await p.locator('.subject-card .daily-star').count(),1);
+ assert.equal(await p.locator('.subject-card .daily-random-label').count(),1);
  assert.equal(await p.locator('.study-resource-button').count(),0);
  // 資材の欄を押しても、資材は選べない
  await p.evaluate(()=>FF.ui.show('study',{tab:'learn'}));

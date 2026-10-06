@@ -23,7 +23,7 @@
  function dailyEntry(subject){return FF.daily.today(FF.app.now()).bySubject[subject]||null;}
  function resourceBadge(entry,cls){
   var r=U.resDef(entry.resource);
-  return E('span',{class:'daily-badge'+(cls?' '+cls:'')+(entry.random?' is-random':''),attrs:{title:U.plain(r.name)+(entry.random?'（'+R.dailyRandom+'）':'')}},[U.resIcon(r),entry.random?E('span',{class:'daily-star',text:'☆'}):null]);
+  return E('span',{class:'daily-badge'+(cls?' '+cls:'')+(entry.random?' is-random':''),attrs:{title:U.plain(r.name)+(entry.random?'（'+R.dailyRandom+'）':'')}},[entry.random?E('span',{class:'daily-random-label',text:'☆ '+R.dailyRandomShort}):null,U.resIcon(r)]);
  }
  function quizResourceButton(){
   var s=FF.app.session,entry=dailyEntry(s.sel.subject),r=U.resDef(s.sel.resource||(entry&&entry.resource)||C.scarcest(FF.app.state)),random=!!(entry&&entry.random&&entry.resource===r.id);
@@ -278,13 +278,12 @@
   var art={math:'math',japanese:'jp',science:'sci',social:'soc',english:'en'};
   var order=['math','japanese','science','social','english'];
   main.appendChild(E('div',{class:'subject-grid'},order.map(function(id){
-   var nUnits=C.units(id,g).length,nDiagrams=C.diagramCount(a.bank,id,g),progress=C.progress(a.bank,s,id,g);
+   var nUnits=C.units(id,g).length,progress=C.progress(a.bank,s,id,g);
    var entry=dailyEntry(id),focus=!!(a.learningFocus&&entry&&!entry.random&&entry.resource===a.learningFocus),rname=entry?U.plain(U.resDef(entry.resource).name):'';
    return E('button',{class:'subject-card subject-'+id+(focus?' daily-focus':''),attrs:{type:'button','data-subject':id,'data-resource':entry?entry.resource:null,'aria-label':U.plain(L.subjectName(id,g))+'：'+R.todayResource+' '+rname+(entry&&entry.random?'（'+R.dailyRandom+'）':'')},on:{click:function(){makeSession(id);}}},[
     entry?resourceBadge(entry,'subject-daily'):null,
     U.artImg('subj-'+art[id],'subject-art'),E('div',{class:'subject-copy'},[E('span',{class:'eyebrow',text:school(g)}),E('h2',{text:U.plain(L.subjectName(id,g))}),E('p',{text:nUnits?R.unitDescription.replace('{n}',nUnits):R.subjectDescription}),
-     E('div',{class:'subject-progress',attrs:{title:progress.generated?R.generatedNote:null}},[E('span',{class:'progress-total',text:R.totalQuestions.replace('{n}',progress.total)}),E('span',{class:'progress-correct',text:R.correctQuestions.replace('{n}',progress.correct)}),E('span',{class:'progress-review',text:R.reviewQuestions.replace('{n}',progress.review)})]),
-     nDiagrams?E('span',{class:'new-badge',text:R.diagramQuestions.replace('{n}',nDiagrams)}):null]),E('span',{class:'subject-arrow',text:'↗'})
+     E('div',{class:'subject-progress',attrs:{title:progress.generated?R.generatedNote:null}},[E('span',{class:'progress-total',text:R.totalQuestions.replace('{n}',progress.total)}),E('span',{class:'progress-correct',text:R.correctQuestions.replace('{n}',progress.correct)}),E('span',{class:'progress-review',text:R.reviewQuestions.replace('{n}',progress.review)})])]),E('span',{class:'subject-arrow',text:'↗'})
    ]);
   })));
   if(a.learningFocus){var fc=main.querySelector('.daily-focus');if(fc)setTimeout(function(){try{fc.focus({preventScroll:true});fc.scrollIntoView({block:'nearest'});}catch(e){}},0);}

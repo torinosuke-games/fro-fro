@@ -402,7 +402,8 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .daily-badge .ico{width:26px;height:26px;object-fit:contain}
 .daily-badge .daily-star{color:#c7821d;font-size:1rem;line-height:1}
 .daily-badge.is-random{border-color:#efc27a;background:#fff8ea}
-.subject-card .subject-daily{position:absolute;right:38px;bottom:10px;z-index:2;padding:2px 8px 2px 4px}
+.subject-card .subject-daily{position:absolute;right:34px;bottom:8px;z-index:2;flex-direction:column;gap:2px;padding:0;border:0;background:none}.subject-card .subject-daily .ico{width:46px!important;height:46px!important}.subject-card .subject-daily.is-random .ico{border-radius:50%;box-shadow:0 0 0 3px #efc27a}.subject-card .subject-copy>p{padding-right:60px}
+.daily-random-label{order:-1;font-size:.6875rem;line-height:1;color:#a8680f;white-space:nowrap;background:#fff8ea;border:1px solid #efc27a;border-radius:999px;padding:2px 6px}
 .subject-card.daily-focus{outline:4px solid #efa64b;outline-offset:3px;box-shadow:0 0 0 6px rgba(239,166,75,.28)}
 .quiz-resource-button.daily-badge{padding:3px 8px 3px 5px;min-height:36px;font-size:.75rem;cursor:default}
 .quiz-resource-button.daily-badge .ico{width:26px;height:26px}
