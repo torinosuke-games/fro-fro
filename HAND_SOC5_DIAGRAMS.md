@@ -93,21 +93,23 @@ PR #74は作業開始時にマージ済みだった。main b2772d2からcodex/re
 
 | ID（social_g5_hand_省略） | 原県データの選択 | 色の形 |
 |---|---|---|
-| industry_006 | 愛知・三重 | 伊勢・三河湾に接する沿岸帯を県境で切る |
+| industry_006 | 愛知・三重 | 伊勢湾に接する細い沿岸帯を県境で切る |
 | industry_010 | 東京・神奈川 | 東京湾の西・北岸に接する沿岸帯を県境で切る |
 | industry_011 | 大阪・兵庫 | 大阪湾の北・東岸に接する沿岸帯を県境で切る |
 | industry_012 | 岡山・広島 | 対象の海に接する沿岸帯を県境で切る |
 | industry_013 | 群馬・栃木・埼玉 | 3県の本土の輪郭 |
 | climate_011 | 岡山・広島・山口、徳島・香川・愛媛 | 中国・四国の対象沿岸だけを県境で切る |
 | climate_013 | 長野・山梨 | 2県の輪郭 |
-| climate_024 | 青森・秋田・山形・新潟・富山・石川・福井 | 日本海側の沿岸帯を県境で切る。太平洋側を除く |
+| climate_024 | 秋田・山形・新潟・富山・石川・福井 | 島も含む6県の全体の形。任意の青森は含めない |
 | terrain_022 | 原県ポリゴンから陸を除いた海面 | 3開口部で外海と区切る連続海面。島をマスクで除く |
 
-沿岸帯は約20kmを目安にした位置表示用の模式図で、正式な工業地帯・気候の境界ではない。県全体を沿岸地域と誤認させないようにした。県境の外へ色を広げず、海岸線に沿った形を使用する。地名・県名・数字は引き続き表示しない。詳しい出典と再生成手順はSOCIAL_MAP_DATA.md。
+ユーザーの具体的な指定（判断298）に合わせ、工業4問は図の幅に対して約1.5%の同じ細さ、瀬戸内の気候は約2.3%のやや広い帯にした。県境の外へ色を広げず、海岸線から内陸へ県の形に沿って切り出す。内陸と日本海側の県全体の図は同じ色の県を結合し、境界を目立たせない。正式な工業・気候分布の境界や測距の図ではない。新しい点や、地名・数字・方位以外のSVG文字は足さない。
 
-変更したファイルはquestions/social_g5_hand.js、tests/cases/redo-soc5-areas.js、tests/fixtures/soc5-prefecture-areas.json、tests/tools/build-soc5-prefecture-areas.py、SOCIAL_MAP_DATA.md、QUESTIONS_GUIDE.md、DECISIONS.md、本書。描画コード・defs・原海岸線・CSS・画像・セーブは変更しない。
+今回の更新ではjs/svg/learning.jsにareaOutline・marineOutlineの任意指定だけを追加し、tests/ui-hand-diagrams-soc5.cjsで実際のSVGの輪郭線が非表示か検査する。それ以外の描画や原海岸線は維持する。
 
-- `node tests/run.js`：699件成功、失敗0。新規4テストで9問だけの変更、全360問のdiagram以外の不変性、対象外351問の不変性、指定24県の包含、隣県・別の沿岸の除外、海面と陸・島・外海の区別を確認。
+変更したファイルはquestions/social_g5_hand.js、js/svg/learning.js、tests/cases/redo-soc5-areas.js、tests/ui-hand-diagrams-soc5.cjs、tests/fixtures/soc5-prefecture-areas.json、tests/tools/build-soc5-prefecture-areas.py、SOCIAL_MAP_DATA.md、QUESTIONS_GUIDE.md、DECISIONS.md、本書。defs・原海岸線・CSS・画像・セーブは変更しない。描画コードは指定された塗りの輪郭線を非表示にする任意項目だけ。
+
+- `node tests/run.js`：700件成功、失敗0。新規5テストで9問だけの変更、全360問のdiagram以外の不変性、対象外351問の不変性、指定23県の包含、隣県・別の湾の除外、海面と陸・島・外海の区別、4つの帯の細さの一致、県全体・点なし・輪郭非表示を確認。
 - `tests/ui-hand-diagrams-soc5.cjs`：全48問＋書き1問×360・390・768・1024px＝196表示、成功。見切れ・横はみ出し・文字の重なり・ページ例外なし。
 - 9問の390px図を一覧で目視し、代表の地域図を390/1024pxの問題画面で確認。全48問の再表示により、対象外の図の回帰も確認する。
 - 標準出力による再生成結果はquestionに入れた9問の座標と一致する。ゲームにはShapelyやPythonの依存を追加しない。

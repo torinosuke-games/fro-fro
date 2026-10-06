@@ -57,6 +57,8 @@ fs.mkdirSync(out,{recursive:true});
     assert.deepEqual(structure.labels,q.kind==='japanMap'?['北']:[],q.id+' answer label');
     assert.equal(structure.arrows,structure.expectedArrows);assert.equal(structure.meridians,structure.expectedMeridians);
     if(q.kind==='japanMap'){assert.equal(structure.marks,structure.expectedMarks);assert.equal(structure.areas,structure.expectedAreas);assert.equal(structure.marine,structure.expectedMarine);}
+    const outlines=await page.evaluate(()=>{const d=FF.app.bank.byId[FF.app.session.currentId].diagram,s=document.querySelector('.lesson-figure svg');return {area:d.areaOutline===false?[...s.querySelectorAll('[data-part="area"]')].every(n=>getComputedStyle(n).stroke==='none'):true,marine:d.marineOutline===false?[...s.querySelectorAll('[data-part="marine-area"]')].every(n=>getComputedStyle(n).stroke==='none'):true};});
+    assert.equal(outlines.area,true,'no highlighted prefecture/band boundary');assert.equal(outlines.marine,true,'no highlighted artificial sea boundary');
     checks.push({id:q.id,width,...result});
     if(q.id===qs[0].id){
      // 実際の文字をviewBoxの端をまたぐ／完全に外へ出す負例。検査後は元に戻す。
@@ -78,4 +80,3 @@ fs.mkdirSync(out,{recursive:true});
   assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',questions:48,inputForms:inputIds.length,renders:checks.length,negativeFixtures:negativeChecks.length*2,screenshots:screenshots.length,errors},null,2));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
-
