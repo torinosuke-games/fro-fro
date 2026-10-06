@@ -388,3 +388,10 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
  .resource-item{min-height:32px}
  .heat-item,.ticket-item{min-height:28px}
 }
+
+/* タブレット・パソコン：問題の画面の、資材欄の下の余白（上の余白と、見出しの行の高さ）も詰める（判断318） */
+@media(min-width:561px){
+ body[data-screen="quiz"] main#screen{padding-top:8px}
+ body[data-screen="quiz"] .lesson-heading{margin-bottom:8px;min-height:0}
+ body[data-screen="quiz"] .lesson-heading .btn,body[data-screen="quiz"] .lesson-heading button{min-height:34px;padding-block:3px}
+}
