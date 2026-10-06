@@ -9,7 +9,7 @@
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
 - 仕様：`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 312。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 313。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
 - リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`。算数の文章題55問への図（判断223）：`MATH_WORD_DIAGRAMS.md`（図の種類・使った問題）、依頼の記録は `DIAGRAM_REQUESTS.md`（完了）
 - 完成報告：`REPORT.md`（v0.1）、`REPORT_v0.2.md`、`REPORT_v0.3.md`、`REPORT_v0.4.md`、`REPORT_sync.md`（データの保存）
@@ -47,7 +47,7 @@
 - 小6国語（判断272〜274）：単元を12登録し、全12単元の手作り336問を `questions/japanese_g6_hand.js` に書いた（reviewed: false。各単元とも基礎8・標準12・発展8。原作と合わせて363問）。絵（Grok）はまだ付けていない
 - 小4英語（判断278〜280）：外国語活動の内容に合わせて単元を11登録し、手作り242問を `questions/english_g4_hand.js` に書いた（reviewed: false。原作と合わせて269問）。**英語の読み上げ**（`js/speech.js`。ブラウザの `speechSynthesis`。問題のスピーカーのボタン・設定のオン・オフと速さ）と、**聞き取りの単元**（`listen` の項目。22問）を付けた。声は、スマホで聞いて確かめてもらう（この環境では出せない）
 - 小5英語（判断281・283）：教科の外国語（読む・書くが加わる）に合わせて単元を12登録し、全12単元の手作り264問を `questions/english_g5_hand.js` に書いた（reviewed: false。各単元とも基礎6・標準9・発展7。原作と合わせて291問）。つづり・買い物・職業・国・学校・読んでみよう・聞き取りなど。読み上げ・聞き取り・手書きに対応
-- 小5理科（判断284）：単元を9登録し、全9単元の手作り324問を `questions/science_g5_hand.js` に書いた（reviewed: false。各単元とも基礎9・標準15・発展12）。図は、SVG 58問を ChatGPT が付け（`DIAGRAM_REQUESTS_16.md`・`HAND_SCI5_DIAGRAMS.md`。判断289。答えを見せる3問は判断290で外した）、絵16問を Grok が付けた（`DIAGRAM_REQUESTS_17.md`。判断285・286・288。プロンプトの記録は `HAND_SCI5_PICTURES.md`）。小5理科の図は計74問
+- 小5理科（判断284）：単元を9登録し、全9単元の手作り324問を `questions/science_g5_hand.js` に書いた（reviewed: false。各単元とも基礎9・標準15・発展12）。図は、SVG 58問を ChatGPT が付け（`DIAGRAM_REQUESTS_16.md`・`HAND_SCI5_DIAGRAMS.md`。判断289。答えを見せる3問は判断290で外した）、絵16問を Grok が付けた（`DIAGRAM_REQUESTS_17.md`。判断285・286・288。プロンプトの記録は `HAND_SCI5_PICTURES.md`）。小5理科の図は計74問（判断312：`river_026` の SVG を外し、Grok に絵を頼んだ＝`DIAGRAM_REQUESTS_20.md`。絵が付くまでは図なし）
 - 小5社会（判断291）：単元を10登録し、全10単元の手作り360問を `questions/social_g5_hand.js` に書いた（reviewed: false。各単元とも基礎9・標準15・発展12。原作の12問は単元だけ移した。図は、絵85枚（110問）を Grok が付けた（`DIAGRAM_REQUESTS_18.md`。判断292・293・294。プロンプトの記録は `HAND_SOC5_PICTURES.md`。新聞など4枚は作り直して差しかえ済み）。地図の SVG 48問は ChatGPT が付けた（`DIAGRAM_REQUESTS_19.md`・`HAND_SOC5_DIAGRAMS.md`。判断295・296。色の範囲の図9問は、県の形・沿岸の細い帯に直して差しかえ済み。判断297・298・`SOCIAL_MAP_DATA.md`）。統計のグラフは、問題を作り直してから）
 - 手書き（判断266・282）：国語で、答えが漢字の書き問題と、英語で、答えが英語の単語（2〜12文字）の書き問題は、手書きの欄に書いて、お手本とくらべて、自分で「かけた」「まちがえた」を選ぶ（ポイントは半分＝`balance.HANDWRITING.REWARD_RATE`。英語は四本線）。端末の手書き入力（iPad のスクリブル・Android の手書き入力）が使えれば、「キーボードで入力する」で、自動判定（満点）。`js/ui/handwriting.js`。AI での判定は、サーバーを持つときの課題
 - データの保存（サーバー同期。判断299〜310、`SPEC_sync.md`、`REPORT_sync.md`）：Supabase。ログインはプレイヤーコード＝1人に1つ（メール・本名なし。判断307）。S-1〜S-7 完了（設計・SQL（`supabase/1〜4_*.sql`は実行済み）・通信とセーブの同期・競合の画面・コードの印刷と引き継ぎ・学習の履歴の送信・保護者の記録画面・手動確認の手順と完成報告）。設定の「データの保存」は、ふつうの画面に出る（判断310。`config.SYNC.ENABLED: true`）が、同期は、おうちの方が同意してオンにした端末だけが行う（既定はオフ）。ここだけは `fetch` を使う（オフなら通信ゼロ）。結合テストの道具：`node tests/tools/sync-e2e-pg.cjs`（Postgres 16 が要る）。Supabase の一時停止の対策：`.github/workflows/supabase-keepalive.yml`（判断309）
