@@ -4,7 +4,7 @@
   var FF = root.FF;
   var U = FF.ui;
 
-  // この版では、設定に出すのは config.SYNC.ENABLED が true のときと、デバッグモードのときだけ
+  // 設定に出すのは、config.SYNC.ENABLED が true のとき（判断310。false に戻せば、デバッグモードのときだけになる）
   function available() {
     return !!(FF.syncApp && FF.config.SYNC && (FF.config.SYNC.ENABLED || FF.debugMode));
   }

@@ -192,6 +192,23 @@ const OUT = process.env.FF_SHOT_DIR || null;
   assert.equal(Object.values(profiles)[0].save.player.name, 'Cくん', '置き換えると、保管庫がこの端末のデータになる');
   assert.equal(JSON.parse(await c.evaluate(() => FF.storage.loadSyncBackup())).player.name, 'ほかの端末', '置き換えられたデータは、控えに残る');
 
+  // ふつうの画面（?debug=1 なし）にも「データの保存」が出る（判断310）。オンにするまで、通信しない
+  const ctxD = await browser.newContext({ viewport: { width: 390, height: 900 } });
+  let dCalls = 0;
+  await ctxD.route(HOST, async route => { dCalls++; await handler(route); });
+  const d = await ctxD.newPage();
+  d.on('pageerror', e => errors.push(e.message));
+  await d.goto(pathToFileURL(path.resolve(__dirname, '../index.html')).href, { waitUntil: 'domcontentloaded' });
+  await d.evaluate(() => { document.documentElement.dataset.theme = 'day'; FF.app.state.flags.introSeen = true; FF.ui.show('settings'); });
+  assert.equal(await d.evaluate(() => !!FF.debugMode), false, 'デバッグモードではない');
+  assert.equal(await d.evaluate(() => FF.config.SYNC.ENABLED), true);
+  await d.waitForSelector('.sync-panel');
+  assert.equal(await d.locator('.sync-panel .btn.primary').count() >= 1, true, 'オンにするボタン');
+  assert.equal(await d.locator('.sync-link-open').count(), 1, '同じプレイヤーとして続ける');
+  await d.waitForTimeout(2600);   // 起動の2秒後の同期が動く時間
+  assert.equal(dCalls, 0, 'オンにするまで、通信しない');
+  await shot('sync-11-normal-screen', d);
+
   // オフにすると通信しない
   await page.evaluate(() => FF.syncApp.disable());
   const n = calls.length;
