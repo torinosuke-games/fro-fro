@@ -412,3 +412,20 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 
 /* タブレット・パソコン：資材のアイコンの下の縁を、カードの説明（「○単元から、えらんで学ぼう。」）の下の縁にそろえる（判断319） */
 @media(min-width:561px){.subject-card .subject-daily{bottom:19px}}
+
+/* 「学ぶ」の教科選択の見出しまわりを整理（判断321）：見出し・説明・資材の説明を左に、主人公の絵と学年のボタンを右に1つにまとめる */
+.subject-top .rn-heading p.daily-note{display:inline-flex;align-items:center;margin:10px 0 0;padding:5px 14px;border:1px solid #d3e3ee;border-radius:999px;background:#fff;color:#43657d;font-size:.8125rem;line-height:1.4;font-weight:700;text-wrap:balance;box-shadow:0 1px 3px rgba(23,76,112,.08)}
+@media(min-width:561px){
+ .subject-top{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"head avatar" "head actions";column-gap:20px;row-gap:6px;align-items:center;min-height:0;margin-bottom:18px}
+ .subject-top .rn-heading{grid-area:head;margin:0;padding-right:0}
+ .subject-top .rn-heading>.eyebrow{padding-right:0}
+ .subject-top-actions{position:static;grid-area:actions;justify-self:center;margin:0}
+ .subject-heading-avatar{position:static;grid-area:avatar;justify-self:center;align-self:end;width:76px;height:76px;margin:0;border:3px solid #fff}
+}
+@media(max-width:560px){
+ .subject-top{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"title actions" "note note";column-gap:10px;row-gap:6px;align-items:center;margin-bottom:12px}
+ .subject-top .rn-heading{display:contents}
+ .subject-top .rn-heading h1{grid-area:title;margin:0}
+ .subject-top .rn-heading p.daily-note{grid-area:note;justify-self:start;margin:0;padding:4px 10px;font-size:min(.8125rem,2.85vw)}
+ .subject-top-actions{grid-area:actions;margin:0}
+}
