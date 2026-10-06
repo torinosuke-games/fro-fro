@@ -474,4 +474,42 @@ module.exports = ({ test, FF, assert, plain }) => {
     await b.engine.sync({ force: true });
     assert.equal(a.serverAttempts().length, 5);
   });
+
+  test('QR コードの中身：# のうしろにコードを入れた URL。コードだけでも、URL でも、読み取れる', () => {
+    const code = 'ABCDEFGHJKMNPQRS';
+    const base = 'https://example.github.io/fro-fro/';
+    assert.equal(S.shareUrl(base, code, false), base + '#ffcode=' + code);
+    assert.equal(S.shareUrl(base + '?x=1#old', code, true), base + '?debug=1#ffcode=' + code);
+    assert.ok(S.shareUrl(base, code, true).indexOf('#') > S.shareUrl(base, code, true).indexOf('?'), 'コードは # のうしろ（サーバーに送られない）');
+    for (const t of [S.shareUrl(base, code, true), S.shareUrl(base, code, false), '#ffcode=abcd-efgh-jkmn-pqrs', code, ' ' + S.formatCode(code) + ' ']) assert.equal(S.codeFromText(t), code, t);
+    for (const t of ['', null, 'https://example.com/', '#ffcode=ABC', 'ffcode=', 'hello']) assert.equal(S.codeFromText(t), null, String(t));
+    // QR コードに入る長さ：型番 5 以内（読み取りやすい大きさ）
+    assert.ok(FF.qrcode.encode(S.shareUrl('https://torinosuke-games.github.io/fro-fro/', code, true)).version <= 5);
+  });
+
+  test('保護者の記録：コードの子どもの名前を読む（使えるコードかの確認にもなる）', async () => {
+    const srv = makeServer(); const d = makeDevice(srv, 'A');
+    d.state = FF.state.setPlayerName(d.state, 'ひなた'); d.state = FF.state.withUpdated(d.state, T0 + 5);
+    const code = (await d.engine.enable()).code; await d.engine.sync();
+    const ok = await S.fetchProfile(srv.fetch, CFG, FF.balance.SYNC, S.formatCode(code).toLowerCase());
+    assert.deepEqual(plain(ok), { ok: true, name: 'ひなた', grade: null });
+    assert.equal((await S.fetchProfile(srv.fetch, CFG, FF.balance.SYNC, 'ZZZZZZZZZZZZZZZZ')).error, 'not_found');
+    assert.equal((await S.fetchProfile(srv.fetch, CFG, FF.balance.SYNC, 'abc')).error, 'bad_code');
+    srv.down = true;
+    assert.equal((await S.fetchProfile(srv.fetch, CFG, FF.balance.SYNC, code)).error, 'network');
+  });
+
+  test('保存先：保護者の記録で見るコードの一覧は、別のキー。同じコードは1つ、形のおかしいものは捨てる。リセットで消える', () => {
+    const mem = {}; const ls = { getItem: k => (k in mem ? mem[k] : null), setItem: (k, v) => { mem[k] = String(v); }, removeItem: k => { delete mem[k]; } };
+    assert.deepEqual(plain(FF.storage.loadGuardians(ls)), []);
+    FF.storage.saveGuardians([{ code: 'abcd-efgh-jkmn-pqrs', name: 'ひなた', addedAt: 5 }, { code: 'ABCDEFGHJKMNPQRS', name: '重複' }, { code: 'bad' }, null, { code: 'ZZZZZZZZZZZZZZZZ', name: 5 }], ls);
+    assert.deepEqual(plain(FF.storage.loadGuardians(ls)), [{ code: 'ABCDEFGHJKMNPQRS', name: 'ひなた', addedAt: 5 }, { code: 'ZZZZZZZZZZZZZZZZ', name: null, addedAt: 0 }]);
+    mem['frozenFrontier.save.guardians'] = '{こわれた';
+    assert.deepEqual(plain(FF.storage.loadGuardians(ls)), []);
+    FF.storage.saveGuardians([{ code: 'ABCDEFGHJKMNPQRS', name: 'a' }], ls);
+    FF.storage.clearSync(ls);   // 同期の記録を消しても、保護者の一覧は残る（ほかの子のコードを失わない）
+    assert.equal(FF.storage.loadGuardians(ls).length, 1);
+    FF.storage.clearGuardians(ls);
+    assert.equal(FF.storage.loadGuardians(ls).length, 0);
+  });
 };

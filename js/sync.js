@@ -96,6 +96,19 @@
     return String(code).replace(/(.{4})(?=.)/g, '$1-');
   }
 
+  // QR コードに入れる文字列：開くとコードが渡る URL。コードは # のうしろ（フラグメント）に入れる＝サーバーには送られない。
+  // 標準のカメラアプリで読むと、そのままゲームが開く。debug が true なら ?debug=1 も付ける（設定を見せるあいだの措置）
+  function shareUrl(baseUrl, code, debug) {
+    var b = String(baseUrl || '').replace(/[?#].*$/, '');
+    return b + (debug ? '?debug=1' : '') + '#ffcode=' + code;
+  }
+  // 読み取った文字・貼り付けた文字 → 16文字のコード。URL（#ffcode=…）でも、コードだけでもよい。読めなければ null
+  function codeFromText(text) {
+    var t = String(text == null ? '' : text);
+    var m = /ffcode=([A-Za-z0-9\-]+)/.exec(t);
+    return normalizeCode(m ? m[1] : t);
+  }
+
   // サーバーに送る鍵（コードの指紋。コードそのものは送らない）
   function keyOf(code) { return sha256Hex('FROZEN-FRONTIER/sync/' + code); }
 
@@ -450,6 +463,18 @@
     return { sync: sync, enable: enable, link: link, disable: disable, deleteRemote: deleteRemote, record: rec, collect: collect, pending: pending };
   }
 
+  // 保護者の記録用：そのコードの子どもの名前（セーブにある主人公の名前）。使えるコードかの確認にも使う。
+  // 返す値：{ ok: true, name, grade } か { ok: false, error }（保管庫にない＝'not_found'）
+  function fetchProfile(fetchFn, cfg, balance, codeText) {
+    var code = normalizeCode(codeText);
+    if (!code) return Promise.resolve({ ok: false, error: 'bad_code' });
+    return rpc(fetchFn, cfg, 'ff_pull', { p_key: keyOf(code) }, balance.TIMEOUT_MS).then(function (res) {
+      if (!res.ok) return { ok: false, error: res.error || 'pull' };
+      var p = res.save_json && res.save_json.player;
+      return { ok: true, name: p && typeof p.name === 'string' ? p.name.slice(0, 24) : null, grade: p && typeof p.grade === 'number' ? p.grade : null };
+    });
+  }
+
   // 保護者の記録用：コードの履歴を、すべて読む（1000件ずつ）。同期がオンでなくても使える。
   // 返す値：{ ok: true, rows } か { ok: false, error }。onProgress(読んだ件数) は省略可
   function fetchAttempts(fetchFn, cfg, balance, codeText, onProgress) {
@@ -474,7 +499,7 @@
   }
 
   FF.sync = {
-    fetchAttempts: fetchAttempts,
+    fetchAttempts: fetchAttempts, fetchProfile: fetchProfile, shareUrl: shareUrl, codeFromText: codeFromText,
     sha256Hex: sha256Hex, ALPHABET: ALPHABET, CODE_LENGTH: CODE_LENGTH,
     generateCode: generateCode, normalizeCode: normalizeCode, formatCode: formatCode, keyOf: keyOf,
     newRecord: newRecord, normalizeRecord: normalizeRecord, summarize: summarize, attemptRow: attemptRow, normalizeOutbox: normalizeOutbox,

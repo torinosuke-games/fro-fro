@@ -106,6 +106,32 @@
     try { store.setItem(outboxKey(), JSON.stringify(o)); return true; } catch (e) { return false; }
   }
 
+  // 保護者の記録で見る子どものコードの一覧（この端末に保存する。判断306）。[{ code, name, addedAt }]
+  function guardiansKey() { return FF.config.SAVE_KEY + '.guardians'; }
+  function normalizeGuardians(list) {
+    var seen = {}, out = [];
+    (Array.isArray(list) ? list : []).forEach(function (g) {
+      var code = g && typeof g.code === 'string' ? FF.sync.normalizeCode(g.code) : null;
+      if (!code || seen[code]) return;
+      seen[code] = true;
+      out.push({ code: code, name: typeof g.name === 'string' ? g.name.slice(0, 24) : null, addedAt: typeof g.addedAt === 'number' ? g.addedAt : 0 });
+    });
+    return out.slice(0, 20);
+  }
+  function loadGuardians(ls) {
+    var store = getLs(ls);
+    try { return normalizeGuardians(JSON.parse(store ? store.getItem(guardiansKey()) || '[]' : '[]')); } catch (e) { return []; }
+  }
+  function saveGuardians(list, ls) {
+    var store = getLs(ls);
+    if (!store) return false;
+    try { store.setItem(guardiansKey(), JSON.stringify(normalizeGuardians(list))); return true; } catch (e) { return false; }
+  }
+  function clearGuardians(ls) {
+    var store = getLs(ls);
+    if (store) try { store.removeItem(guardiansKey()); } catch (e) { /* 何もしない */ }
+  }
+
   function clearSync(ls) {
     var store = getLs(ls);
     if (!store) return;
@@ -115,6 +141,7 @@
   FF.storage = {
     load: load, save: save, clear: clear, loadReviews: loadReviews, saveReviews: saveReviews,
     loadSync: loadSync, saveSync: saveSync, loadSyncBackup: loadSyncBackup, saveSyncBackup: saveSyncBackup, clearSync: clearSync,
-    loadOutbox: loadOutbox, saveOutbox: saveOutbox
+    loadOutbox: loadOutbox, saveOutbox: saveOutbox,
+    loadGuardians: loadGuardians, saveGuardians: saveGuardians, clearGuardians: clearGuardians
   };
 })(this);
