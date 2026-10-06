@@ -98,7 +98,7 @@ attempts   (profile_id → profiles, attempt_id text, at bigint, qid text, subje
 | 段階 | 内容 | 必要なもの |
 |---|---|---|
 | S-1 | この設計（SPEC・判断299）の確認 | ユーザーの確認 |
-| S-2 | Supabase のプロジェクトとテーブル・関数の SQL（`supabase/schema.sql`）を作る | **ユーザーが Supabase のアカウントとプロジェクトを作り、URL と anon キーを教える**。SQL は私が書き、実行はユーザー（SQL Editor に貼る） |
+| S-2 | Supabase のプロジェクトとテーブル・関数の SQL（`supabase/1_tables.sql`〜`4_grants.sql`（順に実行））を作る | **ユーザーが Supabase のアカウントとプロジェクトを作り、URL と anon キーを教える**。SQL は私が書き、実行はユーザー（SQL Editor に貼る） |
 | S-3 | 通信の層（`js/sync.js`）・設定のスイッチ・セーブの同期・競合の画面。テストは偽の fetch | S-2 |
 | S-4 | 引き継ぎコード（作る・表示・印刷・入れて引き継ぐ） | S-3 |
 | S-5 | 学習の履歴の送信（outbox・再送・さかのぼり） | S-3 |
