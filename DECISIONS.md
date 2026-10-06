@@ -792,4 +792,4 @@
 ## 判断300：Supabase の接続先と SQL（S-2）
 - プロジェクトの URL と anon（公開用）キーを `js/config.js` の `SYNC` に置いた。**`ENABLED: false`**（既定）なので、通信はしない。service_role・secret キーは置かない（anon の JWT の role が `anon` であることを確認した）。
 - `supabase/schema.sql`：テーブル3つ（profiles・saves・attempts）と、鍵を確かめる関数 ff_*（create_profile・pull・push_save・push_attempts・read_attempts・delete_profile）。テーブルは RLS 有効・権限なしで、anon は関数だけ実行できる。ユーザーが SQL Editor に貼って実行する。
-- この環境から Supabase へは通信できない（プロキシが許可していない）。SQL は実行して確かめていない。実際の動作確認は、ユーザーが SQL を実行したあと、GitHub Pages の公開版で行う。
+- この環境から Supabase へは通信できない（プロキシが許可していない）。代わりに、ローカルの Postgres 16 に `anon` ロールを作って SQL を試した（2回実行しても通る・作成と重複・セーブの競合・履歴の再送で二重にならない・不正な行は拒否・anon からテーブルと内部関数は直接読めない・削除）。本物の Supabase での確認は、ユーザーが SQL を実行したあと、GitHub Pages の公開版で行う。
