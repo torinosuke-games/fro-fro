@@ -870,6 +870,12 @@ a.btn { text-decoration: none; }
 
 /* ---- 引き継ぎコードのカード（判断302）：画面では見えず、印刷のときだけ、紙の左上に名刺の大きさで出る ---- */
 .code-card { display: none; }
+.sync-qr { width: 200px; max-width: 70%; height: auto; display: block; margin: 0 auto; border: 1px solid rgba(0,0,0,0.12); border-radius: 6px; }
+.sync-qr-note { text-align: center; }
+.sync-scan-video { width: 100%; max-height: 50vh; background: #000; border-radius: 8px; object-fit: cover; }
+.parent-chips { flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.parent-grid { stroke: rgba(0, 0, 0, 0.14); }
+.parent-grid.base { stroke: rgba(0, 0, 0, 0.45); }
 .sync-link-input { text-transform: uppercase; letter-spacing: 0.05em; font-family: monospace; }
 
 /* ---- 保護者の記録（判断304） ---- */
@@ -922,8 +928,11 @@ a.btn { text-decoration: none; }
     display: flex; flex-direction: column; justify-content: space-between; background: #ffffff;
   }
   .code-card-brand { font-size: 8pt; font-weight: bold; border-bottom: 0.3mm solid #000000; padding-bottom: 1mm; }
-  .code-card-code { font-family: monospace; font-size: 14pt; font-weight: bold; text-align: center; white-space: nowrap; letter-spacing: 0.04em; }
-  .code-card-note { font-size: 6.5pt; line-height: 1.45; }
+  .code-card-main { display: flex; gap: 3mm; align-items: center; flex: 1; }
+  .code-card-qr { width: 30mm; height: 30mm; flex: 0 0 auto; }
+  .code-card-side { display: flex; flex-direction: column; gap: 2mm; min-width: 0; }
+  .code-card-code { font-family: monospace; font-size: 10pt; font-weight: bold; white-space: nowrap; letter-spacing: 0.02em; }
+  .code-card-note { font-size: 6pt; line-height: 1.4; }
 }
 
 /* ---- 絵の見た目（判断177。config.ART_STYLE = 'art'）：生成した絵を使う基地の風景・資源・教科のアイコン ---- */

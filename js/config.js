@@ -24,6 +24,7 @@
     // ANON_KEY は公開用（anon）だけ。service_role・secret キーは絶対に置かない
     SYNC: {
       ENABLED: false,
+      PUBLIC_URL: 'https://torinosuke-games.github.io/fro-fro/',   // 引き継ぎコードの QR コードに入れる、ゲームの公開の URL
       URL: 'https://ivylealwkoatewbcxdeg.supabase.co',
       ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2eWxlYWx3a29hdGV3YmN4ZGVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTQzMDcsImV4cCI6MjEwNjgzMDMwN30.mMRiCd3mSzsegrGFvrKtzhQTBC5Qa6NAbQs18fHAxss'
     }

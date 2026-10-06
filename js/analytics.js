@@ -89,5 +89,24 @@
     return { total: total, daily: daily, bySubject: bySubject, byUnit: byUnit, weakUnits: weakUnits, missed: missedList };
   }
 
-  FF.analytics = { dayKey: dayKey, summarize: summarize };
+  // グラフの縦軸：max までが入る「きりのよい」上限と、目盛り（0 から、等間隔。多くても count + 1 本）
+  function niceTicks(max, count) {
+    count = count || 4;
+    var m = Math.max(1, Math.ceil(max || 0));
+    var steps = [1, 2, 5], mag = 1, step = 1;
+    for (var guard = 0; guard < 30; guard++) {
+      var found = false;
+      for (var i = 0; i < steps.length; i++) {
+        step = steps[i] * mag;
+        if (Math.ceil(m / step) <= count) { found = true; break; }
+      }
+      if (found) break;
+      mag *= 10;
+    }
+    var top = Math.ceil(m / step) * step, ticks = [];
+    for (var v = 0; v <= top; v += step) ticks.push(v);
+    return { max: top, step: step, ticks: ticks };
+  }
+
+  FF.analytics = { dayKey: dayKey, summarize: summarize, niceTicks: niceTicks };
 })(this);

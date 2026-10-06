@@ -136,4 +136,20 @@ module.exports = ({ test, FF, assert, plain }) => {
     srv.down = true;
     assert.equal((await S.fetchAttempts(srv.fetch, CFG, FF.balance.SYNC, 'ABCDEFGHJKMNPQRS')).error, 'network');
   });
+
+  test('グラフの縦軸：きりのよい上限と、多くても5本の目盛り（0 を含む）。大きな数でも小さな数でも', () => {
+    const t = (max) => plain(A.niceTicks(max, 4));
+    assert.deepEqual(t(0), { max: 1, step: 1, ticks: [0, 1] });
+    assert.deepEqual(t(3), { max: 3, step: 1, ticks: [0, 1, 2, 3] });
+    assert.deepEqual(t(4), { max: 4, step: 1, ticks: [0, 1, 2, 3, 4] });
+    assert.deepEqual(t(5), { max: 6, step: 2, ticks: [0, 2, 4, 6] });
+    assert.deepEqual(t(15), { max: 15, step: 5, ticks: [0, 5, 10, 15] });
+    assert.deepEqual(t(16), { max: 20, step: 5, ticks: [0, 5, 10, 15, 20] });
+    assert.deepEqual(t(37), { max: 40, step: 10, ticks: [0, 10, 20, 30, 40] });
+    assert.deepEqual(t(101), { max: 150, step: 50, ticks: [0, 50, 100, 150] });
+    for (let m = 1; m <= 5000; m += 7) {
+      const r = A.niceTicks(m, 4);
+      assert.ok(r.max >= m && r.ticks.length <= 5 && r.ticks[0] === 0 && r.ticks[r.ticks.length - 1] === r.max, 'max=' + m);
+    }
+  });
 };

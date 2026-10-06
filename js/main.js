@@ -45,6 +45,7 @@
 
     resetAll: function () {
       FF.storage.clear();
+      FF.storage.clearGuardians();   // 保護者の記録のために保存したコードも消す
       FF.storage.clearSync();   // 全データのリセットでは、同期もオフにする（空のデータで保管庫を上書きしないため。保管庫のデータは残る）
       app.session = null;
       app.studySel = null;
@@ -159,6 +160,7 @@
     });
     root.addEventListener('pagehide', app.save);
     setupSync();
+    if (U.handleIncomingCode) U.handleIncomingCode();   // QR コードから開かれたとき（URL の # のうしろに、引き継ぎコード）
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

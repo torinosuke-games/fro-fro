@@ -1,6 +1,7 @@
 // データの保存（サーバー同期。判断299）：設定でオンにする → コード → 同期 → 競合の選択。Chromium・file://・偽の保管庫（通信は横取り）
 const path = require('node:path'), { pathToFileURL } = require('node:url'), assert = require('node:assert/strict'), crypto = require('node:crypto');
 const { chromium } = require(process.env.FF_PLAYWRIGHT_MODULE || 'playwright');
+const QD = require('./lib/qrdecode');
 const OUT = process.env.FF_SHOT_DIR || null;
 (async () => {
   const browser = await chromium.launch({ headless: true, executablePath: process.env.FF_BROWSER_PATH || undefined });
@@ -46,6 +47,12 @@ const OUT = process.env.FF_SHOT_DIR || null;
   await page.waitForSelector('.sync-code');
   const code = (await page.locator('.sync-code').innerText()).trim();
   assert.match(code, /^[A-Z2-9]{4}(-[A-Z2-9]{4}){3}$/);
+  // QR コード：開くとコードが渡る URL（# のうしろ）。画面の QR をテスト専用の読み取りで読んで、中身を確かめる
+  const expectUrl = 'https://torinosuke-games.github.io/fro-fro/?debug=1#ffcode=' + code.replace(/-/g, '');
+  assert.equal(await page.locator('.sync-qr').count(), 1);
+  const qr = await page.evaluate(url => ({ d: document.querySelector('.sync-qr path').getAttribute('d'), modules: FF.qrcode.encode(url).modules, pathData: FF.qrcode.pathData(FF.qrcode.encode(url).modules, 4) }), expectUrl);
+  assert.equal(qr.d, qr.pathData, '画面の QR は、この URL から作ったもの');
+  assert.equal(QD.decode(qr.modules).text, expectUrl);
   await shot('sync-3-code');
   await page.locator('.modal .actions .btn').first().click();
   await page.waitForFunction(() => FF.storage.loadSync().rev === 1, null, { timeout: 8000 });
@@ -106,6 +113,7 @@ const OUT = process.env.FF_SHOT_DIR || null;
   await page.locator('.sync-print').click();
   assert.equal(await page.evaluate(() => window.__printed), 1);
   assert.equal(await page.locator('.code-card').count(), 1);
+  assert.equal(await page.locator('.code-card .code-card-qr').count(), 1, '印刷のカードにも QR コード');
   assert.equal((await page.locator('.code-card-code').innerText()).trim(), code);
   assert.equal(await page.locator('.code-card').isVisible(), false, '画面では見えない');
   await page.keyboard.press('Escape');
