@@ -880,6 +880,10 @@
 - `DIAGRAM_REQUESTS_16.md`（ChatGPT の第16弾）の一覧から `river_026` の行を外した（判断290と同じやり方）。第16弾の図は 58問→**57問**。`tests/cases/hand-diagrams-sci5.js`・`tests/ui-hand-diagrams-sci5.cjs` の数と印（ハッシュ）を合わせた。`riverWidth` の描き方（`js/svg/learning.js`）は、そのまま残してある（使われていない）。
 - Grok が絵を付けたあと、Claude が問題文・答えと並べて見て、「川はばのちがいが一目でわかる」「流れの速さ（白波・矢印）が描かれていない」を確かめる。
 
+## 判断313：小5理科 `river_026` に、川はばの絵を付けた
+- `DIAGRAM_REQUESTS_20.md` のとおり、`img/diagrams/sci5_river_026.webp` を置き、`questions/science_g5_hand.js` の `river_026` に `diagram`（`kind:'image'`）だけ足した。問題文・答え・選択肢・ヒント・解説は変えていない。
+- 絵は、同じ川の、はばがせまいところ（がけの間）と広いところ（平地）が1枚に入る。水面は両方とも静かな青で、白波・矢印・文字はない。
+- 使ったプロンプトは `HAND_SCI5_PICTURES.md` に残した。`tests/cases/hand-diagrams-sci5.js` の対象外の図の印だけ、絵を足した分を更新した。
 ## 判断314：題名「Frozen Frontier」の下に、小さく「あなたの学ぶ熱で町に雪解けを」
 - 確認ページ（Artifact）のコメントで、「Frozen Frontier の下に小さく、あなたの学ぶ熱で町に雪解けを、と表記」との依頼。ヘッダーの題名（`js/ui/renewal.js` の `.brand`）の下に、小さく1行を出す（`js/renewal-texts.js` の `brandCaption`。もとは題名の右に出ていた「学ぶ熱で、雪の向こうへ。」で、画面の幅が狭いと隠れていた）。
 - どの画面幅でも出す（スマホでは文字を小さくし、とても狭い幅では2行に折り返す。横にはみ出さない）。文言は依頼のとおり。コンセプト（判断189）の「学ぶ熱で雪をとかす」に合っている。
