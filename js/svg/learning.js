@@ -742,7 +742,7 @@
     for(var v=0;v<=top;v+=step){var yy=bottom-v/top*plotHeight;add(line(65,yy,472,yy,'#d0e1eb'),text(48,yy+(detailed?8:5),v,detailed?24:15));}
     var points=d.values.map(function(v,i){return [75+i*380/(d.values.length-1),bottom-v/top*plotHeight];});
     add(S('polyline',{points:points.map(function(p){return p.join(',');}).join(' '),fill:'none',stroke:blue,'stroke-width':3}));
-    points.forEach(function(p,i){add(S('circle',{cx:p[0],cy:p[1],r:5,fill:orange,stroke:'#fff','stroke-width':2}),text(p[0],detailed?333:249,d.labels[i],detailed?24:15));});
+    points.forEach(function(p,i){add(S('circle',{cx:p[0],cy:p[1],r:5,fill:orange,stroke:'#fff','stroke-width':2}),text(p[0],detailed?333:249,d.labels[i],detailed?24:15));if(d.showValues)add(text(i===0?p[0]+16:p[0],p[1]-12,d.values[i],detailed?22:16));});
    }else if(d.kind==='abacus'){
     // けたの数に合わせて、わくと柱の位置を決める（3けた以上でも、一の位まで、わくの中に入る。判断311）
     h=270;var cols=d.digits.length,colW=Math.min(110,440/cols),x0=(520-colW*cols)/2+colW/2;

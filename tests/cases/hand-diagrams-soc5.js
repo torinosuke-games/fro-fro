@@ -2,7 +2,7 @@
 module.exports=({test,FF,ctx,assert,plain})=>{
  const fs=require('fs'),path=require('path'),crypto=require('crypto');
  const ids=[...fs.readFileSync(path.join(__dirname,'../../DIAGRAM_REQUESTS_19.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'social_g5_hand_'+m[1]);
- const all=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_soc5')),qs=all.filter(q=>ids.includes(q.id));
+ const all=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_soc5'&&!q.id.startsWith('social_g5_stat_'))),qs=all.filter(q=>ids.includes(q.id));
  const get=id=>qs.find(q=>q.id==='social_g5_hand_'+id).diagram;
  const hash=a=>crypto.createHash('sha256').update(JSON.stringify(a)).digest('hex');
  function range(d){
