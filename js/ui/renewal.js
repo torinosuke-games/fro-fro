@@ -286,7 +286,7 @@
   if(!g){main.appendChild(title(R.learning,R.chooseGrade,R.gradeIntro));main.appendChild(U.gradePicker(null,function(n){a.commit(FF.state.setPlayerGrade(a.state,n));U.rerender();}));return;}
   var subjectHead=title(R.learning,R.subjectHeading,R.subjectLead);subjectHead.appendChild(E('p',{class:'daily-note',rich:R.dailyNote}));   // 手に入る資材の説明（判断319）
   main.appendChild(E('div',{class:'subject-top'},[subjectHead,E('div',{class:'subject-top-actions'},[
-   button(school(g)+'  ⚙',function(){U.show('settings');},'rn-button')
+   E('button',{class:'rn-button grade-chip',attrs:{type:'button','aria-label':school(g)+'（学年を変える・設定）'},on:{click:function(){U.show('settings');}}},[E('span',{class:'grade-chip-label',text:school(g)}),E('span',{class:'grade-chip-gear',attrs:{'aria-hidden':'true'},text:'⚙'})])
   ]),U.artImg('avatar-'+(s.player.avatar||'e1')+'.jpg','subject-avatar subject-heading-avatar')]));
   var art={math:'math',japanese:'jp',science:'sci',social:'soc',english:'en'};
   var order=['math','japanese','science','social','english'];

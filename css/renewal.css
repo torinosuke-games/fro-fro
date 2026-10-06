@@ -273,13 +273,15 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
  body[data-screen="base"] .head-with-avatar .greeting{text-wrap:pretty}
 
  /* 学ぶ（教科の選択）：見出しを1〜2行にして、カードを低くする */
- .subject-top{min-height:0;margin-bottom:10px}
- .subject-top .rn-heading{padding-right:0}
+ /* 見出しと学年のチップを1行にそろえ、説明は、その下に広く置く */
+ .subject-top{min-height:0;margin-bottom:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:10px}
+ .subject-top .rn-heading{display:contents}
  .subject-top .rn-heading>.eyebrow{display:none}
- .subject-top .rn-heading h1{margin:0 0 2px;font-size:1.25rem;line-height:1.4}
+ .subject-top .rn-heading h1{grid-column:1;grid-row:1;margin:0;font-size:1.25rem;line-height:1.4}
  .subject-top .rn-heading p:not(.daily-note){display:none}
+ .subject-top .rn-heading .daily-note{grid-column:1 / -1;grid-row:2;margin:2px 0 0}
  .subject-heading-avatar{display:none}
- .subject-top-actions{position:static;justify-content:flex-end;gap:6px;margin:0 0 6px}
+ .subject-top-actions{position:static;grid-column:2;grid-row:1;justify-content:flex-end;gap:6px;margin:0}
  .subject-top-actions>.rn-button{height:36px;min-height:36px;padding:3px 10px}
  .subject-top-actions .study-resource-button{padding:3px 8px}
  .subject-top-actions .study-resource-button .ico{width:22px;height:22px}
@@ -412,3 +414,10 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 
 /* タブレット・パソコン：資材のアイコンの下の縁を、カードの説明（「○単元から、えらんで学ぼう。」）の下の縁にそろえる（判断319） */
 @media(min-width:561px){.subject-card .subject-daily{bottom:19px}}
+
+/* 学年のチップ：学年のことばと、設定の歯車を、分けて見せる */
+.grade-chip{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:#fff;border:2px solid #cfe0ec;color:var(--rn-navy,#1e4254);font-weight:700;line-height:1}
+.grade-chip-label{white-space:nowrap}
+.grade-chip-gear{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#e8f1f8;color:#43657d;font-size:.8125rem}
+.grade-chip:hover .grade-chip-gear{background:#d6e7f3}
+
