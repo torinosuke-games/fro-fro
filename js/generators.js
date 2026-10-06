@@ -919,7 +919,7 @@
       accepted: [(inv ? a : N) + 'm'],
       hints: inv ? ['もとの 長さ × ' + k + ' ＝ ' + N + ' だよ', N + ' ÷ ' + k + ' を 計算しよう', '求めた 数に ' + k + ' を かけて 確かめよう'] : ['「' + k + '倍」は ' + k + ' 回ぶんの 大きさ', a + ' × ' + k + ' を 計算しよう', '答えの 単位は m だよ'],
       explanation: inv ? N + ' ÷ ' + k + ' ＝ ' + a + '。もとの 長さは ' + a + 'm です。' : a + ' × ' + k + ' ＝ ' + N + '。' + N + 'm です。',
-      distractors: uniq(inv ? [a + 1, a - 1, a + 2, N - k, k] : [N + a, N - a, N + 10, N - 10, a + k], inv ? a : N),
+      distractors: uniq(inv ? [a + 1, a - 1, a + 2, a - 2] : [N + 10, N - 10, N + a, N - a], inv ? a : N),   // 正解に近い、まちがえやすい数だけ（けた上がりの計算ミス ±10 など。判断311）
       meta: { op: 'ratio_of', a: a, k: k, inv: inv }
     };
   };
@@ -1255,7 +1255,7 @@
     var A = ri(rng, P.a[0], P.a[1]), q = ri(rng, P.q[0], P.q[1]), Pp = A * q;
     return mk5('rate_density', [A, q], '面積が ' + A + 'km² の 町に ' + nin(Pp) + ' 住んで います。1km² あたり 何人 ですか。', q,
       ['1km² あたり ＝ 人口 ÷ 面積', Pp + ' ÷ ' + A + ' を 計算しよう', '答えは 人数だよ'],
-      Pp + ' ÷ ' + A + ' = ' + q + '。1km² あたり ' + nin(q) + ' です。', [Pp * A, A + 1, q + A, Pp - A], { A: A, P: Pp }, [q + '人']);
+      Pp + ' ÷ ' + A + ' = ' + q + '。1km² あたり ' + nin(q) + ' です。', [q + 1, q - 1, q + 10, q - 10], { A: A, P: Pp }, [q + '人']);   // 正解に近い数だけ（判断311）
   };
   OPS.rate_total = function (rng, P) {
     var r = ri(rng, 3, 9), S = ri(rng, P.s[0], P.s[1]);
