@@ -9,7 +9,7 @@
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
 - 仕様：`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 319。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 320。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
 - リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`。算数の文章題55問への図（判断223）：`MATH_WORD_DIAGRAMS.md`（図の種類・使った問題）、依頼の記録は `DIAGRAM_REQUESTS.md`（完了）
 - 完成報告：`REPORT.md`（v0.1）、`REPORT_v0.2.md`、`REPORT_v0.3.md`、`REPORT_v0.4.md`、`REPORT_sync.md`（データの保存）
@@ -49,9 +49,10 @@
 - 小5英語（判断281・283）：教科の外国語（読む・書くが加わる）に合わせて単元を12登録し、全12単元の手作り264問を `questions/english_g5_hand.js` に書いた（reviewed: false。各単元とも基礎6・標準9・発展7。原作と合わせて291問）。つづり・買い物・職業・国・学校・読んでみよう・聞き取りなど。読み上げ・聞き取り・手書きに対応
 - 小5理科（判断284）：単元を9登録し、全9単元の手作り324問を `questions/science_g5_hand.js` に書いた（reviewed: false。各単元とも基礎9・標準15・発展12）。図は、SVG 58問を ChatGPT が付け（`DIAGRAM_REQUESTS_16.md`・`HAND_SCI5_DIAGRAMS.md`。判断289。答えを見せる3問は判断290で外した）、絵16問を Grok が付けた（`DIAGRAM_REQUESTS_17.md`。判断285・286・288。プロンプトの記録は `HAND_SCI5_PICTURES.md`）。小5理科の図は計74問（判断312：`river_026` の SVG を外し、Grok に絵を頼んだ＝`DIAGRAM_REQUESTS_20.md`。絵が付くまでは図なし）
 - 小5社会（判断291）：単元を10登録し、全10単元の手作り360問を `questions/social_g5_hand.js` に書いた（reviewed: false。各単元とも基礎9・標準15・発展12。原作の12問は単元だけ移した。図は、絵85枚（110問）を Grok が付けた（`DIAGRAM_REQUESTS_18.md`。判断292・293・294。プロンプトの記録は `HAND_SOC5_PICTURES.md`。新聞など4枚は作り直して差しかえ済み）。地図の SVG 48問は ChatGPT が付けた（`DIAGRAM_REQUESTS_19.md`・`HAND_SOC5_DIAGRAMS.md`。判断295・296。色の範囲の図9問は、県の形・沿岸の細い帯に直して差しかえ済み。判断297・298・`SOCIAL_MAP_DATA.md`）。統計のグラフを読む問題は、判断316で33問を作った＝`questions/social_g5_stats.js`）
+- 学習で獲得できる資材は、その日だけ教科で決まる（判断319。`js/daily.js`。5教科に4資材＋ランダム1つ「☆」、朝4時で切りかわる。資材を選ぶボタンはなくした。入れ替えの詰み対策は保留）
 - 手書き（判断266・282）：国語で、答えが漢字の書き問題と、英語で、答えが英語の単語（2〜12文字）の書き問題は、手書きの欄に書いて、お手本とくらべて、自分で「かけた」「まちがえた」を選ぶ（ポイントは半分＝`balance.HANDWRITING.REWARD_RATE`。英語は四本線）。端末の手書き入力（iPad のスクリブル・Android の手書き入力）が使えれば、「キーボードで入力する」で、自動判定（満点）。`js/ui/handwriting.js`。AI での判定は、サーバーを持つときの課題
 - データの保存（サーバー同期。判断299〜310、`SPEC_sync.md`、`REPORT_sync.md`）：Supabase。ログインはプレイヤーコード＝1人に1つ（メール・本名なし。判断307）。S-1〜S-7 完了（設計・SQL（`supabase/1〜4_*.sql`は実行済み）・通信とセーブの同期・競合の画面・コードの印刷と引き継ぎ・学習の履歴の送信・保護者の記録画面・手動確認の手順と完成報告）。設定の「データの保存」は、ふつうの画面に出る（判断310。`config.SYNC.ENABLED: true`）が、同期は、おうちの方が同意してオンにした端末だけが行う（既定はオフ）。ここだけは `fetch` を使う（オフなら通信ゼロ）。結合テストの道具：`node tests/tools/sync-e2e-pg.cjs`（Postgres 16 が要る）。Supabase の一時停止の対策：`.github/workflows/supabase-keepalive.yml`（判断309）
-- 自動テスト 744件すべて成功、`node tests/simulate.js` はすべて目標内。小5の図118問（第3〜5弾）は `HAND_G5_DIAGRAMS.md`。小4理科87問（第6・7弾）は判断250・`HAND_SCI4_DIAGRAMS.md`、図を追加してPRでレビュー待ち。
+- 自動テスト 748件すべて成功、`node tests/simulate.js` はすべて目標内。小5の図118問（第3〜5弾）は `HAND_G5_DIAGRAMS.md`。小4理科87問（第6・7弾）は判断250・`HAND_SCI4_DIAGRAMS.md`、図を追加してPRでレビュー待ち。
 
 ## テストの実行方法
 
@@ -64,7 +65,7 @@
 ## ファイル構成の要約
 
 - `index.html` … `<script>` の読み込み順はここが唯一の定義
-- `js/` ロジック（純粋関数）：`config.js`、`clock.js`、`balance.js`、`util.js`、`defs.js`（資源・建物・教科・地域・敵・図の種類の定義）、`units.js`（教科・学年ごとの単元）、`integrity.js`（セーブの指紋）、`theme.js`、`state.js`（初期状態・移行・読み込みの検証）、`storage.js`（localStorage はここだけ）、`tickets.js`、`rewards.js`、`buildings.js`（強化・工事の待ち時間・生産）、`answer.js`（判定）、`generators.js`（算数の自動生成）、`learning.js`（出題・回答・学習記録）、`curriculum.js`（リニューアルの出題・単元の絞り込み・問題の番号）、`exam.js`（昇格試験・実力診断）、`exploration.js`（探索）、`battle.js`（戦闘）、`points.js`（勉強量ポイント・引換・券を使う・引換券ID・QR コードの文字列）、`qrcode.js`（自作の QR コード）、`simulator.js`、`texts.js`（文言とふりがな辞書）、`speech.js`（英語の読み上げ）
+- `js/` ロジック（純粋関数）：`config.js`、`clock.js`、`balance.js`、`util.js`、`defs.js`（資源・建物・教科・地域・敵・図の種類の定義）、`units.js`（教科・学年ごとの単元）、`integrity.js`（セーブの指紋）、`theme.js`、`state.js`（初期状態・移行・読み込みの検証）、`storage.js`（localStorage はここだけ）、`daily.js`（その日に獲得できる資材の割り当て）、`tickets.js`、`rewards.js`、`buildings.js`（強化・工事の待ち時間・生産）、`answer.js`（判定）、`generators.js`（算数の自動生成）、`learning.js`（出題・回答・学習記録）、`curriculum.js`（リニューアルの出題・単元の絞り込み・問題の番号）、`exam.js`（昇格試験・実力診断）、`exploration.js`（探索）、`battle.js`（戦闘）、`points.js`（勉強量ポイント・引換・券を使う・引換券ID・QR コードの文字列）、`qrcode.js`（自作の QR コード）、`simulator.js`、`texts.js`（文言とふりがな辞書）、`speech.js`（英語の読み上げ）
 - `js/ui/` 画面：`core.js`（部品・ふりがな・ヘッダー・ナビ・画面切替）、`title.js`、`base.js`、`study.js`、`quiz.js`、`exam.js`、`records.js`、`settings.js`、`exploration.js`、`battle.js`、`redeem.js`（引換所と券・印刷）、`renewal.js`（リニューアルの学ぶ・問題画面）。`js/svg/learning.js`（問題の図）、`js/svg/`（建物・風景・教科アイコン・敵の立ち絵）、`js/debug.js`（`?debug=1`）、`js/main.js`（起動・自動保存）
 - `questions/` 問題データ（`window.QUESTION_BANK.push(...)`）、`img/` ボスの画像
 - `tests/` テスト（`index.html` からは読み込まない。`tests/lib/loader.js` が vm で読み込む）
