@@ -316,6 +316,9 @@
   ]));
   originalBase(main);
   var cta=main.querySelector('.base-cta');if(cta)cta.remove();
+  // スマホでは、上の見出しと説明を出さず、「学習する」を、風景（フィールドマップ）の下に置く（判断315。PC では、上のボタンだけを出す）
+  var scene=main.querySelector('.scene');
+  if(scene&&scene.parentNode)scene.parentNode.insertBefore(button(R.start+' →',function(){U.show('study',{tab:'learn'});},'rn-button primary home-start-mobile'),scene.nextSibling);
   main.appendChild(E('section',{class:'home-steps'},[
    E('div',{},[E('span',{text:'01'}),E('strong',{text:R.stepLearn}),E('p',{text:R.stepLearnDesc})]),
    E('div',{},[E('span',{text:'02'}),E('strong',{text:R.stepTown}),E('p',{text:R.stepTownDesc})]),
@@ -350,9 +353,9 @@
   U.clear(hud);hud.className='hud renewal-hud';
   hud.appendChild(E('div',{class:'masthead'},[
    E('button',{class:'brand',attrs:{type:'button','aria-label':'Frozen Frontier'},on:{click:function(){U.show('base');}}},[
-    E('img',{class:'brand-snowflake',attrs:{src:'img/snowflake.svg',alt:''}}),E('span',{class:'brand-name',text:'Frozen Frontier'})
+    E('img',{class:'brand-snowflake',attrs:{src:'img/snowflake.svg',alt:''}}),
+    E('span',{class:'brand-text'},[E('span',{class:'brand-name',text:'Frozen Frontier'}),E('span',{class:'brand-caption',text:R.brandCaption})])   // 題名の下に、小さく（判断314）
    ]),
-   E('span',{class:'brand-caption',text:R.brandCaption}),
    E('div',{class:'masthead-links'},[button('⌂ '+R.home,function(){U.show('base');},'masthead-link'),button('▥ '+R.records,function(){U.show('study',{tab:'records'});},'masthead-link'),button('⚙ '+R.settings,function(){U.show('settings');},'masthead-link')])
   ]));
   var strip=E('div',{class:'resource-strip'});
