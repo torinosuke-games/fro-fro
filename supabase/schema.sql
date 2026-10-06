@@ -47,20 +47,20 @@ revoke all on public.profiles, public.saves, public.attempts from anon, authenti
 -- ---- 内部の部品 ----
 -- key の形（16進 64 文字）を確かめて、利用者の ID を返す。なければ null。
 create or replace function public.ff_profile_id(p_key text) returns uuid
-language plpgsql security definer set search_path = public as $$
+language plpgsql security definer set search_path = public as $fn$
 declare v uuid;
 begin
   if p_key is null or p_key !~ '^[0-9a-f]{64}$' then return null; end if;
   select profile_id into v from profiles
     where key_hash = encode(sha256(convert_to(p_key, 'utf8')), 'hex');
   return v;
-end $$;
+end $fn$;
 
 -- ---- 公開する関数 ----
 
 -- 新しい利用者を作る。同じ key があれば失敗。
 create or replace function public.ff_create_profile(p_key text) returns jsonb
-language plpgsql security definer set search_path = public as $$
+language plpgsql security definer set search_path = public as $fn$
 begin
   if p_key is null or p_key !~ '^[0-9a-f]{64}$' then
     return jsonb_build_object('ok', false, 'error', 'bad_key');
@@ -69,11 +69,11 @@ begin
   return jsonb_build_object('ok', true);
 exception when unique_violation then
   return jsonb_build_object('ok', false, 'error', 'exists');
-end $$;
+end $fn$;
 
 -- セーブを読む。まだ保存がなければ rev 0・save_json null。
 create or replace function public.ff_pull(p_key text) returns jsonb
-language plpgsql security definer set search_path = public as $$
+language plpgsql security definer set search_path = public as $fn$
 declare pid uuid; s saves;
 begin
   pid := ff_profile_id(p_key);
@@ -85,12 +85,12 @@ begin
   end if;
   return jsonb_build_object('ok', true, 'rev', s.rev, 'save_json', s.save_json,
                             'updated_at', s.updated_at, 'device_id', s.device_id);
-end $$;
+end $fn$;
 
 -- セーブを書く。p_base_rev がサーバーの rev と同じときだけ更新（rev+1）。違えば conflict で、サーバーの内容を返す。
 create or replace function public.ff_push_save(p_key text, p_base_rev integer, p_save jsonb, p_device text)
 returns jsonb
-language plpgsql security definer set search_path = public as $$
+language plpgsql security definer set search_path = public as $fn$
 declare pid uuid; s saves;
 begin
   pid := ff_profile_id(p_key);
@@ -114,11 +114,11 @@ begin
     where profile_id = pid;
   update profiles set last_seen_at = now() where profile_id = pid;
   return jsonb_build_object('ok', true, 'rev', s.rev + 1);
-end $$;
+end $fn$;
 
 -- 学習の履歴をまとめて追加（1回 200 件まで）。同じ attempt_id は無視（再送しても二重にならない）。
 create or replace function public.ff_push_attempts(p_key text, p_rows jsonb) returns jsonb
-language plpgsql security definer set search_path = public as $$
+language plpgsql security definer set search_path = public as $fn$
 declare pid uuid; n integer;
 begin
   pid := ff_profile_id(p_key);
@@ -141,16 +141,16 @@ begin
   return jsonb_build_object('ok', true, 'inserted', n);
 exception when others then
   return jsonb_build_object('ok', false, 'error', 'bad_rows');
-end $$;
+end $fn$;
 
 -- 履歴を読む（保護者の記録画面用）。p_since より後（at > p_since）を古い順に、最大 p_limit（上限 1000）件。
 create or replace function public.ff_read_attempts(p_key text, p_since bigint, p_limit integer) returns jsonb
-language plpgsql security definer set search_path = public as $$
-declare pid uuid; rows jsonb;
+language plpgsql security definer set search_path = public as $fn$
+declare pid uuid; v_rows jsonb;
 begin
   pid := ff_profile_id(p_key);
   if pid is null then return jsonb_build_object('ok', false, 'error', 'not_found'); end if;
-  select coalesce(jsonb_agg(to_jsonb(t) order by t.at, t.attempt_id), '[]'::jsonb) into rows from (
+  select coalesce(jsonb_agg(to_jsonb(t) order by t.at, t.attempt_id), '[]'::jsonb) into v_rows from (
     select attempt_id, at, qid, subject, grade, difficulty, type, correct, attempts, hints,
            resource, reward, points, device_id
     from attempts
@@ -158,19 +158,19 @@ begin
     order by at, attempt_id
     limit least(greatest(coalesce(p_limit, 500), 1), 1000)
   ) t;
-  return jsonb_build_object('ok', true, 'rows', rows);
-end $$;
+  return jsonb_build_object('ok', true, 'rows', v_rows);
+end $fn$;
 
 -- その利用者のデータをすべて消す
 create or replace function public.ff_delete_profile(p_key text) returns jsonb
-language plpgsql security definer set search_path = public as $$
+language plpgsql security definer set search_path = public as $fn$
 declare pid uuid;
 begin
   pid := ff_profile_id(p_key);
   if pid is null then return jsonb_build_object('ok', false, 'error', 'not_found'); end if;
   delete from profiles where profile_id = pid;   -- saves・attempts は on delete cascade
   return jsonb_build_object('ok', true);
-end $$;
+end $fn$;
 
 -- 実行権限：関数だけを anon に公開する（内部の ff_profile_id は公開しない）
 revoke all on function public.ff_profile_id(text) from public, anon, authenticated;
