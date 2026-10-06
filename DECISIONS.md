@@ -788,3 +788,8 @@
 - supabase-js は使わず、`fetch` で REST を呼ぶ（外部ライブラリなしを守る）。同期は既定でオフ。オフのときは `file://` で動く今まで通り。セーブの saveVersion・integrity は変えず、同期の記録は別キー `frozenFrontier.sync`。
 - 履歴は端末の 500 件上限のまま、サーバーは全件。`attempt_id` で再送しても二重に入らない。セーブの競合は自動で合体せず、画面で選ぶ。
 - 段階 S-1〜S-7（設計→Supabase の SQL→通信とセーブの同期→引き継ぎコード→履歴→保護者の記録画面→手動確認）。S-2 はユーザーが Supabase のプロジェクトを作って URL と anon キーを渡す必要がある。
+
+## 判断300：Supabase の接続先と SQL（S-2）
+- プロジェクトの URL と anon（公開用）キーを `js/config.js` の `SYNC` に置いた。**`ENABLED: false`**（既定）なので、通信はしない。service_role・secret キーは置かない（anon の JWT の role が `anon` であることを確認した）。
+- `supabase/schema.sql`：テーブル3つ（profiles・saves・attempts）と、鍵を確かめる関数 ff_*（create_profile・pull・push_save・push_attempts・read_attempts・delete_profile）。テーブルは RLS 有効・権限なしで、anon は関数だけ実行できる。ユーザーが SQL Editor に貼って実行する。
+- この環境から Supabase へは通信できない（プロキシが許可していない）。SQL は実行して確かめていない。実際の動作確認は、ユーザーが SQL を実行したあと、GitHub Pages の公開版で行う。
