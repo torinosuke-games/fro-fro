@@ -744,8 +744,10 @@
     add(S('polyline',{points:points.map(function(p){return p.join(',');}).join(' '),fill:'none',stroke:blue,'stroke-width':3}));
     points.forEach(function(p,i){add(S('circle',{cx:p[0],cy:p[1],r:5,fill:orange,stroke:'#fff','stroke-width':2}),text(p[0],detailed?333:249,d.labels[i],detailed?24:15));});
    }else if(d.kind==='abacus'){
-    h=270;add(box(135,15,250,223,'#f8eedc'),line(150,97,370,97,'#8e6742'));
-    d.digits.forEach(function(n,i){var x=205+i*110;add(line(x,25,x,225,'#aa8764'),text(x,260,d.labels[i],17));
+    // けたの数に合わせて、わくと柱の位置を決める（3けた以上でも、一の位まで、わくの中に入る。判断311）
+    h=270;var cols=d.digits.length,colW=Math.min(110,440/cols),x0=(520-colW*cols)/2+colW/2;
+    add(box(x0-colW/2-15,15,colW*cols+30,223,'#f8eedc'),line(x0-colW/2-5,97,x0+colW*(cols-0.5)+5,97,'#8e6742'));
+    d.digits.forEach(function(n,i){var x=x0+i*colW;add(line(x,25,x,225,'#aa8764'),text(x,260,d.labels[i],17));
      function bead(y,on){add(S('polygon',{points:[[x-24,y],[x-14,y-9],[x+14,y-9],[x+24,y],[x+14,y+9],[x-14,y+9]].map(function(p){return p.join(',');}).join(' '),fill:on?orange:'#e3d6c3',stroke:on?'#b67a26':'#b8a084','stroke-width':1.5}));}
      bead(n>=5?79:39,n>=5);var count=n%5;
      for(var j=0;j<4;j++)bead(j<count?114+j*20:219-(3-j)*20,j<count);

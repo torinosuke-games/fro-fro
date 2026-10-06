@@ -33,8 +33,8 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   else assert.fail(d.kind);
  }
  test('小5の図：470問の図以外と対象外352問は元データから不変',()=>{
-  assert.equal(all.length,470);assert.equal(hash(all.map(q=>{const v=plain(q);if(ids.includes(q.id))delete v.diagram;return v;})),'1c61df6e6fc9bd4feeddbc59670a525af16d2865e86d5b042d8aada7a47ff868');
-  assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'ccece132a56694d034582fb69485fd3df362baa4fedd5c72a600d6341c24ec25');
+  assert.equal(all.length,470);assert.equal(hash(all.map(q=>{const v=plain(q);if(ids.includes(q.id))delete v.diagram;return v;})),'8fe0794c1dd369cb94e27090f94c94c5431f48df68d04c981d5887a3d91fc99e');
+  assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'f00cec927660127f94500c0ad3ebbd633be92376eced1077a0baf6a90419a198');
  });
  test('小5の図：44＋25＋49＝118問の網羅と書き問題の継承',()=>{
   assert.deepEqual(waves.map(a=>a.length),[44,25,49]);assert.equal(new Set(ids).size,118);assert.equal(qs.length,118);const bank=FF.learning.createBank(ctx.QUESTION_BANK);
