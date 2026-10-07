@@ -31,6 +31,14 @@ fs.mkdirSync(out, { recursive: true });
     await page.screenshot({ path: out + '/party-phone.png', fullPage: true });
     await page.getByRole('button', { name: 'この仲間で旅をする', exact: true }).click();
     await page.screenshot({ path: out + '/field-phone.png', fullPage: true });
+    assert.ok(await page.locator('.adv-world-art').evaluate(img => img.complete && img.naturalWidth > 0));
+    assert.equal(await page.locator('.adv-traveler').count(), 4);
+    await page.getByRole('button', { name: '全体マップ', exact: true }).click();
+    assert.ok(await page.locator('.adv-map-viewport.overview').isVisible());
+    await page.screenshot({ path: out + '/overview-phone.png', fullPage: true });
+    await page.getByRole('button', { name: '現在地へ', exact: true }).click();
+    await page.getByRole('button', { name: '東へ', exact: true }).click();
+    assert.equal(await page.evaluate(() => FF.app.state.adventure.pos.x), 2);
     const checkWidth = async () => assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'Horizontal overflow');
     await checkWidth();
     async function go(x, y) {
@@ -38,6 +46,20 @@ fs.mkdirSync(out, { recursive: true });
       await page.waitForFunction(([x, y]) => FF.app.state.adventure.pos.x === x && FF.app.state.adventure.pos.y === y, [x, y]);
     }
     await go(3, 6);
+    await page.screenshot({ path: out + '/commands-phone.png', fullPage: true });
+    assert.equal(await page.locator('.adv-rpg-stats .adv-status').count(), 4);
+    await page.getByRole('button', { name: 'リンの行動を選ぶ', exact: true }).click();
+    await page.getByRole('button', { name: 'まほう', exact: true }).click();
+    await page.getByLabel('回復する仲間', { exact: true }).selectOption('hero');
+    await page.getByRole('button', { name: 'ゆきの行動を選ぶ', exact: true }).click();
+    await page.getByRole('button', { name: 'どうぐ', exact: true }).click();
+    await page.getByLabel('回復する仲間', { exact: true }).selectOption('gan');
+    assert.ok(await page.getByRole('button', { name: 'リン · まほう', exact: true }).isVisible());
+    // Planning commands never spends MP or supplies before answering.
+    assert.equal(await page.evaluate(() => FF.app.state.adventure.potions), 3);
+    for (const width of [360, 768, 1440]) { await page.setViewportSize({ width, height: 1000 }); await checkWidth(); }
+    await page.screenshot({ path: out + '/commands-desktop.png', fullPage: true });
+    await page.setViewportSize({ width: 390, height: 844 });
     assert.equal(await page.evaluate(() => FF.app.state.adventure.battle.enemy), 'cub');
     await page.getByRole('button', { name: 'にげる', exact: true }).click();
     assert.equal(await page.evaluate(() => FF.app.state.adventure.battle), null);
@@ -55,7 +77,8 @@ fs.mkdirSync(out, { recursive: true });
         }
         assert.notEqual(b.phase, 'lose');
         if (b.phase === 'commands') {
-          if (!seenMagic) { await page.getByLabel('ゆきのコマンド', { exact: true }).selectOption('magic'); seenMagic = true; }
+          if (b.turn === 1) await page.screenshot({ path: out + '/enemy-' + b.enemy + '-phone.png', fullPage: true });
+          if (!seenMagic) { await page.getByRole('button', { name: 'まほう', exact: true }).click(); seenMagic = true; }
           await page.getByRole('button', { name: 'クイズで行動する', exact: true }).click();
         } else if (b.phase === 'attack' || b.phase === 'defense') {
           if (!checkedReload) {
