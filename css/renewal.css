@@ -429,3 +429,14 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
  .subject-top .rn-heading p.daily-note{grid-area:note;justify-self:start;margin:0;padding:4px 10px;font-size:min(.8125rem,2.85vw)}
  .subject-top-actions{grid-area:actions;margin:0}
 }
+
+/* 町のほかの施設（判断324）：学習するボタンの下。スマホは横4つ、広い画面は横8つ */
+.facility-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 8px;margin:4px 0 18px}
+.facility-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;border:0;background:none;cursor:pointer;color:var(--rn-navy,#1f4a68);font-weight:800;min-width:0}
+.facility-btn .facility-icon{display:block;width:100%;max-width:92px;aspect-ratio:1/1;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(23,76,112,.25));transition:transform .12s}
+.facility-btn:hover .facility-icon,.facility-btn:focus-visible .facility-icon{transform:translateY(-2px)}
+.facility-btn.is-soon .facility-icon{filter:drop-shadow(0 2px 3px rgba(23,76,112,.2)) saturate(.85)}
+.facility-btn:focus-visible{outline:3px solid #efa64b;outline-offset:3px;border-radius:14px}
+.facility-name{font-size:.6875rem;line-height:1.25;text-align:center;text-wrap:balance}
+.facility-soon{margin:8px 0 14px;text-align:center}
+@media(min-width:761px){.facility-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:12px;margin:10px 0 24px}.facility-btn .facility-icon{max-width:104px}.facility-name{font-size:.8125rem}}

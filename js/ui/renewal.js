@@ -304,6 +304,21 @@
    button(R.records,function(){U.show('study',{tab:'records'});},'text-button'),button(R.exam,function(){U.show('study',{tab:'exam'});},'text-button'),button(R.diagnosis,function(){U.show('study',{tab:'diagnosis'});},'text-button'),button(R.redeem,function(){U.openRedeem();},'text-button')
   ]));
  }
+ // 町のほかの施設（判断324）。絵は img/art/fac-*.webp。使えるのは、チケット引換所（引換所）だけ。ほかは、これから作る
+ var FACILITIES=[
+  {id:'weapon',name:R.facWeapon},{id:'armor',name:R.facArmor},{id:'item',name:R.facItem},{id:'tavern',name:R.facTavern},
+  {id:'party',name:R.facParty},{id:'magic',name:R.facMagic},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
+ ];
+ function facilityGrid(){
+  return E('nav',{class:'facility-grid',attrs:{'aria-label':R.facilities}},FACILITIES.map(function(f){
+   return E('button',{class:'facility-btn'+(f.open?'':' is-soon'),attrs:{type:'button','data-facility':f.id,'aria-label':U.plain(f.name)+(f.open?'':'（'+U.plain(R.facSoon)+'）')},on:{click:function(){
+    if(f.open){f.open();return;}
+    U.modal({title:f.name,body:E('p',{class:'facility-soon',rich:R.facSoonText}),buttons:[{label:U.T('back'),class:'ghost'}]});
+   }}},[
+    U.artImg('fac-'+f.id+'.webp','facility-icon'),E('span',{class:'facility-name',rich:f.name})
+   ]);
+  }));
+ }
  var originalBase=U.screens.base.render;
  U.screens.base.render=function(main){
   main.appendChild(E('section',{class:'home-mission'},[
@@ -315,6 +330,9 @@
   // スマホでは、上の見出しと説明を出さず、「学習する」を、風景（フィールドマップ）の下に置く（判断315。PC では、上のボタンだけを出す）
   var scene=main.querySelector('.scene');
   if(scene&&scene.parentNode)scene.parentNode.insertBefore(button(R.start+' →',function(){U.show('study',{tab:'learn'});},'rn-button primary home-start-mobile'),scene.nextSibling);
+  // 学習するボタンの下に、ほかの施設のアイコン（スマホでは横4つ。判断324）。いま使えるのはチケット引換所だけ。あとは準備中
+  var facilities=facilityGrid();
+  if(scene&&scene.parentNode)scene.parentNode.insertBefore(facilities,(scene.nextSibling&&scene.nextSibling.nextSibling)||null);
   main.appendChild(E('section',{class:'home-steps'},[
    E('div',{},[E('span',{text:'01'}),E('strong',{text:R.stepLearn}),E('p',{text:R.stepLearnDesc})]),
    E('div',{},[E('span',{text:'02'}),E('strong',{text:R.stepTown}),E('p',{text:R.stepTownDesc})]),
