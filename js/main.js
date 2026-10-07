@@ -83,7 +83,7 @@
   // ---- データの保存（サーバー同期。判断299）：オンにしたときだけ、裏で動く。通信できなくても遊びは止まらない ----
   function setupSync() {
     if (typeof root.fetch !== 'function' || !FF.config.SYNC) return;
-    app.syncBusyUi = function () { return !!(app.session || app.examRun || app.exploreSession || app.screen === 'quiz' || app.screen === 'battle'); };
+    app.syncBusyUi = function () { return !!(app.session || app.examRun || app.exploreSession || app.screen === 'quiz' || app.screen === 'battle' || app.screen === 'adventure' || app.screen === 'adventureParty'); };
     FF.syncApp = FF.sync.createEngine({
       fetch: root.fetch.bind(root), cfg: FF.config.SYNC, balance: FF.balance.SYNC,
       now: function () { return app.now(); },

@@ -304,10 +304,10 @@
    button(R.records,function(){U.show('study',{tab:'records'});},'text-button'),button(R.exam,function(){U.show('study',{tab:'exam'});},'text-button'),button(R.diagnosis,function(){U.show('study',{tab:'diagnosis'});},'text-button'),button(R.redeem,function(){U.openRedeem();},'text-button')
   ]));
  }
- // 町のほかの施設（判断324）。絵は img/art/fac-*.webp。使えるのは、チケット引換所（引換所）だけ。ほかは、これから作る
+ // 町のほかの施設（判断324）。絵は img/art/fac-*.webp。仲間紹介所は冒険の編成、チケット引換所は引換所を開く。
  var FACILITIES=[
   {id:'weapon',name:R.facWeapon},{id:'armor',name:R.facArmor},{id:'item',name:R.facItem},{id:'tavern',name:R.facTavern},
-  {id:'party',name:R.facParty},{id:'magic',name:R.facMagic},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
+  {id:'party',name:R.facParty,open:function(){U.show('adventureParty');}},{id:'magic',name:R.facMagic},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
  ];
  function facilityGrid(){
   return E('nav',{class:'facility-grid',attrs:{'aria-label':R.facilities}},FACILITIES.map(function(f){
@@ -330,9 +330,10 @@
   // スマホでは、上の見出しと説明を出さず、「学習する」を、風景（フィールドマップ）の下に置く（判断315。PC では、上のボタンだけを出す）
   var scene=main.querySelector('.scene');
   if(scene&&scene.parentNode)scene.parentNode.insertBefore(button(R.start+' →',function(){U.show('study',{tab:'learn'});},'rn-button primary home-start-mobile'),scene.nextSibling);
-  // 学習するボタンの下に、ほかの施設のアイコン（スマホでは横4つ。判断324）。いま使えるのはチケット引換所だけ。あとは準備中
+  // 学習するボタンの下に、ほかの施設のアイコン（スマホでは横4つ。判断324）。仲間紹介所とチケット引換所が使える
   var facilities=facilityGrid();
   if(scene&&scene.parentNode)scene.parentNode.insertBefore(facilities,(scene.nextSibling&&scene.nextSibling.nextSibling)||null);
+  if(U.adventureEntry)main.insertBefore(U.adventureEntry(),facilities);
   main.appendChild(E('section',{class:'home-steps'},[
    E('div',{},[E('span',{text:'01'}),E('strong',{text:R.stepLearn}),E('p',{text:R.stepLearnDesc})]),
    E('div',{},[E('span',{text:'02'}),E('strong',{text:R.stepTown}),E('p',{rich:R.stepTownDesc})]),

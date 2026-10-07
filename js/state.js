@@ -56,6 +56,7 @@
         questionResults: {}
       },
       exploration: defaultExploration(),
+      adventure: FF.adventure ? FF.adventure.create() : null,
       // 勉強量ポイント（SPEC 8.4・14.2）：残高・累計・引換券の履歴
       studyPoints: 0,
       studyPointsEarnedTotal: 0,
@@ -152,6 +153,7 @@
     if (FF.exploration && FF.exploration.normalizeExploration) state = FF.exploration.normalizeExploration(state);
     // 勉強量ポイントの整合（残高・累計は 0 以上の整数、形のおかしい引換券の履歴を捨てる、交換レートの範囲）
     if (FF.points && FF.points.normalizePoints) state = FF.points.normalizePoints(state);
+    if (FF.adventure) state.adventure = FF.adventure.normalize(state.adventure);
     state.player.name = util.normalizeName(state.player.name, cfg);
     // 学年（1〜9 の整数）と主人公の絵（AVATARS のどれか）。それ以外は未設定（null）に（判断198。saveVersion は上げない）
     state.player.grade = normalizeGrade(state.player.grade);
