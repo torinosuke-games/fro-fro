@@ -14,3 +14,10 @@
 - `fac-magic.webp`: saturated purple tile. A glowing crystal ball and an open blank spellbook, tiny stars.
 - `fac-ticket.webp`: golden yellow tile. Overlapping golden tickets with decorative patterns only, no writing.
 - `fac-training.webp`: bright red tile. A wooden training dummy and a wooden sword, small footprints.
+
+
+## 透明背景の作り直し（grok/facility-icons-2）
+
+絵の中身は前回の生成画像のまま。背景だけ切り直した。
+
+方法: 元の JPG（白い紙面の上の角丸タイル）から、白に近い画素（R,G,B がすべて 236 超）を外してタイルを切り出す。384×384 の透明キャンバスの中央に、最大 348px で置く。角丸はタイル短辺の約16%。白いふちはタイルの一部として残す。影はタイルの下にアルファ 64 の黒をぼかした半透明だけ。キャンバスの外周 3px はアルファ 0 に固定した。黒・白・灰色の不透明な四角は残していない。
