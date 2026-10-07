@@ -392,7 +392,10 @@
     var head = U.el('div', { class: 'panel' + (face ? ' head-with-avatar' : '') }, [face, text]);
     main.appendChild(head);
 
-    main.appendChild(U.artOn() ? artScene(s) : U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding, FF.app.theme)));
+    var sceneBox = U.artOn() ? artScene(s) : U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding, FF.app.theme));
+    // フィールドの左上（空の部分。建物や名前の札とかさならない）に、いまの町の名前を出す。町は、これから増やしていく予定（判断322）
+    sceneBox.appendChild(U.el('div', { class: 'town-name', rich: FF.texts.renewal.townName }));
+    main.appendChild(sceneBox);
 
     // 絵の見た目では「生産物」の行を出さず、絵の上の吹き出しとかごで受け取る（判断196）
     if (U.artOn()) { collectBar = null; updateBubbles(); }
