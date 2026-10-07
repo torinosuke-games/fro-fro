@@ -449,3 +449,10 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .facility-name{font-size:.6875rem;line-height:1.25;text-align:center;text-wrap:balance}
 .facility-soon{margin:8px 0 14px;text-align:center}
 @media(min-width:761px){.facility-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:12px;margin:10px 0 24px}.facility-btn .facility-icon{max-width:104px}.facility-name{font-size:.8125rem}}
+
+/* スマホ：町のフィールドを、画面のはばいっぱいに大きく見せる（判断327）。建物の名札も大きく、押す場所も広げる */
+@media(max-width:560px){
+ body[data-screen="base"] .scene.art{margin-inline:-15px;border-radius:0;border-inline:0}
+ body[data-screen="base"] .scene.art .art-bld .nm{font-size:13.5px;padding:.2em .6em}
+ .facility-btn .facility-icon{max-width:72px}
+}
