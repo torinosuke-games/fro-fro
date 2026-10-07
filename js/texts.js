@@ -547,7 +547,7 @@
 // 雪原の冒険（試作）の文言。新しい数値・残高は熱量と混ぜない。
 (function (root) {
   root.FF.texts.adventure = {
-    scenery: { region: '白銀の辺境', chapter: 'CHAPTER 01 · 灯りをたどって', map: '全体マップ', follow: '現在地へ',
+    scenery: { viewBattle: '戦闘画面を見る', answerQuiz: '問題に答える', reviewQuiz: '結果と解説を見る', region: '白銀の辺境', chapter: 'CHAPTER 01 · 灯りをたどって', map: '全体マップ', follow: '現在地へ',
       fieldHelp: '雪道をタップして移動。画面をスワイプして、先の景色を見渡そう。',
       actorHelp: '上の仲間を選んで、行動を決めよう。', ready: 'みんなの行動', target: '回復する仲間',
       encounter: '{name}が あらわれた！', attack: 'クイズに正解すると、仲間が攻撃する。',

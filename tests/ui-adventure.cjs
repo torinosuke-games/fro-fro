@@ -52,12 +52,14 @@ fs.mkdirSync(out, { recursive: true });
     await page.getByRole('button', { name: '冒険のつづき', exact: true }).click();
     assert.deepEqual(await page.evaluate(() => FF.app.state.adventure.pos), { x: 1, y: 6 });
     assert.equal(await page.locator('.adv-traveler').count(), 1);
-    // All candidates in both grade groups have four independently drawn, loadable poses.
+    // Every selectable candidate maps to a detailed sheet with four large poses.
     const sprites = await page.evaluate(async () => {
-      const urls = FF.defs.AVATARS.flatMap(id => ['up','down','left','right'].map(dir => FF.adventureScene.traveler(id,dir)));
-      await Promise.all(urls.map(src => { const image=new Image(); image.src=src; return image.decode(); })); return new Set(urls).size;
+      const urls = [...new Set(FF.defs.AVATARS.map(id => FF.adventureScene.traveler(id)))];
+      const sizes = await Promise.all(urls.map(async src => { const image=new Image(); image.src=src; await image.decode(); return [image.naturalWidth,image.naturalHeight]; }));
+      return {count:urls.length, sizes};
     });
-    assert.equal(sprites,96);
+    assert.equal(sprites.count,14);
+    assert.ok(sprites.sizes.every(([w,h]) => w === h && w / 2 >= 600));
     const checkWidth = async () => assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'Horizontal overflow');
     await checkWidth();
     async function go(x, y) {
@@ -88,7 +90,7 @@ fs.mkdirSync(out, { recursive: true });
       for (let turn = 0; turn < 70; turn++) {
         const b = await page.evaluate(() => FF.app.state.adventure.battle);
         if (b.phase === 'win') {
-          assert.ok(await page.locator('.adv-result.win').isVisible());
+          await page.locator('.adv-result.win').waitFor({state:'visible'});
           const gold = await page.evaluate(() => FF.app.state.adventure.gold);
           await page.getByRole('button', { name: '旅をつづける', exact: true }).click();
           assert.equal(await page.evaluate(() => FF.app.state.adventure.gold), gold);
@@ -100,6 +102,11 @@ fs.mkdirSync(out, { recursive: true });
           if (!seenMagic) { await page.getByRole('button', { name: 'まほう', exact: true }).click(); seenMagic = true; }
           await page.getByRole('button', { name: 'クイズで行動する', exact: true }).click();
         } else if (b.phase === 'attack' || b.phase === 'defense') {
+          await page.locator('.adv-quiz-dialog[open]').waitFor();
+          assert.ok(await page.evaluate(() => {
+            const d=document.querySelector('.adv-quiz-dialog').getBoundingClientRect(), c=document.querySelector('.adv-choices').getBoundingClientRect();
+            return scrollY === 0 && d.top >= 0 && d.bottom <= innerHeight && c.bottom <= innerHeight;
+          }), 'Quiz and answers fit the viewport without scrolling the battle');
           if (!checkedReload) {
             await page.screenshot({ path: out + '/battle-phone.png', fullPage: true });
             const before = await page.evaluate(() => JSON.stringify(FF.app.state.adventure));
@@ -115,7 +122,9 @@ fs.mkdirSync(out, { recursive: true });
           const wrong = !seenWrong; seenWrong = true;
           const index = b.choices.findIndex(c => wrong ? c !== b.question.answer : c === b.question.answer);
           await page.locator('.adv-answer').nth(index).click();
-          assert.ok(await page.locator('.adv-feedback').isVisible());
+          const damaged = await page.evaluate(() => document.querySelector('.adv-enemy-art').classList.contains('is-hit'));
+          assert.equal(damaged, b.phase === 'attack' && !wrong);
+          await page.locator('.adv-feedback').waitFor({state:'visible'});
           await checkWidth();
         } else if (b.phase === 'attackResult') await page.getByRole('button', { name: '敵の攻撃にそなえる', exact: true }).click();
         else if (b.phase === 'defenseResult') await page.getByRole('button', { name: '次のターンへ', exact: true }).click();
@@ -146,7 +155,7 @@ fs.mkdirSync(out, { recursive: true });
     await page.getByRole('button', { name: '冒険のつづき', exact: true }).click();
     assert.equal(await page.locator('.adv-traveler').getAttribute('data-avatar'), 'e12');
     await page.getByRole('button', { name: '北へ', exact: true }).click();
-    assert.ok((await page.locator('.adv-traveler').getAttribute('src')).endsWith('e12-up.svg'));
+    assert.ok((await page.locator('.adv-traveler').getAttribute('data-sprite')).endsWith('e12.png'));
     await page.screenshot({ path: out + '/witch-up-phone.png', fullPage: true });
     await page.getByRole('button', { name: '町の画面へ', exact: true }).click();
     await page.locator('.masthead-links .masthead-link').nth(2).click();
@@ -158,6 +167,6 @@ fs.mkdirSync(out, { recursive: true });
     assert.deepEqual(await page.evaluate(() => FF.app.state.adventure.pos), { x: 1, y: 6 });
     assert.equal(await page.locator('.adv-traveler').getAttribute('data-avatar'), 'j6');
     assert.deepEqual(errors, []);
-    console.log(JSON.stringify({ status: 'PASS', checks: 'onboarding, party, symbol encounters, escape, commands, wrong answer, defense, saved state, town return, town departure, facing, avatar settings, 96 sprite assets, three enemies, camp, arrival, responsive layouts', result, errors, screenshots: out }, null, 2));
+    console.log(JSON.stringify({ status: 'PASS', checks: 'onboarding, party, symbol encounters, escape, commands, wrong answer, defense, saved state, town return, town departure, facing, avatar settings, 14 detailed sprite sheets, viewport quiz dialogs, hit feedback, three enemies, camp, arrival, responsive layouts', result, errors, screenshots: out }, null, 2));
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exit(1); });

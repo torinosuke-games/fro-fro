@@ -2,7 +2,7 @@
 (function (root) {
   'use strict';
   var FF = root.FF, A = FF.adventure, U = FF.ui, T = FF.texts.adventure, B = FF.balance.ADVENTURE;
-  var E = U.el, moving = false, routeId = 0, entering = false, overview = false, orders = {}, orderKey = null, actor = null;
+  var E = U.el, moving = false, routeId = 0, entering = false, overview = false, orders = {}, orderKey = null, actor = null, impact = 0;
   var C = T.scenery, scene = FF.adventureScene;
   var beforeShow = FF.renewalBeforeShow;
   FF.renewalBeforeShow = function (screen, params) { routeId++; moving = false; if (screen === 'adventureParty' && FF.app.screen === 'base') { ensure(); save(A.depart(p(), 'home')); } if (beforeShow) beforeShow(screen, params); };
@@ -13,7 +13,12 @@
   function text(tag, cls, value) { return E(tag, { class: cls, rich: value }); }
   function btn(label, action, cls, disabled) { return E('button', { class: 'adv-button ' + (cls || ''), text: label, disabled: disabled, attrs: { type: 'button' }, on: { click: action } }); }
   function paint() { U.rerender(); }
-  function change(next) { if (next === p()) return; save(next); paint(); }
+  function change(next) {
+    var before = p(); if (next === before) return;
+    impact = before.battle && before.battle.phase === 'attack' && next.battle ? Math.max(0, before.battle.hp - next.battle.hp) : 0;
+    save(next); paint();
+    if (before.battle || next.battle) root.scrollTo(0, 0);
+  }
   function open() { ensure(); U.show('adventure'); }
   function departHome() { ensure(); save(A.depart(p(), 'home')); open(); }
   function home() { routeId++; moving = false; orderKey = null; save(A.depart(p(), 'home')); U.show('base'); }
@@ -115,7 +120,7 @@
         map.appendChild(cell);
       });
     });
-    map.appendChild(E('img', { class: 'adv-traveler leader', style: { left: (n.pos.x * 72 + 36) / 936 * 100 + '%', top: (n.pos.y * 72 + 40) / 648 * 100 + '%' }, attrs: { src: scene.traveler(FF.app.state.player.avatar, n.facing), alt: C.current, 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }));
+    map.appendChild(E('span', { class: 'adv-traveler leader', style: { backgroundImage: 'url("' + scene.traveler(FF.app.state.player.avatar) + '")', backgroundPosition: ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[n.facing], left: (n.pos.x * 72 + 36) / 936 * 100 + '%', top: (n.pos.y * 72 + 40) / 648 * 100 + '%' }, attrs: { role: 'img', 'aria-label': C.current, 'data-sprite': scene.traveler(FF.app.state.player.avatar), 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }));
     return map;
   }
   function fieldViewport() {
@@ -202,38 +207,59 @@
     panel.appendChild(menu); panel.appendChild(dialogue); return panel;
   }
   function questionPanel() {
-    var b = p().battle, q = b.question, active = b.phase === 'attack' || b.phase === 'defense', panel = E('section', { class: 'adv-question-panel' });
+    var b = p().battle, q = b.question, active = b.phase === 'attack' || b.phase === 'defense';
+    var panel = E('section', { class: 'adv-question-panel' }), body = E('div', { class: 'adv-question-scroll' }), controls = E('div', { class: 'adv-quiz-controls' });
     if (!q) return panel;
-    panel.appendChild(text('p', 'adv-eyebrow', active ? (b.phase === 'attack' ? T.attackQuiz : T.defenseQuiz) : (b.correct ? T.good : T.wrong)));
-    panel.appendChild(text('h2', 'adv-question', q.question));
-    if (q.diagram && FF.lessonFigure) panel.appendChild(FF.lessonFigure.render(q.diagram));
+    body.appendChild(text('h2', 'adv-question', q.question));
+    if (active && q.diagram && FF.lessonFigure) body.appendChild(FF.lessonFigure.render(q.diagram));
     if (active) {
-      panel.appendChild(text('p', 'adv-help', b.phase === 'attack' ? T.attackHelp : T.defenseHelp));
+      body.appendChild(text('p', 'adv-help', b.phase === 'attack' ? T.attackHelp : T.defenseHelp));
+      q.hints.slice(0, b.hints || 0).forEach(function(hint) { body.appendChild(text('p', 'adv-hint', hint)); });
       if (q.answerType === 'choice') {
-        panel.appendChild(E('div', { class: 'adv-choices' }, b.choices.map(function (choice, i) {
-          var button = btn('', function () { change(A.answer(p(), choice, FF.app.now())); }, 'adv-answer');
-          button.appendChild(E('span', { class: 'adv-choice-letter', text: ['A', 'B', 'C', 'D'][i] })); button.appendChild(U.rich(choice)); return button;
+        controls.appendChild(E('div', { class: 'adv-choices' }, b.choices.map(function(choice, i) {
+          var button = btn('', function() { change(A.answer(p(), choice, FF.app.now())); }, 'adv-answer');
+          button.appendChild(E('span', { class: 'adv-choice-letter', text: ['A','B','C','D'][i] })); button.appendChild(U.rich(choice)); return button;
         })));
       } else {
         var input = E('input', { attrs: { 'aria-label': '答え', autocomplete: 'off' } });
-        var form = E('form', { class: 'adv-input', on: { submit: function (event) { event.preventDefault(); change(A.answer(p(), input.value, FF.app.now())); } } }, [input, E('button', { class: 'adv-button gold', attrs: { type: 'submit' }, text: T.submit })]); panel.appendChild(form);
+        controls.appendChild(E('form', { class: 'adv-input', on: { submit: function(event) { event.preventDefault(); change(A.answer(p(), input.value, FF.app.now())); } } }, [input, E('button', { class: 'adv-button gold', attrs: { type: 'submit' }, text: T.submit })]));
       }
-      if (q.hints && q.hints.length) {
-        panel.appendChild(btn(T.hint, function () { var n = FF.util.clone(p()); n.battle.hints = Math.min(q.hints.length, (n.battle.hints || 0) + 1); change(n); }, 'quiet', b.hints >= q.hints.length));
-        q.hints.slice(0, b.hints || 0).forEach(function (hint) { panel.appendChild(text('p', 'adv-hint', hint)); });
-      }
-      panel.appendChild(btn('戦闘からにげる', function () { change(A.retreat(p())); }, 'quiet'));
+      var tools = E('div', { class: 'adv-quiz-tools' });
+      if (q.hints && q.hints.length) tools.appendChild(btn(T.hint, function() { var n=FF.util.clone(p()); n.battle.hints=Math.min(q.hints.length,(b.hints||0)+1); change(n); }, 'quiet', b.hints >= q.hints.length));
+      tools.appendChild(btn('戦闘からにげる', function() { change(A.retreat(p())); }, 'quiet'));
+      controls.appendChild(tools);
     } else {
-      panel.appendChild(E('div', { class: 'adv-feedback ' + (b.correct ? 'correct' : 'wrong'), attrs: { role: 'status' } }, [text('strong', '', T.answer + '：' + FF.learning.displayAnswer(q)), text('p', '', q.explanation)]));
+      body.appendChild(E('div', { class: 'adv-feedback ' + (b.correct ? 'correct' : 'wrong'), attrs: { role: 'status' } }, [text('strong','',T.answer+'：'+FF.learning.displayAnswer(q)),text('p','',q.explanation)]));
     }
-    return panel;
+    panel.appendChild(body); if (active) panel.appendChild(controls); return panel;
+  }
+  function quizDialog(main, damage) {
+    var b = p().battle, active = b.phase === 'attack' || b.phase === 'defense';
+    var title = active ? (b.phase === 'attack' ? T.attackQuiz : T.defenseQuiz) : (b.correct ? T.good : T.wrong);
+    var dialog = E('dialog', { class: 'adv-quiz-dialog', attrs: { 'aria-labelledby': 'adv-quiz-title' } });
+    var heading = E('h2', { class: 'adv-dialog-title', text: title, attrs: { id: 'adv-quiz-title', tabindex: '-1' } });
+    dialog.appendChild(E('header', { class: 'adv-dialog-header' }, [heading, btn(C.viewBattle, function() { dialog.close(); }, 'quiet')]));
+    dialog.appendChild(questionPanel());
+    var footer = E('footer', { class: 'adv-dialog-footer' });
+    if (b.phase === 'win') {
+      var reward = b.reward;
+      footer.appendChild(E('section', { class: 'adv-result win' }, [text('h2','',T.victory), E('div',{class:'adv-reward',text:'+'+reward.xp+' EXP / 人　 +'+reward.gold+' G'}), E('div',{class:'adv-levelups'},reward.levels.map(function(r){return text('p','','✦ '+name(r.id)+' Lv.'+r.level+'　'+T.levelUp);})), btn(T.field,advance,'gold')]));
+    } else if (b.phase === 'lose') footer.appendChild(E('section',{class:'adv-result'},[text('h2','',T.defeat),text('p','',T.defeatHelp),btn('町で休む',advance,'gold')]));
+    else if (!active) footer.appendChild(btn(b.phase === 'attackResult' ? T.nextDefense : T.nextTurn,advance,'gold adv-next'));
+    if (!active) dialog.appendChild(footer);
+    var opener = btn(active ? C.answerQuiz : C.reviewQuiz,function(){dialog.showModal();heading.focus({preventScroll:true});},'gold adv-open-quiz');
+    main.appendChild(opener); main.appendChild(dialog);
+    root.requestAnimationFrame(function() {
+      var delay = damage && !root.matchMedia('(prefers-reduced-motion: reduce)').matches ? 480 : 0;
+      root.setTimeout(function() { if(dialog.isConnected && FF.app.screen === 'adventure' && !dialog.open) {dialog.showModal();heading.focus({preventScroll:true});} },delay);
+    });
   }
   function advance() {
     var old = p(), next = A.advance(old, FF.app.bank, grade(), Math.random, FF.app.now());
     if (next === old) { U.toast(T.noQuestion); return; } change(next);
   }
   function renderBattle(main) {
-    var n = p(), b = n.battle, d = T.enemies[b.enemy], done = b.phase === 'win' || b.phase === 'lose';
+    var n = p(), b = n.battle, d = T.enemies[b.enemy], done = b.phase === 'win' || b.phase === 'lose', damage = impact; impact = 0;
     main.classList.add('adv-battle-screen');
     if (b.phase === 'commands') prepareOrders();
     header(main, C.region, T.scenery.turn + ' ' + b.turn + ' · ' + d.rank);
@@ -241,22 +267,15 @@
     main.appendChild(battleStats());
     var stage = E('section', { class: 'adv-battle-stage ' + b.enemy, attrs: { 'aria-label': d.name } }, [
       E('div', { class: 'adv-enemy-nameplate' }, [text('strong', '', d.name), E('span', { class: 'adv-enemy-hp', text: 'HP ' + b.hp + ' / ' + B.ENEMIES[b.enemy].hp }), meter(b.hp, B.ENEMIES[b.enemy].hp, 'enemy-hp', '敵のHP')]),
-      E('div', { class: 'adv-enemy-art' }, scene.enemy(b.enemy)),
+      E('div', { class: 'adv-enemy-art' + (damage ? ' is-hit' : ''), attrs: { 'data-damage': damage || null } }, [scene.enemy(b.enemy), damage ? E('span', { class: 'adv-damage', text: '−' + damage, attrs: { 'aria-hidden': true } }) : null]),
       !done ? text('p', 'adv-intent', intention()) : null
     ]);
     main.appendChild(stage);
     if (b.phase === 'commands') main.appendChild(commandPanel());
-    else main.appendChild(questionPanel());
-    if (b.log.length) main.appendChild(E('ol', { class: 'adv-battle-log', attrs: { 'aria-label': '戦闘の記録', 'aria-live': 'polite' } }, b.log.map(function (line) { return text('li', '', T.logs[line.key].replace('{name}', name(line.who)).replace('{n}', line.amount)); })));
-    if (b.phase === 'win') {
-      var reward = b.reward;
-      main.appendChild(E('section', { class: 'adv-result win' }, [text('p', 'adv-eyebrow', 'VICTORY'), text('h2', '', T.victory),
-        E('div', { class: 'adv-reward', text: '+' + reward.xp + ' EXP / 人　 +' + reward.gold + ' G' }), text('p', '', T.rewardHelp),
-        E('div', { class: 'adv-levelups' }, reward.levels.map(function (r) { return text('p', '', '✦ ' + name(r.id) + ' Lv.' + r.level + '　' + T.levelUp); })), btn(T.field, advance, 'gold')
-      ]));
-    } else if (b.phase === 'lose') main.appendChild(E('section', { class: 'adv-result' }, [text('h2', '', T.defeat), text('p', '', T.defeatHelp), btn('町で休む', advance, 'gold')]));
-    else if (b.phase === 'attackResult' || b.phase === 'defenseResult') main.appendChild(btn(b.phase === 'attackResult' ? T.nextDefense : T.nextTurn, advance, 'gold adv-next'));
+    else quizDialog(main, damage);
+    if (b.log.length) main.appendChild(E('ol', { class: 'adv-battle-log', attrs: { 'aria-label': '戦闘の記録', 'aria-live': 'polite' } }, b.log.slice(-4).map(function(line) { return text('li','',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)); })));
   }
+
   U.screens.adventure = { render: function (main) { ensure(); main.classList.add('adventure-screen'); if (p().battle) renderBattle(main); else renderField(main); } };
   U.screens.adventureParty = { render: renderParty };
   root.document.addEventListener('keydown', function (e) {

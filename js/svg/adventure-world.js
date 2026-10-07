@@ -64,10 +64,11 @@
     rect(241,99,24,19,'#6a6756');rect(243,99,20,13,'#b28b48');rect(241,96,24,4,'#e5c587');rect(251,99,4,19,'#dfb76e');
     cached=c.toDataURL();return cached;
   }
-  function traveler(avatar, facing) {
+  function traveler(avatar) {
     if (FF.defs.AVATARS.indexOf(avatar) < 0) avatar = 'e1';
-    if (['up', 'down', 'left', 'right'].indexOf(facing) < 0) facing = 'down';
-    return 'img/adventure/travelers/' + avatar + '-' + facing + '.svg';
+    var junior = ['e4','e7','e2','j4','e1','j6','e8','e9','e6','e5','e12','e3'];
+    var sheet = avatar.charAt(0) === 'j' ? junior[Number(avatar.slice(1)) - 1] : avatar;
+    return 'img/adventure/travelers/' + sheet + '.png';
   }
   function enemy(id) {
     var boxes={cub:'0 550 340 405',wolf:'337 278 497 675',boss:'829 20 707 940'};
