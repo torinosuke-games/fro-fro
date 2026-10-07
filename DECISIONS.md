@@ -929,3 +929,7 @@
 - **スマホ**：1行目に見出しと学年のボタン（右）、2行目に資材の説明の札。ボタンだけの行がなくなり、縦が1行ぶん減った。
 - `tests/ui-compact-subjects.cjs` を、新しい並びに合わせた（主人公の絵が学年のボタンの上）。
 
+
+## 判断322：町の施設アイコン8枚を置いた
+- `FACILITY_ICON_REQUESTS.md` のとおり、`img/art/fac-weapon.webp` から `fac-training.webp` まで8枚を置いた（384×384、角丸、四すみ透明、WebP、60KB以下）。画面への組み込みはしていない。
+- 使ったプロンプトは `HAND_FACILITY_ICONS.md`。
