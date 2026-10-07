@@ -2,10 +2,10 @@
 (function (root) {
   'use strict';
   var FF = root.FF, A = FF.adventure, U = FF.ui, T = FF.texts.adventure, B = FF.balance.ADVENTURE;
-  var E = U.el, moving = false, routeId = 0, trail = [], entering = false, overview = false, orders = {}, orderKey = null, actor = null;
+  var E = U.el, moving = false, routeId = 0, entering = false, overview = false, orders = {}, orderKey = null, actor = null;
   var C = T.scenery, scene = FF.adventureScene;
   var beforeShow = FF.renewalBeforeShow;
-  FF.renewalBeforeShow = function (screen, params) { routeId++; moving = false; if (beforeShow) beforeShow(screen, params); };
+  FF.renewalBeforeShow = function (screen, params) { routeId++; moving = false; if (screen === 'adventureParty' && FF.app.screen === 'base') { ensure(); save(A.depart(p(), 'home')); } if (beforeShow) beforeShow(screen, params); };
   function p() { return FF.app.state.adventure || A.create(); }
   function save(next) { FF.app.commit(Object.assign({}, FF.app.state, { adventure: next })); }
   function ensure() { if (!p().started) { var n = FF.util.clone(p()); n.started = true; save(n); } }
@@ -15,9 +15,11 @@
   function paint() { U.rerender(); }
   function change(next) { if (next === p()) return; save(next); paint(); }
   function open() { ensure(); U.show('adventure'); }
+  function departHome() { ensure(); save(A.depart(p(), 'home')); open(); }
+  function home() { routeId++; moving = false; orderKey = null; save(A.depart(p(), 'home')); U.show('base'); }
   function grade() { return FF.app.state.player.grade || 1; }
   function header(main, title, subtitle) {
-    main.appendChild(E('header', { class: 'adv-heading' }, [E('div', {}, [text('p', 'adv-eyebrow', 'FROZEN FRONTIER · 冒険の試作'), text('h1', '', title), text('p', 'adv-subtitle', subtitle)]), btn(T.back, function () { routeId++; moving = false; U.show('base'); }, 'quiet')]));
+    main.appendChild(E('header', { class: 'adv-heading' }, [E('div', {}, [text('p', 'adv-eyebrow', 'FROZEN FRONTIER · 冒険の試作'), text('h1', '', title), text('p', 'adv-subtitle', subtitle)]), btn(T.back, home, 'quiet')]));
   }
   function meter(value, max, cls, label) { return E('div', { class: 'adv-meter ' + cls, attrs: { role: 'progressbar', 'aria-label': label, 'aria-valuenow': value, 'aria-valuemax': max, 'aria-valuemin': 0 } }, E('span', { style: { width: (100 * value / max) + '%' } })); }
   function member(id, compact) {
@@ -47,7 +49,7 @@
     return E('section', { class: 'adv-entry' }, [
       E('div', { class: 'adv-entry-symbol', attrs: { 'aria-hidden': true }, text: '✦' }),
       E('div', {}, [text('small', '', T.subtitle), text('h2', '', T.title), text('p', '', T.entry)]),
-      btn(p().started ? T.resume : T.start, open, 'gold'), btn(T.party, function () { U.show('adventureParty'); }, 'quiet')
+      btn(p().started ? T.resume : T.start, departHome, 'gold'), btn(T.party, function () { U.show('adventureParty'); }, 'quiet')
     ]);
   };
   function renderParty(main) {
@@ -82,6 +84,7 @@
   }
   function walk(target) {
     if (moving || p().battle) return;
+    if (A.same(target, A.PLACES.home) && A.same(p().pos, target)) { home(); return; }
     var steps = A.path(p(), target);
     if (!steps.length) { U.toast('そこへは道がつながっていない。峠の敵や、ほかの道をたしかめよう。'); return; }
     var token = ++routeId; moving = true;
@@ -89,9 +92,9 @@
       if (token !== routeId || FF.app.screen !== 'adventure' || p().battle || !steps.length) { moving = false; return; }
       var pos = steps.shift(), old = p(), next = A.move(old, pos.x, pos.y);
       if (next === old) { moving = false; return; }
-      trail.unshift(old.pos); trail = trail.slice(0, 3);
       if (next.battle) entering = true;
       save(next);
+      if (!next.battle && A.same(next.pos, A.PLACES.home)) { routeId++; moving = false; U.show('base'); return; }
       if (next.battle || !steps.length || next.notice) { moving = false; steps = []; }
       paint();
       if (moving) root.setTimeout(step, 135);
@@ -112,12 +115,7 @@
         map.appendChild(cell);
       });
     });
-    n.party.slice().reverse().forEach(function(id, rev) {
-      var i = n.party.length - 1 - rev, pos = i ? trail[i - 1] : n.pos;
-      var x = pos ? pos.x * 72 + 36 : n.pos.x * 72 + 36 + i * 13;
-      var y = pos ? pos.y * 72 + 40 : n.pos.y * 72 + 40 - i * 7;
-      map.appendChild(E('img', { class: 'adv-traveler' + (!i ? ' leader' : ''), style: { left: x / 936 * 100 + '%', top: y / 648 * 100 + '%' }, attrs: { src: scene.traveler(id), alt: i ? name(id) : C.current, draggable: 'false' } }));
-    });
+    map.appendChild(E('img', { class: 'adv-traveler leader', style: { left: (n.pos.x * 72 + 36) / 936 * 100 + '%', top: (n.pos.y * 72 + 40) / 648 * 100 + '%' }, attrs: { src: scene.traveler(FF.app.state.player.avatar, n.facing), alt: C.current, 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }));
     return map;
   }
   function fieldViewport() {
@@ -152,7 +150,7 @@
     var heal = E('div', { class: 'adv-supplies' }, [text('strong', '', T.potion + ' × ' + n.potions)]);
     var target = E('select', { attrs: { 'aria-label': '回復薬を使う仲間' } }, n.party.map(function (id) { return E('option', { value: id, text: name(id) }); }));
     heal.appendChild(target); heal.appendChild(btn(T.usePotion, function () { change(A.potion(p(), target.value)); }, 'quiet', !n.potions)); side.appendChild(heal);
-    side.appendChild(btn(T.returnTown, function () { routeId++; moving = false; trail = []; change(A.rest(p(), p().lastTown)); }, 'quiet'));
+    side.appendChild(btn(T.returnTown, function () { if (p().lastTown === 'home') home(); else change(A.depart(p(), 'town')); }, 'quiet'));
     side.appendChild(text('small', '', T.goldHelp));
     layout.appendChild(side); main.appendChild(layout);
     if (n.notice && T.notices[n.notice]) main.appendChild(text('p', 'adv-notice', T.notices[n.notice]));
@@ -185,7 +183,7 @@
     menu.appendChild(text('strong', 'adv-menu-actor', name(actor)));
     [['attack',T.fight],['magic',T.magic],['item',T.item],['escape',T.escape]].forEach(function(entry) {
       var type = entry[0], disabled = type === 'magic' && n.roster[actor].mp < B.MAGIC_COST || type === 'item' && !n.potions;
-      menu.appendChild(btn(entry[1], function() { if(type === 'escape') { orderKey = null; trail = []; change(A.retreat(p())); } else { orders[actor].type = type; paint(); } }, 'adv-command' + (orders[actor].type === type ? ' chosen' : ''), disabled));
+      menu.appendChild(btn(entry[1], function() { if(type === 'escape') { orderKey = null; change(A.retreat(p())); } else { orders[actor].type = type; paint(); } }, 'adv-command' + (orders[actor].type === type ? ' chosen' : ''), disabled));
     });
     var dialogue = E('div', { class: 'adv-command-dialogue' }, [text('p', 'adv-encounter-text', C.encounter.replace('{name}',T.enemies[n.battle.enemy].name)), text('p','adv-help',C.actorHelp)]);
     var action = orders[actor].type;
@@ -224,7 +222,7 @@
         panel.appendChild(btn(T.hint, function () { var n = FF.util.clone(p()); n.battle.hints = Math.min(q.hints.length, (n.battle.hints || 0) + 1); change(n); }, 'quiet', b.hints >= q.hints.length));
         q.hints.slice(0, b.hints || 0).forEach(function (hint) { panel.appendChild(text('p', 'adv-hint', hint)); });
       }
-      panel.appendChild(btn('戦闘からにげる', function () { trail = []; change(A.retreat(p())); }, 'quiet'));
+      panel.appendChild(btn('戦闘からにげる', function () { change(A.retreat(p())); }, 'quiet'));
     } else {
       panel.appendChild(E('div', { class: 'adv-feedback ' + (b.correct ? 'correct' : 'wrong'), attrs: { role: 'status' } }, [text('strong', '', T.answer + '：' + FF.learning.displayAnswer(q)), text('p', '', q.explanation)]));
     }

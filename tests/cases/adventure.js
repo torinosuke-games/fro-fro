@@ -16,6 +16,24 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   }
   function win(p) { for (let i = 0; i < 30 && p.battle.phase !== 'win' && p.battle.phase !== 'lose'; i++) p = turn(p); assert.equal(p.battle.phase, 'win'); return p; }
 
+  test('冒険：移動方向を保存し、旧セーブと不正な向きは正面で補完する', () => {
+    let p = A.create();
+    for (const [x,y,facing] of [[1,5,'up'],[2,5,'right'],[2,6,'down'],[1,6,'left']]) {
+      p = A.move(p,x,y); assert.equal(p.facing,facing); assert.equal(A.normalize(p).facing,facing);
+    }
+    const old = plain(p); delete old.facing; assert.equal(A.normalize(old).facing,'down');
+    old.facing = 'invalid'; assert.equal(A.normalize(old).facing,'down');
+    assert.strictEqual(A.move(p,0,6),p);
+  });
+  test('冒険：町からの出発で途中位置と戦闘を解除し、進行と報酬は保持する', () => {
+    let p = atEnemy('cub'); p.gold=37; p.answered=5; p.correct=4; p.chest=true;
+    const before=JSON.stringify(p), n=A.depart(p,'home');
+    assert.equal(JSON.stringify(p),before);assert.equal(n.battle,null);
+    assert.deepEqual(plain(n.pos),plain(A.PLACES.home));assert.equal(n.facing,'down');
+    assert.equal(n.gold,37);assert.equal(n.answered,5);assert.equal(n.correct,4);assert.equal(n.chest,true);
+    assert.strictEqual(A.depart(p,'town'),p);
+    p.arrived=true;p.cleared=['boss'];assert.deepEqual(plain(A.depart(p,'town').pos),plain(A.PLACES.town));
+  });
   test('冒険：歩行経路は障害物を越えず、敵にふれると止まる', () => {
     let p = A.create();
     const before = JSON.stringify(p), route = A.path(p, A.ENEMIES.cub);

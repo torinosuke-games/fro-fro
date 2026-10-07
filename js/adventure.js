@@ -20,7 +20,7 @@
     var roster = {};
     IDS.forEach(function (id) { var s = stats(id, 0); roster[id] = { xp: 0, hp: s.hp, mp: s.mp }; });
     return { version: 1, started: false, roster: roster, party: IDS.slice(), gold: 0, potions: B.POTIONS, pos: clone(PLACES.home),
-      lastTown: 'home', cleared: [], chest: false, arrived: false, campUsed: false, battle: null,
+      lastTown: 'home', facing: 'down', cleared: [], chest: false, arrived: false, campUsed: false, battle: null,
       subject: 'math', difficulty: 'basic', recent: [], answered: 0, correct: 0, history: [], notice: 'welcome' };
   }
   function normalize(raw) {
@@ -37,6 +37,7 @@
     p.correct = Math.min(p.answered, p.correct);
     ['started', 'chest', 'arrived', 'campUsed'].forEach(function (k) { p[k] = raw[k] === true; });
     if (raw.pos && Number.isInteger(raw.pos.x) && Number.isInteger(raw.pos.y) && walkable(raw.pos)) p.pos = clone(raw.pos);
+    if (['up', 'down', 'left', 'right'].indexOf(raw.facing) >= 0) p.facing = raw.facing;
     p.lastTown = raw.lastTown === 'town' && p.arrived ? 'town' : 'home';
     p.cleared = Array.isArray(raw.cleared) ? Object.keys(ENEMIES).filter(function (id) { return raw.cleared.indexOf(id) >= 0; }) : [];
     if (p.arrived && p.cleared.indexOf('boss') < 0) p.cleared.push('boss');
@@ -76,6 +77,11 @@
     n.battle = null; n.notice = 'rested';
     return n;
   }
+  // Entering the town screen and departing from it always uses that town's position.
+  function depart(p, where) {
+    if (where !== 'home' && (where !== 'town' || !p.arrived)) return p;
+    var n = clone(p); n.battle = null; n = rest(n, where); n.facing = 'down'; n.notice = ''; return n;
+  }
   function setParty(p, party) {
     if (p.battle || !atTown(p) || !Array.isArray(party) || party.length > 4 || party.indexOf('hero') < 0 ||
         party.some(function (id, i) { return IDS.indexOf(id) < 0 || party.indexOf(id) !== i; })) return p;
@@ -92,7 +98,7 @@
     if (p.battle || !walkable({ x: x, y: y }) || Math.abs(p.pos.x - x) + Math.abs(p.pos.y - y) !== 1) return p;
     // 峠の大獣を倒すまでは、東側へ抜けられない。
     if (x > 8 && p.cleared.indexOf('boss') < 0) return p;
-    var n = clone(p); n.pos = { x: x, y: y }; n.notice = '';
+    var n = clone(p); n.facing = x > p.pos.x ? 'right' : x < p.pos.x ? 'left' : y > p.pos.y ? 'down' : 'up'; n.pos = { x: x, y: y }; n.notice = '';
     var enemy = enemyAt(n, n.pos);
     if (enemy) return encounter(n, enemy);
     if (same(n.pos, PLACES.chest) && !n.chest) { n.chest = true; n.gold += B.CHEST_GOLD; n.potions += B.CHEST_POTIONS; n.notice = 'chest'; }
@@ -250,7 +256,7 @@
     var n = clone(p); n.potions--; n.roster[id].hp = Math.min(stats(id, n.roster[id].xp).hp, n.roster[id].hp + B.POTION_HEAL); return n;
   }
   FF.adventure = { IDS: IDS, MAP: MAP, PLACES: PLACES, ENEMIES: ENEMIES, create: create, normalize: normalize,
-    stats: stats, level: level, same: same, alive: alive, atTown: atTown, rest: rest, setParty: setParty,
+    stats: stats, level: level, same: same, alive: alive, atTown: atTown, rest: rest, depart: depart, setParty: setParty,
     walkable: walkable, path: path, enemyAt: enemyAt, move: move, encounter: encounter, intent: intent,
     command: command, answer: answer, advance: advance, retreat: retreat, potion: potion, pick: pick };
 })(this);

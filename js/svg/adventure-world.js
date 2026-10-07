@@ -1,7 +1,7 @@
 // Original, deterministic pixel scenery. The collision map remains the source of truth.
 (function (root) {
   'use strict';
-  var FF = root.FF, cached, sprites = {}, S = 72;
+  var FF = root.FF, cached, S = 72;
   function world() {
     if (cached) return cached;
     var c = document.createElement('canvas'); c.width = 936; c.height = 648;
@@ -64,17 +64,10 @@
     rect(241,99,24,19,'#6a6756');rect(243,99,20,13,'#b28b48');rect(241,96,24,4,'#e5c587');rect(251,99,4,19,'#dfb76e');
     cached=c.toDataURL();return cached;
   }
-  function traveler(id) {
-    if(sprites[id])return sprites[id];
-    var c=document.createElement('canvas');c.width=24;c.height=34;var g=c.getContext('2d');
-    var coat={hero:'#337b93',gan:'#ad754d',rin:'#c46080',sora:'#7075ae'}[id];
-    function r(x,y,w,h,color){g.fillStyle=color;g.fillRect(x,y,w,h);}
-    r(4,30,18,3,'#678f9b66');r(6,26,5,6,'#374c60');r(14,26,5,6,'#374c60');
-    r(5,16,15,12,'#344e64');r(6,17,13,10,coat);r(3,18,4,8,coat);r(19,18,3,8,coat);
-    r(7,7,12,11,'#684d45');r(8,9,10,9,'#f3cdac');r(10,12,2,2,'#344357');r(16,12,2,2,'#344357');
-    r(5,5,16,6,coat);r(8,2,10,5,coat);r(5,8,16,3,'#f2e7cf');r(10,0,5,3,'#f8f3df');
-    r(6,17,15,3,'#f0c56f');r(17,19,4,7,'#dba658');r(4,24,3,3,'#f1ceb2');
-    sprites[id]=c.toDataURL();return sprites[id];
+  function traveler(avatar, facing) {
+    if (FF.defs.AVATARS.indexOf(avatar) < 0) avatar = 'e1';
+    if (['up', 'down', 'left', 'right'].indexOf(facing) < 0) facing = 'down';
+    return 'img/adventure/travelers/' + avatar + '-' + facing + '.svg';
   }
   function enemy(id) {
     var boxes={cub:'0 550 340 405',wolf:'337 278 497 675',boss:'829 20 707 940'};
