@@ -430,6 +430,15 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
  .subject-top-actions{grid-area:actions;margin:0}
 }
 
+/* フィールドの左上（空の部分）に、いまの町の名前（判断322） */
+.scene .town-name{position:absolute;left:12px;top:10px;z-index:4;cursor:pointer;font-family:inherit;padding:4px 14px;border-radius:999px;background:rgba(23,76,112,.74);border:1px solid rgba(255,255,255,.6);color:#fff;font-weight:800;font-size:clamp(.8125rem,2.2vw,1.25rem);letter-spacing:.06em;line-height:1.5;text-shadow:0 1px 2px rgba(0,0,0,.35);box-shadow:0 2px 6px rgba(23,76,112,.25)}
+@media(min-width:761px){.scene .town-name{left:18px;top:14px;padding:5px 18px}}
+
+/* 町の名前は、押すと建物の一覧が開く（判断323） */
+.town-name .town-caret{margin-left:6px;font-size:.85em;opacity:.85}
+.town-name .town-ready{margin-left:6px;padding:0 5px;border-radius:999px;background:#fff;color:#2e8a56;font-size:.75em;line-height:1.5}
+.town-name:hover,.town-name:focus-visible{background:rgba(23,76,112,.9)}
+.town-list-wrap{max-height:min(62vh,520px);overflow-y:auto;margin:6px 0 10px;padding:2px}
 /* 町のほかの施設（判断324）：学習するボタンの下。スマホは横4つ、広い画面は横8つ */
 .facility-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 8px;margin:4px 0 18px}
 .facility-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;border:0;background:none;cursor:pointer;color:var(--rn-navy,#1f4a68);font-weight:800;min-width:0}

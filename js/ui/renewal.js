@@ -335,7 +335,7 @@
   if(scene&&scene.parentNode)scene.parentNode.insertBefore(facilities,(scene.nextSibling&&scene.nextSibling.nextSibling)||null);
   main.appendChild(E('section',{class:'home-steps'},[
    E('div',{},[E('span',{text:'01'}),E('strong',{text:R.stepLearn}),E('p',{text:R.stepLearnDesc})]),
-   E('div',{},[E('span',{text:'02'}),E('strong',{text:R.stepTown}),E('p',{text:R.stepTownDesc})]),
+   E('div',{},[E('span',{text:'02'}),E('strong',{text:R.stepTown}),E('p',{rich:R.stepTownDesc})]),
    E('div',{},[E('span',{text:'03'}),E('strong',{text:R.stepPlay}),button(R.redeem,function(){U.openRedeem();},'text-button')])
   ]));
  };
