@@ -6,7 +6,7 @@
   wantResource:'欲しい資材',noResource:'指定なし',resourceAutoHelp:'指定なしの場合は、不足している資材を自動で選びます。',
   rewardSpecified:'今回の資材：{resource}。選んだ資材を獲得します。',
   totalQuestions:'全{n}問',correctQuestions:'正解 {n}問',reviewQuestions:'要復習 {n}問',generatedNote:'登録問題の進み具合。計算問題は自動生成でも出題します。',
-  todayResource:'きょうの資材',dailyRandomShort:'ランダム',dailyNote:'{手|て}に{入|はい}る資材は教科ごとに毎日{変|か}わります（☆はランダムです）',dailyRandomHelp:'ランダム（4つの資材のどれかがもらえる）',townName:'はじまりの{町|まち}',brandCaption:'{君|きみ}の{学|まな}びの熱量で 町に雪解けを',home:'ホーム',town:'町',settings:'設定',records:'学習記録',explore:'探索',
+  todayResource:'きょうの資材',dailyRandomShort:'ランダム',dailyNote:'{手|て}に{入|はい}る資材は教科ごとに毎日{変|か}わります（☆はランダムです）',dailyRandomHelp:'ランダム（4つの資材のどれかがもらえる）',townName:'はじまりの{町|まち}',townOpen:'{建物|たてもの}の{一覧|いちらん}を{開|ひら}く',brandCaption:'{君|きみ}の{学|まな}びの熱量で 町に雪解けを',home:'ホーム',town:'町',settings:'設定',records:'学習記録',explore:'探索',
   learning:'LEARNING ROOM',chooseGrade:'あなたの学年を教えてください',gradeIntro:'学年に合った問題から、すぐに始められます。あとから設定で変えられます。',
   start:'学習する',subjects:'教科を選ぶ',subjectHeading:'今日は、何を学ぼう？',subjectIntro:'教科を１つ選んで、雪原の町に新しい熱を届けよう。',
   smallSteps:'小さな「わかった」が、町の力になる。',todayHeat:'今日も、ひとつずつ。',subjectLead:'問題を解くと、資材と熱量がたまります。自分のペースで進めよう。',
@@ -27,7 +27,7 @@
   next:'次の問題',previous:'前の問題',skip:'あとで考える',heat:'熱量',answerTickets:'選択問題',ticketHelp:'選択問題で１枚使用。５分ごとに１枚回復。遊びチケットとは別です。',
   redeem:'遊びチケット',exam:'昇格試験',diagnosis:'実力診断',
   welcome:'WELCOME TO FROZEN FRONTIER',homeHeading:'あなたの「わかった」で、町が育つ。',homeLead:'まずは教科を選んで１問。学ぶ熱で雪をとかし、町の未来を広げよう。',
-  stepLearn:'学んで、熱を生む',stepLearnDesc:'教科を選んで問題に挑戦。',stepTown:'資材で、町を育てる',stepTownDesc:'町の建物を押して、強化しよう。',stepPlay:'熱量を、遊び時間に',
+  stepLearn:'学んで、熱を生む',stepLearnDesc:'教科を選んで問題に挑戦。',stepTown:'資材で、町を育てる',stepTownDesc:'「はじまりの{町|まち}」や{建物|たてもの}を{押|お}して、{強化|きょうか}しよう。',stepPlay:'熱量を、遊び時間に',
  };
  T.baseStudyCta='学習する';
  T.opening='雪に閉ざされた町に、あなたの学ぶ熱を。\nまずは名前を教えてください。';

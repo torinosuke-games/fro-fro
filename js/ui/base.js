@@ -375,6 +375,33 @@
     });
   }
 
+  // 町の建物の一覧（町の名前を押すと開く。判断323）
+  var closeTown = null;
+  function openTown() {
+    var app = FF.app, s = app.state, now = app.now();
+    if (closeTown) { closeTown(); closeTown = null; }
+    var list = U.el('div', { class: 'bld-list' });
+    ORDER.forEach(function (id) {
+      var bld = s.buildings[id], locked = bld.level === 0;
+      var ef = effectText(id, bld.level);
+      var can = B.canUpgrade(s, id);
+      list.appendChild(U.el('button', {
+        class: 'bld-card' + (locked ? ' locked' : '') + (bld.construction ? ' is-building' : ''),
+        on: { click: function () { if (closeTown) { closeTown(); closeTown = null; } openBuilding(id); } }
+      }, [
+        U.R('span', 'nm', U.buildingName(id)),
+        U.el('span', { class: 'lv', text: locked ? '🔒' : 'Lv' + bld.level }),
+        U.el('span', { class: 'ef' }, locked
+          ? U.rich(U.T('reason.locked'), { level: B.unlockLevel(id) })
+          : [U.rich(ef[0], ef[1]), can.ok ? U.el('span', { class: 'ready' }, ['  ▲ ', U.rich(U.T('upgrade'))]) : null,
+            bld.construction ? U.el('span', { class: 'constructing' }, ['🔨 ', U.rich(U.T('constructing')), ' ', remainingView(id, s, now)]) : null,
+            B.isStorageFull(s, id, now) ? U.el('span', { class: 'notice' }, ['  ', U.rich(U.T('storageFull'))]) : null])
+      ]));
+    });
+    var wrap = U.el('div', { class: 'town-list-wrap' }, [list]);
+    closeTown = U.modal({ title: FF.texts.renewal.townName, body: wrap, buttons: [{ label: U.T('back'), class: 'ghost' }] });
+  }
+
   function render(main) {
     var app = FF.app, s = app.state, now = app.now();
 
@@ -394,7 +421,12 @@
 
     var sceneBox = U.artOn() ? artScene(s) : U.el('div', { class: 'scene' }, FF.svgScene.render(s, openBuilding, FF.app.theme));
     // フィールドの左上（空の部分。建物や名前の札とかさならない）に、いまの町の名前を出す。町は、これから増やしていく予定（判断322）
-    sceneBox.appendChild(U.el('div', { class: 'town-name', rich: FF.texts.renewal.townName }));
+    // 押すと、町の建物の一覧（中央炉〜食料庫）が開く（判断323）
+    var anyReady = ORDER.some(function (id) { return B.canUpgrade(s, id).ok; });
+    sceneBox.appendChild(U.el('button', {
+      class: 'town-name', attrs: { type: 'button', 'aria-haspopup': 'dialog', 'aria-label': FF.util.plainText(FF.texts.renewal.townName) + '：' + FF.util.plainText(FF.texts.renewal.townOpen) },
+      on: { click: openTown }
+    }, [U.rich(FF.texts.renewal.townName), U.el('span', { class: 'town-caret', text: '▾' }), anyReady ? U.el('span', { class: 'town-ready', text: '▲', attrs: { title: FF.util.plainText(U.T('upgrade')) } }) : null]));
     main.appendChild(sceneBox);
 
     // 絵の見た目では「生産物」の行を出さず、絵の上の吹き出しとかごで受け取る（判断196）
@@ -408,25 +440,6 @@
     // 絵の見た目では、学習への大きなボタンを風景の下に置く（見本の画面に合わせる。判断177）
     if (U.artOn()) main.appendChild(U.el('button', { class: 'btn primary base-cta', rich: U.T('baseStudyCta'), on: { click: function () { U.show('study'); } } }));
 
-    var list = U.el('div', { class: 'bld-list' });
-    ORDER.forEach(function (id) {
-      var bld = s.buildings[id], locked = bld.level === 0;
-      var ef = effectText(id, bld.level);
-      var can = B.canUpgrade(s, id);
-      list.appendChild(U.el('button', {
-        class: 'bld-card' + (locked ? ' locked' : '') + (bld.construction ? ' is-building' : ''),
-        on: { click: function () { openBuilding(id); } }
-      }, [
-        U.R('span', 'nm', U.buildingName(id)),
-        U.el('span', { class: 'lv', text: locked ? '🔒' : 'Lv' + bld.level }),
-        U.el('span', { class: 'ef' }, locked
-          ? U.rich(U.T('reason.locked'), { level: B.unlockLevel(id) })
-          : [U.rich(ef[0], ef[1]), can.ok ? U.el('span', { class: 'ready' }, ['  ▲ ', U.rich(U.T('upgrade'))]) : null,
-            bld.construction ? U.el('span', { class: 'constructing' }, ['🔨 ', U.rich(U.T('constructing')), ' ', remainingView(id, s, now)]) : null,
-            B.isStorageFull(s, id, now) ? U.el('span', { class: 'notice' }, ['  ', U.rich(U.T('storageFull'))]) : null])
-      ]));
-    });
-    main.appendChild(list);
 
     setTimeout(showUnlockNotices, 100);
   }
