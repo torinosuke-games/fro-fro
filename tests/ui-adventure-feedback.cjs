@@ -10,6 +10,9 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   await page.goto(process.env.FF_TEST_URL||'http://127.0.0.1:8769/preview/',{waitUntil:'domcontentloaded'});
   await page.locator('.title-card input').fill('ゆき');await page.locator('.title-card .btn.primary').click();
   await page.getByRole('button',{name:'小学4年',exact:true}).click();await page.locator('.avatar-pick').first().click();await page.locator('.intro-line + button').click();
+  await page.waitForFunction(()=>['snow-world.webp','snow-battle.webp','snow-enemies.webp','travelers/e1.webp'].every(path=>performance.getEntriesByType('resource').some(r=>r.name.endsWith(path))));
+  const preloaded=await page.evaluate(()=>performance.getEntriesByType('resource').filter(r=>/adventure\/.*\.webp$/.test(r.name)).map(r=>({url:r.name,bytes:r.encodedBodySize,start:r.startTime})));
+  assert.equal(preloaded.length,4);assert.ok(preloaded.every(r=>r.bytes<650000));
   await page.getByRole('button',{name:'雪原へ出発',exact:true}).click();
   // Trace every browser frame. The same map stays mounted throughout the route.
   await page.evaluate(()=>{
@@ -59,11 +62,20 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   assert.equal(await page.locator('.adv-enemy-art.is-hit').count(),0);
   await page.screenshot({path:out+'/explanation-phone.png',fullPage:true});
   await page.getByRole('button',{name:'戦闘へ戻る',exact:true}).click();
+  const events=await page.evaluate(()=>FF.app.state.adventure.battle.log);
+  assert.equal(await page.locator('.adv-enemy-hp').innerText(),'HP '+b.hp+' / 95','Visible HP stays unchanged during declaration');
+  assert.equal(await page.locator('.adv-battle-log').count(),0,'Results are not dumped together');
+  await page.evaluate(()=>{window.actionFrames=[];const node=document.querySelector('.adv-action-message');window.actionWatcher=new MutationObserver(()=>actionFrames.push({message:node.textContent,hp:document.querySelector('.adv-enemy-hp').textContent,blink:document.querySelector('.adv-enemy-art').classList.contains('is-hit')}));actionWatcher.observe(node,{childList:true,subtree:true});});
+  await page.waitForFunction(()=>document.querySelector('.adv-enemy-art').classList.contains('is-hit'));
   const animation=await page.locator('.adv-enemy-art').evaluate(el=>{const a=el.getAnimations().find(a=>a.animationName==='adv-hit');return a&&{duration:a.effect.getTiming().duration,zeroes:a.effect.getKeyframes().filter(k=>Number(k.opacity)===0).length,damage:Number(el.dataset.damage)};});
-  assert.ok(animation);assert.equal(animation.zeroes,2);assert.equal(animation.damage,b.hp-(await page.evaluate(()=>FF.app.state.adventure.battle.hp)));
-  assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
+  assert.ok(animation);assert.equal(animation.zeroes,2);assert.equal(animation.damage,events[0].amount);
+  await page.waitForFunction(()=>document.querySelector('.adv-action-message').textContent.includes('ダメージ'));
+  assert.equal(await page.locator('.adv-enemy-hp').innerText(),'HP '+(b.hp-events[0].amount)+' / 95');
   await page.screenshot({path:out+'/attack-phone.png',fullPage:true});
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='enemyAction');
+  const actionFrames=await page.evaluate(()=>{actionWatcher.disconnect();return actionFrames;});
+  assert.equal(actionFrames.filter(f=>f.message.includes('ダメージ')).length,4);
+  assert.ok(actionFrames.some(f=>f.message.includes('ゆきの攻撃'))&&actionFrames.some(f=>f.message.includes('リンの攻撃')));
   assert.ok(await page.locator('.adv-rpg-shell').evaluate(el=>el.getAnimations().some(a=>a.animationName==='adv-party-shake')));
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0);assert.equal(await page.locator('.adv-status.is-damaged').count(),1);
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.answered),1);
@@ -90,7 +102,11 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   assert.equal(await page.locator('.adv-enemy-art').evaluate(el=>getComputedStyle(el).animationName),'none');
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.battle.phase),'win');
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0,'Victory is inline, not a popup');
-  assert.ok(await page.locator('.adv-command-panel.adv-result.win').isVisible());
+  await page.locator('.adv-command-panel.adv-result.win').waitFor({state:'visible'});
+  assert.equal(await page.locator('.adv-victory-panel .adv-command-menu').count(),0);
+  assert.ok((await page.locator('.adv-victory-panel .adv-reward').innerText()).includes('勝利'));
+  assert.equal(await page.locator('.adv-victory-panel .adv-reward').count(),1);
+  assert.equal(await page.locator('.adv-battle-log').count(),0);
   assert.ok(await page.locator('.adv-loot-chest').isVisible());
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.gold),27);
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.potions),4);
@@ -98,6 +114,6 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   for(const width of [360,768,1440]) {await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
   await page.getByRole('button',{name:'旅をつづける',exact:true}).click();
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.gold),27,'Treasure is credited exactly once');
-  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',frames:walking.length,checks:'continuous camera, moving feet, cancellation, dialog focus, long diagrams at four widths, explanation before damage, two blinks, automatic retaliation and repeated visible screen shake, inline victory and treasure, one question per turn, reduced motion',screenshots:out},null,2));
+  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',frames:walking.length,checks:'continuous camera, moving feet, cancellation, dialog focus, long diagrams at four widths, explanation before damage, two blinks, automatic retaliation and repeated visible screen shake, per-character declaration/blink/damage, combined victory and treasure, preloaded lightweight artwork, one question per turn, reduced motion',screenshots:out},null,2));
  } finally {await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1);});

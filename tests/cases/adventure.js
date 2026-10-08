@@ -77,6 +77,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     p = A.advance(p, bank, 4, rng, now);
     assert.ok(p.battle.hp < B.ENEMIES.wolf.hp); assert.equal(p.roster.hero.mp, B.MEMBERS.hero.mp - B.MAGIC_COST);
     assert.equal(p.roster.gan.hp, 1 + B.POTION_HEAL); assert.equal(p.potions, 2); assert.equal(p.correct, 0);
+    assert.equal(p.battle.log.find(l=>l.key==='heal'&&l.who==='gan').actor,'sora');
     assert.notEqual(JSON.stringify(p), old);
     assert.strictEqual(A.answer(p, p.battle.question.answer, now), p, '二重回答で報酬を得ない');
   });
@@ -141,6 +142,12 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const q = A.pick(bank, p, 4, rng, now); assert.equal(q.gradeLevel, 4); assert.equal(q.subject, 'science'); assert.equal(q.difficulty, 'standard');
     p.recent.push(q.id); assert.notEqual(A.pick(bank, p, 4, rng, now).id, q.id);
     p.subject = 'unknown'; assert.equal(A.pick(bank, p, 4, rng, now), null);
+  });
+  test('冒険：敵を倒した後の仲間は攻撃・魔法・道具を使わない', () => {
+    let p=atEnemy('cub');p.battle.hp=1;p.roster.gan.hp=1;
+    p=A.command(p,orders(p,{hero:{type:'magic'},gan:{type:'item',target:'gan'}}),bank,4,rng,now);p=A.answer(p,p.battle.question.answer,now);p=A.advance(p,bank,4,()=>1,now);
+    assert.equal(p.battle.phase,'win');assert.equal(p.battle.log.length,1);assert.equal(p.battle.log[0].who,'sora');assert.equal(p.battle.log[0].amount,1);
+    assert.equal(p.roster.hero.mp,B.MEMBERS.hero.mp);assert.equal(p.potions,B.POTIONS);assert.equal(p.roster.gan.hp,1);
   });
   test('冒険：勝利時の宝箱は確率境界を守り、報酬を一度だけ保存する', () => {
     let p=atEnemy('cub');p.battle.hp=1;p=A.command(p,orders(p),bank,4,rng,now);p=A.answer(p,p.battle.question.answer,now);

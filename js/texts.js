@@ -568,7 +568,7 @@
     attackHelp: 'このターンは1問。正解すると攻撃が1.5倍、敵の攻撃が半分になるよ。', defenseHelp: '正解するとダメージ半分。あせらず考えよう。', returnBattle: '戦闘へ戻る', playerAction: '仲間の攻撃！', enemyAction: '{魔物|まもの}の攻撃！', quizBonus: '正解ボーナス：攻撃1.5倍・敵の攻撃半分', quizNormal: 'このターンは{通常|つうじょう}の{強|つよ}さで行動',
     begin: 'クイズで行動する', nextDefense: '敵の攻撃にそなえる', nextTurn: '次のターンへ', field: '旅をつづける',
     good: '正解！', wrong: 'おしい！ 解き方をたしかめよう。', answer: '答え', explanation: '考え方', hint: 'ヒントを見る', submit: '答える',
-    treasureFound: '敵が{宝箱|たからばこ}を{落|お}としていった！', treasureContents: '{宝箱|たからばこ}から、{gold} Gと回復薬{potions}個を手に入れた！', victory: 'みんなの力で、勝利！', defeat: '町の人が助けにきてくれた。', defeatHelp: '経験値もゴールドも、そのまま。町で休んで、また挑もう。',
+    victoryReward: 'みんなの力で、勝利！ 仲間それぞれに{xp} EXP、{gold} Gを手に入れた！', attackDeclare: '{name}の攻撃！', magicDeclare: '{name}は{magic}！', actionDeclare: '{name}の行動！', damageResult: '{enemy}に{n}ダメージ！', treasureFound: '敵が{宝箱|たからばこ}を{落|お}としていった！', treasureContents: '{宝箱|たからばこ}から、{gold} Gと回復薬{potions}個を手に入れた！', victory: 'みんなの力で、勝利！', defeat: '町の人が助けにきてくれた。', defeatHelp: '経験値もゴールドも、そのまま。町で休んで、また挑もう。',
     rewardHelp: '戦線を離れた仲間にも、同じ経験値が入るよ。', levelUp: 'レベルアップ！', down: 'ひと休み',
     noQuestion: 'この学年・教科・難易度の問題がありません。町で出題設定を変えてください。',
     noOrders: 'MP・回復薬の残り数と、行動する仲間をたしかめてね。',

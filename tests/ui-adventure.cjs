@@ -158,7 +158,7 @@ fs.mkdirSync(out, { recursive: true });
     await page.getByRole('button', { name: '冒険のつづき', exact: true }).click();
     assert.equal(await page.locator('.adv-traveler').getAttribute('data-avatar'), 'e12');
     await page.getByRole('button', { name: '北へ', exact: true }).click();
-    assert.ok((await page.locator('.adv-traveler').getAttribute('data-sprite')).endsWith('e12.png'));
+    assert.ok((await page.locator('.adv-traveler').getAttribute('data-sprite')).endsWith('e12.webp'));
     await page.screenshot({ path: out + '/witch-up-phone.png', fullPage: true });
     await page.getByRole('button', { name: '町の画面へ', exact: true }).click();
     await page.locator('.masthead-links .masthead-link').nth(2).click();

@@ -2,10 +2,10 @@
 (function (root) {
   'use strict';
   var FF = root.FF, A = FF.adventure, U = FF.ui, T = FF.texts.adventure, B = FF.balance.ADVENTURE;
-  var E = U.el, moving = false, routeId = 0, entering = false, overview = false, orders = {}, orderKey = null, actor = null, impact = 0, received = {};
+  var E = U.el, moving = false, routeId = 0, entering = false, overview = false, orders = {}, orderKey = null, actor = null, impact = 0, received = {}, sequence = null;
   var C = T.scenery, scene = FF.adventureScene;
   var beforeShow = FF.renewalBeforeShow;
-  FF.renewalBeforeShow = function (screen, params) { routeId++; moving = false; if (screen === 'adventureParty' && FF.app.screen === 'base') { ensure(); save(A.depart(p(), 'home')); } if (beforeShow) beforeShow(screen, params); };
+  FF.renewalBeforeShow = function (screen, params) { routeId++; moving = false; sequence = null; if (screen === 'adventureParty' && FF.app.screen === 'base') { ensure(); save(A.depart(p(), 'home')); } if (beforeShow) beforeShow(screen, params); };
   function p() { return FF.app.state.adventure || A.create(); }
   function save(next) { FF.app.commit(Object.assign({}, FF.app.state, { adventure: next })); }
   function ensure() { if (!p().started) { var n = FF.util.clone(p()); n.started = true; save(n); } }
@@ -16,6 +16,10 @@
   function change(next) {
     var before = p(); if (next === before) return;
     impact = before.battle && before.battle.phase === 'explanation' && next.battle ? Math.max(0, before.battle.hp - next.battle.hp) : 0;
+    if (before.battle && before.battle.phase === 'explanation' && next.battle) {
+      sequence = {enemy:next.battle.enemy,turn:next.battle.turn,hp:before.battle.hp,events:next.battle.log.slice(),index:0};
+      impact = 0;
+    }
     received = {};
     if (before.battle && before.battle.phase === 'playerAction') next.party.forEach(function(id) { var loss = before.roster[id].hp - next.roster[id].hp; if (loss > 0) received[id] = loss; });
     save(next); paint();
@@ -53,6 +57,7 @@
     ]);
   }
   U.adventureEntry = function () {
+    scene.preload(FF.app.state.player.avatar);
     return E('section', { class: 'adv-entry' }, [
       E('div', { class: 'adv-entry-symbol', attrs: { 'aria-hidden': true }, text: '✦' }),
       E('div', {}, [text('small', '', T.subtitle), text('h2', '', T.title), text('p', '', T.entry)]),
@@ -284,19 +289,52 @@
   function victoryPanel(damage) {
     var reward = p().battle.reward;
     var panel = E('section', {class:'adv-command-panel adv-victory-panel adv-result win', attrs:{'aria-label':T.victory,'aria-live':'polite'}});
-    var menu = E('div',{class:'adv-command-menu'},[text('strong','',T.victory)]);
     var dialogue = E('div',{class:'adv-command-dialogue'},[
-      E('p',{class:'adv-reward',text:'+' + reward.xp + ' EXP / 人　 +' + reward.gold + ' G'}),
+      text('p','adv-reward',T.victoryReward.replace('{xp}',reward.xp).replace('{gold}',reward.gold)),
       E('div',{class:'adv-levelups'},reward.levels.map(function(r){return text('p','','✦ ' + name(r.id) + ' Lv.' + r.level + '　' + T.levelUp);} ))
     ]);
     if (reward.chest) dialogue.appendChild(E('div',{class:'adv-loot'},[
       scene.chest(), E('div',{},[text('strong','',T.treasureFound),text('p','',T.treasureContents.replace('{gold}',reward.chest.gold).replace('{potions}',reward.chest.potions))])
     ]));
     dialogue.appendChild(btn(T.field,advance,'gold'));
-    panel.appendChild(menu);panel.appendChild(dialogue);
+    panel.appendChild(dialogue);
     // Let the final hit play before revealing the victory and chest.
     if (damage && !root.matchMedia('(prefers-reduced-motion: reduce)').matches) panel.classList.add('after-hit');
     return panel;
+  }
+  function playActions(shell, stage) {
+    var playback = sequence, message = text('p','adv-action-message','');
+    var dialogue = E('div',{class:'adv-command-dialogue'},message);
+    shell.appendChild(E('section',{class:'adv-command-panel adv-sequence-panel',attrs:{'aria-live':'polite'}},dialogue));
+    var art = stage.querySelector('.adv-enemy-art'), hpText = stage.querySelector('.adv-enemy-hp'), bar = stage.querySelector('.adv-meter'), total = B.ENEMIES[playback.enemy].hp;
+    function setHp() {hpText.textContent='HP ' + playback.hp + ' / ' + total;bar.setAttribute('aria-valuenow',playback.hp);bar.firstChild.style.width=(playback.hp/total*100)+'%';}
+    function say(value) {U.clear(message);message.appendChild(U.rich(value));}
+    function wait(ms, action) {root.setTimeout(function(){if(shell.isConnected && sequence===playback && FF.app.screen==='adventure') action();},ms);}
+    function event() {
+      if (playback.index >= playback.events.length) {
+        sequence = null;
+        if (p().battle.phase === 'playerAction') advance(); else paint();
+        return;
+      }
+      var line=playback.events[playback.index], acting=line.actor || line.who, command=p().battle.orders[acting];
+      art.classList.remove('is-hit');art.querySelectorAll('.adv-damage').forEach(function(node){node.remove();});
+      say((line.key==='hit' ? (command && command.type==='magic' ? T.magicDeclare.replace('{magic}',T.members[acting].magic) : T.attackDeclare) : T.actionDeclare).replace('{name}',name(acting)));
+      wait(350,function(){
+        if (line.key==='hit') {
+          if (!root.matchMedia('(prefers-reduced-motion: reduce)').matches) art.classList.add('is-hit');
+          art.setAttribute('data-damage',line.amount);
+        }
+        wait(line.key==='hit' ? 460 : 150,function(){
+          if (line.key==='hit') {
+            playback.hp=Math.max(0,playback.hp-line.amount);setHp();
+            art.appendChild(E('span',{class:'adv-damage',text:'−'+line.amount,attrs:{'aria-hidden':'true'}}));
+            say(T.damageResult.replace('{enemy}',T.enemies[playback.enemy].name).replace('{n}',line.amount));
+          } else say(T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount));
+          playback.index++;wait(400,event);
+        });
+      });
+    }
+    setHp();event();
   }
   function renderBattle(main) {
     var n = p(), b = n.battle, d = T.enemies[b.enemy], done = b.phase === 'win' || b.phase === 'lose', damage = impact, hurt = Object.keys(received).length; impact = 0;
@@ -312,6 +350,7 @@
       !done ? text('p', 'adv-intent', intention()) : null
     ]);
     main.appendChild(stage);
+    if (sequence && sequence.enemy===b.enemy && sequence.turn===b.turn) {playActions(main,stage);return;}
     if (b.phase === 'commands') main.appendChild(commandPanel());
     else if (b.phase === 'win') main.appendChild(victoryPanel(damage));
     else if (b.phase === 'playerAction' || b.phase === 'enemyAction') {
@@ -320,7 +359,7 @@
       var phase = b.phase, marker = stage;
       root.setTimeout(function() { if (marker.isConnected && FF.app.screen === 'adventure' && p().battle && p().battle.phase === phase) advance(); }, 900);
     } else quizDialog(main, damage || hurt);
-    if (b.log.length) main.appendChild(E('ol', { class: 'adv-battle-log', attrs: { 'aria-label': '戦闘の記録', 'aria-live': 'polite' } }, b.log.slice(-4).map(function(line) { return text('li','',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)); })));
+    if (b.log.length && !done) main.appendChild(E('ol', { class: 'adv-battle-log', attrs: { 'aria-label': '戦闘の記録', 'aria-live': 'polite' } }, b.log.slice(-4).map(function(line) { return text('li','',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)); })));
   }
 
   U.screens.adventure = { render: function (main) { ensure(); main.classList.remove('adv-field-screen','adv-battle-screen','is-hurt'); main.classList.add('adventure-screen'); if (p().battle) renderBattle(main); else renderField(main); } };

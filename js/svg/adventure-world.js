@@ -68,7 +68,7 @@
     if (FF.defs.AVATARS.indexOf(avatar) < 0) avatar = 'e1';
     var junior = ['e4','e7','e2','j4','e1','j6','e8','e9','e6','e5','e12','e3'];
     var sheet = avatar.charAt(0) === 'j' ? junior[Number(avatar.slice(1)) - 1] : avatar;
-    return 'img/adventure/travelers/' + sheet + '.png';
+    return 'img/adventure/travelers/' + sheet + '.webp';
   }
   function enemy(id) {
     var boxes={cub:'0 550 340 405',wolf:'337 278 497 675',boss:'829 20 707 940'};
@@ -78,7 +78,7 @@
     var box=boxes[id].split(' '),crop=document.createElementNS(svg.namespaceURI,'svg');
     ['x','y','width','height'].forEach(function(key,i){crop.setAttribute(key,box[i]);});
     crop.setAttribute('viewBox',boxes[id]);crop.setAttribute('overflow','hidden');
-    var img=document.createElementNS(svg.namespaceURI,'image');img.setAttribute('href','img/adventure/snow-enemies.png');img.setAttribute('width','1536');img.setAttribute('height','1024');crop.appendChild(img);svg.appendChild(crop);return svg;
+    var img=document.createElementNS(svg.namespaceURI,'image');img.setAttribute('href','img/adventure/snow-enemies.webp');img.setAttribute('width','1536');img.setAttribute('height','1024');crop.appendChild(img);svg.appendChild(crop);return svg;
   }
   function chest() {
     var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns,'svg');
@@ -94,5 +94,13 @@
     shape('path',{class:'adv-loot-sparkle',d:'M60 15 L64 27 L76 31 L64 35 L60 47 L56 35 L44 31 L56 27 Z',fill:'#fff5b4'});
     return svg;
   }
-  FF.adventureScene={background:'img/adventure/snow-world.png',world:world,traveler:traveler,enemy:enemy,chest:chest,tile:S};
+  var prepared = {};
+  function preload(avatar) {
+    ['img/adventure/snow-world.webp','img/adventure/snow-battle.webp','img/adventure/snow-enemies.webp',traveler(avatar)].forEach(function(url){
+      if (prepared[url]) return;
+      var image=new Image();prepared[url]=image;image.decoding='async';image.src=url;
+      if (image.decode) image.decode().catch(function(){});
+    });
+  }
+  FF.adventureScene={background:'img/adventure/snow-world.webp',world:world,traveler:traveler,enemy:enemy,chest:chest,preload:preload,tile:S};
 })(this);

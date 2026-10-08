@@ -59,7 +59,7 @@ body[data-screen="adventure"] #screen{max-width:1320px;padding:20px 24px 35px}
 .adv-board .adv-map-help{padding:12px 16px;margin:0;background:#f6fbfc}
 .adv-map-caption{background:#173b50;color:#edf8ff;letter-spacing:.06em;padding:14px 18px}
 /* Classic windows over a first-person winter landscape. */
-.adv-rpg-shell{padding:22px;border-radius:12px;border:1px solid #adc5d3;background:#b3d0e2 url('../img/adventure/snow-battle.png') center top/cover no-repeat;box-shadow:0 20px 55px #284a6829;overflow:hidden}
+.adv-rpg-shell{padding:22px;border-radius:12px;border:1px solid #adc5d3;background:#b3d0e2 url('../img/adventure/snow-battle.webp') center top/cover no-repeat;box-shadow:0 20px 55px #284a6829;overflow:hidden}
 .adv-rpg-stats,.adv-command-menu,.adv-command-dialogue,.adv-rpg-shell .adv-question-panel,.adv-rpg-shell .adv-result,.adv-rpg-shell .adv-battle-log{color:#f6f9ff;background:#091726f5;border:2px solid #eef7ff;outline:1px solid #304659;border-radius:5px;box-shadow:0 4px 0 #16344844}
 .adv-rpg-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:840px;margin:0 auto;padding:7px 8px;gap:4px}
 .adv-rpg-stats .adv-status{display:grid;grid-template-columns:1fr auto;column-gap:10px;padding:7px 12px;border:1px solid transparent;border-radius:3px;background:none;color:#f4f8ff;text-align:left;min-width:0;box-shadow:none;transform:none;opacity:1}
@@ -158,3 +158,6 @@ body:has(.adv-quiz-dialog[open]){overflow:hidden}
 @keyframes adv-victory-reveal{from{opacity:0}to{opacity:1}}
 @media(max-width:600px){.adv-rpg-shell .adv-victory-panel{grid-template-columns:1fr;gap:6px}.adv-victory-panel .adv-command-menu{padding:10px;border-bottom:1px solid #fff8;border-right:0}.adv-loot-chest{width:66px}.adv-loot{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.adv-victory-panel.after-hit,.adv-loot-lid,.adv-loot-sparkle{animation:none}.adv-loot-lid{transform:translateY(-15px) rotate(-12deg)}}
+
+.adv-rpg-shell .adv-victory-panel,.adv-rpg-shell .adv-sequence-panel{grid-template-columns:minmax(0,1fr)}
+.adv-victory-panel .adv-reward{color:#fff1a5;line-height:1.9;margin:0 0 12px}.adv-action-message{margin:0;min-height:2em;line-height:1.9;font-size:16px}

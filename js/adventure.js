@@ -175,7 +175,7 @@
     n.battle.phase = 'attack';
     return n;
   }
-  function log(b, key, who, amount) { b.log.push({ key: key, who: who, amount: amount }); }
+  function log(b, key, who, amount, actor) { var entry = { key:key, who:who, amount:amount }; if (actor && actor !== who) entry.actor = actor; b.log.push(entry); }
   function victory(n, rng) {
     var b = n.battle, e = B.ENEMIES[b.enemy];
     b.phase = 'win'; b.reward = { xp: e.xp, gold: e.gold, levels: [] };
@@ -199,16 +199,16 @@
     var b = n.battle, e = B.ENEMIES[b.enemy];
     alive(n).sort(function (a, c) { return stats(c, n.roster[c].xp).speed - stats(a, n.roster[a].xp).speed; }).forEach(function (id) {
       var o = b.orders[id], r = n.roster[id], s = stats(id, r.xp), target = o && n.roster[o.target];
-      if (!o) return;
+      if (!o || b.hp <= 0) return;
       if (o.type === 'item') {
         if (!n.potions || !target) return;
         var healed = Math.min(B.POTION_HEAL, stats(o.target, target.xp).hp - target.hp);
-        if (healed <= 0) { log(b, 'full', o.target, 0); return; }
-        n.potions--; target.hp += healed; log(b, 'heal', o.target, healed); return;
+        if (healed <= 0) { log(b, 'full', o.target, 0, id); return; }
+        n.potions--; target.hp += healed; log(b, 'heal', o.target, healed, id); return;
       }
       if (o.type === 'magic') {
         r.mp -= B.MAGIC_COST;
-        if (id === 'rin') { var h = Math.min(B.HEAL + s.wisdom, stats(o.target, target.xp).hp - target.hp); target.hp += h; log(b, 'heal', o.target, h); return; }
+        if (id === 'rin') { var h = Math.min(B.HEAL + s.wisdom, stats(o.target, target.xp).hp - target.hp); target.hp += h; log(b, 'heal', o.target, h, id); return; }
         if (id === 'gan') { b.guarded = true; log(b, 'guard', id, 0); return; }
         if (id === 'sora') { b.ward = true; log(b, 'ward', id, 0); return; }
       }
