@@ -161,3 +161,6 @@ body:has(.adv-quiz-dialog[open]){overflow:hidden}
 
 .adv-rpg-shell .adv-victory-panel,.adv-rpg-shell .adv-sequence-panel{grid-template-columns:minmax(0,1fr)}
 .adv-victory-panel .adv-reward{color:#fff1a5;line-height:1.9;margin:0 0 12px}.adv-action-message{margin:0;min-height:2em;line-height:1.9;font-size:16px}
+
+.adv-subcommand-menu .adv-command{white-space:normal;overflow-wrap:anywhere;line-height:1.7}
+.adv-command-prompt{margin:8px 0}.adv-command-progress{opacity:.8}.adv-retaliation-panel .adv-action-message + .adv-action-message{margin-top:4px}

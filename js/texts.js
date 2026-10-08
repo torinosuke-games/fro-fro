@@ -554,7 +554,7 @@
   root.FF.texts.adventure = {
     scenery: { viewBattle: '戦闘画面を見る', answerQuiz: '問題に答える', reviewQuiz: '結果と解説を見る', region: '白銀の辺境', chapter: 'CHAPTER 01 · 灯りをたどって', map: '全体マップ', follow: '現在地へ',
       fieldHelp: '雪道をタップして移動。画面をスワイプして、先の景色を見渡そう。',
-      actorHelp: '上の仲間を選んで、行動を決めよう。', ready: 'みんなの行動', target: '回復する仲間',
+      actorHelp: '仲間の行動を順番に選ぼう。最後の仲間を選ぶと、問題が{出|で}るよ。', chooseAction: '{name}は どうする？', chooseMagic: '使う魔法を選ぼう。', chooseItem: '使う道具を選ぼう。', chooseTarget: '回復する仲間を選ぼう。', goBack: 'もどる', details: '魔法・道具の{選択|せんたく}', ready: 'みんなの行動', target: '回復する仲間',
       encounter: '{name}が あらわれた！', attack: 'みんなで攻撃。クイズに正解すると、攻撃が1.5倍に！',
       item: '回復薬で仲間のHPを回復する。', magic: '魔法を使う（3 MP）。',
       selected: 'の行動を選ぶ', current: '現在地', supplies: '回復薬', turn: 'ターン' },
@@ -570,7 +570,7 @@
     goldHelp: 'ゴールドは、これから町のお店で使うお金。', learning: '冒険の問題', difficulty: 'むずかしさ',
     command: 'みんなの行動を選ぼう', commandHelp: '1ターンに1問。正解で攻撃が1.5倍、敵の攻撃が半分。魔法は発動時にMPを3使う。',
     fight: 'たたかう', magic: 'まほう', item: 'どうぐ', escape: 'にげる', attackQuiz: 'クイズで、戦いを{有利|ゆうり}に！', defenseQuiz: 'クイズで、みんなを守ろう！',
-    attackHelp: 'このターンは1問。正解すると攻撃が1.5倍、敵の攻撃が半分になるよ。', defenseHelp: '正解するとダメージ半分。あせらず考えよう。', returnBattle: '戦闘へ戻る', playerAction: '仲間の攻撃！', enemyAction: '{魔物|まもの}の攻撃！', quizBonus: '正解ボーナス：攻撃1.5倍・敵の攻撃半分', quizNormal: 'このターンは{通常|つうじょう}の{強|つよ}さで行動',
+    attackHelp: 'このターンは1問。正解すると攻撃が1.5倍、敵の攻撃が半分になるよ。', defenseHelp: '正解するとダメージ半分。あせらず考えよう。', returnBattle: '戦闘へ戻る', playerAction: '仲間の攻撃！', enemyDeclare: '{enemy}の攻撃！', enemyAction: '{魔物|まもの}の攻撃！', quizBonus: '正解ボーナス：攻撃1.5倍・敵の攻撃半分', quizNormal: 'このターンは{通常|つうじょう}の{強|つよ}さで行動',
     begin: 'クイズで行動する', nextDefense: '敵の攻撃にそなえる', nextTurn: '次のターンへ', field: '旅をつづける',
     good: '正解！', wrong: 'おしい！ 解き方をたしかめよう。', answer: '答え', explanation: '考え方', hint: 'ヒントを見る', submit: '答える',
     victoryReward: 'みんなの力で、勝利！ 仲間それぞれに{xp} EXP、{gold} Gを手に入れた！', attackDeclare: '{name}の攻撃！', magicDeclare: '{name}は{magic}！', actionDeclare: '{name}の行動！', damageResult: '{enemy}に{n}ダメージ！', treasureFound: '敵が{宝箱|たからばこ}を{落|お}としていった！', treasureContents: '{宝箱|たからばこ}から、{gold} Gと回復薬{potions}個を手に入れた！', victory: 'みんなの力で、勝利！', defeat: '町の人が助けにきてくれた。', defeatHelp: '経験値もゴールドも、そのまま。町で休んで、また挑もう。',

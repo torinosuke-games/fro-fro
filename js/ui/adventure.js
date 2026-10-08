@@ -2,10 +2,10 @@
 (function (root) {
   'use strict';
   var FF = root.FF, A = FF.adventure, U = FF.ui, T = FF.texts.adventure, B = FF.balance.ADVENTURE;
-  var E = U.el, moving = false, routeId = 0, entering = false, overview = false, orders = {}, orderKey = null, actor = null, impact = 0, received = {}, sequence = null;
+  var E = U.el, moving = false, routeId = 0, entering = false, overview = false, orders = {}, orderKey = null, actor = null, submenu = null, impact = 0, received = {}, sequence = null;
   var C = T.scenery, scene = FF.adventureScene;
   var beforeShow = FF.renewalBeforeShow;
-  FF.renewalBeforeShow = function (screen, params) { routeId++; moving = false; sequence = null; if (screen === 'adventureParty' && FF.app.screen === 'base') { ensure(); save(A.depart(p(), 'home')); } if (beforeShow) beforeShow(screen, params); };
+  FF.renewalBeforeShow = function (screen, params) { routeId++; moving = false; sequence = null; if (screen !== 'adventure') { orderKey = null; submenu = null; } if (screen === 'adventureParty' && FF.app.screen === 'base') { ensure(); save(A.depart(p(), 'home')); } if (beforeShow) beforeShow(screen, params); };
   function p() { return FF.app.state.adventure || A.create(); }
   function save(next) { FF.app.commit(Object.assign({}, FF.app.state, { adventure: next })); }
   function ensure() { if (!p().started) { var n = FF.util.clone(p()); n.started = true; save(n); } }
@@ -200,13 +200,13 @@
   }
   function prepareOrders() {
     var n = p(), key = n.battle.enemy + ':' + n.battle.turn;
-    if (orderKey !== key) { orders = {}; A.alive(n).forEach(function(id) { orders[id] = { type: 'attack', target: id }; }); actor = A.alive(n)[0]; orderKey = key; }
+    if (orderKey !== key) { orders = {}; actor = A.alive(n)[0]; submenu = null; orderKey = key; }
     if (A.alive(n).indexOf(actor) < 0) actor = A.alive(n)[0];
   }
   function battleStats() {
     return E('div', { class: 'adv-rpg-stats', attrs: { 'aria-label': T.party } }, p().party.map(function(id) {
       var r = p().roster[id], st = A.stats(id, r.xp), active = p().battle.phase === 'commands';
-      var card = btn('', function() { actor = id; paint(); }, 'adv-status' + (active && actor === id ? ' selected' : '') + (!r.hp ? ' is-down' : '') + (received[id] ? ' is-damaged' : ''), !active || !r.hp);
+      var card = btn('', function() { actor = id; submenu = null; paint(); }, 'adv-status' + (active && actor === id ? ' selected' : '') + (!r.hp ? ' is-down' : '') + (received[id] ? ' is-damaged' : ''), !active || !r.hp);
       card.setAttribute('aria-label', name(id) + C.selected); card.setAttribute('aria-pressed', active && actor === id ? 'true' : 'false');
       if (received[id]) card.appendChild(E('span',{class:'adv-party-damage',text:'−' + received[id],attrs:{'aria-hidden':'true'}}));
       card.appendChild(text('strong', '', name(id)));card.appendChild(E('small', { text: 'Lv ' + st.level }));
@@ -214,27 +214,57 @@
       card.appendChild(E('span', { text: 'MP ' + r.mp }));card.appendChild(meter(r.mp,st.mp,'mp',name(id)+' MP'));return card;
     }));
   }
+  // Reserve each choice without spending MP or supplies. Only the last choice opens the quiz.
+  function availablePotions() {
+    return p().potions - Object.keys(orders).filter(function(id) { return id !== actor && orders[id].type === 'item'; }).length;
+  }
+  function confirmOrder(type, target) {
+    orders[actor] = { type: type, target: target || actor }; submenu = null;
+    var pending = A.alive(p()).find(function(id) { return !orders[id]; });
+    if (pending) { actor = pending; paint(); return; }
+    var before = p(), next = A.command(before, orders, FF.app.bank, grade(), Math.random, FF.app.now());
+    if (next === before) { U.toast(A.pick(FF.app.bank, before, grade(), Math.random, FF.app.now()) ? T.noOrders : T.noQuestion); paint(); return; }
+    orderKey = null; change(next);
+  }
   function commandPanel() {
-    var n = p(), panel = E('section', { class: 'adv-command-panel' }), menu = E('nav', { class: 'adv-command-menu', attrs: { 'aria-label': T.command } });
+    var n = p(), panel = E('section', { class: 'adv-command-panel' }), menu = E('nav', { class: 'adv-command-menu' + (submenu ? ' adv-subcommand-menu' : ''), attrs: { 'aria-label': submenu ? C.details : T.command } });
     menu.appendChild(text('strong', 'adv-menu-actor', name(actor)));
-    [['attack',T.fight],['magic',T.magic],['item',T.item],['escape',T.escape]].forEach(function(entry) {
-      var type = entry[0], disabled = type === 'magic' && n.roster[actor].mp < B.MAGIC_COST || type === 'item' && !n.potions;
-      menu.appendChild(btn(entry[1], function() { if(type === 'escape') { orderKey = null; change(A.retreat(p())); } else { orders[actor].type = type; paint(); } }, 'adv-command' + (orders[actor].type === type ? ' chosen' : ''), disabled));
-    });
-    var dialogue = E('div', { class: 'adv-command-dialogue' }, [text('p', 'adv-encounter-text', C.encounter.replace('{name}',T.enemies[n.battle.enemy].name)), text('p','adv-help',C.actorHelp)]);
-    var action = orders[actor].type;
-    dialogue.appendChild(text('p','adv-action-description', action === 'magic' ? T.members[actor].magic + ' · ' + C.magic : action === 'item' ? C.item : C.attack));
-    if (action === 'item' || action === 'magic' && actor === 'rin') {
-      dialogue.appendChild(setting(C.target, n.party.map(function(id) {return {id:id,name:name(id)};}), orders[actor].target, function(id){orders[actor].target=id;}));
+    var prompt = C.chooseAction.replace('{name}', name(actor));
+    if (!submenu) {
+      [['attack',T.fight],['magic',T.magic],['item',T.item],['escape',T.escape]].forEach(function(entry) {
+        var type = entry[0], disabled = type === 'magic' && n.roster[actor].mp < B.MAGIC_COST || type === 'item' && availablePotions() <= 0;
+        menu.appendChild(btn(entry[1], function() {
+          if (type === 'escape') { orderKey = null; change(A.retreat(p())); }
+          else if (type === 'attack') confirmOrder(type);
+          else { submenu = {type:type, target:false}; paint(); }
+        }, 'adv-command', disabled));
+      });
+    } else {
+      var type = submenu.type;
+      if (submenu.target) {
+        prompt = C.chooseTarget;
+        n.party.forEach(function(id) {
+          menu.appendChild(btn(name(id) + ' · HP ' + n.roster[id].hp, function() { confirmOrder(type, id); }, 'adv-command'));
+        });
+      } else if (type === 'magic') {
+        prompt = C.chooseMagic;
+        menu.appendChild(btn(T.members[actor].magic + ' · ' + B.MAGIC_COST + ' MP', function() {
+          if (actor === 'rin') { submenu.target = true; paint(); } else confirmOrder('magic');
+        }, 'adv-command', n.roster[actor].mp < B.MAGIC_COST));
+      } else {
+        prompt = C.chooseItem;
+        menu.appendChild(btn(T.potion + ' × ' + availablePotions(), function() { submenu.target = true; paint(); }, 'adv-command', availablePotions() <= 0));
+      }
+      menu.appendChild(btn(C.goBack, function() { if (submenu.target) submenu.target = false; else submenu = null; paint(); }, 'adv-command'));
     }
-    var summary = E('div',{class:'adv-order-summary',attrs:{'aria-label':C.ready}});
-    A.alive(n).forEach(function(id){summary.appendChild(btn(name(id) + ' · ' + ({attack:T.fight,magic:T.magic,item:T.item})[orders[id].type],function(){actor=id;paint();},'adv-order-chip' + (id === actor ? ' selected' : '')));});
-    dialogue.appendChild(summary);
-    dialogue.appendChild(btn(T.begin, function () {
-      var before = p(), next = A.command(before, orders, FF.app.bank, grade(), Math.random, FF.app.now());
-      if (next === before) { U.toast(A.pick(FF.app.bank, before, grade(), Math.random, FF.app.now()) ? T.noOrders : T.noQuestion); return; }
-      orderKey = null; change(next);
-    }, 'gold'));
+    var alive = A.alive(n), position = alive.indexOf(actor) + 1;
+    var dialogue = E('div', { class: 'adv-command-dialogue' }, [
+      text('p', 'adv-encounter-text', C.encounter.replace('{name}',T.enemies[n.battle.enemy].name)),
+      text('p', 'adv-action-message adv-command-prompt', prompt),
+      text('p', 'adv-help', C.actorHelp),
+      text('p', 'adv-action-description', submenu ? (submenu.type === 'magic' ? T.members[actor].detail : C.item) : C.attack),
+      text('p', 'adv-help adv-command-progress', position + ' / ' + alive.length)
+    ]);
     panel.appendChild(menu); panel.appendChild(dialogue); return panel;
   }
   function questionPanel() {
@@ -354,12 +384,16 @@
     if (b.phase === 'commands') main.appendChild(commandPanel());
     else if (b.phase === 'win') main.appendChild(victoryPanel(damage));
     else if (b.phase === 'playerAction' || b.phase === 'enemyAction') {
-      main.appendChild(text('p','adv-action-banner',b.phase === 'playerAction' ? T.playerAction : T.enemyAction));
-      main.appendChild(text('p','adv-turn-bonus',b.correct ? T.quizBonus : T.quizNormal));
+      var dialogue = E('div', {class:'adv-command-dialogue'}, [text('p','adv-action-message',b.phase === 'playerAction' ? T.playerAction : T.enemyDeclare.replace('{enemy}',d.name))]);
+      if (b.phase === 'enemyAction') b.log.forEach(function(line) {
+        dialogue.appendChild(text('p','adv-action-message',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)));
+      });
+      dialogue.appendChild(text('p','adv-help',b.correct ? T.quizBonus : T.quizNormal));
+      main.appendChild(E('section',{class:'adv-command-panel adv-sequence-panel adv-retaliation-panel',attrs:{'aria-live':'polite'}},dialogue));
       var phase = b.phase, marker = stage;
-      root.setTimeout(function() { if (marker.isConnected && FF.app.screen === 'adventure' && p().battle && p().battle.phase === phase) advance(); }, 900);
+      root.setTimeout(function() { if (marker.isConnected && FF.app.screen === 'adventure' && p().battle && p().battle.phase === phase) advance(); }, b.phase === 'enemyAction' ? 1800 : 900);
     } else quizDialog(main, damage || hurt);
-    if (b.log.length && !done) main.appendChild(E('ol', { class: 'adv-battle-log', attrs: { 'aria-label': '戦闘の記録', 'aria-live': 'polite' } }, b.log.slice(-4).map(function(line) { return text('li','',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)); })));
+    if (b.log.length && !done && b.phase !== 'enemyAction' && b.phase !== 'playerAction') main.appendChild(E('ol', { class: 'adv-battle-log', attrs: { 'aria-label': '戦闘の記録', 'aria-live': 'polite' } }, b.log.slice(-4).map(function(line) { return text('li','',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)); })));
   }
 
   U.screens.adventure = { render: function (main) { ensure(); main.classList.remove('adv-field-screen','adv-battle-screen','is-hurt'); main.classList.add('adventure-screen'); if (p().battle) renderBattle(main); else renderField(main); } };

@@ -71,18 +71,31 @@ fs.mkdirSync(out, { recursive: true });
     assert.equal(await page.locator('.adv-rpg-stats .adv-status').count(), 4);
     await page.getByRole('button', { name: 'リンの行動を選ぶ', exact: true }).click();
     await page.getByRole('button', { name: 'まほう', exact: true }).click();
-    await page.getByLabel('回復する仲間', { exact: true }).selectOption('hero');
+    await page.locator('.adv-subcommand-menu .adv-command').first().click();
+    await page.locator('.adv-subcommand-menu .adv-command').first().click();
     await page.getByRole('button', { name: 'ゆきの行動を選ぶ', exact: true }).click();
     await page.getByRole('button', { name: 'どうぐ', exact: true }).click();
-    await page.getByLabel('回復する仲間', { exact: true }).selectOption('gan');
-    assert.ok(await page.getByRole('button', { name: 'リン · まほう', exact: true }).isVisible());
+    await page.locator('.adv-subcommand-menu .adv-command').first().click();
+    await page.locator('.adv-subcommand-menu .adv-command').nth(1).click();
+    assert.equal(await page.locator('.adv-order-chip').count(),0);
+    assert.equal(await page.getByRole('button',{name:'クイズで行動する',exact:true}).count(),0);
+    assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
     // Planning commands never spends MP or supplies before answering.
     assert.equal(await page.evaluate(() => FF.app.state.adventure.potions), 3);
     for (const width of [360, 768, 1440]) { await page.setViewportSize({ width, height: 1000 }); await checkWidth(); }
     await page.screenshot({ path: out + '/commands-desktop.png', fullPage: true });
     await page.setViewportSize({ width: 390, height: 844 });
     assert.equal(await page.evaluate(() => FF.app.state.adventure.battle.enemy), 'cub');
-    await page.getByRole('button', { name: 'にげる', exact: true }).click();
+    assert.equal(await page.locator('.adv-status[aria-pressed="true"]').getAttribute('aria-label'),'ガンの行動を選ぶ');
+    await page.getByRole('button',{name:'たたかう',exact:true}).click();
+    assert.equal(await page.locator('.adv-status[aria-pressed="true"]').getAttribute('aria-label'),'ソラの行動を選ぶ');
+    assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
+    await page.getByRole('button',{name:'たたかう',exact:true}).click();
+    await page.locator('.adv-quiz-dialog[open]').waitFor();
+    assert.deepEqual(await page.evaluate(()=>FF.app.state.adventure.battle.orders.hero),{type:'item',target:'gan'});
+    assert.deepEqual(await page.evaluate(()=>FF.app.state.adventure.battle.orders.rin),{type:'magic',target:'hero'});
+    assert.equal(await page.evaluate(()=>FF.app.state.adventure.potions),3);
+    await page.getByRole('button', { name: '戦闘からにげる', exact: true }).click();
     assert.equal(await page.evaluate(() => FF.app.state.adventure.battle), null);
     await go(3, 6);
     let seenMagic = false, seenDefense = false, checkedReload = false, seenWrong = false;
@@ -99,8 +112,8 @@ fs.mkdirSync(out, { recursive: true });
         assert.notEqual(b.phase, 'lose');
         if (b.phase === 'commands') {
           if (b.turn === 1) await page.screenshot({ path: out + '/enemy-' + b.enemy + '-phone.png', fullPage: true });
-          if (!seenMagic) { await page.getByRole('button', { name: 'まほう', exact: true }).click(); seenMagic = true; }
-          await page.getByRole('button', { name: 'クイズで行動する', exact: true }).click();
+          if (!seenMagic) { await page.getByRole('button', { name: 'まほう', exact: true }).click(); await page.locator('.adv-subcommand-menu .adv-command').first().click(); seenMagic = true; }
+          for(let i=0;i<4 && await page.evaluate(()=>FF.app.state.adventure.battle.phase==='commands');i++) await page.getByRole('button',{name:'たたかう',exact:true}).click();
         } else if (b.phase === 'attack') {
           await page.locator('.adv-quiz-dialog[open]').waitFor();
           assert.ok(await page.evaluate(() => {

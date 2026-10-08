@@ -14,6 +14,18 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   const preloaded=await page.evaluate(()=>performance.getEntriesByType('resource').filter(r=>/adventure\/.*\.webp$/.test(r.name)).map(r=>({url:r.name,bytes:r.encodedBodySize,start:r.startTime})));
   assert.equal(preloaded.length,4);assert.ok(preloaded.every(r=>r.bytes<650000));
   await page.getByRole('button',{name:'雪原へ出発',exact:true}).click();
+  async function chooseAll() {
+   const alive=await page.evaluate(()=>FF.adventure.alive(FF.app.state.adventure));
+   assert.equal(await page.getByRole('button',{name:'クイズで行動する',exact:true}).count(),0);
+   assert.equal(await page.locator('.adv-order-chip').count(),0);
+   for (let i=0;i<alive.length;i++) {
+    assert.equal(await page.locator('.adv-status[aria-pressed="true"]').getAttribute('aria-label'), (alive[i]==='hero'?'ゆき':{gan:'ガン',rin:'リン',sora:'ソラ'}[alive[i]])+'の行動を選ぶ');
+    assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
+    await page.getByRole('button',{name:'たたかう',exact:true}).click();
+    assert.equal(await page.evaluate(()=>FF.app.state.adventure.battle.phase),i===alive.length-1?'attack':'commands');
+   }
+   assert.equal(await page.locator('.adv-quiz-dialog').count(),1);
+  }
   // Trace every browser frame. The same map stays mounted throughout the route.
   await page.evaluate(()=>{
    const p=FF.util.clone(FF.app.state.adventure);p.pos={x:3,y:2};p.notice='';FF.app.commit(Object.assign({},FF.app.state,{adventure:p}));FF.ui.rerender();
@@ -40,7 +52,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   assert.equal(await page.evaluate(()=>FF.app.screen),'base');assert.deepEqual(await page.evaluate(()=>FF.app.state.adventure.pos),{x:1,y:6});
   await page.getByRole('button',{name:'冒険のつづき',exact:true}).click();
   await page.locator('.adv-tile[data-x="3"][data-y="6"]').click();await page.waitForFunction(()=>!!FF.app.state.adventure.battle);
-  await page.getByRole('button',{name:'クイズで行動する',exact:true}).click();await page.locator('.adv-quiz-dialog[open]').waitFor();
+  await chooseAll();await page.locator('.adv-quiz-dialog[open]').waitFor();
   const before=await page.evaluate(()=>JSON.stringify(FF.app.state.adventure));await page.keyboard.press('Escape');assert.equal(await page.locator('.adv-quiz-dialog').evaluate(d=>d.open),false);
   await page.locator('.adv-open-quiz').click();assert.equal(await page.evaluate(()=>JSON.stringify(FF.app.state.adventure)),before);
   await page.keyboard.press('Tab');assert.ok(await page.evaluate(()=>!!document.activeElement.closest('.adv-quiz-dialog')));
@@ -71,6 +83,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   assert.ok(animation);assert.equal(animation.zeroes,2);assert.equal(animation.damage,events[0].amount);
   await page.waitForFunction(()=>document.querySelector('.adv-action-message').textContent.includes('ダメージ'));
   assert.equal(await page.locator('.adv-enemy-hp').innerText(),'HP '+(b.hp-events[0].amount)+' / 95');
+  const attackFont=await page.locator('.adv-action-message').evaluate(el=>getComputedStyle(el).fontSize);
   await page.screenshot({path:out+'/attack-phone.png',fullPage:true});
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='enemyAction');
   const actionFrames=await page.evaluate(()=>{actionWatcher.disconnect();return actionFrames;});
@@ -79,11 +92,14 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   assert.ok(await page.locator('.adv-rpg-shell').evaluate(el=>el.getAnimations().some(a=>a.animationName==='adv-party-shake')));
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0);assert.equal(await page.locator('.adv-status.is-damaged').count(),1);
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.answered),1);
+  assert.equal(await page.locator('.adv-retaliation-panel .adv-action-message').last().evaluate(el=>getComputedStyle(el).fontSize),attackFont);
+  assert.ok((await page.locator('.adv-retaliation-panel').innerText()).includes('ダメージ'));
+  assert.equal(await page.locator('.adv-battle-log').count(),0);
   await page.screenshot({path:out+'/retaliation-phone.png',fullPage:true});
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='commands');
   // A second retaliation must start a new animation, not reuse an ended one.
   await page.evaluate(()=>{const p=FF.util.clone(FF.app.state.adventure);p.battle.hp=95;FF.app.commit(Object.assign({},FF.app.state,{adventure:p}));});
-  await page.getByRole('button',{name:'クイズで行動する',exact:true}).click();await page.locator('.adv-quiz-dialog[open]').waitFor();
+  await chooseAll();await page.locator('.adv-quiz-dialog[open]').waitFor();
   const wrongIndex=await page.evaluate(()=>FF.app.state.adventure.battle.choices.findIndex(c=>c!==FF.app.state.adventure.battle.question.answer));
   await page.locator('.adv-answer').nth(wrongIndex).click();await page.getByRole('button',{name:'戦闘へ戻る',exact:true}).click();
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='enemyAction');
@@ -95,7 +111,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='commands');
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.getByRole('button',{name:'クイズで行動する',exact:true}).click();await page.locator('.adv-quiz-dialog[open]').waitFor();
+  await chooseAll();await page.locator('.adv-quiz-dialog[open]').waitFor();
   const index=await page.evaluate(()=>FF.app.state.adventure.battle.choices.indexOf(FF.app.state.adventure.battle.question.answer));await page.locator('.adv-answer').nth(index).click();
   await page.evaluate(()=>{Math.random=()=>0;});
   await page.getByRole('button',{name:'戦闘へ戻る',exact:true}).click();
@@ -114,6 +130,25 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   for(const width of [360,768,1440]) {await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
   await page.getByRole('button',{name:'旅をつづける',exact:true}).click();
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.gold),27,'Treasure is credited exactly once');
+  // One available potion cannot be reserved twice; submenu back never confirms a choice.
+  await page.evaluate(()=>{const p=FF.adventure.depart(FF.app.state.adventure,'home');p.pos={x:2,y:6};p.potions=1;const n=FF.adventure.move(p,3,6);FF.app.commit(Object.assign({},FF.app.state,{adventure:n}));FF.ui.rerender();});
+  await page.getByRole('button',{name:'まほう',exact:true}).click();
+  assert.equal(await page.locator('.adv-subcommand-menu').count(),1);
+  await page.getByRole('button',{name:'もどる',exact:true}).click();
+  assert.equal(await page.locator('.adv-status[aria-pressed="true"]').getAttribute('aria-label'),'ゆきの行動を選ぶ');
+  await page.getByRole('button',{name:'どうぐ',exact:true}).click();await page.locator('.adv-subcommand-menu .adv-command').first().click();
+  await page.getByRole('button',{name:'もどる',exact:true}).click();
+  assert.equal(await page.locator('.adv-subcommand-menu .adv-command').first().innerText(),'回復薬 × 1');
+  await page.locator('.adv-subcommand-menu .adv-command').first().click();await page.locator('.adv-subcommand-menu .adv-command').first().click();
+  assert.ok(await page.getByRole('button',{name:'どうぐ',exact:true}).isDisabled());
+  assert.equal(await page.evaluate(()=>FF.app.state.adventure.potions),1);
+  await page.getByRole('button',{name:'にげる',exact:true}).click();
+  // A solo party goes directly from its one command to its one question.
+  await page.evaluate(()=>{let p=FF.adventure.setParty(FF.adventure.depart(FF.app.state.adventure,'home'),['hero']);p.pos={x:2,y:6};p=FF.adventure.move(p,3,6);FF.app.commit(Object.assign({},FF.app.state,{adventure:p}));FF.ui.rerender();});
+  assert.equal(await page.evaluate(()=>FF.app.state.adventure.party.length),1);
+  await chooseAll();await page.locator('.adv-quiz-dialog[open]').waitFor();
+  assert.equal(await page.locator('.adv-quiz-dialog').count(),1);
+
   assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',frames:walking.length,checks:'continuous camera, moving feet, cancellation, dialog focus, long diagrams at four widths, explanation before damage, two blinks, automatic retaliation and repeated visible screen shake, per-character declaration/blink/damage, combined victory and treasure, preloaded lightweight artwork, one question per turn, reduced motion',screenshots:out},null,2));
  } finally {await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1);});
