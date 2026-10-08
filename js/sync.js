@@ -144,6 +144,8 @@
       updatedAt: state && state.updatedAt || 0,
       name: state && state.player ? state.player.name : '',
       points: state && state.studyPointsEarnedTotal || 0,
+      heat: state && state.studyPoints || 0,
+      resources: state && state.resources ? FF.util.clone(state.resources) : {},
       levels: levels
     };
   }
@@ -290,6 +292,7 @@
     }
 
     function pushState(r, key, state, baseRev) {
+      if (deps.canPush && !deps.canPush()) return Promise.resolve({ok:false,error:'local_unreadable'});
       return rpc(deps.fetch, deps.cfg, 'ff_push_save',
         { p_key: key, p_base_rev: baseRev, p_save: JSON.parse(FF.state.serialize(state)), p_device: r.deviceId }, B.TIMEOUT_MS)
         .then(function (res) {

@@ -9,23 +9,51 @@
     try { return root.localStorage || null; } catch (e) { return null; }
   }
 
-  // { state, status: 'new' | 'loaded' | 'migrated' | 'error', error }
-  // 読めないデータは消さずに「.broken」キーへ退避し、新規状態で始める。
+  function goodKey() { return FF.config.SAVE_KEY + '.lastGood'; }
+  function historyKey() { return FF.config.SAVE_KEY + '.history'; }
+  function read(store, key) { try { return store ? store.getItem(key) : null; } catch (e) { return null; } }
+  function history(store) {
+    try { var list=JSON.parse(read(store,historyKey()) || '[]'); return Array.isArray(list) ? list.filter(function(t){return typeof t==='string';}).slice(0,8) : []; }
+    catch(e) { return []; }
+  }
+  // Ignore timestamp-only changes when keeping previous saves.
+  function fingerprint(text) {
+    try {var data=JSON.parse(text);delete data.updatedAt;delete data.integrity;if(data.tickets)delete data.tickets.lastRecoveredAt;return FF.integrity.sign(data);}
+    catch(e) {return null;}
+  }
+  function loadRecovery(now, ls) {
+    var store=getLs(ls), seen={}, out=[];
+    [read(store,goodKey())].concat(history(store),[read(store,backupKey()),read(store,FF.config.SAVE_KEY+'.broken')]).forEach(function(text){
+      if (!text) return;
+      var parsed=FF.state.parseSave(text,now), id=fingerprint(text);
+      if (parsed.ok && id && !seen[id]) {seen[id]=true;out.push({text:parsed.saveText,state:parsed.state});}
+    });
+    return out;
+  }
+  // { state, status: 'new' | 'loaded' | 'migrated' | 'recovered' | 'error', error }
+  // 読めないデータは消さずに「.broken」キーへ退避し、控えがあれば復元し、なければアプリ側で自動保存を止める。
   function load(now, ls) {
     var key = FF.config.SAVE_KEY;
     var store = getLs(ls);
     var text = null;
-    try { text = store ? store.getItem(key) : null; } catch (e) { text = null; }
+    try { text = store ? store.getItem(key) : null; } catch (e) { return {state:FF.state.createDefaultState(now),status:'error',error:'storage'}; }
     if (text === null && store) {
       (FF.config.SAVE_FALLBACK_KEYS || []).some(function (legacyKey) {
         try { var old = store.getItem(legacyKey); if (old !== null) { text = old; key = legacyKey; return true; } } catch (e) { /* 続行 */ }
         return false;
       });
     }
-    if (text === null) return { state: FF.state.createDefaultState(now), status: 'new' };
+    if (text === null) {
+      var missing=[read(store,goodKey())].concat(history(store)).map(function(t){return t ? FF.state.parseSave(t,now) : {ok:false};}).filter(function(r){return r.ok;});
+      return missing.length ? {state:missing[0].state,status:'recovered'} : { state: FF.state.createDefaultState(now), status: 'new' };
+    }
     var r = FF.state.parseSave(text, now);
     if (!r.ok) {
-      try { store.setItem(key + '.broken', text); } catch (e) { /* 退避できなくても続行する */ }
+      try { if (store.getItem(key + '.broken') === null) store.setItem(key + '.broken', text); } catch (e) { /* 退避できなくても続行する */ }
+      if (r.error && r.error.indexOf('新しいバージョン') >= 0) return {state:FF.state.createDefaultState(now),status:'error',error:r.error};
+      // Only local checkpoints are automatic recovery candidates; a sync conflict backup is a manual choice.
+      var candidates=[read(store,goodKey())].concat(history(store));
+      for (var candidate of candidates) { if (!candidate) continue; var restored=FF.state.parseSave(candidate,now);if(restored.ok)return {state:restored.state,status:'recovered'}; }
       return { state: FF.state.createDefaultState(now), status: 'error', error: r.error };
     }
     if (key !== FF.config.SAVE_KEY || r.migratedFrom < FF.config.SAVE_VERSION) {
@@ -40,18 +68,23 @@
   function save(state, ls) {
     var store = getLs(ls);
     if (!store) return false;
+    var text=FF.state.serialize(state), previous=read(store,FF.config.SAVE_KEY), list=history(store);
+    try { store.setItem(FF.config.SAVE_KEY,text); } catch(e) { return false; }
+    // A checkpoint failure must not turn a successful primary save into a failure.
     try {
-      store.setItem(FF.config.SAVE_KEY, FF.state.serialize(state));
-      return true;
-    } catch (e) {
-      return false;
-    }
+      if (previous && fingerprint(previous)!==fingerprint(text) && FF.state.parseSave(previous,state.updatedAt).ok) {
+        list=[previous].concat(list.filter(function(t){return fingerprint(t)!==fingerprint(previous);})).slice(0,8);
+        store.setItem(historyKey(),JSON.stringify(list));
+      }
+      store.setItem(goodKey(),text);
+    } catch(e) { /* The primary save is already safe. */ }
+    return true;
   }
 
   function clear(ls) {
     var store = getLs(ls);
     if (!store) return;
-    [FF.config.SAVE_KEY].concat(FF.config.SAVE_FALLBACK_KEYS || []).forEach(function (key) {
+    [FF.config.SAVE_KEY,goodKey(),historyKey(),FF.config.SAVE_KEY+'.broken'].concat(FF.config.SAVE_FALLBACK_KEYS || []).forEach(function (key) {
       try { store.removeItem(key); } catch (e) { /* 何もしない */ }
     });
   }
@@ -139,7 +172,7 @@
   }
 
   FF.storage = {
-    load: load, save: save, clear: clear, loadReviews: loadReviews, saveReviews: saveReviews,
+    load: load, save: save, clear: clear, loadRecovery: loadRecovery, loadReviews: loadReviews, saveReviews: saveReviews,
     loadSync: loadSync, saveSync: saveSync, loadSyncBackup: loadSyncBackup, saveSyncBackup: saveSyncBackup, clearSync: clearSync,
     loadOutbox: loadOutbox, saveOutbox: saveOutbox,
     loadGuardians: loadGuardians, saveGuardians: saveGuardians, clearGuardians: clearGuardians

@@ -173,7 +173,8 @@
       function row(title, x) {
         return U.el('div', { class: 'panel stack' }, [
           U.R('h3', '', title),
-          U.R('div', 'pre small', U.T('sync.conflictRow'), { when: whenText(x.updatedAt), name: x.name, points: U.fmt(x.points), levels: x.levels })
+          U.R('div', 'pre small', U.T('sync.conflictRow'), { when: whenText(x.updatedAt), name: x.name, points: U.fmt(x.points), levels: x.levels }),
+          U.R('div','small',U.T('saveBalances'),{wood:x.resources.wood || 0,iron:x.resources.iron || 0,stone:x.resources.stone || 0,food:x.resources.food || 0,heat:x.heat || 0})
         ]);
       }
       // おすすめ：最初の引き継ぎは、いつも「ほかの端末（保管庫）」（この端末で保管庫を置き換えるのは、おすすめにしない）。それ以外は、新しいほう
@@ -215,7 +216,7 @@
     U.toast(U.T('sync.syncing'));
     FF.syncApp.sync({ force: true }).then(function (r) {
       if (r.status === 'error') U.toast(U.T('sync.syncFailed'), { error: errorText(r.error) });
-      else if (r.status !== 'deferred') U.toast(U.T('sync.synced'));
+      else if (['pushed','pulled','unchanged','conflict-local','conflict-remote'].indexOf(r.status)>=0) U.toast(U.T('sync.synced'));
       if (app.screen === 'settings') U.rerender();
     });
   }
@@ -232,7 +233,7 @@
             FF.syncApp.enable().then(function (r) {
               if (!r.ok) { U.modal({ body: U.T('sync.noNetwork') }); return; }
               showCode(r.code);
-              FF.syncApp.sync({ force: true }).then(function () { if (FF.app.screen === 'settings') U.rerender(); });
+              FF.syncApp.sync({ force: true }).then(function (res) { if(res.status==='error')U.toast(U.T('sync.syncFailed'),{error:errorText(res.error)});if (FF.app.screen === 'settings') U.rerender(); });
             });
           }
         }
@@ -246,13 +247,14 @@
     if (!rec.enabled) {
       kids.push(U.R('div', 'small muted', U.T('sync.help')));
       kids.push(U.el('div', { class: 'row' }, [
-        U.el('button', { class: 'btn small primary', rich: U.T('sync.turnOn'), on: { click: turnOn } }),
+        U.el('button', { class: 'btn small primary', rich: U.T('sync.turnOn'), disabled:FF.app.saveBlocked, on: { click: turnOn } }),
         rec.code ? null : U.el('button', { class: 'btn small sync-link-open', rich: U.T('sync.link'), on: { click: openLink } })
       ]));
       if (!rec.code) kids.push(U.R('div', 'small muted', U.T('sync.linkHelp')));
     } else {
       kids.push(U.R('div', 'small', U.T('sync.on')));
       kids.push(U.R('div', 'small muted', U.T('sync.lastSync') + '：' + (rec.lastSyncAt ? whenText(rec.lastSyncAt) : U.plain(U.T('sync.never')))));
+      if(rec.rev===null || FF.app.state.updatedAt!==rec.pushedAt)kids.push(U.R('p','small',U.T('sync.waitingBackup')));
       var pend = FF.syncApp.pending();
       if (pend.count || pend.dropped) kids.push(U.R('div', 'small muted', U.T('sync.pending') + (pend.dropped ? U.T('sync.droppedNote') : ''), { count: pend.count, dropped: pend.dropped }));
       if (rec.lastError) kids.push(U.R('div', 'small', U.T('sync.syncFailed'), { error: errorText(rec.lastError) }));
@@ -271,6 +273,7 @@
         })
       ]));
     }
+    if(FF.app.saveBlocked && rec.code) kids.push(U.el('button',{class:'btn small primary',rich:U.T('sync.restoreCode'),on:{click:function(){linkWithCode(rec.code,function(key){U.modal({body:U.T(key)});});}}}));
     kids.push(U.el('button', { class: 'btn small sync-parent-open', rich: U.T('guardian.open'), on: { click: function () { U.openParentReport(); } } }));
     if (rec.code) {
       kids.push(U.el('button', {

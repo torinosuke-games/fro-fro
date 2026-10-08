@@ -304,12 +304,12 @@
    button(R.records,function(){U.show('study',{tab:'records'});},'text-button'),button(R.exam,function(){U.show('study',{tab:'exam'});},'text-button'),button(R.diagnosis,function(){U.show('study',{tab:'diagnosis'});},'text-button'),button(R.redeem,function(){U.openRedeem();},'text-button')
   ]));
  }
- // 町のほかの施設（判断324）。絵は img/art/fac-*.webp。使えるのは、チケット引換所（引換所）だけ。ほかは、これから作る
+ // 町のほかの施設（判断324）。絵は img/art/fac-*.webp。仲間紹介所は冒険の編成、チケット引換所は引換所を開く。
  var FACILITIES=[
   {id:'weapon',name:R.facWeapon,open:function(){openWeaponShop();}},{id:'armor',name:R.facArmor},{id:'item',name:R.facItem},{id:'tavern',name:R.facTavern},
-  {id:'party',name:R.facParty},{id:'magic',name:R.facMagic},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
+  {id:'party',name:R.facParty,open:function(){U.show('adventureParty');}},{id:'magic',name:R.facMagic},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
  ];
- // 武器屋（判断330）：ゴールドで武器を買い、装備する。装備した武器が、戦闘の正解1回のダメージになる
+ // 武器屋（判断340）：ゴールドで武器を買い、装備する。装備した武器が、戦闘の正解1回のダメージになる
  var closeShop=null;
  function openWeaponShop(){
   var a=FF.app,SH=FF.shop;
@@ -352,10 +352,11 @@
   // スマホでは、上の見出しと説明を出さず、「学習する」を、風景（フィールドマップ）の下に置く（判断315。PC では、上のボタンだけを出す）
   var scene=main.querySelector('.scene');
   if(scene&&scene.parentNode)scene.parentNode.insertBefore(button(R.start+' →',function(){U.show('study',{tab:'learn'});},'rn-button primary home-start-mobile'),scene.nextSibling);
-  // 学習するボタンの下に、ほかの施設のアイコン（スマホでは横4つ。判断324）。いま使えるのはチケット引換所だけ。あとは準備中
+  // 学習するボタンの下に、ほかの施設のアイコン（スマホでは横4つ。判断324）。仲間紹介所とチケット引換所が使える
   var facilities=facilityGrid();
   if(scene&&scene.parentNode)scene.parentNode.insertBefore(facilities,(scene.nextSibling&&scene.nextSibling.nextSibling)||null);
-  // 「学んで、熱を生む」などの3つの手順の表示は、なくした（判断328）
+  // 「学んで、熱を生む」などの3つの手順の表示は、なくした（判断338）
+  if(U.adventureEntry)main.insertBefore(U.adventureEntry(),facilities);
  };
  U.screens.study.render=renderStudy;
  U.screens.quiz={render:renderQuiz};

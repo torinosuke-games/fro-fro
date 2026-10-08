@@ -111,7 +111,7 @@
       industry: ['scene']
     },
 
-    // 武器（武器屋。判断330）。強さ・値段は balance.WEAPONS
+    // 武器（武器屋。判断340）。強さ・値段は balance.WEAPONS
     WEAPONS: [
       { id: 'wood_sword', icon: '🗡️', name: '{木|き}の{剣|けん}' },
       { id: 'stone_sword', icon: '🗡️', name: '{石|いし}の{剣|けん}' },
