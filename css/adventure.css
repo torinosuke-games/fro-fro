@@ -141,8 +141,8 @@ body:has(.adv-quiz-dialog[open]){overflow:hidden}
 .is-walking .adv-walk-leg-right{animation:adv-walk-step .6s ease-in-out -.3s infinite}
 @keyframes adv-walk-step{0%,100%{transform:rotate(-7deg) translateY(-1px)}50%{transform:rotate(7deg) translateY(1px)}}
 @keyframes adv-walk-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
-.adv-rpg-shell.is-hurt{animation:adv-party-shake .55s linear}
-@keyframes adv-party-shake{0%,100%{transform:translate(0)}15%,55%{transform:translate(-10px,3px)}35%,75%{transform:translate(10px,-3px)}}
+
+
 .adv-status{position:relative}.adv-status.is-damaged{animation:adv-status-hurt .45s ease-out}
 @keyframes adv-status-hurt{0%,50%{background:#9b334a}100%{background:#111b2b}}
 .adv-party-damage{position:absolute;right:5px;top:5px;color:#ffd4d4;font-size:20px;font-weight:800;animation:adv-damage .65s ease-out both;z-index:2}
@@ -164,3 +164,37 @@ body:has(.adv-quiz-dialog[open]){overflow:hidden}
 
 .adv-subcommand-menu .adv-command{white-space:normal;overflow-wrap:anywhere;line-height:1.7}
 .adv-command-prompt{margin:8px 0}.adv-command-progress{opacity:.8}.adv-retaliation-panel .adv-action-message + .adv-action-message{margin-top:4px}
+
+/* One frame for every phase: message length never resizes the winter scene. */
+html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
+.adv-rpg-shell{position:relative;display:grid;grid-template-rows:116px 330px 300px;isolation:isolate}
+.adv-rpg-shell .adv-rpg-stats{width:100%;height:116px;box-sizing:border-box}
+.adv-rpg-stats .adv-status{align-content:start}
+.adv-rpg-stats .adv-status strong{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adv-rpg-shell .adv-battle-stage{height:330px;min-height:0;box-sizing:border-box}
+.adv-rpg-shell .adv-enemy-nameplate{position:absolute;top:14px;left:50%;transform:translateX(-50%)}
+.adv-rpg-shell .adv-enemy-art{position:absolute;top:72px;left:0;right:0;margin:auto}
+.adv-rpg-shell .adv-intent{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);margin:0;white-space:nowrap}
+.adv-rpg-shell .adv-command-panel{grid-template-columns:190px minmax(0,1fr);height:300px;min-height:0;margin:0;box-sizing:border-box}
+.adv-rpg-shell .adv-command-menu,.adv-rpg-shell .adv-command-dialogue{height:100%;min-height:0;box-sizing:border-box;overflow-y:auto;scrollbar-gutter:stable}
+.adv-rpg-shell .adv-command-menu{padding-top:14px;position:relative;overflow:visible}
+.adv-rpg-shell .adv-menu-actor{position:absolute;top:-9px;left:50%;transform:translateX(-50%);margin:0;white-space:nowrap}
+.adv-rpg-shell .adv-subcommand-menu{overflow-y:auto;overflow-x:hidden}.adv-subcommand-menu .adv-menu-actor{position:static;transform:none;align-self:center}
+.adv-passive-menu .adv-command:disabled{opacity:.4}
+.adv-rpg-shell .adv-victory-panel{background:none;outline:none;border:0;box-shadow:none;text-align:left;padding:0}
+.adv-hit-flash{position:absolute;inset:0;z-index:5;pointer-events:none;background:#ff7c7c35;box-shadow:inset 0 0 40px #ed3448;animation:adv-hit-flash .55s ease-out both}
+@keyframes adv-hit-flash{0%,40%{opacity:.75}20%,100%{opacity:0}}
+@media(max-width:600px){
+ .adv-rpg-shell{grid-template-rows:112px 245px 270px;background-size:auto 720px}
+ .adv-rpg-shell .adv-rpg-stats{height:112px}
+ .adv-rpg-shell .adv-battle-stage{height:245px}
+ .adv-rpg-shell .adv-enemy-nameplate{top:12px}
+ .adv-rpg-shell .adv-enemy-art{top:66px}.adv-rpg-shell .boss .adv-enemy-art{top:50px}
+ .adv-rpg-shell .adv-intent{bottom:8px;max-width:100%;box-sizing:border-box}
+ .adv-rpg-shell .adv-command-panel{height:270px;grid-template-columns:110px minmax(0,1fr);gap:7px}
+ .adv-rpg-shell .adv-victory-panel .adv-command-menu{border:2px solid #eef7ff;padding:14px 4px 10px}
+ .adv-rpg-shell .adv-loot{flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){.adv-hit-flash{animation:none;opacity:0}}
+.adv-rpg-shell .adv-passive-menu{justify-content:flex-start}
+.adv-rpg-shell .adv-passive-menu .adv-command{margin-top:0}

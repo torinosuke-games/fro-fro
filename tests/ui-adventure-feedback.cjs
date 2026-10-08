@@ -89,7 +89,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   const actionFrames=await page.evaluate(()=>{actionWatcher.disconnect();return actionFrames;});
   assert.equal(actionFrames.filter(f=>f.message.includes('ダメージ')).length,4);
   assert.ok(actionFrames.some(f=>f.message.includes('ゆきの攻撃'))&&actionFrames.some(f=>f.message.includes('リンの攻撃')));
-  assert.ok(await page.locator('.adv-rpg-shell').evaluate(el=>el.getAnimations().some(a=>a.animationName==='adv-party-shake')));
+  assert.ok(await page.locator('.adv-hit-flash').evaluate(el=>el.getAnimations().some(a=>a.animationName==='adv-hit-flash')));
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0);assert.equal(await page.locator('.adv-status.is-damaged').count(),1);
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.answered),1);
   assert.equal(await page.locator('.adv-retaliation-panel .adv-action-message').last().evaluate(el=>getComputedStyle(el).fontSize),attackFont);
@@ -103,11 +103,12 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   const wrongIndex=await page.evaluate(()=>FF.app.state.adventure.battle.choices.findIndex(c=>c!==FF.app.state.adventure.battle.question.answer));
   await page.locator('.adv-answer').nth(wrongIndex).click();await page.getByRole('button',{name:'戦闘へ戻る',exact:true}).click();
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='enemyAction');
-  const shake=await page.locator('.adv-rpg-shell').evaluate(el=>{
-    const a=el.getAnimations().find(a=>a.animationName==='adv-party-shake');if(!a)return null;
-    const time=a.currentTime;a.pause();a.currentTime=0;const origin=el.getBoundingClientRect().left;a.currentTime=82.5;const shifted=el.getBoundingClientRect().left;a.currentTime=time;a.play();return {time,delta:shifted-origin};
+  const flash=await page.locator('.adv-hit-flash').evaluate(el=>{
+    const a=el.getAnimations().find(a=>a.animationName==='adv-hit-flash');if(!a)return null;
+    const time=a.currentTime;a.pause();a.currentTime=0;const start=Number(getComputedStyle(el).opacity);a.currentTime=110;const dim=Number(getComputedStyle(el).opacity);a.currentTime=time;a.play();return {time,start,dim};
   });
-  assert.ok(shake&&shake.time<500&&Math.abs(shake.delta)>5,'Second hit visibly moves the battlefield');
+  assert.ok(flash&&flash.time<550&&flash.start>flash.dim,'Second hit flashes without moving the frame');
+  assert.equal(await page.locator('.adv-rpg-shell').evaluate(el=>getComputedStyle(el).transform),'none');
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='commands');
   await page.emulateMedia({reducedMotion:'reduce'});
@@ -119,7 +120,8 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.battle.phase),'win');
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0,'Victory is inline, not a popup');
   await page.locator('.adv-command-panel.adv-result.win').waitFor({state:'visible'});
-  assert.equal(await page.locator('.adv-victory-panel .adv-command-menu').count(),0);
+  assert.equal(await page.locator('.adv-victory-panel .adv-command-menu').count(),1);
+  assert.equal(await page.locator('.adv-enemy-art,.adv-enemy-nameplate').count(),0,'Enemy disappears at victory');
   assert.ok((await page.locator('.adv-victory-panel .adv-reward').innerText()).includes('勝利'));
   assert.equal(await page.locator('.adv-victory-panel .adv-reward').count(),1);
   assert.equal(await page.locator('.adv-battle-log').count(),0);
@@ -149,6 +151,6 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   await chooseAll();await page.locator('.adv-quiz-dialog[open]').waitFor();
   assert.equal(await page.locator('.adv-quiz-dialog').count(),1);
 
-  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',frames:walking.length,checks:'continuous camera, moving feet, cancellation, dialog focus, long diagrams at four widths, explanation before damage, two blinks, automatic retaliation and repeated visible screen shake, per-character declaration/blink/damage, combined victory and treasure, preloaded lightweight artwork, one question per turn, reduced motion',screenshots:out},null,2));
+  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',frames:walking.length,checks:'continuous camera, moving feet, cancellation, dialog focus, long diagrams at four widths, explanation before damage, two blinks, automatic retaliation and repeated flash without moving the layout, per-character declaration/blink/damage, combined victory and treasure, preloaded lightweight artwork, one question per turn, reduced motion',screenshots:out},null,2));
  } finally {await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1);});

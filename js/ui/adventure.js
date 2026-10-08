@@ -12,7 +12,12 @@
   function name(id) { return id === 'hero' ? FF.app.state.player.name : T.members[id].name; }
   function text(tag, cls, value) { return E(tag, { class: cls, rich: value }); }
   function btn(label, action, cls, disabled) { return E('button', { class: 'adv-button ' + (cls || ''), text: label, disabled: disabled, attrs: { type: 'button' }, on: { click: action } }); }
-  function paint() { U.rerender(); }
+  function paint() {
+    var main = root.document.getElementById('screen');
+    // Keep the decoded background and enemy mounted throughout a battle.
+    if (FF.app.screen === 'adventure' && p().battle && main.querySelector('.adv-rpg-shell')) renderBattle(main);
+    else U.rerender();
+  }
   function change(next) {
     var before = p(); if (next === before) return;
     impact = before.battle && before.battle.phase === 'explanation' && next.battle ? Math.max(0, before.battle.hp - next.battle.hp) : 0;
@@ -294,10 +299,21 @@
     }
     panel.appendChild(body); if (active) panel.appendChild(controls); return panel;
   }
+  function passiveMenu() {
+    var menu = E('nav', {class:'adv-command-menu adv-passive-menu',attrs:{'aria-label':T.command}});
+    menu.appendChild(text('strong','adv-menu-actor',T.battleMenu));
+    [T.fight,T.magic,T.item,T.escape].forEach(function(label) {menu.appendChild(btn(label,function(){},'adv-command',true));});
+    return menu;
+  }
+  function battleWindow(dialogue, cls) {
+    return E('section',{class:'adv-command-panel ' + (cls || ''),attrs:{'aria-live':'polite'}},[passiveMenu(),dialogue]);
+  }
   function quizDialog(main, damage) {
     var b = p().battle, active = b.phase === 'attack';
     var title = active ? T.attackQuiz : (b.correct ? T.good : T.wrong);
-    var dialog = E('dialog', { class: 'adv-quiz-dialog', attrs: { 'aria-labelledby': 'adv-quiz-title' } });
+    var dialog = main.querySelector('.adv-quiz-dialog');
+    if (dialog) U.clear(dialog);
+    else dialog = E('dialog', { class: 'adv-quiz-dialog', attrs: { 'aria-labelledby': 'adv-quiz-title' } });
     var heading = E('h2', { class: 'adv-dialog-title', rich: title, attrs: { id: 'adv-quiz-title', tabindex: '-1' } });
     dialog.appendChild(E('header', { class: 'adv-dialog-header' }, [heading, btn(C.viewBattle, function() { dialog.close(); }, 'quiet')]));
     dialog.appendChild(questionPanel());
@@ -306,7 +322,8 @@
     else if (!active) footer.appendChild(btn(T.returnBattle,advance,'gold adv-next'));
     if (!active) dialog.appendChild(footer);
     var opener = btn(active ? C.answerQuiz : C.reviewQuiz,function(){dialog.showModal();heading.focus({preventScroll:true});},'gold adv-open-quiz');
-    main.appendChild(opener); main.appendChild(dialog);
+    main.appendChild(battleWindow(E('div',{class:'adv-command-dialogue'},[text('p','adv-action-message',b.phase === 'lose' ? T.defeat : title),opener]),'adv-quiz-pending')); if (!dialog.isConnected) main.appendChild(dialog);
+    if (dialog.open) heading.focus({preventScroll:true});
     root.requestAnimationFrame(function() {
       var delay = damage && !root.matchMedia('(prefers-reduced-motion: reduce)').matches ? 480 : 0;
       root.setTimeout(function() { if(dialog.isConnected && FF.app.screen === 'adventure' && !dialog.open) {dialog.showModal();heading.focus({preventScroll:true});} },delay);
@@ -327,7 +344,7 @@
       scene.chest(), E('div',{},[text('strong','',T.treasureFound),text('p','',T.treasureContents.replace('{gold}',reward.chest.gold).replace('{potions}',reward.chest.potions))])
     ]));
     dialogue.appendChild(btn(T.field,advance,'gold'));
-    panel.appendChild(dialogue);
+    panel.appendChild(passiveMenu()); panel.appendChild(dialogue);
     // Let the final hit play before revealing the victory and chest.
     if (damage && !root.matchMedia('(prefers-reduced-motion: reduce)').matches) panel.classList.add('after-hit');
     return panel;
@@ -335,7 +352,7 @@
   function playActions(shell, stage) {
     var playback = sequence, message = text('p','adv-action-message','');
     var dialogue = E('div',{class:'adv-command-dialogue'},message);
-    shell.appendChild(E('section',{class:'adv-command-panel adv-sequence-panel',attrs:{'aria-live':'polite'}},dialogue));
+    shell.appendChild(battleWindow(dialogue,'adv-sequence-panel'));
     var art = stage.querySelector('.adv-enemy-art'), hpText = stage.querySelector('.adv-enemy-hp'), bar = stage.querySelector('.adv-meter'), total = B.ENEMIES[playback.enemy].hp;
     function setHp() {hpText.textContent='HP ' + playback.hp + ' / ' + total;bar.setAttribute('aria-valuenow',playback.hp);bar.firstChild.style.width=(playback.hp/total*100)+'%';}
     function say(value) {U.clear(message);message.appendChild(U.rich(value));}
@@ -370,16 +387,39 @@
     var n = p(), b = n.battle, d = T.enemies[b.enemy], done = b.phase === 'win' || b.phase === 'lose', damage = impact, hurt = Object.keys(received).length; impact = 0;
     main.classList.add('adv-battle-screen');
     if (b.phase === 'commands') prepareOrders();
-    header(main, C.region, T.scenery.turn + ' ' + b.turn + ' · ' + d.rank);
-    var shell = E('div', { class: 'adv-rpg-shell' + (hurt ? ' is-hurt' : '') + (entering ? ' encounter' : '') }); entering = false; main.appendChild(shell); main = shell;
-    main.appendChild(battleStats());
+    var playing = sequence && sequence.enemy===b.enemy && sequence.turn===b.turn, won = b.phase === 'win' && !playing;
+    var shell = main.querySelector('.adv-rpg-shell');
+    if (!shell) {
+      header(main, C.region, T.scenery.turn + ' ' + b.turn + ' · ' + d.rank);
+      shell = E('div', {class:'adv-rpg-shell' + (entering ? ' encounter' : '')}); main.appendChild(shell);
+    } else {
+      U.clear(main.querySelector('.adv-subtitle')); main.querySelector('.adv-subtitle').appendChild(U.rich(T.scenery.turn + ' ' + b.turn + ' · ' + d.rank));
+      // Retain the open question dialog when replacing the question with its explanation.
+      shell.querySelectorAll('.adv-command-panel,.adv-battle-log,.adv-hit-flash').forEach(function(node) {node.remove();});
+      if (['attack','explanation','lose'].indexOf(b.phase) < 0) shell.querySelectorAll('.adv-quiz-dialog').forEach(function(dialog) {dialog.close();dialog.remove();});
+    }
+    entering = false; main = shell;
+    var stats = shell.querySelector('.adv-rpg-stats');
+    if (stats) stats.replaceWith(battleStats()); else shell.appendChild(battleStats());
     received = {};
-    var stage = E('section', { class: 'adv-battle-stage ' + b.enemy, attrs: { 'aria-label': d.name } }, [
-      E('div', { class: 'adv-enemy-nameplate' }, [text('strong', '', d.name), E('span', { class: 'adv-enemy-hp', text: 'HP ' + b.hp + ' / ' + B.ENEMIES[b.enemy].hp }), meter(b.hp, B.ENEMIES[b.enemy].hp, 'enemy-hp', '敵のHP')]),
-      E('div', { class: 'adv-enemy-art' + (damage ? ' is-hit' : ''), attrs: { 'data-damage': damage || null } }, [scene.enemy(b.enemy), damage ? E('span', { class: 'adv-damage', text: '−' + damage, attrs: { 'aria-hidden': true } }) : null]),
-      !done ? text('p', 'adv-intent', intention()) : null
-    ]);
-    main.appendChild(stage);
+    if (hurt) shell.appendChild(E('div',{class:'adv-hit-flash',attrs:{'aria-hidden':'true'}}));
+    var stage = shell.querySelector('.adv-battle-stage');
+    if (!stage) {
+      stage = E('section', {class:'adv-battle-stage ' + b.enemy,attrs:{'aria-label':d.name}},[
+        E('div',{class:'adv-enemy-nameplate'},[text('strong','',d.name),E('span',{class:'adv-enemy-hp'}),meter(b.hp,B.ENEMIES[b.enemy].hp,'enemy-hp','敵のHP')]),
+        E('div',{class:'adv-enemy-art'},scene.enemy(b.enemy)),
+        text('p','adv-intent',intention())
+      ]); shell.appendChild(stage);
+    }
+    if (won) { U.clear(stage); stage.setAttribute('aria-label',T.victory); }
+    else {
+      var hpText = stage.querySelector('.adv-enemy-hp'), bar = stage.querySelector('.adv-meter'), art = stage.querySelector('.adv-enemy-art'), intent = stage.querySelector('.adv-intent');
+      hpText.textContent = 'HP ' + b.hp + ' / ' + B.ENEMIES[b.enemy].hp;
+      bar.setAttribute('aria-valuenow',b.hp);bar.firstChild.style.width=(b.hp/B.ENEMIES[b.enemy].hp*100)+'%';
+      art.classList.remove('is-hit');art.querySelectorAll('.adv-damage').forEach(function(node){node.remove();});
+      if (damage) {art.classList.add('is-hit');art.appendChild(E('span',{class:'adv-damage',text:'−'+damage,attrs:{'aria-hidden':'true'}}));}
+      U.clear(intent);intent.appendChild(U.rich(done ? '' : intention()));intent.style.visibility = done ? 'hidden' : 'visible';
+    }
     if (sequence && sequence.enemy===b.enemy && sequence.turn===b.turn) {playActions(main,stage);return;}
     if (b.phase === 'commands') main.appendChild(commandPanel());
     else if (b.phase === 'win') main.appendChild(victoryPanel(damage));
@@ -389,11 +429,11 @@
         dialogue.appendChild(text('p','adv-action-message',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)));
       });
       dialogue.appendChild(text('p','adv-help',b.correct ? T.quizBonus : T.quizNormal));
-      main.appendChild(E('section',{class:'adv-command-panel adv-sequence-panel adv-retaliation-panel',attrs:{'aria-live':'polite'}},dialogue));
-      var phase = b.phase, marker = stage;
-      root.setTimeout(function() { if (marker.isConnected && FF.app.screen === 'adventure' && p().battle && p().battle.phase === phase) advance(); }, b.phase === 'enemyAction' ? 1800 : 900);
+      main.appendChild(battleWindow(dialogue,'adv-sequence-panel adv-retaliation-panel'));
+      var phase = b.phase, turn = b.turn, marker = stage;
+      root.setTimeout(function() { if (marker.isConnected && FF.app.screen === 'adventure' && p().battle && p().battle.phase === phase && p().battle.turn === turn) advance(); }, b.phase === 'enemyAction' ? 1800 : 900);
     } else quizDialog(main, damage || hurt);
-    if (b.log.length && !done && b.phase !== 'enemyAction' && b.phase !== 'playerAction') main.appendChild(E('ol', { class: 'adv-battle-log', attrs: { 'aria-label': '戦闘の記録', 'aria-live': 'polite' } }, b.log.slice(-4).map(function(line) { return text('li','',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)); })));
+
   }
 
   U.screens.adventure = { render: function (main) { ensure(); main.classList.remove('adv-field-screen','adv-battle-screen','is-hurt'); main.classList.add('adventure-screen'); if (p().battle) renderBattle(main); else renderField(main); } };
