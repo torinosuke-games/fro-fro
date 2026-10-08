@@ -333,11 +333,7 @@
   // 学習するボタンの下に、ほかの施設のアイコン（スマホでは横4つ。判断324）。いま使えるのはチケット引換所だけ。あとは準備中
   var facilities=facilityGrid();
   if(scene&&scene.parentNode)scene.parentNode.insertBefore(facilities,(scene.nextSibling&&scene.nextSibling.nextSibling)||null);
-  main.appendChild(E('section',{class:'home-steps'},[
-   E('div',{},[E('span',{text:'01'}),E('strong',{text:R.stepLearn}),E('p',{text:R.stepLearnDesc})]),
-   E('div',{},[E('span',{text:'02'}),E('strong',{text:R.stepTown}),E('p',{rich:R.stepTownDesc})]),
-   E('div',{},[E('span',{text:'03'}),E('strong',{text:R.stepPlay}),button(R.redeem,function(){U.openRedeem();},'text-button')])
-  ]));
+  // 「学んで、熱を生む」などの3つの手順の表示は、なくした（判断328）
  };
  U.screens.study.render=renderStudy;
  U.screens.quiz={render:renderQuiz};
