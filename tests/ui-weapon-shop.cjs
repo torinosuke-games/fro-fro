@@ -19,7 +19,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.locator('.facility-btn[data-facility="weapon"]').click();
  assert.ok((await p.locator('.shop-gold').innerText()).includes('350'));
  await p.locator('.shop-row[data-weapon="iron_sword"] .shop-btn').click();
- assert.equal(await p.evaluate(()=>FF.app.state.gold),50);
+ assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),50);
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'iron_sword');
  assert.equal(await p.locator('.shop-row[data-weapon="iron_sword"] .shop-equipped').count(),1);
  // 木の剣を付けかえられる

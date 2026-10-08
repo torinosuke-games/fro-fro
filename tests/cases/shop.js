@@ -8,7 +8,8 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.deepStrictEqual(plain(FF.defs.WEAPONS.map(w => w.id)), W);
     assert.deepStrictEqual(plain(Object.keys(B.WEAPONS)), W);
     const s = fresh();
-    assert.strictEqual(s.gold, 0);
+    assert.strictEqual(S.gold(s), 0);
+    assert.strictEqual(s.gold, undefined);   // ゴールドは、冒険のゴールド（adventure.gold）
     assert.strictEqual(S.currentWeapon(s), 'wood_sword');
     assert.ok(S.owns(s, 'wood_sword'));
     assert.strictEqual(B.WEAPONS.wood_sword.price, 0);
@@ -26,12 +27,13 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     s = S.addGold(s, 150);
     const r = S.buy(s, 'stone_sword');
     assert.ok(r.ok);
-    assert.strictEqual(r.state.gold, 150 - B.WEAPONS.stone_sword.price);
+    assert.strictEqual(S.gold(r.state), 150 - B.WEAPONS.stone_sword.price);
+    assert.strictEqual(r.state.adventure.gold, 150 - B.WEAPONS.stone_sword.price);   // 冒険のゴールドから引かれる
     assert.strictEqual(S.currentWeapon(r.state), 'stone_sword');
     assert.ok(S.owns(r.state, 'wood_sword') && S.owns(r.state, 'stone_sword'));
     assert.strictEqual(S.damagePerCorrect(r.state), B.WEAPONS.stone_sword.damage);
     // 元の状態は変わらない（純粋関数）
-    assert.strictEqual(s.gold, 150);
+    assert.strictEqual(S.gold(s), 150);
     // 同じ武器は、2回買えない。知らない武器も買えない
     assert.strictEqual(S.canBuy(r.state, 'stone_sword').reason, 'owned');
     assert.strictEqual(S.canBuy(r.state, 'nothing').reason, 'unknown');
@@ -48,26 +50,27 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     s = S.equip(s, 'iron_sword').state;
     assert.strictEqual(S.damagePerCorrect(s), B.WEAPONS.iron_sword.damage);
   });
-  test('武器屋：セーブの読み込みで整える（ない・おかしい値は、はじめの状態に。ゴールドは0以上の整数）', () => {
+  test('武器屋：セーブの読み込みで整える（知らない武器・持っていない装備を直す。前の版の state.gold は冒険のゴールドに足す）', () => {
     const base = fresh();
-    const old = JSON.parse(FF.state.serialize(base)); delete old.gold; delete old.equipment; delete old.integrity;
-    const r0 = FF.state.parseSave(JSON.stringify(old), T0 + 1);
-    // integrity がないものは、読み込みで弾かれる場合があるので、整合の関数を直接も確かめる
-    const n = S.normalizeShop(Object.assign({}, base, { gold: -5.7, equipment: { weapon: 'flame_sword', owned: ['stone_sword', 'bogus'] } }));
-    assert.strictEqual(n.gold, 0);
+    const n = S.normalizeShop(Object.assign({}, base, { equipment: { weapon: 'flame_sword', owned: ['stone_sword', 'bogus'] } }));
     assert.deepStrictEqual(plain(n.equipment.owned), ['wood_sword', 'stone_sword']);
     assert.strictEqual(n.equipment.weapon, 'wood_sword');   // 持っていない武器は装備できない
-    const m = S.normalizeShop(Object.assign({}, base, { gold: 12.9, equipment: { weapon: 'stone_sword', owned: ['stone_sword'] } }));
-    assert.strictEqual(m.gold, 12);
+    const m = S.normalizeShop(Object.assign({}, base, { equipment: { weapon: 'stone_sword', owned: ['stone_sword'] } }));
     assert.strictEqual(m.equipment.weapon, 'stone_sword');
     assert.ok(m.equipment.owned.includes('wood_sword'));
+    // 前の版（state.gold にゴールドを持っていた）のセーブ：冒険のゴールドに足されて、gold は消える
+    const legacy = JSON.parse(FF.state.serialize(S.addGold(base, 40)));
+    legacy.gold = 250;
+    const r = FF.state.migrate(legacy, T0 + 1);
+    assert.ok(r.ok, r.error);
+    assert.strictEqual(r.state.gold, undefined);
+    assert.strictEqual(S.gold(r.state), 290);
     // 新しいセーブは、書き出して読み込んでも、ゴールドと装備が残る
-    let s = S.buy(S.addGold(base, 500), 'iron_sword').state;
+    const s = S.buy(S.addGold(base, 500), 'iron_sword').state;
     const back = FF.state.parseSave(FF.state.serialize(s), T0 + 1);
     assert.ok(back.ok, back.error);
-    assert.strictEqual(back.state.gold, 500 - B.WEAPONS.iron_sword.price);
+    assert.strictEqual(S.gold(back.state), 500 - B.WEAPONS.iron_sword.price);
     assert.strictEqual(S.currentWeapon(back.state), 'iron_sword');
-    void r0;
   });
   test('武器屋：戦闘で、装備中の武器のダメージが、正解1回ごとに入る（敵のHPを超えない）', () => {
     const BA = FF.battle, X = FF.exploration;

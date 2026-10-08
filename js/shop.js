@@ -1,5 +1,5 @@
-// 武器屋（判断340）：純粋関数のみ。ゴールドで武器を買い、1つ装備する。装備した武器が、戦闘の正解1問のダメージを決める。
-// 木の剣は、はじめから持っている（値段 0）。ゴールドの入手のしくみは、まだない（デバッグ画面で足せる）。
+// 武器屋（判断340）：純粋関数のみ。ゴールドで武器を買い、1つ装備する。装備した武器が、探索の戦闘の正解1問のダメージを決める。
+// 木の剣は、はじめから持っている（値段 0）。ゴールドは、冒険のゴールド（state.adventure.gold。敵のドロップ・宝箱で入る）を使う（判断342）。
 (function (root) {
   'use strict';
   var FF = root.FF = root.FF || {};
@@ -9,7 +9,13 @@
   function def(id) { return FF.defs.WEAPONS.filter(function (w) { return w.id === id; })[0] || null; }
   function stats(id, b) { return bal(b).WEAPONS[id] || null; }
 
-  function gold(state) { return Math.max(0, Math.floor(state && state.gold) || 0); }
+  var GOLD_MAX = 1000000;   // 冒険のゴールドの上限（adventure.js の int の上限と同じ）
+  function gold(state) { return Math.max(0, Math.floor(state && state.adventure && state.adventure.gold) || 0); }
+  function withGold(s, n) {
+    s.adventure = s.adventure || (FF.adventure ? FF.adventure.create() : {});
+    s.adventure.gold = Math.max(0, Math.min(GOLD_MAX, Math.floor(n) || 0));
+    return s;
+  }
   function eq(state, b) {
     var e = state && state.equipment || {}, d = bal(b).DEFAULT_WEAPON;
     var owned = (Array.isArray(e.owned) ? e.owned : []).filter(function (x) { return stats(x, b); });
@@ -34,7 +40,7 @@
     var c = canBuy(state, id, b);
     if (!c.ok) return { ok: false, state: state, reason: c.reason };
     var s = FF.util.clone(state), e = eq(state, b);
-    s.gold = gold(state) - stats(id, b).price;
+    withGold(s, gold(state) - stats(id, b).price);
     s.equipment = { weapon: id, owned: e.owned.concat([id]) };
     return { ok: true, state: s };
   }
@@ -49,13 +55,12 @@
   // ゴールドを足す（デバッグ用・これから入手のしくみを作るときの入口）
   function addGold(state, n) {
     var s = FF.util.clone(state);
-    s.gold = gold(state) + Math.max(0, Math.floor(n) || 0);
-    return s;
+    return withGold(s, gold(state) + Math.max(0, Math.floor(n) || 0));
   }
-  // 読み込み時の整合
-  function normalizeShop(state, b) {
+  // 読み込み時の整合。legacy：前の版で state.gold に持っていたゴールド（冒険のゴールドに足す）
+  function normalizeShop(state, b, legacy) {
     var s = FF.util.clone(state);
-    s.gold = gold(state);
+    if (legacy) withGold(s, gold(state) + legacy);
     s.equipment = eq(state, b);
     return s;
   }
