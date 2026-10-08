@@ -38,7 +38,7 @@ fs.mkdirSync(out, { recursive: true });
     await page.screenshot({ path: out + '/overview-phone.png', fullPage: true });
     await page.getByRole('button', { name: '現在地へ', exact: true }).click();
     await page.getByRole('button', { name: '東へ', exact: true }).click();
-    assert.equal(await page.evaluate(() => FF.app.state.adventure.pos.x), 2);
+    await page.waitForFunction(() => FF.app.state.adventure.pos.x === 2);
     assert.equal(await page.locator('.adv-traveler').getAttribute('data-facing'), 'right');
     await page.getByRole('button', { name: '北へ', exact: true }).click();
     assert.equal(await page.locator('.adv-traveler').getAttribute('data-facing'), 'up');
@@ -101,7 +101,7 @@ fs.mkdirSync(out, { recursive: true });
           if (b.turn === 1) await page.screenshot({ path: out + '/enemy-' + b.enemy + '-phone.png', fullPage: true });
           if (!seenMagic) { await page.getByRole('button', { name: 'まほう', exact: true }).click(); seenMagic = true; }
           await page.getByRole('button', { name: 'クイズで行動する', exact: true }).click();
-        } else if (b.phase === 'attack' || b.phase === 'defense') {
+        } else if (b.phase === 'attack') {
           await page.locator('.adv-quiz-dialog[open]').waitFor();
           assert.ok(await page.evaluate(() => {
             const d=document.querySelector('.adv-quiz-dialog').getBoundingClientRect(), c=document.querySelector('.adv-choices').getBoundingClientRect();
@@ -118,16 +118,19 @@ fs.mkdirSync(out, { recursive: true });
             checkedReload = true;
             await go(3,6); continue;
           }
-          if (b.phase === 'defense') seenDefense = true;
           const wrong = !seenWrong; seenWrong = true;
           const index = b.choices.findIndex(c => wrong ? c !== b.question.answer : c === b.question.answer);
           await page.locator('.adv-answer').nth(index).click();
           const damaged = await page.evaluate(() => document.querySelector('.adv-enemy-art').classList.contains('is-hit'));
-          assert.equal(damaged, b.phase === 'attack' && !wrong);
+          assert.equal(damaged, false, 'Explanation precedes damage');
           await page.locator('.adv-feedback').waitFor({state:'visible'});
           await checkWidth();
-        } else if (b.phase === 'attackResult') await page.getByRole('button', { name: '敵の攻撃にそなえる', exact: true }).click();
-        else if (b.phase === 'defenseResult') await page.getByRole('button', { name: '次のターンへ', exact: true }).click();
+        } else if (b.phase === 'explanation') await page.getByRole('button', { name: '戦闘へ戻る', exact: true }).click();
+        else if (b.phase === 'playerAction' || b.phase === 'enemyAction') {
+          seenDefense = seenDefense || b.phase === 'enemyAction';
+          assert.equal(await page.locator('.adv-quiz-dialog').count(), 0);
+          await page.waitForFunction(phase => FF.app.state.adventure.battle.phase !== phase, b.phase);
+        }
       }
       throw Error('Battle did not finish');
     }
@@ -167,6 +170,6 @@ fs.mkdirSync(out, { recursive: true });
     assert.deepEqual(await page.evaluate(() => FF.app.state.adventure.pos), { x: 1, y: 6 });
     assert.equal(await page.locator('.adv-traveler').getAttribute('data-avatar'), 'j6');
     assert.deepEqual(errors, []);
-    console.log(JSON.stringify({ status: 'PASS', checks: 'onboarding, party, symbol encounters, escape, commands, wrong answer, defense, saved state, town return, town departure, facing, avatar settings, 14 detailed sprite sheets, viewport quiz dialogs, hit feedback, three enemies, camp, arrival, responsive layouts', result, errors, screenshots: out }, null, 2));
+    console.log(JSON.stringify({ status: 'PASS', checks: 'onboarding, party, symbol encounters, escape, commands, wrong answer, automatic retaliation, saved state, town return, town departure, facing, avatar settings, 14 detailed sprite sheets, viewport quiz dialogs, explanation before hit feedback, three enemies, camp, arrival, responsive layouts', result, errors, screenshots: out }, null, 2));
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exit(1); });

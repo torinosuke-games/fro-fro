@@ -2,7 +2,7 @@
 (function (root) {
   'use strict';
   var FF = root.FF, A = FF.adventure, U = FF.ui, T = FF.texts.adventure, B = FF.balance.ADVENTURE;
-  var E = U.el, moving = false, routeId = 0, entering = false, overview = false, orders = {}, orderKey = null, actor = null, impact = 0;
+  var E = U.el, moving = false, routeId = 0, entering = false, overview = false, orders = {}, orderKey = null, actor = null, impact = 0, received = {};
   var C = T.scenery, scene = FF.adventureScene;
   var beforeShow = FF.renewalBeforeShow;
   FF.renewalBeforeShow = function (screen, params) { routeId++; moving = false; if (screen === 'adventureParty' && FF.app.screen === 'base') { ensure(); save(A.depart(p(), 'home')); } if (beforeShow) beforeShow(screen, params); };
@@ -15,7 +15,9 @@
   function paint() { U.rerender(); }
   function change(next) {
     var before = p(); if (next === before) return;
-    impact = before.battle && before.battle.phase === 'attack' && next.battle ? Math.max(0, before.battle.hp - next.battle.hp) : 0;
+    impact = before.battle && before.battle.phase === 'explanation' && next.battle ? Math.max(0, before.battle.hp - next.battle.hp) : 0;
+    received = {};
+    if (before.battle && before.battle.phase === 'playerAction') next.party.forEach(function(id) { var loss = before.roster[id].hp - next.roster[id].hp; if (loss > 0) received[id] = loss; });
     save(next); paint();
     if (before.battle || next.battle) root.scrollTo(0, 0);
   }
@@ -92,20 +94,43 @@
     if (A.same(target, A.PLACES.home) && A.same(p().pos, target)) { home(); return; }
     var steps = A.path(p(), target);
     if (!steps.length) { U.toast('そこへは道がつながっていない。峠の敵や、ほかの道をたしかめよう。'); return; }
-    var token = ++routeId; moving = true;
+    var token = ++routeId, viewport = root.document.querySelector('.adv-map-viewport'), traveler = viewport.querySelector('.adv-traveler'), map = viewport.querySelector('.adv-map');
+    moving = true; traveler.classList.add('is-walking');
+    function finish() { moving = false; traveler.classList.remove('is-walking'); }
     function step() {
-      if (token !== routeId || FF.app.screen !== 'adventure' || p().battle || !steps.length) { moving = false; return; }
+      if (token !== routeId || !traveler.isConnected || FF.app.screen !== 'adventure' || p().battle || !steps.length) { finish(); return; }
       var pos = steps.shift(), old = p(), next = A.move(old, pos.x, pos.y);
-      if (next === old) { moving = false; return; }
-      if (next.battle) entering = true;
-      save(next);
-      if (!next.battle && A.same(next.pos, A.PLACES.home)) { routeId++; moving = false; U.show('base'); return; }
-      if (next.battle || !steps.length || next.notice) { moving = false; steps = []; }
-      paint();
-      if (moving) root.setTimeout(step, 135);
+      if (next === old) { finish(); return; }
+      traveler.style.backgroundPosition = ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[next.facing];
+      traveler.setAttribute('data-facing', next.facing);
+      var sx = old.pos.x * 72 + 36, sy = old.pos.y * 72 + 40, ex = next.pos.x * 72 + 36, ey = next.pos.y * 72 + 40;
+      var scale = map.clientWidth / 936, cx = viewport.scrollLeft, cy = viewport.scrollTop;
+      var tx = Math.max(0, Math.min(viewport.scrollWidth - viewport.clientWidth, ex * scale - viewport.clientWidth / 2));
+      var ty = Math.max(0, Math.min(viewport.scrollHeight - viewport.clientHeight, ey * scale - viewport.clientHeight / 2));
+      var last = null, elapsed = 0, duration = root.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 300;
+      function frame(time) {
+        if (token !== routeId || !traveler.isConnected || FF.app.screen !== 'adventure') { finish(); return; }
+        if (last !== null) elapsed += Math.min(34, Math.max(0, time - last));
+        last = time;
+        var fraction = duration ? Math.min(1, elapsed / duration) : 1;
+        traveler.style.left = (sx + (ex - sx) * fraction) / 936 * 100 + '%';
+        traveler.style.top = (sy + (ey - sy) * fraction) / 648 * 100 + '%';
+        viewport.scrollLeft = cx + (tx - cx) * fraction; viewport.scrollTop = cy + (ty - cy) * fraction;
+        if (fraction < 1) { root.requestAnimationFrame(frame); return; }
+        save(next);
+        map.querySelectorAll('.adv-tile.current').forEach(function(cell) {cell.classList.remove('current');cell.removeAttribute('aria-current');});
+        var cell = map.querySelector('[data-x="' + pos.x + '"][data-y="' + pos.y + '"]');
+        if (cell) {cell.classList.add('current');cell.setAttribute('aria-current','location');}
+        if (!next.battle && A.same(next.pos, A.PLACES.home)) { finish(); U.show('base'); return; }
+        if (next.battle || next.notice) { finish(); entering = !!next.battle; paint(); return; }
+        root.document.querySelectorAll('.adv-settings,.adv-notice').forEach(function(node) {node.remove();});
+        if (steps.length) step(); else finish();
+      }
+      root.requestAnimationFrame(frame);
     }
     step();
   }
+
   function mapView() {
     var n = p(), map = E('div', { class: 'adv-map', attrs: { role: 'group', 'aria-label': T.map } });
     map.appendChild(E('img', { class: 'adv-world-art', attrs: { src: scene.background, alt: '', draggable: 'false' }, on: { error: function(event) { event.target.src = scene.world(); } } }));
@@ -120,14 +145,14 @@
         map.appendChild(cell);
       });
     });
-    map.appendChild(E('span', { class: 'adv-traveler leader', style: { backgroundImage: 'url("' + scene.traveler(FF.app.state.player.avatar) + '")', backgroundPosition: ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[n.facing], left: (n.pos.x * 72 + 36) / 936 * 100 + '%', top: (n.pos.y * 72 + 40) / 648 * 100 + '%' }, attrs: { role: 'img', 'aria-label': C.current, 'data-sprite': scene.traveler(FF.app.state.player.avatar), 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }));
+    map.appendChild(E('span', { class: 'adv-traveler leader', style: { backgroundImage: 'url("' + scene.traveler(FF.app.state.player.avatar) + '")', backgroundPosition: ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[n.facing], left: (n.pos.x * 72 + 36) / 936 * 100 + '%', top: (n.pos.y * 72 + 40) / 648 * 100 + '%' }, attrs: { role: 'img', 'aria-label': C.current, 'data-sprite': scene.traveler(FF.app.state.player.avatar), 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }, ['body','leg-left','leg-right'].map(function(part) {return E('span',{class:'adv-walk-part adv-walk-' + part,attrs:{'aria-hidden':'true'}});})));
     return map;
   }
   function fieldViewport() {
     var viewport = E('div', { class: 'adv-map-viewport' + (overview ? ' overview' : '') }, mapView());
     var shell = E('div', { class: 'adv-map-shell' }, [viewport,
       E('div', { class: 'adv-compass', text: 'N ↑', attrs: { 'aria-hidden': true } }),
-      btn(overview ? C.follow : C.map, function () { overview = !overview; paint(); }, 'adv-map-toggle'), directions()]);
+      btn(overview ? C.follow : C.map, function () { routeId++; moving = false; overview = !overview; paint(); }, 'adv-map-toggle'), directions()]);
     root.requestAnimationFrame(function () {
       if (!viewport.isConnected || overview) return;
       viewport.scrollLeft = p().pos.x * 72 + 36 - viewport.clientWidth / 2;
@@ -176,8 +201,9 @@
   function battleStats() {
     return E('div', { class: 'adv-rpg-stats', attrs: { 'aria-label': T.party } }, p().party.map(function(id) {
       var r = p().roster[id], st = A.stats(id, r.xp), active = p().battle.phase === 'commands';
-      var card = btn('', function() { actor = id; paint(); }, 'adv-status' + (active && actor === id ? ' selected' : '') + (!r.hp ? ' is-down' : ''), !active || !r.hp);
+      var card = btn('', function() { actor = id; paint(); }, 'adv-status' + (active && actor === id ? ' selected' : '') + (!r.hp ? ' is-down' : '') + (received[id] ? ' is-damaged' : ''), !active || !r.hp);
       card.setAttribute('aria-label', name(id) + C.selected); card.setAttribute('aria-pressed', active && actor === id ? 'true' : 'false');
+      if (received[id]) card.appendChild(E('span',{class:'adv-party-damage',text:'−' + received[id],attrs:{'aria-hidden':'true'}}));
       card.appendChild(text('strong', '', name(id)));card.appendChild(E('small', { text: 'Lv ' + st.level }));
       card.appendChild(E('span', { text: 'HP ' + r.hp }));card.appendChild(meter(r.hp,st.hp,'hp',name(id)+' HP'));
       card.appendChild(E('span', { text: 'MP ' + r.mp }));card.appendChild(meter(r.mp,st.mp,'mp',name(id)+' MP'));return card;
@@ -207,13 +233,13 @@
     panel.appendChild(menu); panel.appendChild(dialogue); return panel;
   }
   function questionPanel() {
-    var b = p().battle, q = b.question, active = b.phase === 'attack' || b.phase === 'defense';
+    var b = p().battle, q = b.question, active = b.phase === 'attack';
     var panel = E('section', { class: 'adv-question-panel' }), body = E('div', { class: 'adv-question-scroll' }), controls = E('div', { class: 'adv-quiz-controls' });
-    if (!q) return panel;
+    if (!q || b.phase === 'win' || b.phase === 'lose') return panel;
     body.appendChild(text('h2', 'adv-question', q.question));
     if (active && q.diagram && FF.lessonFigure) body.appendChild(FF.lessonFigure.render(q.diagram));
     if (active) {
-      body.appendChild(text('p', 'adv-help', b.phase === 'attack' ? T.attackHelp : T.defenseHelp));
+      body.appendChild(text('p', 'adv-help', T.attackHelp));
       q.hints.slice(0, b.hints || 0).forEach(function(hint) { body.appendChild(text('p', 'adv-hint', hint)); });
       if (q.answerType === 'choice') {
         controls.appendChild(E('div', { class: 'adv-choices' }, b.choices.map(function(choice, i) {
@@ -234,10 +260,10 @@
     panel.appendChild(body); if (active) panel.appendChild(controls); return panel;
   }
   function quizDialog(main, damage) {
-    var b = p().battle, active = b.phase === 'attack' || b.phase === 'defense';
-    var title = active ? (b.phase === 'attack' ? T.attackQuiz : T.defenseQuiz) : (b.correct ? T.good : T.wrong);
+    var b = p().battle, active = b.phase === 'attack';
+    var title = active ? T.attackQuiz : (b.correct ? T.good : T.wrong);
     var dialog = E('dialog', { class: 'adv-quiz-dialog', attrs: { 'aria-labelledby': 'adv-quiz-title' } });
-    var heading = E('h2', { class: 'adv-dialog-title', text: title, attrs: { id: 'adv-quiz-title', tabindex: '-1' } });
+    var heading = E('h2', { class: 'adv-dialog-title', rich: title, attrs: { id: 'adv-quiz-title', tabindex: '-1' } });
     dialog.appendChild(E('header', { class: 'adv-dialog-header' }, [heading, btn(C.viewBattle, function() { dialog.close(); }, 'quiet')]));
     dialog.appendChild(questionPanel());
     var footer = E('footer', { class: 'adv-dialog-footer' });
@@ -245,7 +271,7 @@
       var reward = b.reward;
       footer.appendChild(E('section', { class: 'adv-result win' }, [text('h2','',T.victory), E('div',{class:'adv-reward',text:'+'+reward.xp+' EXP / 人　 +'+reward.gold+' G'}), E('div',{class:'adv-levelups'},reward.levels.map(function(r){return text('p','','✦ '+name(r.id)+' Lv.'+r.level+'　'+T.levelUp);})), btn(T.field,advance,'gold')]));
     } else if (b.phase === 'lose') footer.appendChild(E('section',{class:'adv-result'},[text('h2','',T.defeat),text('p','',T.defeatHelp),btn('町で休む',advance,'gold')]));
-    else if (!active) footer.appendChild(btn(b.phase === 'attackResult' ? T.nextDefense : T.nextTurn,advance,'gold adv-next'));
+    else if (!active) footer.appendChild(btn(T.returnBattle,advance,'gold adv-next'));
     if (!active) dialog.appendChild(footer);
     var opener = btn(active ? C.answerQuiz : C.reviewQuiz,function(){dialog.showModal();heading.focus({preventScroll:true});},'gold adv-open-quiz');
     main.appendChild(opener); main.appendChild(dialog);
@@ -259,12 +285,14 @@
     if (next === old) { U.toast(T.noQuestion); return; } change(next);
   }
   function renderBattle(main) {
-    var n = p(), b = n.battle, d = T.enemies[b.enemy], done = b.phase === 'win' || b.phase === 'lose', damage = impact; impact = 0;
+    var n = p(), b = n.battle, d = T.enemies[b.enemy], done = b.phase === 'win' || b.phase === 'lose', damage = impact, hurt = Object.keys(received).length; impact = 0;
     main.classList.add('adv-battle-screen');
+    if (Object.keys(received).length) main.classList.add('is-hurt');
     if (b.phase === 'commands') prepareOrders();
     header(main, C.region, T.scenery.turn + ' ' + b.turn + ' · ' + d.rank);
     var shell = E('div', { class: 'adv-rpg-shell' + (entering ? ' encounter' : '') }); entering = false; main.appendChild(shell); main = shell;
     main.appendChild(battleStats());
+    received = {};
     var stage = E('section', { class: 'adv-battle-stage ' + b.enemy, attrs: { 'aria-label': d.name } }, [
       E('div', { class: 'adv-enemy-nameplate' }, [text('strong', '', d.name), E('span', { class: 'adv-enemy-hp', text: 'HP ' + b.hp + ' / ' + B.ENEMIES[b.enemy].hp }), meter(b.hp, B.ENEMIES[b.enemy].hp, 'enemy-hp', '敵のHP')]),
       E('div', { class: 'adv-enemy-art' + (damage ? ' is-hit' : ''), attrs: { 'data-damage': damage || null } }, [scene.enemy(b.enemy), damage ? E('span', { class: 'adv-damage', text: '−' + damage, attrs: { 'aria-hidden': true } }) : null]),
@@ -272,7 +300,12 @@
     ]);
     main.appendChild(stage);
     if (b.phase === 'commands') main.appendChild(commandPanel());
-    else quizDialog(main, damage);
+    else if (b.phase === 'playerAction' || b.phase === 'enemyAction') {
+      main.appendChild(text('p','adv-action-banner',b.phase === 'playerAction' ? T.playerAction : T.enemyAction));
+      main.appendChild(text('p','adv-turn-bonus',b.correct ? T.quizBonus : T.quizNormal));
+      var phase = b.phase, marker = stage;
+      root.setTimeout(function() { if (marker.isConnected && FF.app.screen === 'adventure' && p().battle && p().battle.phase === phase) advance(); }, 900);
+    } else quizDialog(main, damage || hurt);
     if (b.log.length) main.appendChild(E('ol', { class: 'adv-battle-log', attrs: { 'aria-label': '戦闘の記録', 'aria-live': 'polite' } }, b.log.slice(-4).map(function(line) { return text('li','',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)); })));
   }
 

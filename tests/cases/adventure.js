@@ -8,12 +8,14 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     p = A.command(p, orders(p, overrides), bank, 4, rng, now);
     assert.equal(p.battle.phase, 'attack');
     p = A.answer(p, correct ? p.battle.question.answer : 'not-the-answer', now);
-    if (p.battle.phase === 'win') return p;
+    assert.equal(p.battle.phase, 'explanation');
     p = A.advance(p, bank, 4, rng, now);
-    assert.equal(p.battle.phase, 'defense');
-    p = A.answer(p, correct ? p.battle.question.answer : 'not-the-answer', now);
+    if (p.battle.phase === 'win') return p;
+    assert.equal(p.battle.phase, 'playerAction');
+    p = A.advance(p, bank, 4, rng, now);
     return p.battle.phase === 'lose' ? p : A.advance(p, bank, 4, rng, now);
   }
+
   function win(p) { for (let i = 0; i < 30 && p.battle.phase !== 'win' && p.battle.phase !== 'lose'; i++) p = turn(p); assert.equal(p.battle.phase, 'win'); return p; }
 
   test('冒険：移動方向を保存し、旧セーブと不正な向きは正面で補完する', () => {
@@ -66,11 +68,14 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const n = A.setParty(p, ['gan', 'hero']); assert.deepEqual(plain(n.party), ['gan', 'hero']);
     n.pos = { x: 2, y: 6 }; assert.strictEqual(A.setParty(n, ['hero']), n);
   });
-  test('冒険：誤答で攻撃・魔法は出ず、MPは減らない。道具は使える', () => {
+  test('冒険：解説中は行動せず、誤答でも通常攻撃・魔法・道具を使える', () => {
     let p = atEnemy('wolf'); p.roster.gan.hp = 1;
     p = A.command(p, orders(p, { hero: { type: 'magic', target: 'hero' }, sora: { type: 'item', target: 'gan' } }), bank, 4, rng, now);
     const old = JSON.stringify(p); p = A.answer(p, 'wrong', now);
     assert.equal(p.battle.hp, B.ENEMIES.wolf.hp); assert.equal(p.roster.hero.mp, B.MEMBERS.hero.mp);
+    assert.equal(p.roster.gan.hp, 1); assert.equal(p.potions, 3);
+    p = A.advance(p, bank, 4, rng, now);
+    assert.ok(p.battle.hp < B.ENEMIES.wolf.hp); assert.equal(p.roster.hero.mp, B.MEMBERS.hero.mp - B.MAGIC_COST);
     assert.equal(p.roster.gan.hp, 1 + B.POTION_HEAL); assert.equal(p.potions, 2); assert.equal(p.correct, 0);
     assert.notEqual(JSON.stringify(p), old);
     assert.strictEqual(A.answer(p, p.battle.question.answer, now), p, '二重回答で報酬を得ない');
@@ -81,22 +86,31 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     p.roster.hero.mp = 0; assert.strictEqual(A.command(p, orders(p, { hero: { type: 'magic' } }), bank, 4, rng, now), p);
     p = A.command(p, orders(p), bank, 4, rng, now); assert.strictEqual(A.answer(p, null, now), p);
   });
-  test('冒険：防御正解で軽減、強敵は予告どおり全体攻撃', () => {
+  test('冒険：1問の正解で攻撃強化・敵攻撃軽減。反撃に問題は出ない', () => {
     let p = atEnemy('boss'); p.battle.turn = 2;
-    p = A.command(p, orders(p), bank, 4, rng, now); p = A.answer(p, 'wrong', now); p = A.advance(p, bank, 4, rng, now);
-    assert.equal(A.intent(p).all, true);
-    const good = A.answer(p, p.battle.question.answer, now), bad = A.answer(p, 'wrong', now);
+    p = A.command(p, orders(p), bank, 4, rng, now);
+    const goodAnswer = A.answer(p, p.battle.question.answer, now), badAnswer = A.answer(p, 'wrong', now);
+    assert.equal(goodAnswer.battle.hp, p.battle.hp);
+    const goodHit = A.advance(goodAnswer), badHit = A.advance(badAnswer);
+    assert.ok(goodHit.battle.hp < badHit.battle.hp);
+    const good = A.advance(goodHit), bad = A.advance(badHit);
+    assert.equal(good.battle.phase, 'enemyAction');
+    assert.strictEqual(A.answer(good, 'wrong', now), good);
+    assert.equal(good.answered, 1); assert.equal(good.history.length, 1);
     for (const id of p.party) { assert.ok(good.roster[id].hp < p.roster[id].hp); assert.ok(good.roster[id].hp > bad.roster[id].hp); }
+    for (const state of [goodAnswer, goodHit, good]) assert.deepEqual(plain(A.normalize(state)), plain(state));
+    assert.equal(A.advance(good).battle.phase, 'commands');
   });
   test('冒険：ガンが個別攻撃をかばい、ソラが全体の被害を軽減', () => {
     let p = atEnemy('boss'); p = A.command(p, orders(p, { gan: { type: 'magic' }, sora: { type: 'magic' } }), bank, 4, rng, now);
-    p = A.answer(p, p.battle.question.answer, now); assert.equal(p.battle.guarded, true); assert.equal(p.battle.ward, true);
-    p = A.advance(p, bank, 4, rng, now); p = A.answer(p, 'wrong', now);
+    p = A.answer(p, p.battle.question.answer, now); p = A.advance(p); assert.equal(p.battle.guarded, true); assert.equal(p.battle.ward, true);
+    p = A.advance(p, bank, 4, rng, now);
     assert.equal(p.roster.hero.hp, B.MEMBERS.hero.hp); assert.ok(p.roster.gan.hp < B.MEMBERS.gan.hp);
   });
   test('冒険：リンの魔法で戦線離脱から復帰、倒れた人は行動しない', () => {
     let p = atEnemy('boss'); p.roster.gan.hp = 0;
     p = A.command(p, orders(p, { rin: { type: 'magic', target: 'gan' } }), bank, 4, rng, now); p = A.answer(p, p.battle.question.answer, now);
+    p = A.advance(p);
     assert.ok(p.roster.gan.hp > 0); assert.equal(p.roster.rin.mp, B.MEMBERS.rin.mp - 3);
     assert.ok(!p.battle.log.some(l => l.key === 'hit' && l.who === 'gan'));
   });
@@ -127,6 +141,11 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const q = A.pick(bank, p, 4, rng, now); assert.equal(q.gradeLevel, 4); assert.equal(q.subject, 'science'); assert.equal(q.difficulty, 'standard');
     p.recent.push(q.id); assert.notEqual(A.pick(bank, p, 4, rng, now).id, q.id);
     p.subject = 'unknown'; assert.equal(A.pick(bank, p, 4, rng, now), null);
+  });
+  test('冒険：旧戦闘の移行はすでに終わった攻撃を繰り返さない', () => {
+    let p = atEnemy('wolf'); p.battle.phase='attackResult'; delete p.battle.flowVersion; p.battle.hp=100;
+    const n=A.normalize(p); assert.equal(n.battle.phase,'playerAction'); assert.equal(A.advance(n).battle.hp,100);
+    p.battle.phase='defenseResult'; assert.equal(A.advance(A.normalize(p)).battle.phase,'commands');
   });
   test('冒険：旧セーブの補完と戦闘途中の往復。既存の熱量・チケットは変わらない', () => {
     let s = FF.state.createDefaultState(now), old = FF.state.parseSave(FF.state.serialize(s), now); assert.ok(old.ok); assert.deepEqual(plain(old.state.adventure.party), ['hero', 'gan', 'rin', 'sora']);

@@ -1,56 +1,79 @@
-// Exercise native quiz dialogs and the actual browser damage animation.
+// Real browser: continuous walking/camera, explanation before attacks, automatic retaliation.
 const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');
-const assert=require('node:assert/strict');const fs=require('node:fs');
-const out=process.env.FF_QA_OUTPUT||'/tmp/fro-feedback-qa';fs.mkdirSync(out,{recursive:true});
+const assert=require('node:assert/strict'), fs=require('node:fs');
+const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recursive:true});
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:process.env.FF_BROWSER_PATH||'/usr/bin/chromium'});
  try {
   const page=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'no-preference'});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route(/https:\/\/fonts\.(googleapis|gstatic)\.com\//,r=>r.abort());
-  await page.goto(process.env.FF_TEST_URL||'http://127.0.0.1:8768/preview/',{waitUntil:'domcontentloaded'});
+  await page.goto(process.env.FF_TEST_URL||'http://127.0.0.1:8769/preview/',{waitUntil:'domcontentloaded'});
   await page.locator('.title-card input').fill('ゆき');await page.locator('.title-card .btn.primary').click();
   await page.getByRole('button',{name:'小学4年',exact:true}).click();await page.locator('.avatar-pick').first().click();await page.locator('.intro-line + button').click();
-  await page.getByRole('button',{name:'雪原へ出発',exact:true}).click();await page.locator('.adv-tile[data-x="3"][data-y="6"]').click();await page.waitForFunction(()=>!!FF.app.state.adventure.battle);
+  await page.getByRole('button',{name:'雪原へ出発',exact:true}).click();
+  // Trace every browser frame. The same map stays mounted throughout the route.
+  await page.evaluate(()=>{
+   const p=FF.util.clone(FF.app.state.adventure);p.pos={x:3,y:2};p.notice='';FF.app.commit(Object.assign({},FF.app.state,{adventure:p}));FF.ui.rerender();
+  });
+  await page.waitForTimeout(100);
+  await page.evaluate(()=>{
+   const hero=document.querySelector('.adv-traveler'), viewport=document.querySelector('.adv-map-viewport');window.motionFrames=[];let started=false,remaining=12;
+   function sample(){started=started||hero.classList.contains('is-walking');if(started)window.motionFrames.push({same:hero===document.querySelector('.adv-traveler'),left:parseFloat(hero.style.left),camera:viewport.scrollLeft,leg:getComputedStyle(hero.querySelector('.adv-walk-leg-left')).transform,walking:hero.classList.contains('is-walking')});if(!started||hero.classList.contains('is-walking')||--remaining>0)requestAnimationFrame(sample);}requestAnimationFrame(sample);
+  });
+  await page.locator('.adv-tile[data-x="7"][data-y="2"]').click();
+  await page.waitForTimeout(170);await page.screenshot({path:out+'/walking-phone.png',fullPage:true});
+  await page.waitForFunction(()=>FF.app.state.adventure.pos.x===7);
+  const frames=await page.evaluate(()=>motionFrames);
+  assert.ok(frames.every(f=>f.same),'No tile-by-tile DOM replacement');
+  const walking=frames.filter(f=>f.walking);assert.ok(walking.length>8, JSON.stringify(frames));assert.ok(new Set(walking.map(f=>f.leg)).size>5,'Feet animate');
+  const deltas=walking.slice(1).map((f,i)=>f.left-walking[i].left);
+  assert.ok(deltas.every(d=>d>=0&&d<2),'Position changes smoothly without tile jumps');
+  assert.ok(new Set(walking.map(f=>f.camera)).size>5,'Camera interpolates');
+  await page.waitForFunction(()=>!document.querySelector('.adv-traveler').classList.contains('is-walking'));
+  assert.equal(await page.locator('.adv-walk-leg-left').evaluate(el=>getComputedStyle(el).animationName),'none');
+  // Switch screens during movement: no delayed logical step or encounter.
+  await page.getByRole('button',{name:'西へ',exact:true}).click();await page.waitForTimeout(80);
+  await page.getByRole('button',{name:'町の画面へ',exact:true}).click();await page.waitForTimeout(400);
+  assert.equal(await page.evaluate(()=>FF.app.screen),'base');assert.deepEqual(await page.evaluate(()=>FF.app.state.adventure.pos),{x:1,y:6});
+  await page.getByRole('button',{name:'冒険のつづき',exact:true}).click();
+  await page.locator('.adv-tile[data-x="3"][data-y="6"]').click();await page.waitForFunction(()=>!!FF.app.state.adventure.battle);
   await page.getByRole('button',{name:'クイズで行動する',exact:true}).click();await page.locator('.adv-quiz-dialog[open]').waitFor();
-  // Escape closes only the window. Reopening preserves the same question and state.
   const before=await page.evaluate(()=>JSON.stringify(FF.app.state.adventure));await page.keyboard.press('Escape');assert.equal(await page.locator('.adv-quiz-dialog').evaluate(d=>d.open),false);
   await page.locator('.adv-open-quiz').click();assert.equal(await page.evaluate(()=>JSON.stringify(FF.app.state.adventure)),before);
   await page.keyboard.press('Tab');assert.ok(await page.evaluate(()=>!!document.activeElement.closest('.adv-quiz-dialog')));
-  const b=await page.evaluate(()=>FF.app.state.adventure.battle);
-  await page.locator('.adv-answer').nth(b.choices.indexOf(b.question.answer)).click();
-  const animation=await page.locator('.adv-enemy-art').evaluate(el=>{
-   const a=el.getAnimations().find(a=>a.animationName==='adv-hit');
-   if(!a)return null;return {duration:a.effect.getTiming().duration,zeroes:a.effect.getKeyframes().filter(k=>Number(k.opacity)===0).length,damage:Number(el.dataset.damage),running:a.playState};
-  });
-  assert.ok(animation);assert.equal(animation.zeroes,2);assert.ok(animation.duration<=500);assert.equal(animation.running,'running');
-  assert.equal(animation.damage,b.hp-(await page.evaluate(()=>FF.app.state.adventure.battle.hp)));
-  assert.equal(await page.locator('.adv-quiz-dialog').evaluate(d=>d.open),false,'Damage is visible before the result window');
-  // A background save (e.g. completed construction) must not cancel the result opening.
-  await page.evaluate(()=>FF.app.commit(FF.util.clone(FF.app.state)));
-  await page.locator('.adv-feedback').waitFor({state:'visible'});await page.screenshot({path:out+'/result-phone.png',fullPage:true});
-  // Long questions and real diagrams remain readable inside the dialog; controls stay on-screen.
-  await page.getByRole('button',{name:'敵の攻撃にそなえる',exact:true}).click();await page.locator('.adv-quiz-dialog[open]').waitFor();
+  // Real long question + diagram: only question content scrolls.
   await page.evaluate(()=>{
-   const p=FF.util.clone(FF.app.state.adventure);
-   const q=Object.values(FF.app.bank.byId).find(q=>q.subject==='math'&&q.gradeLevel===4&&q.answerType==='choice'&&q.diagram);
-   p.battle.question=FF.util.clone(q);p.battle.question.question=Array(10).fill(q.question).join('\n');p.battle.choices=q.choices.slice();p.battle.hints=0;
+   const p=FF.util.clone(FF.app.state.adventure),q=Object.values(FF.app.bank.byId).find(q=>q.subject==='math'&&q.gradeLevel===4&&q.answerType==='choice'&&q.diagram);
+   p.battle.question=FF.util.clone(q);p.battle.question.question=Array(10).fill(q.question).join('\n');p.battle.choices=q.choices.slice();
    FF.app.commit(Object.assign({},FF.app.state,{adventure:p}));FF.ui.rerender();
   });
   for(const [width,height] of [[360,640],[390,844],[768,900],[1440,1000]]){
    await page.setViewportSize({width,height});await page.locator('.adv-quiz-dialog[open]').waitFor();
-   const layout=await page.evaluate(()=>{
-    const d=document.querySelector('.adv-quiz-dialog'),s=d.querySelector('.adv-question-scroll'),c=d.querySelector('.adv-choices'),r=d.getBoundingClientRect(),a=c.getBoundingClientRect();
-    return {top:r.top,bottom:r.bottom,controls:a.bottom,overflow:s.scrollHeight>s.clientHeight,pageScroll:scrollY,horizontal:document.documentElement.scrollWidth>innerWidth};
-   });
+   const layout=await page.evaluate(()=>{const d=document.querySelector('.adv-quiz-dialog'),s=d.querySelector('.adv-question-scroll'),r=d.getBoundingClientRect(),a=d.querySelector('.adv-choices').getBoundingClientRect();return {top:r.top,bottom:r.bottom,controls:a.bottom,overflow:s.scrollHeight>s.clientHeight,pageScroll:scrollY,horizontal:document.documentElement.scrollWidth>innerWidth};});
    assert.ok(layout.top>=0&&layout.bottom<=height&&layout.controls<=height&&layout.overflow);assert.equal(layout.pageScroll,0);assert.equal(layout.horizontal,false);
-   if(width===360)await page.screenshot({path:out+'/long-diagram-phone.png',fullPage:true});
   }
-  await page.setViewportSize({width:390,height:844});await page.emulateMedia({reducedMotion:'reduce'});
-  await page.evaluate(()=>{let p=FF.util.clone(FF.app.state.adventure);p.battle.phase='attack';p.battle.hp=95;p.battle.log=[];FF.app.commit(Object.assign({},FF.app.state,{adventure:p}));FF.ui.rerender();});
-  await page.locator('.adv-quiz-dialog[open]').waitFor();
+  await page.setViewportSize({width:390,height:844});
+  const b=await page.evaluate(()=>FF.app.state.adventure.battle);
+  await page.locator('.adv-answer').nth(b.choices.indexOf(b.question.answer)).click();await page.locator('.adv-feedback').waitFor({state:'visible'});
+  assert.equal(await page.evaluate(()=>FF.app.state.adventure.battle.hp),b.hp,'No damage during explanation');
+  assert.equal(await page.locator('.adv-enemy-art.is-hit').count(),0);
+  await page.screenshot({path:out+'/explanation-phone.png',fullPage:true});
+  await page.getByRole('button',{name:'戦闘へ戻る',exact:true}).click();
+  const animation=await page.locator('.adv-enemy-art').evaluate(el=>{const a=el.getAnimations().find(a=>a.animationName==='adv-hit');return a&&{duration:a.effect.getTiming().duration,zeroes:a.effect.getKeyframes().filter(k=>Number(k.opacity)===0).length,damage:Number(el.dataset.damage)};});
+  assert.ok(animation);assert.equal(animation.zeroes,2);assert.equal(animation.damage,b.hp-(await page.evaluate(()=>FF.app.state.adventure.battle.hp)));
+  assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
+  await page.screenshot({path:out+'/attack-phone.png',fullPage:true});
+  await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='enemyAction');
+  assert.ok(await page.locator('.adv-battle-screen').evaluate(el=>el.getAnimations().some(a=>a.animationName==='adv-party-shake')));
+  assert.equal(await page.locator('.adv-quiz-dialog').count(),0);assert.equal(await page.locator('.adv-status.is-damaged').count(),1);
+  assert.equal(await page.evaluate(()=>FF.app.state.adventure.answered),1);
+  await page.screenshot({path:out+'/retaliation-phone.png',fullPage:true});
+  await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='commands');
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.getByRole('button',{name:'クイズで行動する',exact:true}).click();await page.locator('.adv-quiz-dialog[open]').waitFor();
   const index=await page.evaluate(()=>FF.app.state.adventure.battle.choices.indexOf(FF.app.state.adventure.battle.question.answer));await page.locator('.adv-answer').nth(index).click();
-  await page.locator('.adv-feedback').waitFor({state:'visible'});
+  await page.getByRole('button',{name:'戦闘へ戻る',exact:true}).click();
   assert.equal(await page.locator('.adv-enemy-art').evaluate(el=>getComputedStyle(el).animationName),'none');
-  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',checks:'two rapid blinks, real damage, result delay, focus and Escape, long text with diagrams at four viewport sizes, reduced motion',animation,screenshots:out},null,2));
+  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',frames:walking.length,checks:'continuous camera, moving feet, cancellation, dialog focus, long diagrams at four widths, explanation before damage, two blinks, automatic retaliation and screen shake, one question per turn, reduced motion',screenshots:out},null,2));
  } finally {await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1);});

@@ -49,11 +49,16 @@
     p.notice = typeof raw.notice === 'string' ? raw.notice : '';
     var bat = raw.battle;
     if (bat && B.ENEMIES[bat.enemy] && same(p.pos, ENEMIES[bat.enemy]) &&
-        ['commands', 'attack', 'attackResult', 'defense', 'defenseResult', 'win', 'lose'].indexOf(bat.phase) >= 0 &&
+        ['commands', 'attack', 'explanation', 'playerAction', 'enemyAction', 'attackResult', 'defense', 'defenseResult', 'win', 'lose'].indexOf(bat.phase) >= 0 &&
         Array.isArray(bat.log) && bat.orders && typeof bat.orders === 'object' &&
-        (['attack', 'attackResult', 'defense', 'defenseResult'].indexOf(bat.phase) < 0 ||
+        (['attack', 'explanation'].indexOf(bat.phase) < 0 ||
           (bat.question && FF.learning.validateQuestion(bat.question).length === 0 && Array.isArray(bat.choices)))) {
       p.battle = clone(bat);
+      if (bat.flowVersion !== 2) {
+        p.battle.phase = ({attackResult:'playerAction', defense:'playerAction', defenseResult:'enemyAction'})[bat.phase] || bat.phase;
+        if (bat.phase === 'defense') p.battle.correct = false;
+      }
+      p.battle.flowVersion = 2;
       p.battle.hp = int(bat.hp, B.ENEMIES[bat.enemy].hp, B.ENEMIES[bat.enemy].hp);
       p.battle.turn = Math.max(1, int(bat.turn, 1, 10000));
     }
@@ -91,7 +96,7 @@
   function encounter(p, id) {
     if (p.battle || !alive(p).length || enemyAt(p, p.pos) !== id) return p;
     var n = clone(p);
-    n.battle = { enemy: id, hp: B.ENEMIES[id].hp, phase: 'commands', turn: 1, orders: {}, log: [], question: null, choices: [], guarded: false, ward: false };
+    n.battle = { flowVersion: 2, enemy: id, hp: B.ENEMIES[id].hp, phase: 'commands', turn: 1, orders: {}, log: [], question: null, choices: [], guarded: false, ward: false };
     return n;
   }
   function move(p, x, y) {
@@ -197,18 +202,17 @@
         if (healed <= 0) { log(b, 'full', o.target, 0); return; }
         n.potions--; target.hp += healed; log(b, 'heal', o.target, healed); return;
       }
-      if (!correct) { log(b, 'miss', id, 0); return; }
       if (o.type === 'magic') {
         r.mp -= B.MAGIC_COST;
         if (id === 'rin') { var h = Math.min(B.HEAL + s.wisdom, stats(o.target, target.xp).hp - target.hp); target.hp += h; log(b, 'heal', o.target, h); return; }
         if (id === 'gan') { b.guarded = true; log(b, 'guard', id, 0); return; }
         if (id === 'sora') { b.ward = true; log(b, 'ward', id, 0); return; }
       }
-      var damage = Math.max(1, Math.round((o.type === 'magic' ? s.wisdom * B.MAGIC_POWER : s.strength) - e.defense * B.ARMOR_RATE));
+      var damage = Math.max(1, Math.round(((o.type === 'magic' ? s.wisdom * B.MAGIC_POWER : s.strength) - e.defense * B.ARMOR_RATE) * (correct ? B.QUIZ_ATTACK_RATE : 1)));
       damage = Math.min(b.hp, damage); b.hp -= damage;
       log(b, 'hit', id, damage);
     });
-    if (b.hp <= 0) victory(n); else b.phase = 'attackResult';
+    if (b.hp <= 0) victory(n); else b.phase = 'playerAction';
   }
   function defend(n, correct) {
     var b = n.battle, e = B.ENEMIES[b.enemy], plan = intent(n);
@@ -216,15 +220,15 @@
     if (!plan.all && b.guarded && n.party.indexOf('gan') >= 0 && n.roster.gan.hp > 0) targets = ['gan'];
     targets.forEach(function (id) {
       var r = n.roster[id], s = stats(id, r.xp);
-      var damage = Math.max(1, Math.round((e.attack * (plan.heavy ? 1.5 : 1) - s.defense * B.ARMOR_RATE) *
-        (correct ? B.DEFENSE_RATE : 1) * (b.ward ? B.WARD_RATE : 1) * (id === 'gan' && b.guarded ? B.GUARD_RATE : 1)));
+      var damage = Math.max(1, Math.round((e.attack * (correct ? B.QUIZ_ENEMY_RATE : 1) * (plan.heavy ? 1.5 : 1) - s.defense * B.ARMOR_RATE) *
+        (b.ward ? B.WARD_RATE : 1) * (id === 'gan' && b.guarded ? B.GUARD_RATE : 1)));
       damage = Math.min(r.hp, damage); r.hp -= damage; log(b, 'hurt', id, damage);
       if (!r.hp) log(b, 'down', id, 0);
     });
-    b.phase = alive(n).length ? 'defenseResult' : 'lose';
+    b.phase = alive(n).length ? 'enemyAction' : 'lose';
   }
   function answer(p, input, now) {
-    if (!p.battle || ['attack', 'defense'].indexOf(p.battle.phase) < 0) return p;
+    if (!p.battle || p.battle.phase !== 'attack') return p;
     var q = p.battle.question, judged = FF.answer.judge(q, input);
     if (judged.empty) return p;
     var n = clone(p), b = n.battle;
@@ -232,14 +236,15 @@
     n.recent = n.recent.concat([q.id]).slice(-B.RECENT);
     n.history = n.history.concat([{ qid: q.id, subject: q.subject, grade: q.gradeLevel, correct: judged.correct, at: now, phase: b.phase }]).slice(-B.HISTORY);
     b.correct = judged.correct; b.log = [];
-    if (b.phase === 'attack') attack(n, judged.correct); else defend(n, judged.correct);
+    b.phase = 'explanation';
     return n;
   }
   function advance(p, bank, grade, rng, now) {
     if (!p.battle) return p;
     var n = clone(p), b = n.battle;
-    if (b.phase === 'attackResult') { if (!setQuestion(n, bank, grade, rng, now)) return p; b.phase = 'defense'; }
-    else if (b.phase === 'defenseResult') { b.phase = 'commands'; b.turn++; b.orders = {}; b.log = []; b.question = null; }
+    if (b.phase === 'explanation') { attack(n, b.correct); }
+    else if (b.phase === 'playerAction') { b.log = []; defend(n, b.correct); }
+    else if (b.phase === 'enemyAction') { b.phase = 'commands'; b.turn++; b.orders = {}; b.log = []; b.question = null; }
     else if (b.phase === 'win') { n.battle = null; n.notice = b.enemy === 'boss' ? 'passOpen' : 'victory'; }
     else if (b.phase === 'lose') { n = rest(n, n.lastTown); n.notice = 'rescued'; }
     else return p;

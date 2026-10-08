@@ -129,3 +129,23 @@ body:has(.adv-quiz-dialog[open]){overflow:hidden}
 .adv-traveler{width:68px;height:68px;background-size:200% 200%;background-repeat:no-repeat;image-rendering:auto;filter:drop-shadow(0 2px 1px #22435b30)}
 .overview .adv-traveler{width:7.26%;height:auto;aspect-ratio:1}
 .adv-quiz-dialog .adv-button:hover:not(:disabled){transform:none;box-shadow:none}
+
+/* Keep the map mounted while the hero and camera advance together. */
+.adv-traveler{background-size:0 0;will-change:left,top}
+.adv-walk-part{position:absolute;inset:0;background-image:inherit;background-position:inherit;background-size:200% 200%;background-repeat:no-repeat}
+.adv-walk-body{clip-path:inset(0 0 28% 0)}
+.adv-walk-leg-left{clip-path:inset(68% 50% 0 0);transform-origin:45% 70%}
+.adv-walk-leg-right{clip-path:inset(68% 0 0 50%);transform-origin:55% 70%}
+.is-walking .adv-walk-body{animation:adv-walk-bob .3s linear infinite}
+.is-walking .adv-walk-leg-left{animation:adv-walk-step .6s ease-in-out infinite}
+.is-walking .adv-walk-leg-right{animation:adv-walk-step .6s ease-in-out -.3s infinite}
+@keyframes adv-walk-step{0%,100%{transform:rotate(-7deg) translateY(-1px)}50%{transform:rotate(7deg) translateY(1px)}}
+@keyframes adv-walk-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+.adv-battle-screen.is-hurt{animation:adv-party-shake .4s linear}
+@keyframes adv-party-shake{0%,100%{transform:translate(0)}15%,55%{transform:translate(-6px,2px)}35%,75%{transform:translate(6px,-2px)}}
+.adv-status{position:relative}.adv-status.is-damaged{animation:adv-status-hurt .45s ease-out}
+@keyframes adv-status-hurt{0%,50%{background:#9b334a}100%{background:#111b2b}}
+.adv-party-damage{position:absolute;right:5px;top:5px;color:#ffd4d4;font-size:20px;font-weight:800;animation:adv-damage .65s ease-out both;z-index:2}
+.adv-action-banner,.adv-turn-bonus{text-align:center;color:#fff;margin:12px;font-weight:700;text-shadow:0 2px 3px #102039}
+.adv-turn-bonus{font-size:12px}
+@media(prefers-reduced-motion:reduce){.is-walking .adv-walk-part,.adv-battle-screen.is-hurt,.adv-status.is-damaged,.adv-party-damage{animation:none}}
