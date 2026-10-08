@@ -456,3 +456,22 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
  body[data-screen="base"] .scene.art .art-bld .nm{font-size:13.5px;padding:.2em .6em}
  .facility-btn .facility-icon{max-width:72px}
 }
+
+/* 武器屋（判断330） */
+.shop-body{display:grid;gap:10px;margin:6px 0 12px;max-height:min(64vh,520px);overflow-y:auto}
+.shop-gold{margin:0;display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:12px;background:#fff8ea;border:1px solid #efc27a;font-weight:800;color:#885219}
+.shop-gold strong{font-size:1.125rem;font-variant-numeric:tabular-nums}
+.shop-list{display:grid;gap:8px}
+.shop-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--rn-line,#d3e3ee);border-radius:14px;background:#fff}
+.shop-row.is-equipped{border-color:#efa64b;background:#fffaf0}
+.shop-row.is-short{opacity:.7}
+.shop-icon{font-size:1.75rem;text-align:center}
+.shop-info{display:grid;gap:1px;min-width:0}
+.shop-name{font-size:1rem}
+.shop-power{font-size:.8125rem;color:#43657d}
+.shop-price{font-size:.8125rem;font-weight:800;color:#885219}
+.shop-price.is-owned{display:none}
+.shop-btn{min-width:84px;padding:8px 10px;font-size:.875rem;white-space:nowrap}
+.shop-btn[disabled]{opacity:.45}
+.shop-equipped{padding:6px 10px;border-radius:999px;background:#efa64b;color:#fff;font-weight:800;font-size:.8125rem;white-space:nowrap}
+.shop-note{margin:0;font-size:.8125rem;color:#43657d}

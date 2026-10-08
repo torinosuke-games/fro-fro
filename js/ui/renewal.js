@@ -306,9 +306,31 @@
  }
  // 町のほかの施設（判断324）。絵は img/art/fac-*.webp。使えるのは、チケット引換所（引換所）だけ。ほかは、これから作る
  var FACILITIES=[
-  {id:'weapon',name:R.facWeapon},{id:'armor',name:R.facArmor},{id:'item',name:R.facItem},{id:'tavern',name:R.facTavern},
+  {id:'weapon',name:R.facWeapon,open:function(){openWeaponShop();}},{id:'armor',name:R.facArmor},{id:'item',name:R.facItem},{id:'tavern',name:R.facTavern},
   {id:'party',name:R.facParty},{id:'magic',name:R.facMagic},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
  ];
+ // 武器屋（判断330）：ゴールドで武器を買い、装備する。装備した武器が、戦闘の正解1回のダメージになる
+ var closeShop=null;
+ function openWeaponShop(){
+  var a=FF.app,SH=FF.shop;
+  if(closeShop){closeShop();closeShop=null;}
+  var s=a.state,cur=SH.currentWeapon(s);
+  var list=E('div',{class:'shop-list'},FF.defs.WEAPONS.map(function(w){
+   var st=SH.stats(w.id),owned=SH.owns(s,w.id),equipped=cur===w.id,can=SH.canBuy(s,w.id).ok;
+   var action;
+   if(equipped)action=E('span',{class:'shop-equipped',rich:R.shopEquipped});
+   else if(owned)action=E('button',{class:'rn-button shop-btn',attrs:{type:'button'},rich:R.shopEquip,on:{click:function(){var r=SH.equip(a.state,w.id);if(r.ok){a.commit(r.state);openWeaponShop();}}}});
+   else action=E('button',{class:'rn-button primary shop-btn',attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuy,on:{click:function(){var r=SH.buy(a.state,w.id);if(r.ok){a.commit(r.state);U.toast(R.shopBought);openWeaponShop();}}}});
+   return E('div',{class:'shop-row'+(equipped?' is-equipped':'')+(owned||can?'':' is-short'),attrs:{'data-weapon':w.id}},[
+    E('span',{class:'shop-icon',text:w.icon}),
+    E('div',{class:'shop-info'},[E('strong',{class:'shop-name',rich:w.name}),E('span',{class:'shop-power',rich:R.shopPower.replace('{n}',st.damage)}),
+     owned?null:E('span',{class:'shop-price'},[st.price?U.fmt(st.price)+' G':E('span',{rich:R.shopFree})])]),
+    action
+   ]);
+  }));
+  var body=E('div',{class:'shop-body'},[E('p',{class:'shop-gold'},[E('span',{rich:R.shopGold}),E('strong',{text:U.fmt(SH.gold(s))+' G'})]),list,E('p',{class:'shop-note',rich:R.shopNote})]);
+  closeShop=U.modal({title:R.facWeapon,body:body,buttons:[{label:U.T('back'),class:'ghost'}]});
+ }
  function facilityGrid(){
   return E('nav',{class:'facility-grid',attrs:{'aria-label':R.facilities}},FACILITIES.map(function(f){
    return E('button',{class:'facility-btn'+(f.open?'':' is-soon'),attrs:{type:'button','data-facility':f.id,'aria-label':U.plain(f.name)+(f.open?'':'（'+U.plain(R.facSoon)+'）')},on:{click:function(){

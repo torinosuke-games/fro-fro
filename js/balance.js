@@ -162,6 +162,17 @@
 
     // ---- 戦闘（v0.3 その2、SPEC_v0.3_battle 第1章、DESIGN 13.4・13.5） ----
     // 敵の HP ＝ 勝つのに必要な正解の数 × DAMAGE_PER_CORRECT。攻撃力 ＝ 隊長の HP ÷ 負けるまでのまちがいの回数（切り上げ）。
+    // 武器（武器屋。判断330）：damage ＝ 正解1問で敵に与えるダメージ、price ＝ ゴールド。木の剣は、はじめから持っている（BATTLE.DAMAGE_PER_CORRECT と同じ）。
+    // 値段は、ゴールドの入手のしくみが決まったら、調整する
+    WEAPONS: {
+      wood_sword: { damage: 10, price: 0 },
+      stone_sword: { damage: 12, price: 100 },
+      iron_sword: { damage: 15, price: 300 },
+      steel_sword: { damage: 18, price: 800 },
+      flame_sword: { damage: 22, price: 2000 }
+    },
+    DEFAULT_WEAPON: 'wood_sword',
+
     BATTLE: {
       PLAYER_HP: 100,                // 隊長の HP（挑戦のたびに満タンから）
       DAMAGE_PER_CORRECT: 10,        // 正解1問で敵に与えるダメージ（選択問題・書き問題とも同じ）

@@ -116,7 +116,8 @@
     var bat = Object.assign({}, battle);
     var wrong = att.wrong, dealt = 0, taken = 0;
     if (judged.correct) {
-      dealt = Math.min(bat.enemyHp, bt.DAMAGE_PER_CORRECT);
+      // 装備中の武器のダメージ（武器がなければ、これまでと同じ DAMAGE_PER_CORRECT。判断330）
+      dealt = Math.min(bat.enemyHp, FF.shop && FF.shop.damagePerCorrect ? FF.shop.damagePerCorrect(state, b) : bt.DAMAGE_PER_CORRECT);
       bat.enemyHp -= dealt;
     } else {
       wrong += 1;
