@@ -141,11 +141,20 @@ body:has(.adv-quiz-dialog[open]){overflow:hidden}
 .is-walking .adv-walk-leg-right{animation:adv-walk-step .6s ease-in-out -.3s infinite}
 @keyframes adv-walk-step{0%,100%{transform:rotate(-7deg) translateY(-1px)}50%{transform:rotate(7deg) translateY(1px)}}
 @keyframes adv-walk-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
-.adv-battle-screen.is-hurt{animation:adv-party-shake .4s linear}
-@keyframes adv-party-shake{0%,100%{transform:translate(0)}15%,55%{transform:translate(-6px,2px)}35%,75%{transform:translate(6px,-2px)}}
+.adv-rpg-shell.is-hurt{animation:adv-party-shake .55s linear}
+@keyframes adv-party-shake{0%,100%{transform:translate(0)}15%,55%{transform:translate(-10px,3px)}35%,75%{transform:translate(10px,-3px)}}
 .adv-status{position:relative}.adv-status.is-damaged{animation:adv-status-hurt .45s ease-out}
 @keyframes adv-status-hurt{0%,50%{background:#9b334a}100%{background:#111b2b}}
 .adv-party-damage{position:absolute;right:5px;top:5px;color:#ffd4d4;font-size:20px;font-weight:800;animation:adv-damage .65s ease-out both;z-index:2}
 .adv-action-banner,.adv-turn-bonus{text-align:center;color:#fff;margin:12px;font-weight:700;text-shadow:0 2px 3px #102039}
 .adv-turn-bonus{font-size:12px}
-@media(prefers-reduced-motion:reduce){.is-walking .adv-walk-part,.adv-battle-screen.is-hurt,.adv-status.is-damaged,.adv-party-damage{animation:none}}
+@media(prefers-reduced-motion:reduce){.is-walking .adv-walk-part,.adv-rpg-shell.is-hurt,.adv-status.is-damaged,.adv-party-damage{animation:none}}
+
+.adv-victory-panel{margin-top:12px;text-align:left}.adv-victory-panel .adv-command-menu{justify-content:center;color:#fff1a5}.adv-victory-panel .adv-reward{font-size:17px}.adv-victory-panel .adv-levelups{font-size:13px}.adv-victory-panel .adv-button{margin-top:10px}
+.adv-loot{display:flex;align-items:center;gap:12px;margin:12px 0;padding:10px;border:1px solid #dcb45b;border-radius:8px;background:#594d252f;color:#fff1b0;font-size:13px}.adv-loot p{margin:6px 0 0}.adv-loot-chest{width:88px;flex-shrink:0;overflow:visible}.adv-loot-lid{transform-origin:60px 45px;animation:adv-chest-open .8s .15s ease-out both}.adv-loot-sparkle{animation:adv-chest-sparkle 1s .45s ease-out both}
+@keyframes adv-chest-open{from{transform:translateY(0) rotate(0)}to{transform:translateY(-15px) rotate(-12deg)}}
+@keyframes adv-chest-sparkle{0%{opacity:0;transform:translateY(15px)}55%{opacity:1}100%{opacity:1;transform:translateY(-8px)}}
+.adv-victory-panel.after-hit{animation:adv-victory-reveal .3s .48s both}
+@keyframes adv-victory-reveal{from{opacity:0}to{opacity:1}}
+@media(max-width:600px){.adv-rpg-shell .adv-victory-panel{grid-template-columns:1fr;gap:6px}.adv-victory-panel .adv-command-menu{padding:10px;border-bottom:1px solid #fff8;border-right:0}.adv-loot-chest{width:66px}.adv-loot{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.adv-victory-panel.after-hit,.adv-loot-lid,.adv-loot-sparkle{animation:none}.adv-loot-lid{transform:translateY(-15px) rotate(-12deg)}}

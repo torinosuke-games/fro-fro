@@ -80,5 +80,19 @@
     crop.setAttribute('viewBox',boxes[id]);crop.setAttribute('overflow','hidden');
     var img=document.createElementNS(svg.namespaceURI,'image');img.setAttribute('href','img/adventure/snow-enemies.png');img.setAttribute('width','1536');img.setAttribute('height','1024');crop.appendChild(img);svg.appendChild(crop);return svg;
   }
-  FF.adventureScene={background:'img/adventure/snow-world.png',world:world,traveler:traveler,enemy:enemy,tile:S};
+  function chest() {
+    var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns,'svg');
+    svg.setAttribute('viewBox','0 0 120 100');svg.setAttribute('class','adv-loot-chest');svg.setAttribute('aria-hidden','true');
+    function shape(tag,attrs,parent) {var node=document.createElementNS(ns,tag);Object.keys(attrs).forEach(function(k){node.setAttribute(k,attrs[k]);});(parent||svg).appendChild(node);return node;}
+    shape('ellipse',{cx:60,cy:88,rx:49,ry:8,fill:'#0005'});
+    shape('path',{d:'M20 45 L98 45 L91 85 L27 85 Z',fill:'#795039',stroke:'#f0bd55','stroke-width':4});
+    shape('path',{d:'M32 46 L36 84 M84 46 L80 84',stroke:'#f4c766','stroke-width':7});
+    shape('rect',{x:51,y:52,width:18,height:18,rx:3,fill:'#ffd478'});
+    var lid=shape('g',{class:'adv-loot-lid'});
+    shape('path',{d:'M20 45 L25 15 Q60 0 95 15 L98 45 Z',fill:'#986847',stroke:'#f0bd55','stroke-width':4},lid);
+    shape('path',{d:'M34 12 L32 43 M85 12 L87 43',stroke:'#f4c766','stroke-width':7},lid);
+    shape('path',{class:'adv-loot-sparkle',d:'M60 15 L64 27 L76 31 L64 35 L60 47 L56 35 L44 31 L56 27 Z',fill:'#fff5b4'});
+    return svg;
+  }
+  FF.adventureScene={background:'img/adventure/snow-world.png',world:world,traveler:traveler,enemy:enemy,chest:chest,tile:S};
 })(this);

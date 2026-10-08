@@ -176,10 +176,14 @@
     return n;
   }
   function log(b, key, who, amount) { b.log.push({ key: key, who: who, amount: amount }); }
-  function victory(n) {
+  function victory(n, rng) {
     var b = n.battle, e = B.ENEMIES[b.enemy];
     b.phase = 'win'; b.reward = { xp: e.xp, gold: e.gold, levels: [] };
     n.gold += e.gold;
+    if (typeof rng === 'function' && rng() < B.DROP_RATE) {
+      b.reward.chest = { gold: B.DROP_GOLD, potions: B.DROP_POTIONS };
+      n.gold += B.DROP_GOLD; n.potions += B.DROP_POTIONS;
+    }
     if (n.cleared.indexOf(b.enemy) < 0) n.cleared.push(b.enemy);
     n.party.forEach(function (id) {
       var r = n.roster[id], old = stats(id, r.xp); r.xp += e.xp;
@@ -191,7 +195,7 @@
       }
     });
   }
-  function attack(n, correct) {
+  function attack(n, correct, rng) {
     var b = n.battle, e = B.ENEMIES[b.enemy];
     alive(n).sort(function (a, c) { return stats(c, n.roster[c].xp).speed - stats(a, n.roster[a].xp).speed; }).forEach(function (id) {
       var o = b.orders[id], r = n.roster[id], s = stats(id, r.xp), target = o && n.roster[o.target];
@@ -212,7 +216,7 @@
       damage = Math.min(b.hp, damage); b.hp -= damage;
       log(b, 'hit', id, damage);
     });
-    if (b.hp <= 0) victory(n); else b.phase = 'playerAction';
+    if (b.hp <= 0) victory(n, rng); else b.phase = 'playerAction';
   }
   function defend(n, correct) {
     var b = n.battle, e = B.ENEMIES[b.enemy], plan = intent(n);
@@ -242,7 +246,7 @@
   function advance(p, bank, grade, rng, now) {
     if (!p.battle) return p;
     var n = clone(p), b = n.battle;
-    if (b.phase === 'explanation') { attack(n, b.correct); }
+    if (b.phase === 'explanation') { attack(n, b.correct, rng); }
     else if (b.phase === 'playerAction') { b.log = []; defend(n, b.correct); }
     else if (b.phase === 'enemyAction') { b.phase = 'commands'; b.turn++; b.orders = {}; b.log = []; b.question = null; }
     else if (b.phase === 'win') { n.battle = null; n.notice = b.enemy === 'boss' ? 'passOpen' : 'victory'; }

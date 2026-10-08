@@ -142,6 +142,18 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     p.recent.push(q.id); assert.notEqual(A.pick(bank, p, 4, rng, now).id, q.id);
     p.subject = 'unknown'; assert.equal(A.pick(bank, p, 4, rng, now), null);
   });
+  test('冒険：勝利時の宝箱は確率境界を守り、報酬を一度だけ保存する', () => {
+    let p=atEnemy('cub');p.battle.hp=1;p=A.command(p,orders(p),bank,4,rng,now);p=A.answer(p,p.battle.question.answer,now);
+    const before=JSON.stringify(p), drop=A.advance(p,bank,4,()=>0,now), none=A.advance(p,bank,4,()=>B.DROP_RATE,now);
+    assert.equal(JSON.stringify(p),before);assert.equal(none.battle.reward.chest,undefined);
+    assert.equal(drop.battle.phase,'win');assert.equal(drop.gold,B.ENEMIES.cub.gold+B.DROP_GOLD);assert.equal(drop.potions,B.POTIONS+B.DROP_POTIONS);
+    assert.deepEqual(plain(A.normalize(drop)),plain(drop));
+    const state=FF.state.createDefaultState(now);state.adventure=drop;
+    const restored=FF.state.parseSave(FF.state.serialize(state),now);assert.ok(restored.ok);
+    assert.deepEqual(plain(restored.state.adventure.battle.reward.chest),{gold:B.DROP_GOLD,potions:B.DROP_POTIONS});
+    const cleared=A.advance(restored.state.adventure);assert.equal(cleared.gold,drop.gold);assert.equal(cleared.potions,drop.potions);
+    assert.strictEqual(A.advance(cleared),cleared);
+  });
   test('冒険：旧戦闘の移行はすでに終わった攻撃を繰り返さない', () => {
     let p = atEnemy('wolf'); p.battle.phase='attackResult'; delete p.battle.flowVersion; p.battle.hp=100;
     const n=A.normalize(p); assert.equal(n.battle.phase,'playerAction'); assert.equal(A.advance(n).battle.hp,100);

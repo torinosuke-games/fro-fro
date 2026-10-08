@@ -64,16 +64,40 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
   await page.screenshot({path:out+'/attack-phone.png',fullPage:true});
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='enemyAction');
-  assert.ok(await page.locator('.adv-battle-screen').evaluate(el=>el.getAnimations().some(a=>a.animationName==='adv-party-shake')));
+  assert.ok(await page.locator('.adv-rpg-shell').evaluate(el=>el.getAnimations().some(a=>a.animationName==='adv-party-shake')));
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0);assert.equal(await page.locator('.adv-status.is-damaged').count(),1);
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.answered),1);
   await page.screenshot({path:out+'/retaliation-phone.png',fullPage:true});
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='commands');
+  // A second retaliation must start a new animation, not reuse an ended one.
+  await page.evaluate(()=>{const p=FF.util.clone(FF.app.state.adventure);p.battle.hp=95;FF.app.commit(Object.assign({},FF.app.state,{adventure:p}));});
+  await page.getByRole('button',{name:'クイズで行動する',exact:true}).click();await page.locator('.adv-quiz-dialog[open]').waitFor();
+  const wrongIndex=await page.evaluate(()=>FF.app.state.adventure.battle.choices.findIndex(c=>c!==FF.app.state.adventure.battle.question.answer));
+  await page.locator('.adv-answer').nth(wrongIndex).click();await page.getByRole('button',{name:'戦闘へ戻る',exact:true}).click();
+  await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='enemyAction');
+  const shake=await page.locator('.adv-rpg-shell').evaluate(el=>{
+    const a=el.getAnimations().find(a=>a.animationName==='adv-party-shake');if(!a)return null;
+    const time=a.currentTime;a.pause();a.currentTime=0;const origin=el.getBoundingClientRect().left;a.currentTime=82.5;const shifted=el.getBoundingClientRect().left;a.currentTime=time;a.play();return {time,delta:shifted-origin};
+  });
+  assert.ok(shake&&shake.time<500&&Math.abs(shake.delta)>5,'Second hit visibly moves the battlefield');
+  assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
+  await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='commands');
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.getByRole('button',{name:'クイズで行動する',exact:true}).click();await page.locator('.adv-quiz-dialog[open]').waitFor();
   const index=await page.evaluate(()=>FF.app.state.adventure.battle.choices.indexOf(FF.app.state.adventure.battle.question.answer));await page.locator('.adv-answer').nth(index).click();
+  await page.evaluate(()=>{Math.random=()=>0;});
   await page.getByRole('button',{name:'戦闘へ戻る',exact:true}).click();
   assert.equal(await page.locator('.adv-enemy-art').evaluate(el=>getComputedStyle(el).animationName),'none');
-  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',frames:walking.length,checks:'continuous camera, moving feet, cancellation, dialog focus, long diagrams at four widths, explanation before damage, two blinks, automatic retaliation and screen shake, one question per turn, reduced motion',screenshots:out},null,2));
+  assert.equal(await page.evaluate(()=>FF.app.state.adventure.battle.phase),'win');
+  assert.equal(await page.locator('.adv-quiz-dialog').count(),0,'Victory is inline, not a popup');
+  assert.ok(await page.locator('.adv-command-panel.adv-result.win').isVisible());
+  assert.ok(await page.locator('.adv-loot-chest').isVisible());
+  assert.equal(await page.evaluate(()=>FF.app.state.adventure.gold),27);
+  assert.equal(await page.evaluate(()=>FF.app.state.adventure.potions),4);
+  await page.screenshot({path:out+'/victory-chest-phone.png',fullPage:true});
+  for(const width of [360,768,1440]) {await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
+  await page.getByRole('button',{name:'旅をつづける',exact:true}).click();
+  assert.equal(await page.evaluate(()=>FF.app.state.adventure.gold),27,'Treasure is credited exactly once');
+  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',frames:walking.length,checks:'continuous camera, moving feet, cancellation, dialog focus, long diagrams at four widths, explanation before damage, two blinks, automatic retaliation and repeated visible screen shake, inline victory and treasure, one question per turn, reduced motion',screenshots:out},null,2));
  } finally {await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1);});

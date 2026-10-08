@@ -267,10 +267,7 @@
     dialog.appendChild(E('header', { class: 'adv-dialog-header' }, [heading, btn(C.viewBattle, function() { dialog.close(); }, 'quiet')]));
     dialog.appendChild(questionPanel());
     var footer = E('footer', { class: 'adv-dialog-footer' });
-    if (b.phase === 'win') {
-      var reward = b.reward;
-      footer.appendChild(E('section', { class: 'adv-result win' }, [text('h2','',T.victory), E('div',{class:'adv-reward',text:'+'+reward.xp+' EXP / 人　 +'+reward.gold+' G'}), E('div',{class:'adv-levelups'},reward.levels.map(function(r){return text('p','','✦ '+name(r.id)+' Lv.'+r.level+'　'+T.levelUp);})), btn(T.field,advance,'gold')]));
-    } else if (b.phase === 'lose') footer.appendChild(E('section',{class:'adv-result'},[text('h2','',T.defeat),text('p','',T.defeatHelp),btn('町で休む',advance,'gold')]));
+    if (b.phase === 'lose') footer.appendChild(E('section',{class:'adv-result'},[text('h2','',T.defeat),text('p','',T.defeatHelp),btn('町で休む',advance,'gold')]));
     else if (!active) footer.appendChild(btn(T.returnBattle,advance,'gold adv-next'));
     if (!active) dialog.appendChild(footer);
     var opener = btn(active ? C.answerQuiz : C.reviewQuiz,function(){dialog.showModal();heading.focus({preventScroll:true});},'gold adv-open-quiz');
@@ -284,13 +281,29 @@
     var old = p(), next = A.advance(old, FF.app.bank, grade(), Math.random, FF.app.now());
     if (next === old) { U.toast(T.noQuestion); return; } change(next);
   }
+  function victoryPanel(damage) {
+    var reward = p().battle.reward;
+    var panel = E('section', {class:'adv-command-panel adv-victory-panel adv-result win', attrs:{'aria-label':T.victory,'aria-live':'polite'}});
+    var menu = E('div',{class:'adv-command-menu'},[text('strong','',T.victory)]);
+    var dialogue = E('div',{class:'adv-command-dialogue'},[
+      E('p',{class:'adv-reward',text:'+' + reward.xp + ' EXP / 人　 +' + reward.gold + ' G'}),
+      E('div',{class:'adv-levelups'},reward.levels.map(function(r){return text('p','','✦ ' + name(r.id) + ' Lv.' + r.level + '　' + T.levelUp);} ))
+    ]);
+    if (reward.chest) dialogue.appendChild(E('div',{class:'adv-loot'},[
+      scene.chest(), E('div',{},[text('strong','',T.treasureFound),text('p','',T.treasureContents.replace('{gold}',reward.chest.gold).replace('{potions}',reward.chest.potions))])
+    ]));
+    dialogue.appendChild(btn(T.field,advance,'gold'));
+    panel.appendChild(menu);panel.appendChild(dialogue);
+    // Let the final hit play before revealing the victory and chest.
+    if (damage && !root.matchMedia('(prefers-reduced-motion: reduce)').matches) panel.classList.add('after-hit');
+    return panel;
+  }
   function renderBattle(main) {
     var n = p(), b = n.battle, d = T.enemies[b.enemy], done = b.phase === 'win' || b.phase === 'lose', damage = impact, hurt = Object.keys(received).length; impact = 0;
     main.classList.add('adv-battle-screen');
-    if (Object.keys(received).length) main.classList.add('is-hurt');
     if (b.phase === 'commands') prepareOrders();
     header(main, C.region, T.scenery.turn + ' ' + b.turn + ' · ' + d.rank);
-    var shell = E('div', { class: 'adv-rpg-shell' + (entering ? ' encounter' : '') }); entering = false; main.appendChild(shell); main = shell;
+    var shell = E('div', { class: 'adv-rpg-shell' + (hurt ? ' is-hurt' : '') + (entering ? ' encounter' : '') }); entering = false; main.appendChild(shell); main = shell;
     main.appendChild(battleStats());
     received = {};
     var stage = E('section', { class: 'adv-battle-stage ' + b.enemy, attrs: { 'aria-label': d.name } }, [
@@ -300,6 +313,7 @@
     ]);
     main.appendChild(stage);
     if (b.phase === 'commands') main.appendChild(commandPanel());
+    else if (b.phase === 'win') main.appendChild(victoryPanel(damage));
     else if (b.phase === 'playerAction' || b.phase === 'enemyAction') {
       main.appendChild(text('p','adv-action-banner',b.phase === 'playerAction' ? T.playerAction : T.enemyAction));
       main.appendChild(text('p','adv-turn-bonus',b.correct ? T.quizBonus : T.quizNormal));
@@ -309,7 +323,7 @@
     if (b.log.length) main.appendChild(E('ol', { class: 'adv-battle-log', attrs: { 'aria-label': '戦闘の記録', 'aria-live': 'polite' } }, b.log.slice(-4).map(function(line) { return text('li','',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)); })));
   }
 
-  U.screens.adventure = { render: function (main) { ensure(); main.classList.add('adventure-screen'); if (p().battle) renderBattle(main); else renderField(main); } };
+  U.screens.adventure = { render: function (main) { ensure(); main.classList.remove('adv-field-screen','adv-battle-screen','is-hurt'); main.classList.add('adventure-screen'); if (p().battle) renderBattle(main); else renderField(main); } };
   U.screens.adventureParty = { render: renderParty };
   root.document.addEventListener('keydown', function (e) {
     if (FF.app.screen !== 'adventure' || p().battle || /INPUT|SELECT|TEXTAREA|BUTTON/.test(e.target.tagName)) return;
