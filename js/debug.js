@@ -166,6 +166,17 @@
       U.toast('実力診断を未受験に戻した');
     }
 
+    // ---- ゴールドと武器（判断330。テスト用） ----
+    main.appendChild(U.el('div', { class: 'panel stack' }, [
+      U.el('h3', { text: 'ゴールド・武器（テスト用）' }),
+      U.el('div', { class: 'small muted', text: 'ゴールドの入手のしくみは、まだない。武器屋（町の画面の施設）の確認用に、ここで足せる。' }),
+      U.el('div', { class: 'grid2' }, [
+        U.el('button', { class: 'btn small', text: '+500 G', on: { click: function () { app.commit(FF.shop.addGold(app.state, 500)); U.toast('ゴールドを足した'); } } }),
+        U.el('button', { class: 'btn small', text: '+5,000 G', on: { click: function () { app.commit(FF.shop.addGold(app.state, 5000)); U.toast('ゴールドを足した'); } } }),
+        U.el('button', { class: 'btn small', text: 'ゴールドと武器をはじめに戻す', on: { click: function () { var s = FF.util.clone(app.state); s.gold = 0; s.equipment = { weapon: FF.balance.DEFAULT_WEAPON, owned: [FF.balance.DEFAULT_WEAPON] }; app.commit(s); U.toast('はじめに戻した'); } } })
+      ])
+    ]));
+
     // ---- 探索（v0.2） ----
     main.appendChild(U.el('div', { class: 'panel stack' }, [
       U.el('h3', { text: '探索（テスト用）' }),

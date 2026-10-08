@@ -60,6 +60,9 @@
       studyPoints: 0,
       studyPointsEarnedTotal: 0,
       redeemHistory: [],
+      // ゴールド（武器屋などで使うお金。判断330。入手のしくみは、これから決める）と、装備（持っている武器・装備中の武器）
+      gold: 0,
+      equipment: { weapon: b.DEFAULT_WEAPON, owned: [b.DEFAULT_WEAPON] },
       // themeMode：いつも 'day'（判断176。前のセーブの 'night'・'auto' も読み込み時に 'day' に直す）
       // pointsPerHour：交換レート（この pt で1時間。SPEC 14.4）
       settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE, sound: true, soundStyle: 'bright', speech: true, speechRate: 'normal', pointsPerHour: b.STUDY_POINTS.PER_HOUR_DEFAULT },
@@ -152,6 +155,8 @@
     if (FF.exploration && FF.exploration.normalizeExploration) state = FF.exploration.normalizeExploration(state);
     // 勉強量ポイントの整合（残高・累計は 0 以上の整数、形のおかしい引換券の履歴を捨てる、交換レートの範囲）
     if (FF.points && FF.points.normalizePoints) state = FF.points.normalizePoints(state);
+    // ゴールドと装備の整合（0 以上の整数、知らない武器を捨てる、木の剣は必ず持つ、装備中の武器は持っているもの。saveVersion は上げない）
+    if (FF.shop && FF.shop.normalizeShop) state = FF.shop.normalizeShop(state);
     state.player.name = util.normalizeName(state.player.name, cfg);
     // 学年（1〜9 の整数）と主人公の絵（AVATARS のどれか）。それ以外は未設定（null）に（判断198。saveVersion は上げない）
     state.player.grade = normalizeGrade(state.player.grade);
