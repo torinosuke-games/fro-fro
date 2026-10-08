@@ -249,4 +249,39 @@ module.exports = ({ test, FF, assert, plain }) => {
     FF.storage.clear(store);
     assert.strictEqual(FF.storage.load(T0,store).status,'new');
   });
+  test('保存：壊れた本体・欠落した本体は正常な控えから資材と熱量を含めて復元する', () => {
+    for (const corrupt of ['{broken',null]) {
+      const ls=fakeStorage(),state=sampleState();FF.storage.save(state,ls);
+      if(corrupt===null)ls.removeItem(FF.config.SAVE_KEY);else ls.setItem(FF.config.SAVE_KEY,corrupt);
+      const loaded=FF.storage.load(T0+1000,ls);assert.equal(loaded.status,'recovered');assert.deepEqual(plain(loaded.state),plain(state));
+      if(corrupt!==null)assert.equal(ls.getItem(FF.config.SAVE_KEY+'.broken'),corrupt);
+    }
+  });
+  test('保存：初期状態で上書きされた後も以前の進行を控えから選べる。時刻だけの保存で控えは消えない', () => {
+    const ls=fakeStorage(),state=sampleState();FF.storage.save(state,ls);
+    let empty=S.createDefaultState(T0+1000);FF.storage.save(empty,ls);
+    for(let i=0;i<20;i++){empty=S.withUpdated(empty,T0+2000+i);empty.tickets.lastRecoveredAt=T0+i;FF.storage.save(empty,ls);}
+    const choices=FF.storage.loadRecovery(T0+4000,ls);assert.ok(choices.some(c=>c.state.resources.wood===321&&c.state.studyPoints===1234));
+    assert.equal(JSON.parse(ls.getItem(FF.config.SAVE_KEY+'.history')).length,1);
+    for(let i=0;i<20;i++){empty.resources.wood=i+1;FF.storage.save(empty,ls);}assert.equal(JSON.parse(ls.getItem(FF.config.SAVE_KEY+'.history')).length,8);
+  });
+  test('保存：控えの書き込み失敗で本体の成功を取り消さない。本体失敗で以前の控えを壊さない', () => {
+    const ls=fakeStorage(),state=sampleState(),original=ls.setItem;
+    ls.setItem=(key,value)=>{if(key.endsWith('.lastGood'))throw new Error('quota');original(key,value);};
+    assert.equal(FF.storage.save(state,ls),true);assert.equal(FF.storage.load(T0,ls).state.resources.wood,321);
+    ls.setItem=original;FF.storage.save(state,ls);const old=ls.getItem(FF.config.SAVE_KEY+'.lastGood');
+    ls.setItem=(key,value)=>{if(key===FF.config.SAVE_KEY)throw new Error('quota');original(key,value);};
+    assert.equal(FF.storage.save(S.createDefaultState(T0),ls),false);assert.equal(ls.getItem(FF.config.SAVE_KEY+'.lastGood'),old);
+  });
+  test('保存：読めない保存先を新規と判定せず、未来版を古い控えで置き換えない', () => {
+    assert.equal(FF.storage.load(T0,{getItem(){throw new Error('denied');}}).status,'error');
+    const ls=fakeStorage();FF.storage.save(sampleState(),ls);
+    const future=sampleState();future.saveVersion=FF.config.SAVE_VERSION+1;ls.setItem(FF.config.SAVE_KEY,S.serialize(future));
+    assert.equal(FF.storage.load(T0,ls).status,'error');assert.equal(JSON.parse(ls.getItem(FF.config.SAVE_KEY)).saveVersion,future.saveVersion);
+  });
+  test('保存：明示的なリセットは控えも消し、同期の控えを勝手に自動復元しない', () => {
+    const ls=fakeStorage();FF.storage.save(sampleState(),ls);FF.storage.save(S.createDefaultState(T0),ls);
+    FF.storage.clear(ls);assert.equal(FF.storage.load(T0,ls).status,'new');assert.equal(FF.storage.loadRecovery(T0,ls).length,0);
+    FF.storage.saveSyncBackup(S.serialize(sampleState()),ls);assert.equal(FF.storage.load(T0,ls).status,'new');assert.equal(FF.storage.loadRecovery(T0,ls).length,1);
+  });
 };
