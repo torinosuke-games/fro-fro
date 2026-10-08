@@ -17,6 +17,7 @@
     theme: 'day',            // いま画面に使っているテーマ（いつも 'day'。判断176）
     leaveGuard: null,
     saveWarned: false,
+    saveBlocked: false,
 
     now: function () { return FF.clock.now(); },
 
@@ -24,12 +25,13 @@
     commit: function (s) {
       app.state = FF.state.withUpdated(s, app.now());
       app.save();
+      if (app.scheduleSync) app.scheduleSync();
       if (FF.syncApp) FF.syncApp.collect(app.state);   // 新しい回答の履歴を、サーバーへ送る箱に入れる（同期がオンのときだけ）
       U.renderHud();
     },
 
     save: function () {
-      if (!app.state) return;
+      if (!app.state || app.saveBlocked) return;
       if (!FF.storage.save(app.state) && !app.saveWarned) {
         app.saveWarned = true;
         U.toast(U.T('saveError'));
@@ -44,6 +46,7 @@
     },
 
     resetAll: function () {
+      app.saveBlocked = false;
       FF.storage.clear();
       FF.storage.clearGuardians();   // 保護者の記録のために保存したコードも消す
       FF.storage.clearSync();   // 全データのリセットでは、同期もオフにする（空のデータで保管庫を上書きしないため。保管庫のデータは残る）
@@ -83,7 +86,7 @@
   // ---- データの保存（サーバー同期。判断299）：オンにしたときだけ、裏で動く。通信できなくても遊びは止まらない ----
   function setupSync() {
     if (typeof root.fetch !== 'function' || !FF.config.SYNC) return;
-    app.syncBusyUi = function () { return !!(app.session || app.examRun || app.exploreSession || app.screen === 'quiz' || app.screen === 'battle'); };
+    app.syncBusyUi = function () { return !!(app.session || app.examRun || app.exploreSession || app.screen === 'quiz' || app.screen === 'battle' || app.screen === 'adventure' || app.screen === 'adventureParty'); };
     FF.syncApp = FF.sync.createEngine({
       fetch: root.fetch.bind(root), cfg: FF.config.SYNC, balance: FF.balance.SYNC,
       now: function () { return app.now(); },
@@ -100,6 +103,7 @@
       getState: function () { return app.state; },
       applyRemote: function (st) {
         st.tickets = FF.tickets.recoverTickets(st.tickets, app.now());
+        app.saveBlocked = false;
         app.state = st;
         FF.storage.save(app.state);   // commit は使わない（更新時刻をいまにしない）
         app.session = null; app.studySel = null; app.examRun = null; app.exploreSession = null; app.leaveGuard = null;
@@ -108,14 +112,21 @@
         U.toast(U.T('imported'));
       },
       decideConflict: function (info) { return U.askSyncConflict(info); },
+      canPush: function () { return !app.saveBlocked; },
       canInterrupt: function () { return !app.syncBusyUi(); }
     });
     // timer のときは、前回の同期から変わっていなければ通信しない（変更があったときだけ送る。SPEC_sync.md 5章）
     function auto(force, timer) {
+      if (app.saveBlocked) return;
       var rec = FF.syncApp.record();
       if (timer && rec.rev !== null && app.state.updatedAt === rec.pushedAt && !FF.syncApp.pending().count) return;
       FF.syncApp.sync({ force: !!force }).then(function () { if (app.screen === 'settings' && !document.querySelector('.overlay')) U.rerender(); });
     }
+    var changeTimer = null;
+    app.scheduleSync = function () {
+      if (app.saveBlocked || !FF.syncApp.record().enabled || changeTimer !== null) return;
+      changeTimer = setTimeout(function () { changeTimer = null; auto(false, true); }, FF.balance.SYNC.CHANGE_SYNC_MS);
+    };
     setTimeout(function () { auto(true); }, 2000);
     setInterval(function () { auto(false, true); }, FF.balance.SYNC.INTERVAL_MS);
     // 隠れるとき：送る。戻ってきたとき：ほかの端末の変更を受け取る
@@ -126,6 +137,7 @@
     document.title = FF.config.TITLE;
     var now = app.now();
     var loaded = FF.storage.load(now);
+    app.saveBlocked = loaded.status === 'error';
     var s = loaded.state;
     s.tickets = FF.tickets.recoverTickets(s.tickets, now);
     app.state = FF.exam.applyFuriganaAuto(s);
@@ -141,7 +153,8 @@
     }
 
     U.show(app.state.flags.introSeen ? 'base' : 'title');
-    if (loaded.status === 'error') U.modal({ body: U.T('loadError') });
+    if (loaded.status === 'error') U.modal({ body: U.T('loadError'), buttons:[{label:U.T('recoveryOpen'),class:'primary',onClick:function(){U.show('settings');}}] });
+    else if (loaded.status === 'recovered') U.toast(U.T('recoveredSave'));
     else if (loaded.status === 'migrated') U.toast(U.T('migrated'));
 
     // アプリを閉じていた間に終わった工事

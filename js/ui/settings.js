@@ -169,21 +169,38 @@
     // データの保存（サーバー同期。判断299）：設定で有効にしたときと、デバッグモードのときだけ
     if (U.syncAvailable && U.syncAvailable()) main.appendChild(U.syncPanel());
 
+    var checkpoints=FF.storage.loadRecovery(app.now());
+    if (checkpoints.length) main.appendChild(U.el('section',{class:'panel stack save-recovery'},[
+      U.R('h3','',U.T('recoveryTitle')),U.R('p','small',U.T('recoveryHelp')),
+      U.el('div',{class:'stack'},checkpoints.map(function(item){
+        var st=item.state,r=st.resources;
+        return U.el('article',{class:'panel stack'},[
+          U.el('strong',{text:st.player.name+' · '+new Date(st.updatedAt).toLocaleString()}),
+          U.R('p','small',U.T('saveBalances'),{wood:r.wood,iron:r.iron,stone:r.stone,food:r.food,heat:st.studyPoints}),
+          U.el('button',{class:'btn small',rich:U.T('recoveryUse'),on:{click:function(){inp.value=item.text;doImport();}}})
+        ]);
+      }))
+    ]));
     // エクスポート
     var out = U.el('textarea', { attrs: { readonly: true, 'aria-label': FF.util.plainText(U.T('exportTitle')) }, value: FF.state.serialize(app.state) });
     main.appendChild(U.el('div', { class: 'panel stack' }, [
       U.R('h3', '', U.T('exportTitle')),
       U.R('div', 'small muted', U.T('exportHelp')),
       out,
-      U.el('button', { class: 'btn small', rich: U.T('copy'), on: { click: function () { copyText(out); } } })
+      U.el('button', { class: 'btn small', rich: U.T('copy'), on: { click: function () { copyText(out); } } }),
+      U.el('button',{class:'btn small',rich:U.T('downloadSave'),on:{click:function(){
+        var url=URL.createObjectURL(new Blob([FF.state.serialize(app.state)],{type:'application/json'})),link=U.el('a',{attrs:{href:url,download:'frozen-frontier-'+app.now()+'.json'}});
+        document.body.appendChild(link);link.click();link.remove();root.setTimeout(function(){URL.revokeObjectURL(url);},1000);
+      }}})
     ]));
 
     // インポート
+    var file=U.el('input',{attrs:{type:'file',accept:'.json,application/json','aria-label':U.plain(U.T('uploadSave'))},on:{change:function(){if(!file.files[0])return;var reader=new FileReader();reader.onload=function(){inp.value=String(reader.result);doImport();};reader.onerror=function(){U.modal({body:U.T('copyFailed')});};reader.readAsText(file.files[0]);}}});
     var inp = U.el('textarea', { attrs: { 'aria-label': FF.util.plainText(U.T('importTitle')) } });
     main.appendChild(U.el('div', { class: 'panel stack' }, [
       U.R('h3', '', U.T('importTitle')),
       U.R('div', 'small muted', U.T('importHelp')),
-      inp,
+      inp, file,
       U.el('button', { class: 'btn small', rich: U.T('importBtn'), on: { click: doImport } })
     ]));
     function doImport() {
@@ -199,6 +216,7 @@
               st.tickets = FF.tickets.recoverTickets(st.tickets, app.now());
               app.session = null;
               app.studySel = null;
+              app.saveBlocked = false;
               app.commit(st);
               U.toast(U.T('imported'));
               U.show(st.flags.introSeen ? 'base' : 'title');

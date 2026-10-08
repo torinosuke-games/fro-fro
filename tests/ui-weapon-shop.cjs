@@ -1,4 +1,4 @@
-// 武器屋（判断330）：file:// で、実際の画面を確かめる
+// 武器屋（判断340）：file:// で、実際の画面を確かめる
 const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');
 const assert=require('node:assert/strict'),path=require('node:path'),{pathToFileURL}=require('node:url');
 (async()=>{

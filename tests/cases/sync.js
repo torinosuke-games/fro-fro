@@ -57,6 +57,7 @@ module.exports = ({ test, FF, assert, plain }) => {
       getState: () => dev.state,
       applyRemote: st => { dev.state = st; dev.applied.push(st); },
       decideConflict: info => { dev.asked.push(info); return Promise.resolve(dev.choice); },
+      canPush: () => dev.pushAllowed !== false,
       canInterrupt: () => dev.interruptible
     });
     // 回答を n 件ぶん、履歴に足す（learning.history と同じ形）
@@ -79,6 +80,20 @@ module.exports = ({ test, FF, assert, plain }) => {
     return dev;
   }
 
+  test('同期：プレイヤーコードで名前だけでなく全資材・熱量・建物を復元し、比較画面の数値も一致する', async () => {
+    const srv=makeServer(),a=makeDevice(srv,'A'),b=makeDevice(srv,'B');
+    a.state.player.name='ユキ';a.state.resources={wood:321,iron:42,stone:87,food:63};a.state.studyPoints=1234;a.state.studyPointsEarnedTotal=2345;a.state.buildings.furnace.level=3;
+    const code=(await a.engine.enable()).code;assert.equal((await a.engine.sync()).status,'pushed');
+    await b.engine.link(code);b.choice='remote';assert.equal((await b.engine.sync()).status,'conflict-remote');
+    assert.equal(b.state.player.name,'ユキ');assert.deepEqual(plain(b.state.resources),plain(a.state.resources));assert.equal(b.state.studyPoints,1234);assert.equal(b.state.buildings.furnace.level,3);
+    assert.equal(b.asked[0].remote.heat,1234);assert.deepEqual(plain(b.asked[0].remote.resources),plain(a.state.resources));
+  });
+  test('同期：読めない端末データの送信を拒否し、保管庫の正常なデータは復元できる', async () => {
+    const srv=makeServer(),a=makeDevice(srv,'A'),b=makeDevice(srv,'B');a.play(1234);
+    const code=(await a.engine.enable()).code;await a.engine.sync();await b.engine.link(code);b.pushAllowed=false;b.choice='local';
+    assert.equal((await b.engine.sync()).status,'error');assert.equal(Object.values(srv.profiles)[0].save.studyPoints,1234);
+    b.choice='remote';assert.equal((await b.engine.sync({force:true})).status,'conflict-remote');assert.equal(b.state.studyPoints,1234);
+  });
   test('SHA-256：既知の値と、Node の crypto が一致する（日本語・長い文字列も）', () => {
     assert.equal(S.sha256Hex('abc'), 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
     assert.equal(S.sha256Hex(''), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');

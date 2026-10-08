@@ -8,6 +8,26 @@
   var HOUR = 60 * MIN;
 
   FF.balance = {
+    // 雪原の冒険・試作。敵の強さと出題学年は独立。
+    ADVENTURE: {
+      QUIZ_ATTACK_RATE: 1.5, QUIZ_ENEMY_RATE: 0.5,
+      DROP_RATE: 0.25, DROP_GOLD: 15, DROP_POTIONS: 1,
+      MAX_LEVEL: 10, XP_STEP: 24, HP_GROWTH: 7, MP_GROWTH: 2, STAT_GROWTH: 2,
+      DEFENSE_RATE: 0.5, ARMOR_RATE: 0.45, MAGIC_COST: 3, MAGIC_POWER: 1.7,
+      HEAL: 30, POTION_HEAL: 35, POTIONS: 3, CHEST_GOLD: 30, CHEST_POTIONS: 2,
+      GUARD_RATE: 0.6, WARD_RATE: 0.7, RECENT: 12, HISTORY: 200,
+      MEMBERS: {
+        hero: { hp: 66, mp: 12, strength: 15, defense: 10, speed: 11, wisdom: 13 },
+        gan: { hp: 88, mp: 9, strength: 19, defense: 17, speed: 6, wisdom: 6 },
+        rin: { hp: 54, mp: 21, strength: 8, defense: 8, speed: 10, wisdom: 20 },
+        sora: { hp: 58, mp: 12, strength: 16, defense: 9, speed: 20, wisdom: 11 }
+      },
+      ENEMIES: {
+        cub: { hp: 95, attack: 20, defense: 4, xp: 14, gold: 12 },
+        wolf: { hp: 155, attack: 32, defense: 8, xp: 25, gold: 24 },
+        boss: { hp: 290, attack: 38, defense: 12, xp: 60, gold: 65 }
+      }
+    },
     // ---- 報酬（SPEC 8.2） ----
     BASE_REWARD: { 1: 10, 2: 15, 3: 22, 4: 32, 5: 45, 6: 62, 7: 82, 8: 110, 9: 150 },
     DIFFICULTY_MULT: { basic: 0.8, standard: 1.0, advanced: 1.3 },
@@ -76,6 +96,7 @@
     HISTORY_LIMIT: 500,
     // データの保存（サーバー同期。SPEC_sync.md・判断299）
     SYNC: {
+      CHANGE_SYNC_MS: 5000, // 変更後のバックアップ。連続操作をまとめ、60秒の定期同期も維持する。
       INTERVAL_MS: 60000,         // 変更があったとき、前回の同期からこれだけたったら送る
       TIMEOUT_MS: 10000,          // 1回の通信の待ち時間
       BACKOFF_BASE_MS: 30000,     // 失敗したあとの待ち時間（失敗のたびに2倍）
@@ -162,7 +183,7 @@
 
     // ---- 戦闘（v0.3 その2、SPEC_v0.3_battle 第1章、DESIGN 13.4・13.5） ----
     // 敵の HP ＝ 勝つのに必要な正解の数 × DAMAGE_PER_CORRECT。攻撃力 ＝ 隊長の HP ÷ 負けるまでのまちがいの回数（切り上げ）。
-    // 武器（武器屋。判断330）：damage ＝ 正解1問で敵に与えるダメージ、price ＝ ゴールド。木の剣は、はじめから持っている（BATTLE.DAMAGE_PER_CORRECT と同じ）。
+    // 武器（武器屋。判断340）：damage ＝ 正解1問で敵に与えるダメージ、price ＝ ゴールド。木の剣は、はじめから持っている（BATTLE.DAMAGE_PER_CORRECT と同じ）。
     // 値段は、ゴールドの入手のしくみが決まったら、調整する
     WEAPONS: {
       wood_sword: { damage: 10, price: 0 },

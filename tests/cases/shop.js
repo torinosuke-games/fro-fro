@@ -1,4 +1,4 @@
-// 武器屋（判断330）
+// 武器屋（判断340）
 module.exports = ({ test, FF, ctx, assert, plain }) => {
   const S = FF.shop, B = FF.balance, T0 = 1790000000000;
   const W = ['wood_sword', 'stone_sword', 'iron_sword', 'steel_sword', 'flame_sword'];

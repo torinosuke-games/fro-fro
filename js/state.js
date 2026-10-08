@@ -56,11 +56,12 @@
         questionResults: {}
       },
       exploration: defaultExploration(),
+      adventure: FF.adventure ? FF.adventure.create() : null,
       // 勉強量ポイント（SPEC 8.4・14.2）：残高・累計・引換券の履歴
       studyPoints: 0,
       studyPointsEarnedTotal: 0,
       redeemHistory: [],
-      // ゴールド（武器屋などで使うお金。判断330。入手のしくみは、これから決める）と、装備（持っている武器・装備中の武器）
+      // ゴールド（武器屋などで使うお金。判断340。入手のしくみは、これから決める）と、装備（持っている武器・装備中の武器）
       gold: 0,
       equipment: { weapon: b.DEFAULT_WEAPON, owned: [b.DEFAULT_WEAPON] },
       // themeMode：いつも 'day'（判断176。前のセーブの 'night'・'auto' も読み込み時に 'day' に直す）
@@ -157,6 +158,7 @@
     if (FF.points && FF.points.normalizePoints) state = FF.points.normalizePoints(state);
     // ゴールドと装備の整合（0 以上の整数、知らない武器を捨てる、木の剣は必ず持つ、装備中の武器は持っているもの。saveVersion は上げない）
     if (FF.shop && FF.shop.normalizeShop) state = FF.shop.normalizeShop(state);
+    if (FF.adventure) state.adventure = FF.adventure.normalize(state.adventure);
     state.player.name = util.normalizeName(state.player.name, cfg);
     // 学年（1〜9 の整数）と主人公の絵（AVATARS のどれか）。それ以外は未設定（null）に（判断198。saveVersion は上げない）
     state.player.grade = normalizeGrade(state.player.grade);
