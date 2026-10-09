@@ -209,5 +209,5 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 @keyframes adv-party-shake{0%,100%{transform:translate(0)}15%,55%{transform:translate(-8px,3px)}35%,75%{transform:translate(8px,-3px)}}
 .adv-intent:empty{display:none}
 /* 戦闘のせつめいボタン（目立たない小さなボタン。判断349） */
-.adv-command-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}.adv-command-foot .adv-command-progress{margin:0;white-space:nowrap}
+.adv-command-foot{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:8px}.adv-command-foot .adv-command-progress{margin:0;white-space:nowrap}
 .adv-howto{white-space:nowrap;font:inherit;font-size:11px;color:#b9ccdc;background:none;border:1px solid #6f8aa1;border-radius:4px;padding:3px 8px;cursor:pointer}.adv-howto-body p{line-height:1.8;margin:6px 0}

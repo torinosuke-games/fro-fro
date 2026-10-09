@@ -262,13 +262,12 @@
       }
       menu.appendChild(btn(C.goBack, function() { if (submenu.target) submenu.target = false; else submenu = null; paint(); }, 'adv-command'));
     }
-    var alive = A.alive(n), position = alive.indexOf(actor) + 1;
+    var alive = A.alive(n);
     var dialogue = E('div', { class: 'adv-command-dialogue' }, [
       text('p', 'adv-encounter-text', C.encounter.replace('{name}',T.enemies[n.battle.enemy].name)),
       text('p', 'adv-action-message adv-command-prompt', prompt),
       submenu ? text('p', 'adv-action-description', submenu.type === 'magic' ? T.members[actor].detail : C.item) : null,
       E('div', { class: 'adv-command-foot' }, [
-        text('span', 'adv-help adv-command-progress', position + ' / ' + alive.length),
         E('button', { class: 'adv-howto', rich: '？ ' + C.howtoShort, attrs: { type: 'button' }, on: { click: openHowto } })
       ])
     ]);
