@@ -283,4 +283,19 @@ module.exports = ({ test, FF, assert }) => {
       }
     }
   }
+
+  test('算数の自動生成：たし算・ひき算・かけ算・わり算の選択肢は、正解から遠すぎる外れ値を含まない（判断351）', () => {
+    const rng = FF.util.makeRng(5);
+    const ops = ['add', 'sub', 'mul', 'div', 'add3'];
+    let checked = 0;
+    for (let grade = 1; grade <= 6; grade++) for (const d of ['basic', 'standard', 'advanced']) for (let i = 0; i < 300; i++) {
+      const q = G.generate(grade, d, 'choice', rng);
+      if (!q || !q.choices || !q.id.match(new RegExp('_g\\d_(' + ops.join('|') + ')_'))) continue;
+      const n = Number(q.answer);
+      if (!Number.isFinite(n)) continue;
+      checked++;
+      for (const c of q.choices) assert.ok(Math.abs(Number(c) - n) <= Math.max(Math.abs(n) * 0.6, 12) || Math.abs(Number(c) / n - 10) < 1e-9 || Math.abs(Number(c) / n - 0.1) < 1e-9, q.question + ' / 答え ' + q.answer + ' / 選択肢 ' + q.choices.join(','));
+    }
+    assert.ok(checked > 200, 'checked ' + checked);
+  });
 };
