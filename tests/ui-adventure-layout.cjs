@@ -15,7 +15,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-battle-layout';fs.mkdirSync(out,{r
    const measure=()=>page.evaluate(()=>{
     const rect=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return [r.x,r.y+scrollY,r.width,r.height].map(n=>Math.round(n*100)/100);};
     const shell=document.querySelector('.adv-rpg-shell'),s=getComputedStyle(shell);
-    return {shell:rect('.adv-rpg-shell'),stats:rect('.adv-rpg-stats'),stage:rect('.adv-battle-stage'),panel:rect('.adv-command-panel'),menu:rect('.adv-command-menu'),dialogue:rect('.adv-command-dialogue'),background:[s.backgroundImage,s.backgroundSize,s.backgroundPosition],transform:s.transform,same:shell===sceneNode&&document.querySelector('.adv-battle-stage')===stageNode};
+    return {shell:rect('.adv-rpg-shell'),stats:rect('.adv-rpg-stats'),stage:rect('.adv-battle-stage'),panel:rect('.adv-command-panel'),menu:rect('.adv-command-menu'),dialogue:rect('.adv-command-dialogue'),background:[s.backgroundImage,s.backgroundSize,s.backgroundPosition],transform:'(揺れは判断346で戻した。配置の比較には使わない)',same:shell===sceneNode&&document.querySelector('.adv-battle-stage')===stageNode};
    });
    const baseline=await measure();
    const menuPositions=()=>page.locator('.adv-command-menu .adv-command').evaluateAll(nodes=>nodes.map(node=>{const r=node.getBoundingClientRect();return [r.x,r.y+scrollY,r.width,r.height].map(n=>Math.round(n*100)/100);}));

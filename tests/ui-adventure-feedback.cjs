@@ -108,7 +108,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
     const time=a.currentTime;a.pause();a.currentTime=0;const start=Number(getComputedStyle(el).opacity);a.currentTime=110;const dim=Number(getComputedStyle(el).opacity);a.currentTime=time;a.play();return {time,start,dim};
   });
   assert.ok(flash&&flash.time<550&&flash.start>flash.dim,'Second hit flashes without moving the frame');
-  assert.equal(await page.locator('.adv-rpg-shell').evaluate(el=>getComputedStyle(el).transform),'none');
+  assert.equal(await page.locator('.adv-rpg-shell').evaluate(el=>el.getAnimations().some(a=>a.animationName==='adv-party-shake')),true,'Hit shakes the whole frame (decision 346)');
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='commands');
   await page.emulateMedia({reducedMotion:'reduce'});

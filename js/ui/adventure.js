@@ -405,6 +405,8 @@
     if (stats) stats.replaceWith(battleStats()); else shell.appendChild(battleStats());
     received = {};
     if (hurt) shell.appendChild(E('div',{class:'adv-hit-flash',attrs:{'aria-hidden':'true'}}));
+    // ダメージを受けたら、画面（戦闘の枠）全体を揺らす（判断346。transform だけなので配置はずれない）
+    shell.classList.remove('is-hurt'); if (hurt) { void shell.offsetWidth; shell.classList.add('is-hurt'); }
     var stage = shell.querySelector('.adv-battle-stage');
     if (!stage) {
       stage = E('section', {class:'adv-battle-stage ' + b.enemy,attrs:{'aria-label':d.name}},[
