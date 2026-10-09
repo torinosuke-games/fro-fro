@@ -66,14 +66,106 @@
     return E('section', { class: 'adv-entry' }, [
       E('div', { class: 'adv-entry-symbol', attrs: { 'aria-hidden': true }, text: '✦' }),
       E('div', {}, [text('small', '', T.subtitle), text('h2', '', T.title), text('p', '', T.entry)]),
-      btn(p().started ? T.resume : T.start, departHome, 'gold'), btn(T.party, function () { U.show('adventureParty'); }, 'quiet')
+      btn(p().started ? T.resume : T.start, departHome, 'gold'), btn(T.party, function () { U.show('adventureParty'); }, 'quiet'), btn(I.button, openInventory, 'quiet adv-entry-inv')
     ]);
   };
+  // ---- 持ち物と装備（判断359） ----
+  var SH = FF.shop, I = T.inv, invTab = 'weapon';
+  function itemDef(kind, id) { return (kind === 'armor' ? FF.defs.ARMORS : FF.defs.WEAPONS).filter(function (x) { return x.id === id; })[0] || null; }
+  function itemMarkup(kind, id) { var d = itemDef(kind, id); return d ? d.icon + ' ' + d.name : ''; }
+  function itemPlain(kind, id) { var d = itemDef(kind, id); return d ? U.plain(d.name) : ''; }
+  function itemPower(kind, id) {
+    if (kind === 'armor') return I.defense.replace('{n}', SH.astats(id).defense);
+    var dmg = SH.stats(id).damage; return I.power.replace('{n}', dmg).replace('{b}', dmg - SH.stats(FF.balance.DEFAULT_WEAPON).damage);
+  }
+  function gearBonus(id) { var s = FF.app.state; return { attack: SH.weaponBonus(s, id), defense: SH.armorDefense(s, id) }; }
+  function squadIds() { return ['hero'].concat(p().recruited); }
+  function gearDone(next, message) { FF.app.commit(next); if (message) U.toast(message); U.rerender(); }
+  // 装備する。ほかの人が装備中なら、確認のメッセージを出す
+  function equipFlow(memberId, kind, itemId) {
+    var r = SH.equip(FF.app.state, memberId, kind, itemId), vars = { item: itemPlain(kind, itemId), member: name(memberId) };
+    if (r.ok) { gearDone(r.state, U.plain(I.doneEquip.replace('{member}', vars.member).replace('{item}', vars.item))); return; }
+    if (r.reason !== 'inUse') return;
+    vars.holder = name(r.holder);
+    U.modal({ title: I.confirmTitle, body: I.confirm, vars: vars, buttons: [
+      { label: I.yes, class: 'primary', onClick: function () { var r2 = SH.equip(FF.app.state, memberId, kind, itemId, { force: true }); if (r2.ok) gearDone(r2.state, U.plain(I.doneEquip.replace('{member}', vars.member).replace('{item}', vars.item))); } },
+      { label: I.cancel, class: 'ghost' }
+    ] });
+  }
+  function removeGear(memberId, kind) {
+    var cur = SH.equippedOf(FF.app.state, memberId)[kind], r = SH.unequip(FF.app.state, memberId, kind);
+    if (r.ok && cur) gearDone(r.state, U.plain(I.doneRemove.replace('{member}', name(memberId)).replace('{item}', itemPlain(kind, cur))));
+  }
+  function holderBadge(kind, itemId) {
+    var h = SH.holder(FF.app.state, kind, itemId);
+    if (!h) return E('span', { class: 'inv-holder is-nobody', rich: I.nobody });
+    return E('span', { class: 'inv-holder' }, [E('span', { class: 'adv-portrait inv-holder-icon' }, FF.adventureArt(h, true)), E('span', { rich: I.equippedBy }), text('strong', '', name(h))]);
+  }
+  // ある人の、武器（防具）を選ぶ
+  function openPicker(memberId, kind) {
+    var s = FF.app.state, cur = SH.equippedOf(s, memberId)[kind], close = null;
+    var list = E('div', { class: 'inv-pick-list' }, SH.owned(s, kind).map(function (id) {
+      var h = SH.holder(s, kind, id);
+      return E('button', { class: 'rn-button inv-pick' + (id === cur ? ' is-current' : ''), attrs: { type: 'button', 'data-item': id }, on: { click: function () { close(); equipFlow(memberId, kind, id); } } }, [
+        E('strong', { rich: itemMarkup(kind, id) }), E('small', { rich: itemPower(kind, id) }),
+        E('small', { class: 'inv-pick-holder', text: h && h !== memberId ? U.plain(I.equippedBy) + name(h) : (id === cur ? '◎' : '') })
+      ]);
+    }));
+    var buttons = [{ label: U.T('back'), class: 'ghost' }];
+    if (cur) buttons.unshift({ label: I.remove, class: 'ghost', onClick: function () { removeGear(memberId, kind); } });
+    close = U.modal({ title: name(memberId) + '　' + U.plain(I.gearLabel[kind]), body: list, buttons: buttons });
+  }
+  // ある品物を、だれが装備するかを選ぶ
+  function openAssign(kind, itemId) {
+    var close = null, s = FF.app.state, h = SH.holder(s, kind, itemId);
+    var list = E('div', { class: 'inv-pick-list' }, squadIds().map(function (id) {
+      var cur = SH.equippedOf(s, id)[kind];
+      return E('button', { class: 'rn-button inv-pick' + (id === h ? ' is-current' : ''), attrs: { type: 'button', 'data-member': id }, on: { click: function () { close(); equipFlow(id, kind, itemId); } } }, [
+        E('span', { class: 'adv-portrait inv-pick-icon' }, FF.adventureArt(id, true)), E('strong', { text: name(id) }),
+        E('small', { rich: cur ? itemMarkup(kind, cur) : I.nobody })
+      ]);
+    }));
+    var buttons = [{ label: U.T('back'), class: 'ghost' }];
+    if (h) buttons.unshift({ label: I.remove, class: 'ghost', onClick: function () { removeGear(h, kind); } });
+    close = U.modal({ title: I.pickTitle, body: E('div', {}, [E('p', { class: 'inv-pick-item', rich: itemMarkup(kind, itemId) }), list]), buttons: buttons });
+  }
+  U.openAssign = openAssign;
+  function renderInventory(main) {
+    ensure(); header(main, I.title, I.help);
+    var tabs = E('div', { class: 'inv-tabs', attrs: { role: 'tablist' } }, ['weapon', 'armor', 'item'].map(function (k) {
+      return E('button', { class: 'inv-tab' + (invTab === k ? ' is-active' : ''), attrs: { type: 'button', role: 'tab', 'aria-selected': invTab === k ? 'true' : 'false', 'data-tab': k }, rich: I.tabs[k], on: { click: function () { invTab = k; U.rerender(); } } });
+    }));
+    main.appendChild(tabs);
+    var panel = E('section', { class: 'inv-panel' });
+    if (invTab === 'item') {
+      panel.appendChild(E('article', { class: 'inv-row' }, [
+        E('span', { class: 'inv-ico', text: '🧪' }),
+        E('div', { class: 'inv-info' }, [E('strong', { rich: I.potion }), E('span', { class: 'inv-power', rich: I.potionText })]),
+        E('span', { class: 'inv-count' }, [E('strong', { text: '× ' + p().potions })])
+      ]));
+    } else {
+      var s = FF.app.state, ids = SH.owned(s, invTab);
+      if (!ids.length) panel.appendChild(text('p', 'inv-empty', I.empty));
+      ids.forEach(function (id) {
+        var h = SH.holder(s, invTab, id), d = itemDef(invTab, id), locked = !!p().battle;
+        panel.appendChild(E('article', { class: 'inv-row', attrs: { 'data-item': id } }, [
+          E('span', { class: 'inv-ico', text: d.icon }),
+          E('div', { class: 'inv-info' }, [E('strong', { rich: d.name }), E('span', { class: 'inv-power', rich: itemPower(invTab, id) }), holderBadge(invTab, id)]),
+          E('div', { class: 'inv-actions' }, [
+            btn(h ? I.change : I.equip, function () { openAssign(invTab, id); }, 'quiet inv-equip', locked),
+            h ? btn(I.remove, function () { removeGear(h, invTab); }, 'quiet inv-remove', locked) : null
+          ])
+        ]));
+      });
+    }
+    main.appendChild(panel);
+  }
+  function openInventory() { U.show('adventureInventory'); }
   function renderParty(main) {
     ensure(); header(main, T.party, T.partyHelp);
     var locked = !!p().battle || !A.atTown(p());
     // 「この仲間で旅をする」は、なくした（町の中で編成していて、急に外に出ないように。判断358）
-    if (locked) main.appendChild(E('div', { class: 'adv-toolbar' }, [text('span', '', T.partyLocked)]));
+    main.appendChild(E('div', { class: 'adv-toolbar' }, [btn(I.button, openInventory, 'quiet adv-party-inv'), locked ? text('span', '', T.partyLocked) : null]));
     // いまの隊（先頭から順）：アイコンと名前で、4つの枠。ここで、順番を前へ・外すこともできる（判断358）
     var squad = E('section', { class: 'adv-squad', attrs: { 'aria-label': T.squad } }, [text('h2', 'adv-squad-title', T.squad), text('p', 'adv-squad-help', T.squadHelp)]);
     var slots = E('ol', { class: 'adv-squad-slots' });
@@ -101,9 +193,21 @@
       card.appendChild(member(id, false));
       card.appendChild(text('blockquote', '', '「' + d.quote + '」'));
       card.appendChild(text('p', 'adv-description', d.detail));
-      var stats = E('dl', { class: 'adv-stats' });
-      ['strength', 'defense', 'speed', 'wisdom'].forEach(function (k) { stats.appendChild(E('div', {}, [text('dt', '', T.stats[k]), E('dd', { text: s[k] })])); });
+      var gb = gearBonus(id), stats = E('dl', { class: 'adv-stats' });
+      ['strength', 'defense', 'speed', 'wisdom'].forEach(function (k) {
+        var bonus = k === 'strength' ? gb.attack : k === 'defense' ? gb.defense : 0;
+        stats.appendChild(E('div', {}, [text('dt', '', T.stats[k]), E('dd', { text: bonus ? (s[k] + bonus) + '（+' + bonus + '）' : s[k] })]));
+      });
       card.appendChild(stats);
+      // 装備（武器・防具）：ここで入れかえられる（判断359）
+      card.appendChild(E('div', { class: 'adv-gear' }, ['weapon', 'armor'].map(function (kind) {
+        var cur = SH.equippedOf(FF.app.state, id)[kind];
+        return E('div', { class: 'adv-gear-row', attrs: { 'data-gear': kind } }, [
+          text('span', 'adv-gear-label', I.gearLabel[kind]),
+          cur ? E('span', { class: 'adv-gear-name', rich: itemMarkup(kind, cur) }) : text('span', 'adv-gear-name is-none', I.nobody),
+          btn(I.change2, function () { openPicker(id, kind); }, 'quiet adv-gear-btn', !!p().battle)
+        ]);
+      })));
       card.appendChild(text('p', 'adv-xp', s.level >= B.MAX_LEVEL ? 'Lv.MAX · 経験値 ' + r.xp : '経験値 ' + r.xp + ' · 次のレベルまで ' + (B.XP_STEP * s.level * s.level - r.xp)));
       card.appendChild(E('div', { class: 'adv-card-actions' }, [
         text('span', 'adv-pill', index >= 0 ? (index + 1) + ' · ' + T.joined : T.waiting),
@@ -357,8 +461,8 @@
       root.setTimeout(function() { if(dialog.isConnected && FF.app.screen === 'adventure' && !dialog.open) {dialog.showModal();heading.focus({preventScroll:true});} },delay);
     });
   }
-  // 武器・防具を主人公の攻撃・防御に足す（判断343）
-  function gear() { var s = FF.app.state; return FF.shop ? { attack: FF.shop.weaponBonus(s), defense: FF.shop.armorDefense(s) } : {}; }
+  // 武器・防具を、ひとりひとりの攻撃・防御に足す（判断343・359）
+  function gear() { return FF.shop ? FF.shop.gearMap(FF.app.state) : {}; }
   function advance() {
     var old = p(), next = A.advance(old, FF.app.bank, grade(), Math.random, FF.app.now(), gear());
     if (next === old) { U.toast(T.noQuestion); return; } change(next);
@@ -472,6 +576,7 @@
 
   U.screens.adventure = { render: function (main) { ensure(); main.classList.remove('adv-field-screen','adv-battle-screen','is-hurt'); main.classList.add('adventure-screen'); if (p().battle) renderBattle(main); else renderField(main); } };
   U.screens.adventureParty = { render: renderParty };
+  U.screens.adventureInventory = { render: renderInventory };
   root.document.addEventListener('keydown', function (e) {
     if (FF.app.screen !== 'adventure' || p().battle || /INPUT|SELECT|TEXTAREA|BUTTON/.test(e.target.tagName)) return;
     var delta = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] }[e.key];

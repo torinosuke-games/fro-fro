@@ -227,7 +227,7 @@
         if (kind === 'guard') { b.guarded = true; log(b, 'guard', id, 0); return; }
         if (kind === 'ward') { b.ward = true; log(b, 'ward', id, 0); return; }
       }
-      var damage = Math.max(1, Math.round(((o.type === 'magic' ? s.wisdom * B.MAGIC_POWER : s.strength + (id === 'hero' ? gear.attack || 0 : 0)) - e.defense * B.ARMOR_RATE) * (correct ? B.QUIZ_ATTACK_RATE : 1)));
+      var damage = Math.max(1, Math.round(((o.type === 'magic' ? s.wisdom * B.MAGIC_POWER : s.strength + (gear[id] && gear[id].attack || 0)) - e.defense * B.ARMOR_RATE) * (correct ? B.QUIZ_ATTACK_RATE : 1)));
       damage = Math.min(b.hp, damage); b.hp -= damage;
       log(b, 'hit', id, damage);
     });
@@ -241,7 +241,7 @@
     if (!plan.all && b.guarded && guard) targets = [guard];
     targets.forEach(function (id) {
       var r = n.roster[id], s = stats(id, r.xp);
-      var damage = Math.max(1, Math.round((e.attack * (correct ? B.QUIZ_ENEMY_RATE : 1) * (plan.heavy ? 1.5 : 1) - (s.defense + (id === 'hero' ? gear.defense || 0 : 0)) * B.ARMOR_RATE) *
+      var damage = Math.max(1, Math.round((e.attack * (correct ? B.QUIZ_ENEMY_RATE : 1) * (plan.heavy ? 1.5 : 1) - (s.defense + (gear[id] && gear[id].defense || 0)) * B.ARMOR_RATE) *
         (b.ward ? B.WARD_RATE : 1) * (id === guard && b.guarded ? B.GUARD_RATE : 1)));
       damage = Math.min(r.hp, damage); r.hp -= damage; log(b, 'hurt', id, damage);
       if (!r.hp) log(b, 'down', id, 0);

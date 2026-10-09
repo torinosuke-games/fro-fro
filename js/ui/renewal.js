@@ -314,21 +314,20 @@
  // 武器屋・防具屋（判断340・343）：ゴールドで買い、装備する。武器は正解1回のダメージ（冒険では主人公の攻撃力）、防具は受けるダメージを減らす
  var closeShop=null;
  function openGearShop(kind){
-  var a=FF.app,SH=FF.shop,armor=kind==='armor';
+  var a=FF.app,SH=FF.shop,armor=kind==='armor',k=armor?'armor':'weapon';
   if(closeShop){closeShop();closeShop=null;}
-  var s=a.state,cur=armor?SH.currentArmor(s):SH.currentWeapon(s);
+  var s=a.state;
   var again=function(){openGearShop(kind);};
   var list=E('div',{class:'shop-list'},(armor?FF.defs.ARMORS:FF.defs.WEAPONS).map(function(w){
-   var st=armor?SH.astats(w.id):SH.stats(w.id),owned=armor?SH.ownsArmor(s,w.id):SH.owns(s,w.id),equipped=cur===w.id,can=(armor?SH.canBuyArmor(s,w.id):SH.canBuy(s,w.id)).ok;
+   var st=armor?SH.astats(w.id):SH.stats(w.id),owned=SH.owned(s,k).indexOf(w.id)>=0,can=SH.canBuyItem(s,k,w.id).ok,h=SH.holder(s,k,w.id);
    var action;
-   if(equipped)action=E('span',{class:'shop-equipped',rich:R.shopEquipped});
-   else if(owned)action=E('button',{class:'rn-button shop-btn',attrs:{type:'button'},rich:R.shopEquip,on:{click:function(){var r=armor?SH.equipArmor(a.state,w.id):SH.equip(a.state,w.id);if(r.ok){a.commit(r.state);again();}}}});
-   else action=E('button',{class:'rn-button primary shop-btn',attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuy,on:{click:function(){var r=armor?SH.buyArmor(a.state,w.id):SH.buy(a.state,w.id);if(r.ok){a.commit(r.state);U.toast(R.shopBought);again();}}}});
+   if(owned)action=E('button',{class:'rn-button shop-btn',attrs:{type:'button'},rich:R.shopEquip,on:{click:function(){if(closeShop){closeShop();closeShop=null;}if(FF.ui.openAssign)FF.ui.openAssign(k,w.id);}}});
+   else action=E('button',{class:'rn-button primary shop-btn',attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuy,on:{click:function(){var r=SH.buyItem(a.state,k,w.id);if(r.ok){a.commit(r.state);U.toast(R.shopBought);again();}}}});
    var power=armor?R.shopDefense.replace('{n}',st.defense):R.shopPower.replace('{n}',st.damage)+'／'+R.shopPowerBonus.replace('{n}',st.damage-SH.stats(FF.balance.DEFAULT_WEAPON).damage);
-   return E('div',{class:'shop-row'+(equipped?' is-equipped':'')+(owned||can?'':' is-short'),attrs:{'data-weapon':w.id}},[
+   var status=owned?E('span',{class:'shop-owned',text:'持っている'+(h?'（装備：'+(h==='hero'?a.state.player.name:FF.texts.adventure.members[h].name)+'）':'（だれも装備していない）')}):E('span',{class:'shop-price'},[st.price?U.fmt(st.price)+' G':E('span',{rich:R.shopFree})]);
+   return E('div',{class:'shop-row'+(h?' is-equipped':'')+(owned||can?'':' is-short'),attrs:{'data-weapon':w.id}},[
     E('span',{class:'shop-icon',text:w.icon}),
-    E('div',{class:'shop-info'},[E('strong',{class:'shop-name',rich:w.name}),E('span',{class:'shop-power',rich:power}),
-     owned?null:E('span',{class:'shop-price'},[st.price?U.fmt(st.price)+' G':E('span',{rich:R.shopFree})])]),
+    E('div',{class:'shop-info'},[E('strong',{class:'shop-name',rich:w.name}),E('span',{class:'shop-power',rich:power}),status]),
     action
    ]);
   }));
