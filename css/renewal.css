@@ -314,7 +314,7 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
  body[data-screen="quiz"] main#screen{padding-top:10px}
  .lesson-heading{flex-wrap:nowrap;gap:6px;margin-bottom:8px}
  .lesson-heading .text-button{white-space:nowrap;min-height:32px;padding-inline:2px}
- .lesson-heading>span:not(.lesson-session-count){flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.8125rem}
+ .lesson-heading>span:not(.lesson-session-count):not(.quiz-resource-button){flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.8125rem}
  .lesson-heading .quiz-resource-button{min-height:32px;margin-left:0}
  .lesson-heading .filter-open{min-height:32px;padding:4px 8px;font-size:.75rem;white-space:nowrap;flex:none}
  /* 問題の中を少し詰める */
@@ -483,3 +483,5 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .population-bar{display:flex;align-items:baseline;gap:6px;width:100%;margin:10px 0 0;padding:9px 14px;border:1px solid #cfe0e8;border-radius:12px;background:#f3f8fa;font:inherit;color:#2d5568;cursor:pointer;text-align:left}
 .population-bar .pop-label{font-size:12px;color:#6a8796}.population-bar .pop-num{font-size:20px}.population-bar .pop-unit{font-size:12px}.population-bar .pop-bonus{margin-left:auto;font-size:12px;color:#3d7a52}
 .pop-detail .pop-total{font-size:22px;margin:4px 0}.pop-detail p{line-height:1.8}
+/* スマホで、「きょうの資材」の欄が横に広がらないように（判断357） */
+.lesson-heading .quiz-resource-button{flex:none;width:auto}
