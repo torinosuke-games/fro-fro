@@ -74,7 +74,7 @@
     var locked = !!p().battle || !A.atTown(p());
     main.appendChild(E('div', { class: 'adv-toolbar' }, [btn(T.depart, open, 'gold'), text('span', '', locked ? T.partyLocked : '町で、仲間が出発を待っている。')]));
     var grid = E('div', { class: 'adv-roster' });
-    A.IDS.forEach(function (id) {
+    A.IDS.filter(function (id) { return id === 'hero' || p().recruited.indexOf(id) >= 0; }).forEach(function (id) {
       var d = T.members[id], r = p().roster[id], s = A.stats(id, r.xp), index = p().party.indexOf(id), card = E('section', { class: 'adv-roster-card' });
       card.appendChild(member(id, false));
       card.appendChild(text('blockquote', '', '「' + d.quote + '」'));
@@ -89,6 +89,12 @@
         btn(T.front, function () { var list = p().party.slice(); var old = list[index - 1]; list[index - 1] = id; list[index] = old; change(A.setParty(p(), list)); }, 'quiet', locked || index <= 0)
       ]));
       grid.appendChild(card);
+    });
+    // まだ会えていない旅人（影の絵。旅人を救出すると、仲間になる）
+    A.ALLIES.filter(function (id) { return p().recruited.indexOf(id) < 0; }).forEach(function (id) {
+      grid.appendChild(E('section', { class: 'adv-roster-card adv-roster-locked', attrs: { 'data-locked': id } }, [
+        E('div', { class: 'adv-portrait' }, FF.adventureArt(id, true)), text('p', 'adv-role', T.lockedAlly)
+      ]));
     });
     main.appendChild(grid);
     if (!locked) main.appendChild(settings());
@@ -254,7 +260,7 @@
       } else if (type === 'magic') {
         prompt = C.chooseMagic;
         menu.appendChild(btn(T.members[actor].magic + ' · ' + B.MAGIC_COST + ' MP', function() {
-          if (actor === 'rin') { submenu.target = true; paint(); } else confirmOrder('magic');
+          if (A.magicKind(actor) === 'heal') { submenu.target = true; paint(); } else confirmOrder('magic');
         }, 'adv-command', n.roster[actor].mp < B.MAGIC_COST));
       } else {
         prompt = C.chooseItem;

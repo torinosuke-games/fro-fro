@@ -2,7 +2,10 @@
 (function (root) {
   'use strict';
   var FF = root.FF, B = FF.balance.ADVENTURE;
-  var IDS = ['hero', 'gan', 'rin', 'sora'];
+  var ALLIES = ['juushouhei', 'siromadoushi', 'kenshi', 'senshi', 'kuromadoushi', 'gakusya', 'sisho', 'touzoku', 'yumitsukai'];
+  var IDS = ['hero'].concat(ALLIES);
+  var LEGACY = { gan: 'juushouhei', rin: 'siromadoushi', sora: 'kenshi' };   // 前の版の仲間は、新しい仲間に引きつぐ（判断352）
+  function magicKind(id) { return B.MEMBERS[id] && B.MEMBERS[id].magic || 'attack'; }
   var MAP = ['#############', '#.......#...#', '#.......#...#', '#.......#...#', '#..##...#...#', '#.......#...#', '#...........#', '#.......#...#', '#############'];
   var PLACES = { home: { x: 1, y: 6 }, camp: { x: 6, y: 3 }, chest: { x: 3, y: 1 }, town: { x: 11, y: 2 } };
   var ENEMIES = { cub: { x: 3, y: 6 }, wolf: { x: 6, y: 5 }, boss: { x: 8, y: 6 } };
@@ -19,18 +22,23 @@
   function create() {
     var roster = {};
     IDS.forEach(function (id) { var s = stats(id, 0); roster[id] = { xp: 0, hp: s.hp, mp: s.mp }; });
-    return { version: 1, started: false, roster: roster, party: IDS.slice(), gold: 0, potions: B.POTIONS, pos: clone(PLACES.home),
+    return { version: 1, started: false, roster: roster, recruited: B.START_ALLIES.slice(), party: ['hero'].concat(B.START_ALLIES), gold: 0, potions: B.POTIONS, pos: clone(PLACES.home),
       lastTown: 'home', facing: 'down', cleared: [], chest: false, arrived: false, campUsed: false, battle: null,
       subject: 'math', difficulty: 'basic', recent: [], answered: 0, correct: 0, history: [], notice: 'welcome' };
   }
   function normalize(raw) {
     var p = create();
     if (!raw || typeof raw !== 'object') return p;
+    // 前の版（ガン・リン・ソラ）のセーブは、新しい仲間に引きつぐ
+    var oldRoster = raw.roster || {};
+    Object.keys(LEGACY).forEach(function (o) { if (oldRoster[o] && !oldRoster[LEGACY[o]]) { oldRoster = Object.assign({}, oldRoster); oldRoster[LEGACY[o]] = oldRoster[o]; } });
     IDS.forEach(function (id) {
-      var r = raw.roster && raw.roster[id] || {}, xp = int(r.xp, 0, 1000000), s = stats(id, xp);
+      var r = oldRoster[id] || {}, xp = int(r.xp, 0, 1000000), s = stats(id, xp);
       p.roster[id] = { xp: xp, hp: int(r.hp, s.hp, s.hp), mp: int(r.mp, s.mp, s.mp) };
     });
-    p.party = Array.isArray(raw.party) ? raw.party.filter(function (id, i, a) { return IDS.indexOf(id) >= 0 && a.indexOf(id) === i; }) : IDS.slice();
+    p.recruited = Array.isArray(raw.recruited) ? raw.recruited.filter(function (id, i, a) { return ALLIES.indexOf(id) >= 0 && a.indexOf(id) === i; }) : B.START_ALLIES.slice();
+    var rawParty = Array.isArray(raw.party) ? raw.party.map(function (id) { return LEGACY[id] || id; }) : null;
+    p.party = rawParty ? rawParty.filter(function (id, i, a) { return (id === 'hero' || p.recruited.indexOf(id) >= 0) && a.indexOf(id) === i; }) : ['hero'].concat(p.recruited).slice(0, 4);
     if (p.party.indexOf('hero') < 0) p.party.unshift('hero');
     p.party = p.party.slice(0, 4);
     ['gold', 'potions', 'answered', 'correct'].forEach(function (k) { p[k] = int(raw[k], p[k], 1000000); });
@@ -89,8 +97,13 @@
   }
   function setParty(p, party) {
     if (p.battle || !atTown(p) || !Array.isArray(party) || party.length > 4 || party.indexOf('hero') < 0 ||
-        party.some(function (id, i) { return IDS.indexOf(id) < 0 || party.indexOf(id) !== i; })) return p;
+        party.some(function (id, i) { return IDS.indexOf(id) < 0 || party.indexOf(id) !== i || id !== 'hero' && p.recruited.indexOf(id) < 0; })) return p;
     var n = clone(p); n.party = party.slice(); return n;
+  }
+  // 旅人を救出して、仲間にする（判断352。救出のしくみは、これから）。すでに仲間なら、そのまま
+  function recruit(p, id) {
+    if (ALLIES.indexOf(id) < 0 || p.recruited.indexOf(id) >= 0) return p;
+    var n = clone(p); n.recruited.push(id); return n;
   }
   function enemyAt(p, pos) { return Object.keys(ENEMIES).find(function (id) { return same(pos, ENEMIES[id]) && p.cleared.indexOf(id) < 0; }) || null; }
   function encounter(p, id) {
@@ -166,7 +179,7 @@
       if (!o || ['attack', 'magic', 'item'].indexOf(o.type) < 0) return p;
       if (o.type === 'magic' && n.roster[id].mp < B.MAGIC_COST) return p;
       if (o.type === 'item') count++;
-      if ((o.type === 'item' || o.type === 'magic' && id === 'rin') && n.party.indexOf(o.target) < 0) return p;
+      if ((o.type === 'item' || o.type === 'magic' && magicKind(id) === 'heal') && n.party.indexOf(o.target) < 0) return p;
       n.battle.orders[id] = { type: o.type, target: o.target || id };
     }
     if (count > n.potions) return p;
@@ -209,9 +222,10 @@
       }
       if (o.type === 'magic') {
         r.mp -= B.MAGIC_COST;
-        if (id === 'rin') { var h = Math.min(B.HEAL + s.wisdom, stats(o.target, target.xp).hp - target.hp); target.hp += h; log(b, 'heal', o.target, h, id); return; }
-        if (id === 'gan') { b.guarded = true; log(b, 'guard', id, 0); return; }
-        if (id === 'sora') { b.ward = true; log(b, 'ward', id, 0); return; }
+        var kind = magicKind(id);
+        if (kind === 'heal') { var h = Math.min(B.HEAL + s.wisdom, stats(o.target, target.xp).hp - target.hp); target.hp += h; log(b, 'heal', o.target, h, id); return; }
+        if (kind === 'guard') { b.guarded = true; log(b, 'guard', id, 0); return; }
+        if (kind === 'ward') { b.ward = true; log(b, 'ward', id, 0); return; }
       }
       var damage = Math.max(1, Math.round(((o.type === 'magic' ? s.wisdom * B.MAGIC_POWER : s.strength + (id === 'hero' ? gear.attack || 0 : 0)) - e.defense * B.ARMOR_RATE) * (correct ? B.QUIZ_ATTACK_RATE : 1)));
       damage = Math.min(b.hp, damage); b.hp -= damage;
@@ -223,11 +237,12 @@
     gear = gear || {};
     var b = n.battle, e = B.ENEMIES[b.enemy], plan = intent(n);
     var targets = plan.all ? alive(n) : [plan.target];
-    if (!plan.all && b.guarded && n.party.indexOf('gan') >= 0 && n.roster.gan.hp > 0) targets = ['gan'];
+    var guard = n.party.filter(function (m) { return magicKind(m) === 'guard' && n.roster[m].hp > 0; })[0];
+    if (!plan.all && b.guarded && guard) targets = [guard];
     targets.forEach(function (id) {
       var r = n.roster[id], s = stats(id, r.xp);
       var damage = Math.max(1, Math.round((e.attack * (correct ? B.QUIZ_ENEMY_RATE : 1) * (plan.heavy ? 1.5 : 1) - (s.defense + (id === 'hero' ? gear.defense || 0 : 0)) * B.ARMOR_RATE) *
-        (b.ward ? B.WARD_RATE : 1) * (id === 'gan' && b.guarded ? B.GUARD_RATE : 1)));
+        (b.ward ? B.WARD_RATE : 1) * (id === guard && b.guarded ? B.GUARD_RATE : 1)));
       damage = Math.min(r.hp, damage); r.hp -= damage; log(b, 'hurt', id, damage);
       if (!r.hp) log(b, 'down', id, 0);
     });
@@ -266,7 +281,7 @@
     if (p.battle || !p.potions || p.party.indexOf(id) < 0 || p.roster[id].hp >= stats(id, p.roster[id].xp).hp) return p;
     var n = clone(p); n.potions--; n.roster[id].hp = Math.min(stats(id, n.roster[id].xp).hp, n.roster[id].hp + B.POTION_HEAL); return n;
   }
-  FF.adventure = { IDS: IDS, MAP: MAP, PLACES: PLACES, ENEMIES: ENEMIES, create: create, normalize: normalize,
+  FF.adventure = { IDS: IDS, ALLIES: ALLIES, magicKind: magicKind, recruit: recruit, MAP: MAP, PLACES: PLACES, ENEMIES: ENEMIES, create: create, normalize: normalize,
     stats: stats, level: level, same: same, alive: alive, atTown: atTown, rest: rest, depart: depart, setParty: setParty,
     walkable: walkable, path: path, enemyAt: enemyAt, move: move, encounter: encounter, intent: intent,
     command: command, answer: answer, advance: advance, retreat: retreat, potion: potion, pick: pick };

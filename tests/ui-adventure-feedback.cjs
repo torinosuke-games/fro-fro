@@ -19,7 +19,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
    assert.equal(await page.getByRole('button',{name:'クイズで行動する',exact:true}).count(),0);
    assert.equal(await page.locator('.adv-order-chip').count(),0);
    for (let i=0;i<alive.length;i++) {
-    assert.equal(await page.locator('.adv-status[aria-pressed="true"]').getAttribute('aria-label'), (alive[i]==='hero'?'ゆき':{gan:'ガン',rin:'リン',sora:'ソラ'}[alive[i]])+'の行動を選ぶ');
+    assert.equal(await page.locator('.adv-status[aria-pressed="true"]').getAttribute('aria-label'), (alive[i]==='hero'?'ゆき':{juushouhei:'ガルド',siromadoushi:'ミレイ',kenshi:'アカネ'}[alive[i]])+'の行動を選ぶ');
     assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
     await page.getByRole('button',{name:'たたかう',exact:true}).click();
     assert.equal(await page.evaluate(()=>FF.app.state.adventure.battle.phase),i===alive.length-1?'attack':'commands');
@@ -88,7 +88,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   await page.waitForFunction(()=>FF.app.state.adventure.battle.phase==='enemyAction');
   const actionFrames=await page.evaluate(()=>{actionWatcher.disconnect();return actionFrames;});
   assert.equal(actionFrames.filter(f=>f.message.includes('ダメージ')).length,4);
-  assert.ok(actionFrames.some(f=>f.message.includes('ゆきの攻撃'))&&actionFrames.some(f=>f.message.includes('リンの攻撃')));
+  assert.ok(actionFrames.some(f=>f.message.includes('ゆきの攻撃'))&&actionFrames.some(f=>f.message.includes('ミレイの攻撃')));
   assert.ok(await page.locator('.adv-hit-flash').evaluate(el=>el.getAnimations().some(a=>a.animationName==='adv-hit-flash')));
   assert.equal(await page.locator('.adv-quiz-dialog').count(),0);assert.equal(await page.locator('.adv-status.is-damaged').count(),1);
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.answered),1);

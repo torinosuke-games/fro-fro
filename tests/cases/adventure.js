@@ -57,33 +57,33 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     let p = A.create(); p.pos = { x: 3, y: 2 }; p = A.move(p, 3, 1);
     assert.equal(p.gold, 30); assert.equal(p.potions, 5);
     p = A.move(A.move(p, 3, 2), 3, 1); assert.equal(p.gold, 30);
-    p.pos = { x: 6, y: 2 }; p.roster.rin.hp = 0; p = A.move(p, 6, 3); assert.equal(p.roster.rin.hp, B.MEMBERS.rin.hp);
-    p.roster.rin.hp = 1; p = A.move(A.move(p, 6, 2), 6, 3); assert.equal(p.roster.rin.hp, 1);
-    p.potions = 0; p = A.rest(p, 'home'); assert.equal(p.potions, 3); assert.equal(p.campUsed, false); assert.equal(p.roster.rin.hp, B.MEMBERS.rin.hp);
+    p.pos = { x: 6, y: 2 }; p.roster.siromadoushi.hp = 0; p = A.move(p, 6, 3); assert.equal(p.roster.siromadoushi.hp, B.MEMBERS.siromadoushi.hp);
+    p.roster.siromadoushi.hp = 1; p = A.move(A.move(p, 6, 2), 6, 3); assert.equal(p.roster.siromadoushi.hp, 1);
+    p.potions = 0; p = A.rest(p, 'home'); assert.equal(p.potions, 3); assert.equal(p.campUsed, false); assert.equal(p.roster.siromadoushi.hp, B.MEMBERS.siromadoushi.hp);
   });
   test('冒険：編成は町だけ、主人公を外せず重複しない', () => {
     const p = A.create();
-    assert.strictEqual(A.setParty(p, ['gan']), p);
+    assert.strictEqual(A.setParty(p, ['juushouhei']), p);
     assert.strictEqual(A.setParty(p, ['hero', 'hero']), p);
-    const n = A.setParty(p, ['gan', 'hero']); assert.deepEqual(plain(n.party), ['gan', 'hero']);
+    const n = A.setParty(p, ['juushouhei', 'hero']); assert.deepEqual(plain(n.party), ['juushouhei', 'hero']);
     n.pos = { x: 2, y: 6 }; assert.strictEqual(A.setParty(n, ['hero']), n);
   });
   test('冒険：解説中は行動せず、誤答でも通常攻撃・魔法・道具を使える', () => {
-    let p = atEnemy('wolf'); p.roster.gan.hp = 1;
-    p = A.command(p, orders(p, { hero: { type: 'magic', target: 'hero' }, sora: { type: 'item', target: 'gan' } }), bank, 4, rng, now);
+    let p = atEnemy('wolf'); p.roster.juushouhei.hp = 1;
+    p = A.command(p, orders(p, { hero: { type: 'magic', target: 'hero' }, kenshi: { type: 'item', target: 'juushouhei' } }), bank, 4, rng, now);
     const old = JSON.stringify(p); p = A.answer(p, 'wrong', now);
     assert.equal(p.battle.hp, B.ENEMIES.wolf.hp); assert.equal(p.roster.hero.mp, B.MEMBERS.hero.mp);
-    assert.equal(p.roster.gan.hp, 1); assert.equal(p.potions, 3);
+    assert.equal(p.roster.juushouhei.hp, 1); assert.equal(p.potions, 3);
     p = A.advance(p, bank, 4, rng, now);
     assert.ok(p.battle.hp < B.ENEMIES.wolf.hp); assert.equal(p.roster.hero.mp, B.MEMBERS.hero.mp - B.MAGIC_COST);
-    assert.equal(p.roster.gan.hp, 1 + B.POTION_HEAL); assert.equal(p.potions, 2); assert.equal(p.correct, 0);
-    assert.equal(p.battle.log.find(l=>l.key==='heal'&&l.who==='gan').actor,'sora');
+    assert.equal(p.roster.juushouhei.hp, 1 + B.POTION_HEAL); assert.equal(p.potions, 2); assert.equal(p.correct, 0);
+    assert.equal(p.battle.log.find(l=>l.key==='heal'&&l.who==='juushouhei').actor,'kenshi');
     assert.notEqual(JSON.stringify(p), old);
     assert.strictEqual(A.answer(p, p.battle.question.answer, now), p, '二重回答で報酬を得ない');
   });
   test('冒険：回復薬の多重予約とMP不足は拒否、空欄は未回答', () => {
     let p = atEnemy('wolf'); p.potions = 1;
-    assert.strictEqual(A.command(p, orders(p, { hero: { type: 'item', target: 'gan' }, sora: { type: 'item', target: 'rin' } }), bank, 4, rng, now), p);
+    assert.strictEqual(A.command(p, orders(p, { hero: { type: 'item', target: 'juushouhei' }, kenshi: { type: 'item', target: 'siromadoushi' } }), bank, 4, rng, now), p);
     p.roster.hero.mp = 0; assert.strictEqual(A.command(p, orders(p, { hero: { type: 'magic' } }), bank, 4, rng, now), p);
     p = A.command(p, orders(p), bank, 4, rng, now); assert.strictEqual(A.answer(p, null, now), p);
   });
@@ -102,23 +102,24 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     for (const state of [goodAnswer, goodHit, good]) assert.deepEqual(plain(A.normalize(state)), plain(state));
     assert.equal(A.advance(good).battle.phase, 'commands');
   });
-  test('冒険：ガンが個別攻撃をかばい、ソラが全体の被害を軽減', () => {
-    let p = atEnemy('boss'); p = A.command(p, orders(p, { gan: { type: 'magic' }, sora: { type: 'magic' } }), bank, 4, rng, now);
+  test('冒険：重装兵が個別攻撃をかばい、司書が全体の被害を軽減', () => {
+    let p = A.recruit(A.create(), 'sisho'); p = A.setParty(p, ['hero', 'juushouhei', 'siromadoushi', 'sisho']); assert.deepEqual(plain(p.party), ['hero', 'juushouhei', 'siromadoushi', 'sisho']);
+    p = atEnemy('boss', p); p = A.command(p, orders(p, { juushouhei: { type: 'magic' }, sisho: { type: 'magic' } }), bank, 4, rng, now);
     p = A.answer(p, p.battle.question.answer, now); p = A.advance(p); assert.equal(p.battle.guarded, true); assert.equal(p.battle.ward, true);
     p = A.advance(p, bank, 4, rng, now);
-    assert.equal(p.roster.hero.hp, B.MEMBERS.hero.hp); assert.ok(p.roster.gan.hp < B.MEMBERS.gan.hp);
+    assert.equal(p.roster.hero.hp, B.MEMBERS.hero.hp); assert.ok(p.roster.juushouhei.hp < B.MEMBERS.juushouhei.hp);
   });
   test('冒険：リンの魔法で戦線離脱から復帰、倒れた人は行動しない', () => {
-    let p = atEnemy('boss'); p.roster.gan.hp = 0;
-    p = A.command(p, orders(p, { rin: { type: 'magic', target: 'gan' } }), bank, 4, rng, now); p = A.answer(p, p.battle.question.answer, now);
+    let p = atEnemy('boss'); p.roster.juushouhei.hp = 0;
+    p = A.command(p, orders(p, { siromadoushi: { type: 'magic', target: 'juushouhei' } }), bank, 4, rng, now); p = A.answer(p, p.battle.question.answer, now);
     p = A.advance(p);
-    assert.ok(p.roster.gan.hp > 0); assert.equal(p.roster.rin.mp, B.MEMBERS.rin.mp - 3);
-    assert.ok(!p.battle.log.some(l => l.key === 'hit' && l.who === 'gan'));
+    assert.ok(p.roster.juushouhei.hp > 0); assert.equal(p.roster.siromadoushi.mp, B.MEMBERS.siromadoushi.mp - 3);
+    assert.ok(!p.battle.log.some(l => l.key === 'hit' && l.who === 'juushouhei'));
   });
   test('冒険：勝利報酬は1回だけ。離脱者にも経験値、次のレベルで能力上昇', () => {
-    let p = atEnemy('cub'); p.roster.gan.hp = 0; p.roster.gan.xp = 20;
-    p = win(p); assert.equal(p.gold, B.ENEMIES.cub.gold); assert.equal(p.roster.gan.xp, 34);
-    assert.equal(p.roster.gan.hp, 0); assert.equal(A.stats('gan', 34).level, 2); assert.ok(A.stats('gan', 34).strength > B.MEMBERS.gan.strength);
+    let p = atEnemy('cub'); p.roster.juushouhei.hp = 0; p.roster.juushouhei.xp = 20;
+    p = win(p); assert.equal(p.gold, B.ENEMIES.cub.gold); assert.equal(p.roster.juushouhei.xp, 34);
+    assert.equal(p.roster.juushouhei.hp, 0); assert.equal(A.stats('juushouhei', 34).level, 2); assert.ok(A.stats('juushouhei', 34).strength > B.MEMBERS.juushouhei.strength);
     assert.strictEqual(A.answer(p, p.battle.question.answer, now), p);
     p = A.advance(p, bank, 4, rng, now); assert.equal(p.gold, B.ENEMIES.cub.gold); assert.equal(p.battle, null);
     assert.strictEqual(A.encounter(p, 'cub'), p);
@@ -144,10 +145,10 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     p.subject = 'unknown'; assert.equal(A.pick(bank, p, 4, rng, now), null);
   });
   test('冒険：敵を倒した後の仲間は攻撃・魔法・道具を使わない', () => {
-    let p=atEnemy('cub');p.battle.hp=1;p.roster.gan.hp=1;
-    p=A.command(p,orders(p,{hero:{type:'magic'},gan:{type:'item',target:'gan'}}),bank,4,rng,now);p=A.answer(p,p.battle.question.answer,now);p=A.advance(p,bank,4,()=>1,now);
-    assert.equal(p.battle.phase,'win');assert.equal(p.battle.log.length,1);assert.equal(p.battle.log[0].who,'sora');assert.equal(p.battle.log[0].amount,1);
-    assert.equal(p.roster.hero.mp,B.MEMBERS.hero.mp);assert.equal(p.potions,B.POTIONS);assert.equal(p.roster.gan.hp,1);
+    let p=atEnemy('cub');p.battle.hp=1;p.roster.juushouhei.hp=1;
+    p=A.command(p,orders(p,{hero:{type:'magic'},juushouhei:{type:'item',target:'juushouhei'}}),bank,4,rng,now);p=A.answer(p,p.battle.question.answer,now);p=A.advance(p,bank,4,()=>1,now);
+    assert.equal(p.battle.phase,'win');assert.equal(p.battle.log.length,1);assert.equal(p.battle.log[0].who,'kenshi');assert.equal(p.battle.log[0].amount,1);
+    assert.equal(p.roster.hero.mp,B.MEMBERS.hero.mp);assert.equal(p.potions,B.POTIONS);assert.equal(p.roster.juushouhei.hp,1);
   });
   test('冒険：勝利時の宝箱は確率境界を守り、報酬を一度だけ保存する', () => {
     let p=atEnemy('cub');p.battle.hp=1;p=A.command(p,orders(p),bank,4,rng,now);p=A.answer(p,p.battle.question.answer,now);
@@ -167,12 +168,45 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     p.battle.phase='defenseResult'; assert.equal(A.advance(A.normalize(p)).battle.phase,'commands');
   });
   test('冒険：旧セーブの補完と戦闘途中の往復。既存の熱量・チケットは変わらない', () => {
-    let s = FF.state.createDefaultState(now), old = FF.state.parseSave(FF.state.serialize(s), now); assert.ok(old.ok); assert.deepEqual(plain(old.state.adventure.party), ['hero', 'gan', 'rin', 'sora']);
+    let s = FF.state.createDefaultState(now), old = FF.state.parseSave(FF.state.serialize(s), now); assert.ok(old.ok); assert.deepEqual(plain(old.state.adventure.party), ['hero', 'juushouhei', 'siromadoushi', 'kenshi']);
     s.adventure = atEnemy('boss'); s.adventure = A.command(s.adventure, orders(s.adventure), bank, 4, rng, now);
     const saved = FF.state.parseSave(FF.state.serialize(s), now); assert.ok(saved.ok); assert.deepEqual(plain(saved.state.adventure), plain(s.adventure));
     saved.state.adventure = A.answer(saved.state.adventure, saved.state.adventure.battle.question.answer, now);
     assert.equal(saved.state.studyPoints, s.studyPoints); assert.deepEqual(plain(saved.state.tickets), plain(s.tickets)); assert.equal(saved.state.adventure.history.length, 1);
     const tampered = JSON.parse(FF.state.serialize(s)); tampered.adventure.gold = 999;
     assert.equal(FF.state.parseSave(JSON.stringify(tampered), now).ok, false);
+  });
+  test('仲間：はじめは3人（重装兵・白魔導士・剣士）。ほかの6人は、救出（recruit）で増え、編成できる', () => {
+    let p = A.create();
+    assert.deepEqual(plain(p.recruited), ['juushouhei', 'siromadoushi', 'kenshi']);
+    assert.deepEqual(plain(p.party), ['hero', 'juushouhei', 'siromadoushi', 'kenshi']);
+    assert.equal(A.ALLIES.length, 9);
+    // まだ仲間でない人は、編成できない
+    assert.strictEqual(A.setParty(p, ['hero', 'sisho']), p);
+    p = A.recruit(p, 'sisho'); assert.ok(p.recruited.includes('sisho'));
+    assert.strictEqual(A.recruit(p, 'sisho'), p);              // 二重には増えない
+    assert.strictEqual(A.recruit(p, 'nobody'), p);
+    p = A.setParty(p, ['hero', 'sisho', 'kenshi']); assert.deepEqual(plain(p.party), ['hero', 'sisho', 'kenshi']);
+    // 保存して読み込んでも残る。仲間でない人が混ざった編成は、直される
+    const back = A.normalize(plain(p)); assert.deepEqual(plain(back.recruited), plain(p.recruited)); assert.deepEqual(plain(back.party), ['hero', 'sisho', 'kenshi']);
+    const bad = plain(p); bad.party = ['hero', 'yumitsukai', 'gakusya']; assert.deepEqual(plain(A.normalize(bad).party), ['hero']);
+  });
+  test('仲間：前の版（ガン・リン・ソラ）のセーブは、重装兵・白魔導士・剣士に引きつがれる', () => {
+    const old = plain(A.create()); delete old.recruited;
+    old.roster = { hero: { xp: 5, hp: 66, mp: 12 }, gan: { xp: 100, hp: 50, mp: 4 }, rin: { xp: 200, hp: 54, mp: 21 }, sora: { xp: 300, hp: 58, mp: 12 } };
+    old.party = ['hero', 'gan', 'rin', 'sora'];
+    const n = A.normalize(old);
+    assert.deepEqual(plain(n.party), ['hero', 'juushouhei', 'siromadoushi', 'kenshi']);
+    assert.equal(n.roster.juushouhei.xp, 100); assert.equal(n.roster.siromadoushi.xp, 200); assert.equal(n.roster.kenshi.xp, 300);
+    assert.deepEqual(plain(n.recruited), ['juushouhei', 'siromadoushi', 'kenshi']);
+  });
+  test('仲間：魔法の種類（回復・かばう・軽減・攻撃）と、9人の能力・絵・文言がそろっている', () => {
+    const kinds = Object.fromEntries(A.ALLIES.map(id => [id, A.magicKind(id)]));
+    assert.equal(kinds.siromadoushi, 'heal'); assert.equal(kinds.juushouhei, 'guard'); assert.equal(kinds.sisho, 'ward');
+    assert.equal(kinds.kuromadoushi, 'attack');
+    for (const id of A.ALLIES) {
+      assert.ok(B.MEMBERS[id], id); assert.ok(FF.texts.adventure.members[id].name, id);
+      assert.ok(require('fs').existsSync(require('path').resolve(__dirname, '../../img/adventure/allies/' + id + '.webp')), id + ' の絵');
+    }
   });
 };

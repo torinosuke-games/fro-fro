@@ -211,3 +211,6 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 /* 戦闘のせつめいボタン（目立たない小さなボタン。判断349） */
 .adv-command-foot{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:8px}.adv-command-foot .adv-command-progress{margin:0;white-space:nowrap}
 .adv-howto{white-space:nowrap;font:inherit;font-size:11px;color:#b9ccdc;background:none;border:1px solid #6f8aa1;border-radius:4px;padding:3px 8px;cursor:pointer}.adv-howto-body p{line-height:1.8;margin:6px 0}
+/* 仲間の絵（判断352。上半身を丸く切りぬく）と、まだ会えていない旅人（影） */
+.adv-portrait .adv-ally-art{display:block;width:100%;height:auto;aspect-ratio:1/1;overflow:hidden;object-fit:cover;object-position:50% 8%;border-radius:50%;background:radial-gradient(ellipse,#edf3f5,#cfe0e8)}
+.adv-roster-locked{display:flex;align-items:center;gap:12px;opacity:.75}.adv-roster-locked .adv-portrait{width:64px}.adv-roster-locked{align-self:start}.adv-roster-locked .adv-portrait .adv-ally-art{filter:brightness(0);opacity:.5;background:none;border-radius:0;aspect-ratio:1/1;height:64px;width:64px}.adv-roster-locked .adv-role{margin:0;font-size:12px}
