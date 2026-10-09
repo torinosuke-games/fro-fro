@@ -61,11 +61,18 @@
     var w = X().withRegion(state, regionId);
     w.rs.defeated = (w.rs.defeated || []).slice();
     var firstTime = w.rs.defeated.indexOf(enemyId) < 0;
-    var reward = null, completed = false;
+    var reward = null, completed = false, rescued = null;
     if (firstTime) {
       w.rs.defeated.push(enemyId);
       reward = BT(b).REWARDS[enemyId] || null;
       X().addReward(w.s, reward, now, b);
+      // 捕らえられていた旅人を救出して、仲間にする（判断354）
+      var who = BT(b).RESCUE && BT(b).RESCUE[enemyId];
+      if (who && FF.adventure) {
+        var adv = w.s.adventure || FF.adventure.create();
+        var next = FF.adventure.recruit(adv, who);
+        if (next !== adv) { w.s.adventure = next; rescued = who; }
+      }
     }
     if (node && node.kind === 'boss') {
       w.rs.bossLosses = 0;
@@ -78,7 +85,19 @@
         completed = true;
       }
     }
-    return { state: w.s, reward: reward ? FF.util.clone(reward) : null, firstTime: firstTime, completed: completed };
+    return { state: w.s, reward: reward ? FF.util.clone(reward) : null, firstTime: firstTime, completed: completed, rescued: rescued };
+  }
+
+  // 前の版で倒したボスの旅人も、仲間にする（読み込み時。判断354）
+  function rescueBackfill(state, b) {
+    var table = BT(b).RESCUE || {}, adv = state.adventure, out = adv;
+    Object.keys(table).forEach(function (enemyId) {
+      var regions = FF.defs.REGIONS, rid = null;
+      regions.forEach(function (r) { if (r.nodes.some(function (n) { return n.enemy === enemyId; })) rid = r.id; });
+      if (rid && FF.adventure && out && (X().regionState(state, rid).defeated || []).indexOf(enemyId) >= 0) out = FF.adventure.recruit(out, table[enemyId]);
+    });
+    if (out === adv) return state;
+    var s = FF.util.clone(state); s.adventure = out; return s;
   }
 
   // HPが0になって負けたとき：まだ倒していないボスの敗北回数を数える（上限まで）。
@@ -177,6 +196,7 @@
     answerBattle: answerBattle,
     winBattle: winBattle,
     loseBattle: loseBattle,
+    rescueBackfill: rescueBackfill,
     retreatBattle: retreatBattle
   };
 })(this);

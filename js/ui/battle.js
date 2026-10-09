@@ -124,6 +124,19 @@
         body.appendChild(U.R('div', 'section-title', U.T('battle.firstReward')));
         body.appendChild(U.exploreRewardView(ses.win.reward));
       }
+      // 捕らえられていた旅人の救出（判断354）
+      if (ses.win && ses.win.rescued && FF.texts.adventure.members[ses.win.rescued]) {
+        var ally = FF.texts.adventure.members[ses.win.rescued];
+        body.appendChild(U.R('div', 'section-title', U.T('battle.rescueTitle')));
+        body.appendChild(U.el('div', { class: 'rescue-card' }, [
+          U.el('div', { class: 'rescue-portrait' }, FF.adventureArt ? FF.adventureArt(ses.win.rescued, true) : null),
+          U.el('div', { class: 'rescue-text' }, [
+            U.el('strong', {}, [U.rich(ally.name), U.rich('　'), U.rich(ally.role)]),
+            U.el('p', { class: 'rescue-quote' }, U.rich('「' + ally.rescue + '」')),
+            U.el('p', { class: 'small muted' }, U.rich(U.T('battle.rescueJoin').replace('{name}', ally.name)))
+          ])
+        ]));
+      }
       if (ses.win && ses.win.completed) {
         var r = X.regionDef(ses.regionId);
         body.appendChild(U.el('div', { class: 'verdict good-text' }, [U.rich(r.name), U.rich(U.T('explore.completeTitle'))]));

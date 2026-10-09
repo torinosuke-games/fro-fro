@@ -231,6 +231,8 @@
         gl_boss_guardian: { hp: 120, attack: 17 }
       },
       // 初めて倒したときだけの報酬（2回目以降は何もない）
+      // 捕らえられていた旅人の救出（判断354）：ボスを初めて倒すと、その旅人が仲間になる
+      RESCUE: { sf_boss_wolf: 'senshi', fr_enemy_warden: 'yumitsukai', gl_boss_guardian: 'kuromadoushi' },
       REWARDS: {
         sf_enemy_fangs: { food: 60 },
         sf_enemy_machine: { iron: 60 },
