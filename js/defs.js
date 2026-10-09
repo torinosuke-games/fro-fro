@@ -120,6 +120,15 @@
       { id: 'flame_sword', icon: '🔥', name: 'ほのおの{剣|けん}' }
     ],
 
+    // 防具（防具屋。判断343）。強さ・値段は balance.ARMORS
+    ARMORS: [
+      { id: 'cloth_clothes', icon: '👕', name: 'ぬのの{服|ふく}' },
+      { id: 'fur_coat', icon: '🧥', name: '{毛皮|けがわ}のコート' },
+      { id: 'leather_armor', icon: '🦺', name: '{革|かわ}のよろい' },
+      { id: 'iron_armor', icon: '🛡️', name: '{鉄|てつ}のよろい' },
+      { id: 'steel_armor', icon: '🛡️', name: 'はがねのよろい' }
+    ],
+
     RESOURCES: [
       { id: 'wood', icon: '🪵', name: '木材' },
       { id: 'iron', icon: '⛏️', name: '鉄' },

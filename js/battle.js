@@ -121,7 +121,7 @@
       bat.enemyHp -= dealt;
     } else {
       wrong += 1;
-      taken = Math.min(bat.playerHp, st.attack);
+      taken = Math.min(bat.playerHp, FF.shop && FF.shop.damageTaken ? FF.shop.damageTaken(state, st.attack, b) : st.attack);
       bat.playerHp -= taken;
       bat.missed = true;
     }

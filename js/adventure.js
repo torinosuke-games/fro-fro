@@ -195,7 +195,8 @@
       }
     });
   }
-  function attack(n, correct, rng) {
+  function attack(n, correct, rng, gear) {
+    gear = gear || {};
     var b = n.battle, e = B.ENEMIES[b.enemy];
     alive(n).sort(function (a, c) { return stats(c, n.roster[c].xp).speed - stats(a, n.roster[a].xp).speed; }).forEach(function (id) {
       var o = b.orders[id], r = n.roster[id], s = stats(id, r.xp), target = o && n.roster[o.target];
@@ -212,19 +213,20 @@
         if (id === 'gan') { b.guarded = true; log(b, 'guard', id, 0); return; }
         if (id === 'sora') { b.ward = true; log(b, 'ward', id, 0); return; }
       }
-      var damage = Math.max(1, Math.round(((o.type === 'magic' ? s.wisdom * B.MAGIC_POWER : s.strength) - e.defense * B.ARMOR_RATE) * (correct ? B.QUIZ_ATTACK_RATE : 1)));
+      var damage = Math.max(1, Math.round(((o.type === 'magic' ? s.wisdom * B.MAGIC_POWER : s.strength + (id === 'hero' ? gear.attack || 0 : 0)) - e.defense * B.ARMOR_RATE) * (correct ? B.QUIZ_ATTACK_RATE : 1)));
       damage = Math.min(b.hp, damage); b.hp -= damage;
       log(b, 'hit', id, damage);
     });
     if (b.hp <= 0) victory(n, rng); else b.phase = 'playerAction';
   }
-  function defend(n, correct) {
+  function defend(n, correct, gear) {
+    gear = gear || {};
     var b = n.battle, e = B.ENEMIES[b.enemy], plan = intent(n);
     var targets = plan.all ? alive(n) : [plan.target];
     if (!plan.all && b.guarded && n.party.indexOf('gan') >= 0 && n.roster.gan.hp > 0) targets = ['gan'];
     targets.forEach(function (id) {
       var r = n.roster[id], s = stats(id, r.xp);
-      var damage = Math.max(1, Math.round((e.attack * (correct ? B.QUIZ_ENEMY_RATE : 1) * (plan.heavy ? 1.5 : 1) - s.defense * B.ARMOR_RATE) *
+      var damage = Math.max(1, Math.round((e.attack * (correct ? B.QUIZ_ENEMY_RATE : 1) * (plan.heavy ? 1.5 : 1) - (s.defense + (id === 'hero' ? gear.defense || 0 : 0)) * B.ARMOR_RATE) *
         (b.ward ? B.WARD_RATE : 1) * (id === 'gan' && b.guarded ? B.GUARD_RATE : 1)));
       damage = Math.min(r.hp, damage); r.hp -= damage; log(b, 'hurt', id, damage);
       if (!r.hp) log(b, 'down', id, 0);
@@ -243,11 +245,11 @@
     b.phase = 'explanation';
     return n;
   }
-  function advance(p, bank, grade, rng, now) {
+  function advance(p, bank, grade, rng, now, gear) {
     if (!p.battle) return p;
     var n = clone(p), b = n.battle;
-    if (b.phase === 'explanation') { attack(n, b.correct, rng); }
-    else if (b.phase === 'playerAction') { b.log = []; defend(n, b.correct); }
+    if (b.phase === 'explanation') { attack(n, b.correct, rng, gear); }
+    else if (b.phase === 'playerAction') { b.log = []; defend(n, b.correct, gear); }
     else if (b.phase === 'enemyAction') { b.phase = 'commands'; b.turn++; b.orders = {}; b.log = []; b.question = null; }
     else if (b.phase === 'win') { n.battle = null; n.notice = b.enemy === 'boss' ? 'passOpen' : 'victory'; }
     else if (b.phase === 'lose') { n = rest(n, n.lastTown); n.notice = 'rescued'; }
