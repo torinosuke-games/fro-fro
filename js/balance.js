@@ -20,16 +20,16 @@
       MEMBERS: {
         hero: { hp: 66, mp: 12, strength: 15, defense: 10, speed: 11, wisdom: 13, magic: 'attack' },
         juushouhei: { hp: 92, mp: 8, strength: 18, defense: 19, speed: 5, wisdom: 6, magic: 'guard' },
-        siromadoushi: { hp: 54, mp: 22, strength: 7, defense: 8, speed: 10, wisdom: 20, magic: 'heal' },
+        shiromadoushi: { hp: 54, mp: 22, strength: 7, defense: 8, speed: 10, wisdom: 20, magic: 'heal' },
         kenshi: { hp: 70, mp: 8, strength: 19, defense: 12, speed: 14, wisdom: 7, magic: 'attack' },
         senshi: { hp: 80, mp: 6, strength: 20, defense: 14, speed: 9, wisdom: 5, magic: 'attack' },
         kuromadoushi: { hp: 52, mp: 22, strength: 6, defense: 7, speed: 11, wisdom: 21, magic: 'attack' },
-        gakusya: { hp: 56, mp: 18, strength: 7, defense: 8, speed: 12, wisdom: 18, magic: 'attack' },
-        sisho: { hp: 60, mp: 16, strength: 8, defense: 9, speed: 10, wisdom: 16, magic: 'ward' },
+        gakusha: { hp: 56, mp: 18, strength: 7, defense: 8, speed: 12, wisdom: 18, magic: 'attack' },
+        shisho: { hp: 60, mp: 16, strength: 8, defense: 9, speed: 10, wisdom: 16, magic: 'ward' },
         touzoku: { hp: 58, mp: 8, strength: 15, defense: 8, speed: 22, wisdom: 9, magic: 'attack' },
         yumitsukai: { hp: 56, mp: 10, strength: 17, defense: 8, speed: 18, wisdom: 10, magic: 'attack' }
       },
-      START_ALLIES: ['juushouhei', 'siromadoushi', 'kenshi'],   // はじめからいる仲間。ほかは、旅人の救出で増える
+      START_ALLIES: ['juushouhei', 'shiromadoushi', 'kenshi'],   // はじめからいる仲間。ほかは、旅人の救出で増える
       ENEMIES: {
         cub: { hp: 95, attack: 20, defense: 4, xp: 14, gold: 12 },
         wolf: { hp: 155, attack: 32, defense: 8, xp: 25, gold: 24 },

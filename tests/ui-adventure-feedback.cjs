@@ -19,7 +19,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
    assert.equal(await page.getByRole('button',{name:'クイズで行動する',exact:true}).count(),0);
    assert.equal(await page.locator('.adv-order-chip').count(),0);
    for (let i=0;i<alive.length;i++) {
-    assert.equal(await page.locator('.adv-status[aria-pressed="true"]').getAttribute('aria-label'), (alive[i]==='hero'?'ゆき':{juushouhei:'ガルド',siromadoushi:'ミレイ',kenshi:'アカネ'}[alive[i]])+'の行動を選ぶ');
+    assert.equal(await page.locator('.adv-status[aria-pressed="true"]').getAttribute('aria-label'), (alive[i]==='hero'?'ゆき':{juushouhei:'ガルド',shiromadoushi:'ミレイ',kenshi:'アカネ'}[alive[i]])+'の行動を選ぶ');
     assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
     await page.getByRole('button',{name:'たたかう',exact:true}).click();
     assert.equal(await page.evaluate(()=>FF.app.state.adventure.battle.phase),i===alive.length-1?'attack':'commands');

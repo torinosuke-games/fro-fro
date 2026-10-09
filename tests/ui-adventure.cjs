@@ -94,7 +94,7 @@ fs.mkdirSync(out, { recursive: true });
     await page.getByRole('button',{name:'たたかう',exact:true}).click();
     await page.locator('.adv-quiz-dialog[open]').waitFor();
     assert.deepEqual(await page.evaluate(()=>FF.app.state.adventure.battle.orders.hero),{type:'item',target:'juushouhei'});
-    assert.deepEqual(await page.evaluate(()=>FF.app.state.adventure.battle.orders.siromadoushi),{type:'magic',target:'hero'});
+    assert.deepEqual(await page.evaluate(()=>FF.app.state.adventure.battle.orders.shiromadoushi),{type:'magic',target:'hero'});
     assert.equal(await page.evaluate(()=>FF.app.state.adventure.potions),3);
     await page.getByRole('button', { name: '戦闘からにげる', exact: true }).click();
     assert.equal(await page.evaluate(() => FF.app.state.adventure.battle), null);

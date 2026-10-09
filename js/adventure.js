@@ -2,9 +2,9 @@
 (function (root) {
   'use strict';
   var FF = root.FF, B = FF.balance.ADVENTURE;
-  var ALLIES = ['juushouhei', 'siromadoushi', 'kenshi', 'senshi', 'kuromadoushi', 'gakusya', 'sisho', 'touzoku', 'yumitsukai'];
+  var ALLIES = ['juushouhei', 'shiromadoushi', 'kenshi', 'senshi', 'kuromadoushi', 'gakusha', 'shisho', 'touzoku', 'yumitsukai'];
   var IDS = ['hero'].concat(ALLIES);
-  var LEGACY = { gan: 'juushouhei', rin: 'siromadoushi', sora: 'kenshi' };   // 前の版の仲間は、新しい仲間に引きつぐ（判断352）
+  var LEGACY = { gan: 'juushouhei', rin: 'shiromadoushi', sora: 'kenshi', siromadoushi: 'shiromadoushi', sisho: 'shisho', gakusya: 'gakusha' };   // 前の名前も、新しい名前に引きつぐ   // 前の版の仲間は、新しい仲間に引きつぐ（判断352）
   function magicKind(id) { return B.MEMBERS[id] && B.MEMBERS[id].magic || 'attack'; }
   var MAP = ['#############', '#.......#...#', '#.......#...#', '#.......#...#', '#..##...#...#', '#.......#...#', '#...........#', '#.......#...#', '#############'];
   var PLACES = { home: { x: 1, y: 6 }, camp: { x: 6, y: 3 }, chest: { x: 3, y: 1 }, town: { x: 11, y: 2 } };
@@ -36,7 +36,7 @@
       var r = oldRoster[id] || {}, xp = int(r.xp, 0, 1000000), s = stats(id, xp);
       p.roster[id] = { xp: xp, hp: int(r.hp, s.hp, s.hp), mp: int(r.mp, s.mp, s.mp) };
     });
-    p.recruited = Array.isArray(raw.recruited) ? raw.recruited.filter(function (id, i, a) { return ALLIES.indexOf(id) >= 0 && a.indexOf(id) === i; }) : B.START_ALLIES.slice();
+    p.recruited = Array.isArray(raw.recruited) ? raw.recruited.map(function (id) { return LEGACY[id] || id; }).filter(function (id, i, a) { return ALLIES.indexOf(id) >= 0 && a.indexOf(id) === i; }) : B.START_ALLIES.slice();
     var rawParty = Array.isArray(raw.party) ? raw.party.map(function (id) { return LEGACY[id] || id; }) : null;
     p.party = rawParty ? rawParty.filter(function (id, i, a) { return (id === 'hero' || p.recruited.indexOf(id) >= 0) && a.indexOf(id) === i; }) : ['hero'].concat(p.recruited).slice(0, 4);
     if (p.party.indexOf('hero') < 0) p.party.unshift('hero');
