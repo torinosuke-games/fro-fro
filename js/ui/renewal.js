@@ -360,6 +360,13 @@
   var facilities=facilityGrid();
   if(scene&&scene.parentNode)scene.parentNode.insertBefore(facilities,(scene.nextSibling&&scene.nextSibling.nextSibling)||null);
   // 「学んで、熱を生む」などの3つの手順の表示は、なくした（判断338）
+  // 人口と、生産の増え方（判断355）
+  var pop=FF.buildings.population(FF.app.state),mult=FF.buildings.productionMultiplier(FF.app.state);
+  var popBar=E('button',{class:'population-bar',attrs:{type:'button','aria-label':U.plain(R.popLabel)+' '+pop.total+U.plain(R.popUnit)},on:{click:function(){U.modal({title:R.popLabel,body:E('div',{class:'pop-detail'},[E('p',{class:'pop-total'},[E('strong',{text:pop.total+' '}),E('span',{rich:R.popUnit})]),E('p',{rich:R.popDetail.replace('{housing}',pop.housing).replace('{rescued}',pop.rescued)})]),buttons:[{label:U.T('back'),class:'ghost'}]});}}},[
+   E('span',{class:'pop-label',rich:R.popLabel}),E('strong',{class:'pop-num',text:String(pop.total)}),E('span',{class:'pop-unit',rich:R.popUnit}),
+   E('span',{class:'pop-bonus'},[E('span',{rich:R.popBonus}),E('strong',{text:' +'+Math.round((mult-1)*100)+'%'})])
+  ]);
+  main.insertBefore(popBar,facilities);
   if(U.adventureEntry)main.insertBefore(U.adventureEntry(),facilities);
  };
  U.screens.study.render=renderStudy;

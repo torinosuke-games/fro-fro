@@ -64,7 +64,7 @@
       foodhall: '食料を少しずつ生産する。食料を集める学習の報酬が増える。'
     },
     effectProducer: '生産：1時間に{rate}個　学習ボーナス：+{bonus}%',
-    effectHousing: '保管できる時間：{hours}時間',
+    effectHousing: '保管できる時間：{hours}時間　人口：{pop}人',
     effectFurnace: 'ほかの建物の上限：Lv{level}',
     nextLevel: '次のレベル',
     upgrade: '強化する',
