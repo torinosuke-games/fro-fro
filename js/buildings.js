@@ -41,8 +41,26 @@
     return Math.min(s.MAX, s.BASE + s.PER_LEVEL * Math.max(0, housingLevel - 1));
   }
 
-  function productionPerHour(level, b) {
-    return Math.max(0, level) * bal(b).PRODUCTION_PER_LEVEL_PER_HOUR;
+  // 人口（判断355）：{ total, base, housing（住宅のぶん）, rescued（救出した旅人のぶん）, rescuedCount }
+  function population(state, b) {
+    b = bal(b);
+    var P = b.POPULATION;
+    var level = state && state.buildings && state.buildings.housing ? Math.max(1, state.buildings.housing.level) : 1;
+    var adv = state && state.adventure, start = b.ADVENTURE.START_ALLIES;
+    var count = adv && Array.isArray(adv.recruited) ? adv.recruited.filter(function (id) { return start.indexOf(id) < 0; }).length : 0;
+    var housing = P.PER_HOUSING_LEVEL * (level - 1), rescued = P.PER_RESCUED * count;
+    return { total: P.BASE + housing + rescued, base: P.BASE, housing: housing, rescued: rescued, rescuedCount: count };
+  }
+
+  // 人口による、生産の倍率（はじめは 1）
+  function productionMultiplier(state, b) {
+    var pop = population(state, b);
+    return 1 + bal(b).POPULATION.BONUS_PER_PERSON * (pop.total - pop.base);
+  }
+
+  // mult：人口による倍率（省略すると 1）
+  function productionPerHour(level, b, mult) {
+    return Math.max(0, level) * bal(b).PRODUCTION_PER_LEVEL_PER_HOUR * (mult || 1);
   }
 
   // ---- 解放 ----
@@ -191,7 +209,7 @@
     var elapsed = now - bld.lastCollectedAt;
     if (elapsed <= 0) return 0;   // 時計が戻っている
     var capMs = storageHours(state.buildings.housing.level, b) * HOUR;
-    return Math.floor(productionPerHour(bld.level, b) * Math.min(elapsed, capMs) / HOUR);
+    return Math.floor(productionPerHour(bld.level, b, productionMultiplier(state, b)) * Math.min(elapsed, capMs) / HOUR);
   }
 
   // 資源ごとの未受け取り量 { wood: n, ... }
@@ -223,7 +241,7 @@
       collected[d.produces] = (collected[d.produces] || 0) + amount;
     }
     if (elapsed >= capMs) bld.lastCollectedAt = now;
-    else if (amount > 0) bld.lastCollectedAt += Math.floor(amount * HOUR / productionPerHour(bld.level, b));
+    else if (amount > 0) bld.lastCollectedAt += Math.floor(amount * HOUR / productionPerHour(bld.level, b, productionMultiplier(s, b)));
   }
 
   // 「受け取り」：すべての生産施設の生産物を資源に加える。{ state, collected: { wood: n, ... } }
@@ -290,6 +308,8 @@
     upgradeCost: upgradeCost,
     storageHours: storageHours,
     productionPerHour: productionPerHour,
+    population: population,
+    productionMultiplier: productionMultiplier,
     unlockLevel: unlockLevel,
     isUnlocked: isUnlocked,
     canUpgrade: canUpgrade,

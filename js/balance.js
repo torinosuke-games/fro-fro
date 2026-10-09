@@ -150,6 +150,10 @@
     PRODUCTION_PER_LEVEL_PER_HOUR: 2,
     STORAGE_HOURS: { BASE: 4, PER_LEVEL: 2, MAX: 12 },  // 住宅 Lv1 で4時間、+2時間/Lv
 
+    // 人口（判断355）：人口が増えると、すべての生産施設の生産が増える。人口 ＝ BASE ＋ 住宅のレベルごと ＋ 救出した旅人ごと。
+    // 生産の倍率 ＝ 1 ＋ BONUS_PER_PERSON × (人口 − BASE)。はじめ（住宅Lv1・救出なし）は ちょうど ×1 で、これまでのバランスは変わらない。
+    POPULATION: { BASE: 10, PER_HOUSING_LEVEL: 5, PER_RESCUED: 10, BONUS_PER_PERSON: 0.02 },
+
     INITIAL_RESOURCES: { wood: 0, iron: 0, stone: 0, food: 0 },
 
     // ---- 探索（v0.2、SPEC_v0.2） ----

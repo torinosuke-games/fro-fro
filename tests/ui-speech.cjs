@@ -29,7 +29,9 @@ const { chromium } = require(process.env.FF_PLAYWRIGHT_MODULE || 'playwright');
   let { page, errors } = await open(true);
   await show(page, 'english_g4_hand_animal_007');          // 「elephant」は 日本語で どれかな
   assert.equal(await page.locator('.speak-button.small').count(), 1);
+  assert.equal((await page.locator('.speak-button.small').innerText()).trim().replace(/^🔊\s*/, ''), 'きく');   // はじめは「きく」（判断356）
   await page.locator('.speak-button.small').click();
+  assert.ok((await page.locator('.speak-button.small').innerText()).includes('もういちど'));   // きいたあとで「もういちど きく」
   let spoken = await page.evaluate(() => window.__spoken);
   assert.deepEqual(spoken.map(s => s.text), ['elephant']);
   assert.equal(spoken[0].lang, 'en-US'); assert.equal(spoken[0].rate, 0.85); assert.equal(spoken[0].voice, 'Samantha');

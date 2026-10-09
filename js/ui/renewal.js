@@ -189,19 +189,21 @@
   return aside;
  }
  // 英語の読み上げ（判断280）：スピーカーのボタン。聞き取りの問題（q.listen）は、大きなボタンで、読み上げができないときは英語の文字を見せる
- function speakButton(text,label,cls){
-  return E('button',{class:'speak-button '+(cls||''),attrs:{type:'button','aria-label':label},on:{click:function(){FF.speech.speak(text);}}},[E('span',{class:'speak-icon',text:'🔊'}),E('span',{text:label})]);
+ function speakButton(text,label,cls,again){
+  // はじめは label（きく）。一度きいたら again（もういちど きく）に変わる（判断356）
+  var name=E('span',{text:label}),btn=E('button',{class:'speak-button '+(cls||''),attrs:{type:'button','aria-label':label},on:{click:function(){FF.speech.speak(text);if(again){name.textContent=again;btn.setAttribute('aria-label',again);}}}},[E('span',{class:'speak-icon',text:'🔊'}),name]);
+  return btn;
  }
  function speakView(q,done){
   if(!FF.speech||q.subject!=='english')return null;
   var text=FF.speech.textFor(q);if(!text)return null;
   var can=FF.speech.supported()&&FF.speech.enabled();
   if(q.listen){
-   if(can)return E('div',{class:'speak-row listen'},[speakButton(text,R.speakListen,'big'),E('span',{class:'speak-note',text:R.speakNote})]);
+   if(can)return E('div',{class:'speak-row listen'},[speakButton(text,R.speakListen,'big',R.speakAgain),E('span',{class:'speak-note',text:R.speakNote})]);
    return E('div',{class:'speak-row listen no-sound'},[E('span',{class:'speak-note',text:R.speakNoSound}),E('strong',{class:'speak-text',text:'「'+text+'」'})]);
   }
   if(!can)return null;
-  return E('div',{class:'speak-row'},[speakButton(text,R.speakAgain,'small')]);
+  return E('div',{class:'speak-row'},[speakButton(text,R.speakListen,'small',R.speakAgain)]);
  }
  FF.lessonHelp=helpView;
  function renderQuiz(main){
@@ -360,6 +362,13 @@
   var facilities=facilityGrid();
   if(scene&&scene.parentNode)scene.parentNode.insertBefore(facilities,(scene.nextSibling&&scene.nextSibling.nextSibling)||null);
   // 「学んで、熱を生む」などの3つの手順の表示は、なくした（判断338）
+  // 人口と、生産の増え方（判断355）
+  var pop=FF.buildings.population(FF.app.state),mult=FF.buildings.productionMultiplier(FF.app.state);
+  var popBar=E('button',{class:'population-bar',attrs:{type:'button','aria-label':U.plain(R.popLabel)+' '+pop.total+U.plain(R.popUnit)},on:{click:function(){U.modal({title:R.popLabel,body:E('div',{class:'pop-detail'},[E('p',{class:'pop-total'},[E('strong',{text:pop.total+' '}),E('span',{rich:R.popUnit})]),E('p',{rich:R.popDetail.replace('{housing}',pop.housing).replace('{rescued}',pop.rescued)})]),buttons:[{label:U.T('back'),class:'ghost'}]});}}},[
+   E('span',{class:'pop-label',rich:R.popLabel}),E('strong',{class:'pop-num',text:String(pop.total)}),E('span',{class:'pop-unit',rich:R.popUnit}),
+   E('span',{class:'pop-bonus'},[E('span',{rich:R.popBonus}),E('strong',{text:' +'+Math.round((mult-1)*100)+'%'})])
+  ]);
+  main.insertBefore(popBar,facilities);
   if(U.adventureEntry)main.insertBefore(U.adventureEntry(),facilities);
  };
  U.screens.study.render=renderStudy;
