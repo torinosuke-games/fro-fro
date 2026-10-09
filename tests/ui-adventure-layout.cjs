@@ -8,6 +8,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-battle-layout';fs.mkdirSync(out,{r
   const page=await browser.newPage({viewport:{width:911,height:884},reducedMotion:'no-preference'}),errors=[];
   page.on('pageerror',e=>errors.push(e.message));await page.route(/https:\/\/fonts\.(googleapis|gstatic)\.com\//,r=>r.abort());
   await page.goto(process.env.FF_TEST_URL||'http://127.0.0.1:8773/preview/',{waitUntil:'domcontentloaded'});
+  await page.addStyleTag({content:'.adv-rpg-shell.is-hurt{animation:none!important}'});   // 揺れ（判断346）は、配置の比較からはずす
   await page.locator('.title-card input').fill('ゆき');await page.locator('.title-card .btn.primary').click();await page.getByRole('button',{name:'小学4年',exact:true}).click();await page.locator('.avatar-pick').first().click();await page.locator('.intro-line + button').click();
   for(const [width,height] of [[360,640],[390,844],[768,1024],[911,884]]){
    await page.setViewportSize({width,height});

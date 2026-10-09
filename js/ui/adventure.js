@@ -394,6 +394,9 @@
     if (!shell) {
       header(main, C.region, T.scenery.turn + ' ' + b.turn + ' · ' + d.rank);
       shell = E('div', {class:'adv-rpg-shell' + (entering ? ' encounter' : '')}); main.appendChild(shell);
+      // 登場の光（encounter）は一度だけ。残しておくと、揺れ（is-hurt）のあとで再生されて、画面が白く光る（判断347）
+      shell.addEventListener('animationend', function(e) { if (e.target === shell && e.animationName === 'adv-encounter') shell.classList.remove('encounter'); });
+      root.setTimeout(function() { shell.classList.remove('encounter'); }, 700);
     } else {
       U.clear(main.querySelector('.adv-subtitle')); main.querySelector('.adv-subtitle').appendChild(U.rich(T.scenery.turn + ' ' + b.turn + ' · ' + d.rank));
       // Retain the open question dialog when replacing the question with its explanation.
