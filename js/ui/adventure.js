@@ -340,12 +340,12 @@
     var panel = E('section', {class:'adv-command-panel adv-victory-panel adv-result win', attrs:{'aria-label':T.victory,'aria-live':'polite'}});
     var dialogue = E('div',{class:'adv-command-dialogue'},[
       text('p','adv-reward',T.victoryReward.replace('{xp}',reward.xp).replace('{gold}',reward.gold)),
+      btn(T.field,advance,'gold'),
       E('div',{class:'adv-levelups'},reward.levels.map(function(r){return text('p','','✦ ' + name(r.id) + ' Lv.' + r.level + '　' + T.levelUp);} ))
     ]);
     if (reward.chest) dialogue.appendChild(E('div',{class:'adv-loot'},[
       scene.chest(), E('div',{},[text('strong','',T.treasureFound),text('p','',T.treasureContents.replace('{gold}',reward.chest.gold).replace('{potions}',reward.chest.potions))])
     ]));
-    dialogue.appendChild(btn(T.field,advance,'gold'));
     panel.appendChild(passiveMenu()); panel.appendChild(dialogue);
     // Let the final hit play before revealing the victory and chest.
     if (damage && !root.matchMedia('(prefers-reduced-motion: reduce)').matches) panel.classList.add('after-hit');

@@ -198,9 +198,9 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 @media(prefers-reduced-motion:reduce){.adv-hit-flash{animation:none;opacity:0}}
 .adv-rpg-shell .adv-passive-menu{justify-content:flex-start}
 .adv-rpg-shell .adv-passive-menu .adv-command{margin-top:0}
-/* 勝利の画面：レベルアップが多くても、「旅をつづける」を枠の下に隠さない（判断344）。文字は詰め、ボタンは下に固定 */
+/* 勝利の画面：「旅をつづける」は、報酬の文のすぐ下に置く（判断344。下だと画面の外になるため） */
 .adv-victory-panel .adv-command-dialogue{display:flex;flex-direction:column;padding-bottom:0}
 .adv-victory-panel .adv-reward{font-size:15px;margin:0 0 6px;line-height:1.5}
 .adv-victory-panel .adv-levelups{display:flex;flex-wrap:wrap;gap:0 12px;font-size:12px}.adv-victory-panel .adv-levelups p{margin:2px 0;font-size:12px}
 .adv-victory-panel .adv-loot{margin:6px 0;padding:6px 8px}.adv-victory-panel .adv-loot-chest{width:52px}.adv-victory-panel .adv-loot p{margin:2px 0 0}
-.adv-victory-panel .adv-command-dialogue>.adv-button{position:sticky;bottom:0;margin-top:auto;flex-shrink:0;box-shadow:0 -10px 8px -2px #091726}
+.adv-victory-panel .adv-command-dialogue>.adv-button{flex-shrink:0;margin:0 0 8px}
