@@ -173,7 +173,7 @@
       U.el('div', { class: 'grid2' }, [
         U.el('button', { class: 'btn small', text: '+500 G', on: { click: function () { app.commit(FF.shop.addGold(app.state, 500)); U.toast('ゴールドを足した'); } } }),
         U.el('button', { class: 'btn small', text: '+5,000 G', on: { click: function () { app.commit(FF.shop.addGold(app.state, 5000)); U.toast('ゴールドを足した'); } } }),
-        U.el('button', { class: 'btn small', text: 'ゴールドと武器をはじめに戻す', on: { click: function () { var s = FF.util.clone(app.state); if (s.adventure) s.adventure.gold = 0; s.equipment = { weapon: FF.balance.DEFAULT_WEAPON, owned: [FF.balance.DEFAULT_WEAPON] }; app.commit(s); U.toast('はじめに戻した'); } } })
+        U.el('button', { class: 'btn small', text: 'ゴールドと武器・防具をはじめに戻す', on: { click: function () { var s = FF.util.clone(app.state); if (s.adventure) s.adventure.gold = 0; s.equipment = { weapon: FF.balance.DEFAULT_WEAPON, owned: [FF.balance.DEFAULT_WEAPON], armor: FF.balance.DEFAULT_ARMOR, ownedArmor: [FF.balance.DEFAULT_ARMOR] }; app.commit(s); U.toast('はじめに戻した'); } } })
       ])
     ]));
 

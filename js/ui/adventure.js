@@ -329,8 +329,10 @@
       root.setTimeout(function() { if(dialog.isConnected && FF.app.screen === 'adventure' && !dialog.open) {dialog.showModal();heading.focus({preventScroll:true});} },delay);
     });
   }
+  // 武器・防具を主人公の攻撃・防御に足す（判断343）
+  function gear() { var s = FF.app.state; return FF.shop ? { attack: FF.shop.weaponBonus(s), defense: FF.shop.armorDefense(s) } : {}; }
   function advance() {
-    var old = p(), next = A.advance(old, FF.app.bank, grade(), Math.random, FF.app.now());
+    var old = p(), next = A.advance(old, FF.app.bank, grade(), Math.random, FF.app.now(), gear());
     if (next === old) { U.toast(T.noQuestion); return; } change(next);
   }
   function victoryPanel(damage) {

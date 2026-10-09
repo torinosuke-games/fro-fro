@@ -26,6 +26,17 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.locator('.shop-row[data-weapon="wood_sword"] .shop-btn').click();
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'wood_sword');
  assert.equal(await p.evaluate(()=>FF.shop.damagePerCorrect(FF.app.state)),10);
+ // 防具屋：5つ。ゴールドで買うと装備中になる
+ await p.locator('.overlay .btn').click();
+ await p.evaluate(()=>FF.app.commit(FF.shop.addGold(FF.app.state,150)));
+ await p.locator('.facility-btn[data-facility="armor"]').click();
+ assert.equal(await p.locator('.overlay h2').innerText(),'防具屋');
+ assert.equal(await p.locator('.shop-row').count(),5);
+ assert.equal(await p.locator('.shop-row[data-weapon="cloth_clothes"] .shop-equipped').count(),1);
+ await p.locator('.shop-row[data-weapon="fur_coat"] .shop-btn').click();
+ assert.equal(await p.evaluate(()=>FF.shop.currentArmor(FF.app.state)),'fur_coat');
+ assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'wood_sword');
+ assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),100);
  // 画面におさまる
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  for(const w of [360,768]){await p.setViewportSize({width:w,height:844});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}

@@ -91,4 +91,58 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     }
     void X;
   });
+  test('防具屋：防具は5つ。買うと装備され、武器の装備は変わらない。足りないゴールドでは買えない', () => {
+    const AR = ['cloth_clothes', 'fur_coat', 'leather_armor', 'iron_armor', 'steel_armor'];
+    assert.deepStrictEqual(plain(FF.defs.ARMORS.map(a => a.id)), AR);
+    assert.deepStrictEqual(plain(Object.keys(B.ARMORS)), AR);
+    for (let i = 1; i < AR.length; i++) {
+      assert.ok(B.ARMORS[AR[i]].defense > B.ARMORS[AR[i - 1]].defense, AR[i]);
+      assert.ok(B.ARMORS[AR[i]].price > B.ARMORS[AR[i - 1]].price, AR[i]);
+    }
+    let s = fresh();
+    assert.strictEqual(S.currentArmor(s), 'cloth_clothes');
+    assert.strictEqual(S.armorDefense(s), 0);
+    assert.strictEqual(S.canBuyArmor(s, 'fur_coat').reason, 'gold');
+    assert.strictEqual(S.canBuyArmor(s, 'bogus').reason, 'unknown');
+    s = S.buy(S.addGold(s, 1000), 'iron_sword').state;
+    const r = S.buyArmor(s, 'leather_armor');
+    assert.ok(r.ok);
+    assert.strictEqual(S.gold(r.state), 1000 - B.WEAPONS.iron_sword.price - B.ARMORS.leather_armor.price);
+    assert.strictEqual(S.currentArmor(r.state), 'leather_armor');
+    assert.strictEqual(S.currentWeapon(r.state), 'iron_sword');
+    assert.strictEqual(S.canBuyArmor(r.state, 'leather_armor').reason, 'owned');
+    const q = S.equipArmor(r.state, 'cloth_clothes');
+    assert.strictEqual(S.currentArmor(q.state), 'cloth_clothes');
+    assert.strictEqual(S.equipArmor(r.state, 'steel_armor').reason, 'notOwned');
+    const back = FF.state.parseSave(FF.state.serialize(r.state), T0 + 1);
+    assert.ok(back.ok, back.error);
+    assert.strictEqual(S.currentArmor(back.state), 'leather_armor');
+    // 古いセーブ（防具の項目なし）は、ぬのの服で補う
+    const old = Object.assign({}, fresh(), { equipment: { weapon: 'wood_sword', owned: ['wood_sword'] } });
+    assert.strictEqual(S.currentArmor(S.normalizeShop(old)), 'cloth_clothes');
+  });
+  test('武器・防具：冒険のクイズ戦闘で、剣は主人公の与えるダメージを、防具は受けるダメージを変える', () => {
+    const A = FF.adventure, bank = FF.learning.createBank(ctx.QUESTION_BANK), rng = () => .37, now = 1791000000000;
+    const run = gear => {
+      let p = A.create(); p.pos = plain(A.ENEMIES.boss); p = A.encounter(p, 'boss');
+      const orders = Object.fromEntries(A.alive(p).map(id => [id, { type: 'attack', target: id }]));
+      p = A.command(p, orders, bank, 4, rng, now);
+      p = A.answer(p, p.battle.question.answer, now);
+      p = A.advance(p, bank, 4, rng, now, gear);          // 攻撃
+      const hp = p.battle.hp;
+      p = A.advance(p, bank, 4, rng, now, gear);          // 反撃
+      return { enemyHp: hp, heroHp: p.roster.hero.hp };
+    };
+    const base = run(), strong = run({ attack: S.weaponBonus(S.buy(S.addGold(fresh(), 5000), 'flame_sword').state), defense: B.ARMORS.steel_armor.defense });
+    assert.ok(strong.enemyHp < base.enemyHp, '剣で敵のHPがより減る');
+    assert.ok(strong.heroHp > base.heroHp, '防具で主人公のHPがより残る');
+    assert.strictEqual(S.weaponBonus(fresh()), 0);
+  });
+  test('防具：探索の戦闘で、まちがえたときのダメージが防具で減る（最低1）', () => {
+    const s = fresh();
+    assert.strictEqual(S.damageTaken(s, 20), 20);
+    const a = S.buyArmor(S.addGold(s, 5000), 'steel_armor').state;
+    assert.strictEqual(S.damageTaken(a, 20), 20 - Math.round(B.ARMORS.steel_armor.defense * B.BATTLE.ARMOR_RATE));
+    assert.strictEqual(S.damageTaken(a, 1), 1);
+  });
 };

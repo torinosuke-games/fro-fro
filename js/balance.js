@@ -193,9 +193,19 @@
       flame_sword: { damage: 22, price: 2000 }
     },
     DEFAULT_WEAPON: 'wood_sword',
+    // 防具（防具屋。判断343）：defense ＝ 防御力。冒険では、主人公の防御力に足す。探索では、まちがえたときに受けるダメージを (defense × BATTLE.ARMOR_RATE) だけ減らす（最低1）
+    ARMORS: {
+      cloth_clothes: { defense: 0, price: 0 },
+      fur_coat: { defense: 3, price: 100 },
+      leather_armor: { defense: 6, price: 300 },
+      iron_armor: { defense: 10, price: 800 },
+      steel_armor: { defense: 15, price: 2000 }
+    },
+    DEFAULT_ARMOR: 'cloth_clothes',
 
     BATTLE: {
       PLAYER_HP: 100,                // 隊長の HP（挑戦のたびに満タンから）
+      ARMOR_RATE: 0.6,               // 防具の防御力のうち、探索でまちがえたときのダメージを減らす割合
       DAMAGE_PER_CORRECT: 10,        // 正解1問で敵に与えるダメージ（選択問題・書き問題とも同じ）
       CHOICE_SHARE: 0.5,             // 選択問題を出す割合。一度まちがえたら、その戦闘の間は書き問題だけ
       BOSS_MERCY_STEP: 0.1,          // ボスに負けるたびに、次の挑戦でボスの HP を最大値のこの割合ずつ減らす
