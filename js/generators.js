@@ -1560,20 +1560,40 @@
     var seen = {};
     seen[FF.answer.normalize(q.answer)] = true;
     var pool = [];
+    var n = FF.answer.parseNumber(q.answer);
+    var isFrac = /^\d+\/\d+$/.test(q.answer);
+    var step = 1;
+    if (!isNaN(n) && q.answer.indexOf('.') >= 0) step = pow10(-(q.answer.split('.')[1].length));
+    // 正解から遠すぎる誤答（見た目で外れとわかる数）は選ばない（判断351）。
+    // 近さ：正解との差が、正解の6割と、最小の位の12個ぶんの大きいほう以内。位どりのまちがい（10倍・10分の1）だけは、1つまで入れてよい
+    var shifted = 0;
+    function plausible(s) {
+      if (isFrac || isNaN(n) || Math.abs(n) >= 1e7) return true;   // 千万以上は、桁の読み書きが問題の中心なので、そのまま
+      var v = FF.answer.parseNumber(s);
+      if (isNaN(v)) return true;
+      if (Math.abs(v - n) <= Math.max(Math.abs(n) * 0.6, 12 * step)) return true;
+      if (n !== 0 && v !== 0 && shifted < 1 && (Math.abs(v / n - 10) < 1e-9 || Math.abs(v / n - 0.1) < 1e-9)) { shifted++; return true; }
+      return false;
+    }
     function add(s) {
       s = String(s);
       var key = FF.answer.normalize(s);
       if (seen[key] || s === '' || s === 'NaN') return;
       if (FF.answer.judgeInput(q, s).correct) return;
+      if (!plausible(s)) { far.push(s); return; }
       seen[key] = true;
       pool.push(s);
     }
+    var far = [];
     FF.util.shuffle(distractors, rng).forEach(add);
+    // 近い誤答が足りないとき、位どりのまちがい（10のべき乗倍）は、遠くても入れる（桁・位どりが問題の中心のもの）。それ以外の遠いものは使わない
+    function tenPower(s) { var r = Math.abs(Math.log10(Math.abs(FF.answer.parseNumber(s) / n))); return Math.abs(r - Math.round(r)) < 1e-9; }
+    far = far.filter(tenPower);
+    if (pool.length < 3) far.sort(function (a, b) { return Math.abs(Math.log(Math.abs(FF.answer.parseNumber(a) / n))) - Math.abs(Math.log(Math.abs(FF.answer.parseNumber(b) / n))); }).forEach(function (s) {
+      var key = FF.answer.normalize(s);
+      if (pool.length < 3 && !seen[key]) { seen[key] = true; pool.push(s); }
+    });
     // 足りなければ正解の近くの数で補う
-    var n = FF.answer.parseNumber(q.answer);
-    var isFrac = /^\d+\/\d+$/.test(q.answer);
-    var step = 1;
-    if (!isNaN(n) && q.answer.indexOf('.') >= 0) step = pow10(-(q.answer.split('.')[1].length));
     for (var k = 1; pool.length < 3 && k < 50; k++) {
       if (isFrac) {
         var parts = q.answer.split('/');
