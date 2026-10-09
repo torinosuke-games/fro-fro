@@ -189,19 +189,21 @@
   return aside;
  }
  // 英語の読み上げ（判断280）：スピーカーのボタン。聞き取りの問題（q.listen）は、大きなボタンで、読み上げができないときは英語の文字を見せる
- function speakButton(text,label,cls){
-  return E('button',{class:'speak-button '+(cls||''),attrs:{type:'button','aria-label':label},on:{click:function(){FF.speech.speak(text);}}},[E('span',{class:'speak-icon',text:'🔊'}),E('span',{text:label})]);
+ function speakButton(text,label,cls,again){
+  // はじめは label（きく）。一度きいたら again（もういちど きく）に変わる（判断356）
+  var name=E('span',{text:label}),btn=E('button',{class:'speak-button '+(cls||''),attrs:{type:'button','aria-label':label},on:{click:function(){FF.speech.speak(text);if(again){name.textContent=again;btn.setAttribute('aria-label',again);}}}},[E('span',{class:'speak-icon',text:'🔊'}),name]);
+  return btn;
  }
  function speakView(q,done){
   if(!FF.speech||q.subject!=='english')return null;
   var text=FF.speech.textFor(q);if(!text)return null;
   var can=FF.speech.supported()&&FF.speech.enabled();
   if(q.listen){
-   if(can)return E('div',{class:'speak-row listen'},[speakButton(text,R.speakListen,'big'),E('span',{class:'speak-note',text:R.speakNote})]);
+   if(can)return E('div',{class:'speak-row listen'},[speakButton(text,R.speakListen,'big',R.speakAgain),E('span',{class:'speak-note',text:R.speakNote})]);
    return E('div',{class:'speak-row listen no-sound'},[E('span',{class:'speak-note',text:R.speakNoSound}),E('strong',{class:'speak-text',text:'「'+text+'」'})]);
   }
   if(!can)return null;
-  return E('div',{class:'speak-row'},[speakButton(text,R.speakAgain,'small')]);
+  return E('div',{class:'speak-row'},[speakButton(text,R.speakListen,'small',R.speakAgain)]);
  }
  FF.lessonHelp=helpView;
  function renderQuiz(main){
