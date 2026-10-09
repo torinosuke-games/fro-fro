@@ -276,7 +276,8 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(B.isStorageFull(s, 'lumber', T0 + 4 * HOUR), true);
     s.buildings.furnace.level = 5;
     s.buildings.housing.level = 5;
-    assert.strictEqual(B.pendingProduction(s, 'lumber', T0 + 30 * HOUR), 12 * rate);
+    // 住宅Lv5：人口が +20人（判断355）で、生産は ×1.4
+    assert.strictEqual(B.pendingProduction(s, 'lumber', T0 + 30 * HOUR), Math.floor(12 * rate * 1.4));
   });
 
   test('生産物は自動では加算されず、「受け取り」で資源に入る', () => {
@@ -353,5 +354,25 @@ module.exports = ({ test, FF, assert, plain }) => {
     let s = B.collectAll(newState(), T0 + 2 * HOUR).state;
     const loaded = FF.state.parseSave(FF.state.serialize(s), T0 + 3 * HOUR).state;
     assert.strictEqual(B.pendingProduction(loaded, 'lumber', T0 + 3 * HOUR), rate);
+  });
+
+  test('人口：はじめは10人で生産は×1。住宅のレベルと、救出した旅人で増え、生産が増える（判断355）', () => {
+    const s = newState();
+    const pop = B.population(s);
+    assert.deepStrictEqual(plain({ t: pop.total, h: pop.housing, r: pop.rescued }), { t: 10, h: 0, r: 0 });
+    assert.strictEqual(B.productionMultiplier(s), 1);
+    assert.strictEqual(B.pendingProduction(s, 'lumber', T0 + 2 * HOUR), 2 * rate);   // これまでと同じ
+    // 住宅 Lv3：+10人 → ×1.2
+    s.buildings.furnace.level = 5; s.buildings.housing.level = 3;
+    assert.strictEqual(B.population(s).total, 20);
+    assert.ok(Math.abs(B.productionMultiplier(s) - 1.2) < 1e-9);
+    // 旅人を2人救出：+20人 → ×1.6（住宅Lv3と合わせて 40人）
+    s.adventure = FF.adventure.recruit(FF.adventure.recruit(s.adventure, 'senshi'), 'yumitsukai');
+    assert.strictEqual(B.population(s).rescuedCount, 2);
+    assert.strictEqual(B.population(s).total, 40);
+    assert.ok(Math.abs(B.productionMultiplier(s) - 1.6) < 1e-9);
+    assert.strictEqual(B.pendingProduction(s, 'lumber', T0 + 2 * HOUR), Math.floor(2 * rate * 1.6));
+    // はじめの3人の仲間は、人口に数えない
+    const fresh = newState(); assert.strictEqual(B.population(fresh).rescuedCount, 0);
   });
 };
