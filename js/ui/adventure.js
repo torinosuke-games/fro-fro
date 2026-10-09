@@ -197,12 +197,8 @@
     if (A.atTown(n)) main.appendChild(settings());
     main.appendChild(text('p', 'adv-record', '冒険の学習記録：' + n.answered + '問 · 正解 ' + n.correct + '問（熱量・問題チケットとは別の記録）'));
   }
-  function intention() {
-    var plan = A.intent(p());
-    if (!plan || !plan.target) return '';
-    if (plan.all) return '次の攻撃：吹雪の息 → 仲間全員';
-    return '次の攻撃：' + (plan.heavy ? '身を低くして、強い一撃' : 'ひっかき攻撃') + ' → ' + name(plan.target);
-  }
+  // 敵の次の行動は、先に見せない（わかると簡単になるため。判断348）。要素は残し、中身を空にする
+  function intention() { return ''; }
   function prepareOrders() {
     var n = p(), key = n.battle.enemy + ':' + n.battle.turn;
     if (orderKey !== key) { orders = {}; actor = A.alive(n)[0]; submenu = null; orderKey = key; }
@@ -230,6 +226,10 @@
     var before = p(), next = A.command(before, orders, FF.app.bank, grade(), Math.random, FF.app.now());
     if (next === before) { U.toast(A.pick(FF.app.bank, before, grade(), Math.random, FF.app.now()) ? T.noOrders : T.noQuestion); paint(); return; }
     orderKey = null; change(next);
+  }
+  // 戦闘の説明は、毎回は出さず、ボタンで開く（判断349）
+  function openHowto() {
+    U.modal({ title: C.howtoButton, body: E('div', { class: 'adv-howto-body' }, C.howto.map(function(line) { return text('p', '', line); })), buttons: [{ label: C.goBack, class: 'ghost' }] });
   }
   function commandPanel() {
     var n = p(), panel = E('section', { class: 'adv-command-panel' }), menu = E('nav', { class: 'adv-command-menu' + (submenu ? ' adv-subcommand-menu' : ''), attrs: { 'aria-label': submenu ? C.details : T.command } });
@@ -262,13 +262,14 @@
       }
       menu.appendChild(btn(C.goBack, function() { if (submenu.target) submenu.target = false; else submenu = null; paint(); }, 'adv-command'));
     }
-    var alive = A.alive(n), position = alive.indexOf(actor) + 1;
+    var alive = A.alive(n);
     var dialogue = E('div', { class: 'adv-command-dialogue' }, [
       text('p', 'adv-encounter-text', C.encounter.replace('{name}',T.enemies[n.battle.enemy].name)),
       text('p', 'adv-action-message adv-command-prompt', prompt),
-      text('p', 'adv-help', C.actorHelp),
-      text('p', 'adv-action-description', submenu ? (submenu.type === 'magic' ? T.members[actor].detail : C.item) : C.attack),
-      text('p', 'adv-help adv-command-progress', position + ' / ' + alive.length)
+      submenu ? text('p', 'adv-action-description', submenu.type === 'magic' ? T.members[actor].detail : C.item) : null,
+      E('div', { class: 'adv-command-foot' }, [
+        E('button', { class: 'adv-howto', rich: '？ ' + C.howtoShort, attrs: { type: 'button' }, on: { click: openHowto } })
+      ])
     ]);
     panel.appendChild(menu); panel.appendChild(dialogue); return panel;
   }
@@ -279,7 +280,6 @@
     body.appendChild(text('h2', 'adv-question', q.question));
     if (active && q.diagram && FF.lessonFigure) body.appendChild(FF.lessonFigure.render(q.diagram));
     if (active) {
-      body.appendChild(text('p', 'adv-help', T.attackHelp));
       q.hints.slice(0, b.hints || 0).forEach(function(hint) { body.appendChild(text('p', 'adv-hint', hint)); });
       if (q.answerType === 'choice') {
         controls.appendChild(E('div', { class: 'adv-choices' }, b.choices.map(function(choice, i) {
@@ -340,12 +340,12 @@
     var panel = E('section', {class:'adv-command-panel adv-victory-panel adv-result win', attrs:{'aria-label':T.victory,'aria-live':'polite'}});
     var dialogue = E('div',{class:'adv-command-dialogue'},[
       text('p','adv-reward',T.victoryReward.replace('{xp}',reward.xp).replace('{gold}',reward.gold)),
+      btn(T.field,advance,'gold'),
       E('div',{class:'adv-levelups'},reward.levels.map(function(r){return text('p','','✦ ' + name(r.id) + ' Lv.' + r.level + '　' + T.levelUp);} ))
     ]);
     if (reward.chest) dialogue.appendChild(E('div',{class:'adv-loot'},[
       scene.chest(), E('div',{},[text('strong','',T.treasureFound),text('p','',T.treasureContents.replace('{gold}',reward.chest.gold).replace('{potions}',reward.chest.potions))])
     ]));
-    dialogue.appendChild(btn(T.field,advance,'gold'));
     panel.appendChild(passiveMenu()); panel.appendChild(dialogue);
     // Let the final hit play before revealing the victory and chest.
     if (damage && !root.matchMedia('(prefers-reduced-motion: reduce)').matches) panel.classList.add('after-hit');
@@ -394,6 +394,9 @@
     if (!shell) {
       header(main, C.region, T.scenery.turn + ' ' + b.turn + ' · ' + d.rank);
       shell = E('div', {class:'adv-rpg-shell' + (entering ? ' encounter' : '')}); main.appendChild(shell);
+      // 登場の光（encounter）は一度だけ。残しておくと、揺れ（is-hurt）のあとで再生されて、画面が白く光る（判断347）
+      shell.addEventListener('animationend', function(e) { if (e.target === shell && e.animationName === 'adv-encounter') shell.classList.remove('encounter'); });
+      root.setTimeout(function() { shell.classList.remove('encounter'); }, 700);
     } else {
       U.clear(main.querySelector('.adv-subtitle')); main.querySelector('.adv-subtitle').appendChild(U.rich(T.scenery.turn + ' ' + b.turn + ' · ' + d.rank));
       // Retain the open question dialog when replacing the question with its explanation.
@@ -405,6 +408,8 @@
     if (stats) stats.replaceWith(battleStats()); else shell.appendChild(battleStats());
     received = {};
     if (hurt) shell.appendChild(E('div',{class:'adv-hit-flash',attrs:{'aria-hidden':'true'}}));
+    // ダメージを受けたら、画面（戦闘の枠）全体を揺らす（判断346。transform だけなので配置はずれない）
+    shell.classList.remove('is-hurt'); if (hurt) { void shell.offsetWidth; shell.classList.add('is-hurt'); }
     var stage = shell.querySelector('.adv-battle-stage');
     if (!stage) {
       stage = E('section', {class:'adv-battle-stage ' + b.enemy,attrs:{'aria-label':d.name}},[
@@ -430,7 +435,6 @@
       if (b.phase === 'enemyAction') b.log.forEach(function(line) {
         dialogue.appendChild(text('p','adv-action-message',T.logs[line.key].replace('{name}',name(line.who)).replace('{n}',line.amount)));
       });
-      dialogue.appendChild(text('p','adv-help',b.correct ? T.quizBonus : T.quizNormal));
       main.appendChild(battleWindow(dialogue,'adv-sequence-panel adv-retaliation-panel'));
       var phase = b.phase, turn = b.turn, marker = stage;
       root.setTimeout(function() { if (marker.isConnected && FF.app.screen === 'adventure' && p().battle && p().battle.phase === phase && p().battle.turn === turn) advance(); }, b.phase === 'enemyAction' ? 1800 : 900);

@@ -111,6 +111,7 @@ fs.mkdirSync(out, { recursive: true });
         }
         assert.notEqual(b.phase, 'lose');
         if (b.phase === 'commands') {
+          if (b.turn >= 2) assert.equal(await page.locator('.adv-rpg-shell.encounter').count(), 0, 'encounter flash class is removed after it plays (decision 347)');
           if (b.turn === 1) await page.screenshot({ path: out + '/enemy-' + b.enemy + '-phone.png', fullPage: true });
           if (!seenMagic) { await page.getByRole('button', { name: 'まほう', exact: true }).click(); await page.locator('.adv-subcommand-menu .adv-command').first().click(); seenMagic = true; }
           for(let i=0;i<4 && await page.evaluate(()=>FF.app.state.adventure.battle.phase==='commands');i++) await page.getByRole('button',{name:'たたかう',exact:true}).click();
