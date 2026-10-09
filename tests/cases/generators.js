@@ -283,4 +283,30 @@ module.exports = ({ test, FF, assert }) => {
       }
     }
   }
+
+  // 4択の選択肢の質（判断346）：数の答えでは、答えからかけはなれた突拍子もない数を選択肢に出さない
+  test('4択の誤答は、答えに近い「まちがえやすい数」だけ（かけはなれた数は出さない）', () => {
+    let seed = 20261009;
+    const rng = () => { seed = (seed + 0x6D2B79F5) >>> 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const digits = v => String(v).replace(/[^1-9]/g, '');
+    const far = [];
+    let checked = 0;
+    for (const g of grades) for (const d of ['basic', 'standard', 'advanced']) for (let i = 0; i < 300; i++) {
+      const q = G.generate(g, d, 'choice', rng);
+      if (!q || !q.choices || q.choices.length !== 4 || new Set(q.choices).size !== 4) { far.push(`${g}/${d}: 選択肢が4つの別々の数でない`); continue; }
+      const n = FF.answer.parseNumber(q.answer);
+      if (isNaN(n) || /\//.test(q.answer)) continue;
+      checked++;
+      const reach = Math.max(6, Math.abs(n) * 0.5);
+      const placeSlip = q.answer.indexOf('.') >= 0 || Math.abs(n) >= 100000;
+      for (const c of q.choices) {
+        if (c === q.answer) continue;
+        const v = FF.answer.parseNumber(c);
+        if (isNaN(v) || v === -n || (placeSlip && digits(c) === digits(q.answer))) continue;   // 符号・小数点・位取りのまちがいは、よくあるまちがい
+        if (Math.abs(v - n) > reach) far.push(`${q.id}: 答え ${q.answer} に対して ${c} はかけはなれている`);
+      }
+    }
+    assert.ok(checked > 2000, `数の答えの4択を ${checked} 問しか確かめていない`);
+    assert.deepStrictEqual(far.slice(0, 5), []);
+  });
 };

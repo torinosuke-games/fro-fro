@@ -1555,26 +1555,35 @@
     }).join('_');
   }
 
-  // 4択の誤答を3つ選ぶ（正解と同じと判定されるもの・重複は除く）
+  // 4択の誤答を3つ選ぶ（正解と同じと判定されるもの・重複は除く）。
+  // 数の答えでは、答えからかけはなれた数（たし算の答えなど）は、ほかの3つが足りないときだけ使う。
+  // かけはなれていても、小数点の位置のまちがい（×10・÷10）と符号のまちがいは、よくあるまちがいなので残す（判断346）
   function makeChoices(q, distractors, rng) {
     var seen = {};
     seen[FF.answer.normalize(q.answer)] = true;
-    var pool = [];
+    var n = FF.answer.parseNumber(q.answer);
+    var isFrac = /^\d+\/\d+$/.test(q.answer);
+    var numeric = !isNaN(n) && !isFrac;
+    var reach = Math.max(6, Math.abs(n) * 0.5);   // この範囲の中の数は、まちがえやすい数とする
+    function digitsOf(v) { return String(v).replace(/[^1-9]/g, ''); }   // 0 を除いた数字の並び（位取り・小数点の位置のまちがいを見つける）
+    // 位取り・小数点の位置のまちがいを「まちがえやすい数」に入れるのは、小数が関わるときと、けたの大きい数（10万以上）のときだけ
+    var placeSlip = numeric && (q.answer.indexOf('.') >= 0 || Math.abs(n) >= 100000);
+    var near = [], far = [];
     function add(s) {
       s = String(s);
       var key = FF.answer.normalize(s);
       if (seen[key] || s === '' || s === 'NaN') return;
       if (FF.answer.judgeInput(q, s).correct) return;
       seen[key] = true;
-      pool.push(s);
+      var v = numeric ? FF.answer.parseNumber(s) : NaN;
+      if (isNaN(v) || Math.abs(v - n) <= reach || v === -n || (placeSlip && digitsOf(s) === digitsOf(q.answer))) near.push(s);
+      else far.push({ s: s, d: Math.abs(v - n) });
     }
     FF.util.shuffle(distractors, rng).forEach(add);
     // 足りなければ正解の近くの数で補う
-    var n = FF.answer.parseNumber(q.answer);
-    var isFrac = /^\d+\/\d+$/.test(q.answer);
     var step = 1;
     if (!isNaN(n) && q.answer.indexOf('.') >= 0) step = pow10(-(q.answer.split('.')[1].length));
-    for (var k = 1; pool.length < 3 && k < 50; k++) {
+    for (var k = 1; near.length < 3 && k < 50; k++) {
       if (isFrac) {
         var parts = q.answer.split('/');
         add((Number(parts[0]) + k) + '/' + parts[1]);
@@ -1584,6 +1593,9 @@
         if (n - k * step >= 0) add(dec(Math.round((n - k * step) * pow10(places)), places));
       }
     }
+    // それでも足りないときだけ、かけはなれた数のうち答えに近いものを使う
+    far.sort(function (a, b) { return a.d - b.d; });
+    var pool = near.concat(far.map(function (f) { return f.s; }));
     return [q.answer].concat(pool.slice(0, 3));
   }
 
