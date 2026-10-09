@@ -10,9 +10,9 @@
   function effectText(id, level) {
     if (level <= 0) return null;
     if (id === 'furnace') return [U.T('effectFurnace'), { level: level }];
-    if (id === 'housing') return [U.T('effectHousing'), { hours: B.storageHours(level) }];
+    if (id === 'housing') return [U.T('effectHousing'), { hours: B.storageHours(level), pop: B.population(FF.app.state).total }];
     return [U.T('effectProducer'), {
-      rate: B.productionPerHour(level),
+      rate: Math.round(B.productionPerHour(level, undefined, B.productionMultiplier(FF.app.state)) * 10) / 10,   // 人口による倍率つき（判断355）
       bonus: Math.round((FF.rewards.facilityMultiplier(level) - 1) * 100)
     }];
   }

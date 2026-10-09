@@ -72,7 +72,29 @@
   function renderParty(main) {
     ensure(); header(main, T.party, T.partyHelp);
     var locked = !!p().battle || !A.atTown(p());
-    main.appendChild(E('div', { class: 'adv-toolbar' }, [btn(T.depart, open, 'gold'), text('span', '', locked ? T.partyLocked : '町で、仲間が出発を待っている。')]));
+    // 「この仲間で旅をする」は、なくした（町の中で編成していて、急に外に出ないように。判断358）
+    if (locked) main.appendChild(E('div', { class: 'adv-toolbar' }, [text('span', '', T.partyLocked)]));
+    // いまの隊（先頭から順）：アイコンと名前で、4つの枠。ここで、順番を前へ・外すこともできる（判断358）
+    var squad = E('section', { class: 'adv-squad', attrs: { 'aria-label': T.squad } }, [text('h2', 'adv-squad-title', T.squad), text('p', 'adv-squad-help', T.squadHelp)]);
+    var slots = E('ol', { class: 'adv-squad-slots' });
+    for (var i = 0; i < 4; i++) {
+      (function (i) {
+        var id = p().party[i], slot = E('li', { class: 'adv-squad-slot' + (id ? '' : ' is-empty'), attrs: id ? { 'data-member': id } : {} });
+        slot.appendChild(E('span', { class: 'adv-squad-no', text: String(i + 1) }));
+        if (id) {
+          slot.appendChild(E('div', { class: 'adv-portrait adv-squad-icon' }, FF.adventureArt(id, true)));
+          slot.appendChild(text('strong', 'adv-squad-name', name(id)));
+          slot.appendChild(E('div', { class: 'adv-squad-actions' }, [
+            btn('◀', function () { var list = p().party.slice(); var o = list[i - 1]; list[i - 1] = id; list[i] = o; change(A.setParty(p(), list)); }, 'quiet adv-squad-move', locked || i === 0),
+            btn('✕', function () { var list = p().party.slice(); list.splice(i, 1); change(A.setParty(p(), list)); }, 'quiet adv-squad-out', locked || id === 'hero')
+          ]));
+          slot.lastChild.firstChild.setAttribute('aria-label', name(id) + T.front);
+          slot.lastChild.lastChild.setAttribute('aria-label', name(id) + T.remove);
+        } else slot.appendChild(text('span', 'adv-squad-empty', T.squadEmpty));
+        slots.appendChild(slot);
+      })(i);
+    }
+    squad.appendChild(slots); main.appendChild(squad);
     var grid = E('div', { class: 'adv-roster' });
     A.IDS.filter(function (id) { return id === 'hero' || p().recruited.indexOf(id) >= 0; }).forEach(function (id) {
       var d = T.members[id], r = p().roster[id], s = A.stats(id, r.xp), index = p().party.indexOf(id), card = E('section', { class: 'adv-roster-card' });
