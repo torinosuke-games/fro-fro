@@ -475,3 +475,7 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .shop-btn[disabled]{opacity:.45}
 .shop-equipped{padding:6px 10px;border-radius:999px;background:#efa64b;color:#fff;font-weight:800;font-size:.8125rem;white-space:nowrap}
 .shop-note{margin:0;font-size:.8125rem;color:#43657d}
+/* 旅人の救出（判断354） */
+.rescue-card{display:flex;align-items:center;gap:14px;padding:12px;border:1px solid #dcb45b;border-radius:12px;background:linear-gradient(120deg,#fff7df,#eef7ee)}
+.rescue-portrait{width:84px;flex-shrink:0}.rescue-portrait .adv-ally-art{width:100%;aspect-ratio:1/1;height:auto}
+.rescue-text{min-width:0}.rescue-quote{margin:6px 0;line-height:1.7}

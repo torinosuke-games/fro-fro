@@ -209,4 +209,26 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
       for (const s of ['jh', 'el']) assert.ok(require('fs').existsSync(require('path').resolve(__dirname, '../../img/adventure/allies/' + id + '-' + s + '.webp')), id + ' の絵（' + s + '）');
     }
   });
+  test('救出：ボスを初めて倒すと、捕らわれていた旅人が仲間になる（2回目以降は何も起きない）', () => {
+    const s0 = FF.state.createDefaultState(now);
+    assert.ok(!s0.adventure.recruited.includes('senshi'));
+    const w = FF.battle.winBattle(s0, 'snowfield', 'sf_boss_wolf', now);
+    assert.equal(w.rescued, 'senshi'); assert.ok(w.state.adventure.recruited.includes('senshi'));
+    const again = FF.battle.winBattle(w.state, 'snowfield', 'sf_boss_wolf', now);
+    assert.equal(again.rescued, null); assert.equal(again.state.adventure.recruited.filter(x => x === 'senshi').length, 1);
+    // ふつうの敵では救出されない
+    assert.equal(FF.battle.winBattle(s0, 'snowfield', 'sf_enemy_fangs', now).rescued, null);
+    const f = FF.battle.winBattle(FF.battle.winBattle(w.state, 'forest', 'fr_enemy_warden', now).state, 'glacier', 'gl_boss_guardian', now);
+    assert.ok(['yumitsukai', 'kuromadoushi', 'senshi'].every(id => f.state.adventure.recruited.includes(id)));
+    // 仲間になった旅人は、仲間紹介所で編成できる
+    const p = A.setParty(f.state.adventure, ['hero', 'senshi']); assert.deepEqual(plain(p.party), ['hero', 'senshi']);
+  });
+  test('救出：前の版で倒したボスの旅人も、読み込み時に仲間になる', () => {
+    let s = FF.state.createDefaultState(now);
+    s.exploration = plain(s.exploration); s.exploration.regions = s.exploration.regions || {};
+    s = FF.battle.winBattle(s, 'snowfield', 'sf_boss_wolf', now).state;
+    s.adventure.recruited = s.adventure.recruited.filter(id => id !== 'senshi');   // 旧版のセーブ（救出なし）
+    const back = FF.state.parseSave(FF.state.serialize(s), now + 1);
+    assert.ok(back.ok, back.error); assert.ok(back.state.adventure.recruited.includes('senshi'));
+  });
 };
