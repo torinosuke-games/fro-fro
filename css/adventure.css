@@ -260,3 +260,10 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 .adv-map-shell.is-hd .adv-compass,.adv-map-shell.is-hd .adv-map-toggle,.adv-map-shell.is-hd .adv-directions{z-index:6}
 .adv-hd-toggle{position:absolute;top:12px;right:14px;z-index:6;font-size:11px;border-radius:5px;background:#173b50d9;color:#fff;border-color:#daeaf2a0;box-shadow:0 3px 12px #1b47672a}
 .adv-map-shell:not(.is-hd) .adv-hd-toggle{top:12px;right:14px}
+
+/* 移動パッド：8方向。押したまま指を動かすと、その方角へ歩き続ける（判断369） */
+.adv-map-shell .adv-directions{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.adv-directions .adv-diag{display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;text-shadow:0 2px 3px #24465d;opacity:.8;pointer-events:none;border-radius:50%}
+.adv-directions .adv-button.on,.adv-directions .adv-diag.on{background:#ffffff55;opacity:1}
+.adv-directions .adv-knob{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:#ffffff40;border:2px solid #ffffffb0;pointer-events:none;opacity:.55;transition:opacity .12s}
+.adv-directions .adv-knob.on{opacity:1;background:#ffffff66}

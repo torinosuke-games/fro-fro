@@ -231,17 +231,17 @@
     for (var key of Object.keys(A.PLACES)) if (A.same(pos, A.PLACES[key])) return T[key] + 'へ移動';
     return '雪道 ' + x + ',' + y + 'へ移動';
   }
-  function walk(target) {
+  function walk(target, forced) {
     if (moving || p().battle) return;
-    if (A.same(target, A.PLACES.home) && A.same(p().pos, target)) { home(); return; }
-    var steps = A.path(p(), target);
+    if (!forced && A.same(target, A.PLACES.home) && A.same(p().pos, target)) { home(); return; }
+    var steps = forced || A.path(p(), target);
     if (!steps.length) { U.toast('そこへは道がつながっていない。峠の敵や、ほかの道をたしかめよう。'); return; }
     var token = ++routeId, viewport = root.document.querySelector('.adv-map-viewport'), traveler = viewport.querySelector('.adv-traveler'), map = viewport.querySelector('.adv-map'), hdNow = viewport.classList.contains('hd2d'), shadow = viewport.querySelector('.adv-traveler-shadow');
     moving = true; traveler.classList.add('is-walking');
     function finish() { moving = false; traveler.classList.remove('is-walking'); }
     function step() {
       if (token !== routeId || !traveler.isConnected || FF.app.screen !== 'adventure' || p().battle || !steps.length) { finish(); return; }
-      var pos = steps.shift(), old = p(), next = A.move(old, pos.x, pos.y);
+      var pos = steps.shift(), old = p(), next = pos.via ? advanceDiag(old, pos) : A.move(old, pos.x, pos.y);
       if (next === old) { finish(); return; }
       traveler.style.backgroundPosition = ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[next.facing];
       traveler.setAttribute('data-facing', next.facing);
@@ -249,7 +249,7 @@
       var scale = map.clientWidth / 936, cx = viewport.scrollLeft, cy = viewport.scrollTop;
       var tx = Math.max(0, Math.min(viewport.scrollWidth - viewport.clientWidth, ex * scale - viewport.clientWidth / 2));
       var ty = Math.max(0, Math.min(viewport.scrollHeight - viewport.clientHeight, ey * scale - viewport.clientHeight / 2));
-      var last = null, elapsed = 0, duration = root.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 300;
+      var last = null, elapsed = 0, duration = root.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : (held ? 210 : 300);
       function frame(time) {
         if (token !== routeId || !traveler.isConnected || FF.app.screen !== 'adventure') { finish(); return; }
         if (last !== null) elapsed += Math.min(34, Math.max(0, time - last));
@@ -263,9 +263,10 @@
           if (shadow) { shadow.style.left = hx + 'px'; shadow.style.top = hy + 'px'; }
         } else { viewport.scrollLeft = cx + (tx - cx) * fraction; viewport.scrollTop = cy + (ty - cy) * fraction; }
         if (fraction < 1) { root.requestAnimationFrame(frame); return; }
+        if (!steps.length && held && !next.battle && !next.notice) { var more = holdStep(held, next); if (more) steps.push(more); }   // 指を離すまで、つぎの1マスを足していく
         save(next);
         map.querySelectorAll('.adv-tile.current').forEach(function(cell) {cell.classList.remove('current');cell.removeAttribute('aria-current');});
-        var cell = map.querySelector('[data-x="' + pos.x + '"][data-y="' + pos.y + '"]');
+        var cell = map.querySelector('[data-x="' + next.pos.x + '"][data-y="' + next.pos.y + '"]');
         if (cell) {cell.classList.add('current');cell.setAttribute('aria-current','location');}
         if (!next.battle && A.same(next.pos, A.PLACES.home)) { finish(); U.show('base'); return; }
         if (next.battle || next.notice) { finish(); entering = !!next.battle; paint(); return; }
@@ -352,10 +353,66 @@
     });
     return shell;
   }
+  // ---- 移動パッド（8方向）：押したまま指を動かすと、その方角へ歩き続ける。ちょん、と押せば1マス ----
+  var held = null, padStamp = 0;   // held：押している方角 [dx, dy]
+  var PAD_DIRS = [[0, -1, '↑', '北へ'], [-1, 0, '←', '西へ'], [0, 1, '↓', '南へ'], [1, 0, '→', '東へ']];
+  var PAD_DIAG = [[-1, -1, '↖', 1, 1], [1, -1, '↗', 3, 1], [-1, 1, '↙', 1, 3], [1, 1, '↘', 3, 3]];
+  function dirFromVector(vx, vy, r) {
+    if (Math.hypot(vx, vy) < r * .26) return null;
+    var k = Math.round(Math.atan2(vy, vx) / (Math.PI / 4));
+    return ({ 0: [1, 0], 1: [1, 1], 2: [0, 1], 3: [-1, 1], 4: [-1, 0], '-4': [-1, 0], '-3': [-1, -1], '-2': [0, -1], '-1': [1, -1] })[k] || null;
+  }
+  // いまの状態から、その方角へ進む1歩。ななめは、両どなりが歩けるときだけ。ふさがれていたら、歩ける向きへ、かべづたいに進む
+  function holdStep(d, state) {
+    var n = state || p(), x = n.pos.x, y = n.pos.y;
+    if (n.battle) return null;
+    function ok(tx, ty) { return A.walkable({ x: tx, y: ty }) && !(tx > 8 && n.cleared.indexOf('boss') < 0); }
+    if (d[0] && d[1]) {
+      if (ok(x + d[0], y + d[1]) && ok(x + d[0], y) && ok(x, y + d[1])) return { x: x + d[0], y: y + d[1], via: { x: x + d[0], y: y } };
+      d = ok(x + d[0], y) ? [d[0], 0] : ok(x, y + d[1]) ? [0, d[1]] : null;
+      if (!d) return null;
+    }
+    return ok(x + d[0], y + d[1]) ? { x: x + d[0], y: y + d[1] } : null;
+  }
+  // ななめの1歩 ＝ 横へ1歩、たてへ1歩（途中で戦闘・宝箱などが起きたら、そこで止まる）
+  function advanceDiag(old, pos) {
+    var a = A.move(old, pos.via.x, pos.via.y);
+    if (a === old || a.battle || a.notice) return a;
+    var b = A.move(a, pos.x, pos.y);
+    if (b === a) return a;
+    b.facing = pos.x > old.pos.x ? 'right' : 'left';
+    return b;
+  }
   function directions() {
-    return E('div', { class: 'adv-directions', attrs: { 'aria-label': '移動ボタン' } }, [[0, -1, '↑', '北へ'], [-1, 0, '←', '西へ'], [0, 1, '↓', '南へ'], [1, 0, '→', '東へ']].map(function (d) {
-      var b = btn(d[2], function () { var pos = p().pos; if (A.walkable({ x: pos.x + d[0], y: pos.y + d[1] })) walk({ x: pos.x + d[0], y: pos.y + d[1] }); }, 'quiet'); b.setAttribute('aria-label', d[3]); return b;
-    }));
+    var pad = E('div', { class: 'adv-directions', attrs: { 'aria-label': '移動パッド' } }), parts = {}, knob = E('span', { class: 'adv-knob', attrs: { 'aria-hidden': 'true' } });
+    PAD_DIRS.forEach(function (d) {
+      var b = btn(d[2], function () {
+        if (Date.now() - padStamp < 700) return;   // 指で押したときは、下の pointer の処理で動いている（二重に歩かない）
+        var pos = p().pos; if (A.walkable({ x: pos.x + d[0], y: pos.y + d[1] })) walk({ x: pos.x + d[0], y: pos.y + d[1] });
+      }, 'quiet');
+      b.setAttribute('aria-label', d[3]); parts[d[0] + ',' + d[1]] = b; pad.appendChild(b);
+    });
+    PAD_DIAG.forEach(function (d) {
+      var m = E('span', { class: 'adv-diag', text: d[2], style: { gridColumn: d[3], gridRow: d[4] }, attrs: { 'aria-hidden': 'true' } });
+      parts[d[0] + ',' + d[1]] = m; pad.appendChild(m);
+    });
+    pad.appendChild(knob);
+    function show(d, v) {
+      Object.keys(parts).forEach(function (k) { parts[k].classList.toggle('on', !!d && k === d[0] + ',' + d[1]); });
+      var m = v ? Math.min(1, v.R * .5 / Math.max(1, Math.hypot(v.vx, v.vy))) : 0;
+      knob.style.transform = v ? 'translate(' + v.vx * m + 'px,' + v.vy * m + 'px)' : '';
+      knob.classList.toggle('on', !!v);
+    }
+    function aim(e) {
+      var r = pad.getBoundingClientRect(), R = r.width / 2, v = { vx: e.clientX - (r.left + R), vy: e.clientY - (r.top + R), R: R };
+      held = dirFromVector(v.vx, v.vy, R); show(held, v);
+      if (held && !moving && !p().battle) { var st = holdStep(held); if (st) walk(st, [st]); }
+    }
+    function stop() { held = null; show(null, null); }
+    pad.addEventListener('pointerdown', function (e) { padStamp = Date.now(); try { pad.setPointerCapture(e.pointerId); } catch (x) {} e.preventDefault(); aim(e); });
+    pad.addEventListener('pointermove', function (e) { if (held || (e.buttons && e.pointerType === 'mouse') || pad.hasPointerCapture && pad.hasPointerCapture(e.pointerId)) { padStamp = Date.now(); aim(e); } });
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (t) { pad.addEventListener(t, stop); });
+    return pad;
   }
   function renderField(main) {
     var n = p(); main.classList.add('adv-field-screen');
