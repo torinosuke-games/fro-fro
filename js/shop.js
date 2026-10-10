@@ -1,7 +1,7 @@
 // 武器屋・防具屋・持ち物（判断340・343・359）：純粋関数のみ。ゴールドで武器・防具を買い、仲間ひとりひとりに装備する。
 // 武器・防具は、同じ品物を、何個でも買える（判断381。上限は MAX_COPIES）。1個につき、1人が装備する。持っている個数ぶんの人が、同じ品物を装備できる。あまりがなければ、いまの持ち主から外す（画面で確認する）。
 // 装備の効き方：探索の戦闘は、主人公の装備だけ（正解1問のダメージ・まちがえたときのダメージ）。冒険のクイズ戦闘は、全員の装備が、それぞれの攻撃力・防御力に足される。
-// 木の剣・ぬのの服は、はじめから持っていて、主人公が装備している（値段 0）。ゴールドは、冒険のゴールド（state.adventure.gold）を使う（判断342）。
+// 木の剣・ぬのの服は、いちばん弱い武器・防具（+1）。はじめは、何も持っていない。ゴールドは、冒険のゴールド（state.adventure.gold）を使う（判断342）。
 (function (root) {
   'use strict';
   var FF = root.FF = root.FF || {};
@@ -11,6 +11,8 @@
   function def(id) { return FF.defs.WEAPONS.filter(function (w) { return w.id === id; })[0] || null; }
   function stats(id, b) { return bal(b).WEAPONS[id] || null; }
   function astats(id, b) { return bal(b).ARMORS[id] || null; }
+  // 装備なしの攻撃（探索の戦闘の、正解1回のダメージ）。木の剣は、これより +1
+  function baseDamage(b) { return bal(b).BATTLE.DAMAGE_PER_CORRECT; }
   function members() { return FF.adventure ? FF.adventure.IDS : ['hero']; }
   function kindStats(kind, id, b) { return kind === 'armor' ? astats(id, b) : stats(id, b); }
 
@@ -25,19 +27,18 @@
   // 装備の整合：{ owned, ownedArmor, equipped: { 仲間: { weapon, armor } } }。同じ品物を2人が装備していたら、先の人だけ
   var MAX_COPIES = 10;   // 同じ品物を持てる上限（仲間は、主人公を入れて10人）
   function eq(state, b) {
-    var e = state && state.equipment || {}, d = bal(b).DEFAULT_WEAPON, da = bal(b).DEFAULT_ARMOR;
-    function clean(list, ok, first) {
+    var e = state && state.equipment || {};
+    function clean(list, ok) {
       var out = (Array.isArray(list) ? list : []).filter(ok);
       var counts = {};
       out = out.filter(function (x) { counts[x] = (counts[x] || 0) + 1; return counts[x] <= MAX_COPIES; });   // 同じ品物は、複数持てる
-      if (out.indexOf(first) < 0) out.unshift(first);
       return out;
     }
-    var owned = clean(e.owned, function (x) { return !!stats(x, b); }, d);
-    var ownedArmor = clean(e.ownedArmor, function (x) { return !!astats(x, b); }, da);
+    var owned = clean(e.owned, function (x) { return !!stats(x, b); });
+    var ownedArmor = clean(e.ownedArmor, function (x) { return !!astats(x, b); });
     var raw = e.equipped && typeof e.equipped === 'object' ? e.equipped : null;
-    if (!raw) raw = { hero: { weapon: owned.indexOf(e.weapon) >= 0 ? e.weapon : d, armor: ownedArmor.indexOf(e.armor) >= 0 ? e.armor : da } };   // 前の版：装備は主人公の1つだけ
-    if (!raw.hero) raw.hero = { weapon: d, armor: da };               // はじめは、主人公が木の剣・ぬのの服
+    if (!raw) raw = { hero: { weapon: owned.indexOf(e.weapon) >= 0 ? e.weapon : null, armor: ownedArmor.indexOf(e.armor) >= 0 ? e.armor : null } };   // 前の版：装備は主人公の1つだけ
+    if (!raw.hero) raw.hero = { weapon: null, armor: null };
     function count(list) { var c = {}; list.forEach(function (x) { c[x] = (c[x] || 0) + 1; }); return c; }
     var have = { weapon: count(owned), armor: count(ownedArmor) }, used = { weapon: {}, armor: {} }, equipped = {};
     members().forEach(function (id) {
@@ -51,7 +52,6 @@
     return { owned: owned, ownedArmor: ownedArmor, equipped: equipped };
   }
   // はじめから持っている木の剣・ぬのの服（能力は±0。装備なしと、同じ）。画面には出さない（判断382）
-  function isStarter(kind, id, b) { return id === (kind === 'armor' ? bal(b).DEFAULT_ARMOR : bal(b).DEFAULT_WEAPON); }
   // 持っている個数
   function copies(state, kind, id, b) { var e = eq(state, b); return (kind === 'armor' ? e.ownedArmor : e.owned).filter(function (x) { return x === id; }).length; }
   function owns(state, id, b) { return eq(state, b).owned.indexOf(id) >= 0; }
@@ -100,7 +100,7 @@
   // 冒険のクイズ戦闘：その人の攻撃力に足す分（木の剣との差。装備なしは0）
   function weaponBonus(state, memberId, b) {
     var w = equippedOf(state, memberId || 'hero', b).weapon;
-    return w ? stats(w, b).damage - stats(bal(b).DEFAULT_WEAPON, b).damage : 0;
+    return w ? stats(w, b).damage - baseDamage(b) : 0;
   }
   // 防御力に足す分（装備なしは0）
   function armorDefense(state, memberId, b) {
@@ -117,7 +117,7 @@
   function currentWeapon(state, b) { return equippedOf(state, 'hero', b).weapon; }
   function currentArmor(state, b) { return equippedOf(state, 'hero', b).armor; }
   // 正解1問で敵に与えるダメージ（主人公の武器。なければ、木の剣と同じ）
-  function damagePerCorrect(state, b) { var w = currentWeapon(state, b); return stats(w || bal(b).DEFAULT_WEAPON, b).damage; }
+  function damagePerCorrect(state, b) { var w = currentWeapon(state, b); return w ? stats(w, b).damage : baseDamage(b); }
   // 探索の戦闘：まちがえたときに受けるダメージ（主人公の防具で減る。最低1）
   function damageTaken(state, attack, b) {
     var rate = (bal(b).BATTLE || {}).ARMOR_RATE || 0;
@@ -147,6 +147,25 @@
   function canBuyArmor(state, id, b) { return canBuyItem(state, 'armor', id, b); }
   function buyArmor(state, id, b) { return buyItem(state, 'armor', id, b); }
 
+  // 道具屋（判断384）：回復薬を、ゴールドで買う。持てる数に上限がある（冒険の持ち物 adventure.potions）
+  function adv(b) { return (b || FF.balance).ADVENTURE; }
+  function potions(state) { return Math.max(0, Math.floor(state && state.adventure && state.adventure.potions) || 0); }
+  function canBuyPotion(state, n, b) {
+    n = Math.max(1, Math.floor(n) || 1);
+    if (potions(state) + n > adv(b).POTION_MAX) return { ok: false, reason: 'max' };
+    if (gold(state) < n * adv(b).POTION_PRICE) return { ok: false, reason: 'gold' };
+    return { ok: true };
+  }
+  function buyPotion(state, n, b) {
+    n = Math.max(1, Math.floor(n) || 1);
+    var c = canBuyPotion(state, n, b);
+    if (!c.ok) return { ok: false, state: state, reason: c.reason };
+    var s = FF.util.clone(state);
+    withGold(s, gold(state) - n * adv(b).POTION_PRICE);
+    s.adventure.potions = potions(state) + n;
+    return { ok: true, state: s };
+  }
+
   // ゴールドを足す（デバッグ用・これから入手のしくみを作るときの入口）
   function addGold(state, n) {
     var s = FF.util.clone(state);
@@ -161,11 +180,11 @@
   }
 
   FF.shop = {
-    ids: ids, def: def, stats: stats, astats: astats, gold: gold, owns: owns, ownsArmor: ownsArmor, owned: owned,
+    baseDamage: baseDamage, ids: ids, def: def, stats: stats, astats: astats, gold: gold, owns: owns, ownsArmor: ownsArmor, owned: owned,
     equippedOf: equippedOf, holder: holder, equip: equip, unequip: unequip,
     weaponBonus: weaponBonus, armorDefense: armorDefense, gearMap: gearMap,
     currentWeapon: currentWeapon, currentArmor: currentArmor, damagePerCorrect: damagePerCorrect, damageTaken: damageTaken,
-    isStarter: isStarter, copies: copies, holders: holders, freeCopies: freeCopies, MAX_COPIES: MAX_COPIES, canBuyItem: canBuyItem, buyItem: buyItem, canBuy: canBuy, buy: buy, canBuyArmor: canBuyArmor, buyArmor: buyArmor,
-    addGold: addGold, normalizeShop: normalizeShop
+    copies: copies, holders: holders, freeCopies: freeCopies, MAX_COPIES: MAX_COPIES, canBuyItem: canBuyItem, buyItem: buyItem, canBuy: canBuy, buy: buy, canBuyArmor: canBuyArmor, buyArmor: buyArmor,
+    potions: potions, canBuyPotion: canBuyPotion, buyPotion: buyPotion, addGold: addGold, normalizeShop: normalizeShop
   };
 })(this);

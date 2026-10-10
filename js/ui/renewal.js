@@ -308,7 +308,7 @@
  }
  // 町のほかの施設（判断324）。絵は img/art/fac-*.webp。仲間紹介所は冒険の編成、チケット引換所は引換所を開く。
  var FACILITIES=[
-  {id:'weapon',name:R.facWeapon,open:function(){openWeaponShop();}},{id:'armor',name:R.facArmor,open:function(){openArmorShop();}},{id:'item',name:R.facItem},{id:'tavern',name:R.facTavern},
+  {id:'weapon',name:R.facWeapon,open:function(){openWeaponShop();}},{id:'armor',name:R.facArmor,open:function(){openArmorShop();}},{id:'item',name:R.facItem,open:function(){openItemShop();}},{id:'tavern',name:R.facTavern},
   {id:'party',name:R.facParty,open:function(){U.show('adventureParty');}},{id:'magic',name:R.facMagic,open:function(){openLab();}},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
  ];
  // 武器屋・防具屋（判断340・343）：ゴールドで買い、装備する。武器は正解1回のダメージ（冒険では主人公の攻撃力）、防具は受けるダメージを減らす
@@ -318,12 +318,12 @@
   if(closeShop){closeShop();closeShop=null;}
   var s=a.state;
   var again=function(){openGearShop(kind);};
-  var list=E('div',{class:'shop-list'},(armor?FF.defs.ARMORS:FF.defs.WEAPONS).filter(function(w){return !SH.isStarter(k,w.id);}).map(function(w){   // 木の剣・ぬのの服は、店に並べない（能力は±0で、装備しても、しなくても同じ。判断382）
+  var list=E('div',{class:'shop-list'},(armor?FF.defs.ARMORS:FF.defs.WEAPONS).map(function(w){
    var st=armor?SH.astats(w.id):SH.stats(w.id),n=SH.copies(s,k,w.id),owned=n>0,can=SH.canBuyItem(s,k,w.id).ok,hs=SH.holders(s,k,w.id),h=hs[0];
    var memberName=function(id){return id==='hero'?a.state.player.name:FF.texts.adventure.members[id].name;};
    var buy=E('button',{class:'rn-button primary shop-btn shop-buy',attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuy,on:{click:function(){var r=SH.buyItem(a.state,k,w.id);if(r.ok){a.commit(r.state);U.toast(R.shopBought);again();}}}});
    var action=buy;   // 装備は、持ち物・編成の画面で（店には、「買う」だけ）
-   var power=armor?R.shopDefense.replace('{n}',st.defense):R.shopPower.replace('{n}',st.damage)+'／'+R.shopPowerBonus.replace('{n}',st.damage-SH.stats(FF.balance.DEFAULT_WEAPON).damage);
+   var power=armor?R.shopDefense.replace('{n}',st.defense):R.shopPower.replace('{n}',st.damage)+'／'+R.shopPowerBonus.replace('{n}',st.damage-SH.baseDamage());
    var priceTag=st.price?U.fmt(st.price)+' G':null;
    // 値段は、持っていても、同じ形で出す。持っているときは、持っている個数と装備している人を、そえる
    var status=E('span',{class:'shop-price'},[st.price?U.fmt(st.price)+' G':E('span',{rich:R.shopFree}),owned?E('span',{class:'shop-owned',text:'　所持：'+n+'個'+(hs.length?'（装備：'+hs.map(memberName).join('・')+'）':'')}):null]);
@@ -335,6 +335,24 @@
   }));
   var body=E('div',{class:'shop-body'},[E('p',{class:'shop-gold'},[E('span',{rich:R.shopGold}),E('strong',{text:U.fmt(SH.gold(s))+' G'})]),list,E('p',{class:'shop-note',rich:R.shopNote})]);
   closeShop=U.modal({title:armor?R.facArmor:R.facWeapon,body:body,buttons:[{label:U.T('back'),class:'ghost'}]});
+ }
+ // 道具屋（判断384）：回復薬を、ゴールドで買う
+ function openItemShop(){
+  var a=FF.app,SH=FF.shop,B=FF.balance.ADVENTURE;
+  if(closeShop){closeShop();closeShop=null;}
+  var s=a.state,again=function(){openItemShop();};
+  var buyBtn=function(n){
+   var can=SH.canBuyPotion(s,n).ok;
+   return E('button',{class:'rn-button primary shop-btn shop-buy shop-buy-'+n,attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuyN.replace('{n}',n),on:{click:function(){var r=SH.buyPotion(a.state,n);if(r.ok){a.commit(r.state);U.toast(R.shopBought);again();}}}});
+  };
+  var row=E('div',{class:'shop-row',attrs:{'data-item':'potion'}},[
+   E('span',{class:'shop-icon',text:'🧪'}),
+   E('div',{class:'shop-info'},[E('strong',{class:'shop-name',rich:R.potionName}),E('span',{class:'shop-power',rich:R.potionEffect.replace('{n}',B.POTION_HEAL)}),
+    E('span',{class:'shop-price'},[U.fmt(B.POTION_PRICE)+' G',E('span',{class:'shop-owned',text:'　所持：'+SH.potions(s)+'個'})])]),
+   E('div',{class:'shop-buys'},[buyBtn(1),buyBtn(5)])
+  ]);
+  var body=E('div',{class:'shop-body'},[E('p',{class:'shop-gold'},[E('span',{rich:R.shopGold}),E('strong',{text:U.fmt(SH.gold(s))+' G'})]),E('div',{class:'shop-list'},[row]),E('p',{class:'shop-note',rich:R.itemNote.replace('{max}',B.POTION_MAX)})]);
+  closeShop=U.modal({title:R.facItem,body:body,buttons:[{label:U.T('back'),class:'ghost'}]});
  }
  function openWeaponShop(){openGearShop('weapon');}
  function openArmorShop(){openGearShop('armor');}
