@@ -284,6 +284,7 @@
       type: q.answerType, correct: correct, attempts: attemptNo, hints: att.hintsShown,
       resource: correct ? ctx.resource : null, reward: reward, points: points
     }]).slice(-b.HISTORY_LIMIT);
+    if (FF.research) FF.research.applyJoins(s);   // 正解した問題の数で仲間になる人（判断365）
 
     return {
       state: s,

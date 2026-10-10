@@ -186,6 +186,7 @@
     var w = withRegion(state, regionId);
     w.rs.openedChests.push(chestId);
     addReward(w.s, reward, now, b);
+    if (FF.research) FF.research.applyJoins(w.s);   // 宝箱を開けた数で仲間になる人（判断365）
     return { state: w.s, reward: FF.util.clone(reward) };
   }
 

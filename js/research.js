@@ -16,11 +16,34 @@
 
   // ---- 熱量で、力を貸してくれる仲間 ----
   // 条件を満たしたのに、まだ仲間でない人を、仲間にする（state をその場で書きかえる）。新しく仲間になった人の一覧を返す
+  // 仲間になる条件の「いまの数」：heat＝獲得熱量、solved＝正解した問題の数、chests＝探索で開けた宝箱の数
+  function countOf(state, kind) {
+    if (kind === 'heat') return state.studyPointsEarnedTotal || 0;
+    if (kind === 'solved') {
+      var qr = state.learning && state.learning.questionResults || {};
+      return Object.keys(qr).filter(function (k) { return qr[k] === true; }).length;
+    }
+    var n = 0, regs = state.exploration && state.exploration.regions || {};
+    Object.keys(regs).forEach(function (r) { n += Array.isArray(regs[r].openedChests) ? regs[r].openedChests.length : 0; });
+    return n;
+  }
+  function rules(b) {
+    var out = {};
+    [['heat', 'JOIN_BY_HEAT'], ['solved', 'JOIN_BY_SOLVED'], ['chests', 'JOIN_BY_CHESTS']].forEach(function (k) {
+      var t = R(b)[k[1]] || {};
+      Object.keys(t).forEach(function (id) { out[id] = { kind: k[0], need: t[id] }; });
+    });
+    return out;
+  }
+  // 条件で仲間になる人か（画面の「？？？」の説明の出し分け用）。'heat' | 'solved' | 'chests' | null
+  function joinKind(id, b) { var r = rules(b)[id]; return r ? r.kind : null; }
+
+  // 条件を満たしたのに、まだ仲間でない人を、仲間にする（state をその場で書きかえる）。新しく仲間になった人の一覧を返す
   function applyJoins(state, b) {
-    var table = R(b).JOIN_BY_HEAT, earned = state.studyPointsEarnedTotal || 0, joined = [];
+    var table = rules(b), joined = [];
     if (!FF.adventure) return joined;
     Object.keys(table).forEach(function (id) {
-      if (earned < table[id]) return;
+      if (countOf(state, table[id].kind) < table[id].need) return;
       var a = state.adventure || (state.adventure = FF.adventure.create());
       if (a.recruited.indexOf(id) >= 0) return;
       state.adventure = FF.adventure.recruit(a, id);
@@ -29,10 +52,10 @@
     });
     return joined;
   }
-  // あと何ptで、その仲間が力を貸してくれるか（画面の表示用）
+  // あと、どれだけで仲間になるか（テスト・確認用。画面には数を出さない）
   function joinProgress(state, id, b) {
-    var need = R(b).JOIN_BY_HEAT[id], have = state.studyPointsEarnedTotal || 0;
-    return { need: need, have: Math.min(have, need), remaining: Math.max(0, need - have), done: have >= need };
+    var r = rules(b)[id], have = countOf(state, r.kind);
+    return { need: r.need, have: Math.min(have, r.need), remaining: Math.max(0, r.need - have), done: have >= r.need };
   }
   // 魔法研究所が使えるか（司書が仲間になっているか）
   function unlocked(state, b) { var a = adv(state); return !!a && a.recruited.indexOf(R(b).LAB_REQUIRES) >= 0; }
@@ -68,7 +91,7 @@
   }
 
   FF.research = {
-    bookIds: bookIds, level: level, applyJoins: applyJoins, joinProgress: joinProgress, unlocked: unlocked,
+    bookIds: bookIds, level: level, applyJoins: applyJoins, joinKind: joinKind, joinProgress: joinProgress, unlocked: unlocked,
     nextCost: nextCost, canDevelop: canDevelop, develop: develop, effects: effects
   };
 })(this);
