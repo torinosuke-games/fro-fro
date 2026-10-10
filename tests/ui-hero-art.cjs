@@ -10,6 +10,6 @@ for(const av of ['e9','e3']){
  await p.waitForSelector('.adv-squad-slot[data-member="hero"] img');
  for(const sel of ['.adv-squad-slot[data-member="hero"] img','article[data-member="hero"] img'])
   assert.equal(await p.locator(sel).first().getAttribute('data-avatar'),av,sel);
- assert.ok(await p.locator('.adv-squad-slot[data-member="hero"] img').evaluate(i=>i.complete&&i.naturalWidth>0));
+ assert.ok(await p.locator('.adv-squad-slot[data-member="hero"] img').evaluate((i,a)=>i.complete&&i.naturalWidth>0&&i.src.includes('portrait-'+a+'.webp'),av));
 }
 assert.deepEqual(errors,[]);console.log('PASS: hero portrait follows the chosen avatar');await b.close();})().catch(e=>{console.error(e);process.exit(1)});
