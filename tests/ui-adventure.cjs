@@ -23,7 +23,7 @@ fs.mkdirSync(out, { recursive: true });
     assert.equal(await page.locator('.adv-roster-card:not(.adv-roster-locked)').count(), 4);
     assert.equal(await page.locator('.adv-roster-locked').count(), 6);
     const sora = page.locator('.adv-roster-card').nth(3);
-    await sora.getByRole('button', { name: '待ってもらう', exact: true }).click();
+    await sora.getByRole('button', { name: '隊から外す', exact: true }).click();
     assert.equal(await page.evaluate(() => FF.app.state.adventure.party.length), 3);
     await sora.getByRole('button', { name: '参加する', exact: true }).click();
     await sora.getByRole('button', { name: 'ひとつ前へ', exact: true }).click();

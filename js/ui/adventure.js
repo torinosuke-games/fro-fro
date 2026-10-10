@@ -165,7 +165,7 @@
     ensure(); header(main, T.party, T.partyHelp);
     var locked = !!p().battle || !A.atTown(p());
     // 「この仲間で旅をする」は、なくした（町の中で編成していて、急に外に出ないように。判断358）
-    main.appendChild(E('div', { class: 'adv-toolbar' }, [btn(I.button, openInventory, 'quiet adv-party-inv'), locked ? text('span', '', T.partyLocked) : null]));
+    if (locked) main.appendChild(E('div', { class: 'adv-toolbar' }, [text('span', '', T.partyLocked)]));   // 持ち物は、下のナビから（編成画面には、ボタンを置かない）
     // いまの隊（先頭から順）：アイコンと名前で、4つの枠。ここで、順番を前へ・外すこともできる（判断358）
     var squad = E('section', { class: 'adv-squad', attrs: { 'aria-label': T.squad } }, [text('h2', 'adv-squad-title', T.squad), text('p', 'adv-squad-help', T.squadHelp)]);
     var slots = E('ol', { class: 'adv-squad-slots' });
@@ -191,7 +191,6 @@
     A.IDS.filter(function (id) { return id === 'hero' || p().recruited.indexOf(id) >= 0; }).forEach(function (id) {
       var d = T.members[id], r = p().roster[id], s = A.stats(id, r.xp), index = p().party.indexOf(id), card = E('section', { class: 'adv-roster-card' });
       card.appendChild(member(id, false));
-      card.appendChild(text('blockquote', '', '「' + d.quote + '」'));
       card.appendChild(text('p', 'adv-description', d.detail));
       var gb = gearBonus(id), stats = E('dl', { class: 'adv-stats' });
       ['strength', 'defense', 'speed', 'wisdom'].forEach(function (k) {
