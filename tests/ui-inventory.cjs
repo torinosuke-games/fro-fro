@@ -11,8 +11,8 @@ await p.waitForTimeout(400);
 // 町から、持ち物の画面へ
 await p.locator('#nav button',{hasText:'持ち物'}).click();   // 下のナビ（判断360）
 assert.equal(await p.evaluate(()=>FF.app.screen),'adventureInventory');
-assert.equal(await p.locator('.inv-row').count(),3);                                    // 武器：木・石・鉄
-assert.ok((await p.locator('.inv-row[data-item="wood_sword"]').innerText()).includes('ゆき'));   // 木の剣は、主人公が装備
+assert.equal(await p.locator('.inv-row').count(),2);                                    // 武器：石・鉄（木の剣は、出さない。判断382）
+assert.equal(await p.locator('.inv-row[data-item="wood_sword"]').count(),0);
 assert.ok((await p.locator('.inv-row[data-item="iron_sword"]').innerText()).includes('装備していない'));
 await p.screenshot({path:out+'/inventory-weapon.png',fullPage:true});
 // 鉄の剣を、アカネ（剣士）に装備
