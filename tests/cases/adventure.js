@@ -2,7 +2,7 @@
 module.exports = ({ test, FF, ctx, assert, plain }) => {
   const A = FF.adventure, B = FF.balance.ADVENTURE, bank = FF.learning.createBank(ctx.QUESTION_BANK), now = 1791000000000;
   const rng = () => .37;
-  function atEnemy(id, source) { let p = source || A.create(); p.pos = plain(A.ENEMIES[id]); return A.encounter(p, id); }
+  function atEnemy(id, source) { let p = source || A.create(); p.pos = plain(A.ENEMIES[id] || { x: 4, y: 6 }); return A.encounter(p, id); }   // ザコ敵は、ランダムに現れる（判断376）。ここでは、その場で戦闘にする
   function orders(p, overrides = {}) { return Object.fromEntries(A.alive(p).map(id => [id, overrides[id] || { type: 'attack', target: id }])); }
   function turn(p, correct = true, overrides) {
     p = A.command(p, orders(p, overrides), bank, 4, rng, now);
@@ -36,16 +36,13 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(A.depart(p,'town'),p);
     p.arrived=true;p.cleared=['boss'];assert.deepEqual(plain(A.depart(p,'town').pos),plain(A.PLACES.town));
   });
-  test('冒険：歩行経路は障害物を越えず、敵にふれると止まる', () => {
-    let p = A.create();
-    const before = JSON.stringify(p), route = A.path(p, A.ENEMIES.cub);
+  test('冒険：歩行経路は障害物を越えず、見える敵（峠の大獣）にふれると止まる', () => {
+    let p = A.create(); p.pos = { x: 6, y: 6 };
+    const before = JSON.stringify(p), route = A.path(p, A.ENEMIES.boss);
     assert.equal(route.length, 2);
     for (const pos of route) p = A.move(p, pos.x, pos.y);
-    assert.equal(p.battle.enemy, 'cub'); assert.strictEqual(A.move(p, 4, 6), p);
-    assert.equal(JSON.stringify(A.create()), before);
-    assert.strictEqual(A.move(A.create(), 0, 6).pos.x, 1);
-    assert.strictEqual(A.move(A.create(), 7, 6).pos.x, 1);
-    assert.equal(A.path(A.create(), A.PLACES.town).length, 0);
+    assert.equal(p.battle.enemy, 'boss'); assert.strictEqual(A.move(p, 9, 6), p);
+    assert.equal(JSON.stringify(Object.assign(A.create(), { pos: { x: 6, y: 6 } })), before);
   });
   test('冒険：弱い敵は回避でき、峠の敵は回避できない', () => {
     let p = A.create(); const route = A.path(p, A.ENEMIES.boss); assert.ok(route.length);
@@ -122,7 +119,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.equal(p.roster.juushouhei.hp, 0); assert.equal(A.stats('juushouhei', 34).level, 2); assert.ok(A.stats('juushouhei', 34).strength > B.MEMBERS.juushouhei.strength);
     assert.strictEqual(A.answer(p, p.battle.question.answer, now), p);
     p = A.advance(p, bank, 4, rng, now); assert.equal(p.gold, B.ENEMIES.cub.gold); assert.equal(p.battle, null);
-    assert.strictEqual(A.encounter(p, 'cub'), p);
+    assert.notStrictEqual(A.encounter(p, 'cub'), p);   // ザコ敵は、何度でも現れる（ランダム。判断376）
   });
   test('冒険：敗北・撤退で資産を失わない。にげる連打で移動しない', () => {
     let p = atEnemy('boss'); p.gold = 50; p.party.forEach(id => p.roster[id].hp = 1); p.battle.turn = 2;
@@ -230,5 +227,45 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     s.adventure.recruited = s.adventure.recruited.filter(id => id !== 'senshi');   // 旧版のセーブ（救出なし）
     const back = FF.state.parseSave(FF.state.serialize(s), now + 1);
     assert.ok(back.ok, back.error); assert.ok(back.state.adventure.recruited.includes('senshi'));
+  });
+
+  // ---- ランダムエンカウント（判断376） ----
+  const walk = (p, cells, r) => { for (const [x, y] of cells) { p = A.move(p, x, y, r); if (p.battle || p.notice) break; } return p; };
+  const row6 = [[2, 6], [3, 6], [4, 6], [5, 6], [6, 6], [7, 6]];
+  test('ランダムエンカウント：見える敵は大獣だけ。乱数がなければ、出ない。安全な歩数のあいだと、場所では、出ない', () => {
+    assert.deepStrictEqual(Object.keys(plain(A.ENEMIES)), ['boss']);
+    let p = A.create(); p.pos = { x: 1, y: 6 };
+    p = walk(p, row6, undefined); assert.equal(p.battle, null);   // 乱数なし
+    p = A.create(); p.pos = { x: 1, y: 6 };
+    p = walk(p, row6.slice(0, B.ENCOUNTER.SAFE_STEPS), () => 0); assert.equal(p.battle, null); assert.equal(p.steps, B.ENCOUNTER.SAFE_STEPS);   // はじめの数歩
+    p = A.create(); p.pos = { x: 5, y: 3 }; p.steps = 99;
+    p = A.move(p, 6, 3, () => 0); assert.equal(p.battle, null);   // 焚き火（場所）
+  });
+  test('ランダムエンカウント：安全な歩数のあとは、確率で現れる。西は野獣、東はオオカミも。出たら歩数は0', () => {
+    let p = A.create(); p.pos = { x: 1, y: 6 };
+    p = walk(p, row6, () => 0); assert.equal(p.battle.enemy, 'wolf'); assert.equal(p.steps, 0); assert.equal(p.battle.phase, 'commands');
+    assert.deepStrictEqual(plain(p.pos), { x: 2 + B.ENCOUNTER.SAFE_STEPS, y: 6 });   // 安全な4歩のあと、5歩め（x=6。東なので、オオカミも）のとき
+    let q = A.create(); q.pos = { x: 5, y: 6 }; q.steps = 99; q = A.move(q, 6, 6, () => 0); assert.equal(q.battle.enemy, 'wolf');
+    q = A.create(); q.pos = { x: 5, y: 6 }; q.steps = 99; q = A.move(q, 6, 6, (() => { const v = [0, .99]; return () => v.shift(); })()); assert.equal(q.battle.enemy, 'cub');   // 東でも、野獣のことがある
+    q = A.create(); q.pos = { x: 1, y: 6 }; q.steps = 99; q = A.move(q, 2, 6, () => 0); assert.equal(q.battle.enemy, 'cub');   // 西は、野獣だけ
+    let none = A.create(); none.pos = { x: 1, y: 6 }; none.steps = 99; none = A.move(none, 2, 6, () => 0.99); assert.equal(none.battle, null);   // 確率の外
+  });
+  test('ランダムエンカウント：歩くほど出やすい（上限あり）。町・焚き火で休むと歩数は0。ザコ敵を倒しても、見える敵は消えない', () => {
+    const E = B.ENCOUNTER; let hits = 0;
+    for (let steps = E.SAFE_STEPS + 1; steps < 40; steps++) {
+      let p = A.create(); p.pos = { x: 2, y: 6 }; p.steps = steps - 1; p = A.move(p, 3, 6, () => Math.min(E.MAX, E.BASE + (steps - E.SAFE_STEPS - 1) * E.GROWTH) - 1e-9);
+      assert.ok(p.battle, 'steps ' + steps); hits++;
+    }
+    let p = A.create(); p.pos = { x: 2, y: 6 }; p.steps = 30; p = A.move(p, 3, 6, () => E.MAX + 1e-6); assert.equal(p.battle, null);   // 上限を超える値では、出ない
+    p = A.create(); p.steps = 7; assert.equal(A.rest(p, 'home').steps, 0);
+    let w = A.encounter(Object.assign(A.create(), { pos: { x: 4, y: 6 }, steps: 9 }), 'wolf'); assert.equal(w.steps, 0);
+    w.battle.hp = 1; w = A.advance(win(w), bank, 4, rng, now); assert.equal(w.battle, null); assert.deepStrictEqual(plain(w.cleared), []);
+    assert.equal(A.enemyAt(w, A.ENEMIES.boss), 'boss');
+  });
+  test('ランダムエンカウント：歩数は、保存・読み込みで残り、へんな値は直る。全員たおれているときは、出ない', () => {
+    const p = A.create(); p.steps = 6; assert.equal(A.normalize(plain(p)).steps, 6);
+    assert.equal(A.normalize({ steps: -3 }).steps, 0); assert.equal(A.normalize({ steps: 'x' }).steps, 0);
+    const dead = A.create(); dead.pos = { x: 2, y: 6 }; dead.steps = 99; dead.party.forEach(id => dead.roster[id].hp = 0);
+    assert.equal(A.move(dead, 3, 6, () => 0).battle, null);
   });
 };

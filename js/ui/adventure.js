@@ -230,6 +230,8 @@
     for (var key of Object.keys(A.PLACES)) if (A.same(pos, A.PLACES[key])) return T[key] + 'へ移動';
     return '雪道 ' + x + ',' + y + 'へ移動';
   }
+  // ランダムエンカウントの乱数（テストでは、FF.adventureRng で差しかえる）
+  function wildRng() { return (FF.adventureRng || Math.random)(); }
   function walk(target, forced) {
     if (moving || p().battle) return;
     if (!forced && A.same(target, A.PLACES.home) && A.same(p().pos, target)) { home(); return; }
@@ -240,7 +242,7 @@
     function finish() { moving = false; traveler.classList.remove('is-walking'); }
     function step() {
       if (token !== routeId || !traveler.isConnected || FF.app.screen !== 'adventure' || p().battle || !steps.length) { finish(); return; }
-      var pos = steps.shift(), old = p(), next = pos.via ? advanceDiag(old, pos) : A.move(old, pos.x, pos.y);
+      var pos = steps.shift(), old = p(), next = pos.via ? advanceDiag(old, pos) : A.move(old, pos.x, pos.y, wildRng);
       if (next === old) { finish(); return; }
       var diagArt = pos.via ? scene.travelerDiag(FF.app.state.player.avatar) : null;   // ななめ向きの絵があれば、それを使う
       if (diagArt) {
@@ -275,7 +277,7 @@
         var cell = map.querySelector('[data-x="' + next.pos.x + '"][data-y="' + next.pos.y + '"]');
         if (cell) {cell.classList.add('current');cell.setAttribute('aria-current','location');}
         if (!next.battle && A.same(next.pos, A.PLACES.home)) { finish(); U.show('base'); return; }
-        if (next.battle || next.notice) { finish(); entering = !!next.battle; paint(); return; }
+        if (next.battle || next.notice) { held = null; finish(); entering = !!next.battle; paint(); return; }
         root.document.querySelectorAll('.adv-settings,.adv-notice').forEach(function(node) {node.remove();});
         if (steps.length) step(); else finish();
       }
@@ -374,6 +376,7 @@
     ]);
   }
   function fieldViewport() {
+    held = null;   // 戦闘から帰ってきたとき、前の「押している」が残らないように
     var flat = !isHd(), world = mapView();
     var viewport = E('div', { class: 'adv-map-viewport' + (overview ? ' overview' : '') + (flat ? '' : ' hd2d') }, flat ? world : E('div', { class: 'adv-tilt' }, world));
     var shell = E('div', { class: 'adv-map-shell' + (flat ? '' : ' is-hd') }, [viewport,
@@ -411,9 +414,9 @@
   }
   // ななめの1歩 ＝ 横へ1歩、たてへ1歩（途中で戦闘・宝箱などが起きたら、そこで止まる）
   function advanceDiag(old, pos) {
-    var a = A.move(old, pos.via.x, pos.via.y);
+    var a = A.move(old, pos.via.x, pos.via.y, wildRng);
     if (a === old || a.battle || a.notice) return a;
-    var b = A.move(a, pos.x, pos.y);
+    var b = A.move(a, pos.x, pos.y, wildRng);
     if (b === a) return a;
     b.facing = pos.y < old.pos.y ? 'up' : 'down';   // ななめ用の絵はないので、手前向き・奥向きの絵を、進む側へかたむけて使う
     return b;

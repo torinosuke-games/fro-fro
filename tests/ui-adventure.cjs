@@ -14,6 +14,7 @@ fs.mkdirSync(out, { recursive: true });
     await page.goto(process.env.FF_TEST_URL || 'http://127.0.0.1:8765/', { waitUntil: 'domcontentloaded' });
     await page.locator('.title-card input').fill('ゆき'); await page.locator('.title-card .btn.primary').click();
     await page.getByRole('button', { name: '小学4年', exact: true }).click();
+    await page.evaluate(() => { FF.adventureRng = () => 0.99; });
     await page.locator('.avatar-pick').first().click(); await page.locator('.intro-line + button').click();
     await page.getByRole('button', { name: '雪原へ出発', exact: true }).click();
     await page.waitForSelector('.adv-map');
@@ -81,7 +82,15 @@ fs.mkdirSync(out, { recursive: true });
       await page.locator('.adv-tile[data-x="' + x + '"][data-y="' + y + '"]').click();
       await page.waitForFunction(([x, y]) => FF.app.state.adventure.pos.x === x && FF.app.state.adventure.pos.y === y, [x, y]);
     }
-    await go(3, 6);
+    // ザコ敵は、歩いていると、ランダムに現れる（判断376）。ここでは、乱数を固定して、1歩で出す。ふだんは、出ないようにする
+    const quiet = () => page.evaluate(() => { FF.adventureRng = () => 0.99; });
+    async function goFight(x, y) {
+      await page.evaluate(() => { FF.adventureRng = () => 0; const s = FF.util.clone(FF.app.state); s.adventure.steps = 99; FF.app.commit(s); });
+      await page.locator('.adv-tile[data-x="' + x + '"][data-y="' + y + '"]').click();
+      await page.waitForFunction(() => FF.app.state.adventure.battle);
+      await quiet();
+    }
+    await goFight(3, 6);
     await page.screenshot({ path: out + '/commands-phone.png', fullPage: true });
     assert.equal(await page.locator('.adv-rpg-stats .adv-status').count(), 4);
     await page.getByRole('button', { name: 'ミレイの行動を選ぶ', exact: true }).click();
@@ -112,7 +121,7 @@ fs.mkdirSync(out, { recursive: true });
     assert.equal(await page.evaluate(()=>FF.app.state.adventure.potions),3);
     await page.getByRole('button', { name: '戦闘からにげる', exact: true }).click();
     assert.equal(await page.evaluate(() => FF.app.state.adventure.battle), null);
-    await go(3, 6);
+    await goFight(3, 6);
     let seenMagic = false, seenDefense = false, checkedReload = false, seenWrong = false;
     async function fight() {
       for (let turn = 0; turn < 70; turn++) {
@@ -139,13 +148,13 @@ fs.mkdirSync(out, { recursive: true });
           if (!checkedReload) {
             await page.screenshot({ path: out + '/battle-phone.png', fullPage: true });
             const before = await page.evaluate(() => JSON.stringify(FF.app.state.adventure));
-            await page.reload({ waitUntil: 'domcontentloaded' });
+            await page.reload({ waitUntil: 'domcontentloaded' }); await quiet();
             assert.equal(await page.evaluate(() => JSON.stringify(FF.app.state.adventure)), before);
             await page.getByRole('button', { name: '冒険のつづき', exact: true }).click();
             assert.equal(await page.evaluate(() => FF.app.state.adventure.battle), null);
             assert.deepEqual(await page.evaluate(() => FF.app.state.adventure.pos), { x: 1, y: 6 });
             checkedReload = true;
-            await go(3,6); continue;
+            await goFight(3,6); continue;
           }
           const wrong = !seenWrong; seenWrong = true;
           const index = b.choices.findIndex(c => wrong ? c !== b.question.answer : c === b.question.answer);
@@ -164,7 +173,7 @@ fs.mkdirSync(out, { recursive: true });
       throw Error('Battle did not finish');
     }
     await fight(); assert.ok(seenMagic && seenDefense && checkedReload);
-    await go(6, 5); await fight();
+    await goFight(6, 5); await fight();
     await go(6, 3); // 焚き火で回復
     await go(8, 6); await fight();
     await go(11, 2);
@@ -172,10 +181,11 @@ fs.mkdirSync(out, { recursive: true });
     assert.ok(await page.getByText('灯りの集落に、到着！', { exact: true }).isVisible());
     await page.screenshot({ path: out + '/arrival-phone.png', fullPage: true });
     const result = await page.evaluate(() => ({ gold: FF.app.state.adventure.gold, answered: FF.app.state.adventure.answered, correct: FF.app.state.adventure.correct, town: FF.app.state.adventure.lastTown, levels: FF.app.state.adventure.party.map(id => FF.adventure.stats(id, FF.app.state.adventure.roster[id].xp).level) }));
-    assert.ok(result.gold >= 101); assert.ok(result.answered > 0); assert.equal(result.correct, result.answered - 1);
+    assert.ok(result.gold >= 89);   // 野獣12G＋野獣12G＋大獣65G（ザコ敵は、ランダム。判断376）
+     assert.ok(result.answered > 0); assert.equal(result.correct, result.answered - 1);
     for (const width of [360, 768, 1440]) { await page.setViewportSize({ width, height: 1000 }); await checkWidth(); }
     await page.screenshot({ path: out + '/arrival-desktop.png', fullPage: true });
-    await page.reload({ waitUntil: 'domcontentloaded' }); await page.getByRole('button', { name: '冒険のつづき', exact: true }).click();
+    await page.reload({ waitUntil: 'domcontentloaded' }); await quiet(); await page.getByRole('button', { name: '冒険のつづき', exact: true }).click();
     assert.equal(await page.evaluate(() => FF.app.state.adventure.lastTown), 'home');
     assert.deepEqual(await page.evaluate(() => FF.app.state.adventure.pos), { x: 1, y: 6 });
     assert.equal(await page.evaluate(() => FF.app.state.studyPoints), 0);

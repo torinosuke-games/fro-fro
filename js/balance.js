@@ -17,6 +17,8 @@
       HEAL: 30, POTION_HEAL: 35, POTIONS: 3, CHEST_GOLD: 30, CHEST_POTIONS: 2,
       GUARD_RATE: 0.6, WARD_RATE: 0.7, RECENT: 12, HISTORY: 200,
       // オートバトルの作戦（判断375）：HP の割合の目安。LOW＝かなり減っている、MID＝減ってきた、HIGH＝少し減った
+      // ランダムエンカウント（判断376）：町・焚き火・宝箱などの場所以外を歩くと、ときどき、ザコ敵が現れる。SAFE_STEPS 歩までは出ない。そのあと、1歩ごとに、BASE から始まり GROWTH ずつ上がる確率（上限 MAX）。WOLF_FROM_X より東では、オオカミも出る（WOLF_SHARE の割合）
+      ENCOUNTER: { SAFE_STEPS: 4, BASE: 0.05, GROWTH: 0.04, MAX: 0.3, WOLF_FROM_X: 5, WOLF_SHARE: 0.5 },
       AUTO: { TACTICS: ['gungun', 'noMp', 'balance', 'life'], DEFAULT: 'balance', LOW: 0.4, MID: 0.6, HIGH: 0.85 },
       // 仲間（判断352）。magic：heal＝味方ひとりを回復／guard＝個別攻撃をかばう／ward＝全員の被害を軽減／attack＝魔法で攻撃
       MEMBERS: {

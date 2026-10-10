@@ -554,7 +554,7 @@
 (function (root) {
   root.FF.texts.adventure = {
     scenery: { viewBattle: '戦闘画面を見る', answerQuiz: '問題に答える', reviewQuiz: '結果と解説を見る', region: '白銀の辺境', chapter: 'CHAPTER 01 · 灯りをたどって', map: '全体マップ', follow: '現在地へ',
-      fieldHelp: '雪道をタップして移動。画面をスワイプして、先の景色を見渡そう。',
+      fieldHelp: '雪道をタップして移動。歩いていると、ときどき、敵が現れる。画面をスワイプして、先の景色を見渡そう。',
       auto: 'オート', autoStop: '手動にする', autoBack: 'もどる',
       autoPrompt: 'オートバトルの{作戦|さくせん}を{選|えら}ぼう。クイズには、{自分|じぶん}で{答|こた}えるよ。',
       autoRunning: 'オートバトル：{name}', autoWait: '{作戦|さくせん}にまかせて、{行動|こうどう}を{決|き}めているよ。',
