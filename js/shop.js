@@ -50,6 +50,8 @@
     });
     return { owned: owned, ownedArmor: ownedArmor, equipped: equipped };
   }
+  // はじめから持っている木の剣・ぬのの服（能力は±0。装備なしと、同じ）。画面には出さない（判断382）
+  function isStarter(kind, id, b) { return id === (kind === 'armor' ? bal(b).DEFAULT_ARMOR : bal(b).DEFAULT_WEAPON); }
   // 持っている個数
   function copies(state, kind, id, b) { var e = eq(state, b); return (kind === 'armor' ? e.ownedArmor : e.owned).filter(function (x) { return x === id; }).length; }
   function owns(state, id, b) { return eq(state, b).owned.indexOf(id) >= 0; }
@@ -163,7 +165,7 @@
     equippedOf: equippedOf, holder: holder, equip: equip, unequip: unequip,
     weaponBonus: weaponBonus, armorDefense: armorDefense, gearMap: gearMap,
     currentWeapon: currentWeapon, currentArmor: currentArmor, damagePerCorrect: damagePerCorrect, damageTaken: damageTaken,
-    copies: copies, holders: holders, freeCopies: freeCopies, MAX_COPIES: MAX_COPIES, canBuyItem: canBuyItem, buyItem: buyItem, canBuy: canBuy, buy: buy, canBuyArmor: canBuyArmor, buyArmor: buyArmor,
+    isStarter: isStarter, copies: copies, holders: holders, freeCopies: freeCopies, MAX_COPIES: MAX_COPIES, canBuyItem: canBuyItem, buyItem: buyItem, canBuy: canBuy, buy: buy, canBuyArmor: canBuyArmor, buyArmor: buyArmor,
     addGold: addGold, normalizeShop: normalizeShop
   };
 })(this);

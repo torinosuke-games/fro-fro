@@ -97,7 +97,7 @@
   }
   function removeGear(memberId, kind) {
     var cur = SH.equippedOf(FF.app.state, memberId)[kind], r = SH.unequip(FF.app.state, memberId, kind);
-    if (r.ok && cur) gearDone(r.state, U.plain(I.doneRemove.replace('{member}', name(memberId)).replace('{item}', itemPlain(kind, cur))));
+    if (r.ok && cur && !SH.isStarter(kind, cur)) gearDone(r.state, U.plain(I.doneRemove.replace('{member}', name(memberId)).replace('{item}', itemPlain(kind, cur))));
   }
   // 持っている個数と、装備している人たち（同じ品物を、何個も持てる。判断381）
   function holderBadge(kind, itemId) {
@@ -111,7 +111,8 @@
   // ある人の、武器（防具）を選ぶ
   function openPicker(memberId, kind) {
     var s = FF.app.state, cur = SH.equippedOf(s, memberId)[kind], close = null;
-    var list = E('div', { class: 'inv-pick-list' }, SH.owned(s, kind).map(function (id) {
+    if (cur && SH.isStarter(kind, cur)) cur = null;   // 木の剣・ぬのの服は、「装備なし」と同じ
+    var list = E('div', { class: 'inv-pick-list' }, SH.owned(s, kind).filter(function (id) { return !SH.isStarter(kind, id); }).map(function (id) {
       var hs = SH.holders(s, kind, id), free = SH.copies(s, kind, id) - hs.length, h = hs[hs.length - 1];
       return E('button', { class: 'rn-button inv-pick' + (id === cur ? ' is-current' : ''), attrs: { type: 'button', 'data-item': id }, on: { click: function () { close(); equipFlow(memberId, kind, id); } } }, [
         E('strong', { rich: itemMarkup(kind, id) }), E('small', { rich: itemPower(kind, id) }),
@@ -129,7 +130,7 @@
       var cur = SH.equippedOf(s, id)[kind];
       return E('button', { class: 'rn-button inv-pick' + (hs.indexOf(id) >= 0 ? ' is-current' : ''), attrs: { type: 'button', 'data-member': id }, on: { click: function () { close(); equipFlow(id, kind, itemId); } } }, [
         E('span', { class: 'adv-portrait inv-pick-icon' }, FF.adventureArt(id, true)), E('strong', { text: name(id) }),
-        E('small', { rich: cur ? itemMarkup(kind, cur) : I.nobody })
+        E('small', { rich: cur && !SH.isStarter(kind, cur) ? itemMarkup(kind, cur) : I.nobody })
       ]);
     }));
     var buttons = [{ label: U.T('back'), class: 'ghost' }];
@@ -151,7 +152,7 @@
         E('span', { class: 'inv-count' }, [E('strong', { text: '× ' + p().potions })])
       ]));
     } else {
-      var s = FF.app.state, ids = SH.owned(s, invTab);
+      var s = FF.app.state, ids = SH.owned(s, invTab).filter(function (id) { return !SH.isStarter(invTab, id); });
       if (!ids.length) panel.appendChild(text('p', 'inv-empty', I.empty));
       ids.forEach(function (id) {
         var hs = SH.holders(s, invTab, id), h = hs.length === 1 ? hs[0] : null, d = itemDef(invTab, id), locked = !!p().battle;
@@ -210,7 +211,7 @@
         var cur = SH.equippedOf(FF.app.state, id)[kind];
         return E('div', { class: 'adv-gear-row', attrs: { 'data-gear': kind } }, [
           text('span', 'adv-gear-label', I.gearLabel[kind]),
-          cur ? E('span', { class: 'adv-gear-name', rich: itemMarkup(kind, cur) }) : text('span', 'adv-gear-name is-none', I.nobody),
+          cur && !SH.isStarter(kind, cur) ? E('span', { class: 'adv-gear-name', rich: itemMarkup(kind, cur) }) : text('span', 'adv-gear-name is-none', I.nobody),
           btn(I.change2, function () { openPicker(id, kind); }, 'quiet adv-gear-btn', !!p().battle)
         ]);
       })));
