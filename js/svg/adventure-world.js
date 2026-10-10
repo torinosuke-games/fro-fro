@@ -70,6 +70,17 @@
     var sheet = avatar.charAt(0) === 'j' ? junior[Number(avatar.slice(1)) - 1] : avatar;
     return 'img/adventure/travelers/' + sheet + '.webp';
   }
+  // ななめ向きの絵（<シート>-d.webp。2×2：左前・右前・左後ろ・右後ろ）があるシート。届いたぶんだけ足す（判断372）。ないシートは、前後の絵をかたむけて見せる
+  var DIAG_SHEETS = ['e1','e2','e3','e4','e5','e6','e7','e8','e9','e10','e11','e12','j4','j6'];   // 14種類すべて（判断373）
+  function sheetOf(avatar) {
+    if (FF.defs.AVATARS.indexOf(avatar) < 0) avatar = 'e1';
+    var junior = ['e4','e7','e2','j4','e1','j6','e8','e9','e6','e5','e12','e3'];
+    return avatar.charAt(0) === 'j' ? junior[Number(avatar.slice(1)) - 1] : avatar;
+  }
+  function travelerDiag(avatar) {
+    var sheet = sheetOf(avatar);
+    return DIAG_SHEETS.indexOf(sheet) >= 0 ? 'img/adventure/travelers/' + sheet + '-d.webp' : null;
+  }
   function enemy(id) {
     var boxes={cub:'0 550 340 405',wolf:'337 278 497 675',boss:'829 20 707 940'};
     var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -96,11 +107,11 @@
   }
   var prepared = {};
   function preload(avatar) {
-    ['img/adventure/snow-world.webp','img/adventure/snow-battle.webp','img/adventure/snow-enemies.webp',traveler(avatar)].forEach(function(url){
+    ['img/adventure/snow-world.webp','img/adventure/snow-battle.webp','img/adventure/snow-enemies.webp',traveler(avatar),travelerDiag(avatar)].filter(Boolean).forEach(function(url){
       if (prepared[url]) return;
       var image=new Image();prepared[url]=image;image.decoding='async';image.src=url;
       if (image.decode) image.decode().catch(function(){});
     });
   }
-  FF.adventureScene={background:'img/adventure/snow-world.webp',world:world,traveler:traveler,enemy:enemy,chest:chest,preload:preload,tile:S};
+  FF.adventureScene={background:'img/adventure/snow-world.webp',world:world,traveler:traveler,travelerDiag:travelerDiag,diagSheets:DIAG_SHEETS,enemy:enemy,chest:chest,preload:preload,tile:S};
 })(this);

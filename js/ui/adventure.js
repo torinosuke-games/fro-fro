@@ -243,9 +243,17 @@
       if (token !== routeId || !traveler.isConnected || FF.app.screen !== 'adventure' || p().battle || !steps.length) { finish(); return; }
       var pos = steps.shift(), old = p(), next = pos.via ? advanceDiag(old, pos) : A.move(old, pos.x, pos.y);
       if (next === old) { finish(); return; }
-      traveler.style.backgroundPosition = ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[next.facing];
+      var diagArt = pos.via ? scene.travelerDiag(FF.app.state.player.avatar) : null;   // ななめ向きの絵があれば、それを使う
+      if (diagArt) {
+        traveler.style.backgroundImage = 'url("' + diagArt + '")';
+        traveler.style.backgroundPosition = (pos.x > old.pos.x ? 'right' : 'left') + ' ' + (pos.y < old.pos.y ? 'bottom' : 'top');   // 左前＝左上・右前＝右上・左後ろ＝左下・右後ろ＝右下
+      } else {
+        traveler.style.backgroundImage = 'url("' + scene.traveler(FF.app.state.player.avatar) + '")';
+        traveler.style.backgroundPosition = ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[next.facing];
+      }
       traveler.setAttribute('data-facing', next.facing);
-      traveler.setAttribute('data-lean', pos.via ? (pos.x > old.pos.x ? '1' : '-1') : '0');   // ななめのときは、進む側へかたむけて見せる
+      traveler.setAttribute('data-diag', diagArt ? '1' : '0');
+      traveler.setAttribute('data-lean', pos.via && !diagArt ? (pos.x > old.pos.x ? '1' : '-1') : '0');   // ななめの絵がないときだけ、進む側へかたむけて見せる
       var sx = old.pos.x * 72 + 36, sy = old.pos.y * 72 + 40, ex = next.pos.x * 72 + 36, ey = next.pos.y * 72 + 40;
       var scale = map.clientWidth / 936, cx = viewport.scrollLeft, cy = viewport.scrollTop;
       var tx = Math.max(0, Math.min(viewport.scrollWidth - viewport.clientWidth, ex * scale - viewport.clientWidth / 2));
