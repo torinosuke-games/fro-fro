@@ -22,7 +22,7 @@
   function create() {
     var roster = {};
     IDS.forEach(function (id) { var s = stats(id, 0); roster[id] = { xp: 0, hp: s.hp, mp: s.mp }; });
-    return { version: 1, started: false, roster: roster, recruited: B.START_ALLIES.slice(), party: ['hero'].concat(B.START_ALLIES), gold: 0, potions: B.POTIONS, pos: clone(PLACES.home),
+    return { version: 1, started: false, roster: roster, recruited: B.START_ALLIES.slice(), party: ['hero'].concat(B.START_ALLIES), gold: 0, research: {}, joinNotice: [], potions: B.POTIONS, pos: clone(PLACES.home),
       lastTown: 'home', facing: 'down', cleared: [], chest: false, arrived: false, campUsed: false, battle: null,
       subject: 'math', difficulty: 'basic', recent: [], answered: 0, correct: 0, history: [], notice: 'welcome' };
   }
@@ -41,6 +41,10 @@
     p.party = rawParty ? rawParty.filter(function (id, i, a) { return (id === 'hero' || p.recruited.indexOf(id) >= 0) && a.indexOf(id) === i; }) : ['hero'].concat(p.recruited).slice(0, 4);
     if (p.party.indexOf('hero') < 0) p.party.unshift('hero');
     p.party = p.party.slice(0, 4);
+    // 魔法の書物の開発（判断363）と、新しく力を貸してくれた仲間のお知らせ
+    p.research = {};
+    Object.keys(FF.balance.RESEARCH.BOOKS).forEach(function (id) { var v = raw.research && raw.research[id], max = FF.balance.RESEARCH.BOOKS[id].costs.length; if (v) p.research[id] = Math.max(0, Math.min(max, Math.floor(v) || 0)); });
+    p.joinNotice = Array.isArray(raw.joinNotice) ? raw.joinNotice.filter(function (id, i, a) { return p.recruited.indexOf(id) >= 0 && a.indexOf(id) === i; }) : [];
     ['gold', 'potions', 'answered', 'correct'].forEach(function (k) { p[k] = int(raw[k], p[k], 1000000); });
     p.correct = Math.min(p.answered, p.correct);
     ['started', 'chest', 'arrived', 'campUsed'].forEach(function (k) { p[k] = raw[k] === true; });
@@ -208,8 +212,8 @@
       }
     });
   }
-  function attack(n, correct, rng, gear) {
-    gear = gear || {};
+  function attack(n, correct, rng, gear, fx) {
+    gear = gear || {}; fx = fx || {};
     var b = n.battle, e = B.ENEMIES[b.enemy];
     alive(n).sort(function (a, c) { return stats(c, n.roster[c].xp).speed - stats(a, n.roster[a].xp).speed; }).forEach(function (id) {
       var o = b.orders[id], r = n.roster[id], s = stats(id, r.xp), target = o && n.roster[o.target];
@@ -223,18 +227,18 @@
       if (o.type === 'magic') {
         r.mp -= B.MAGIC_COST;
         var kind = magicKind(id);
-        if (kind === 'heal') { var h = Math.min(B.HEAL + s.wisdom, stats(o.target, target.xp).hp - target.hp); target.hp += h; log(b, 'heal', o.target, h, id); return; }
+        if (kind === 'heal') { var h = Math.min(B.HEAL + s.wisdom + (fx.healBonus || 0), stats(o.target, target.xp).hp - target.hp); target.hp += h; log(b, 'heal', o.target, h, id); return; }
         if (kind === 'guard') { b.guarded = true; log(b, 'guard', id, 0); return; }
         if (kind === 'ward') { b.ward = true; log(b, 'ward', id, 0); return; }
       }
-      var damage = Math.max(1, Math.round(((o.type === 'magic' ? s.wisdom * B.MAGIC_POWER : s.strength + (gear[id] && gear[id].attack || 0)) - e.defense * B.ARMOR_RATE) * (correct ? B.QUIZ_ATTACK_RATE : 1)));
+      var damage = Math.max(1, Math.round(((o.type === 'magic' ? s.wisdom * B.MAGIC_POWER * (fx.powerMult || 1) : s.strength + (gear[id] && gear[id].attack || 0)) - e.defense * B.ARMOR_RATE) * (correct ? B.QUIZ_ATTACK_RATE : 1)));
       damage = Math.min(b.hp, damage); b.hp -= damage;
       log(b, 'hit', id, damage);
     });
     if (b.hp <= 0) victory(n, rng); else b.phase = 'playerAction';
   }
-  function defend(n, correct, gear) {
-    gear = gear || {};
+  function defend(n, correct, gear, fx) {
+    gear = gear || {}; fx = fx || {};
     var b = n.battle, e = B.ENEMIES[b.enemy], plan = intent(n);
     var targets = plan.all ? alive(n) : [plan.target];
     var guard = n.party.filter(function (m) { return magicKind(m) === 'guard' && n.roster[m].hp > 0; })[0];
@@ -242,7 +246,7 @@
     targets.forEach(function (id) {
       var r = n.roster[id], s = stats(id, r.xp);
       var damage = Math.max(1, Math.round((e.attack * (correct ? B.QUIZ_ENEMY_RATE : 1) * (plan.heavy ? 1.5 : 1) - (s.defense + (gear[id] && gear[id].defense || 0)) * B.ARMOR_RATE) *
-        (b.ward ? B.WARD_RATE : 1) * (id === guard && b.guarded ? B.GUARD_RATE : 1)));
+        (b.ward ? Math.max(.1, B.WARD_RATE - (fx.guardBonus || 0)) : 1) * (id === guard && b.guarded ? Math.max(.1, B.GUARD_RATE - (fx.guardBonus || 0)) : 1)));
       damage = Math.min(r.hp, damage); r.hp -= damage; log(b, 'hurt', id, damage);
       if (!r.hp) log(b, 'down', id, 0);
     });
@@ -260,11 +264,11 @@
     b.phase = 'explanation';
     return n;
   }
-  function advance(p, bank, grade, rng, now, gear) {
+  function advance(p, bank, grade, rng, now, gear, fx) {
     if (!p.battle) return p;
     var n = clone(p), b = n.battle;
-    if (b.phase === 'explanation') { attack(n, b.correct, rng, gear); }
-    else if (b.phase === 'playerAction') { b.log = []; defend(n, b.correct, gear); }
+    if (b.phase === 'explanation') { attack(n, b.correct, rng, gear, fx); }
+    else if (b.phase === 'playerAction') { b.log = []; defend(n, b.correct, gear, fx); }
     else if (b.phase === 'enemyAction') { b.phase = 'commands'; b.turn++; b.orders = {}; b.log = []; b.question = null; }
     else if (b.phase === 'win') { n.battle = null; n.notice = b.enemy === 'boss' ? 'passOpen' : 'victory'; }
     else if (b.phase === 'lose') { n = rest(n, n.lastTown); n.notice = 'rescued'; }

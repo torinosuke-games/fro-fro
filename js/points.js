@@ -30,6 +30,7 @@
   function addPoints(state, n) {
     state.studyPoints = (state.studyPoints || 0) + n;
     state.studyPointsEarnedTotal = (state.studyPointsEarnedTotal || 0) + n;
+    if (FF.research) FF.research.applyJoins(state);   // 獲得熱量で、力を貸してくれる仲間（判断363）
     return state;
   }
 

@@ -159,6 +159,7 @@
     var legacyGold = typeof state.gold === 'number' && isFinite(state.gold) ? Math.max(0, Math.floor(state.gold)) : 0;
     delete state.gold;
     if (FF.adventure) state.adventure = FF.adventure.normalize(state.adventure);
+    if (FF.research && FF.adventure) FF.research.applyJoins(state);   // すでに熱量が足りている人も、仲間にする
     if (FF.battle && FF.battle.rescueBackfill) state = FF.battle.rescueBackfill(state);
     if (FF.shop && FF.shop.normalizeShop) state = FF.shop.normalizeShop(state, undefined, legacyGold);
     state.player.name = util.normalizeName(state.player.name, cfg);

@@ -150,6 +150,19 @@
     PRODUCTION_PER_LEVEL_PER_HOUR: 2,
     STORAGE_HOURS: { BASE: 4, PER_LEVEL: 2, MAX: 12 },  // 住宅 Lv1 で4時間、+2時間/Lv
 
+    // 熱量で力を貸してくれる仲間と、魔法研究所の魔法の書物（判断363）
+    // JOIN_BY_HEAT：獲得熱量（これまでに生んだ熱量の累計）が、この値になると、仲間になる。LAB_REQUIRES：この仲間がいると、魔法研究所が使える
+    // BOOKS：開発のゴールド（レベルごと）と、1レベルごとの効き目。heal＝回復魔法の回復量に足す、flame＝攻撃魔法の威力の増え方、guard＝かばう・ベールで被害がさらに減る割合
+    RESEARCH: {
+      JOIN_BY_HEAT: { shisho: 10000 },
+      LAB_REQUIRES: 'shisho',
+      BOOKS: {
+        heal: { costs: [300, 800, 2000], perLevel: 8 },
+        flame: { costs: [300, 800, 2000], perLevel: 0.15 },
+        guard: { costs: [300, 800, 2000], perLevel: 0.05 }
+      }
+    },
+
     // 人口（判断355）：人口が増えると、すべての生産施設の生産が増える。人口 ＝ BASE ＋ 住宅のレベルごと ＋ 救出した旅人ごと。
     // 生産の倍率 ＝ 1 ＋ BONUS_PER_PERSON × (人口 − BASE)。はじめ（住宅Lv1・救出なし）は ちょうど ×1 で、これまでのバランスは変わらない。
     POPULATION: { BASE: 10, PER_HOUSING_LEVEL: 5, PER_RESCUED: 10, BONUS_PER_PERSON: 0.02 },

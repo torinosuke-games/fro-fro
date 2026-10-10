@@ -219,7 +219,7 @@
     // まだ会えていない旅人（影の絵。旅人を救出すると、仲間になる）
     A.ALLIES.filter(function (id) { return p().recruited.indexOf(id) < 0; }).forEach(function (id) {
       grid.appendChild(E('section', { class: 'adv-roster-card adv-roster-locked', attrs: { 'data-locked': id } }, [
-        E('div', { class: 'adv-portrait' }, FF.adventureArt(id, true)), text('p', 'adv-role', T.lockedAlly)
+        E('div', { class: 'adv-portrait' }, FF.adventureArt(id, true)), text('p', 'adv-role', (FF.balance.RESEARCH.JOIN_BY_HEAT[id] ? T.lockedHeat : T.lockedAlly))
       ]));
     });
     main.appendChild(grid);
@@ -464,7 +464,7 @@
   // 武器・防具を、ひとりひとりの攻撃・防御に足す（判断343・359）
   function gear() { return FF.shop ? FF.shop.gearMap(FF.app.state) : {}; }
   function advance() {
-    var old = p(), next = A.advance(old, FF.app.bank, grade(), Math.random, FF.app.now(), gear());
+    var old = p(), next = A.advance(old, FF.app.bank, grade(), Math.random, FF.app.now(), gear(), FF.research ? FF.research.effects(FF.app.state) : {});
     if (next === old) { U.toast(T.noQuestion); return; } change(next);
   }
   function victoryPanel(damage) {
