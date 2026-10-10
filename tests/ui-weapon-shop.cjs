@@ -11,7 +11,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  assert.equal(await p.locator('.overlay h2').innerText(),'武器屋');
  assert.equal(await p.locator('.shop-row').count(),5);
  // はじめは、木の剣を装備中。ほかは、ゴールドが足りなくて買えない
- assert.equal(await p.locator('.shop-row[data-weapon="wood_sword"] .shop-equipped').count(),1);
+ assert.ok((await p.locator('.shop-row[data-weapon="wood_sword"]').innerText()).includes('装備：ゆき'));
  assert.equal(await p.locator('.shop-row[data-weapon="stone_sword"] .shop-btn').isDisabled(),true);
  await p.locator('.overlay .btn').click();
  // ゴールドを足すと、買える。買うと、ゴールドが減り、装備中になる
@@ -20,21 +20,25 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  assert.ok((await p.locator('.shop-gold').innerText()).includes('350'));
  await p.locator('.shop-row[data-weapon="iron_sword"] .shop-btn').click();
  assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),50);
- assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'iron_sword');
- assert.equal(await p.locator('.shop-row[data-weapon="iron_sword"] .shop-equipped').count(),1);
- // 木の剣を付けかえられる
- await p.locator('.shop-row[data-weapon="wood_sword"] .shop-btn').click();
+ // 買っただけでは、装備は変わらない（持ち物に入る）。「そうびする」で、だれが装備するかを選ぶ
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'wood_sword');
+ assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('装備していない'));
+ await p.locator('.shop-row[data-weapon="iron_sword"] .shop-btn').click();
+ await p.locator('.inv-pick[data-member="hero"]').click();
+ assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'iron_sword');
+ assert.equal(await p.evaluate(()=>FF.shop.damagePerCorrect(FF.app.state)),15);
+ await p.evaluate(()=>FF.app.commit(FF.shop.equip(FF.app.state,'hero','weapon','wood_sword').state));
  assert.equal(await p.evaluate(()=>FF.shop.damagePerCorrect(FF.app.state)),10);
+ await p.locator('.facility-btn[data-facility="weapon"]').click();
  // 防具屋：5つ。ゴールドで買うと装備中になる
  await p.locator('.overlay .btn').click();
  await p.evaluate(()=>FF.app.commit(FF.shop.addGold(FF.app.state,150)));
  await p.locator('.facility-btn[data-facility="armor"]').click();
  assert.equal(await p.locator('.overlay h2').innerText(),'防具屋');
  assert.equal(await p.locator('.shop-row').count(),5);
- assert.equal(await p.locator('.shop-row[data-weapon="cloth_clothes"] .shop-equipped').count(),1);
+ assert.ok((await p.locator('.shop-row[data-weapon="cloth_clothes"]').innerText()).includes('装備：ゆき'));
  await p.locator('.shop-row[data-weapon="fur_coat"] .shop-btn').click();
- assert.equal(await p.evaluate(()=>FF.shop.currentArmor(FF.app.state)),'fur_coat');
+ assert.ok(await p.evaluate(()=>FF.shop.owns&&FF.shop.ownsArmor(FF.app.state,'fur_coat')));
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'wood_sword');
  assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),100);
  // 画面におさまる
