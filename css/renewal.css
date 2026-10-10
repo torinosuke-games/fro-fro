@@ -514,3 +514,6 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .gold-item .gold-num{font:800 1.375rem/1 Nunito,var(--font);font-variant-numeric:tabular-nums}
 @media(max-width:1180px){.gold-item .gold-num{font-size:1.375rem}}
 @media(max-width:760px){.gold-item .gold-num{font-size:.9375rem}}
+/* 魔法研究所（判断363） */
+.lab-body .lab-intro{line-height:1.8;margin:6px 0 10px}.lab-locked{line-height:1.8}.lab-progress{font-size:.8125rem;color:#6a8796;line-height:1.7}
+.lab-meter{height:10px;border-radius:6px;background:#dde9ef;overflow:hidden;margin:8px 0 4px}.lab-meter span{display:block;height:100%;background:linear-gradient(90deg,#f2b25a,#e07a3a)}

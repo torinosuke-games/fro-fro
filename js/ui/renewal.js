@@ -309,7 +309,7 @@
  // 町のほかの施設（判断324）。絵は img/art/fac-*.webp。仲間紹介所は冒険の編成、チケット引換所は引換所を開く。
  var FACILITIES=[
   {id:'weapon',name:R.facWeapon,open:function(){openWeaponShop();}},{id:'armor',name:R.facArmor,open:function(){openArmorShop();}},{id:'item',name:R.facItem},{id:'tavern',name:R.facTavern},
-  {id:'party',name:R.facParty,open:function(){U.show('adventureParty');}},{id:'magic',name:R.facMagic},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
+  {id:'party',name:R.facParty,open:function(){U.show('adventureParty');}},{id:'magic',name:R.facMagic,open:function(){openLab();}},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
  ];
  // 武器屋・防具屋（判断340・343）：ゴールドで買い、装備する。武器は正解1回のダメージ（冒険では主人公の攻撃力）、防具は受けるダメージを減らす
  var closeShop=null;
@@ -336,6 +336,46 @@
  }
  function openWeaponShop(){openGearShop('weapon');}
  function openArmorShop(){openGearShop('armor');}
+ // 魔法研究所（判断363）：司書が仲間になると、魔法の書物を、ゴールドで開発できる
+ var closeLab=null;
+ function openLab(){
+  var a=FF.app,RS=FF.research,s=a.state;
+  if(closeLab){closeLab();closeLab=null;}
+  var body=E('div',{class:'lab-body'});
+  if(!RS.unlocked(s)){
+   var pr=RS.joinProgress(s,'shisho');
+   body.appendChild(E('p',{class:'lab-locked',rich:R.labLocked}));
+   body.appendChild(E('p',{class:'lab-progress',rich:R.labProgress.replace('{have}',U.fmt(pr.have)).replace('{need}',U.fmt(pr.need))}));
+   body.appendChild(E('div',{class:'lab-meter',attrs:{role:'progressbar','aria-valuenow':pr.have,'aria-valuemax':pr.need,'aria-valuemin':0}},E('span',{style:{width:Math.min(100,pr.have/pr.need*100)+'%'}})));
+  }else{
+   body.appendChild(E('p',{class:'shop-gold'},[E('span',{rich:R.shopGold}),E('strong',{text:U.fmt(FF.shop.gold(s))+' G'})]));
+   body.appendChild(E('p',{class:'lab-intro',rich:R.labIntro}));
+   var P=FF.balance.RESEARCH.BOOKS,names={heal:R.bookHeal,flame:R.bookFlame,guard:R.bookGuard},texts={heal:R.bookHealText.replace('{n}',P.heal.perLevel),flame:R.bookFlameText.replace('{n}',Math.round(P.flame.perLevel*100)),guard:R.bookGuardText.replace('{n}',Math.round(P.guard.perLevel*100))},icons={heal:'📗',flame:'📕',guard:'📘'};
+   body.appendChild(E('div',{class:'shop-list'},RS.bookIds().map(function(id){
+    var lv=RS.level(s,id),max=P[id].costs.length,c=RS.canDevelop(s,id),cost=RS.nextCost(s,id);
+    var action=lv>=max?E('span',{class:'shop-equipped',rich:R.labMax}):E('button',{class:'rn-button primary shop-btn',attrs:{type:'button','data-book':id,disabled:c.ok?null:'true'},rich:R.labDevelop,on:{click:function(){var r=RS.develop(a.state,id);if(r.ok){a.commit(r.state);U.toast(R.labDone);openLab();}}}});
+    return E('div',{class:'shop-row'+(lv>=max||c.ok?'':' is-short'),attrs:{'data-book':id}},[
+     E('span',{class:'shop-icon',text:icons[id]}),
+     E('div',{class:'shop-info'},[E('strong',{class:'shop-name',rich:names[id]}),E('span',{class:'shop-power',rich:texts[id]}),E('span',{class:'shop-owned',rich:R.labLevel.replace('{lv}',lv).replace('{max}',max)+(cost!=null?'　'+U.fmt(cost)+' G':'')})]),
+     action]);
+   })));
+  }
+  closeLab=U.modal({title:R.labTitle,body:body,buttons:[{label:U.T('back'),class:'ghost'}]});
+ }
+ // 獲得熱量で、仲間が力を貸してくれたとき、お知らせを出す（判断363）
+ var joinShowing=false;
+ function showJoinNotice(){
+  var a=FF.app,s=a.state,ids=s.adventure&&s.adventure.joinNotice||[];
+  if(!ids.length||joinShowing)return;joinShowing=true;
+  var body=E('div',{class:'stack'},ids.map(function(id){
+   var m=FF.texts.adventure.members[id];
+   return E('div',{class:'rescue-card'},[
+    E('div',{class:'rescue-portrait'},FF.adventureArt?FF.adventureArt(id,true):null),
+    E('div',{class:'rescue-text'},[E('strong',{},[U.rich(m.name),U.rich('　'),U.rich(m.role)]),E('p',{class:'rescue-quote',rich:'「'+(m.join||m.rescue||'')+'」'}),E('p',{class:'small muted',rich:R.joinText.replace('{name}',m.name)})])
+   ]);
+  }));
+  U.modal({title:R.joinTitle,body:body,buttons:[{label:U.T('ok'),class:'primary',onClick:function(){joinShowing=false;var n=FF.util.clone(a.state);n.adventure.joinNotice=[];a.commit(n);}}],dismissible:false});
+ }
  function facilityGrid(){
   return E('nav',{class:'facility-grid',attrs:{'aria-label':R.facilities}},FACILITIES.map(function(f){
    return E('button',{class:'facility-btn'+(f.open?'':' is-soon'),attrs:{type:'button','data-facility':f.id,'aria-label':U.plain(f.name)+(f.open?'':'（'+U.plain(R.facSoon)+'）')},on:{click:function(){
@@ -384,6 +424,7 @@
  }
  FF.renewalHud=function(hud){
   var a=FF.app,s=a.state;hud.hidden=a.screen==='title';if(hud.hidden){lastValues={};hudSignature=null;return;}
+  if(s.adventure&&s.adventure.joinNotice&&s.adventure.joinNotice.length&&a.screen!=='quiz'&&a.screen!=='battle'&&a.screen!=='exploreQuiz')root.setTimeout(showJoinNotice,0);
   var recovered=FF.tickets.recoverTickets(s.tickets,a.now());
   var signature=JSON.stringify([a.screen,a.session&&a.session.sel&&a.session.sel.resource,s.resources,s.studyPoints,s.adventure&&s.adventure.gold,recovered.count,FF.defs.RESOURCES.map(function(r){return FF.rewardFlight.display(r.id,s.resources[r.id]);}),FF.rewardFlight.display('heat',s.studyPoints)]);
   if(signature===hudSignature)return;
