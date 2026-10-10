@@ -234,3 +234,29 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 .inv-pick-list{display:grid;gap:8px;margin:10px 0}.inv-pick{display:flex;align-items:center;gap:10px;text-align:left;padding:10px 12px}.inv-pick small{color:#6a8796}.inv-pick.is-current{border-color:#2d6f94;background:#eaf3f8}.inv-pick-icon{width:34px;flex-shrink:0}.inv-pick-item{font-size:18px;margin:4px 0}
 .adv-gear{display:grid;gap:6px;margin:10px 0}.adv-gear-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:10px;background:#f2f7f9}.adv-gear-label{font-size:12px;color:#6a8796;width:3.2em;flex-shrink:0}.adv-gear-name{flex:1;min-width:0;font-weight:700;font-size:14px}.adv-gear-name.is-none{color:#98b0bd;font-weight:400}.adv-gear-btn{padding:4px 10px;font-size:12px}
 @media(max-width:420px){.inv-row{flex-wrap:wrap}.inv-actions{flex-direction:row;width:100%}.inv-actions .adv-button{flex:1}}
+
+/* ---- HD-2D 風のフィールド（試作。判断367）：地面を傾け、木・人物・敵は立てた絵。上下のぼかし・もや・光を重ねる ---- */
+.adv-map-shell.is-hd{--tilt:56deg;overflow:hidden;background:#2b6a9c}
+.adv-map-viewport.hd2d{position:relative;overflow:hidden;perspective:700px;perspective-origin:50% 12%;touch-action:manipulation;
+  background:linear-gradient(#d6e9f3 0,#bcd8e8 22%,#5f9cc4 40%,#2b6a9c 70%)}
+.hd2d .adv-tilt{position:absolute;left:50%;top:70%;width:0;height:0;transform-style:preserve-3d;transform:rotateX(var(--tilt,56deg))}
+.hd2d .adv-map{position:absolute;left:0;top:0;transform-style:preserve-3d;isolation:auto;
+  transform:translate3d(calc(var(--cx,468px)*-1),calc(var(--cy,324px)*-1),0)}
+.hd2d .adv-map:before{display:none}
+.hd2d .adv-tile{transform-style:preserve-3d;isolation:auto;transform:translateZ(1px)}
+.hd2d .adv-tile .adv-monster{width:96px;height:104px;bottom:6px;overflow:visible;transform-origin:50% 100%;transform:rotateX(calc(var(--tilt,56deg)*-1));filter:none}
+.hd2d .adv-threat{transform-origin:50% 100%;transform:rotateX(calc(var(--tilt,56deg)*-1))}
+.hd2d .adv-map-label{transform-origin:50% 100%;transform:rotateX(calc(var(--tilt,56deg)*-1))}
+.hd2d .adv-traveler{width:84px;height:84px;transform-origin:50% 92%;transform:translate(-50%,-92%) rotateX(calc(var(--tilt,56deg)*-1));filter:none;z-index:auto}
+.hd2d .adv-tree{position:absolute;height:auto;transform-origin:50% 100%;transform:translate(-50%,-100%) rotateX(calc(var(--tilt,56deg)*-1));pointer-events:none;image-rendering:auto;max-width:none}
+.hd2d .adv-shadow{position:absolute;aspect-ratio:2.4/1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,#16365a66 0,#16365a33 55%,transparent 72%);pointer-events:none;z-index:0}
+.hd2d .adv-traveler-shadow{width:58px}
+.adv-map-shell:not(.is-hd) .adv-shadow{display:none}
+.adv-hd-fx{position:absolute;left:0;right:0;pointer-events:none;z-index:3}
+.adv-hd-haze{top:0;height:46%;background:linear-gradient(#e6f2f9f2 0,#e6f2f9a6 38%,#e6f2f900 100%)}
+.adv-hd-blur-top{top:0;height:34%;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);-webkit-mask-image:linear-gradient(#000 0,#000 25%,transparent 100%);mask-image:linear-gradient(#000 0,#000 25%,transparent 100%)}
+.adv-hd-blur-bottom{bottom:0;height:24%;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);-webkit-mask-image:linear-gradient(transparent 0,#000 75%);mask-image:linear-gradient(transparent 0,#000 75%)}
+.adv-hd-light{inset:0;background:radial-gradient(ellipse at 82% 6%,#fff3c8aa 0,#fff3c800 46%),radial-gradient(ellipse at 50% 60%,transparent 55%,#0b2a4a55 100%);mix-blend-mode:normal}
+.adv-map-shell.is-hd .adv-compass,.adv-map-shell.is-hd .adv-map-toggle,.adv-map-shell.is-hd .adv-directions{z-index:6}
+.adv-hd-toggle{position:absolute;top:12px;right:14px;z-index:6;font-size:11px;border-radius:5px;background:#173b50d9;color:#fff;border-color:#daeaf2a0;box-shadow:0 3px 12px #1b47672a}
+.adv-map-shell:not(.is-hd) .adv-hd-toggle{top:12px;right:14px}
