@@ -126,12 +126,12 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
   assert.equal(await page.locator('.adv-victory-panel .adv-reward').count(),1);
   assert.equal(await page.locator('.adv-battle-log').count(),0);
   assert.ok(await page.locator('.adv-loot-chest').isVisible());
-  assert.equal(await page.evaluate(()=>FF.app.state.adventure.gold),27);
+  assert.equal(await page.evaluate(()=>FF.app.state.adventure.gold),FF.balance.ADVENTURE.ENEMIES.cub.gold+FF.balance.ADVENTURE.DROP_GOLD);
   assert.equal(await page.evaluate(()=>FF.app.state.adventure.potions),4);
   await page.screenshot({path:out+'/victory-chest-phone.png',fullPage:true});
   for(const width of [360,768,1440]) {await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
   await page.getByRole('button',{name:'旅をつづける',exact:true}).click();
-  assert.equal(await page.evaluate(()=>FF.app.state.adventure.gold),27,'Treasure is credited exactly once');
+  assert.equal(await page.evaluate(()=>FF.app.state.adventure.gold),FF.balance.ADVENTURE.ENEMIES.cub.gold+FF.balance.ADVENTURE.DROP_GOLD,'Treasure is credited exactly once');
   // One available potion cannot be reserved twice; submenu back never confirms a choice.
   await page.evaluate(()=>{const p=FF.adventure.depart(FF.app.state.adventure,'home');p.pos={x:2,y:6};p.potions=1;const n=FF.adventure.move(p,3,6);FF.app.commit(Object.assign({},FF.app.state,{adventure:n}));FF.ui.rerender();});
   await page.getByRole('button',{name:'まほう',exact:true}).click();
