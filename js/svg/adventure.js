@@ -5,6 +5,13 @@
   function art(id, small) {
     // 仲間は、絵（img/adventure/allies/）。学年で、小学生用・中学生用に分ける予定（7年生（中学1年）から中学生用。判断353）
     if (root.FF.adventure && root.FF.adventure.ALLIES.indexOf(id) >= 0) return U.el('img', { class: 'adv-art adv-ally-art', attrs: { src: 'img/adventure/allies/' + id + (root.FF.app && root.FF.app.state && root.FF.app.state.player && root.FF.app.state.player.grade >= 7 ? '-jh' : '-el') + '.webp', alt: root.FF.texts.adventure.members[id].name, draggable: 'false' } });
+    // 主人公は、設定で選んだキャラの顔の絵（img/art/avatar-*.jpg。判断198・204）。絵が読めないときだけ、下の簡単な絵
+    if (id === 'hero' && root.FF.app && root.FF.app.state && root.FF.app.state.player && root.FF.app.state.player.avatar) {
+      var avatar = root.FF.app.state.player.avatar, img = U.artImg('avatar-' + avatar + '.jpg', 'adv-art adv-ally-art adv-hero-art', function () { return art('hero-fallback', small); });
+      img.setAttribute('role', 'img'); img.setAttribute('alt', root.FF.texts.adventure.members.hero.name); img.setAttribute('data-avatar', avatar);
+      return img;
+    }
+    if (id === 'hero-fallback') id = 'hero';
     var svg = U.svg('svg', { viewBox: '0 0 240 240', role: 'img', 'aria-label': (root.FF.texts.adventure.members[id] || root.FF.texts.adventure.enemies[id]).name, class: 'adv-art' });
     function shape(tag, attrs) { svg.appendChild(U.svg(tag, attrs)); }
     function ellipse(cx, cy, rx, ry, fill) { shape('ellipse', { cx: cx, cy: cy, rx: rx, ry: ry, fill: fill }); }
