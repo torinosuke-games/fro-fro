@@ -14,7 +14,7 @@
       DROP_RATE: 0.25, DROP_GOLD: 20, DROP_POTIONS: 1,
       MAX_LEVEL: 10, XP_STEP: 24, HP_GROWTH: 7, MP_GROWTH: 2, STAT_GROWTH: 2,
       DEFENSE_RATE: 0.5, ARMOR_RATE: 0.45, MAGIC_COST: 3, MAGIC_POWER: 1.7,
-      HEAL: 30, POTION_HEAL: 35, POTIONS: 3, CHEST_GOLD: 30, CHEST_POTIONS: 2,
+      HEAL: 30, POTION_HEAL: 35, POTIONS: 3, POTION_PRICE: 25, POTION_MAX: 99, CHEST_GOLD: 30, CHEST_POTIONS: 2,
       GUARD_RATE: 0.6, WARD_RATE: 0.7, RECENT: 12, HISTORY: 200,
       // オートバトルの作戦（判断375）：HP の割合の目安。LOW＝かなり減っている、MID＝減ってきた、HIGH＝少し減った
       // ランダムエンカウント（判断376）：町・焚き火・宝箱などの場所以外を歩くと、ときどき、ザコ敵が現れる。SAFE_STEPS 歩までは出ない。そのあと、1歩ごとに、BASE から始まり GROWTH ずつ上がる確率（上限 MAX）。WOLF_FROM_X より東では、オオカミも出る（WOLF_SHARE の割合）
@@ -218,22 +218,20 @@
     // 武器（武器屋。判断340）：damage ＝ 正解1問で敵に与えるダメージ、price ＝ ゴールド。木の剣は、はじめから持っている（BATTLE.DAMAGE_PER_CORRECT と同じ）。
     // 値段は、ゴールドの入手のしくみが決まったら、調整する
     WEAPONS: {
-      wood_sword: { damage: 10, price: 0 },
+      wood_sword: { damage: 11, price: 20 },   // 最弱の武器（+1。判断383）。装備なしの攻撃は、BATTLE.DAMAGE_PER_CORRECT（10）
       stone_sword: { damage: 12, price: 60 },
       iron_sword: { damage: 15, price: 200 },
       steel_sword: { damage: 18, price: 500 },
       flame_sword: { damage: 22, price: 1200 }
     },
-    DEFAULT_WEAPON: 'wood_sword',
     // 防具（防具屋。判断343）：defense ＝ 防御力。冒険では、主人公の防御力に足す。探索では、まちがえたときに受けるダメージを (defense × BATTLE.ARMOR_RATE) だけ減らす（最低1）
     ARMORS: {
-      cloth_clothes: { defense: 0, price: 0 },
+      cloth_clothes: { defense: 1, price: 20 },   // 最弱の防具（+1。判断383）。装備なしは、防御力 +0
       fur_coat: { defense: 3, price: 60 },
       leather_armor: { defense: 6, price: 180 },
       iron_armor: { defense: 10, price: 450 },
       steel_armor: { defense: 15, price: 1100 }
     },
-    DEFAULT_ARMOR: 'cloth_clothes',
 
     BATTLE: {
       PLAYER_HP: 100,                // 隊長の HP（挑戦のたびに満タンから）

@@ -62,7 +62,7 @@
       studyPointsEarnedTotal: 0,
       redeemHistory: [],
       // 装備（持っている武器・装備中の武器。判断340）。ゴールドは、冒険のゴールド（adventure.gold）を、武器屋でも使う（判断342）
-      equipment: { owned: [b.DEFAULT_WEAPON], ownedArmor: [b.DEFAULT_ARMOR], equipped: { hero: { weapon: b.DEFAULT_WEAPON, armor: b.DEFAULT_ARMOR } } },
+      equipment: { owned: [], ownedArmor: [], equipped: { hero: { weapon: null, armor: null } } },   // はじめは、何も持っていない（木の剣・ぬのの服も、店で買う。判断383）
       // themeMode：いつも 'day'（判断176。前のセーブの 'night'・'auto' も読み込み時に 'day' に直す）
       // pointsPerHour：交換レート（この pt で1時間。SPEC 14.4）
       settings: { furigana: true, furiganaAuto: true, themeMode: FF.theme.DEFAULT_MODE, sound: true, soundStyle: 'bright', speech: true, speechRate: 'normal', pointsPerHour: b.STUDY_POINTS.PER_HOUR_DEFAULT },

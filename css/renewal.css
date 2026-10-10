@@ -465,6 +465,7 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .shop-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--rn-line,#d3e3ee);border-radius:14px;background:#fff}
 .shop-row.is-equipped{border-color:#efa64b;background:#fffaf0}
 .shop-row.is-short{opacity:.7}
+.shop-buys{display:flex;flex-direction:column;gap:6px}
 .shop-icon{font-size:1.75rem;text-align:center}
 .shop-info{display:grid;gap:1px;min-width:0}
 .shop-name{font-size:1rem}
