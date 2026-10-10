@@ -9,7 +9,7 @@ await p.locator('.title-card input').fill('ゆき');await p.locator('.title-card
 await p.evaluate(()=>{let s=FF.shop.addGold(FF.app.state,5000);for(const w of ['stone_sword','iron_sword'])s=FF.shop.buy(s,w).state;s=FF.shop.buyArmor(s,'iron_armor').state;FF.app.commit(s);FF.ui.show('base');});
 await p.waitForTimeout(400);
 // 町から、持ち物の画面へ
-await p.getByRole('button',{name:'持ち物',exact:true}).click();
+await p.locator('#nav button',{hasText:'持ち物'}).click();   // 下のナビ（判断360）
 assert.equal(await p.evaluate(()=>FF.app.screen),'adventureInventory');
 assert.equal(await p.locator('.inv-row').count(),3);                                    // 武器：木・石・鉄
 assert.ok((await p.locator('.inv-row[data-item="wood_sword"]').innerText()).includes('ゆき'));   // 木の剣は、主人公が装備
