@@ -8,7 +8,7 @@ await p.goto(process.env.FF_TEST_URL,{waitUntil:'domcontentloaded'});
 await p.locator('.title-card input').fill('ゆき');await p.locator('.title-card .btn.primary').click();await p.getByRole('button',{name:'小学4年',exact:true}).click();await p.locator('.avatar-pick').first().click();await p.locator('.intro-line + button').click();
 // はじめは、魔法研究所は使えない（司書がまだ）
 await p.locator('.facility-btn[data-facility="magic"]').click();
-assert.ok((await p.locator('.lab-body').innerText()).includes('0 / 10,000'));
+const lockedText=await p.locator('.lab-body').innerText();assert.ok(lockedText.includes('いずれ司書が仲間になります'));assert.ok(!/10,?000|獲得熱量/.test(lockedText),'条件の数字は、書かない（ネタバレ）');
 await p.screenshot({path:out+'/lab-locked.png'});
 await p.locator('.overlay .btn').click();
 // 獲得熱量が10000になると、司書が力を貸してくれる（お知らせが出る）

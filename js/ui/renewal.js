@@ -343,10 +343,7 @@
   if(closeLab){closeLab();closeLab=null;}
   var body=E('div',{class:'lab-body'});
   if(!RS.unlocked(s)){
-   var pr=RS.joinProgress(s,'shisho');
-   body.appendChild(E('p',{class:'lab-locked',rich:R.labLocked}));
-   body.appendChild(E('p',{class:'lab-progress',rich:R.labProgress.replace('{have}',U.fmt(pr.have)).replace('{need}',U.fmt(pr.need))}));
-   body.appendChild(E('div',{class:'lab-meter',attrs:{role:'progressbar','aria-valuenow':pr.have,'aria-valuemax':pr.need,'aria-valuemin':0}},E('span',{style:{width:Math.min(100,pr.have/pr.need*100)+'%'}})));
+   body.appendChild(E('p',{class:'lab-locked',rich:R.labLocked}));   // 条件（獲得熱量）は、書かない（ネタバレになるため。判断364）
   }else{
    body.appendChild(E('p',{class:'shop-gold'},[E('span',{rich:R.shopGold}),E('strong',{text:U.fmt(FF.shop.gold(s))+' G'})]));
    body.appendChild(E('p',{class:'lab-intro',rich:R.labIntro}));

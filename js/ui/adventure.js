@@ -219,7 +219,7 @@
     // まだ会えていない旅人（影の絵。旅人を救出すると、仲間になる）
     A.ALLIES.filter(function (id) { return p().recruited.indexOf(id) < 0; }).forEach(function (id) {
       grid.appendChild(E('section', { class: 'adv-roster-card adv-roster-locked', attrs: { 'data-locked': id } }, [
-        E('div', { class: 'adv-portrait' }, FF.adventureArt(id, true)), text('p', 'adv-role', (FF.balance.RESEARCH.JOIN_BY_HEAT[id] ? T.lockedHeat.replace('{need}', U.fmt(FF.balance.RESEARCH.JOIN_BY_HEAT[id])).replace('{have}', U.fmt(Math.min(FF.app.state.studyPointsEarnedTotal || 0, FF.balance.RESEARCH.JOIN_BY_HEAT[id]))) : T.lockedAlly))
+        E('div', { class: 'adv-portrait' }, FF.adventureArt(id, true)), text('p', 'adv-role', (FF.balance.RESEARCH.JOIN_BY_HEAT[id] ? T.lockedHeat : T.lockedAlly))
       ]));
     });
     main.appendChild(grid);
