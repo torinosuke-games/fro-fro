@@ -505,22 +505,52 @@
   function openHowto() {
     U.modal({ title: C.howtoButton, body: E('div', { class: 'adv-howto-body' }, C.howto.map(function(line) { return text('p', '', line); })), buttons: [{ label: C.goBack, class: 'ghost' }] });
   }
+  var A_TACTICS = FF.balance.ADVENTURE.AUTO.TACTICS, autoTimer = null;
+  // オートバトル中のパネル：作戦を選びなおす／手動にもどす。少し待ってから、作戦で、全員の行動を決めて、クイズへ
+  function autoPanel() {
+    var n = p(), panel = E('section', { class: 'adv-command-panel adv-auto-panel' }), menu = E('nav', { class: 'adv-command-menu', attrs: { 'aria-label': C.auto } });
+    menu.appendChild(text('strong', 'adv-menu-actor', C.auto));
+    A_TACTICS.forEach(function(t) { menu.appendChild(btn((n.auto.tactic === t ? '✓ ' : '') + C.tactics[t].name, function() { change(A.setAuto(p(), t)); }, 'adv-command adv-tactic' + (n.auto.tactic === t ? ' is-current' : ''))); });
+    menu.appendChild(btn(C.autoStop, function() { root.clearTimeout(autoTimer); change(A.setAuto(p(), null)); }, 'adv-command'));
+    panel.appendChild(menu);
+    panel.appendChild(E('div', { class: 'adv-command-dialogue' }, [
+      text('p', 'adv-encounter-text', C.encounter.replace('{name}', T.enemies[n.battle.enemy].name)),
+      text('p', 'adv-action-message adv-command-prompt', C.autoRunning.replace('{name}', C.tactics[n.auto.tactic].name)),
+      text('p', 'adv-action-description', C.tactics[n.auto.tactic].text + '\n' + C.autoWait)
+    ]));
+    var turn = n.battle.turn, enemy = n.battle.enemy;
+    root.clearTimeout(autoTimer);
+    autoTimer = root.setTimeout(function() {
+      var before = p();
+      if (!panel.isConnected || FF.app.screen !== 'adventure' || !before.battle || before.battle.phase !== 'commands' || before.battle.turn !== turn || before.battle.enemy !== enemy || !before.auto.on) return;
+      var next = A.command(before, A.autoOrders(before, before.auto.tactic), FF.app.bank, grade(), Math.random, FF.app.now());
+      orderKey = null;
+      if (next === before) { U.toast(C.autoFailed); change(A.setAuto(before, null)); return; }
+      change(next);
+    }, 1100);
+    return panel;
+  }
   function commandPanel() {
+    if (p().auto && p().auto.on) return autoPanel();
     var n = p(), panel = E('section', { class: 'adv-command-panel' }), menu = E('nav', { class: 'adv-command-menu' + (submenu ? ' adv-subcommand-menu' : ''), attrs: { 'aria-label': submenu ? C.details : T.command } });
     menu.appendChild(text('strong', 'adv-menu-actor', name(actor)));
     var prompt = C.chooseAction.replace('{name}', name(actor));
     if (!submenu) {
-      [['attack',T.fight],['magic',T.magic],['item',T.item],['escape',T.escape]].forEach(function(entry) {
+      [['attack',T.fight],['magic',T.magic],['item',T.item],['auto',C.auto],['escape',T.escape]].forEach(function(entry) {
         var type = entry[0], disabled = type === 'magic' && n.roster[actor].mp < B.MAGIC_COST || type === 'item' && availablePotions() <= 0;
         menu.appendChild(btn(entry[1], function() {
           if (type === 'escape') { orderKey = null; change(A.retreat(p())); }
           else if (type === 'attack') confirmOrder(type);
+          else if (type === 'auto') { submenu = {type:'auto', target:false}; paint(); }
           else { submenu = {type:type, target:false}; paint(); }
         }, 'adv-command', disabled));
       });
     } else {
       var type = submenu.type;
-      if (submenu.target) {
+      if (type === 'auto') {
+        prompt = C.autoPrompt;
+        A_TACTICS.forEach(function(t) { menu.appendChild(btn(C.tactics[t].name, function() { submenu = null; change(A.setAuto(p(), t)); }, 'adv-command adv-tactic')); });
+      } else if (submenu.target) {
         prompt = C.chooseTarget;
         n.party.forEach(function(id) {
           menu.appendChild(btn(name(id) + ' · HP ' + n.roster[id].hp, function() { confirmOrder(type, id); }, 'adv-command'));
@@ -540,7 +570,7 @@
     var dialogue = E('div', { class: 'adv-command-dialogue' }, [
       text('p', 'adv-encounter-text', C.encounter.replace('{name}',T.enemies[n.battle.enemy].name)),
       text('p', 'adv-action-message adv-command-prompt', prompt),
-      submenu ? text('p', 'adv-action-description', submenu.type === 'magic' ? T.members[actor].detail : C.item) : null,
+      submenu ? text('p', 'adv-action-description', submenu.type === 'magic' ? T.members[actor].detail : submenu.type === 'auto' ? A_TACTICS.map(function(t) { return C.tactics[t].name + '：' + C.tactics[t].text; }).join('\n') : C.item) : null,
       E('div', { class: 'adv-command-foot' }, [
         E('button', { class: 'adv-howto', rich: '？ ' + C.howtoShort, attrs: { type: 'button' }, on: { click: openHowto } })
       ])

@@ -287,3 +287,10 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 .adv-lean{position:absolute;inset:0;background-image:inherit;background-position:inherit;background-size:inherit;background-repeat:no-repeat;transform-origin:50% 90%;transition:transform .12s}
 .adv-traveler[data-lean="1"] .adv-lean{transform:rotate(10deg) skewX(-4deg)}
 .adv-traveler[data-lean="-1"] .adv-lean{transform:rotate(-10deg) skewX(4deg)}
+
+/* オートバトル（判断375） */
+.adv-auto-panel .adv-action-description,.adv-command-dialogue .adv-action-description{white-space:pre-line}
+.adv-auto-panel .adv-command.is-current{box-shadow:inset 0 0 0 2px #f3d27a}
+.adv-command-menu .adv-tactic{font-size:11.5px;letter-spacing:0;white-space:nowrap;padding-left:6px;padding-right:6px}
+.adv-auto-panel .adv-command-dialogue,.adv-subcommand-menu+.adv-command-dialogue{overflow-y:auto}
+.adv-auto-panel .adv-action-description,.adv-subcommand-menu+.adv-command-dialogue .adv-action-description{font-size:11.5px;line-height:1.55}

@@ -22,7 +22,7 @@
   function create() {
     var roster = {};
     IDS.forEach(function (id) { var s = stats(id, 0); roster[id] = { xp: 0, hp: s.hp, mp: s.mp }; });
-    return { version: 1, started: false, roster: roster, recruited: B.START_ALLIES.slice(), party: ['hero'].concat(B.START_ALLIES), gold: 0, research: {}, joinNotice: [], potions: B.POTIONS, pos: clone(PLACES.home),
+    return { version: 1, started: false, roster: roster, recruited: B.START_ALLIES.slice(), party: ['hero'].concat(B.START_ALLIES), gold: 0, research: {}, joinNotice: [], auto: { on: false, tactic: B.AUTO.DEFAULT }, potions: B.POTIONS, pos: clone(PLACES.home),
       lastTown: 'home', facing: 'down', cleared: [], chest: false, arrived: false, campUsed: false, battle: null,
       subject: 'math', difficulty: 'basic', recent: [], answered: 0, correct: 0, history: [], notice: 'welcome' };
   }
@@ -44,6 +44,7 @@
     // 魔法の書物の開発（判断363）と、新しく力を貸してくれた仲間のお知らせ
     p.research = {};
     Object.keys(FF.balance.RESEARCH.BOOKS).forEach(function (id) { var v = raw.research && raw.research[id], max = FF.balance.RESEARCH.BOOKS[id].costs.length; if (v) p.research[id] = Math.max(0, Math.min(max, Math.floor(v) || 0)); });
+    p.auto = { on: !!(raw.auto && raw.auto.on === true), tactic: raw.auto && B.AUTO.TACTICS.indexOf(raw.auto.tactic) >= 0 ? raw.auto.tactic : B.AUTO.DEFAULT };
     p.joinNotice = Array.isArray(raw.joinNotice) ? raw.joinNotice.filter(function (id, i, a) { return p.recruited.indexOf(id) >= 0 && a.indexOf(id) === i; }) : [];
     ['gold', 'potions', 'answered', 'correct'].forEach(function (k) { p[k] = int(raw[k], p[k], 1000000); });
     p.correct = Math.min(p.answered, p.correct);
@@ -192,6 +193,37 @@
     n.battle.phase = 'attack';
     return n;
   }
+  // ---- オートバトル（判断375）：作戦ごとに、そのターンの全員の行動を決める。クイズには、これまでどおり、答える ----
+  function ratioOf(p, id) { var r = p.roster[id]; return r.hp / stats(id, r.xp).hp; }
+  function autoOrders(p, tactic) {
+    var T = B.AUTO, orders = {}, potions = p.potions, healed = {};
+    if (T.TACTICS.indexOf(tactic) < 0) tactic = T.DEFAULT;
+    var order = p.party.slice().sort(function (a, c) { return ratioOf(p, a) - ratioOf(p, c); }), low = order[0], lr = ratioOf(p, low);
+    var members = alive(p), avg = members.reduce(function (t, id) { return t + ratioOf(p, id); }, 0) / Math.max(1, members.length);
+    var rank = { heal: 0, guard: 1, ward: 1, attack: 2 };   // 回復役を先に決める（回復薬は、そのあまりに）
+    members.slice().sort(function (a, c) { return rank[magicKind(a)] - rank[magicKind(c)]; }).forEach(function (id) {
+      var kind = magicKind(id), r = p.roster[id], s = stats(id, r.xp), canMagic = r.mp >= B.MAGIC_COST, strong = s.wisdom * B.MAGIC_POWER > s.strength;
+      function heal(th) { if (kind === 'heal' && canMagic && lr < th && !healed[low]) { healed[low] = true; return { type: 'magic', target: low }; } return null; }
+      function buff(th) { return (kind === 'guard' || kind === 'ward') && canMagic && th ? { type: 'magic', target: id } : null; }
+      function potion(th) { if (potions > 0 && lr < th && !healed[low]) { potions--; healed[low] = true; return { type: 'item', target: low }; } return null; }
+      function blast(spare) { return kind === 'attack' && canMagic && strong && r.mp >= B.MAGIC_COST * (spare ? 2 : 1) ? { type: 'magic', target: id } : null; }
+      var o;
+      if (tactic === 'gungun') o = blast(false);
+      else if (tactic === 'noMp') o = potion(T.LOW);
+      else if (tactic === 'life') o = heal(T.HIGH) || buff(true) || potion(T.MID);
+      else o = heal(T.MID) || buff(kind === 'guard' ? lr < T.MID : avg < T.HIGH) || potion(T.LOW) || blast(true);
+      orders[id] = o || { type: 'attack', target: id };
+    });
+    return orders;
+  }
+  // オートバトルのオン・オフ（tactic が null なら、手動にもどす）
+  function setAuto(p, tactic) {
+    var n = clone(p), T = B.AUTO;
+    if (tactic == null) n.auto = { on: false, tactic: p.auto && p.auto.tactic || T.DEFAULT };
+    else if (T.TACTICS.indexOf(tactic) >= 0) n.auto = { on: true, tactic: tactic };
+    else return p;
+    return n;
+  }
   function log(b, key, who, amount, actor) { var entry = { key:key, who:who, amount:amount }; if (actor && actor !== who) entry.actor = actor; b.log.push(entry); }
   function victory(n, rng) {
     var b = n.battle, e = B.ENEMIES[b.enemy];
@@ -287,6 +319,6 @@
   }
   FF.adventure = { IDS: IDS, ALLIES: ALLIES, magicKind: magicKind, recruit: recruit, MAP: MAP, PLACES: PLACES, ENEMIES: ENEMIES, create: create, normalize: normalize,
     stats: stats, level: level, same: same, alive: alive, atTown: atTown, rest: rest, depart: depart, setParty: setParty,
-    walkable: walkable, path: path, enemyAt: enemyAt, move: move, encounter: encounter, intent: intent,
+    autoOrders: autoOrders, setAuto: setAuto, walkable: walkable, path: path, enemyAt: enemyAt, move: move, encounter: encounter, intent: intent,
     command: command, answer: answer, advance: advance, retreat: retreat, potion: potion, pick: pick };
 })(this);

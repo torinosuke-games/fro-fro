@@ -16,6 +16,8 @@
       DEFENSE_RATE: 0.5, ARMOR_RATE: 0.45, MAGIC_COST: 3, MAGIC_POWER: 1.7,
       HEAL: 30, POTION_HEAL: 35, POTIONS: 3, CHEST_GOLD: 30, CHEST_POTIONS: 2,
       GUARD_RATE: 0.6, WARD_RATE: 0.7, RECENT: 12, HISTORY: 200,
+      // オートバトルの作戦（判断375）：HP の割合の目安。LOW＝かなり減っている、MID＝減ってきた、HIGH＝少し減った
+      AUTO: { TACTICS: ['gungun', 'noMp', 'balance', 'life'], DEFAULT: 'balance', LOW: 0.4, MID: 0.6, HIGH: 0.85 },
       // 仲間（判断352）。magic：heal＝味方ひとりを回復／guard＝個別攻撃をかばう／ward＝全員の被害を軽減／attack＝魔法で攻撃
       MEMBERS: {
         hero: { hp: 66, mp: 12, strength: 15, defense: 10, speed: 11, wisdom: 13, magic: 'attack' },
