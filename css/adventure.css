@@ -283,7 +283,8 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 .adv-directions:after{content:'';position:absolute;inset:11%;border:1px dashed #ffffff33;border-radius:50%;pointer-events:none}
 .adv-directions .adv-button,.adv-directions .adv-diag{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;grid-column:auto;grid-row:auto;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%;line-height:1}
 .adv-directions .adv-button{font-size:22px}
-.adv-directions .adv-diag{font-size:19px}
+.adv-directions .adv-diag{font-size:26px;font-weight:700;opacity:1}
+.adv-directions .adv-diag-glyph{display:block;line-height:1}
 .adv-lean{position:absolute;inset:0;background-image:inherit;background-position:inherit;background-size:inherit;background-repeat:no-repeat;transform-origin:50% 90%;transition:transform .12s}
 .adv-traveler[data-lean="1"] .adv-lean{transform:rotate(10deg) skewX(-4deg)}
 .adv-traveler[data-lean="-1"] .adv-lean{transform:rotate(-10deg) skewX(4deg)}

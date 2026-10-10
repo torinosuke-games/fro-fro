@@ -401,7 +401,7 @@
   // ---- 移動パッド（8方向）：押したまま指を動かすと、その方角へ歩き続ける。ちょん、と押せば1マス ----
   var held = null, padStamp = 0;   // held：押している方角 [dx, dy]
   var PAD_DIRS = [[0, -1, '↑', '北へ'], [-1, 0, '←', '西へ'], [0, 1, '↓', '南へ'], [1, 0, '→', '東へ']];
-  var PAD_DIAG = [[-1, -1, '↖', 1, 1], [1, -1, '↗', 3, 1], [-1, 1, '↙', 1, 3], [1, 1, '↘', 3, 3]];
+  var PAD_DIAG = [[-1, -1, -45], [1, -1, 45], [-1, 1, -135], [1, 1, 135]];   // 上下左右と同じ「↑」を回して、太さと大きさをそろえる
   function dirFromVector(vx, vy, r) {
     if (Math.hypot(vx, vy) < r * .26) return null;
     var k = Math.round(Math.atan2(vy, vx) / (Math.PI / 4));
@@ -440,7 +440,8 @@
       b.setAttribute('aria-label', d[3]); Object.assign(b.style, ringStyle(d[0], d[1])); parts[d[0] + ',' + d[1]] = b; pad.appendChild(b);
     });
     PAD_DIAG.forEach(function (d) {
-      var m = E('span', { class: 'adv-diag', text: d[2], attrs: { 'aria-hidden': 'true' } });
+      var m = E('span', { class: 'adv-diag', attrs: { 'aria-hidden': 'true' } }), g = E('span', { class: 'adv-diag-glyph', text: '↑' });
+      g.style.transform = 'rotate(' + d[2] + 'deg)'; m.appendChild(g);
       Object.assign(m.style, ringStyle(d[0], d[1])); parts[d[0] + ',' + d[1]] = m; pad.appendChild(m);
     });
     pad.appendChild(knob);
