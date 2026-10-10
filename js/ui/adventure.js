@@ -236,7 +236,7 @@
     if (A.same(target, A.PLACES.home) && A.same(p().pos, target)) { home(); return; }
     var steps = A.path(p(), target);
     if (!steps.length) { U.toast('そこへは道がつながっていない。峠の敵や、ほかの道をたしかめよう。'); return; }
-    var token = ++routeId, viewport = root.document.querySelector('.adv-map-viewport'), traveler = viewport.querySelector('.adv-traveler'), map = viewport.querySelector('.adv-map'), hdNow = viewport.classList.contains('hd2d'), shadow = viewport.querySelector('.adv-traveler-shadow');
+    var token = ++routeId, viewport = root.document.querySelector('.adv-map-viewport'), traveler = viewport.querySelector('.adv-traveler'), map = viewport.querySelector('.adv-map'), hdNow = viewport.classList.contains('hd2d');
     moving = true; traveler.classList.add('is-walking');
     function finish() { moving = false; traveler.classList.remove('is-walking'); }
     function step() {
@@ -255,15 +255,13 @@
         if (last !== null) elapsed += Math.min(34, Math.max(0, time - last));
         last = time;
         var fraction = duration ? Math.min(1, elapsed / duration) : 1;
-        traveler.style.left = (sx + (ex - sx) * fraction) / 936 * 100 + '%';
-        traveler.style.top = (sy + (ey - sy) * fraction) / 648 * 100 + '%';
+        if (!hdNow) { traveler.style.left = (sx + (ex - sx) * fraction) / 936 * 100 + '%'; traveler.style.top = (sy + (ey - sy) * fraction) / 648 * 100 + '%'; }
         if (hdNow) {
-          var hx = sx + (ex - sx) * fraction, hy = sy + (ey - sy) * fraction;
-          map.style.setProperty('--cx', hx + 'px'); map.style.setProperty('--cy', hy + 'px');
-          if (shadow) { shadow.style.left = hx + 'px'; shadow.style.top = hy + 'px'; }
+          hdPlace(map, sx + (ex - sx) * fraction, sy + (ey - sy) * fraction);
         } else { viewport.scrollLeft = cx + (tx - cx) * fraction; viewport.scrollTop = cy + (ty - cy) * fraction; }
         if (fraction < 1) { root.requestAnimationFrame(frame); return; }
-        save(next);
+        if (steps.length && !next.battle && !next.notice) FF.app.state = Object.assign({}, FF.app.state, { adventure: next }); else save(next);   // 道の途中は、保存・画面の更新をしない（重いので）。着いたとき・戦闘や知らせのときに保存
+        if (hdNow) syncTrees(map, ex, ey);
         map.querySelectorAll('.adv-tile.current').forEach(function(cell) {cell.classList.remove('current');cell.removeAttribute('aria-current');});
         var cell = map.querySelector('[data-x="' + pos.x + '"][data-y="' + pos.y + '"]');
         if (cell) {cell.classList.add('current');cell.setAttribute('aria-current','location');}
@@ -298,19 +296,37 @@
     });
     return treeUrls;
   }
-  function hdTrees(map) {
-    var urls = treeSprites(), hash = function (a, b) { var h = (a * 374761393 + b * 668265263) >>> 0; h = ((h ^ (h >>> 13)) * 1274126177) >>> 0; return (h ^ (h >>> 16)) / 4294967296; };
-    var list = [];
+  // 木は、カメラの近くのぶんだけ出す（遠いものは外す。画面の部品が少ないほど、軽い）
+  function hdTreeData() {
+    var hash = function (a, b) { var h = (a * 374761393 + b * 668265263) >>> 0; h = ((h ^ (h >>> 13)) * 1274126177) >>> 0; return (h ^ (h >>> 16)) / 4294967296; };
+    var list = [], out = [];
     A.MAP.forEach(function (row, y) { row.split('').forEach(function (t, x) { if (t === '#') list.push([x, y]); }); });
     // 外側の海べりの、もう1列。木の列が、そのまま続いて見える
     for (var x = -1; x <= 13; x++) { list.push([x, -1]); list.push([x, 9]); }
     for (var y = 0; y < 9; y++) { list.push([-1, y]); list.push([13, y]); }
     list.sort(function (a, b) { return a[1] - b[1] || a[0] - b[0]; }).forEach(function (c) {
-      var jx = (hash(c[0], c[1]) - .5) * 26, jy = (hash(c[1], c[0] + 7) - .5) * 18, big = .85 + hash(c[0] + 3, c[1] + 5) * .35;
-      var px = (c[0] + .5) * 72 + jx, py = (c[1] + .85) * 72 + jy;
-      map.appendChild(E('span', { class: 'adv-shadow adv-tree-shadow', style: { left: px + 'px', top: py + 'px', width: 60 * big + 'px' }, attrs: { 'aria-hidden': 'true' } }));
-      map.appendChild(E('img', { class: 'adv-tree', attrs: { src: urls[Math.floor(hash(c[0], c[1] + 11) * 3)], alt: '', draggable: 'false', 'aria-hidden': 'true' }, style: { left: px + 'px', top: py + 'px', width: 86 * big + 'px' } }));
+      var big = .85 + hash(c[0] + 3, c[1] + 5) * .35;
+      out.push({ key: c[0] + ',' + c[1], x: (c[0] + .5) * 72 + (hash(c[0], c[1]) - .5) * 26, y: (c[1] + .85) * 72 + (hash(c[1], c[0] + 7) - .5) * 18, w: 86 * big, v: Math.floor(hash(c[0], c[1] + 11) * 3) });
     });
+    return out;
+  }
+  function syncTrees(map, cx, cy) {
+    var st = map._trees; if (!st) return;
+    var urls = treeSprites();
+    st.data.forEach(function (t) {
+      var near = t.x > cx - 560 && t.x < cx + 560 && t.y > cy - 700 && t.y < cy + 380, el = st.els[t.key];
+      if (near && !el) {
+        el = E('img', { class: 'adv-tree', attrs: { src: urls[t.v], alt: '', draggable: 'false', 'aria-hidden': 'true' }, style: { left: t.x + 'px', top: t.y + 'px', width: t.w + 'px' } });
+        st.els[t.key] = el; map.appendChild(el);
+      } else if (!near && el) { el.remove(); delete st.els[t.key]; }
+    });
+  }
+  // HD-2D：カメラ（地面の移動）と主人公・影の位置を、transform で直接動かす（レイアウトや、子への再計算を起こさない）
+  function hdPlace(map, x, y) {
+    map.style.transform = 'translate3d(' + (-x) + 'px,' + (-y) + 'px,0)';
+    var hero = map.querySelector('.adv-traveler'), shadow = map.querySelector('.adv-traveler-shadow');
+    if (hero) hero.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) translate(-50%,-92%) rotateX(-56deg)';
+    if (shadow) shadow.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) translate(-50%,-50%)';
   }
   function mapView() {
     var n = p(), map = E('div', { class: 'adv-map', attrs: { role: 'group', 'aria-label': T.map } });
@@ -328,23 +344,34 @@
     });
     map.appendChild(E('span', { class: 'adv-traveler leader', style: { backgroundImage: 'url("' + scene.traveler(FF.app.state.player.avatar) + '")', backgroundPosition: ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[n.facing], left: (n.pos.x * 72 + 36) / 936 * 100 + '%', top: (n.pos.y * 72 + 40) / 648 * 100 + '%' }, attrs: { role: 'img', 'aria-label': C.current, 'data-sprite': scene.traveler(FF.app.state.player.avatar), 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }, ['body','leg-left','leg-right'].map(function(part) {return E('span',{class:'adv-walk-part adv-walk-' + part,attrs:{'aria-hidden':'true'}});})));
     if (isHd()) {
-      hdTrees(map);
-      map.appendChild(E('span', { class: 'adv-shadow adv-traveler-shadow', style: { left: (n.pos.x * 72 + 36) + 'px', top: (n.pos.y * 72 + 40) + 'px' }, attrs: { 'aria-hidden': 'true' } }));
-      map.style.setProperty('--cx', (n.pos.x * 72 + 36) + 'px'); map.style.setProperty('--cy', (n.pos.y * 72 + 40) + 'px');
+      var hx = n.pos.x * 72 + 36, hy = n.pos.y * 72 + 40, shadow = E('span', { class: 'adv-shadow adv-traveler-shadow', attrs: { 'aria-hidden': 'true' } });
+      map.appendChild(shadow);
+      map._trees = { data: hdTreeData(), els: {} };
+      hdPlace(map, hx, hy);
+      syncTrees(map, hx, hy);
     }
     return map;
+  }
+  // フィールドの上に重ねる操作：町へ・仲間の編成・ゴールド・全体マップ・HD-2D（画面を広く使うため、タイトルは出さない）
+  function fieldBar() {
+    var n = p();
+    return E('div', { class: 'adv-fbar' }, [
+      btn(T.back, home, 'quiet'),
+      btn(T.party, function () { routeId++; moving = false; U.show('adventureParty'); }, 'quiet'),
+      text('span', 'adv-gold adv-fgold', n.gold + ' G'),
+      E('span', { class: 'adv-fspacer' }),
+      btn(overview ? C.follow : C.map, function () { routeId++; moving = false; overview = !overview; paint(); }, 'quiet'),
+      btn(hd ? 'HD-2D：入' : 'HD-2D：切', function () { routeId++; moving = false; hd = !hd; overview = false; paint(); }, 'quiet adv-hd-toggle')
+    ]);
   }
   function fieldViewport() {
     var flat = !isHd(), world = mapView();
     var viewport = E('div', { class: 'adv-map-viewport' + (overview ? ' overview' : '') + (flat ? '' : ' hd2d') }, flat ? world : E('div', { class: 'adv-tilt' }, world));
     var shell = E('div', { class: 'adv-map-shell' + (flat ? '' : ' is-hd') }, [viewport,
       flat ? null : E('div', { class: 'adv-hd-fx adv-hd-haze', attrs: { 'aria-hidden': 'true' } }),
-      flat ? null : E('div', { class: 'adv-hd-fx adv-hd-blur-top', attrs: { 'aria-hidden': 'true' } }),
-      flat ? null : E('div', { class: 'adv-hd-fx adv-hd-blur-bottom', attrs: { 'aria-hidden': 'true' } }),
       flat ? null : E('div', { class: 'adv-hd-fx adv-hd-light', attrs: { 'aria-hidden': 'true' } }),
       E('div', { class: 'adv-compass', text: 'N ↑', attrs: { 'aria-hidden': true } }),
-      btn(overview ? C.follow : C.map, function () { routeId++; moving = false; overview = !overview; paint(); }, 'adv-map-toggle'),
-      btn(hd ? 'HD-2D：入' : 'HD-2D：切', function () { routeId++; moving = false; hd = !hd; overview = false; paint(); }, 'adv-hd-toggle'), directions()].filter(Boolean));
+      fieldBar(), directions()].filter(Boolean));
     root.requestAnimationFrame(function () {
       if (!viewport.isConnected || overview || !flat) return;
       viewport.scrollLeft = p().pos.x * 72 + 36 - viewport.clientWidth / 2;
@@ -359,15 +386,12 @@
   }
   function renderField(main) {
     var n = p(); main.classList.add('adv-field-screen');
-    header(main, C.region, C.chapter);
-    main.appendChild(E('div', { class: 'adv-toolbar' }, [text('strong', 'adv-quest', n.arrived ? T.routeDone : T.route), text('span', 'adv-gold', n.gold + ' G'), btn(T.party, function () { routeId++; moving = false; U.show('adventureParty'); }, 'quiet')]));
     if (n.notice === 'arrival') main.appendChild(E('section', { class: 'adv-arrival', attrs: { role: 'status' } }, [text('p', 'adv-eyebrow', 'CHAPTER 01 · COMPLETE'), text('h2', '', T.arrivalTitle), text('p', '', T.arrivalText), text('p', '', T.arrivalNext)]));
     var layout = E('div', { class: 'adv-field-layout' }), board = E('section', { class: 'adv-board' });
-    board.appendChild(E('div', { class: 'adv-map-caption' }, [text('strong', '', 'はじまりの雪原'), text('span', '', '西の町 → 東の集落')]));
     board.appendChild(fieldViewport()); board.appendChild(text('p', 'adv-map-help', C.fieldHelp));
     layout.appendChild(board);
     var side = E('aside', { class: 'adv-travel-panel' });
-    side.appendChild(text('h2', '', '旅の仲間')); side.appendChild(team());
+    side.appendChild(text('strong', 'adv-quest', n.arrived ? T.routeDone : T.route)); side.appendChild(text('h2', '', '旅の仲間')); side.appendChild(team());
     side.appendChild(text('p', 'adv-field-help', T.fieldHelp));
     var heal = E('div', { class: 'adv-supplies' }, [text('strong', '', T.potion + ' × ' + n.potions)]);
     var target = E('select', { attrs: { 'aria-label': '回復薬を使う仲間' } }, n.party.map(function (id) { return E('option', { value: id, text: name(id) }); }));
