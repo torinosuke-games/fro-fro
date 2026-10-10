@@ -27,7 +27,13 @@ await setup(4,6);c=await center();
 await p.mouse.move(c.x,c.y);await p.mouse.down();await p.mouse.move(c.x+c.R*.6,c.y-c.R*.6,{steps:4});
 await p.waitForFunction(()=>FF.app.state.adventure.pos.x>4&&FF.app.state.adventure.pos.y<6,null,{timeout:6000});
 assert.equal(await p.locator('.adv-traveler').getAttribute('data-facing'),'up','back sprite going north-east');
-assert.equal(await p.locator('.adv-traveler').getAttribute('data-lean'),'1','leans toward east');
+const hasDiag=await p.evaluate(()=>!!FF.adventureScene.travelerDiag(FF.app.state.player.avatar));
+if(hasDiag){// ななめ向きの絵がある人：右後ろ（右下の枠）の絵を使い、かたむけない
+ assert.equal(await p.locator('.adv-traveler').getAttribute('data-diag'),'1');
+ assert.equal(await p.locator('.adv-traveler').getAttribute('data-lean'),'0');
+ assert.ok((await p.locator('.adv-traveler').evaluate(e=>e.style.backgroundImage)).includes('-d.webp'));
+ assert.equal(await p.locator('.adv-traveler').evaluate(e=>e.style.backgroundPosition),'right bottom');
+}else assert.equal(await p.locator('.adv-traveler').getAttribute('data-lean'),'1','leans toward east');
 await p.screenshot({path:out+'/diag.png'});
 await p.mouse.up();await p.waitForTimeout(500);
 // 指を回して、向きを変える：北東 → 西
