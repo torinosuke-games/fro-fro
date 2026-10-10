@@ -13,10 +13,23 @@ for(const n of ['ガンガンいこうぜ','MP使うな','バランス重視で'
 await p.screenshot({path:out+'/menu.png'});
 await p.getByRole('button',{name:'ガンガンいこうぜ',exact:true}).click();
 assert.deepEqual(await p.evaluate(()=>FF.app.state.adventure.auto),{on:true,tactic:'gungun'});
+// 小さな目印「オート：ON」。押すと、作戦の選びなおしと、手動にもどすボタンが出る
+const chip=p.locator('.adv-auto-chip');await chip.waitFor();assert.equal((await chip.innerText()).trim(),'オート：ON');
+await chip.click();await p.locator('.overlay .modal').waitFor();
+for(const n of ['ガンガンいこうぜ','MP使うな','バランス重視で','いのち大事に','手動にする'])assert.ok(await p.locator('.overlay .btn',{hasText:n}).count()>=1,n);
+await p.screenshot({path:out+'/chip-menu.png'});
+await p.locator('.overlay .btn',{hasText:'バランス重視で'}).click();
+assert.equal(await p.evaluate(()=>FF.app.state.adventure.auto.tactic),'balance');
 // 少しすると、全員の行動が決まり、クイズが出る
 await p.waitForFunction(()=>FF.app.state.adventure.battle.phase==='attack',null,{timeout:8000});
 const orders=await p.evaluate(()=>FF.app.state.adventure.battle.orders);
 assert.equal(Object.keys(orders).length,4);
+// クイズの画面の中から、オートを止める（問題には、そのまま答えられる）
+await p.screenshot({path:out+'/quiz-auto.png'});
+await p.locator('.adv-quiz-dialog[open] .adv-auto-stop').click();
+assert.equal(await p.evaluate(()=>FF.app.state.adventure.auto.on),false);
+assert.equal(await p.locator('.adv-auto-chip').count(),0);
+assert.equal(await p.evaluate(()=>FF.app.state.adventure.battle.phase),'attack');
 await p.screenshot({path:out+'/quiz.png'});
 // 作戦を変える・手動にもどす（クイズに答えたあと、次のターンで）
 await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.adventure=FF.adventure.setAuto(FF.adventure.retreat(FF.adventure.create()),null);});

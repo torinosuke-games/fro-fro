@@ -508,6 +508,27 @@
     U.modal({ title: C.howtoButton, body: E('div', { class: 'adv-howto-body' }, C.howto.map(function(line) { return text('p', '', line); })), buttons: [{ label: C.goBack, class: 'ghost' }] });
   }
   var A_TACTICS = FF.balance.ADVENTURE.AUTO.TACTICS, autoTimer = null;
+  // オートバトル中の目印「オート：ON」（戦闘の画面の左上に、小さく。押すと、作戦を選びなおす／手動にもどす）
+  function openAutoMenu() {
+    var n = p(), buttons = A_TACTICS.map(function(t) {
+      return { label: (n.auto.tactic === t ? '✓ ' : '') + C.tactics[t].name, class: n.auto.tactic === t ? 'primary' : '', onClick: function() { change(A.setAuto(p(), t)); } };
+    });
+    buttons.push({ label: C.autoStop, class: 'ghost', onClick: function() { change(A.setAuto(p(), null)); } });
+    buttons.push({ label: C.autoBack, class: 'ghost' });
+    U.modal({ title: C.autoMenuTitle, body: E('div', { class: 'adv-auto-menu-body' }, A_TACTICS.map(function(t) { return text('p', '', '【' + C.tactics[t].name + '】' + C.tactics[t].text); })), buttons: buttons });
+  }
+  function syncAutoChip(stage) {
+    var chip = stage.querySelector('.adv-auto-chip'), on = p().auto && p().auto.on;
+    if (!on) { if (chip) chip.remove(); return; }
+    if (!chip) { chip = btn(C.autoOn, openAutoMenu, 'quiet adv-auto-chip'); stage.appendChild(chip); }
+    chip.setAttribute('aria-label', C.autoOn + '（' + C.tactics[p().auto.tactic].name + '）。' + C.autoMenuTitle);
+  }
+  // 問題の画面の中から、オートを止める（問題には、そのまま答えられる）
+  function stopAutoInQuiz() {
+    save(A.setAuto(p(), null));
+    root.document.querySelectorAll('.adv-auto-stop,.adv-auto-chip').forEach(function(node) { node.remove(); });
+    U.toast(C.autoStopped);
+  }
   // オートバトル中のパネル：作戦を選びなおす／手動にもどす。少し待ってから、作戦で、全員の行動を決めて、クイズへ
   function autoPanel() {
     var n = p(), panel = E('section', { class: 'adv-command-panel adv-auto-panel' }), menu = E('nav', { class: 'adv-command-menu', attrs: { 'aria-label': C.auto } });
@@ -621,7 +642,7 @@
     if (dialog) U.clear(dialog);
     else dialog = E('dialog', { class: 'adv-quiz-dialog', attrs: { 'aria-labelledby': 'adv-quiz-title' } });
     var heading = E('h2', { class: 'adv-dialog-title', rich: title, attrs: { id: 'adv-quiz-title', tabindex: '-1' } });
-    dialog.appendChild(E('header', { class: 'adv-dialog-header' }, [heading, btn(C.viewBattle, function() { dialog.close(); }, 'quiet')]));
+    dialog.appendChild(E('header', { class: 'adv-dialog-header' }, [heading, p().auto && p().auto.on ? btn(C.autoOn + '→' + C.autoStop, stopAutoInQuiz, 'quiet adv-auto-stop') : null, btn(C.viewBattle, function() { dialog.close(); }, 'quiet')].filter(Boolean)));
     dialog.appendChild(questionPanel());
     var footer = E('footer', { class: 'adv-dialog-footer' });
     if (b.phase === 'lose') footer.appendChild(E('section',{class:'adv-result'},[text('h2','',T.defeat),text('p','',T.defeatHelp),btn('町で休む',advance,'gold')]));
@@ -726,6 +747,7 @@
     }
     if (won) { U.clear(stage); stage.setAttribute('aria-label',T.victory); }
     else {
+      syncAutoChip(stage);
       var hpText = stage.querySelector('.adv-enemy-hp'), bar = stage.querySelector('.adv-meter'), art = stage.querySelector('.adv-enemy-art'), intent = stage.querySelector('.adv-intent');
       hpText.textContent = 'HP ' + b.hp + ' / ' + B.ENEMIES[b.enemy].hp;
       bar.setAttribute('aria-valuenow',b.hp);bar.firstChild.style.width=(b.hp/B.ENEMIES[b.enemy].hp*100)+'%';

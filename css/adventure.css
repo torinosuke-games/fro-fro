@@ -294,3 +294,11 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 .adv-command-menu .adv-tactic{font-size:11.5px;letter-spacing:0;white-space:nowrap;padding-left:6px;padding-right:6px}
 .adv-auto-panel .adv-command-dialogue,.adv-subcommand-menu+.adv-command-dialogue{overflow-y:auto}
 .adv-auto-panel .adv-action-description,.adv-subcommand-menu+.adv-command-dialogue .adv-action-description{font-size:11.5px;line-height:1.55}
+
+/* オートバトルの目印（判断377）：戦闘の画面の左上に、小さく */
+.adv-battle-stage{position:relative}
+.adv-auto-chip{position:absolute;top:8px;left:8px;z-index:4;font-size:10.5px;padding:3px 8px;min-height:26px;border-radius:13px;background:#f3d27ae6;color:#4a3410;border:1px solid #fff9;box-shadow:0 2px 6px #0003;font-weight:800}
+.adv-auto-menu-body p{margin:0 0 8px;font-size:13px;line-height:1.6}
+.adv-dialog-header .adv-auto-stop{font-size:11px;padding:6px 8px}
+.adv-rpg-shell .adv-battle-stage .adv-auto-chip.adv-button{background:#f3d27a;color:#4a3410;border:1px solid #fff;opacity:1;font-size:11px;padding:3px 9px;min-height:26px;border-radius:13px;box-shadow:0 2px 6px #0004}
+.adv-quiz-dialog .adv-dialog-header .adv-auto-stop.adv-button{background:#f3d27a;color:#4a3410;border-color:#fff}
