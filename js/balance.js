@@ -160,9 +160,9 @@
       JOIN_BY_CHESTS: { touzoku: 8 },
       LAB_REQUIRES: 'shisho',
       BOOKS: {
-        heal: { costs: [300, 800, 2000], perLevel: 8 },
-        flame: { costs: [300, 800, 2000], perLevel: 0.15 },
-        guard: { costs: [300, 800, 2000], perLevel: 0.05 }
+        heal: { costs: [120, 350, 900], perLevel: 8 },
+        flame: { costs: [180, 500, 1200], perLevel: 0.15 },
+        guard: { costs: [100, 300, 800], perLevel: 0.05 }
       }
     },
 
@@ -215,19 +215,19 @@
     // 値段は、ゴールドの入手のしくみが決まったら、調整する
     WEAPONS: {
       wood_sword: { damage: 10, price: 0 },
-      stone_sword: { damage: 12, price: 100 },
-      iron_sword: { damage: 15, price: 300 },
-      steel_sword: { damage: 18, price: 800 },
-      flame_sword: { damage: 22, price: 2000 }
+      stone_sword: { damage: 12, price: 60 },
+      iron_sword: { damage: 15, price: 200 },
+      steel_sword: { damage: 18, price: 500 },
+      flame_sword: { damage: 22, price: 1200 }
     },
     DEFAULT_WEAPON: 'wood_sword',
     // 防具（防具屋。判断343）：defense ＝ 防御力。冒険では、主人公の防御力に足す。探索では、まちがえたときに受けるダメージを (defense × BATTLE.ARMOR_RATE) だけ減らす（最低1）
     ARMORS: {
       cloth_clothes: { defense: 0, price: 0 },
-      fur_coat: { defense: 3, price: 100 },
-      leather_armor: { defense: 6, price: 300 },
-      iron_armor: { defense: 10, price: 800 },
-      steel_armor: { defense: 15, price: 2000 }
+      fur_coat: { defense: 3, price: 60 },
+      leather_armor: { defense: 6, price: 180 },
+      iron_armor: { defense: 10, price: 450 },
+      steel_armor: { defense: 15, price: 1100 }
     },
     DEFAULT_ARMOR: 'cloth_clothes',
 

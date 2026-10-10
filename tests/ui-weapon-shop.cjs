@@ -19,7 +19,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.locator('.facility-btn[data-facility="weapon"]').click();
  assert.ok((await p.locator('.shop-gold').innerText()).includes('350'));
  await p.locator('.shop-row[data-weapon="iron_sword"] .shop-btn').click();
- assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),50);
+ assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),150);
  // 買っただけでは、装備は変わらない（持ち物に入る）。「そうびする」で、だれが装備するかを選ぶ
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'wood_sword');
  assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('装備していない'));
@@ -40,7 +40,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.locator('.shop-row[data-weapon="fur_coat"] .shop-btn').click();
  assert.ok(await p.evaluate(()=>FF.shop.owns&&FF.shop.ownsArmor(FF.app.state,'fur_coat')));
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'wood_sword');
- assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),100);
+ assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),240);
  // 画面におさまる
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  for(const w of [360,768]){await p.setViewportSize({width:w,height:844});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
