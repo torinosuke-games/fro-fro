@@ -80,4 +80,35 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     };
     assert.ok(guard(fx) > guard(fx0), '守りの書で、かばうときの被害が減る');
   });
+
+  test('学者：正解した問題が200種類になると仲間になる。盗賊：探索の宝箱を8個開けると仲間になる', () => {
+    let s = fresh();
+    for (let i = 0; i < 199; i++) s.learning.questionResults['q' + i] = true;
+    s.learning.questionResults.wrong = false;
+    R.applyJoins(s);
+    assert.ok(!s.adventure.recruited.includes('gakusha'));
+    assert.strictEqual(R.joinProgress(s, 'gakusha').remaining, 1);
+    s.learning.questionResults.q200 = true;
+    assert.deepStrictEqual(plain(R.applyJoins(s)), ['gakusha']);
+    assert.deepStrictEqual(plain(s.adventure.joinNotice), ['gakusha']);
+    // 盗賊：宝箱（探索）。8個目で仲間になる
+    s = fresh();
+    const ids = Object.keys(B.EXPLORE.CHESTS), regions = { sf: 'snowfield', fr: 'forest', gl: 'glacier' };
+    let opened = 0;
+    for (const id of ids) {
+      if (opened >= 8) break;
+      const r = FF.exploration.openChest(s, regions[id.slice(0, 2)], id, T0);
+      if (r.reward) { s = r.state; opened++; }
+      if (opened < 8) assert.ok(!s.adventure.recruited.includes('touzoku'));
+    }
+    assert.strictEqual(opened, 8);
+    assert.ok(s.adventure.recruited.includes('touzoku'));
+  });
+  test('学者・盗賊：まだ会えていない間は、編成の画面に条件の数は出ない', () => {
+    assert.strictEqual(R.joinKind('gakusha'), 'solved');
+    assert.strictEqual(R.joinKind('touzoku'), 'chests');
+    assert.strictEqual(R.joinKind('shisho'), 'heat');
+    assert.strictEqual(R.joinKind('senshi'), null);
+    assert.ok(!/\d/.test(FF.texts.adventure.lockedSolved + FF.texts.adventure.lockedChests));
+  });
 };

@@ -155,6 +155,9 @@
     // BOOKS：開発のゴールド（レベルごと）と、1レベルごとの効き目。heal＝回復魔法の回復量に足す、flame＝攻撃魔法の威力の増え方、guard＝かばう・ベールで被害がさらに減る割合
     RESEARCH: {
       JOIN_BY_HEAT: { shisho: 10000 },
+      // 学者ルイ：正解した問題の数（種類）。盗賊ピコ：探索で開けた宝箱の数（判断365）
+      JOIN_BY_SOLVED: { gakusha: 200 },
+      JOIN_BY_CHESTS: { touzoku: 8 },
       LAB_REQUIRES: 'shisho',
       BOOKS: {
         heal: { costs: [300, 800, 2000], perLevel: 8 },
