@@ -245,6 +245,7 @@
       if (next === old) { finish(); return; }
       traveler.style.backgroundPosition = ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[next.facing];
       traveler.setAttribute('data-facing', next.facing);
+      traveler.setAttribute('data-lean', pos.via ? (pos.x > old.pos.x ? '1' : '-1') : '0');   // ななめのときは、進む側へかたむけて見せる
       var sx = old.pos.x * 72 + 36, sy = old.pos.y * 72 + 40, ex = next.pos.x * 72 + 36, ey = next.pos.y * 72 + 40;
       var scale = map.clientWidth / 936, cx = viewport.scrollLeft, cy = viewport.scrollTop;
       var tx = Math.max(0, Math.min(viewport.scrollWidth - viewport.clientWidth, ex * scale - viewport.clientWidth / 2));
@@ -343,7 +344,7 @@
         map.appendChild(cell);
       });
     });
-    map.appendChild(E('span', { class: 'adv-traveler leader', style: { backgroundImage: 'url("' + scene.traveler(FF.app.state.player.avatar) + '")', backgroundPosition: ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[n.facing], left: (n.pos.x * 72 + 36) / 936 * 100 + '%', top: (n.pos.y * 72 + 40) / 648 * 100 + '%' }, attrs: { role: 'img', 'aria-label': C.current, 'data-sprite': scene.traveler(FF.app.state.player.avatar), 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }, ['body','leg-left','leg-right'].map(function(part) {return E('span',{class:'adv-walk-part adv-walk-' + part,attrs:{'aria-hidden':'true'}});})));
+    map.appendChild(E('span', { class: 'adv-traveler leader', style: { backgroundImage: 'url("' + scene.traveler(FF.app.state.player.avatar) + '")', backgroundPosition: ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[n.facing], left: (n.pos.x * 72 + 36) / 936 * 100 + '%', top: (n.pos.y * 72 + 40) / 648 * 100 + '%' }, attrs: { role: 'img', 'aria-label': C.current, 'data-sprite': scene.traveler(FF.app.state.player.avatar), 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }, [E('span', { class: 'adv-lean', attrs: { 'aria-hidden': 'true' } }, ['body','leg-left','leg-right'].map(function(part) {return E('span',{class:'adv-walk-part adv-walk-' + part,attrs:{'aria-hidden':'true'}});}))]));
     if (isHd()) {
       var hx = n.pos.x * 72 + 36, hy = n.pos.y * 72 + 40, shadow = E('span', { class: 'adv-shadow adv-traveler-shadow', attrs: { 'aria-hidden': 'true' } });
       map.appendChild(shadow);
@@ -407,21 +408,23 @@
     if (a === old || a.battle || a.notice) return a;
     var b = A.move(a, pos.x, pos.y);
     if (b === a) return a;
-    b.facing = pos.x > old.pos.x ? 'right' : 'left';
+    b.facing = pos.y < old.pos.y ? 'up' : 'down';   // ななめ用の絵はないので、手前向き・奥向きの絵を、進む側へかたむけて使う
     return b;
   }
   function directions() {
     var pad = E('div', { class: 'adv-directions', attrs: { 'aria-label': '移動パッド' } }), parts = {}, knob = E('span', { class: 'adv-knob', attrs: { 'aria-hidden': 'true' } });
+    // 矢印は、同心円の輪の上に、45度ずつならべる
+    function ringStyle(dx, dy) { var m = Math.hypot(dx, dy); return { left: 50 + dx / m * 37 + '%', top: 50 + dy / m * 37 + '%' }; }
     PAD_DIRS.forEach(function (d) {
       var b = btn(d[2], function () {
         if (root.performance.now() - padStamp < 700) return;   // 指で押したときは、下の pointer の処理で動いている（二重に歩かない）
         var pos = p().pos; if (A.walkable({ x: pos.x + d[0], y: pos.y + d[1] })) walk({ x: pos.x + d[0], y: pos.y + d[1] });
       }, 'quiet');
-      b.setAttribute('aria-label', d[3]); parts[d[0] + ',' + d[1]] = b; pad.appendChild(b);
+      b.setAttribute('aria-label', d[3]); Object.assign(b.style, ringStyle(d[0], d[1])); parts[d[0] + ',' + d[1]] = b; pad.appendChild(b);
     });
     PAD_DIAG.forEach(function (d) {
-      var m = E('span', { class: 'adv-diag', text: d[2], style: { gridColumn: d[3], gridRow: d[4] }, attrs: { 'aria-hidden': 'true' } });
-      parts[d[0] + ',' + d[1]] = m; pad.appendChild(m);
+      var m = E('span', { class: 'adv-diag', text: d[2], attrs: { 'aria-hidden': 'true' } });
+      Object.assign(m.style, ringStyle(d[0], d[1])); parts[d[0] + ',' + d[1]] = m; pad.appendChild(m);
     });
     pad.appendChild(knob);
     function show(d, v) {

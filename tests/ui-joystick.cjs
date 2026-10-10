@@ -11,6 +11,10 @@ const pos=()=>p.evaluate(()=>FF.app.state.adventure.pos);
 const center=async()=>{const r=await p.locator('.adv-directions').boundingBox();return {x:r.x+r.width/2,y:r.y+r.height/2,R:r.width/2};};
 await setup(1,6);await p.waitForSelector('.adv-directions');
 assert.equal(await p.locator('.adv-diag').count(),4,'4 diagonals');
+{const r=await p.locator('.adv-directions').boundingBox();const sh=await p.locator('.adv-map-shell').boundingBox();assert.ok(Math.abs(r.x+r.width/2-(sh.x+sh.width/2))<3,'pad is centered');
+ // 8つの矢印は、中心から同じ距離（同心円の輪の上）
+ const d=await p.evaluate(()=>{const pad=document.querySelector('.adv-directions').getBoundingClientRect(),cx=pad.x+pad.width/2,cy=pad.y+pad.height/2;return [...document.querySelectorAll('.adv-directions .adv-button,.adv-directions .adv-diag')].map(e=>{const b=e.getBoundingClientRect();return Math.hypot(b.x+b.width/2-cx,b.y+b.height/2-cy)})});
+ assert.equal(d.length,8);assert.ok(Math.max(...d)-Math.min(...d)<2,'ring '+d.join(','));}
 // 東へ押したまま：歩き続ける
 let c=await center();
 await p.mouse.move(c.x,c.y);await p.mouse.down();await p.mouse.move(c.x+c.R*.8,c.y,{steps:4});
@@ -22,6 +26,8 @@ assert.ok(stopped.x>=4&&stopped.y===6);
 await setup(4,6);c=await center();
 await p.mouse.move(c.x,c.y);await p.mouse.down();await p.mouse.move(c.x+c.R*.6,c.y-c.R*.6,{steps:4});
 await p.waitForFunction(()=>FF.app.state.adventure.pos.x>4&&FF.app.state.adventure.pos.y<6,null,{timeout:6000});
+assert.equal(await p.locator('.adv-traveler').getAttribute('data-facing'),'up','back sprite going north-east');
+assert.equal(await p.locator('.adv-traveler').getAttribute('data-lean'),'1','leans toward east');
 await p.screenshot({path:out+'/diag.png'});
 await p.mouse.up();await p.waitForTimeout(500);
 // 指を回して、向きを変える：北東 → 西

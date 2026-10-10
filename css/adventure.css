@@ -276,3 +276,14 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
  .adv-field-screen .adv-board{border-radius:0;border-left:0;border-right:0;border-top:0}
  .adv-field-screen .adv-map-shell .adv-directions{bottom:max(16px,env(safe-area-inset-bottom))}
 }
+
+/* 移動パッド：画面の中央下。矢印は、同心円の輪の上に8つ（判断370） */
+.adv-map-shell .adv-directions{left:50%;transform:translateX(-50%);display:block}
+.adv-directions:before{content:'';position:absolute;inset:25%;border:2px solid #ffffff55;border-radius:50%;pointer-events:none}
+.adv-directions:after{content:'';position:absolute;inset:11%;border:1px dashed #ffffff33;border-radius:50%;pointer-events:none}
+.adv-directions .adv-button,.adv-directions .adv-diag{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;grid-column:auto;grid-row:auto;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%;line-height:1}
+.adv-directions .adv-button{font-size:22px}
+.adv-directions .adv-diag{font-size:19px}
+.adv-lean{position:absolute;inset:0;background-image:inherit;background-position:inherit;background-size:inherit;background-repeat:no-repeat;transform-origin:50% 90%;transition:transform .12s}
+.adv-traveler[data-lean="1"] .adv-lean{transform:rotate(10deg) skewX(-4deg)}
+.adv-traveler[data-lean="-1"] .adv-lean{transform:rotate(-10deg) skewX(4deg)}
