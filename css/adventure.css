@@ -50,7 +50,7 @@ body[data-screen="adventure"] #screen{max-width:1320px;padding:20px 24px 35px}
 .adv-traveler.leader{z-index:6}
 .adv-compass{position:absolute;right:20px;top:15px;color:#f3fbff;text-shadow:0 1px 3px #123e58;font-size:17px;pointer-events:none}
 .adv-map-toggle{position:absolute;top:12px;left:14px;font-size:11px;border-radius:5px;background:#173b50d9;color:#fff;border-color:#daeaf2a0;box-shadow:0 3px 12px #1b47672a}
-.adv-map-shell .adv-directions{position:absolute;bottom:18px;left:18px;width:136px;height:136px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:0;padding:3px;border:2px solid #f6fcff8c;border-radius:50%;background:#21485a65;box-shadow:inset 0 0 0 10px #ffffff10;backdrop-filter:blur(2px)}
+.adv-map-shell .adv-directions{position:absolute;bottom:18px;left:18px;width:136px;height:136px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:0;padding:3px;border:2px solid #f6fcff8c;border-radius:50%;background:#21485a65;box-shadow:inset 0 0 0 10px #ffffff10;}
 .adv-map-shell .adv-directions .adv-button{padding:0;min-width:0;min-height:0;border:0;background:transparent;color:#fff;text-shadow:0 2px 3px #24465d;font-size:26px;border-radius:50%;box-shadow:none}
 .adv-directions .adv-button:nth-child(1){grid-column:2;grid-row:1}.adv-directions .adv-button:nth-child(2){grid-column:1;grid-row:2}.adv-directions .adv-button:nth-child(3){grid-column:2;grid-row:3}.adv-directions .adv-button:nth-child(4){grid-column:3;grid-row:2}
 .adv-map-viewport.overview{height:auto;max-height:none;overflow:hidden}
@@ -240,23 +240,50 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 .adv-map-viewport.hd2d{position:relative;overflow:hidden;perspective:700px;perspective-origin:50% 12%;touch-action:manipulation;
   background:linear-gradient(#d6e9f3 0,#bcd8e8 22%,#5f9cc4 40%,#2b6a9c 70%)}
 .hd2d .adv-tilt{position:absolute;left:50%;top:70%;width:0;height:0;transform-style:preserve-3d;transform:rotateX(var(--tilt,56deg))}
-.hd2d .adv-map{position:absolute;left:0;top:0;transform-style:preserve-3d;isolation:auto;
-  transform:translate3d(calc(var(--cx,468px)*-1),calc(var(--cy,324px)*-1),0)}
+.hd2d .adv-map{position:absolute;left:0;top:0;transform-style:preserve-3d;isolation:auto;will-change:transform}
 .hd2d .adv-map:before{display:none}
 .hd2d .adv-tile{transform-style:preserve-3d;isolation:auto;transform:translateZ(1px)}
 .hd2d .adv-tile .adv-monster{width:96px;height:104px;bottom:6px;overflow:visible;transform-origin:50% 100%;transform:rotateX(calc(var(--tilt,56deg)*-1));filter:none}
 .hd2d .adv-threat{transform-origin:50% 100%;transform:rotateX(calc(var(--tilt,56deg)*-1))}
 .hd2d .adv-map-label{transform-origin:50% 100%;transform:rotateX(calc(var(--tilt,56deg)*-1))}
-.hd2d .adv-traveler{width:84px;height:84px;transform-origin:50% 92%;transform:translate(-50%,-92%) rotateX(calc(var(--tilt,56deg)*-1));filter:none;z-index:auto}
+.hd2d .adv-traveler{width:84px;height:84px;left:0!important;top:0!important;transform-origin:50% 92%;filter:none;z-index:auto;will-change:transform}
 .hd2d .adv-tree{position:absolute;height:auto;transform-origin:50% 100%;transform:translate(-50%,-100%) rotateX(calc(var(--tilt,56deg)*-1));pointer-events:none;image-rendering:auto;max-width:none}
-.hd2d .adv-shadow{position:absolute;aspect-ratio:2.4/1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,#16365a66 0,#16365a33 55%,transparent 72%);pointer-events:none;z-index:0}
+.hd2d .adv-shadow{position:absolute;left:0;top:0;will-change:transform;aspect-ratio:2.4/1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,#16365a66 0,#16365a33 55%,transparent 72%);pointer-events:none;z-index:0}
 .hd2d .adv-traveler-shadow{width:58px}
 .adv-map-shell:not(.is-hd) .adv-shadow{display:none}
 .adv-hd-fx{position:absolute;left:0;right:0;pointer-events:none;z-index:3}
-.adv-hd-haze{top:0;height:46%;background:linear-gradient(#e6f2f9f2 0,#e6f2f9a6 38%,#e6f2f900 100%)}
-.adv-hd-blur-top{top:0;height:34%;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);-webkit-mask-image:linear-gradient(#000 0,#000 25%,transparent 100%);mask-image:linear-gradient(#000 0,#000 25%,transparent 100%)}
-.adv-hd-blur-bottom{bottom:0;height:24%;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);-webkit-mask-image:linear-gradient(transparent 0,#000 75%);mask-image:linear-gradient(transparent 0,#000 75%)}
+.adv-hd-haze{top:0;height:42%;background:linear-gradient(#e6f2f9f5 0,#e6f2f9b0 40%,#e6f2f900 100%)}
 .adv-hd-light{inset:0;background:radial-gradient(ellipse at 82% 6%,#fff3c8aa 0,#fff3c800 46%),radial-gradient(ellipse at 50% 60%,transparent 55%,#0b2a4a55 100%);mix-blend-mode:normal}
 .adv-map-shell.is-hd .adv-compass,.adv-map-shell.is-hd .adv-map-toggle,.adv-map-shell.is-hd .adv-directions{z-index:6}
-.adv-hd-toggle{position:absolute;top:12px;right:14px;z-index:6;font-size:11px;border-radius:5px;background:#173b50d9;color:#fff;border-color:#daeaf2a0;box-shadow:0 3px 12px #1b47672a}
-.adv-map-shell:not(.is-hd) .adv-hd-toggle{top:12px;right:14px}
+
+/* 移動パッド：8方向。押したまま指を動かすと、その方角へ歩き続ける（判断369） */
+.adv-map-shell .adv-directions{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.adv-directions .adv-diag{display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;text-shadow:0 2px 3px #24465d;opacity:.8;pointer-events:none;border-radius:50%}
+.adv-directions .adv-button.on,.adv-directions .adv-diag.on{background:#ffffff55;opacity:1}
+.adv-directions .adv-knob{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:#ffffff40;border:2px solid #ffffffb0;pointer-events:none;opacity:.55;transition:opacity .12s}
+.adv-directions .adv-knob.on{opacity:1;background:#ffffff66}
+/* フィールドを広く使う：タイトルをなくし、操作ボタンはフィールドの上に重ねる（判断368） */
+.adv-fbar{position:absolute;top:6px;left:6px;right:6px;z-index:7;display:flex;flex-wrap:wrap;align-items:center;gap:5px;pointer-events:none}
+.adv-fbar>*{pointer-events:auto}
+.adv-fbar .adv-fspacer{flex:1;pointer-events:none}
+.adv-fbar .adv-button{font-size:10.5px;padding:5px 6px;min-height:32px;border-radius:8px;background:#173b50d9;color:#fff;border-color:#daeaf2a0;box-shadow:0 3px 12px #1b47672a;white-space:nowrap}
+.adv-fbar .adv-gold{padding:5px 7px;font-size:11px;white-space:nowrap;flex-shrink:0;box-shadow:0 3px 12px #1b47672a}
+.adv-map-shell .adv-compass{top:46px}
+@media(max-width:1000px){
+ body[data-screen="adventure"] #screen{padding:0 0 25px}
+ .adv-field-screen .adv-map-viewport{height:calc(100dvh - 8px);min-height:420px;max-height:none}
+ .adv-field-screen .adv-map-viewport.overview{height:auto;min-height:0}
+ .adv-field-screen .adv-board{border-radius:0;border-left:0;border-right:0;border-top:0}
+ .adv-field-screen .adv-map-shell .adv-directions{bottom:max(16px,env(safe-area-inset-bottom))}
+}
+
+/* 移動パッド：画面の中央下。矢印は、同心円の輪の上に8つ（判断370） */
+.adv-map-shell .adv-directions{left:50%;transform:translateX(-50%);display:block}
+.adv-directions:before{content:'';position:absolute;inset:25%;border:2px solid #ffffff55;border-radius:50%;pointer-events:none}
+.adv-directions:after{content:'';position:absolute;inset:11%;border:1px dashed #ffffff33;border-radius:50%;pointer-events:none}
+.adv-directions .adv-button,.adv-directions .adv-diag{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;grid-column:auto;grid-row:auto;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%;line-height:1}
+.adv-directions .adv-button{font-size:22px}
+.adv-directions .adv-diag{font-size:19px}
+.adv-lean{position:absolute;inset:0;background-image:inherit;background-position:inherit;background-size:inherit;background-repeat:no-repeat;transform-origin:50% 90%;transition:transform .12s}
+.adv-traveler[data-lean="1"] .adv-lean{transform:rotate(10deg) skewX(-4deg)}
+.adv-traveler[data-lean="-1"] .adv-lean{transform:rotate(-10deg) skewX(4deg)}
