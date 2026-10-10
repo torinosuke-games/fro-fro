@@ -6,6 +6,7 @@ const p=await b.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'}
 await p.route(/https:\/\/fonts\./,r=>r.abort());
 await p.goto(process.env.FF_TEST_URL,{waitUntil:'domcontentloaded'});
 await p.locator('.title-card input').fill('ゆき');await p.locator('.title-card .btn.primary').click();await p.getByRole('button',{name:'小学4年',exact:true}).click();
+await p.evaluate(()=>{FF.adventureRng=()=>0.99;});
 await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.adventure.started=true;FF.app.commit(s);FF.ui.show('adventure');});
 await p.waitForSelector('.adv-map-viewport.hd2d');
 assert.ok(await p.locator('.adv-tree').count()>5,'trees');

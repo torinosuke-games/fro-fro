@@ -8,7 +8,8 @@
   function magicKind(id) { return B.MEMBERS[id] && B.MEMBERS[id].magic || 'attack'; }
   var MAP = ['#############', '#.......#...#', '#.......#...#', '#.......#...#', '#..##...#...#', '#.......#...#', '#...........#', '#.......#...#', '#############'];
   var PLACES = { home: { x: 1, y: 6 }, camp: { x: 6, y: 3 }, chest: { x: 3, y: 1 }, town: { x: 11, y: 2 } };
-  var ENEMIES = { cub: { x: 3, y: 6 }, wolf: { x: 6, y: 5 }, boss: { x: 8, y: 6 } };
+  // 見える敵は、峠の大獣（中ボス）だけ。ザコ敵（雪かじりの野獣・霜牙のオオカミ）は、歩いていると、ランダムに現れる（判断376）
+  var ENEMIES = { boss: { x: 8, y: 6 } };
   function clone(v) { return FF.util.clone(v); }
   function same(a, b) { return a.x === b.x && a.y === b.y; }
   function int(n, fallback, max) { return typeof n === 'number' && isFinite(n) ? Math.max(0, Math.min(max, Math.floor(n))) : fallback; }
@@ -22,8 +23,8 @@
   function create() {
     var roster = {};
     IDS.forEach(function (id) { var s = stats(id, 0); roster[id] = { xp: 0, hp: s.hp, mp: s.mp }; });
-    return { version: 1, started: false, roster: roster, recruited: B.START_ALLIES.slice(), party: ['hero'].concat(B.START_ALLIES), gold: 0, research: {}, joinNotice: [], potions: B.POTIONS, pos: clone(PLACES.home),
-      lastTown: 'home', facing: 'down', cleared: [], chest: false, arrived: false, campUsed: false, battle: null,
+    return { version: 1, started: false, roster: roster, recruited: B.START_ALLIES.slice(), party: ['hero'].concat(B.START_ALLIES), gold: 0, research: {}, joinNotice: [], auto: { on: false, tactic: B.AUTO.DEFAULT }, potions: B.POTIONS, pos: clone(PLACES.home),
+      lastTown: 'home', facing: 'down', steps: 0, cleared: [], chest: false, arrived: false, campUsed: false, battle: null,
       subject: 'math', difficulty: 'basic', recent: [], answered: 0, correct: 0, history: [], notice: 'welcome' };
   }
   function normalize(raw) {
@@ -44,6 +45,8 @@
     // 魔法の書物の開発（判断363）と、新しく力を貸してくれた仲間のお知らせ
     p.research = {};
     Object.keys(FF.balance.RESEARCH.BOOKS).forEach(function (id) { var v = raw.research && raw.research[id], max = FF.balance.RESEARCH.BOOKS[id].costs.length; if (v) p.research[id] = Math.max(0, Math.min(max, Math.floor(v) || 0)); });
+    p.steps = int(raw.steps, 0, 1000);
+    p.auto = { on: !!(raw.auto && raw.auto.on === true), tactic: raw.auto && B.AUTO.TACTICS.indexOf(raw.auto.tactic) >= 0 ? raw.auto.tactic : B.AUTO.DEFAULT };
     p.joinNotice = Array.isArray(raw.joinNotice) ? raw.joinNotice.filter(function (id, i, a) { return p.recruited.indexOf(id) >= 0 && a.indexOf(id) === i; }) : [];
     ['gold', 'potions', 'answered', 'correct'].forEach(function (k) { p[k] = int(raw[k], p[k], 1000000); });
     p.correct = Math.min(p.answered, p.correct);
@@ -60,7 +63,7 @@
     p.history = Array.isArray(raw.history) ? raw.history.filter(function (h) { return h && typeof h.qid === 'string' && typeof h.correct === 'boolean' && isFinite(h.at); }).slice(-B.HISTORY) : [];
     p.notice = typeof raw.notice === 'string' ? raw.notice : '';
     var bat = raw.battle;
-    if (bat && B.ENEMIES[bat.enemy] && same(p.pos, ENEMIES[bat.enemy]) &&
+    if (bat && B.ENEMIES[bat.enemy] && (!ENEMIES[bat.enemy] || same(p.pos, ENEMIES[bat.enemy])) &&
         ['commands', 'attack', 'explanation', 'playerAction', 'enemyAction', 'attackResult', 'defense', 'defenseResult', 'win', 'lose'].indexOf(bat.phase) >= 0 &&
         Array.isArray(bat.log) && bat.orders && typeof bat.orders === 'object' &&
         (['attack', 'explanation'].indexOf(bat.phase) < 0 ||
@@ -90,8 +93,9 @@
       n.potions = Math.max(B.POTIONS, n.potions);
       n.cleared = n.cleared.filter(function (id) { return id === 'boss'; });
       n.campUsed = false;
+      n.steps = 0;
     } else n.campUsed = true;
-    n.battle = null; n.notice = 'rested';
+    n.battle = null; n.notice = where === 'camp' ? 'camp' : 'rested';
     return n;
   }
   // Entering the town screen and departing from it always uses that town's position.
@@ -111,12 +115,23 @@
   }
   function enemyAt(p, pos) { return Object.keys(ENEMIES).find(function (id) { return same(pos, ENEMIES[id]) && p.cleared.indexOf(id) < 0; }) || null; }
   function encounter(p, id) {
-    if (p.battle || !alive(p).length || enemyAt(p, p.pos) !== id) return p;
-    var n = clone(p);
+    if (p.battle || !alive(p).length || ENEMIES[id] && enemyAt(p, p.pos) !== id || !B.ENEMIES[id]) return p;
+    var n = clone(p); n.steps = 0;
     n.battle = { flowVersion: 2, enemy: id, hp: B.ENEMIES[id].hp, phase: 'commands', turn: 1, orders: {}, log: [], question: null, choices: [], guarded: false, ward: false };
     return n;
   }
-  function move(p, x, y) {
+  // ランダムエンカウント：場所（町・焚き火・宝箱・はじまりの町）では出ない。歩くほど、出やすくなる。rng がないときは、出ない
+  function wild(n, rng) {
+    var E = B.ENCOUNTER;
+    if (n.battle || typeof rng !== 'function' || !alive(n).length) return n;
+    if (Object.keys(PLACES).some(function (k) { return same(n.pos, PLACES[k]); })) return n;
+    n.steps = (n.steps || 0) + 1;
+    if (n.steps <= E.SAFE_STEPS) return n;
+    var chance = Math.min(E.MAX, E.BASE + (n.steps - E.SAFE_STEPS - 1) * E.GROWTH);
+    if (rng() >= chance) return n;
+    return encounter(n, n.pos.x >= E.WOLF_FROM_X && rng() < E.WOLF_SHARE ? 'wolf' : 'cub');
+  }
+  function move(p, x, y, rng) {
     if (p.battle || !walkable({ x: x, y: y }) || Math.abs(p.pos.x - x) + Math.abs(p.pos.y - y) !== 1) return p;
     // 峠の大獣を倒すまでは、東側へ抜けられない。
     if (x > 8 && p.cleared.indexOf('boss') < 0) return p;
@@ -124,9 +139,10 @@
     var enemy = enemyAt(n, n.pos);
     if (enemy) return encounter(n, enemy);
     if (same(n.pos, PLACES.chest) && !n.chest) { n.chest = true; n.gold += B.CHEST_GOLD; n.potions += B.CHEST_POTIONS; n.notice = 'chest'; }
-    if (same(n.pos, PLACES.camp) && !n.campUsed) n = rest(n, 'camp');
+    if (same(n.pos, PLACES.camp)) n = n.campUsed ? Object.assign(n, { notice: 'campUsed' }) : rest(n, 'camp');   // 焚き火は、旅ごとに1回（使ったあとは、知らせだけ）
     if (same(n.pos, PLACES.home)) n = rest(n, 'home');
     if (same(n.pos, PLACES.town)) { var first = !n.arrived; n.arrived = true; n = rest(n, 'town'); n.notice = first ? 'arrival' : 'rested'; }
+    if (!n.notice) n = wild(n, rng);
     return n;
   }
   // 遠い場所のタップも一歩ずつ進む。敵への接触で必ず止まる。
@@ -192,6 +208,37 @@
     n.battle.phase = 'attack';
     return n;
   }
+  // ---- オートバトル（判断375）：作戦ごとに、そのターンの全員の行動を決める。クイズには、これまでどおり、答える ----
+  function ratioOf(p, id) { var r = p.roster[id]; return r.hp / stats(id, r.xp).hp; }
+  function autoOrders(p, tactic) {
+    var T = B.AUTO, orders = {}, potions = p.potions, healed = {};
+    if (T.TACTICS.indexOf(tactic) < 0) tactic = T.DEFAULT;
+    var order = p.party.slice().sort(function (a, c) { return ratioOf(p, a) - ratioOf(p, c); }), low = order[0], lr = ratioOf(p, low);
+    var members = alive(p), avg = members.reduce(function (t, id) { return t + ratioOf(p, id); }, 0) / Math.max(1, members.length);
+    var rank = { heal: 0, guard: 1, ward: 1, attack: 2 };   // 回復役を先に決める（回復薬は、そのあまりに）
+    members.slice().sort(function (a, c) { return rank[magicKind(a)] - rank[magicKind(c)]; }).forEach(function (id) {
+      var kind = magicKind(id), r = p.roster[id], s = stats(id, r.xp), canMagic = r.mp >= B.MAGIC_COST, strong = s.wisdom * B.MAGIC_POWER > s.strength;
+      function heal(th) { if (kind === 'heal' && canMagic && lr < th && !healed[low]) { healed[low] = true; return { type: 'magic', target: low }; } return null; }
+      function buff(th) { return (kind === 'guard' || kind === 'ward') && canMagic && th ? { type: 'magic', target: id } : null; }
+      function potion(th) { if (potions > 0 && lr < th && !healed[low]) { potions--; healed[low] = true; return { type: 'item', target: low }; } return null; }
+      function blast(spare) { return kind === 'attack' && canMagic && strong && r.mp >= B.MAGIC_COST * (spare ? 2 : 1) ? { type: 'magic', target: id } : null; }
+      var o;
+      if (tactic === 'gungun') o = blast(false);
+      else if (tactic === 'noMp') o = potion(T.LOW);
+      else if (tactic === 'life') o = heal(T.HIGH) || buff(true) || potion(T.MID);
+      else o = heal(T.MID) || buff(kind === 'guard' ? lr < T.MID : avg < T.HIGH) || potion(T.LOW) || blast(true);
+      orders[id] = o || { type: 'attack', target: id };
+    });
+    return orders;
+  }
+  // オートバトルのオン・オフ（tactic が null なら、手動にもどす）
+  function setAuto(p, tactic) {
+    var n = clone(p), T = B.AUTO;
+    if (tactic == null) n.auto = { on: false, tactic: p.auto && p.auto.tactic || T.DEFAULT };
+    else if (T.TACTICS.indexOf(tactic) >= 0) n.auto = { on: true, tactic: tactic };
+    else return p;
+    return n;
+  }
   function log(b, key, who, amount, actor) { var entry = { key:key, who:who, amount:amount }; if (actor && actor !== who) entry.actor = actor; b.log.push(entry); }
   function victory(n, rng) {
     var b = n.battle, e = B.ENEMIES[b.enemy];
@@ -201,7 +248,7 @@
       b.reward.chest = { gold: B.DROP_GOLD, potions: B.DROP_POTIONS };
       n.gold += B.DROP_GOLD; n.potions += B.DROP_POTIONS;
     }
-    if (n.cleared.indexOf(b.enemy) < 0) n.cleared.push(b.enemy);
+    if (ENEMIES[b.enemy] && n.cleared.indexOf(b.enemy) < 0) n.cleared.push(b.enemy);
     n.party.forEach(function (id) {
       var r = n.roster[id], old = stats(id, r.xp); r.xp += e.xp;
       var next = stats(id, r.xp);
@@ -287,6 +334,6 @@
   }
   FF.adventure = { IDS: IDS, ALLIES: ALLIES, magicKind: magicKind, recruit: recruit, MAP: MAP, PLACES: PLACES, ENEMIES: ENEMIES, create: create, normalize: normalize,
     stats: stats, level: level, same: same, alive: alive, atTown: atTown, rest: rest, depart: depart, setParty: setParty,
-    walkable: walkable, path: path, enemyAt: enemyAt, move: move, encounter: encounter, intent: intent,
+    autoOrders: autoOrders, setAuto: setAuto, walkable: walkable, path: path, enemyAt: enemyAt, move: move, encounter: encounter, intent: intent,
     command: command, answer: answer, advance: advance, retreat: retreat, potion: potion, pick: pick };
 })(this);

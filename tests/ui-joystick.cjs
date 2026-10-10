@@ -6,6 +6,7 @@ const p=await b.newPage({viewport:{width:390,height:844}});const errors=[];p.on(
 await p.route(/https:\/\/fonts\./,r=>r.abort());
 await p.goto(process.env.FF_TEST_URL,{waitUntil:'domcontentloaded'});
 await p.locator('.title-card input').fill('ゆき');await p.locator('.title-card .btn.primary').click();await p.getByRole('button',{name:'小学4年',exact:true}).click();
+await p.evaluate(()=>{FF.adventureRng=()=>0.99;});   // ランダムエンカウントを出さない
 const setup=(x,y)=>p.evaluate(([x,y])=>{const s=FF.util.clone(FF.app.state);s.adventure.started=true;s.adventure.pos={x,y};s.adventure.cleared=['cub','wolf'];FF.app.commit(s);FF.ui.show('adventure');},[x,y]);
 const pos=()=>p.evaluate(()=>FF.app.state.adventure.pos);
 const center=async()=>{const r=await p.locator('.adv-directions').boundingBox();return {x:r.x+r.width/2,y:r.y+r.height/2,R:r.width/2};};

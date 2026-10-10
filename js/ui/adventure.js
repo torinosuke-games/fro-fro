@@ -18,8 +18,11 @@
     if (FF.app.screen === 'adventure' && p().battle && main.querySelector('.adv-rpg-shell')) renderBattle(main);
     else U.rerender();
   }
+  // 画面に出す「知らせ」（焚き火で回復・宝箱など）：フィールドの上に、数秒だけ出す。再描画のたびには、出さない
+  var pendingBanner = null;
   function change(next) {
     var before = p(); if (next === before) return;
+    if (!next.battle && next.notice && next.notice !== before.notice) pendingBanner = next.notice;
     impact = before.battle && before.battle.phase === 'explanation' && next.battle ? Math.max(0, before.battle.hp - next.battle.hp) : 0;
     if (before.battle && before.battle.phase === 'explanation' && next.battle) {
       sequence = {enemy:next.battle.enemy,turn:next.battle.turn,hp:before.battle.hp,events:next.battle.log.slice(),index:0};
@@ -165,7 +168,7 @@
     ensure(); header(main, T.party, T.partyHelp);
     var locked = !!p().battle || !A.atTown(p());
     // 「この仲間で旅をする」は、なくした（町の中で編成していて、急に外に出ないように。判断358）
-    main.appendChild(E('div', { class: 'adv-toolbar' }, [btn(I.button, openInventory, 'quiet adv-party-inv'), locked ? text('span', '', T.partyLocked) : null]));
+    if (locked) main.appendChild(E('div', { class: 'adv-toolbar' }, [text('span', '', T.partyLocked)]));   // 持ち物は、下のナビから（編成画面には、ボタンを置かない）
     // いまの隊（先頭から順）：アイコンと名前で、4つの枠。ここで、順番を前へ・外すこともできる（判断358）
     var squad = E('section', { class: 'adv-squad', attrs: { 'aria-label': T.squad } }, [text('h2', 'adv-squad-title', T.squad), text('p', 'adv-squad-help', T.squadHelp)]);
     var slots = E('ol', { class: 'adv-squad-slots' });
@@ -191,7 +194,6 @@
     A.IDS.filter(function (id) { return id === 'hero' || p().recruited.indexOf(id) >= 0; }).forEach(function (id) {
       var d = T.members[id], r = p().roster[id], s = A.stats(id, r.xp), index = p().party.indexOf(id), card = E('section', { class: 'adv-roster-card' });
       card.appendChild(member(id, false));
-      card.appendChild(text('blockquote', '', '「' + d.quote + '」'));
       card.appendChild(text('p', 'adv-description', d.detail));
       var gb = gearBonus(id), stats = E('dl', { class: 'adv-stats' });
       ['strength', 'defense', 'speed', 'wisdom'].forEach(function (k) {
@@ -231,6 +233,8 @@
     for (var key of Object.keys(A.PLACES)) if (A.same(pos, A.PLACES[key])) return T[key] + 'へ移動';
     return '雪道 ' + x + ',' + y + 'へ移動';
   }
+  // ランダムエンカウントの乱数（テストでは、FF.adventureRng で差しかえる）
+  function wildRng() { return (FF.adventureRng || Math.random)(); }
   function walk(target, forced) {
     if (moving || p().battle) return;
     if (!forced && A.same(target, A.PLACES.home) && A.same(p().pos, target)) { home(); return; }
@@ -241,7 +245,7 @@
     function finish() { moving = false; traveler.classList.remove('is-walking'); }
     function step() {
       if (token !== routeId || !traveler.isConnected || FF.app.screen !== 'adventure' || p().battle || !steps.length) { finish(); return; }
-      var pos = steps.shift(), old = p(), next = pos.via ? advanceDiag(old, pos) : A.move(old, pos.x, pos.y);
+      var pos = steps.shift(), old = p(), next = pos.via ? advanceDiag(old, pos) : A.move(old, pos.x, pos.y, wildRng);
       if (next === old) { finish(); return; }
       var diagArt = pos.via ? scene.travelerDiag(FF.app.state.player.avatar) : null;   // ななめ向きの絵があれば、それを使う
       if (diagArt) {
@@ -276,7 +280,7 @@
         var cell = map.querySelector('[data-x="' + next.pos.x + '"][data-y="' + next.pos.y + '"]');
         if (cell) {cell.classList.add('current');cell.setAttribute('aria-current','location');}
         if (!next.battle && A.same(next.pos, A.PLACES.home)) { finish(); U.show('base'); return; }
-        if (next.battle || next.notice) { finish(); entering = !!next.battle; paint(); return; }
+        if (next.battle || next.notice) { held = null; if (next.notice && !next.battle) pendingBanner = next.notice; finish(); entering = !!next.battle; paint(); return; }
         root.document.querySelectorAll('.adv-settings,.adv-notice').forEach(function(node) {node.remove();});
         if (steps.length) step(); else finish();
       }
@@ -375,6 +379,7 @@
     ]);
   }
   function fieldViewport() {
+    held = null;   // 戦闘から帰ってきたとき、前の「押している」が残らないように
     var flat = !isHd(), world = mapView();
     var viewport = E('div', { class: 'adv-map-viewport' + (overview ? ' overview' : '') + (flat ? '' : ' hd2d') }, flat ? world : E('div', { class: 'adv-tilt' }, world));
     var shell = E('div', { class: 'adv-map-shell' + (flat ? '' : ' is-hd') }, [viewport,
@@ -412,9 +417,9 @@
   }
   // ななめの1歩 ＝ 横へ1歩、たてへ1歩（途中で戦闘・宝箱などが起きたら、そこで止まる）
   function advanceDiag(old, pos) {
-    var a = A.move(old, pos.via.x, pos.via.y);
+    var a = A.move(old, pos.via.x, pos.via.y, wildRng);
     if (a === old || a.battle || a.notice) return a;
-    var b = A.move(a, pos.x, pos.y);
+    var b = A.move(a, pos.x, pos.y, wildRng);
     if (b === a) return a;
     b.facing = pos.y < old.pos.y ? 'up' : 'down';   // ななめ用の絵はないので、手前向き・奥向きの絵を、進む側へかたむけて使う
     return b;
@@ -467,7 +472,14 @@
     side.appendChild(btn(T.returnTown, function () { if (p().lastTown === 'home') home(); else change(A.depart(p(), 'town')); }, 'quiet'));
     side.appendChild(text('small', '', T.goldHelp));
     layout.appendChild(side); main.appendChild(layout);
-    if (n.notice && T.notices[n.notice]) main.appendChild(text('p', 'adv-notice', T.notices[n.notice]));
+    var banner = pendingBanner; pendingBanner = null;
+    if (banner && banner !== 'arrival' && T.notices[banner]) {
+      var shell = main.querySelector('.adv-map-shell');
+      if (shell) {
+        var node = E('div', { class: 'adv-field-banner ' + banner, attrs: { role: 'status' } }, [text('strong', '', T.notices[banner])]);
+        shell.appendChild(node); root.setTimeout(function() { node.remove(); }, 4800);
+      } else main.appendChild(text('p', 'adv-notice', T.notices[banner]));
+    }
     if (A.atTown(n)) main.appendChild(settings());
     main.appendChild(text('p', 'adv-record', '冒険の学習記録：' + n.answered + '問 · 正解 ' + n.correct + '問（熱量・問題チケットとは別の記録）'));
   }
@@ -505,22 +517,73 @@
   function openHowto() {
     U.modal({ title: C.howtoButton, body: E('div', { class: 'adv-howto-body' }, C.howto.map(function(line) { return text('p', '', line); })), buttons: [{ label: C.goBack, class: 'ghost' }] });
   }
+  var A_TACTICS = FF.balance.ADVENTURE.AUTO.TACTICS, autoTimer = null;
+  // オートバトル中の目印「オート：ON」（戦闘の画面の左上に、小さく。押すと、作戦を選びなおす／手動にもどす）
+  function openAutoMenu() {
+    var n = p(), buttons = A_TACTICS.map(function(t) {
+      return { label: (n.auto.tactic === t ? '✓ ' : '') + C.tactics[t].name, class: n.auto.tactic === t ? 'primary' : '', onClick: function() { change(A.setAuto(p(), t)); } };
+    });
+    buttons.push({ label: C.autoStop, class: 'ghost', onClick: function() { change(A.setAuto(p(), null)); } });
+    buttons.push({ label: C.autoBack, class: 'ghost' });
+    U.modal({ title: C.autoMenuTitle, body: E('div', { class: 'adv-auto-menu-body' }, A_TACTICS.map(function(t) { return text('p', '', '【' + C.tactics[t].name + '】' + C.tactics[t].text); })), buttons: buttons });
+  }
+  function syncAutoChip(stage) {
+    var chip = stage.querySelector('.adv-auto-chip'), on = p().auto && p().auto.on;
+    if (!on) { if (chip) chip.remove(); return; }
+    if (!chip) { chip = btn(C.autoOn, openAutoMenu, 'quiet adv-auto-chip'); stage.appendChild(chip); }
+    chip.setAttribute('aria-label', C.autoOn + '（' + C.tactics[p().auto.tactic].name + '）。' + C.autoMenuTitle);
+  }
+  // 問題の画面の中から、オートを止める（問題には、そのまま答えられる）
+  function stopAutoInQuiz() {
+    save(A.setAuto(p(), null));
+    root.document.querySelectorAll('.adv-auto-stop,.adv-auto-chip').forEach(function(node) { node.remove(); });
+    U.toast(C.autoStopped);
+  }
+  // オートバトル中のパネル：作戦を選びなおす／手動にもどす。少し待ってから、作戦で、全員の行動を決めて、クイズへ
+  function autoPanel() {
+    var n = p(), panel = E('section', { class: 'adv-command-panel adv-auto-panel' }), menu = E('nav', { class: 'adv-command-menu', attrs: { 'aria-label': C.auto } });
+    menu.appendChild(text('strong', 'adv-menu-actor', C.auto));
+    A_TACTICS.forEach(function(t) { menu.appendChild(btn((n.auto.tactic === t ? '✓ ' : '') + C.tactics[t].name, function() { change(A.setAuto(p(), t)); }, 'adv-command adv-tactic' + (n.auto.tactic === t ? ' is-current' : ''))); });
+    menu.appendChild(btn(C.autoStop, function() { root.clearTimeout(autoTimer); change(A.setAuto(p(), null)); }, 'adv-command'));
+    panel.appendChild(menu);
+    panel.appendChild(E('div', { class: 'adv-command-dialogue' }, [
+      text('p', 'adv-encounter-text', C.encounter.replace('{name}', T.enemies[n.battle.enemy].name)),
+      text('p', 'adv-action-message adv-command-prompt', C.autoRunning.replace('{name}', C.tactics[n.auto.tactic].name)),
+      text('p', 'adv-action-description', C.tactics[n.auto.tactic].text + '\n' + C.autoWait)
+    ]));
+    var turn = n.battle.turn, enemy = n.battle.enemy;
+    root.clearTimeout(autoTimer);
+    autoTimer = root.setTimeout(function() {
+      var before = p();
+      if (!panel.isConnected || FF.app.screen !== 'adventure' || !before.battle || before.battle.phase !== 'commands' || before.battle.turn !== turn || before.battle.enemy !== enemy || !before.auto.on) return;
+      var next = A.command(before, A.autoOrders(before, before.auto.tactic), FF.app.bank, grade(), Math.random, FF.app.now());
+      orderKey = null;
+      if (next === before) { U.toast(C.autoFailed); change(A.setAuto(before, null)); return; }
+      change(next);
+    }, 1100);
+    return panel;
+  }
   function commandPanel() {
+    if (p().auto && p().auto.on) return autoPanel();
     var n = p(), panel = E('section', { class: 'adv-command-panel' }), menu = E('nav', { class: 'adv-command-menu' + (submenu ? ' adv-subcommand-menu' : ''), attrs: { 'aria-label': submenu ? C.details : T.command } });
     menu.appendChild(text('strong', 'adv-menu-actor', name(actor)));
     var prompt = C.chooseAction.replace('{name}', name(actor));
     if (!submenu) {
-      [['attack',T.fight],['magic',T.magic],['item',T.item],['escape',T.escape]].forEach(function(entry) {
+      [['attack',T.fight],['magic',T.magic],['item',T.item],['auto',C.auto],['escape',T.escape]].forEach(function(entry) {
         var type = entry[0], disabled = type === 'magic' && n.roster[actor].mp < B.MAGIC_COST || type === 'item' && availablePotions() <= 0;
         menu.appendChild(btn(entry[1], function() {
           if (type === 'escape') { orderKey = null; change(A.retreat(p())); }
           else if (type === 'attack') confirmOrder(type);
+          else if (type === 'auto') { submenu = {type:'auto', target:false}; paint(); }
           else { submenu = {type:type, target:false}; paint(); }
         }, 'adv-command', disabled));
       });
     } else {
       var type = submenu.type;
-      if (submenu.target) {
+      if (type === 'auto') {
+        prompt = C.autoPrompt;
+        A_TACTICS.forEach(function(t) { menu.appendChild(btn(C.tactics[t].name, function() { submenu = null; change(A.setAuto(p(), t)); }, 'adv-command adv-tactic')); });
+      } else if (submenu.target) {
         prompt = C.chooseTarget;
         n.party.forEach(function(id) {
           menu.appendChild(btn(name(id) + ' · HP ' + n.roster[id].hp, function() { confirmOrder(type, id); }, 'adv-command'));
@@ -540,7 +603,7 @@
     var dialogue = E('div', { class: 'adv-command-dialogue' }, [
       text('p', 'adv-encounter-text', C.encounter.replace('{name}',T.enemies[n.battle.enemy].name)),
       text('p', 'adv-action-message adv-command-prompt', prompt),
-      submenu ? text('p', 'adv-action-description', submenu.type === 'magic' ? T.members[actor].detail : C.item) : null,
+      submenu ? text('p', 'adv-action-description', submenu.type === 'magic' ? T.members[actor].detail : submenu.type === 'auto' ? A_TACTICS.map(function(t) { return C.tactics[t].name + '：' + C.tactics[t].text; }).join('\n') : C.item) : null,
       E('div', { class: 'adv-command-foot' }, [
         E('button', { class: 'adv-howto', rich: '？ ' + C.howtoShort, attrs: { type: 'button' }, on: { click: openHowto } })
       ])
@@ -576,7 +639,7 @@
   function passiveMenu() {
     var menu = E('nav', {class:'adv-command-menu adv-passive-menu',attrs:{'aria-label':T.command}});
     menu.appendChild(text('strong','adv-menu-actor',T.battleMenu));
-    [T.fight,T.magic,T.item,T.escape].forEach(function(label) {menu.appendChild(btn(label,function(){},'adv-command',true));});
+    [T.fight,T.magic,T.item,C.auto,T.escape].forEach(function(label) {menu.appendChild(btn(label,function(){},'adv-command',true));});
     return menu;
   }
   function battleWindow(dialogue, cls) {
@@ -589,7 +652,7 @@
     if (dialog) U.clear(dialog);
     else dialog = E('dialog', { class: 'adv-quiz-dialog', attrs: { 'aria-labelledby': 'adv-quiz-title' } });
     var heading = E('h2', { class: 'adv-dialog-title', rich: title, attrs: { id: 'adv-quiz-title', tabindex: '-1' } });
-    dialog.appendChild(E('header', { class: 'adv-dialog-header' }, [heading, btn(C.viewBattle, function() { dialog.close(); }, 'quiet')]));
+    dialog.appendChild(E('header', { class: 'adv-dialog-header' }, [heading, p().auto && p().auto.on ? btn(C.autoOn + '→' + C.autoStop, stopAutoInQuiz, 'quiet adv-auto-stop') : null, btn(C.viewBattle, function() { dialog.close(); }, 'quiet')].filter(Boolean)));
     dialog.appendChild(questionPanel());
     var footer = E('footer', { class: 'adv-dialog-footer' });
     if (b.phase === 'lose') footer.appendChild(E('section',{class:'adv-result'},[text('h2','',T.defeat),text('p','',T.defeatHelp),btn('町で休む',advance,'gold')]));
@@ -694,6 +757,7 @@
     }
     if (won) { U.clear(stage); stage.setAttribute('aria-label',T.victory); }
     else {
+      syncAutoChip(stage);
       var hpText = stage.querySelector('.adv-enemy-hp'), bar = stage.querySelector('.adv-meter'), art = stage.querySelector('.adv-enemy-art'), intent = stage.querySelector('.adv-intent');
       hpText.textContent = 'HP ' + b.hp + ' / ' + B.ENEMIES[b.enemy].hp;
       bar.setAttribute('aria-valuenow',b.hp);bar.firstChild.style.width=(b.hp/B.ENEMIES[b.enemy].hp*100)+'%';
