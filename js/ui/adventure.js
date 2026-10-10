@@ -605,7 +605,7 @@
   function passiveMenu() {
     var menu = E('nav', {class:'adv-command-menu adv-passive-menu',attrs:{'aria-label':T.command}});
     menu.appendChild(text('strong','adv-menu-actor',T.battleMenu));
-    [T.fight,T.magic,T.item,T.escape].forEach(function(label) {menu.appendChild(btn(label,function(){},'adv-command',true));});
+    [T.fight,T.magic,T.item,C.auto,T.escape].forEach(function(label) {menu.appendChild(btn(label,function(){},'adv-command',true));});
     return menu;
   }
   function battleWindow(dialogue, cls) {
