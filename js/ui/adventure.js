@@ -236,7 +236,7 @@
     if (A.same(target, A.PLACES.home) && A.same(p().pos, target)) { home(); return; }
     var steps = A.path(p(), target);
     if (!steps.length) { U.toast('そこへは道がつながっていない。峠の敵や、ほかの道をたしかめよう。'); return; }
-    var token = ++routeId, viewport = root.document.querySelector('.adv-map-viewport'), traveler = viewport.querySelector('.adv-traveler'), map = viewport.querySelector('.adv-map');
+    var token = ++routeId, viewport = root.document.querySelector('.adv-map-viewport'), traveler = viewport.querySelector('.adv-traveler'), map = viewport.querySelector('.adv-map'), hdNow = viewport.classList.contains('hd2d'), shadow = viewport.querySelector('.adv-traveler-shadow');
     moving = true; traveler.classList.add('is-walking');
     function finish() { moving = false; traveler.classList.remove('is-walking'); }
     function step() {
@@ -257,7 +257,11 @@
         var fraction = duration ? Math.min(1, elapsed / duration) : 1;
         traveler.style.left = (sx + (ex - sx) * fraction) / 936 * 100 + '%';
         traveler.style.top = (sy + (ey - sy) * fraction) / 648 * 100 + '%';
-        viewport.scrollLeft = cx + (tx - cx) * fraction; viewport.scrollTop = cy + (ty - cy) * fraction;
+        if (hdNow) {
+          var hx = sx + (ex - sx) * fraction, hy = sy + (ey - sy) * fraction;
+          map.style.setProperty('--cx', hx + 'px'); map.style.setProperty('--cy', hy + 'px');
+          if (shadow) { shadow.style.left = hx + 'px'; shadow.style.top = hy + 'px'; }
+        } else { viewport.scrollLeft = cx + (tx - cx) * fraction; viewport.scrollTop = cy + (ty - cy) * fraction; }
         if (fraction < 1) { root.requestAnimationFrame(frame); return; }
         save(next);
         map.querySelectorAll('.adv-tile.current').forEach(function(cell) {cell.classList.remove('current');cell.removeAttribute('aria-current');});
@@ -273,6 +277,41 @@
     step();
   }
 
+  // ---- HD-2D 風の表示（試作。判断367）：地面を傾け、木・人物・敵は立てた絵。カメラは、主人公の位置を --cx/--cy で追う ----
+  var hd = !(FF.config && FF.config.ADVENTURE_HD2D === false), treeUrls = null;
+  function isHd() { return hd && !overview; }
+  function treeSprites() {
+    if (treeUrls) return treeUrls;
+    treeUrls = [0, 1, 2].map(function (v) {
+      var c = root.document.createElement('canvas'); c.width = 96; c.height = 128;
+      var x = c.getContext('2d'), tones = [['#2d5a66', '#3d7480'], ['#2a5560', '#38707a'], ['#31606a', '#437c86']][v];
+      function poly(pts, col) { x.fillStyle = col; x.beginPath(); pts.forEach(function (q, i) { if (i) x.lineTo(q[0], q[1]); else x.moveTo(q[0], q[1]); }); x.closePath(); x.fill(); }
+      x.fillStyle = '#6e625a'; x.fillRect(43, 100, 10, 24); x.fillStyle = '#85766b'; x.fillRect(43, 100, 4, 24);
+      for (var j = 0; j < 4; j++) {
+        var base = 106 - j * 25, top = base - 40 + j * 4, w = 40 - j * 7;
+        poly([[48 - w, base], [48, top], [48 + w, base], [48 + w * .45, base - 6], [48, base + 2], [48 - w * .45, base - 6]], tones[0]);
+        poly([[48 - w, base], [48, top], [48 + w * .15, base - 4], [48 - w * .5, base - 4]], tones[1]);
+        poly([[48 - w * .8, base - 10], [48, top], [48 + w * .75, base - 12], [48 + w * .25, base - 20], [48, base - 14], [48 - w * .3, base - 21]], '#e9f4f7');
+        poly([[48, top], [48 + w * .75, base - 12], [48 + w * .25, base - 20]], '#bcd6e0');
+      }
+      return c.toDataURL('image/png');
+    });
+    return treeUrls;
+  }
+  function hdTrees(map) {
+    var urls = treeSprites(), hash = function (a, b) { var h = (a * 374761393 + b * 668265263) >>> 0; h = ((h ^ (h >>> 13)) * 1274126177) >>> 0; return (h ^ (h >>> 16)) / 4294967296; };
+    var list = [];
+    A.MAP.forEach(function (row, y) { row.split('').forEach(function (t, x) { if (t === '#') list.push([x, y]); }); });
+    // 外側の海べりの、もう1列。木の列が、そのまま続いて見える
+    for (var x = -1; x <= 13; x++) { list.push([x, -1]); list.push([x, 9]); }
+    for (var y = 0; y < 9; y++) { list.push([-1, y]); list.push([13, y]); }
+    list.sort(function (a, b) { return a[1] - b[1] || a[0] - b[0]; }).forEach(function (c) {
+      var jx = (hash(c[0], c[1]) - .5) * 26, jy = (hash(c[1], c[0] + 7) - .5) * 18, big = .85 + hash(c[0] + 3, c[1] + 5) * .35;
+      var px = (c[0] + .5) * 72 + jx, py = (c[1] + .85) * 72 + jy;
+      map.appendChild(E('span', { class: 'adv-shadow adv-tree-shadow', style: { left: px + 'px', top: py + 'px', width: 60 * big + 'px' }, attrs: { 'aria-hidden': 'true' } }));
+      map.appendChild(E('img', { class: 'adv-tree', attrs: { src: urls[Math.floor(hash(c[0], c[1] + 11) * 3)], alt: '', draggable: 'false', 'aria-hidden': 'true' }, style: { left: px + 'px', top: py + 'px', width: 86 * big + 'px' } }));
+    });
+  }
   function mapView() {
     var n = p(), map = E('div', { class: 'adv-map', attrs: { role: 'group', 'aria-label': T.map } });
     map.appendChild(E('img', { class: 'adv-world-art', attrs: { src: scene.background, alt: '', draggable: 'false' }, on: { error: function(event) { event.target.src = scene.world(); } } }));
@@ -288,15 +327,26 @@
       });
     });
     map.appendChild(E('span', { class: 'adv-traveler leader', style: { backgroundImage: 'url("' + scene.traveler(FF.app.state.player.avatar) + '")', backgroundPosition: ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[n.facing], left: (n.pos.x * 72 + 36) / 936 * 100 + '%', top: (n.pos.y * 72 + 40) / 648 * 100 + '%' }, attrs: { role: 'img', 'aria-label': C.current, 'data-sprite': scene.traveler(FF.app.state.player.avatar), 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }, ['body','leg-left','leg-right'].map(function(part) {return E('span',{class:'adv-walk-part adv-walk-' + part,attrs:{'aria-hidden':'true'}});})));
+    if (isHd()) {
+      hdTrees(map);
+      map.appendChild(E('span', { class: 'adv-shadow adv-traveler-shadow', style: { left: (n.pos.x * 72 + 36) + 'px', top: (n.pos.y * 72 + 40) + 'px' }, attrs: { 'aria-hidden': 'true' } }));
+      map.style.setProperty('--cx', (n.pos.x * 72 + 36) + 'px'); map.style.setProperty('--cy', (n.pos.y * 72 + 40) + 'px');
+    }
     return map;
   }
   function fieldViewport() {
-    var viewport = E('div', { class: 'adv-map-viewport' + (overview ? ' overview' : '') }, mapView());
-    var shell = E('div', { class: 'adv-map-shell' }, [viewport,
+    var flat = !isHd(), world = mapView();
+    var viewport = E('div', { class: 'adv-map-viewport' + (overview ? ' overview' : '') + (flat ? '' : ' hd2d') }, flat ? world : E('div', { class: 'adv-tilt' }, world));
+    var shell = E('div', { class: 'adv-map-shell' + (flat ? '' : ' is-hd') }, [viewport,
+      flat ? null : E('div', { class: 'adv-hd-fx adv-hd-haze', attrs: { 'aria-hidden': 'true' } }),
+      flat ? null : E('div', { class: 'adv-hd-fx adv-hd-blur-top', attrs: { 'aria-hidden': 'true' } }),
+      flat ? null : E('div', { class: 'adv-hd-fx adv-hd-blur-bottom', attrs: { 'aria-hidden': 'true' } }),
+      flat ? null : E('div', { class: 'adv-hd-fx adv-hd-light', attrs: { 'aria-hidden': 'true' } }),
       E('div', { class: 'adv-compass', text: 'N ↑', attrs: { 'aria-hidden': true } }),
-      btn(overview ? C.follow : C.map, function () { routeId++; moving = false; overview = !overview; paint(); }, 'adv-map-toggle'), directions()]);
+      btn(overview ? C.follow : C.map, function () { routeId++; moving = false; overview = !overview; paint(); }, 'adv-map-toggle'),
+      btn(hd ? 'HD-2D：入' : 'HD-2D：切', function () { routeId++; moving = false; hd = !hd; overview = false; paint(); }, 'adv-hd-toggle'), directions()].filter(Boolean));
     root.requestAnimationFrame(function () {
-      if (!viewport.isConnected || overview) return;
+      if (!viewport.isConnected || overview || !flat) return;
       viewport.scrollLeft = p().pos.x * 72 + 36 - viewport.clientWidth / 2;
       viewport.scrollTop = p().pos.y * 72 + 36 - viewport.clientHeight / 2;
     });
