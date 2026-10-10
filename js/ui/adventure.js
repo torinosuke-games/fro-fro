@@ -99,19 +99,23 @@
     var cur = SH.equippedOf(FF.app.state, memberId)[kind], r = SH.unequip(FF.app.state, memberId, kind);
     if (r.ok && cur) gearDone(r.state, U.plain(I.doneRemove.replace('{member}', name(memberId)).replace('{item}', itemPlain(kind, cur))));
   }
+  // 持っている個数と、装備している人たち（同じ品物を、何個も持てる。判断381）
   function holderBadge(kind, itemId) {
-    var h = SH.holder(FF.app.state, kind, itemId);
-    if (!h) return E('span', { class: 'inv-holder is-nobody', rich: I.nobody });
-    return E('span', { class: 'inv-holder' }, [E('span', { class: 'adv-portrait inv-holder-icon' }, FF.adventureArt(h, true)), E('span', { rich: I.equippedBy }), text('strong', '', name(h))]);
+    var hs = SH.holders(FF.app.state, kind, itemId), n = SH.copies(FF.app.state, kind, itemId), free = n - hs.length;
+    var parts = [E('span', { class: 'inv-count-tag', text: '持っている：' + n + '個' })];
+    if (!hs.length) parts.push(E('span', { class: 'inv-holder is-nobody', rich: I.nobody }));
+    hs.forEach(function (h) { parts.push(E('span', { class: 'inv-holder' }, [E('span', { class: 'adv-portrait inv-holder-icon' }, FF.adventureArt(h, true)), text('strong', '', name(h))])); });
+    if (hs.length && free > 0) parts.push(E('span', { class: 'inv-holder is-nobody', text: '（あまり ' + free + '個）' }));
+    return E('span', { class: 'inv-holders' }, parts);
   }
   // ある人の、武器（防具）を選ぶ
   function openPicker(memberId, kind) {
     var s = FF.app.state, cur = SH.equippedOf(s, memberId)[kind], close = null;
     var list = E('div', { class: 'inv-pick-list' }, SH.owned(s, kind).map(function (id) {
-      var h = SH.holder(s, kind, id);
+      var hs = SH.holders(s, kind, id), free = SH.copies(s, kind, id) - hs.length, h = hs[hs.length - 1];
       return E('button', { class: 'rn-button inv-pick' + (id === cur ? ' is-current' : ''), attrs: { type: 'button', 'data-item': id }, on: { click: function () { close(); equipFlow(memberId, kind, id); } } }, [
         E('strong', { rich: itemMarkup(kind, id) }), E('small', { rich: itemPower(kind, id) }),
-        E('small', { class: 'inv-pick-holder', text: h && h !== memberId ? U.plain(I.equippedBy) + name(h) : (id === cur ? '◎' : '') })
+        E('small', { class: 'inv-pick-holder', text: (SH.copies(s, kind, id) > 1 ? '×' + SH.copies(s, kind, id) + '　' : '') + (hs.indexOf(memberId) >= 0 ? '◎' : (free <= 0 && h ? U.plain(I.equippedBy) + name(h) : '')) })
       ]);
     }));
     var buttons = [{ label: U.T('back'), class: 'ghost' }];
@@ -120,10 +124,10 @@
   }
   // ある品物を、だれが装備するかを選ぶ
   function openAssign(kind, itemId) {
-    var close = null, s = FF.app.state, h = SH.holder(s, kind, itemId);
+    var close = null, s = FF.app.state, hs = SH.holders(s, kind, itemId), h = hs.length === 1 ? hs[0] : null;
     var list = E('div', { class: 'inv-pick-list' }, squadIds().map(function (id) {
       var cur = SH.equippedOf(s, id)[kind];
-      return E('button', { class: 'rn-button inv-pick' + (id === h ? ' is-current' : ''), attrs: { type: 'button', 'data-member': id }, on: { click: function () { close(); equipFlow(id, kind, itemId); } } }, [
+      return E('button', { class: 'rn-button inv-pick' + (hs.indexOf(id) >= 0 ? ' is-current' : ''), attrs: { type: 'button', 'data-member': id }, on: { click: function () { close(); equipFlow(id, kind, itemId); } } }, [
         E('span', { class: 'adv-portrait inv-pick-icon' }, FF.adventureArt(id, true)), E('strong', { text: name(id) }),
         E('small', { rich: cur ? itemMarkup(kind, cur) : I.nobody })
       ]);
@@ -150,12 +154,12 @@
       var s = FF.app.state, ids = SH.owned(s, invTab);
       if (!ids.length) panel.appendChild(text('p', 'inv-empty', I.empty));
       ids.forEach(function (id) {
-        var h = SH.holder(s, invTab, id), d = itemDef(invTab, id), locked = !!p().battle;
+        var hs = SH.holders(s, invTab, id), h = hs.length === 1 ? hs[0] : null, d = itemDef(invTab, id), locked = !!p().battle;
         panel.appendChild(E('article', { class: 'inv-row', attrs: { 'data-item': id } }, [
           E('span', { class: 'inv-ico', text: d.icon }),
           E('div', { class: 'inv-info' }, [E('strong', { rich: d.name }), E('span', { class: 'inv-power', rich: itemPower(invTab, id) }), holderBadge(invTab, id)]),
           E('div', { class: 'inv-actions' }, [
-            btn(h ? I.change : I.equip, function () { openAssign(invTab, id); }, 'quiet inv-equip', locked),
+            btn(hs.length && SH.copies(s, invTab, id) - hs.length <= 0 ? I.change : I.equip, function () { openAssign(invTab, id); }, 'quiet inv-equip', locked),
             h ? btn(I.remove, function () { removeGear(h, invTab); }, 'quiet inv-remove', locked) : null
           ])
         ]));

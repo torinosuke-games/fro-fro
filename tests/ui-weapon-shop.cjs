@@ -23,10 +23,23 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  // 買っただけでは、装備は変わらない（持ち物に入る）。「そうびする」で、だれが装備するかを選ぶ
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'wood_sword');
  assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('装備していない'));
- await p.locator('.shop-row[data-weapon="iron_sword"] .shop-btn').click();
+ await p.locator('.shop-row[data-weapon="iron_sword"] .shop-equip').click();
  await p.locator('.inv-pick[data-member="hero"]').click();
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'iron_sword');
  assert.equal(await p.evaluate(()=>FF.shop.damagePerCorrect(FF.app.state)),15);
+ // 同じ武器を、もう1本買える（判断381）：持っている2本めは、ほかの仲間にも付けられる
+ await p.evaluate(()=>FF.app.commit(FF.shop.addGold(FF.app.state,200)));
+ await p.locator('.facility-btn[data-facility="weapon"]').click();
+ assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('持っている：1個'));
+ await p.locator('.shop-row[data-weapon="iron_sword"] .shop-buy').click();
+ assert.equal(await p.evaluate(()=>FF.shop.copies(FF.app.state,'weapon','iron_sword')),2);
+ assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('持っている：2個'));
+ await p.locator('.overlay .btn').click();
+ await p.evaluate(()=>FF.app.commit(FF.shop.equip(FF.app.state,'kenshi','weapon','iron_sword').state));
+ assert.deepEqual(await p.evaluate(()=>FF.shop.holders(FF.app.state,'weapon','iron_sword')),['hero','kenshi']);
+ await p.evaluate(()=>FF.app.commit(FF.shop.equip(FF.app.state,'kenshi','weapon','wood_sword').state));
+ await p.locator('.facility-btn[data-facility="weapon"]').click();
+ await p.locator('.overlay .btn').click();
  await p.evaluate(()=>FF.app.commit(FF.shop.equip(FF.app.state,'hero','weapon','wood_sword').state));
  assert.equal(await p.evaluate(()=>FF.shop.damagePerCorrect(FF.app.state)),10);
  await p.locator('.facility-btn[data-facility="weapon"]').click();

@@ -319,12 +319,15 @@
   var s=a.state;
   var again=function(){openGearShop(kind);};
   var list=E('div',{class:'shop-list'},(armor?FF.defs.ARMORS:FF.defs.WEAPONS).map(function(w){
-   var st=armor?SH.astats(w.id):SH.stats(w.id),owned=SH.owned(s,k).indexOf(w.id)>=0,can=SH.canBuyItem(s,k,w.id).ok,h=SH.holder(s,k,w.id);
+   var st=armor?SH.astats(w.id):SH.stats(w.id),n=SH.copies(s,k,w.id),owned=n>0,can=SH.canBuyItem(s,k,w.id).ok,hs=SH.holders(s,k,w.id),h=hs[0];
+   var memberName=function(id){return id==='hero'?a.state.player.name:FF.texts.adventure.members[id].name;};
+   var buy=E('button',{class:'rn-button primary shop-btn shop-buy',attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuy,on:{click:function(){var r=SH.buyItem(a.state,k,w.id);if(r.ok){a.commit(r.state);U.toast(R.shopBought);again();}}}});
    var action;
-   if(owned)action=E('button',{class:'rn-button shop-btn',attrs:{type:'button'},rich:R.shopEquip,on:{click:function(){if(closeShop){closeShop();closeShop=null;}if(FF.ui.openAssign)FF.ui.openAssign(k,w.id);}}});
-   else action=E('button',{class:'rn-button primary shop-btn',attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuy,on:{click:function(){var r=SH.buyItem(a.state,k,w.id);if(r.ok){a.commit(r.state);U.toast(R.shopBought);again();}}}});
+   if(owned)action=E('div',{class:'shop-actions'},[E('button',{class:'rn-button shop-btn shop-equip',attrs:{type:'button'},rich:R.shopEquip,on:{click:function(){if(closeShop){closeShop();closeShop=null;}if(FF.ui.openAssign)FF.ui.openAssign(k,w.id);}}}),buy]);   // 同じ品物は、何個でも買える（判断381）
+   else action=buy;
    var power=armor?R.shopDefense.replace('{n}',st.defense):R.shopPower.replace('{n}',st.damage)+'／'+R.shopPowerBonus.replace('{n}',st.damage-SH.stats(FF.balance.DEFAULT_WEAPON).damage);
-   var status=owned?E('span',{class:'shop-owned',text:'持っている'+(h?'（装備：'+(h==='hero'?a.state.player.name:FF.texts.adventure.members[h].name)+'）':'（装備していない）')}):E('span',{class:'shop-price'},[st.price?U.fmt(st.price)+' G':E('span',{rich:R.shopFree})]);
+   var priceTag=st.price?U.fmt(st.price)+' G':null;
+   var status=owned?E('span',{class:'shop-owned',text:'持っている：'+n+'個'+(hs.length?'（装備：'+hs.map(memberName).join('・')+'）':'（装備していない）')+(priceTag?'　1個 '+priceTag:'')}):E('span',{class:'shop-price'},[st.price?U.fmt(st.price)+' G':E('span',{rich:R.shopFree})]);
    return E('div',{class:'shop-row'+(h?' is-equipped':'')+(owned||can?'':' is-short'),attrs:{'data-weapon':w.id}},[
     E('span',{class:'shop-icon',text:w.icon}),
     E('div',{class:'shop-info'},[E('strong',{class:'shop-name',rich:w.name}),E('span',{class:'shop-power',rich:power}),status]),

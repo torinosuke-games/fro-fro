@@ -37,8 +37,8 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(S.damagePerCorrect(S.equip(r.state, 'hero', 'weapon', 'stone_sword').state), B.WEAPONS.stone_sword.damage);
     // 元の状態は変わらない（純粋関数）
     assert.strictEqual(S.gold(s), 150);
-    // 同じ武器は、2回買えない。知らない武器も買えない
-    assert.strictEqual(S.canBuy(r.state, 'stone_sword').reason, 'owned');
+    // 同じ武器も、ゴールドがあれば、何個でも買える（判断381）。知らない武器は買えない
+    assert.ok(S.canBuy(r.state, 'stone_sword').ok);
     assert.strictEqual(S.canBuy(r.state, 'nothing').reason, 'unknown');
   });
   test('武器屋：持っている武器は付けかえられる。持っていない武器は付けられない', () => {
@@ -157,7 +157,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(S.gold(r.state), 1000 - B.WEAPONS.iron_sword.price - B.ARMORS.leather_armor.price);
     assert.strictEqual(S.currentArmor(r.state), 'leather_armor');
     assert.strictEqual(S.currentWeapon(r.state), 'iron_sword');
-    assert.strictEqual(S.canBuyArmor(r.state, 'leather_armor').reason, 'owned');
+    assert.ok(S.canBuyArmor(r.state, 'leather_armor').ok);   // 同じ防具も、また買える（判断381）
     const q = S.equip(r.state, 'hero', 'armor', 'cloth_clothes');
     assert.strictEqual(S.currentArmor(q.state), 'cloth_clothes');
     assert.strictEqual(S.equip(r.state, 'hero', 'armor', 'steel_armor').reason, 'notOwned');
@@ -195,5 +195,38 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const a = buyEqA(S.addGold(s, 5000), 'steel_armor');
     assert.strictEqual(S.damageTaken(a, 20), 20 - Math.round(B.ARMORS.steel_armor.defense * B.BATTLE.ARMOR_RATE));
     assert.strictEqual(S.damageTaken(a, 1), 1);
+  });
+
+  test('同じ装備を、複数買って、複数人に装備させられる（判断381）。個数ぶんまで。あまりがなければ、もらう確認', () => {
+    const base = S.addGold(fresh(), 1000);
+    let s = S.buy(base, 'iron_sword').state; s = S.buy(s, 'iron_sword').state;
+    assert.strictEqual(S.copies(s, 'weapon', 'iron_sword'), 2); assert.strictEqual(S.gold(s), 1000 - 2 * B.WEAPONS.iron_sword.price);
+    assert.deepStrictEqual(plain(S.owned(s, 'weapon')), ['wood_sword', 'iron_sword']);   // 種類は1つにまとめて見せる
+    s = S.equip(s, 'hero', 'weapon', 'iron_sword').state; s = S.equip(s, 'kenshi', 'weapon', 'iron_sword').state;
+    assert.deepStrictEqual(plain(S.holders(s, 'weapon', 'iron_sword')), ['hero', 'kenshi']); assert.strictEqual(S.freeCopies(s, 'weapon', 'iron_sword'), 0);
+    // 3人目は、あまりがない：確認が必要（最後の人から、もらう）
+    const r = S.equip(s, 'senshi', 'weapon', 'iron_sword'); assert.strictEqual(r.ok, false); assert.strictEqual(r.reason, 'inUse'); assert.strictEqual(r.holder, 'kenshi');
+    const f = S.equip(s, 'senshi', 'weapon', 'iron_sword', { force: true }); assert.deepStrictEqual(plain(S.holders(f.state, 'weapon', 'iron_sword')), ['hero', 'senshi']);
+    // 1個増やせば、確認なしで付けられる
+    const more = S.buy(s, 'iron_sword').state, ok = S.equip(more, 'senshi', 'weapon', 'iron_sword'); assert.strictEqual(ok.ok, true);
+    assert.deepStrictEqual(plain(S.holders(ok.state, 'weapon', 'iron_sword')), ['hero', 'kenshi', 'senshi']);
+    // それぞれの攻撃力に、効く
+    assert.strictEqual(S.weaponBonus(ok.state, 'kenshi'), B.WEAPONS.iron_sword.damage - B.WEAPONS.wood_sword.damage);
+    assert.strictEqual(S.weaponBonus(ok.state, 'senshi'), S.weaponBonus(ok.state, 'hero'));
+  });
+  test('防具も、複数買える。保存・読み込みでも、個数と装備が残る。個数より多い装備は、読み込み時に外れる。上限がある', () => {
+    let s = S.addGold(fresh(), 5000);
+    s = S.buyArmor(s, 'leather_armor').state; s = S.buyArmor(s, 'leather_armor').state;
+    s = S.equip(s, 'hero', 'armor', 'leather_armor').state; s = S.equip(s, 'juushouhei', 'armor', 'leather_armor').state;
+    const back = FF.state.parseSave(FF.state.serialize(s), 1791000000001).state;
+    assert.strictEqual(S.copies(back, 'armor', 'leather_armor'), 2); assert.deepStrictEqual(plain(S.holders(back, 'armor', 'leather_armor')), ['hero', 'juushouhei']);
+    const bad = plain(s); bad.equipment.ownedArmor = ['cloth_clothes', 'leather_armor'];   // 1個しかないのに、2人が装備している
+    assert.strictEqual(S.holders(FF.shop.normalizeShop(bad, undefined, 0), 'armor', 'leather_armor').length, 1);
+    let t = S.addGold(fresh(), 1000000);
+    for (let i = 0; i < S.MAX_COPIES + 3; i++) t = S.buyItem(t, 'armor', 'fur_coat').state || t;
+    assert.strictEqual(S.copies(t, 'armor', 'fur_coat'), S.MAX_COPIES); assert.strictEqual(S.canBuyItem(t, 'armor', 'fur_coat').reason, 'max');
+    // 前の版の、1個ずつのセーブは、そのまま使える
+    const legacy = plain(fresh()); legacy.equipment = { owned: ['wood_sword', 'stone_sword'], ownedArmor: ['cloth_clothes'], equipped: { hero: { weapon: 'stone_sword', armor: 'cloth_clothes' } } };
+    assert.strictEqual(S.currentWeapon(FF.shop.normalizeShop(legacy, undefined, 0)), 'stone_sword');
   });
 };

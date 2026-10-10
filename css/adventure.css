@@ -310,3 +310,8 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 .adv-field-banner.camp{border-color:#ffb35c;background:#5a2d12ee}
 @keyframes adv-banner{0%{opacity:0;transform:translate(-50%,-10px)}8%,82%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-6px)}}
 @media(prefers-reduced-motion:reduce){.adv-field-banner{animation:none}}
+
+/* 同じ装備を複数持つ（判断381）：持っている個数と、装備している人たち */
+.inv-holders{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
+.inv-count-tag{font-size:12px;font-weight:800;color:#2d5568}
+.shop-actions{display:flex;flex-direction:column;gap:6px;align-items:stretch}
