@@ -194,7 +194,7 @@ fs.mkdirSync(out, { recursive: true });
     await page.getByRole('button', { name: '中学1年', exact: true }).click();
     await page.locator('.avatar-pick').nth(5).click();
     await page.getByRole('button', { name: 'Frozen Frontier', exact: true }).click();
-    await page.getByRole('button', { name: '仲間を編成', exact: true }).click();
+    await page.locator('#nav button', { hasText: '仲間' }).click();   // 下のナビ（判断360・361）
     await page.getByRole('button', { name: '町の画面へ', exact: true }).click();
     await page.getByRole('button', { name: /雪原へ出発|冒険のつづき/ }).click();
     assert.deepEqual(await page.evaluate(() => FF.app.state.adventure.pos), { x: 1, y: 6 });

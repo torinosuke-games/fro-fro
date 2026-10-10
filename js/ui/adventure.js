@@ -66,7 +66,7 @@
     return E('section', { class: 'adv-entry' }, [
       E('div', { class: 'adv-entry-symbol', attrs: { 'aria-hidden': true }, text: '✦' }),
       E('div', {}, [text('small', '', T.subtitle), text('h2', '', T.title), text('p', '', T.entry)]),
-      btn(p().started ? T.resume : T.start, departHome, 'gold'), btn(T.party, function () { U.show('adventureParty'); }, 'quiet'), btn(I.button, openInventory, 'quiet adv-entry-inv')
+      btn(p().started ? T.resume : T.start, departHome, 'gold')   // 編成・持ち物は、下のナビから（判断361）
     ]);
   };
   // ---- 持ち物と装備（判断359） ----

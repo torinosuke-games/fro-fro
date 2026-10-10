@@ -505,3 +505,8 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 /* 町の詳細（町の名前を押すと開く）：人口と生産を、名前の右に（判断360） */
 .modal>h2.town-title-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .town-pop{margin-left:auto;display:inline-flex;align-items:baseline;gap:4px;font-size:.8125rem;font-weight:400;color:#2d5568}.town-pop .pop-num{font-size:1.1rem}.town-pop .pop-label{color:#6a8796;font-size:.75rem}.town-pop .pop-bonus{margin-left:6px;color:#3d7a52;font-size:.75rem}
+/* 熱量・ゴールド・選択チケットの、縦の高さをそろえる（判断361） */
+.resource-strip .heat-item,.resource-strip .gold-item,.resource-strip .ticket-item{box-sizing:border-box;height:38px;min-height:0;align-self:center;white-space:nowrap}
+.resource-strip .heat-item img,.resource-strip .ticket-item img{max-height:26px;width:auto}
+@media(max-width:1180px){.resource-strip .heat-item,.resource-strip .gold-item,.resource-strip .ticket-item{height:30px;font-size:.75rem;line-height:1.1}.resource-strip .heat-item img,.resource-strip .ticket-item img{max-height:22px}}
+@media(max-width:400px){.resource-strip .ticket-item{font-size:.6875rem}.resource-strip .ticket-item .resource-label{letter-spacing:-.02em}}
