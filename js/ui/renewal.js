@@ -403,7 +403,7 @@
   });
   strip.appendChild(E('div',{class:'heat-item',attrs:{'aria-label':R.heat+' '+s.studyPoints}},[E('img',{class:'heat-illustration',attrs:{src:'img/heat.svg',alt:''}}),E('span',{class:'resource-label',text:R.heat}),countSpan('heat',s.studyPoints),E('small',{text:'pt'})]));
   var gold=FF.shop?FF.shop.gold(s):0;   // 所持ゴールド（冒険のゴールド。判断360）
-  strip.appendChild(E('div',{class:'gold-item',attrs:{'aria-label':R.gold+' '+gold,title:R.goldHelp}},[E('span',{class:'gold-ico',attrs:{'aria-hidden':'true'},text:'🪙'}),E('span',{class:'resource-label',rich:R.gold}),E('strong',{text:U.fmt(gold)}),E('small',{text:'G'})]));
+  strip.appendChild(E('div',{class:'gold-item',attrs:{'aria-label':R.gold+' '+gold,title:R.goldHelp}},[E('span',{class:'gold-ico',attrs:{'aria-hidden':'true'},text:'🪙'}),E('span',{class:'resource-label',rich:R.gold}),E('strong',{class:'gold-num',text:U.fmt(gold)}),E('small',{text:'G'})]));
   var tk=FF.tickets.recoverTickets(s.tickets,a.now());strip.appendChild(E('div',{class:'ticket-item',attrs:{title:R.ticketHelp}},[E('img',{class:'ticket-illustration',attrs:{src:'img/ticket.svg',alt:''}}),E('span',{class:'resource-label',text:R.answerTickets}),E('strong',{text:tk.count+'/'+FF.balance.TICKET_MAX})]));
   hud.appendChild(strip);
  };

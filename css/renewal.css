@@ -510,3 +510,7 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .resource-strip .heat-item img,.resource-strip .ticket-item img{max-height:26px;width:auto}
 @media(max-width:1180px){.resource-strip .heat-item,.resource-strip .gold-item,.resource-strip .ticket-item{height:30px;font-size:.75rem;line-height:1.1}.resource-strip .heat-item img,.resource-strip .ticket-item img{max-height:22px}}
 @media(max-width:400px){.resource-strip .ticket-item{font-size:.6875rem}.resource-strip .ticket-item .resource-label{letter-spacing:-.02em}}
+/* ゴールドの数字は、資材の数字と同じ大きさ・太さ（判断362） */
+.gold-item .gold-num{font:800 1.375rem/1 Nunito,var(--font);font-variant-numeric:tabular-nums}
+@media(max-width:1180px){.gold-item .gold-num{font-size:1.375rem}}
+@media(max-width:760px){.gold-item .gold-num{font-size:.9375rem}}
