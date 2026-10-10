@@ -117,7 +117,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     // ザコ敵が、1回出るまでの歩数（期待値）と、1戦のゴールド（野獣・オオカミは、東西で半々として平均。ドロップを含む）
     let alive = 1, steps = 0;
     for (let k = 1; k < 500; k++) { const p = k <= E.SAFE_STEPS ? 0 : Math.min(E.MAX, E.BASE + (k - E.SAFE_STEPS - 1) * E.GROWTH); steps += k * alive * p; alive *= 1 - p; }
-    assert.ok(steps > 8 && steps < 12);   // 約10歩に1戦
+    assert.ok(steps > 15 && steps < 21, String(steps));   // 約18歩に1戦（判断386で、出る率を約半分に）
     const perBattle = (AB.ENEMIES.cub.gold + (AB.ENEMIES.cub.gold + AB.ENEMIES.wolf.gold) / 2) / 2 + AB.DROP_RATE * AB.DROP_GOLD;
     const first = B.WEAPONS.stone_sword.price + B.ARMORS.fur_coat.price;
     assert.ok(Math.ceil(Math.max(0, first - AB.CHEST_GOLD) / perBattle) <= 6);   // 最初の宝箱と、数戦で、はじめの2つが買える
