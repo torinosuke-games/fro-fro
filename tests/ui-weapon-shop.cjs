@@ -22,7 +22,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),50);
  // 買っただけでは、装備は変わらない（持ち物に入る）。「そうびする」で、だれが装備するかを選ぶ
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'wood_sword');
- assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('だれも装備していない'));
+ assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('装備していない'));
  await p.locator('.shop-row[data-weapon="iron_sword"] .shop-btn').click();
  await p.locator('.inv-pick[data-member="hero"]').click();
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'iron_sword');

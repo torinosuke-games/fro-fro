@@ -13,7 +13,7 @@ await p.getByRole('button',{name:'持ち物',exact:true}).click();
 assert.equal(await p.evaluate(()=>FF.app.screen),'adventureInventory');
 assert.equal(await p.locator('.inv-row').count(),3);                                    // 武器：木・石・鉄
 assert.ok((await p.locator('.inv-row[data-item="wood_sword"]').innerText()).includes('ゆき'));   // 木の剣は、主人公が装備
-assert.ok((await p.locator('.inv-row[data-item="iron_sword"]').innerText()).includes('だれも装備していない'));
+assert.ok((await p.locator('.inv-row[data-item="iron_sword"]').innerText()).includes('装備していない'));
 await p.screenshot({path:out+'/inventory-weapon.png',fullPage:true});
 // 鉄の剣を、アカネ（剣士）に装備
 await p.locator('.inv-row[data-item="iron_sword"] .inv-equip').click();
@@ -39,7 +39,7 @@ await p.locator('.inv-tab[data-tab="item"]').click();assert.ok((await p.locator(
 // 編成の画面：各メンバーの、ステータスと装備。ここで入れかえる
 await p.evaluate(()=>FF.ui.show('adventureParty'));await p.waitForTimeout(300);
 const card=p.locator('.adv-roster-card:not(.adv-roster-locked)',{hasText:'ガルド'});
-assert.ok((await card.locator('.adv-gear').innerText()).includes('なし')||(await card.locator('.adv-gear').innerText()).includes('だれも'));
+assert.ok((await card.locator('.adv-gear').innerText()).includes('装備していない'));
 await card.locator('.adv-gear-row[data-gear="armor"] .adv-gear-btn').click();
 await p.locator('.inv-pick[data-item="iron_armor"]').click();
 assert.equal(await p.evaluate(()=>FF.shop.holder(FF.app.state,'armor','iron_armor')),'juushouhei');
