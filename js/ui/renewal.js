@@ -361,13 +361,6 @@
   var facilities=facilityGrid();
   if(scene&&scene.parentNode)scene.parentNode.insertBefore(facilities,(scene.nextSibling&&scene.nextSibling.nextSibling)||null);
   // 「学んで、熱を生む」などの3つの手順の表示は、なくした（判断338）
-  // 人口と、生産の増え方（判断355）
-  var pop=FF.buildings.population(FF.app.state),mult=FF.buildings.productionMultiplier(FF.app.state);
-  var popBar=E('button',{class:'population-bar',attrs:{type:'button','aria-label':U.plain(R.popLabel)+' '+pop.total+U.plain(R.popUnit)},on:{click:function(){U.modal({title:R.popLabel,body:E('div',{class:'pop-detail'},[E('p',{class:'pop-total'},[E('strong',{text:pop.total+' '}),E('span',{rich:R.popUnit})]),E('p',{rich:R.popDetail.replace('{housing}',pop.housing).replace('{rescued}',pop.rescued)})]),buttons:[{label:U.T('back'),class:'ghost'}]});}}},[
-   E('span',{class:'pop-label',rich:R.popLabel}),E('strong',{class:'pop-num',text:String(pop.total)}),E('span',{class:'pop-unit',rich:R.popUnit}),
-   E('span',{class:'pop-bonus'},[E('span',{rich:R.popBonus}),E('strong',{text:' +'+Math.round((mult-1)*100)+'%'})])
-  ]);
-  main.insertBefore(popBar,facilities);
   if(U.adventureEntry)main.insertBefore(U.adventureEntry(),facilities);
  };
  U.screens.study.render=renderStudy;
@@ -392,7 +385,7 @@
  FF.renewalHud=function(hud){
   var a=FF.app,s=a.state;hud.hidden=a.screen==='title';if(hud.hidden){lastValues={};hudSignature=null;return;}
   var recovered=FF.tickets.recoverTickets(s.tickets,a.now());
-  var signature=JSON.stringify([a.screen,a.session&&a.session.sel&&a.session.sel.resource,s.resources,s.studyPoints,recovered.count,FF.defs.RESOURCES.map(function(r){return FF.rewardFlight.display(r.id,s.resources[r.id]);}),FF.rewardFlight.display('heat',s.studyPoints)]);
+  var signature=JSON.stringify([a.screen,a.session&&a.session.sel&&a.session.sel.resource,s.resources,s.studyPoints,s.adventure&&s.adventure.gold,recovered.count,FF.defs.RESOURCES.map(function(r){return FF.rewardFlight.display(r.id,s.resources[r.id]);}),FF.rewardFlight.display('heat',s.studyPoints)]);
   if(signature===hudSignature)return;
   hudSignature=signature;
   U.clear(hud);hud.className='hud renewal-hud';
@@ -409,14 +402,16 @@
    strip.appendChild(E(selectable?'button':'div',{class:'resource-item'+(selectable?' resource-selectable':''),attrs:{type:selectable?'button':null,'data-resource':r.id,'aria-label':U.plain(r.name)+' '+U.fmt(s.resources[r.id])+(selectable?'・この資材を獲得する':''),'aria-pressed':selectable?(a.session.sel.resource===r.id?'true':'false'):null},on:selectable?{click:function(){setQuizResource(r.id);}}:{}},[U.resIcon(r),E('span',{class:'resource-label',text:U.plain(r.name)}),countSpan(r.id,s.resources[r.id])]));
   });
   strip.appendChild(E('div',{class:'heat-item',attrs:{'aria-label':R.heat+' '+s.studyPoints}},[E('img',{class:'heat-illustration',attrs:{src:'img/heat.svg',alt:''}}),E('span',{class:'resource-label',text:R.heat}),countSpan('heat',s.studyPoints),E('small',{text:'pt'})]));
+  var gold=FF.shop?FF.shop.gold(s):0;   // 所持ゴールド（冒険のゴールド。判断360）
+  strip.appendChild(E('div',{class:'gold-item',attrs:{'aria-label':R.gold+' '+gold,title:R.goldHelp}},[E('span',{class:'gold-ico',attrs:{'aria-hidden':'true'},text:'🪙'}),E('span',{class:'resource-label',rich:R.gold}),E('strong',{text:U.fmt(gold)}),E('small',{text:'G'})]));
   var tk=FF.tickets.recoverTickets(s.tickets,a.now());strip.appendChild(E('div',{class:'ticket-item',attrs:{title:R.ticketHelp}},[E('img',{class:'ticket-illustration',attrs:{src:'img/ticket.svg',alt:''}}),E('span',{class:'resource-label',text:R.answerTickets}),E('strong',{text:tk.count+'/'+FF.balance.TICKET_MAX})]));
   hud.appendChild(strip);
  };
  FF.renewalNav=function(nav){
-  var screen=FF.app.screen;nav.hidden=['title','quiz','lessonFilters','exam','diagnosis','battle','exploreQuiz'].indexOf(screen)>=0;
+  var screen=FF.app.screen,navScreen=screen==='adventureParty'?'party':screen==='adventureInventory'?'inventory':screen;nav.hidden=['title','quiz','lessonFilters','exam','diagnosis','battle','exploreQuiz'].indexOf(screen)>=0;
   U.clear(nav);
-  var options=[['base','img/art/housing.jpg',R.town],['study','img/art/subj-en.jpg',R.start],['explore','img/nav-compass.svg',R.explore],['redeem','img/ticket.svg',R.redeem],['settings','img/nav-settings.svg',R.settings]];
-  nav.appendChild(E('div',{class:'inner'},options.map(function(o){return E('button',{class:screen===o[0]?'active':'',attrs:{type:'button','aria-current':screen===o[0]?'page':null},on:{click:function(){if(o[0]==='redeem')U.openRedeem();else if(o[0]==='explore'&&!FF.exploration.isExploreOpen(FF.app.state))U.toast(U.T('explore.navLocked'));else U.show(o[0],o[0]==='study'?{tab:'learn'}:{});}}},[E('img',{class:'nav-illustration',attrs:{src:o[1],alt:''}}),E('span',{class:'nav-label',text:o[2]})]);})));
+  var options=[['base','img/art/housing.jpg',R.town],['study','img/art/subj-en.jpg',R.start],['explore','img/nav-compass.svg',R.explore],['party','img/nav-party.svg',R.partyNav],['inventory','img/nav-bag.svg',R.invNav],['settings','img/nav-settings.svg',R.settings]];
+  nav.appendChild(E('div',{class:'inner'},options.map(function(o){return E('button',{class:navScreen===o[0]?'active':'',attrs:{type:'button','aria-current':navScreen===o[0]?'page':null},on:{click:function(){if(o[0]==='party')U.show('adventureParty');else if(o[0]==='inventory')U.show('adventureInventory');else if(o[0]==='explore'&&!FF.exploration.isExploreOpen(FF.app.state))U.toast(U.T('explore.navLocked'));else U.show(o[0],o[0]==='study'?{tab:'learn'}:{});}}},[E('img',{class:'nav-illustration',attrs:{src:o[1],alt:''}}),E('span',{class:'nav-label',text:o[2]})]);})));
  };
 })(this);
 

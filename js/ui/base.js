@@ -400,6 +400,16 @@
     });
     var wrap = U.el('div', { class: 'town-list-wrap' }, [list]);
     closeTown = U.modal({ title: FF.texts.renewal.townName, body: wrap, buttons: [{ label: U.T('back'), class: 'ghost' }] });
+    // 人口と、生産の増え方：町の名前の右に出す（判断360）
+    var R2 = FF.texts.renewal, pop = B.population(s), mult = B.productionMultiplier(s);
+    var head = root.document.querySelector('.overlay .modal > h2');
+    if (head) {
+      head.classList.add('town-title-row');
+      head.appendChild(U.el('span', { class: 'town-pop', attrs: { title: FF.util.plainText(R2.popDetail.replace('{housing}', pop.housing).replace('{rescued}', pop.rescued)) } }, [
+        U.el('span', { class: 'pop-label', rich: R2.popLabel }), U.el('strong', { class: 'pop-num', text: String(pop.total) }), U.el('span', { class: 'pop-unit', rich: R2.popUnit }),
+        U.el('span', { class: 'pop-bonus' }, [U.el('span', { rich: R2.popBonus }), U.el('strong', { text: ' +' + Math.round((mult - 1) * 100) + '%' })])
+      ]));
+    }
   }
 
   function render(main) {
