@@ -95,7 +95,7 @@
       n.campUsed = false;
       n.steps = 0;
     } else n.campUsed = true;
-    n.battle = null; n.notice = 'rested';
+    n.battle = null; n.notice = where === 'camp' ? 'camp' : 'rested';
     return n;
   }
   // Entering the town screen and departing from it always uses that town's position.
@@ -139,7 +139,7 @@
     var enemy = enemyAt(n, n.pos);
     if (enemy) return encounter(n, enemy);
     if (same(n.pos, PLACES.chest) && !n.chest) { n.chest = true; n.gold += B.CHEST_GOLD; n.potions += B.CHEST_POTIONS; n.notice = 'chest'; }
-    if (same(n.pos, PLACES.camp) && !n.campUsed) n = rest(n, 'camp');
+    if (same(n.pos, PLACES.camp)) n = n.campUsed ? Object.assign(n, { notice: 'campUsed' }) : rest(n, 'camp');   // 焚き火は、旅ごとに1回（使ったあとは、知らせだけ）
     if (same(n.pos, PLACES.home)) n = rest(n, 'home');
     if (same(n.pos, PLACES.town)) { var first = !n.arrived; n.arrived = true; n = rest(n, 'town'); n.notice = first ? 'arrival' : 'rested'; }
     if (!n.notice) n = wild(n, rng);

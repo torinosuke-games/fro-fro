@@ -268,4 +268,15 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const dead = A.create(); dead.pos = { x: 2, y: 6 }; dead.steps = 99; dead.party.forEach(id => dead.roster[id].hp = 0);
     assert.equal(A.move(dead, 3, 6, () => 0).battle, null);
   });
+
+  test('焚き火：初めて着くと全回復して「camp」の知らせ。2回めからは、「campUsed」の知らせだけで、回復しない', () => {
+    let p = A.create(); p.pos = { x: 5, y: 3 }; p.roster.hero.hp = 1; p.roster.hero.mp = 0;
+    p = A.move(p, 6, 3);
+    assert.equal(p.notice, 'camp'); assert.equal(p.roster.hero.hp, A.stats('hero', 0).hp); assert.equal(p.roster.hero.mp, A.stats('hero', 0).mp); assert.equal(p.campUsed, true);
+    p = A.move(p, 5, 3); assert.equal(p.notice, '');
+    p.roster.hero.hp = 1; p = A.move(p, 6, 3);
+    assert.equal(p.notice, 'campUsed'); assert.equal(p.roster.hero.hp, 1);   // 旅ごとに1回
+    assert.ok(FF.texts.adventure.notices.camp && FF.texts.adventure.notices.campUsed);
+    assert.equal(A.rest(p, 'home').campUsed, false);   // 町で休むと、また使える
+  });
 };

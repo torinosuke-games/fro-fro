@@ -302,3 +302,11 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 .adv-dialog-header .adv-auto-stop{font-size:11px;padding:6px 8px}
 .adv-rpg-shell .adv-battle-stage .adv-auto-chip.adv-button{background:#f3d27a;color:#4a3410;border:1px solid #fff;opacity:1;font-size:11px;padding:3px 9px;min-height:26px;border-radius:13px;box-shadow:0 2px 6px #0004}
 .adv-quiz-dialog .adv-dialog-header .adv-auto-stop.adv-button{background:#f3d27a;color:#4a3410;border-color:#fff}
+
+/* フィールドの知らせ（焚き火で回復・宝箱など。判断379）：マップの上に、数秒だけ出る */
+.adv-field-banner{position:absolute;left:50%;top:56px;transform:translateX(-50%);z-index:8;width:min(86%,340px);box-sizing:border-box;padding:12px 16px;border-radius:14px;text-align:center;
+  background:#173b50ee;color:#fff;border:2px solid #f3d27a;box-shadow:0 6px 20px #0006;pointer-events:none;animation:adv-banner 4.8s ease both}
+.adv-field-banner strong{font-size:14px;line-height:1.6;font-weight:800}
+.adv-field-banner.camp{border-color:#ffb35c;background:#5a2d12ee}
+@keyframes adv-banner{0%{opacity:0;transform:translate(-50%,-10px)}8%,82%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-6px)}}
+@media(prefers-reduced-motion:reduce){.adv-field-banner{animation:none}}

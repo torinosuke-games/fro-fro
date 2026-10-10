@@ -18,8 +18,11 @@
     if (FF.app.screen === 'adventure' && p().battle && main.querySelector('.adv-rpg-shell')) renderBattle(main);
     else U.rerender();
   }
+  // 画面に出す「知らせ」（焚き火で回復・宝箱など）：フィールドの上に、数秒だけ出す。再描画のたびには、出さない
+  var pendingBanner = null;
   function change(next) {
     var before = p(); if (next === before) return;
+    if (!next.battle && next.notice && next.notice !== before.notice) pendingBanner = next.notice;
     impact = before.battle && before.battle.phase === 'explanation' && next.battle ? Math.max(0, before.battle.hp - next.battle.hp) : 0;
     if (before.battle && before.battle.phase === 'explanation' && next.battle) {
       sequence = {enemy:next.battle.enemy,turn:next.battle.turn,hp:before.battle.hp,events:next.battle.log.slice(),index:0};
@@ -277,7 +280,7 @@
         var cell = map.querySelector('[data-x="' + next.pos.x + '"][data-y="' + next.pos.y + '"]');
         if (cell) {cell.classList.add('current');cell.setAttribute('aria-current','location');}
         if (!next.battle && A.same(next.pos, A.PLACES.home)) { finish(); U.show('base'); return; }
-        if (next.battle || next.notice) { held = null; finish(); entering = !!next.battle; paint(); return; }
+        if (next.battle || next.notice) { held = null; if (next.notice && !next.battle) pendingBanner = next.notice; finish(); entering = !!next.battle; paint(); return; }
         root.document.querySelectorAll('.adv-settings,.adv-notice').forEach(function(node) {node.remove();});
         if (steps.length) step(); else finish();
       }
@@ -469,7 +472,14 @@
     side.appendChild(btn(T.returnTown, function () { if (p().lastTown === 'home') home(); else change(A.depart(p(), 'town')); }, 'quiet'));
     side.appendChild(text('small', '', T.goldHelp));
     layout.appendChild(side); main.appendChild(layout);
-    if (n.notice && T.notices[n.notice]) main.appendChild(text('p', 'adv-notice', T.notices[n.notice]));
+    var banner = pendingBanner; pendingBanner = null;
+    if (banner && banner !== 'arrival' && T.notices[banner]) {
+      var shell = main.querySelector('.adv-map-shell');
+      if (shell) {
+        var node = E('div', { class: 'adv-field-banner ' + banner, attrs: { role: 'status' } }, [text('strong', '', T.notices[banner])]);
+        shell.appendChild(node); root.setTimeout(function() { node.remove(); }, 4800);
+      } else main.appendChild(text('p', 'adv-notice', T.notices[banner]));
+    }
     if (A.atTown(n)) main.appendChild(settings());
     main.appendChild(text('p', 'adv-record', '冒険の学習記録：' + n.answered + '問 · 正解 ' + n.correct + '問（熱量・問題チケットとは別の記録）'));
   }
