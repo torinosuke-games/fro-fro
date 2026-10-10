@@ -181,7 +181,7 @@ fs.mkdirSync(out, { recursive: true });
     assert.ok(await page.getByText('灯りの集落に、到着！', { exact: true }).isVisible());
     await page.screenshot({ path: out + '/arrival-phone.png', fullPage: true });
     const result = await page.evaluate(() => ({ gold: FF.app.state.adventure.gold, answered: FF.app.state.adventure.answered, correct: FF.app.state.adventure.correct, town: FF.app.state.adventure.lastTown, levels: FF.app.state.adventure.party.map(id => FF.adventure.stats(id, FF.app.state.adventure.roster[id].xp).level) }));
-    assert.ok(result.gold >= 89);   // 野獣12G＋野獣12G＋大獣65G（ザコ敵は、ランダム。判断376）
+    assert.ok(result.gold >= 190);   // 野獣20G＋野獣20G＋大獣150G（ザコ敵は、ランダム。判断376）
      assert.ok(result.answered > 0); assert.equal(result.correct, result.answered - 1);
     for (const width of [360, 768, 1440]) { await page.setViewportSize({ width, height: 1000 }); await checkWidth(); }
     await page.screenshot({ path: out + '/arrival-desktop.png', fullPage: true });

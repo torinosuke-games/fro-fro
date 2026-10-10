@@ -318,13 +318,15 @@
   if(closeShop){closeShop();closeShop=null;}
   var s=a.state;
   var again=function(){openGearShop(kind);};
-  var list=E('div',{class:'shop-list'},(armor?FF.defs.ARMORS:FF.defs.WEAPONS).map(function(w){
-   var st=armor?SH.astats(w.id):SH.stats(w.id),owned=SH.owned(s,k).indexOf(w.id)>=0,can=SH.canBuyItem(s,k,w.id).ok,h=SH.holder(s,k,w.id);
-   var action;
-   if(owned)action=E('button',{class:'rn-button shop-btn',attrs:{type:'button'},rich:R.shopEquip,on:{click:function(){if(closeShop){closeShop();closeShop=null;}if(FF.ui.openAssign)FF.ui.openAssign(k,w.id);}}});
-   else action=E('button',{class:'rn-button primary shop-btn',attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuy,on:{click:function(){var r=SH.buyItem(a.state,k,w.id);if(r.ok){a.commit(r.state);U.toast(R.shopBought);again();}}}});
+  var list=E('div',{class:'shop-list'},(armor?FF.defs.ARMORS:FF.defs.WEAPONS).filter(function(w){return !SH.isStarter(k,w.id);}).map(function(w){   // 木の剣・ぬのの服は、店に並べない（能力は±0で、装備しても、しなくても同じ。判断382）
+   var st=armor?SH.astats(w.id):SH.stats(w.id),n=SH.copies(s,k,w.id),owned=n>0,can=SH.canBuyItem(s,k,w.id).ok,hs=SH.holders(s,k,w.id),h=hs[0];
+   var memberName=function(id){return id==='hero'?a.state.player.name:FF.texts.adventure.members[id].name;};
+   var buy=E('button',{class:'rn-button primary shop-btn shop-buy',attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuy,on:{click:function(){var r=SH.buyItem(a.state,k,w.id);if(r.ok){a.commit(r.state);U.toast(R.shopBought);again();}}}});
+   var action=buy;   // 装備は、持ち物・編成の画面で（店には、「買う」だけ）
    var power=armor?R.shopDefense.replace('{n}',st.defense):R.shopPower.replace('{n}',st.damage)+'／'+R.shopPowerBonus.replace('{n}',st.damage-SH.stats(FF.balance.DEFAULT_WEAPON).damage);
-   var status=owned?E('span',{class:'shop-owned',text:'持っている'+(h?'（装備：'+(h==='hero'?a.state.player.name:FF.texts.adventure.members[h].name)+'）':'（装備していない）')}):E('span',{class:'shop-price'},[st.price?U.fmt(st.price)+' G':E('span',{rich:R.shopFree})]);
+   var priceTag=st.price?U.fmt(st.price)+' G':null;
+   // 値段は、持っていても、同じ形で出す。持っているときは、持っている個数と装備している人を、そえる
+   var status=E('span',{class:'shop-price'},[st.price?U.fmt(st.price)+' G':E('span',{rich:R.shopFree}),owned?E('span',{class:'shop-owned',text:'　所持：'+n+'個'+(hs.length?'（装備：'+hs.map(memberName).join('・')+'）':'')}):null]);
    return E('div',{class:'shop-row'+(h?' is-equipped':'')+(owned||can?'':' is-short'),attrs:{'data-weapon':w.id}},[
     E('span',{class:'shop-icon',text:w.icon}),
     E('div',{class:'shop-info'},[E('strong',{class:'shop-name',rich:w.name}),E('span',{class:'shop-power',rich:power}),status]),

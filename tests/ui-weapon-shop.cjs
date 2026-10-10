@@ -9,9 +9,10 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.waitForTimeout(400);
  await p.locator('.facility-btn[data-facility="weapon"]').click();
  assert.equal(await p.locator('.overlay h2').innerText(),'武器屋');
- assert.equal(await p.locator('.shop-row').count(),5);
- // はじめは、木の剣を装備中。ほかは、ゴールドが足りなくて買えない
- assert.ok((await p.locator('.shop-row[data-weapon="wood_sword"]').innerText()).includes('装備：ゆき'));
+ assert.equal(await p.locator('.shop-row').count(),4);   // 木の剣は、店に並べない（能力は±0。判断382）
+ assert.equal(await p.locator('.shop-row[data-weapon="wood_sword"]').count(),0);
+ // 値段が出る。ゴールドが足りなくて買えない
+ assert.ok((await p.locator('.shop-row[data-weapon="stone_sword"]').innerText()).includes('G'));
  assert.equal(await p.locator('.shop-row[data-weapon="stone_sword"] .shop-btn').isDisabled(),true);
  await p.locator('.overlay .btn').click();
  // ゴールドを足すと、買える。買うと、ゴールドが減り、装備中になる
@@ -22,21 +23,37 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),150);
  // 買っただけでは、装備は変わらない（持ち物に入る）。「そうびする」で、だれが装備するかを選ぶ
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'wood_sword');
- assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('装備していない'));
- await p.locator('.shop-row[data-weapon="iron_sword"] .shop-btn').click();
+ assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('所持：1個'));
+ assert.equal(await p.locator('.shop-equip').count(),0);   // 店には、「買う」だけ
+ await p.locator('.overlay .btn').click();
+ await p.evaluate(()=>FF.ui.openAssign('weapon','iron_sword'));
  await p.locator('.inv-pick[data-member="hero"]').click();
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'iron_sword');
  assert.equal(await p.evaluate(()=>FF.shop.damagePerCorrect(FF.app.state)),15);
+ // 同じ武器を、もう1本買える（判断381）：持っている2本めは、ほかの仲間にも付けられる
+ await p.evaluate(()=>FF.app.commit(FF.shop.addGold(FF.app.state,200)));
+ await p.locator('.facility-btn[data-facility="weapon"]').click();
+ assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('所持：1個'));
+ assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('200 G'));   // 持っていても、値段が出る
+ await p.locator('.shop-row[data-weapon="iron_sword"] .shop-buy').click();
+ assert.equal(await p.evaluate(()=>FF.shop.copies(FF.app.state,'weapon','iron_sword')),2);
+ assert.ok((await p.locator('.shop-row[data-weapon="iron_sword"]').innerText()).includes('所持：2個'));
+ await p.locator('.overlay .btn').click();
+ await p.evaluate(()=>FF.app.commit(FF.shop.equip(FF.app.state,'kenshi','weapon','iron_sword').state));
+ assert.deepEqual(await p.evaluate(()=>FF.shop.holders(FF.app.state,'weapon','iron_sword')),['hero','kenshi']);
+ await p.evaluate(()=>FF.app.commit(FF.shop.unequip(FF.app.state,'kenshi','weapon').state));
+ await p.locator('.facility-btn[data-facility="weapon"]').click();
+ await p.locator('.overlay .btn').click();
  await p.evaluate(()=>FF.app.commit(FF.shop.equip(FF.app.state,'hero','weapon','wood_sword').state));
  assert.equal(await p.evaluate(()=>FF.shop.damagePerCorrect(FF.app.state)),10);
  await p.locator('.facility-btn[data-facility="weapon"]').click();
- // 防具屋：5つ。ゴールドで買うと装備中になる
+ // 防具屋：4つ。ゴールドで買う
  await p.locator('.overlay .btn').click();
  await p.evaluate(()=>FF.app.commit(FF.shop.addGold(FF.app.state,150)));
  await p.locator('.facility-btn[data-facility="armor"]').click();
  assert.equal(await p.locator('.overlay h2').innerText(),'防具屋');
- assert.equal(await p.locator('.shop-row').count(),5);
- assert.ok((await p.locator('.shop-row[data-weapon="cloth_clothes"]').innerText()).includes('装備：ゆき'));
+ assert.equal(await p.locator('.shop-row').count(),4);
+ assert.equal(await p.locator('.shop-row[data-weapon="cloth_clothes"]').count(),0);
  await p.locator('.shop-row[data-weapon="fur_coat"] .shop-btn').click();
  assert.ok(await p.evaluate(()=>FF.shop.owns&&FF.shop.ownsArmor(FF.app.state,'fur_coat')));
  assert.equal(await p.evaluate(()=>FF.shop.currentWeapon(FF.app.state)),'wood_sword');
@@ -44,5 +61,5 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  // 画面におさまる
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  for(const w of [360,768]){await p.setViewportSize({width:w,height:844});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
- assert.deepEqual(errors,[]);await b.close();console.log('PASS: weapon shop lists 5 weapons, buy/equip, gold, damage');
+ assert.deepEqual(errors,[]);await b.close();console.log('PASS: weapon shop lists 4 weapons, buy/equip, gold, damage');
 })().catch(e=>{console.error(e);process.exit(1);});

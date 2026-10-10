@@ -112,13 +112,20 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.ok(!/\d/.test(FF.texts.adventure.lockedSolved + FF.texts.adventure.lockedChests));
   });
 
-  test('値段のバランス（判断366）：はじめの一周のゴールドで最初の武器と防具が買え、最後の品物は何周も遊ぶ先にある', () => {
-    const AB = B.ADVENTURE, firstRun = AB.CHEST_GOLD + AB.ENEMIES.cub.gold + AB.ENEMIES.wolf.gold + AB.ENEMIES.boss.gold;
-    assert.ok(firstRun >= B.WEAPONS.stone_sword.price + B.ARMORS.fur_coat.price);   // 最初の宝箱とボスで、はじめの2つが買える
-    const loop = AB.ENEMIES.cub.gold + AB.ENEMIES.wolf.gold + AB.DROP_RATE * AB.DROP_GOLD * 2;   // 2回めからの1周（ボス・宝箱はなし）
+  test('ゴールドのバランス（判断380）：最初の装備は数戦で買え、すべてそろえるのは、数百戦の先', () => {
+    const AB = B.ADVENTURE, E = AB.ENCOUNTER;
+    // ザコ敵が、1回出るまでの歩数（期待値）と、1戦のゴールド（野獣・オオカミは、東西で半々として平均。ドロップを含む）
+    let alive = 1, steps = 0;
+    for (let k = 1; k < 500; k++) { const p = k <= E.SAFE_STEPS ? 0 : Math.min(E.MAX, E.BASE + (k - E.SAFE_STEPS - 1) * E.GROWTH); steps += k * alive * p; alive *= 1 - p; }
+    assert.ok(steps > 8 && steps < 12);   // 約10歩に1戦
+    const perBattle = (AB.ENEMIES.cub.gold + (AB.ENEMIES.cub.gold + AB.ENEMIES.wolf.gold) / 2) / 2 + AB.DROP_RATE * AB.DROP_GOLD;
+    const first = B.WEAPONS.stone_sword.price + B.ARMORS.fur_coat.price;
+    assert.ok(Math.ceil(Math.max(0, first - AB.CHEST_GOLD) / perBattle) <= 6);   // 最初の宝箱と、数戦で、はじめの2つが買える
     const all = Object.values(B.WEAPONS).concat(Object.values(B.ARMORS)).reduce((a, x) => a + x.price, 0);
     const books = Object.values(B.RESEARCH.BOOKS).reduce((a, x) => a + x.costs.reduce((p, c) => p + c, 0), 0);
-    assert.ok((all + books) / loop > 60 && (all + books) / loop < 250);   // すべてそろえるまでに、60〜250周
+    const battles = (all + books) / perBattle;
+    assert.ok(battles > 150 && battles < 400, String(battles));   // すべてそろえるまでに、150〜400戦
+    assert.ok(AB.ENEMIES.boss.gold >= B.WEAPONS.iron_sword.price * 0.5);   // 大獣を初めて倒すと、次の品物にも手が届く
     Object.values(B.RESEARCH.BOOKS).forEach(bk => bk.costs.forEach((c, k) => { if (k) assert.ok(c > bk.costs[k - 1]); }));
   });
 };

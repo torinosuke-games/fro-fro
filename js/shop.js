@@ -1,5 +1,5 @@
 // 武器屋・防具屋・持ち物（判断340・343・359）：純粋関数のみ。ゴールドで武器・防具を買い、仲間ひとりひとりに装備する。
-// 武器・防具は、1つずつ（同じ品物は1つだけ）。誰かが装備している品物を、ほかの人が装備するには、いまの持ち主から外す（画面で確認する）。
+// 武器・防具は、同じ品物を、何個でも買える（判断381。上限は MAX_COPIES）。1個につき、1人が装備する。持っている個数ぶんの人が、同じ品物を装備できる。あまりがなければ、いまの持ち主から外す（画面で確認する）。
 // 装備の効き方：探索の戦闘は、主人公の装備だけ（正解1問のダメージ・まちがえたときのダメージ）。冒険のクイズ戦闘は、全員の装備が、それぞれの攻撃力・防御力に足される。
 // 木の剣・ぬのの服は、はじめから持っていて、主人公が装備している（値段 0）。ゴールドは、冒険のゴールド（state.adventure.gold）を使う（判断342）。
 (function (root) {
@@ -23,38 +23,52 @@
   }
 
   // 装備の整合：{ owned, ownedArmor, equipped: { 仲間: { weapon, armor } } }。同じ品物を2人が装備していたら、先の人だけ
+  var MAX_COPIES = 10;   // 同じ品物を持てる上限（仲間は、主人公を入れて10人）
   function eq(state, b) {
     var e = state && state.equipment || {}, d = bal(b).DEFAULT_WEAPON, da = bal(b).DEFAULT_ARMOR;
-    var owned = (Array.isArray(e.owned) ? e.owned : []).filter(function (x, i, a) { return stats(x, b) && a.indexOf(x) === i; });
-    if (owned.indexOf(d) < 0) owned.unshift(d);
-    var ownedArmor = (Array.isArray(e.ownedArmor) ? e.ownedArmor : []).filter(function (x, i, a) { return astats(x, b) && a.indexOf(x) === i; });
-    if (ownedArmor.indexOf(da) < 0) ownedArmor.unshift(da);
+    function clean(list, ok, first) {
+      var out = (Array.isArray(list) ? list : []).filter(ok);
+      var counts = {};
+      out = out.filter(function (x) { counts[x] = (counts[x] || 0) + 1; return counts[x] <= MAX_COPIES; });   // 同じ品物は、複数持てる
+      if (out.indexOf(first) < 0) out.unshift(first);
+      return out;
+    }
+    var owned = clean(e.owned, function (x) { return !!stats(x, b); }, d);
+    var ownedArmor = clean(e.ownedArmor, function (x) { return !!astats(x, b); }, da);
     var raw = e.equipped && typeof e.equipped === 'object' ? e.equipped : null;
     if (!raw) raw = { hero: { weapon: owned.indexOf(e.weapon) >= 0 ? e.weapon : d, armor: ownedArmor.indexOf(e.armor) >= 0 ? e.armor : da } };   // 前の版：装備は主人公の1つだけ
     if (!raw.hero) raw.hero = { weapon: d, armor: da };               // はじめは、主人公が木の剣・ぬのの服
-    var used = { weapon: {}, armor: {} }, equipped = {};
+    function count(list) { var c = {}; list.forEach(function (x) { c[x] = (c[x] || 0) + 1; }); return c; }
+    var have = { weapon: count(owned), armor: count(ownedArmor) }, used = { weapon: {}, armor: {} }, equipped = {};
     members().forEach(function (id) {
       var r = raw[id] || {}, w = r.weapon, a = r.armor;
-      if (!(w && owned.indexOf(w) >= 0 && !used.weapon[w])) w = null;
-      if (!(a && ownedArmor.indexOf(a) >= 0 && !used.armor[a])) a = null;
-      if (w) used.weapon[w] = true;
-      if (a) used.armor[a] = true;
+      if (!(w && have.weapon[w] && (used.weapon[w] || 0) < have.weapon[w])) w = null;   // 持っている個数までの人が、装備できる
+      if (!(a && have.armor[a] && (used.armor[a] || 0) < have.armor[a])) a = null;
+      if (w) used.weapon[w] = (used.weapon[w] || 0) + 1;
+      if (a) used.armor[a] = (used.armor[a] || 0) + 1;
       if (w || a || id === 'hero') equipped[id] = { weapon: w, armor: a };   // 何も装備していない仲間は、書かない
     });
     return { owned: owned, ownedArmor: ownedArmor, equipped: equipped };
   }
+  // はじめから持っている木の剣・ぬのの服（能力は±0。装備なしと、同じ）。画面には出さない（判断382）
+  function isStarter(kind, id, b) { return id === (kind === 'armor' ? bal(b).DEFAULT_ARMOR : bal(b).DEFAULT_WEAPON); }
+  // 持っている個数
+  function copies(state, kind, id, b) { var e = eq(state, b); return (kind === 'armor' ? e.ownedArmor : e.owned).filter(function (x) { return x === id; }).length; }
   function owns(state, id, b) { return eq(state, b).owned.indexOf(id) >= 0; }
   function ownsArmor(state, id, b) { return eq(state, b).ownedArmor.indexOf(id) >= 0; }
-  function owned(state, kind, b) { var e = eq(state, b); return kind === 'armor' ? e.ownedArmor : e.owned; }
+  // 持っている品物の種類（同じ品物は、1つにまとめる。個数は copies）
+  function owned(state, kind, b) { var e = eq(state, b); return (kind === 'armor' ? e.ownedArmor : e.owned).filter(function (x, i, a) { return a.indexOf(x) === i; }); }
 
   // ---- 装備 ----
   function equippedOf(state, memberId, b) { return eq(state, b).equipped[memberId] || { weapon: null, armor: null }; }
   // その品物を、いま装備している人（いなければ null）
-  function holder(state, kind, itemId, b) {
-    var e = eq(state, b).equipped, found = null;
-    members().forEach(function (id) { if (!found && e[id] && e[id][kind] === itemId) found = id; });
-    return found;
+  function holders(state, kind, itemId, b) {
+    var e = eq(state, b).equipped;
+    return members().filter(function (id) { return e[id] && e[id][kind] === itemId; });
   }
+  function holder(state, kind, itemId, b) { return holders(state, kind, itemId, b)[0] || null; }
+  // 装備していない、あまりの個数
+  function freeCopies(state, kind, itemId, b) { return copies(state, kind, itemId, b) - holders(state, kind, itemId, b).length; }
   // 装備する。ほかの人が装備中なら、force が true のときだけ、その人から外して付ける。{ ok, state, reason: 'unknown'|'notOwned'|'inUse'|'noMember', holder }
   function equip(state, memberId, kind, itemId, opts, b) {
     if (kind !== 'weapon' && kind !== 'armor') return { ok: false, state: state, reason: 'unknown' };
@@ -62,8 +76,9 @@
     if (members().indexOf(memberId) < 0) return { ok: false, state: state, reason: 'noMember' };
     var e = eq(state, b);
     if ((kind === 'armor' ? e.ownedArmor : e.owned).indexOf(itemId) < 0) return { ok: false, state: state, reason: 'notOwned' };
-    var h = holder(state, kind, itemId, b);
-    if (h === memberId) return { ok: true, state: state, holder: h };
+    var all = holders(state, kind, itemId, b);
+    if (all.indexOf(memberId) >= 0) return { ok: true, state: state, holder: memberId };
+    var h = all.length >= copies(state, kind, itemId, b) ? all[all.length - 1] : null;   // あまりがなければ、いちばん最後の人から、もらう
     if (h && !(opts && opts.force)) return { ok: false, state: state, reason: 'inUse', holder: h };
     var s = FF.util.clone(state);
     if (h) e.equipped[h][kind] = null;
@@ -114,7 +129,7 @@
   function canBuyItem(state, kind, id, b) {
     var st = kindStats(kind, id, b);
     if (!st) return { ok: false, reason: 'unknown' };
-    if (owned(state, kind, b).indexOf(id) >= 0) return { ok: false, reason: 'owned' };
+    if (copies(state, kind, id, b) >= MAX_COPIES) return { ok: false, reason: 'max' };
     if (gold(state) < st.price) return { ok: false, reason: 'gold' };
     return { ok: true };
   }
@@ -150,7 +165,7 @@
     equippedOf: equippedOf, holder: holder, equip: equip, unequip: unequip,
     weaponBonus: weaponBonus, armorDefense: armorDefense, gearMap: gearMap,
     currentWeapon: currentWeapon, currentArmor: currentArmor, damagePerCorrect: damagePerCorrect, damageTaken: damageTaken,
-    canBuyItem: canBuyItem, buyItem: buyItem, canBuy: canBuy, buy: buy, canBuyArmor: canBuyArmor, buyArmor: buyArmor,
+    isStarter: isStarter, copies: copies, holders: holders, freeCopies: freeCopies, MAX_COPIES: MAX_COPIES, canBuyItem: canBuyItem, buyItem: buyItem, canBuy: canBuy, buy: buy, canBuyArmor: canBuyArmor, buyArmor: buyArmor,
     addGold: addGold, normalizeShop: normalizeShop
   };
 })(this);
