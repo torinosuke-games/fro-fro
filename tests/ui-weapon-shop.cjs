@@ -37,7 +37,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.locator('.overlay .btn').click();
  await p.evaluate(()=>FF.app.commit(FF.shop.equip(FF.app.state,'kenshi','weapon','iron_sword').state));
  assert.deepEqual(await p.evaluate(()=>FF.shop.holders(FF.app.state,'weapon','iron_sword')),['hero','kenshi']);
- await p.evaluate(()=>FF.app.commit(FF.shop.equip(FF.app.state,'kenshi','weapon','wood_sword').state));
+ await p.evaluate(()=>FF.app.commit(FF.shop.unequip(FF.app.state,'kenshi','weapon').state));
  await p.locator('.facility-btn[data-facility="weapon"]').click();
  await p.locator('.overlay .btn').click();
  await p.evaluate(()=>FF.app.commit(FF.shop.equip(FF.app.state,'hero','weapon','wood_sword').state));
