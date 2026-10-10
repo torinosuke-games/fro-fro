@@ -71,7 +71,7 @@
     return 'img/adventure/travelers/' + sheet + '.webp';
   }
   // ななめ向きの絵（<シート>-d.webp。2×2：左前・右前・左後ろ・右後ろ）があるシート。届いたぶんだけ足す（判断372）。ないシートは、前後の絵をかたむけて見せる
-  var DIAG_SHEETS = ['e1'];
+  var DIAG_SHEETS = ['e1','e2','e3','e4','e5','e6','e7','e8','e9','e10','e11','e12','j4','j6'];   // 14種類すべて（判断373）
   function sheetOf(avatar) {
     if (FF.defs.AVATARS.indexOf(avatar) < 0) avatar = 'e1';
     var junior = ['e4','e7','e2','j4','e1','j6','e8','e9','e6','e5','e12','e3'];
@@ -113,5 +113,5 @@
       if (image.decode) image.decode().catch(function(){});
     });
   }
-  FF.adventureScene={background:'img/adventure/snow-world.webp',world:world,traveler:traveler,travelerDiag:travelerDiag,enemy:enemy,chest:chest,preload:preload,tile:S};
+  FF.adventureScene={background:'img/adventure/snow-world.webp',world:world,traveler:traveler,travelerDiag:travelerDiag,diagSheets:DIAG_SHEETS,enemy:enemy,chest:chest,preload:preload,tile:S};
 })(this);

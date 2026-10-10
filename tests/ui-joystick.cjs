@@ -47,4 +47,8 @@ await setup(1,1);c=await center();
 await p.mouse.move(c.x,c.y);await p.mouse.down();await p.mouse.move(c.x-c.R*.8,c.y-c.R*.8,{steps:3});await p.waitForTimeout(700);await p.mouse.up();
 assert.deepEqual(await pos(),{x:1,y:1},'wall blocks');
 assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+// ななめ向きの絵：14種類のシートすべてが、1254×1254で読める。画面の24人すべてに、ななめの絵がある
+const sheets=await p.evaluate(async()=>{const urls=[...new Set(FF.defs.AVATARS.map(a=>FF.adventureScene.travelerDiag(a)))];
+ const out=[];for(const u of urls){if(!u){out.push(null);continue;}const i=new Image();i.src=u;await i.decode();out.push([i.naturalWidth,i.naturalHeight]);}return out;});
+assert.equal(sheets.length,14);assert.ok(sheets.every(x=>x&&x[0]===1254&&x[1]===1254),JSON.stringify(sheets));
 assert.deepEqual(errors,[]);console.log('PASS: 8-way hold-to-walk pad');await b.close();})().catch(e=>{console.error(e);process.exit(1)});
