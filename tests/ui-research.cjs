@@ -24,7 +24,7 @@ await p.locator('.facility-btn[data-facility="magic"]').click();
 assert.equal(await p.locator('.shop-row[data-book]').count(),3);
 await p.locator('.shop-row[data-book="heal"] .shop-btn').click();
 assert.equal(await p.evaluate(()=>FF.research.level(FF.app.state,'heal')),1);
-assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),700);
+assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),880);
 await p.screenshot({path:out+'/lab.png'});
 assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
 assert.deepEqual(errors,[]);console.log('PASS: librarian joins at 10000 heat, lab develops magic books with gold');await b.close();})().catch(e=>{console.error(e);process.exit(1)});

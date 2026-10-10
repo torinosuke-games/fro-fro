@@ -111,4 +111,14 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(R.joinKind('senshi'), null);
     assert.ok(!/\d/.test(FF.texts.adventure.lockedSolved + FF.texts.adventure.lockedChests));
   });
+
+  test('値段のバランス（判断366）：はじめの一周のゴールドで最初の武器と防具が買え、最後の品物は何周も遊ぶ先にある', () => {
+    const AB = B.ADVENTURE, firstRun = AB.CHEST_GOLD + AB.ENEMIES.cub.gold + AB.ENEMIES.wolf.gold + AB.ENEMIES.boss.gold;
+    assert.ok(firstRun >= B.WEAPONS.stone_sword.price + B.ARMORS.fur_coat.price);   // 最初の宝箱とボスで、はじめの2つが買える
+    const loop = AB.ENEMIES.cub.gold + AB.ENEMIES.wolf.gold + AB.DROP_RATE * AB.DROP_GOLD * 2;   // 2回めからの1周（ボス・宝箱はなし）
+    const all = Object.values(B.WEAPONS).concat(Object.values(B.ARMORS)).reduce((a, x) => a + x.price, 0);
+    const books = Object.values(B.RESEARCH.BOOKS).reduce((a, x) => a + x.costs.reduce((p, c) => p + c, 0), 0);
+    assert.ok((all + books) / loop > 60 && (all + books) / loop < 250);   // すべてそろえるまでに、60〜250周
+    Object.values(B.RESEARCH.BOOKS).forEach(bk => bk.costs.forEach((c, k) => { if (k) assert.ok(c > bk.costs[k - 1]); }));
+  });
 };
