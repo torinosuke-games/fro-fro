@@ -42,10 +42,12 @@
     $('enemyState').textContent=state.enemyHp===0?'峠に、静けさが戻った':state.enemyHp<state.enemyMax*.3?'あと少し。落ち着いて進もう。':'峠を守る、氷のけもの';
     $('enemyFigure').classList.toggle('defeated',state.enemyHp===0);
     $('party').innerHTML=state.party.map(m=>{const d=definitions[m.id],select=state.phase==='commands'&&state.actor===m.id;
-      return `<button class="member ${m.hp?'':'dead'}" data-actor="${m.id}" aria-pressed="${select}" aria-label="${d.name}、HP ${m.hp}/${d.hp}、MP ${m.mp}/${d.mp}、${orderLabel(m.id)}" ${state.phase!=='commands'||!m.hp?'disabled':''}>
+      const hpState=m.hp===0?'down':m.hp/d.hp<=.25?'critical':m.hp/d.hp<=.5?'caution':'normal';
+      const hpNotice=hpState==='critical'?'、HPがとても少ない':hpState==='caution'?'、HPが少ない':hpState==='down'?'、戦闘不能':'';
+      return `<button class="member ${m.hp?'':'dead'}" data-actor="${m.id}" data-hp-state="${hpState}" aria-pressed="${select}" aria-label="${d.name}${hpNotice}、HP ${m.hp}/${d.hp}、MP ${m.mp}/${d.mp}、${orderLabel(m.id)}" ${state.phase!=='commands'||!m.hp?'disabled':''}>
         <span class="member-top"><span class="portrait"><img src="assets/${m.id}.webp" alt=""></span><span class="member-name">${d.name}<span class="member-role">${d.role}</span></span></span>
         <span class="vitals"><span>HP <b>${m.hp}</b>/${d.hp}</span><span class="mp">MP ${m.mp}</span></span>
-        <span class="meter ${m.hp/d.hp<.3?'low':''}"><i style="width:${m.hp/d.hp*100}%"></i></span>
+        <span class="meter"><i style="width:${m.hp/d.hp*100}%"></i></span>
         <span class="order-label"><span class="order-dot">${m.hp?'◆':'−'}</span>${orderLabel(m.id)}</span></button>`;
     }).join('');
     for(const m of state.party){const el=document.querySelector(`[data-fighter="${m.id}"]`);el.classList.toggle('selected',state.phase==='commands'&&state.actor===m.id);el.classList.toggle('down',!m.hp);}

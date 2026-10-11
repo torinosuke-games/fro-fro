@@ -2,7 +2,7 @@
   "scope": "codex-prototypes/snow-battle/ only",
   "baseCommit": "41ca94854d104d9262db674116fcf4f6be4eceed",
   "runtimeImageBytes": 417400,
-  "runtimeCodeBytes": 68144,
+  "runtimeCodeBytes": 68883,
   "automatedChecksPassed": 117,
   "layoutChecksPassed": 104,
   "questionLayoutChecksPassed": 60,
@@ -13,24 +13,24 @@
       "sha256": "4d6f79ca7e5f7252633179fef4d057441726e5c8c8b7345b936a5983e80b6ad4"
     },
     "style.css": {
-      "bytes": 30255,
-      "sha256": "8ede0532960c6f272fdb3df33d83a881b79814b277e492db1981ac629985984d"
+      "bytes": 30735,
+      "sha256": "b3b93d688768cb98958dce3f0c60ee5fb2dc5e38fc8b27cefd6ecda00ff47163"
     },
     "data.js": {
       "bytes": 5021,
       "sha256": "b500ffdabd1194284da7251d807808976edf54ea443a1df4958aee9c7d24fc9b"
     },
     "battle.js": {
-      "bytes": 29591,
-      "sha256": "3f801997ed2b36061b7c34634cd29fa20f4297a6355dff13b1c742be907b7707"
+      "bytes": 29850,
+      "sha256": "2b0e34b97c0d2a17e08cd9ee5441466a99787161f18e1160febffdc9e4216fbc"
     },
     "review.html": {
       "bytes": 3634,
       "sha256": "7fc79d63787e42c7eacec8f144a00165cf04d7fd2fc82b7e52395b9f6433849d"
     },
     "README.md": {
-      "bytes": 6177,
-      "sha256": "6d113003473693352e323f2b28ff868381683eea70068fa70fd236a531832588"
+      "bytes": 6354,
+      "sha256": "fdf2d7cc4c6461e40d1459797b090f3a556c5762d709c88ec95c2d50cd0f1e35"
     },
     "REVIEW.md": {
       "bytes": 5567,
