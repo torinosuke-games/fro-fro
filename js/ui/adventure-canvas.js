@@ -167,9 +167,9 @@
     for (var y = -FM; y < rows + FM; y++) for (var x = -FM; x < cols + FM; x++) {
       var inside = y >= 0 && y < rows && x >= 0 && x < cols;
       if (inside) { if (MAP[y].charAt(x) === '#') wall(x, y, x === 8 && y > 0 && y < rows - 1); }
-      else {   // 地図の外：遠いほど、木をまびく（林のはしが、そろって切れて見えない）
-        var out = Math.max(x < 0 ? -x : x - cols + 1, y < 0 ? -y : y - rows + 1), keep = out <= 6 ? 1 : Math.max(0, 1 - (out - 6) / 4.5);
-        if (r() < keep) { wall(x, y, false); if (r() < .3) tree(x + (r() - .5) * .6, y + .25, 90); }
+      else {   // 地図の外：ふちのすぐ外だけ木をつづけ、そこから先は、ぽつぽつと（雪原が見える）
+        var out = Math.max(x < 0 ? -x : x - cols + 1, y < 0 ? -y : y - rows + 1), keep = out <= 1 ? .85 : out <= 3 ? .3 : out <= 6 ? .1 : .03;
+        if (r() < keep) { if (r() < .12) rock(x + (r() - .5) * .5, y + .12, 70 + r() * 40); else tree(x + (r() - .5) * .7, y + (r() - .5) * .5, 98); }
       }
     }
     var h = PLACES.home, tn = PLACES.town, ch = PLACES.chest;
