@@ -34,7 +34,15 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.locator('.adv-hd-toggle').click();assert.equal(await p.locator('.adv-tilt').count(),0);assert.ok(await p.locator('.adv-tile').count()>0);                                                  // 平面
  await p.locator('.adv-hd-toggle').click();assert.equal(await p.locator('.adv-canvas').count(),1);                                                // Canvas に戻る
  // 全体マップ（見下ろし）にもできる
- await p.getByRole('button',{name:'全体マップ'}).click();assert.equal(await p.locator('.adv-canvas').count(),0);
+ await p.getByRole('button',{name:'全体マップ'}).click();assert.equal(await p.locator('.adv-canvas').count(),1);assert.equal(await p.locator('.is-overview').count(),1);
+ // 全体マップでも、タップで歩ける（地図ぜんたいが入る大きさ）
+ await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.adventure.pos={x:2,y:6};FF.app.state=s;FF.ui.show('adventure');});
+ await p.getByRole('button',{name:'全体マップ'}).count();
+ await p.waitForTimeout(500);
+ const t=await p.evaluate(()=>{const c=FF.ui.fieldCanvas.current(),r=c.canvas.getBoundingClientRect(),q=c.project(5,6);return {x:r.left+q.x,y:r.top+q.y,w:r.width,left:r.left,inOverview:!!document.querySelector('.is-overview')};});
+ assert.ok(t.inOverview);assert.ok(t.x>t.left&&t.x<t.left+t.w,'全体マップに、地図ぜんたいが入る');
+ await p.mouse.click(t.x,t.y);await p.waitForTimeout(2000);
+ assert.equal(await p.evaluate(()=>FF.app.state.adventure.pos.x),5);
  for(const w of [360,768]){await p.setViewportSize({width:w,height:844});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
  assert.deepEqual(errors,[]);await b.close();console.log('PASS: canvas field draws, walks via buttons/tap/pad, toggles quality and mode');
 })().catch(e=>{console.error(e);process.exit(1);});

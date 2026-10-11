@@ -5,11 +5,10 @@
   'use strict';
   var FF = root.FF = root.FF || {}; FF.ui = FF.ui || {};
   var doc = root.document;
-  var T = 112, Y = .64, GW = 13 * T + 120, GH = 9 * T * Y + 130;     // 1マスの幅（描画用の座標）、たての縮み、地面の絵の大きさ
+  var T = 112, Y = .64, OX = 60, OY = 50, CLIFF = 70;     // 1マスの幅（描画用の座標）、たての縮み、地面の絵の余白（海べりのふくらみ）・崖の高さ
   var DIR = 'img/adventure/canvas/';
   // 近景アトラスの切り出し（2048 幅の座標。実際の絵は 1280 幅なので、拡大率で換算する）
   var CROP = { tree: [0, 0, 485, 684], cabin: [514, 142, 620, 495], rock: [1170, 244, 490, 427], lantern: [1744, 170, 280, 503] };
-  var OUTLINE = [[28, 95], [98, 35], [300, 30], [370, 49], [650, 24], [920, 42], [1310, 35], [1400, 110], [1402, 515], [1360, 658], [1090, 690], [1020, 673], [700, 700], [610, 680], [170, 689], [62, 647], [35, 464]];
   // 以前の地面の絵（img/adventure/snow-world.webp）から切り出した、雪の起伏・枯れ草・岩（座標は、その絵の中。判断387）。ふちをぼかして、雪の地面に重ねる
   var STAMPS = {
     mound: [[690, 190, 140, 100], [510, 260, 100, 70], [190, 200, 110, 80], [200, 495, 120, 90], [590, 590, 120, 100], [680, 500, 130, 90], [290, 375, 100, 70]],
@@ -18,7 +17,7 @@
   };
   var QUALITY = { low: 1, std: 1.5, high: 2 };
 
-  var imgs = null, loading = null, baked = null, current = null;
+  var imgs = null, loading = null, baked = null, current = null, groundCache = {};
 
   function mk(w, h) { var c = doc.createElement('canvas'); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h)); return c; }
   function rng(seed) { var s = seed >>> 0; return function () { s = (s + 0x6D2B79F5) >>> 0; var t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
@@ -37,6 +36,16 @@
       imgs = o; baked = bake(o); return o;
     });
     return loading;
+  }
+  // 水面のさざ波と流氷（つなぎ目のない小さな絵。カメラにあわせて動かして、地面と同じ速さで流れる）
+  var waterTile = null;
+  function water() {
+    if (waterTile) return waterTile;
+    var c = mk(256, 128), x = c.getContext('2d'), q = rng(55);
+    function at(fn) { for (var ox = -256; ox <= 256; ox += 256) for (var oy = -128; oy <= 128; oy += 128) { x.save(); x.translate(ox, oy); fn(); x.restore(); } }
+    for (var i = 0; i < 16; i++) { var px = q() * 256, py = q() * 128, len = 18 + q() * 40, light = i % 3 > 0; at(function () { x.strokeStyle = light ? 'rgba(255,255,255,.4)' : 'rgba(35,95,135,.16)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(px, py); x.quadraticCurveTo(px + len / 2, py - 2.5, px + len, py); x.stroke(); }); }
+    for (i = 0; i < 4; i++) { var fx = q() * 256, fy = q() * 128, fr = 9 + q() * 12; at(function () { x.fillStyle = 'rgba(40,100,140,.2)'; x.beginPath(); x.ellipse(fx + 3, fy + 3, fr, fr * .42, 0, 0, Math.PI * 2); x.fill(); x.fillStyle = 'rgba(244,250,252,.92)'; x.beginPath(); x.ellipse(fx, fy, fr, fr * .4, 0, 0, Math.PI * 2); x.fill(); }); }
+    return (waterTile = c);
   }
   var sheets = {};
   function sheet(url) {
@@ -61,7 +70,6 @@
     tones.forEach(function (t) { out.trees.push([tinted(o.atlas, 'tree', t, false), tinted(o.atlas, 'tree', t, true)]); });
     ['rgba(40,70,110,.2)', null, 'rgba(255,230,180,.16)'].forEach(function (t) { out.rocks.push([tinted(o.atlas, 'rock', t, false), tinted(o.atlas, 'rock', t, true)]); });
     out.cabin = tinted(o.atlas, 'cabin', null, false); out.lantern = tinted(o.atlas, 'lantern', null, false);
-    out.ground = bakeGround(o, out);
     return out;
   }
   // 切り出して、ふちをなめらかに透明にした小さな絵（雪の地面に重ねても、四角いふちが見えない）
@@ -79,16 +87,49 @@
     });
     return out;
   }
-  function bakeGround(o, parts) {
-    var g = mk(GW, GH), c = g.getContext('2d'), r = rng(941);
-    var rock = parts.rocks[1][0];
-    poly(c, OUTLINE.map(function (p) { return [p[0], p[1] + 36]; }), 'rgba(75,116,133,.5)');
-    poly(c, OUTLINE.map(function (p) { return [p[0], p[1] + 25]; }), '#96b9c5');
-    for (var x = 42; x < 1370; x += 64) c.drawImage(rock, 0, 0, rock.width, rock.height, x - 38, 644 + Math.sin(x * .012) * 10 - 24, 125, 92);
-    for (var y = 90; y < 635; y += 62) c.drawImage(rock, 0, 0, rock.width, rock.height, 4, y, 100, 96);
-    var snow = c.createLinearGradient(0, 0, 1000, 740); snow.addColorStop(0, '#ffffff'); snow.addColorStop(.55, '#f1f7f5'); snow.addColorStop(1, '#dcebef');
-    poly(c, OUTLINE, snow);
-    c.save(); c.beginPath(); OUTLINE.forEach(function (p, i) { if (i) c.lineTo(p[0], p[1]); else c.moveTo(p[0], p[1]); }); c.closePath(); c.clip();
+  // 地図から、陸のマス（'~' の海でないマス）の形を作る。四角いマスの和に、海に面した辺と角へ、ふくらみ（だ円）を足して、海べりを自然な形にする
+  function dims(MAP) { var cols = MAP[0].length, rows = MAP.length; return { cols: cols, rows: rows, GW: cols * T + 2 * OX, GH: Math.round(rows * T * Y) + 2 * OY + CLIFF }; }
+  function isLand(MAP, x, y) { var row = MAP[y]; return !!row && x >= 0 && x < row.length && row.charAt(x) !== '~'; }
+  function landPath(c, MAP, dy, rim) {
+    var rnd = rng(1234), H = T * Y;
+    c.beginPath();
+    function blob(cx, cy, rx) { c.moveTo(cx + rx, cy + dy); c.ellipse(cx, cy + dy, rx, rx * Y, 0, 0, Math.PI * 2); }
+    for (var y = 0; y < MAP.length; y++) for (var x = 0; x < MAP[y].length; x++) {
+      if (!isLand(MAP, x, y)) continue;
+      var cx = (x + .5) * T + OX, cy = (y + .5) * H + OY;
+      c.rect(cx - T / 2 - 1, cy - H / 2 - 1 + dy, T + 2, H + 2);
+      var W = isLand(MAP, x - 1, y), E = isLand(MAP, x + 1, y), N = isLand(MAP, x, y - 1), S = isLand(MAP, x, y + 1);
+      [[W, -1, 0], [E, 1, 0], [N, 0, -1], [S, 0, 1]].forEach(function (d) {
+        if (d[0]) return;
+        for (var k = -1; k <= 1; k++) {
+          var bx = cx + (d[1] ? d[1] * T / 2 : k * T * .3), by = cy + (d[2] ? d[2] * H / 2 : k * H * .3), out = rnd() * .2, rx = T * (.2 + rnd() * .18);
+          bx += d[1] * T * out; by += d[2] * H * out; blob(bx, by, rx);
+          if (rim && dy === 0) rim.push([bx, by, d[1], d[2]]);
+        }
+      });
+      [[W, N, -1, -1], [E, N, 1, -1], [W, S, -1, 1], [E, S, 1, 1]].forEach(function (d) { if (!d[0] && !d[1]) blob(cx + d[2] * T / 2, cy + d[3] * H / 2, T * (.28 + rnd() * .1)); });   // とがった角を、まるくする
+    }
+  }
+  function groundFor(o, parts, MAP) {
+    var key = MAP.join('/');
+    if (!groundCache[key]) groundCache[key] = bakeGround(o, parts, MAP);
+    return groundCache[key];
+  }
+  function bakeGround(o, parts, MAP) {
+    var D = dims(MAP), GW = D.GW, GH = D.GH, g = mk(GW, GH), c = g.getContext('2d'), r = rng(941), rim = [], k0 = GW * GH / (13 * T * 9 * T * Y);
+    landPath(c, MAP, 0, rim);   // rim を作る
+    // 崖：陸の形を、下へずらして重ねる。海べりの岩を並べる
+    landPath(c, MAP, 38); c.fillStyle = 'rgba(75,116,133,.55)'; c.fill();
+    landPath(c, MAP, 24); c.fillStyle = '#96b9c5'; c.fill();
+    var rock = parts.rocks[1][0], rr = rng(77);
+    rim.forEach(function (p) {
+      if (p[3] < 0) return;   // 奥（北）の海べりは、崖が見えない
+      var big = p[3] > 0, w = big ? 110 + rr() * 26 : 86 + rr() * 20, h = w * rock.height / rock.width;
+      c.save(); if (rr() < .5) { c.translate(p[0] * 2, 0); c.scale(-1, 1); } c.drawImage(rock, 0, 0, rock.width, rock.height, p[0] - w / 2 + (p[2] ? p[2] * 6 : 0), p[1] + 14 - h * .55, w, h); c.restore();
+    });
+    var snow = c.createLinearGradient(0, 0, GW * .7, GH); snow.addColorStop(0, '#ffffff'); snow.addColorStop(.55, '#f1f7f5'); snow.addColorStop(1, '#dcebef');
+    landPath(c, MAP, 0); c.fillStyle = snow; c.fill();
+    c.save(); landPath(c, MAP, 0); c.clip();
     // 雪の質感：大きさと向きを変えた3枚を、うすく重ねる（1枚を引き伸ばすと、同じ模様が目立つ）
     function tex(alpha, flip, fx, fy, fw) {   // 雪の絵の一部（fx,fy,fw は 0〜1 の割合）を、地面いっぱいに引きのばす（タイルにしない。つなぎ目が出ない）
       var w = o.snow.width * fw, h = o.snow.height * fw;
@@ -98,32 +139,32 @@
     tex(.5, false, 0, .1, .9); tex(.3, true, .15, 0, .8); tex(.22, false, .05, .25, .65);
     // ゆるやかな色むら：青い窪みと、日の当たる明るいところ
     var blot = [['#ffffff', .4], ['#9cc3d6', .1], ['#fff0c4', .2], ['#7aa8bf', .08], ['#ffffff', .3]];
-    for (var i = 0; i < 90; i++) {
+    for (var i = 0; i < 90 * k0; i++) {
       var bx = r() * GW, by = r() * GH, br = 70 + r() * 260, bc = blot[i % blot.length], gr = c.createRadialGradient(bx, by, 0, bx, by, br);
       gr.addColorStop(0, bc[0] + ('0' + Math.round(bc[1] * 255).toString(16)).slice(-2)); gr.addColorStop(1, bc[0] + '00'); c.fillStyle = gr; c.fillRect(bx - br, by - br, br * 2, br * 2);
     }
     // 海べりは、青く沈む
-    c.lineJoin = 'round'; c.strokeStyle = 'rgba(80,130,160,.16)'; c.lineWidth = 70; c.beginPath(); OUTLINE.forEach(function (p, i) { if (i) c.lineTo(p[0], p[1]); else c.moveTo(p[0], p[1]); }); c.closePath(); c.stroke();
+    rim.forEach(function (p) { var gr = c.createRadialGradient(p[0], p[1], 0, p[0], p[1], 90); gr.addColorStop(0, 'rgba(80,130,160,.18)'); gr.addColorStop(1, 'rgba(80,130,160,0)'); c.fillStyle = gr; c.fillRect(p[0] - 90, p[1] - 90, 180, 180); });
     // 雪の起伏・枯れ草・小さな岩：以前の地面の絵から切り出して、ふちをぼかして置く（大きさ・向き・位置はばらばら）
     var st = stamps(o.world);
     function put(list, n, sx, sy, scaleLo, scaleHi, alpha) {
       for (var q = 0; q < n; q++) {
         var s0 = list[(r() * list.length) | 0], sc = scaleLo + r() * (scaleHi - scaleLo), w = s0.width * sc * sx, h = s0.height * sc * sy;
-        c.save(); c.globalAlpha = alpha; c.translate(50 + r() * (GW - 100), 50 + r() * (GH - 120)); if (r() < .5) c.scale(-1, 1);
+        c.save(); c.globalAlpha = alpha; c.translate(OX + r() * (GW - 2 * OX), OY + r() * (GH - 2 * OY - CLIFF)); if (r() < .5) c.scale(-1, 1);
         c.drawImage(s0, -w / 2, -h / 2, w, h); c.restore();
       }
     }
-    put(st.mound, 42, .97, .64, .85, 1.5, .92);
-    put(st.shrub, 56, .9, .8, .8, 1.25, .98);
-    put(st.rock, 22, .9, .8, .8, 1.3, .98);
-    for (i = 0; i < 16000; i++) { c.fillStyle = i % 3 ? 'rgba(255,255,255,.4)' : 'rgba(112,157,173,.11)'; c.fillRect(r() * GW, r() * GH, r() * 2 + 1, 1); }
+    put(st.mound, Math.round(42 * k0), .97, .64, .85, 1.5, .92);
+    put(st.shrub, Math.round(56 * k0), .9, .8, .8, 1.25, .98);
+    put(st.rock, Math.round(22 * k0), .9, .8, .8, 1.3, .98);
+    for (i = 0; i < 16000 * k0; i++) { c.fillStyle = i % 3 ? 'rgba(255,255,255,.4)' : 'rgba(112,157,173,.11)'; c.fillRect(r() * GW, r() * GH, r() * 2 + 1, 1); }
     // きらめき（雪の結晶）
-    for (i = 0; i < 260; i++) {
+    for (i = 0; i < 260 * k0; i++) {
       var qx = r() * GW, qy = r() * GH; c.fillStyle = 'rgba(255,255,255,.95)'; c.fillRect(qx, qy, 2, 2);
       if (i % 5 === 0) { c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 1; c.beginPath(); c.moveTo(qx - 5, qy + 1); c.lineTo(qx + 7, qy + 1); c.moveTo(qx + 1, qy - 5); c.lineTo(qx + 1, qy + 7); c.stroke(); }
     }
     c.restore();
-    return g;
+    return { canvas: g, GW: GW, GH: GH };
   }
 
   // ---- 立った絵（木・家・岩・灯り）の置き場所。地図から作る ----
@@ -138,12 +179,12 @@
     MAP.forEach(function (row, y) {
       for (var x = 0; x < row.length; x++) {
         if (row[x] !== '#') continue;
-        if (x === 8 && y > 0 && y < 8) { rock(x, y + .08, 150 + r() * 24); if (y !== 5 && y !== 7) rock(x + .05, y - .35, 108); continue; }
+        if (x === 8 && y > 0 && y < MAP.length - 1) { rock(x, y + .08, 150 + r() * 24); if (y !== 5 && y !== 7) rock(x + .05, y - .35, 108); continue; }
         var roll = r(), jx = (r() - .5) * .62, jy = (r() - .5) * .4;
         if (roll < .1) { for (var k = 0; k < 3; k++) tree(x + (k - 1) * .3 + jx * .3, y + .1 + (k % 2) * .16, 100, 'young'); }       // 若木の群れ
         else if (roll < .16) { rock(x + jx, y + .12, 70 + r() * 36); tree(x + .1, y - .1, 96, 'young'); }                              // 岩のそばの木
         else { tree(x + jx, y + jy, 108); if (r() < .38) tree(x + (r() < .5 ? -.32 : .32), y - .28 + r() * .1, 82, 'young'); }       // 大きな木に、小さい木をそえる
-        if (y === 0 || y === 8) tree(x + .4, y + .19, 96);
+        if (!isLand(MAP, x - 1, y) || !isLand(MAP, x + 1, y) || !isLand(MAP, x, y - 1) || !isLand(MAP, x, y + 1)) tree(x + .4, y + .19, 96);   // 海べりの木は、すきまなく
       }
     });
     var h = PLACES.home, tn = PLACES.town, ch = PLACES.chest;
@@ -167,28 +208,36 @@
     var width = 0, height = 0, ratio = 1, zoom = 1, back = null, dead = false, pending = 0, ro = null;
     var hero = { x: opts.hero.x, y: opts.hero.y, face: 0, diag: false, walking: false, stamp: 0 };
     var cam = { x: hero.x, y: hero.y - .3 }, quality = opts.quality || 'std';
-    var avatarSheet = opts.sheet, diagSheet = opts.diagSheet;
+    var avatarSheet = opts.sheet, diagSheet = opts.diagSheet, ground = null, cols = MAP[0].length, rows = MAP.length;
 
-    function project(x, y) { return { x: width * .5 + (x - cam.x) * T * zoom, y: height * .55 + (y - cam.y) * T * Y * zoom }; }
-    function unproject(px, py) { return { x: cam.x + (px - width * .5) / (T * zoom), y: cam.y + (py - height * .55) / (T * Y * zoom) }; }
+    var overview = !!opts.overview, cy0 = overview ? .5 : .55;   // 全体マップ：地図ぜんたいが入る大きさで、動かさない
+    function project(x, y) { return { x: width * .5 + (x - cam.x) * T * zoom, y: height * cy0 + (y - cam.y) * T * Y * zoom }; }
+    function unproject(px, py) { return { x: cam.x + (px - width * .5) / (T * zoom), y: cam.y + (py - height * cy0) / (T * Y * zoom) }; }
     function followHero() {
+      if (overview) { cam.x = (cols - 1) / 2; cam.y = (rows - 1) / 2; return; }
       var margin = Math.min(4.9, Math.max(1.6, width / (T * zoom) * .3));
-      cam.x = Math.max(margin, Math.min(12 - margin, hero.x));
-      var maxY = 8.55 - (height * .45 - 150) / (T * Y * zoom);   // 地面の下の端が、画面の下に近づきすぎない（下の空きは、移動パッドのうしろに隠れる）
+      cam.x = Math.max(margin, Math.min(cols - 1 - margin, hero.x));
+      var maxY = rows - .45 - (height * .45 - 150) / (T * Y * zoom);   // 地面の下の端が、画面の下に近づきすぎない（下の空きは、移動パッドのうしろに隠れる）
       cam.y = Math.min(hero.y - .3, maxY);
     }
+    function horizon() { return Math.round(height * .34); }
     function bakeBack() {
       back = mk(width * ratio, height * ratio); var b = back.getContext('2d'); b.setTransform(ratio, 0, 0, ratio, 0, 0);
+      var h0 = horizon();
       b.fillStyle = '#bcd6e4'; b.fillRect(0, 0, width, height);
+      // 遠景：雪山。いちばん下は、もやにとけて、水平線になる
       var d = imgs && imgs.distance;
-      if (d) { var s = Math.max(width / d.width, height / d.height), dw = d.width * s, dh = d.height * s; b.drawImage(d, (width - dw) * .5, (height - dh) * .23, dw, dh); }
-      var g = b.createLinearGradient(0, height * .22, 0, height); g.addColorStop(0, 'rgba(212,229,236,0)'); g.addColorStop(.3, 'rgba(179,208,222,.6)'); g.addColorStop(.62, '#91bccc'); g.addColorStop(1, '#bad5de');
-      b.fillStyle = g; b.fillRect(0, height * .22, width, height * .78);
+      if (d) { var s = Math.max(width / d.width, h0 * 1.3 / d.height), dw = d.width * s, dh = d.height * s; b.drawImage(d, (width - dw) * .5, Math.min(0, h0 - dh * .72), dw, dh); }
+      var hz = b.createLinearGradient(0, h0 * .62, 0, h0); hz.addColorStop(0, 'rgba(207,227,234,0)'); hz.addColorStop(1, '#cfe3ea'); b.fillStyle = hz; b.fillRect(0, h0 * .62, width, h0 * .38 + 1);
+      // 水面：水平線のあたりは、もやで白く、手前ほど深い青
+      var w = b.createLinearGradient(0, h0, 0, height); w.addColorStop(0, '#cfe3ea'); w.addColorStop(.12, '#98c6d6'); w.addColorStop(.55, '#6aa5be'); w.addColorStop(1, '#4f8aa6');
+      b.fillStyle = w; b.fillRect(0, h0, width, height - h0);
     }
     function resize() {
       var w = host.clientWidth, h = host.clientHeight; if (!w || !h) return;
       width = w; height = h; ratio = Math.min(root.devicePixelRatio || 1, QUALITY[quality] || 1.5);
       zoom = width < 600 ? .78 : Math.min(1.22, width / 1000); if (height < 500) zoom = Math.min(zoom, .8);
+      if (overview) zoom = Math.min((width - 12) / (cols * T), (height * .8) / (rows * T * Y), 1.2);
       canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
       bakeBack(); followHero(); draw();
     }
@@ -233,6 +282,7 @@
     }
     function drawHero() {
       var p = project(hero.x, hero.y), s = 72 * zoom, bob = hero.walking && !opts.reduced ? Math.sin(root.performance.now() / 1000 * 22) * 1.8 : 0;
+      if (overview) { ctx.fillStyle = 'rgba(224,181,104,.55)'; ctx.beginPath(); ctx.arc(p.x, p.y - 8, 15, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#d09233'; ctx.lineWidth = 2.5; ctx.stroke(); }
       shadow(p, 43 * zoom * 1.2, .22);
       ctx.strokeStyle = '#e0b568'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(p.x, p.y + 1, 20 * zoom, 7 * zoom, 0, 0, Math.PI * 2); ctx.stroke();
       var img = (hero.diag && sheet(diagSheet)) || sheet(avatarSheet); if (!img) return;
@@ -242,11 +292,15 @@
     }
 
     function draw() {
-      if (dead || !width || !baked) return;
+      if (dead || !width || !baked || !ground) return;
       var st = opts.state(), hp = project(hero.x, hero.y);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0); ctx.clearRect(0, 0, width, height);
       ctx.drawImage(back, 0, 0, width, height);
-      var p0 = project(-.5, -.5); ctx.drawImage(baked.ground, p0.x - 28 * zoom, p0.y - 20 * zoom, GW * zoom, GH * zoom);
+      var wt = water(), wz = Math.max(zoom, .75), tw = 256 * wz, th = 128 * wz, h0 = horizon(), ox = overview ? 0 : -((cam.x * T * zoom * .9) % tw), oy = overview ? 0 : -((cam.y * T * Y * zoom) % th);
+      ctx.save(); ctx.beginPath(); ctx.rect(0, h0, width, height - h0); ctx.clip(); ctx.globalAlpha = .9;
+      for (var wy = h0 + oy - th; wy < height; wy += th) for (var wx = ox - tw; wx < width; wx += tw) ctx.drawImage(wt, wx, wy, tw, th);
+      ctx.restore();
+      var p0 = project(-.5, -.5); ctx.drawImage(ground.canvas, p0.x - OX * zoom, p0.y - OY * zoom, ground.GW * zoom, ground.GH * zoom);
       // 動くもの・状態で変わるもの：主人公・焚き火・宝箱・ボス。足元の y 順に、立てた絵の間へ入れる
       var dyn = [{ y: hero.y, f: drawHero }, { y: PLACES.camp.y - .25, f: function () { drawProp(1, PLACES.camp.x + .65, PLACES.camp.y - .25, 66); } }];
       if (st && !st.chest) dyn.push({ y: PLACES.chest.y - .3, f: function () { drawProp(0, PLACES.chest.x, PLACES.chest.y - .3, 45); } });
@@ -289,10 +343,10 @@
     };
     current = api;
     if (root.ResizeObserver) { ro = new root.ResizeObserver(function () { if (!canvas.isConnected) { api.destroy(); return; } resize(); }); ro.observe(host); } else root.addEventListener('resize', resize);
-    ensureImages().then(function () { if (!dead) { bakeBack(); resize(); } });
+    ensureImages().then(function () { if (!dead) { ground = groundFor(imgs, baked, MAP); bakeBack(); resize(); } });
     resize();
     return api;
   }
 
-  FF.ui.fieldCanvas = { create: create, QUALITY: QUALITY };
+  FF.ui.fieldCanvas = { create: create, QUALITY: QUALITY, current: function () { return current; } };
 })(this);

@@ -270,7 +270,7 @@
       traveler.setAttribute('data-diag', diagArt ? '1' : '0');
       traveler.setAttribute('data-lean', pos.via && !diagArt ? (pos.x > old.pos.x ? '1' : '-1') : '0');   // ななめの絵がないときだけ、進む側へかたむけて見せる
       var sx = old.pos.x * 72 + 36, sy = old.pos.y * 72 + 40, ex = next.pos.x * 72 + 36, ey = next.pos.y * 72 + 40;
-      var scale = map.clientWidth / 936, cx = viewport.scrollLeft, cy = viewport.scrollTop;
+      var scale = map.clientWidth / (A.MAP[0].length * 72), cx = viewport.scrollLeft, cy = viewport.scrollTop;
       var tx = Math.max(0, Math.min(viewport.scrollWidth - viewport.clientWidth, ex * scale - viewport.clientWidth / 2));
       var ty = Math.max(0, Math.min(viewport.scrollHeight - viewport.clientHeight, ey * scale - viewport.clientHeight / 2));
       var last = null, elapsed = 0, duration = root.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : cvNow ? (held ? 280 : 360) * Math.hypot(next.pos.x - old.pos.x, next.pos.y - old.pos.y) : (held ? 210 : 300);   // Canvas は、少しゆっくり（斜めは、距離のぶん長く）
@@ -280,7 +280,7 @@
         last = time;
         var fraction = duration ? Math.min(1, elapsed / duration) : 1;
         if (cvNow) cv.setHero(old.pos.x + (next.pos.x - old.pos.x) * fraction, old.pos.y + (next.pos.y - old.pos.y) * fraction);
-        else if (!hdNow) { traveler.style.left = (sx + (ex - sx) * fraction) / 936 * 100 + '%'; traveler.style.top = (sy + (ey - sy) * fraction) / 648 * 100 + '%'; }
+        else if (!hdNow) { traveler.style.left = (sx + (ex - sx) * fraction) / (A.MAP[0].length * 72) * 100 + '%'; traveler.style.top = (sy + (ey - sy) * fraction) / (A.MAP.length * 72) * 100 + '%'; }
         if (cvNow) { /* 上で描いた */ }
         else if (hdNow) {
           hdPlace(map, sx + (ex - sx) * fraction, sy + (ey - sy) * fraction);
@@ -307,7 +307,7 @@
   var fieldMode = null, treeUrls = null, cv = null, cvQuality = 'std';
   function mode() { if (!fieldMode) fieldMode = root.FF_FIELD_MODE || (FF.config && FF.config.ADVENTURE_FIELD) || (FF.config && FF.config.ADVENTURE_HD2D === false ? 'flat' : 'css'); return fieldMode; }
   function isHd() { return mode() === 'css' && !overview; }
-  function isCv() { return mode() === 'canvas' && !overview && !!FF.ui.fieldCanvas; }
+  function isCv() { return mode() === 'canvas' && !!FF.ui.fieldCanvas; }
   function treeSprites() {
     if (treeUrls) return treeUrls;
     treeUrls = [0, 1, 2].map(function (v) {
@@ -332,8 +332,9 @@
     var list = [], out = [];
     A.MAP.forEach(function (row, y) { row.split('').forEach(function (t, x) { if (t === '#') list.push([x, y]); }); });
     // 外側の海べりの、もう1列。木の列が、そのまま続いて見える
-    for (var x = -1; x <= 13; x++) { list.push([x, -1]); list.push([x, 9]); }
-    for (var y = 0; y < 9; y++) { list.push([-1, y]); list.push([13, y]); }
+    var cols = A.MAP[0].length, rows = A.MAP.length;
+    for (var x = -1; x <= cols; x++) { list.push([x, -1]); list.push([x, rows]); }
+    for (var y = 0; y < rows; y++) { list.push([-1, y]); list.push([cols, y]); }
     list.sort(function (a, b) { return a[1] - b[1] || a[0] - b[0]; }).forEach(function (c) {
       var big = .85 + hash(c[0] + 3, c[1] + 5) * .35;
       out.push({ key: c[0] + ',' + c[1], x: (c[0] + .5) * 72 + (hash(c[0], c[1]) - .5) * 26, y: (c[1] + .85) * 72 + (hash(c[1], c[0] + 7) - .5) * 18, w: 86 * big, v: Math.floor(hash(c[0], c[1] + 11) * 3) });
@@ -360,6 +361,7 @@
   }
   function mapView() {
     var n = p(), map = E('div', { class: 'adv-map', attrs: { role: 'group', 'aria-label': T.map } });
+    map.style.setProperty('--cols', A.MAP[0].length); map.style.setProperty('--rows', A.MAP.length);
     map.appendChild(E('img', { class: 'adv-world-art', attrs: { src: scene.background, alt: '', draggable: 'false' }, on: { error: function(event) { event.target.src = scene.world(); } } }));
     A.MAP.forEach(function (row, y) {
       row.split('').forEach(function (tile, x) {
@@ -372,7 +374,7 @@
         map.appendChild(cell);
       });
     });
-    map.appendChild(E('span', { class: 'adv-traveler leader', style: { backgroundImage: 'url("' + scene.traveler(FF.app.state.player.avatar) + '")', backgroundPosition: ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[n.facing], left: (n.pos.x * 72 + 36) / 936 * 100 + '%', top: (n.pos.y * 72 + 40) / 648 * 100 + '%' }, attrs: { role: 'img', 'aria-label': C.current, 'data-sprite': scene.traveler(FF.app.state.player.avatar), 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }, [E('span', { class: 'adv-lean', attrs: { 'aria-hidden': 'true' } }, ['body','leg-left','leg-right'].map(function(part) {return E('span',{class:'adv-walk-part adv-walk-' + part,attrs:{'aria-hidden':'true'}});}))]));
+    map.appendChild(E('span', { class: 'adv-traveler leader', style: { backgroundImage: 'url("' + scene.traveler(FF.app.state.player.avatar) + '")', backgroundPosition: ({down:'left top',up:'right top',left:'left bottom',right:'right bottom'})[n.facing], left: (n.pos.x * 72 + 36) / (A.MAP[0].length * 72) * 100 + '%', top: (n.pos.y * 72 + 40) / (A.MAP.length * 72) * 100 + '%' }, attrs: { role: 'img', 'aria-label': C.current, 'data-sprite': scene.traveler(FF.app.state.player.avatar), 'data-avatar': FF.app.state.player.avatar || 'e1', 'data-facing': n.facing, draggable: 'false' } }, [E('span', { class: 'adv-lean', attrs: { 'aria-hidden': 'true' } }, ['body','leg-left','leg-right'].map(function(part) {return E('span',{class:'adv-walk-part adv-walk-' + part,attrs:{'aria-hidden':'true'}});}))]));
     if (isHd()) {
       var hx = n.pos.x * 72 + 36, hy = n.pos.y * 72 + 40, shadow = E('span', { class: 'adv-shadow adv-traveler-shadow', attrs: { 'aria-hidden': 'true' } });
       map.appendChild(shadow);
@@ -400,7 +402,7 @@
     var n = p(), host = E('div', { class: 'adv-map-viewport adv-cv' }), places = ['home', 'camp', 'chest', 'town'];
     var labels = { home: T.home, camp: T.camp, town: T.town };
     var reduced = root.matchMedia && root.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    cv = FF.ui.fieldCanvas.create(host, { map: A.MAP, places: A.PLACES, boss: A.ENEMIES.boss, hero: n.pos, quality: cvQuality, reduced: reduced, labels: labels, sheet: scene.traveler(FF.app.state.player.avatar), diagSheet: scene.travelerDiag(FF.app.state.player.avatar),
+    cv = FF.ui.fieldCanvas.create(host, { map: A.MAP, places: A.PLACES, boss: A.ENEMIES.boss, hero: n.pos, overview: overview, quality: cvQuality, reduced: reduced, labels: labels, sheet: scene.traveler(FF.app.state.player.avatar), diagSheet: scene.travelerDiag(FF.app.state.player.avatar),
       state: p, onTap: function (cell) { walk(cell); } });
     cv.face(n.facing, null);
     var list = E('div', { class: 'adv-cv-places', attrs: { role: 'group', 'aria-label': T.map } }, places.map(function (k) {
@@ -414,7 +416,7 @@
     if (cv) { cv.destroy(); cv = null; }
     if (isCv()) {
       var cvHost = canvasViewport();
-      return E('div', { class: 'adv-map-shell is-cv' }, [cvHost, E('div', { class: 'adv-compass', text: 'N ↑', attrs: { 'aria-hidden': true } }), fieldBar(), directions()]);
+      return E('div', { class: 'adv-map-shell is-cv' + (overview ? ' is-overview' : '') }, [cvHost, E('div', { class: 'adv-compass', text: 'N ↑', attrs: { 'aria-hidden': true } }), fieldBar(), directions()]);
     }
     var flat = !isHd(), world = mapView();
     var viewport = E('div', { class: 'adv-map-viewport' + (overview ? ' overview' : '') + (flat ? '' : ' hd2d') }, flat ? world : E('div', { class: 'adv-tilt' }, world));
