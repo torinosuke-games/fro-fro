@@ -191,7 +191,7 @@
     host.appendChild(canvas);
     var objects = buildObjects(MAP, PLACES), A = null;   // A：読み込んだ絵
     var width = 0, height = 0, ratio = 1, zoom = 1, back = null, dead = false, queued = 0, ro = null;
-    var hero = { x: opts.hero.x, y: opts.hero.y, face: 0, diag: false, walking: false, stamp: 0 };
+    var hero = { x: opts.hero.x, y: opts.hero.y, face: 0, diag: false, walking: false, dist: 0 };   // dist：歩いた道のり（マス）。歩くしぐさの位相
     var cam = { x: hero.x, y: hero.y - .3 }, quality = opts.quality || 'std';
     var avatarSheet = opts.sheet, diagSheet = opts.diagSheet, cols = MAP[0].length, rows = MAP.length;
 
@@ -265,14 +265,17 @@
       ctx.font = '700 11px sans-serif'; ctx.fillStyle = '#c8873a'; ctx.textAlign = 'center'; ctx.fillText('★★★', p.x, p.y - h - 2); ctx.textAlign = 'start';
     }
     function drawHero() {
-      var p = project(hero.x, hero.y), s = 72 * zoom, bob = hero.walking && !opts.reduced ? Math.sin(root.performance.now() / 1000 * 22) * 1.8 : 0;
+      var p = project(hero.x, hero.y), s = 72 * zoom;
+      // 歩くしぐさ：絵は、立ち姿の1枚ずつなので、1マスに2歩ぶん、はずんで、体をかたむける（歩いた道のりで決まるので、足を止めるとぴたりと止まる）
+      var ph = hero.walking && !opts.reduced && !overview ? hero.dist * Math.PI * 2 : 0, hop = Math.abs(Math.sin(ph)), tilt = Math.sin(ph);
       if (overview) { ctx.fillStyle = 'rgba(224,181,104,.55)'; ctx.beginPath(); ctx.arc(p.x, p.y - 8, 15, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#d09233'; ctx.lineWidth = 2.5; ctx.stroke(); }
-      shadow(p, 43 * zoom * 1.2, .22);
+      shadow(p, 43 * zoom * 1.2 * (1 - .18 * hop), .22 - .06 * hop);
       ctx.strokeStyle = '#e0b568'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(p.x, p.y + 1, 20 * zoom, 7 * zoom, 0, 0, Math.PI * 2); ctx.stroke();
       var img = (hero.diag && sheet(diagSheet)) || sheet(avatarSheet); if (!img) return;
       var diag = hero.diag && img === sheets[diagSheet], q = img.width / 2, face = hero.face;
       if (hero.diag && !diag) face = ({ 0: 0, 1: 0, 2: 3, 3: 3 })[face];   // ななめの絵がないときは、前向き・左右の絵
-      ctx.drawImage(img, (face % 2) * q, Math.floor(face / 2) * q, q, q, p.x - s / 2, p.y - s + 4 + bob, s, s);
+      ctx.save(); ctx.translate(p.x, p.y - hop * 7 * zoom); ctx.rotate(tilt * .075); ctx.scale(1 - .035 * hop, 1 + .06 * hop);   // 足元を軸に、はずんで・かたむく
+      ctx.drawImage(img, (face % 2) * q, Math.floor(face / 2) * q, q, q, -s / 2, -s + 4, s, s); ctx.restore();
     }
 
     function draw() {
@@ -319,7 +322,7 @@
 
     var api = {
       canvas: canvas,
-      setHero: function (x, y) { hero.x = x; hero.y = y; followHero(); draw(); },
+      setHero: function (x, y) { hero.dist += Math.hypot(x - hero.x, y - hero.y); hero.x = x; hero.y = y; followHero(); draw(); },
       face: function (facing, via) {
         if (via) { hero.diag = true; hero.face = (via.dy < 0 ? 2 : 0) + (via.dx > 0 ? 1 : 0); }
         else { hero.diag = false; hero.face = ({ down: 0, up: 1, left: 2, right: 3 })[facing] || 0; }
