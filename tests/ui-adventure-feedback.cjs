@@ -7,6 +7,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-motion-qa';fs.mkdirSync(out,{recur
  try {
   const page=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'no-preference'});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route(/https:\/\/fonts\.(googleapis|gstatic)\.com\//,r=>r.abort());
+  await page.addInitScript(()=>{window.FF_FIELD_MODE='css';});   // Canvas の表示ではなく、CSS の表示を確かめる（判断387）
   await page.goto(process.env.FF_TEST_URL||'http://127.0.0.1:8769/preview/',{waitUntil:'domcontentloaded'});
   await page.locator('.title-card input').fill('ゆき');await page.locator('.title-card .btn.primary').click();
   await page.getByRole('button',{name:'小学4年',exact:true}).click();await page.locator('.avatar-pick').first().click();await page.locator('.intro-line + button').click();

@@ -316,3 +316,8 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 .inv-holders{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
 .inv-count-tag{font-size:12px;font-weight:800;color:#2d5568}
 .shop-actions{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+
+/* Canvas のフィールド（判断387） */
+.adv-map-viewport.adv-cv{position:relative;overflow:hidden;touch-action:manipulation;background:#bcd6e4}
+.adv-canvas{display:block;width:100%;height:100%;touch-action:manipulation}
+.adv-cv-places{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

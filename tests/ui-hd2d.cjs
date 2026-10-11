@@ -4,6 +4,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-hd2d';fs.mkdirSync(out,{recursive:
 (async()=>{const b=await chromium.launch({headless:true,executablePath:process.env.FF_BROWSER_PATH||undefined});
 const p=await b.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'});const errors=[];p.on('pageerror',e=>errors.push(e.message));
 await p.route(/https:\/\/fonts\./,r=>r.abort());
+await p.addInitScript(()=>{window.FF_FIELD_MODE='css';});   // Canvas の表示ではなく、CSS の表示を確かめる（判断387）
 await p.goto(process.env.FF_TEST_URL,{waitUntil:'domcontentloaded'});
 await p.locator('.title-card input').fill('ゆき');await p.locator('.title-card .btn.primary').click();await p.getByRole('button',{name:'小学4年',exact:true}).click();
 await p.evaluate(()=>{FF.adventureRng=()=>0.99;});

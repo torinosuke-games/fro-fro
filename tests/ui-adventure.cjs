@@ -11,6 +11,7 @@ fs.mkdirSync(out, { recursive: true });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     // Google Fontsは任意。外部ネットワーク待ちを切り離して同梱画像とシステムフォントで検証。
     await page.route(/https:\/\/fonts\.(googleapis|gstatic)\.com\//, r => r.abort());
+    await page.addInitScript(()=>{window.FF_FIELD_MODE='css';});   // Canvas の表示ではなく、CSS の表示を確かめる（判断387）
     await page.goto(process.env.FF_TEST_URL || 'http://127.0.0.1:8765/', { waitUntil: 'domcontentloaded' });
     await page.locator('.title-card input').fill('ゆき'); await page.locator('.title-card .btn.primary').click();
     await page.getByRole('button', { name: '小学4年', exact: true }).click();

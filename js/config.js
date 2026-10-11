@@ -21,6 +21,8 @@
     ART_STYLE: 'art',
     // 雪原の冒険のフィールドを、HD-2D 風（傾けた地面＋立てた絵＋ぼかしと光。試作＝判断367）で出す。false で、これまでの見下ろし表示
     ADVENTURE_HD2D: true,
+    // フィールドの表示（判断387）：'canvas' ＝ Canvas で描く斜め見下ろし（試作）／'css' ＝ CSS の3D の HD-2D／'flat' ＝ これまでの見下ろし。なければ ADVENTURE_HD2D で決める
+    ADVENTURE_FIELD: 'canvas',
     ART_DIR: 'img/art/',
     // データの保存（サーバー同期。SPEC_sync.md・判断299）。ENABLED が true なら、設定に「データの保存」が出る（判断310。それまでは ?debug=1 のときだけ）。同期は、おうちの方が同意してオンにした端末だけが行う（オンにするまで通信は一切しない）。
     // ANON_KEY は公開用（anon）だけ。service_role・secret キーは絶対に置かない

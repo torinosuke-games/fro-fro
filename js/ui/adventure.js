@@ -239,18 +239,25 @@
   }
   // ランダムエンカウントの乱数（テストでは、FF.adventureRng で差しかえる）
   function wildRng() { return (FF.adventureRng || Math.random)(); }
+  // Canvas の表示のときの「旅人」の代わり（walk は、旅人の要素を直接さわるので、同じ名前のメソッドを持つ入れ物を渡す）
+  function cvTraveler() {
+    var o = { style: {}, classList: { add: function (c) { if (c === 'is-walking' && cv) cv.setWalking(true); }, remove: function (c) { if (c === 'is-walking' && cv) cv.setWalking(false); } }, setAttribute: function () {} };
+    Object.defineProperty(o, 'isConnected', { get: function () { return !!cv && cv.canvas.isConnected; } });
+    return o;
+  }
   function walk(target, forced) {
     if (moving || p().battle) return;
     if (!forced && A.same(target, A.PLACES.home) && A.same(p().pos, target)) { home(); return; }
     var steps = forced || A.path(p(), target);
     if (!steps.length) { U.toast('そこへは道がつながっていない。峠の敵や、ほかの道をたしかめよう。'); return; }
-    var token = ++routeId, viewport = root.document.querySelector('.adv-map-viewport'), traveler = viewport.querySelector('.adv-traveler'), map = viewport.querySelector('.adv-map'), hdNow = viewport.classList.contains('hd2d');
+    var token = ++routeId, viewport = root.document.querySelector('.adv-map-viewport'), cvNow = !!cv && viewport.classList.contains('adv-cv'), traveler = cvNow ? cvTraveler() : viewport.querySelector('.adv-traveler'), map = cvNow ? viewport : viewport.querySelector('.adv-map'), hdNow = viewport.classList.contains('hd2d');
     moving = true; traveler.classList.add('is-walking');
     function finish() { moving = false; traveler.classList.remove('is-walking'); }
     function step() {
       if (token !== routeId || !traveler.isConnected || FF.app.screen !== 'adventure' || p().battle || !steps.length) { finish(); return; }
       var pos = steps.shift(), old = p(), next = pos.via ? advanceDiag(old, pos) : A.move(old, pos.x, pos.y, wildRng);
       if (next === old) { finish(); return; }
+      if (cvNow) cv.face(next.facing, pos.via ? { dx: pos.x - old.pos.x, dy: pos.y - old.pos.y } : null);
       var diagArt = pos.via ? scene.travelerDiag(FF.app.state.player.avatar) : null;   // ななめ向きの絵があれば、それを使う
       if (diagArt) {
         traveler.style.backgroundImage = 'url("' + diagArt + '")';
@@ -272,8 +279,10 @@
         if (last !== null) elapsed += Math.min(34, Math.max(0, time - last));
         last = time;
         var fraction = duration ? Math.min(1, elapsed / duration) : 1;
-        if (!hdNow) { traveler.style.left = (sx + (ex - sx) * fraction) / 936 * 100 + '%'; traveler.style.top = (sy + (ey - sy) * fraction) / 648 * 100 + '%'; }
-        if (hdNow) {
+        if (cvNow) cv.setHero(old.pos.x + (next.pos.x - old.pos.x) * fraction, old.pos.y + (next.pos.y - old.pos.y) * fraction);
+        else if (!hdNow) { traveler.style.left = (sx + (ex - sx) * fraction) / 936 * 100 + '%'; traveler.style.top = (sy + (ey - sy) * fraction) / 648 * 100 + '%'; }
+        if (cvNow) { /* 上で描いた */ }
+        else if (hdNow) {
           hdPlace(map, sx + (ex - sx) * fraction, sy + (ey - sy) * fraction);
         } else { viewport.scrollLeft = cx + (tx - cx) * fraction; viewport.scrollTop = cy + (ty - cy) * fraction; }
         if (fraction < 1) { root.requestAnimationFrame(frame); return; }
@@ -294,8 +303,11 @@
   }
 
   // ---- HD-2D 風の表示（試作。判断367）：地面を傾け、木・人物・敵は立てた絵。カメラは、主人公の位置を --cx/--cy で追う ----
-  var hd = !(FF.config && FF.config.ADVENTURE_HD2D === false), treeUrls = null;
-  function isHd() { return hd && !overview; }
+  // 表示の種類（判断387）：'canvas' ＝ Canvas で描く斜め見下ろし／'css' ＝ CSS の3D で傾ける HD-2D（判断367）／'flat' ＝ これまでの見下ろし。config.ADVENTURE_FIELD（なければ ADVENTURE_HD2D）で、はじめの表示を決める
+  var fieldMode = null, treeUrls = null, cv = null, cvQuality = 'std';
+  function mode() { if (!fieldMode) fieldMode = root.FF_FIELD_MODE || (FF.config && FF.config.ADVENTURE_FIELD) || (FF.config && FF.config.ADVENTURE_HD2D === false ? 'flat' : 'css'); return fieldMode; }
+  function isHd() { return mode() === 'css' && !overview; }
+  function isCv() { return mode() === 'canvas' && !overview && !!FF.ui.fieldCanvas; }
   function treeSprites() {
     if (treeUrls) return treeUrls;
     treeUrls = [0, 1, 2].map(function (v) {
@@ -379,11 +391,31 @@
       text('span', 'adv-gold adv-fgold', n.gold + ' G'),
       E('span', { class: 'adv-fspacer' }),
       btn(overview ? C.follow : C.map, function () { routeId++; moving = false; overview = !overview; paint(); }, 'quiet'),
-      btn(hd ? 'HD-2D：入' : 'HD-2D：切', function () { routeId++; moving = false; hd = !hd; overview = false; paint(); }, 'quiet adv-hd-toggle')
-    ]);
+      mode() === 'canvas' && !overview ? btn(C.quality[cvQuality], function () { cvQuality = cvQuality === 'std' ? 'high' : cvQuality === 'high' ? 'low' : 'std'; if (cv) cv.setQuality(cvQuality); this.textContent = C.quality[cvQuality]; }, 'quiet adv-quality-toggle') : null,
+      btn(C.fieldMode[mode()], function () { routeId++; moving = false; fieldMode = mode() === 'canvas' ? 'css' : mode() === 'css' ? 'flat' : 'canvas'; overview = false; paint(); }, 'quiet adv-hd-toggle')
+    ].filter(Boolean));
+  }
+  // Canvas の表示（判断387）：地図は FF.adventure のものをそのまま使い、絵だけ描く。タップは、これまでと同じ walk に渡す。読み上げ用に、行き先のボタンを重ねる（見えない）
+  function canvasViewport() {
+    var n = p(), host = E('div', { class: 'adv-map-viewport adv-cv' }), places = ['home', 'camp', 'chest', 'town'];
+    var labels = { home: T.home, camp: T.camp, town: T.town };
+    var reduced = root.matchMedia && root.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    cv = FF.ui.fieldCanvas.create(host, { map: A.MAP, places: A.PLACES, boss: A.ENEMIES.boss, hero: n.pos, quality: cvQuality, reduced: reduced, labels: labels, sheet: scene.traveler(FF.app.state.player.avatar), diagSheet: scene.travelerDiag(FF.app.state.player.avatar),
+      state: p, onTap: function (cell) { walk(cell); } });
+    cv.face(n.facing, null);
+    var list = E('div', { class: 'adv-cv-places', attrs: { role: 'group', 'aria-label': T.map } }, places.map(function (k) {
+      return E('button', { class: 'adv-cv-place', text: destinationLabel(A.PLACES[k].x, A.PLACES[k].y), attrs: { type: 'button', 'data-place': k }, on: { click: function () { walk(A.PLACES[k]); } } });
+    }));
+    host.appendChild(list);
+    return host;
   }
   function fieldViewport() {
     held = null;   // 戦闘から帰ってきたとき、前の「押している」が残らないように
+    if (cv) { cv.destroy(); cv = null; }
+    if (isCv()) {
+      var cvHost = canvasViewport();
+      return E('div', { class: 'adv-map-shell is-cv' }, [cvHost, E('div', { class: 'adv-compass', text: 'N ↑', attrs: { 'aria-hidden': true } }), fieldBar(), directions()]);
+    }
     var flat = !isHd(), world = mapView();
     var viewport = E('div', { class: 'adv-map-viewport' + (overview ? ' overview' : '') + (flat ? '' : ' hd2d') }, flat ? world : E('div', { class: 'adv-tilt' }, world));
     var shell = E('div', { class: 'adv-map-shell' + (flat ? '' : ' is-hd') }, [viewport,
