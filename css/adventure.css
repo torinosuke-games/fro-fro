@@ -323,3 +323,13 @@ html:has(body[data-screen="adventure"]){scrollbar-gutter:stable}
 .adv-cv-places{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 .adv-map-shell.is-cv.is-overview .adv-directions{display:none}
+
+/* Canvas の表示の移動パッド：ChatGPT の試作の見た目（すりガラスのような明るい円・濃い青緑の矢印・白い丸のつまみ）。動きは、これまでどおり（判断369・370・385）。判断392 */
+.adv-map-shell.is-cv .adv-directions{border:1px solid #ffffffb8;background:radial-gradient(circle,#f3f7f254 0 29%,#e0eced7a 30% 64%,#ffffff9e 65%);box-shadow:0 8px 30px #204e651c,inset 0 0 0 7px #f8fff327}
+.adv-map-shell.is-cv .adv-directions:before{inset:26%;border:1px solid #58778225}
+.adv-map-shell.is-cv .adv-directions:after{display:none}
+.adv-map-shell.is-cv .adv-directions .adv-button{color:#3a6070;text-shadow:none;font-size:22px}
+.adv-map-shell.is-cv .adv-directions .adv-diag{color:#607e85;text-shadow:none;font-size:17px;opacity:.55}
+.adv-map-shell.is-cv .adv-directions .adv-button.on,.adv-map-shell.is-cv .adv-directions .adv-diag.on{background:#ffffffb0;opacity:1;color:#2b5365}
+.adv-map-shell.is-cv .adv-directions .adv-knob{width:38px;height:38px;margin:-19px 0 0 -19px;background:#f9fcf3e3;border:1px solid #fff;box-shadow:0 3px 8px #31516326;opacity:.9}
+.adv-map-shell.is-cv .adv-directions .adv-knob.on{opacity:1;background:#fff}
