@@ -148,3 +148,5 @@
 .battle-toolbar .header-tools #escapeButton{border-radius:9px;font-size:10px;font-weight:500;color:#697d7c;background:#f5f8f2;padding:0 5px}
 .escape-actions{display:flex;gap:10px;margin-top:16px}.escape-actions button{flex:1;min-height:44px}
 .escape-actions [data-escape=confirm]{color:#8c594c;border-color:#d4b8a6;background:#fff7ee}
+
+.item-list{display:grid;gap:8px}.item-option{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;min-height:72px;width:100%;padding:12px;border:1px solid #d5dfd5;border-radius:10px;background:#fff;color:#354f56}.item-option b{display:block;font-size:14px}.item-option small{display:block;font-size:11px;color:#718679;line-height:1.6}.item-count{flex-shrink:0;font-size:12px;text-align:right}.item-back{width:100%;margin-top:12px}

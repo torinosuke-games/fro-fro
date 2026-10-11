@@ -1,0 +1,33 @@
+{
+  "checks": [
+    "Command is items",
+    "Items opens owned list before targets",
+    "List shows owned count and effect",
+    "Cancel list keeps actor and order",
+    "Selecting potion opens target selection",
+    "Back returns to owned list without reserving",
+    "Cancel target does not advance actor",
+    "Target commits item id and advances actor",
+    "Reservation does not consume inventory",
+    "Party card names reserved item",
+    "Guard advances guardian to healer",
+    "Healing skill waits for target",
+    "Healing target advances to sword",
+    "Last actor stays selected and does not skip question",
+    "Items still wait for explicit answer review",
+    "Actual use consumes one item and records recovery",
+    "Reserved last item disabled in list",
+    "Replacing order releases reservation",
+    "Empty inventory has clear message",
+    "Cursor skips dead ally",
+    "Unavailable action does not advance",
+    "Full HP and dead targets disabled",
+    "Overlapping recovery skips now-full target without consuming second item",
+    "Second definition appears in owned list",
+    "MP item targets MP instead of HP",
+    "MP effect restores MP and consumes only its inventory",
+    "Speed control uses clear label",
+    "No browser errors"
+  ],
+  "environment": "Linux Chromium; MP item injected only in QA page; no hardware test"
+}

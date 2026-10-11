@@ -3,25 +3,32 @@
   'use strict';
   const D = window.BATTLE_DATA, $ = id => document.getElementById(id);
   const definitions = Object.fromEntries(D.members.map(m => [m.id, m]));
-  const orderNames = {attack:'たたかう', skill:'わざ', guard:'まもる', item:'回復薬'};
+  const orderNames = {attack:'たたかう', skill:'わざ', guard:'まもる', item:'どうぐ'};
   const icons = {attack:'⚔', skill:'✧', guard:'◇', item:'＋'};
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  let state, timer = 0, noticeTimer = 0, pendingTarget = null, paused = false, speed = 1;
+  let state, timer = 0, noticeTimer = 0, pendingTarget = null, pendingItemActor = null, paused = false, speed = 1;
   let queue = [], queueIndex = 0, epoch = 0;
   const stats = {renders:0, answerSubmissions:0, reviewAcknowledgements:0, appliedEvents:0, animations:0};
   const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const clone = value => JSON.parse(JSON.stringify(value));
 
   function fresh() {
-    return {auto:false,escapePending:false,phase:'commands',turn:1,actor:'hero',enemyHp:360,enemyMax:360,potions:2,
+    return {auto:false,escapePending:false,phase:'commands',turn:1,actor:'hero',enemyHp:360,enemyMax:360,inventory:Object.fromEntries(D.items.map(i=>[i.id,i.count])),
       party:D.members.map(m=>({id:m.id,hp:m.startHp,mp:m.mp})),
       orders:Object.fromEntries(D.members.map(m=>[m.id,{type:'attack',target:m.id}])),
       selected:null,hint:false,question:null,history:[],log:[],acknowledged:false,correct:false,outcome:null};
   }
   const member = id => state.party.find(m => m.id === id);
   const alive = () => state.party.filter(m => m.hp > 0);
-  function orderLabel(id) { const o=state.orders[id];return !member(id).hp?'戦闘不能':!o?'未選択':o.type==='skill'?definitions[id].skill:orderNames[o.type]; }
-  function remainingItems(except) {return state.potions-Object.entries(state.orders).filter(([id,o])=>id!==except&&member(id).hp>0&&o.type==='item').length;}
+  const itemEffects={
+    restoreHp:{resource:'hp',label:'HP',maximum:id=>definitions[id].hp},
+    restoreMp:{resource:'mp',label:'MP',maximum:id=>definitions[id].mp}
+  };
+  const itemDefinition=id=>D.items.find(i=>i.id===id);
+  const itemEffect=id=>itemEffects[itemDefinition(id)?.effect];
+  function orderLabel(id) {const o=state.orders[id];return !member(id).hp?'戦闘不能':!o?'未選択':o.type==='skill'?definitions[id].skill:o.type==='item'?itemDefinition(o.itemId)?.name||'どうぐ':orderNames[o.type];}
+  function remainingItems(itemId,except) {return (state.inventory[itemId]||0)-Object.entries(state.orders).filter(([id,o])=>id!==except&&member(id).hp>0&&o.type==='item'&&o.itemId===itemId).length;}
+  function itemTargetAvailable(itemId,target) {const effect=itemEffect(itemId);return !!(effect&&target?.hp>0&&target[effect.resource]<effect.maximum(target.id));}
   function notice(text) { $('notice').textContent=text;$('notice').classList.add('visible');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('notice').classList.remove('visible'),2500); }
   function message(text) { $('sceneMessage').textContent=text; }
   function focusHeading() {const h=$('panel').querySelector('h1,h2');const target=h&&h.getClientRects().length?h:$('panel').querySelector('.question-text,.answer-status,.selection-heading,.resolving-title,.result-copy,.panel-body');if(target){target.tabIndex=-1;target.focus({preventScroll:true});}}
@@ -59,11 +66,11 @@
   function primary(label,action,disabled=false){return `<button class="primary" data-do="${action}" ${disabled?'disabled':''}>${label}<span class="arrow" aria-hidden="true">→</span></button>`;}
 
   function commandsPanel(actor=state.actor,order=state.orders[actor]) {
-    const m=member(actor),d=definitions[m.id],o=order,items=remainingItems(m.id);
-    const descriptions={attack:'敵1体を攻撃します。MPは使いません。',skill:d.detail,guard:'このターン、自分が受けるダメージを半分にします。',item:`仲間1人のHPを45回復。回復薬は残り${state.potions}こ。`};
+    const m=member(actor),d=definitions[m.id],o=order,selectedItem=o?.type==='item'?itemDefinition(o.itemId):null;
+    const descriptions={attack:'敵1体を攻撃します。MPは使いません。',skill:d.detail,guard:'このターン、自分が受けるダメージを半分にします。',item:selectedItem?`${selectedItem.name}：${selectedItem.description}`:'所持一覧からどうぐを選び、使う相手を指定します。'};
     return heading('CHOOSE YOUR PLAN','仲間の作戦を決めよう','仲間のカードを押すと、行動を変更できます。')+
       `<div class="panel-body"><div class="selection-heading"><strong>${d.name}の行動</strong><span>MP ${m.mp} / ${d.mp}</span></div><div class="commands">`+
-      ['attack','skill','guard','item'].map(type=>`<button class="command ${o?.type===type?'active':''}" data-order="${type}" aria-pressed="${o?.type===type}" ${type==='skill'&&m.mp<d.cost||type==='item'&&items<1?'disabled':''}><span class="command-icon" aria-hidden="true">${icons[type]}</span><strong>${type==='skill'?d.skill:orderNames[type]}</strong><small>${type==='attack'?'MPを使わない':type==='skill'?`MP ${d.cost}`:type==='guard'?'受けるダメージ半分':`予約できる数 ${Math.max(0,items)}`}</small></button>`).join('')+
+      ['attack','skill','guard','item'].map(type=>`<button class="command ${o?.type===type?'active':''}" data-order="${type}" aria-pressed="${o?.type===type}" ${type==='skill'&&m.mp<d.cost?'disabled':''}><span class="command-icon" aria-hidden="true">${icons[type]}</span><strong>${type==='skill'?d.skill:orderNames[type]}</strong><small>${type==='attack'?'MPを使わない':type==='skill'?`MP ${d.cost}`:type==='guard'?'受けるダメージ半分':'所持一覧から選ぶ'}</small></button>`).join('')+
       `</div><p class="command-info">${descriptions[o?.type||'attack']}${o&&(o.type==='item'||o.type==='skill'&&d.kind==='heal')?`<br>対象：${definitions[o.target].name}`:''}</p><div class="plan-tools"><button class="secondary" data-do="recommend">おすすめの作戦</button><button class="secondary" data-do="allAttack">全員たたかう</button></div></div>`+
       footer(primary('この作戦で問題へ','startQuiz'),'選んだ作戦は、解答を確認したあとに実行します。');
   }
@@ -83,7 +90,7 @@
   }
   function logsMarkup() {return `<ul class="action-log">${state.log.map(t=>`<li><span class="log-dot" aria-hidden="true">◇</span><span>${esc(t)}</span></li>`).join('')}</ul>`;}
   function actionPanel() {
-    if(state.phase==='resolving') return heading('PARTY ACTION','仲間たちの行動')+`<div class="panel-body"><p class="resolving-title">${paused?'一時停止中です':'作戦を実行しています'}</p><p class="resolve-note">${paused?'ページに戻ると続きから再開します。':'仲間と敵の行動は、ここに記録されます。'}</p>${logsMarkup()}</div>`+footer(`<button class="secondary" style="width:100%" data-do="fast">演出を短くする</button>`);
+    if(state.phase==='resolving') return heading('PARTY ACTION','仲間たちの行動')+`<div class="panel-body"><p class="resolving-title">${paused?'一時停止中です':'作戦を実行しています'}</p><p class="resolve-note">${paused?'ページに戻ると続きから再開します。':'仲間と敵の行動は、ここに記録されます。'}</p>${logsMarkup()}</div>`+footer(`<button class="secondary" style="width:100%" data-do="fast">速さ ×2にする</button>`);
     const turnLog=state.log.length?logsMarkup():'';
     return heading('TURN COMPLETE',state.auto?'次の問題へ進みます':'次の一手を考えよう')+`<div class="panel-body">${turnLog}</div>`+footer(primary(`ターン ${state.turn+1} へ`,'nextTurn'),state.auto?'オート ON · 1.5秒後に次の作戦を選び、問題で止まります。':'次のターンも、問題と解答を確認してから行動します。');
   }
@@ -106,8 +113,8 @@
     let required=0,partyHeight=0,available=0;
     try {
       const target=D.members.reduce((a,b)=>a.name.length>=b.name.length?a:b).id;
-      for(const m of D.members)for(const type of ['attack','skill','guard','item']) {
-        probe.innerHTML=`<div class="panel" style="height:auto">${commandsPanel(m.id,{type,target})}</div>`;
+      for(const m of D.members)for(const type of ['attack','skill','guard','item'])for(const itemId of type==='item'?[null,...D.items.map(i=>i.id)]:[null]) {
+        probe.innerHTML=`<div class="panel" style="height:auto">${commandsPanel(m.id,{type,target,itemId})}</div>`;
         probe.querySelector('.panel-body').style.flex='none';
         // Keep the previous arena height; reclaimed heading space belongs to the question.
         probe.querySelector('.panel-heading').style.display='block';
@@ -122,16 +129,31 @@
     app.classList.add('arena-locked');
   }
 
+  function commitOrder(actor,order) {
+    if(state.phase!=='commands'||!member(actor)?.hp)return;
+    state.orders[actor]=order;
+    const index=state.party.findIndex(m=>m.id===actor),next=state.party.slice(index+1).find(m=>m.hp>0);
+    state.actor=next?.id||actor;render();focusHeading();
+    message(next?`${definitions[actor].name}の${orderLabel(actor)}を予約。次は${definitions[next.id].name}。`:'作戦を予約しました。問題へ進めます。');
+  }
   function chooseOrder(type) {
     if(state.phase!=='commands')return;
     const d=definitions[state.actor],m=member(state.actor);
-    if(!m.hp||type==='skill'&&m.mp<d.cost||type==='item'&&remainingItems(m.id)<1)return;
-    if(type==='item'||type==='skill'&&d.kind==='heal'){openTargets(type);return;}
-    state.orders[m.id]={type,target:m.id};render();
+    if(!m.hp||type==='skill'&&m.mp<d.cost)return;
+    if(type==='item'){openItems(state.actor);return;}
+    if(type==='skill'&&d.kind==='heal'){openTargets(type);return;}
+    commitOrder(m.id,{type,target:m.id});
   }
-  function openTargets(type) {
-    pendingTarget={type,actor:state.actor};
-    openDialog(type==='item'?'回復薬を使う相手':'いやしの光を届ける相手',`<p>${type==='item'?'HPを45回復します。':'HPを38回復します。'}</p><div class="target-list">${state.party.map(m=>{const d=definitions[m.id];return `<button class="target-option" data-target="${m.id}" ${!m.hp||m.hp===d.hp?'disabled':''}><img src="assets/${m.id}.webp" alt=""><span><b>${d.name}</b><small>HP ${m.hp} / ${d.hp}${!m.hp?' · 戦闘不能':m.hp===d.hp?' · HPは満タン':''}</small></span></button>`}).join('')}</div>`);
+  function openItems(actor) {
+    pendingTarget=null;pendingItemActor=actor;
+    const owned=D.items.filter(i=>(state.inventory[i.id]||0)>0);
+    openDialog('どうぐの所持一覧',owned.length?`<div class="item-list">${owned.map(i=>{const available=remainingItems(i.id,actor),usable=itemEffect(i.id)&&available>0&&alive().some(m=>itemTargetAvailable(i.id,m));return `<button class="item-option" data-item="${esc(i.id)}" ${usable?'':'disabled'}><span><b>${esc(i.name)}</b><small>${esc(i.description)}</small></span><span class="item-count">所持 ${state.inventory[i.id]}こ<small>予約できる ${Math.max(0,available)}こ</small></span></button>`}).join('')}</div>`:'<p>所持しているどうぐはありません。</p>');
+  }
+  function openTargets(type,itemId=null,actor=state.actor) {
+    pendingTarget={type,actor,itemId};
+    const item=type==='item'?itemDefinition(itemId):null,effect=item?itemEffect(itemId):itemEffects.restoreHp;
+    if(!effect)return;
+    openDialog(item?`${item.name}を使う相手`:'いやしの光を届ける相手',`<p>${item?esc(item.description):'HPを38回復します。'}</p><div class="target-list">${state.party.map(m=>{const d=definitions[m.id],maximum=effect.maximum(m.id),full=m[effect.resource]>=maximum;return `<button class="target-option" data-target="${m.id}" ${!m.hp||full?'disabled':''}><img src="assets/${m.id}.webp" alt=""><span><b>${d.name}</b><small>${effect.label} ${m[effect.resource]} / ${maximum}${!m.hp?' · 戦闘不能':full?` · ${effect.label}は満タン`:''}</small></span></button>`}).join('')}</div>${item?'<button class="secondary item-back" data-items-back>所持一覧に戻る</button>':''}`);
   }
   function autoOrders(silent=false) {
     if(state.phase!=='commands')return;
@@ -144,11 +166,12 @@
       else if(d.kind==='strike'&&m.mp>=d.cost)o={type:'skill',target:m.id};
       state.orders[m.id]=o;
     }
-    if(!plannedHeal&&low.hp/definitions[low.id].hp<.4&&state.potions>0)state.orders[low.id]={type:'item',target:low.id};
+    const recovery=D.items.find(i=>i.effect==='restoreHp'&&remainingItems(i.id,low.id)>0);
+    if(!plannedHeal&&low.hp/definitions[low.id].hp<.4&&recovery)state.orders[low.id]={type:'item',itemId:recovery.id,target:low.id};
     render();if(!silent)notice('おすすめを予約しました。カードから変更できます。');
   }
   function validOrders() {
-    return alive().every(m=>{const o=state.orders[m.id],d=definitions[m.id],target=o&&member(o.target);return o&&['attack','skill','guard','item'].includes(o.type)&&(!(o.type==='skill')||m.mp>=d.cost)&&(!(o.type==='item'||o.type==='skill'&&d.kind==='heal')||target?.hp>0)})&&Object.entries(state.orders).filter(([id,o])=>member(id).hp>0&&o.type==='item').length<=state.potions;
+    return alive().every(m=>{const o=state.orders[m.id],d=definitions[m.id],target=o&&member(o.target);return o&&['attack','skill','guard','item'].includes(o.type)&&(o.type!=='skill'||m.mp>=d.cost)&&(!(o.type==='item'||o.type==='skill'&&d.kind==='heal')||target?.hp>0)&&(o.type!=='item'||!!itemEffect(o.itemId))})&&D.items.every(i=>Object.entries(state.orders).filter(([id,o])=>member(id).hp>0&&o.type==='item'&&o.itemId===i.id).length<=(state.inventory[i.id]||0));
   }
   function startQuiz() {
     if(state.phase!=='commands'||!validOrders())return;
@@ -166,14 +189,15 @@
   function combatQueue() {
     const s=clone(state),events=[],guards=new Set();let cover=null;
     const byId=id=>s.party.find(m=>m.id===id);
-    function event(kind,actor,target,amount,text){events.push({kind,actor,target,amount,text,party:clone(s.party),enemyHp:s.enemyHp,potions:s.potions});}
+    function event(kind,actor,target,amount,text){events.push({kind,actor,target,amount,text,party:clone(s.party),enemyHp:s.enemyHp,inventory:clone(s.inventory)});}
     for(const m of s.party){
       if(!m.hp||s.enemyHp<=0)continue;
       const d=definitions[m.id],o=s.orders[m.id],target=byId(o.target);
       if(o.type==='guard'){guards.add(m.id);event('guard',m.id,m.id,0,`${d.name}は身を守っている。`);continue;}
       if(o.type==='item'){
-        const heal=Math.min(45,definitions[target.id].hp-target.hp);
-        if(heal>0&&s.potions>0){s.potions--;target.hp+=heal;event('heal',m.id,target.id,heal,`${d.name}の回復薬。${definitions[target.id].name}のHPが${heal}回復。`);}else event('note',m.id,m.id,0,`${definitions[target.id].name}のHPは満タン。回復薬は使わなかった。`);
+        const item=itemDefinition(o.itemId),effect=itemEffect(o.itemId),amount=Math.min(item.amount,effect.maximum(target.id)-target[effect.resource]);
+        if(target.hp>0&&amount>0&&(s.inventory[item.id]||0)>0){s.inventory[item.id]--;target[effect.resource]+=amount;event('heal',m.id,target.id,amount,`${d.name}の${item.name}。${definitions[target.id].name}の${effect.label}が${amount}回復。`);}
+        else event('note',m.id,m.id,0,`${definitions[target.id].name}には${item.name}を使わなかった。`);
         continue;
       }
       if(o.type==='skill'){
@@ -226,7 +250,7 @@
     timer=0;if(state.phase!=='resolving'||!state.acknowledged||document.hidden||$('infoDialog').open)return;
     paused=false;
     if(queueIndex>=queue.length){state.outcome=state.enemyHp<=0?'win':alive().length?'summary':'lose';message(state.outcome==='win'?'学ぶ力で、道がひらけた。':state.outcome==='lose'?'仲間とともに、ひと休み。':'このターンの行動が終わりました。');changePhase(state.outcome);schedule();return;}
-    const event=queue[queueIndex++];state.party=clone(event.party);state.enemyHp=event.enemyHp;state.potions=event.potions;state.log.push(event.text);stats.appliedEvents++;
+    const event=queue[queueIndex++];state.party=clone(event.party);state.enemyHp=event.enemyHp;state.inventory=clone(event.inventory);state.log.push(event.text);stats.appliedEvents++;
     render();message(event.text);animateEvent(event);const scroll=$('panel').querySelector('.panel-body');if(scroll)scroll.scrollTop=scroll.scrollHeight;schedule();
   }
   function nextTurn() {
@@ -236,11 +260,11 @@
     message('仲間の状態を見て、次の作戦を。');changePhase('commands');if(state.auto){autoOrders(true);startQuiz();}
   }
   function stopAnimations() {document.getAnimations().forEach(a=>a.cancel());$('floatText').textContent='';$('effect').className='effect';}
-  function restart() {epoch++;clearTimeout(timer);clearNotice();stopAnimations();queue=[];queueIndex=0;pendingTarget=null;paused=false;state=fresh();message('仲間とともに、峠の向こうへ。');render();lockArena();focusHeading();}
+  function restart() {epoch++;clearTimeout(timer);clearNotice();stopAnimations();queue=[];queueIndex=0;pendingTarget=null;pendingItemActor=null;paused=false;state=fresh();message('仲間とともに、峠の向こうへ。');render();lockArena();focusHeading();}
 
   function openDialog(title,html) {
     clearTimeout(timer);if(state.phase==='resolving'){paused=true;stopAnimations();renderPanel();}
-    $('dialogTitle').textContent=title;$('dialogBody').innerHTML=html;$('infoDialog').showModal();
+    $('dialogTitle').textContent=title;$('dialogBody').innerHTML=html;if(!$('infoDialog').open)$('infoDialog').showModal();
   }
   function history() {
     const html=state.history.length?state.history.map(h=>`<article class="history-item"><small>TURN ${h.turn} · ${h.question.unit} · ${h.correct?'正解':'確認した問題'}</small><h3>${esc(h.question.text)}</h3><p class="history-answer">あなたの答え：${h.selected===null?'わからない':esc(h.question.choices[h.selected])}<br><b>正しい答え：${esc(h.question.choices[h.question.answer])}</b></p><p class="history-explain">${esc(h.question.explanation)}</p></article>`).join(''):'<p>問題に答えると、ここに問題・自分の答え・正解・解説が残ります。</p>';
@@ -264,14 +288,25 @@
     } else escapeBattle();
     $('infoDialog').close();focusHeading();
   }
-  function help() {openDialog('戦闘のせつめい',`<p>仲間のカードを押して、作戦を選びます。最初は全員「たたかう」です。</p><ol><li>作戦を選ぶ</li><li>1問に答える</li><li>正しい答えと解説を確認する</li><li>仲間と敵が行動する</li></ol><p>正解すると攻撃が1.5倍、受けるダメージが半分になります。まちがえても仲間は行動します。</p><p>「オート ON」は毎ターンの作戦と次のターンへの進行を自動化します。問題への回答と解答確認は手動です。いつでもOFFにできます。OFFにしても今のターンに予約済みの作戦は変えません。次のターンから再び手動で選べます。「おすすめの作戦」は行動の予約だけです。時間制限はありません。</p><p>MPと回復薬は、実際に行動するときに使います。画面の「演出 ×1」で速さを変えられます。</p><p>このページは戦闘だけの独立試作です。本体・フィールド試作・セーブデータには接続しません。</p>`);}
+  function help() {openDialog('戦闘のせつめい',`<p>仲間のカードを押して、作戦を選びます。行動を確定すると次の仲間へ移ります。最後の仲間では止まります。「どうぐ」は所持一覧から品物、使用対象の順に選びます。最初は全員「たたかう」です。</p><ol><li>作戦を選ぶ</li><li>1問に答える</li><li>正しい答えと解説を確認する</li><li>仲間と敵が行動する</li></ol><p>正解すると攻撃が1.5倍、受けるダメージが半分になります。まちがえても仲間は行動します。</p><p>「オート ON」は毎ターンの作戦と次のターンへの進行を自動化します。問題への回答と解答確認は手動です。いつでもOFFにできます。OFFにしても今のターンに予約済みの作戦は変えません。次のターンから再び手動で選べます。「おすすめの作戦」は行動の予約だけです。時間制限はありません。</p><p>MPと回復薬は、実際に行動するときに使います。画面の「速さ ×1」で速さを変えられます。</p><p>このページは戦闘だけの独立試作です。本体・フィールド試作・セーブデータには接続しません。</p>`);}
   $('closeDialog').onclick=()=>$('infoDialog').close();
-  $('infoDialog').addEventListener('close',()=>{pendingTarget=null;if(state.phase==='resolving'){paused=false;renderPanel();schedule();}else if(state.phase==='summary')schedule();});
-  $('dialogBody').addEventListener('click',e=>{const escape=e.target.closest('[data-escape]');if(escape){if(escape.dataset.escape==='confirm')confirmEscape();else $('infoDialog').close();return;}const b=e.target.closest('[data-target]');if(!b||b.disabled||!pendingTarget||state.phase!=='commands')return;const p=pendingTarget,target=member(b.dataset.target);if(!target?.hp)return;state.orders[p.actor]={type:p.type,target:target.id};$('infoDialog').close();render();});
+  $('infoDialog').addEventListener('close',()=>{pendingTarget=null;pendingItemActor=null;if(state.phase==='resolving'){paused=false;renderPanel();schedule();}else if(state.phase==='summary')schedule();});
+  $('dialogBody').addEventListener('click',e=>{
+    const escape=e.target.closest('[data-escape]');if(escape){if(escape.dataset.escape==='confirm')confirmEscape();else $('infoDialog').close();return;}
+    if(state.phase!=='commands')return;
+    if(e.target.closest('[data-items-back]')){if(pendingTarget)openItems(pendingTarget.actor);return;}
+    const item=e.target.closest('[data-item]');
+    if(item){if(!item.disabled&&pendingItemActor&&remainingItems(item.dataset.item,pendingItemActor)>0)openTargets('item',item.dataset.item,pendingItemActor);return;}
+    const b=e.target.closest('[data-target]');if(!b||b.disabled||!pendingTarget)return;
+    const pending=pendingTarget,target=member(b.dataset.target);
+    if(!target?.hp||pending.type==='item'&&(!itemTargetAvailable(pending.itemId,target)||remainingItems(pending.itemId,pending.actor)<1))return;
+    const order={type:pending.type,target:target.id};if(pending.type==='item')order.itemId=pending.itemId;
+    $('infoDialog').close();commitOrder(pending.actor,order);
+  });
   $('autoButton').onclick=toggleAuto;
   $('escapeButton').onclick=requestEscape;
   $('historyButton').onclick=history;$('helpButton').onclick=help;
-  $('speedButton').onclick=()=>{speed=speed===1?2:1;$('speedButton').textContent='演出 ×'+speed;$('speedButton').setAttribute('aria-label','演出速度 '+speed+'倍。押すと切り替え');};
+  $('speedButton').onclick=()=>{speed=speed===1?2:1;$('speedButton').textContent='速さ ×'+speed;$('speedButton').setAttribute('aria-label','速さ '+speed+'倍。押すと切り替え');};
   $('party').addEventListener('click',e=>{const b=e.target.closest('[data-actor]');if(b&&!b.disabled&&state.phase==='commands'){state.actor=b.dataset.actor;render();}});
   $('panel').addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b||b.disabled)return;
@@ -286,7 +321,7 @@
       case 'recommend':autoOrders();break;
       case 'allAttack':if(state.phase==='commands'){for(const m of alive())state.orders[m.id]={type:'attack',target:m.id};render();notice('全員の「たたかう」を予約しました。');}break;
       case 'hint':if(state.phase==='quiz'){state.hint=!state.hint;renderPanel();$('panel').querySelector('[data-do=hint]').focus({preventScroll:true});}break;
-      case 'fast':speed=2;$('speedButton').textContent='演出 ×2';notice('行動の演出を短くします。');break;
+      case 'fast':speed=2;$('speedButton').textContent='速さ ×2';$('speedButton').setAttribute('aria-label','速さ 2倍。押すと切り替え');notice('速さを2倍にしました。');break;
       case 'history':history();break;
       case 'restart':restart();break;
     }
@@ -298,7 +333,7 @@
   state=fresh();render();lockArena();
   if(new URLSearchParams(location.search).has('qa'))window.BATTLE_QA={
     snapshot:()=>clone(state),stats,definitions:D.members,questions:D.questions,
-    fixture:(patch={})=>{restart();if(patch.turn)state.turn=patch.turn;if(patch.enemyHp){state.enemyHp=patch.enemyHp;state.enemyMax=patch.enemyHp;}for(const m of state.party){if(patch.hp?.[m.id]!==undefined)m.hp=patch.hp[m.id];if(patch.mp?.[m.id]!==undefined)m.mp=patch.mp[m.id];}if(patch.potions!==undefined)state.potions=patch.potions;state.actor=alive()[0]?.id||'hero';render();},
+    fixture:(patch={})=>{restart();if(patch.turn)state.turn=patch.turn;if(patch.enemyHp){state.enemyHp=patch.enemyHp;state.enemyMax=patch.enemyHp;}for(const m of state.party){if(patch.hp?.[m.id]!==undefined)m.hp=patch.hp[m.id];if(patch.mp?.[m.id]!==undefined)m.mp=patch.mp[m.id];}if(patch.inventory)state.inventory={...state.inventory,...patch.inventory};state.actor=alive()[0]?.id||'hero';render();},
     drain:()=>{clearTimeout(timer);let max=15;while(state.phase==='resolving'&&max-->0){processNext();clearTimeout(timer);}stopAnimations();if(state.phase==='summary'&&state.auto)schedule();},
     transitions:{startQuiz,submit,acknowledge,nextTurn},
     animationState:()=>({pending:state.phase==='resolving'&&queueIndex<queue.length,paused,queueIndex,queueLength:queue.length,timer:!!timer})

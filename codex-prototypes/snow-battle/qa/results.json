@@ -121,8 +121,8 @@
   "performance": {
     "cpuThrottle": 4,
     "samples": 8,
-    "selectionToTwoFramesMedianMs": 33.69999999925494,
-    "selectionToTwoFramesP95Ms": 37.600000001490116,
+    "selectionToTwoFramesMedianMs": 33.20000000298023,
+    "selectionToTwoFramesP95Ms": 41,
     "domNodes": 171,
     "liveAnimations": 0
   },

@@ -6,6 +6,9 @@ window.BATTLE_DATA = Object.freeze({
     { id: 'healer', name: '白魔道士', role: '回復役', hp: 84, startHp: 60, mp: 20, power: 12, color: '#92a782', skill: 'いやしの光', cost: 4, kind: 'heal', detail: '仲間1人のHPを38回復。消費MP 4。戦闘不能は回復できません。' },
     { id: 'sword', name: '剣士', role: '攻め役', hp: 104, startHp: 88, mp: 16, power: 25, color: '#b08082', skill: 'つむじ斬り', cost: 4, kind: 'strike', detail: '敵1体に強い一撃。消費MP 4。', skillPower: 39 }
   ],
+  items: [
+    {id:'potion',name:'回復薬',description:'仲間1人のHPを45回復します。',effect:'restoreHp',amount:45,count:2}
+  ],
   questions: [
     { id:'area', unit:'面積', text:'たて 6cm、横 8cm の長方形。面積は何cm²？', choices:['14cm²','28cm²','48cm²','64cm²'], answer:2, explanation:'長方形の面積は「たて × 横」。6 × 8 ＝ 48 なので、48cm²です。', hint:'長さを足すのではなく、たてと横をかけます。', diagram:'rectangle' },
     { id:'division', unit:'わり算', text:'84このクッキーを、4人で同じ数ずつ分けます。1人分は何こ？', choices:['20こ','21こ','22こ','24こ'], answer:1, explanation:'84 ÷ 4 ＝ 21。80 ÷ 4 ＝ 20 と、4 ÷ 4 ＝ 1 を合わせても求められます。', hint:'80こと4こに分けて考えてみよう。' },
