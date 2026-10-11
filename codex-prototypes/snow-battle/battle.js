@@ -24,7 +24,7 @@
   function remainingItems(except) {return state.potions-Object.entries(state.orders).filter(([id,o])=>id!==except&&member(id).hp>0&&o.type==='item').length;}
   function notice(text) { $('notice').textContent=text;$('notice').classList.add('visible');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('notice').classList.remove('visible'),2500); }
   function message(text) { $('sceneMessage').textContent=text; }
-  function focusHeading() {const h=$('panel').querySelector('h1,h2');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
+  function focusHeading() {const h=$('panel').querySelector('h1,h2');const target=h&&h.getClientRects().length?h:$('panel').querySelector('.question-text,.answer-status,.selection-heading,.resolving-title,.result-copy,.panel-body');if(target){target.tabIndex=-1;target.focus({preventScroll:true});}}
   function clearNotice() {clearTimeout(noticeTimer);$('notice').classList.remove('visible');}
   function changePhase(phase) {clearTimeout(timer);timer=0;clearNotice();state.phase=phase;render();focusHeading();}
 
@@ -105,6 +105,8 @@
       for(const m of D.members)for(const type of ['attack','skill','guard','item']) {
         probe.innerHTML=`<div class="panel" style="height:auto">${commandsPanel(m.id,{type,target})}</div>`;
         probe.querySelector('.panel-body').style.flex='none';
+        // Keep the previous arena height; reclaimed heading space belongs to the question.
+        probe.querySelector('.panel-heading').style.display='block';
         required=Math.max(required,probe.getBoundingClientRect().height);
       }
       partyHeight=$('party').getBoundingClientRect().height;

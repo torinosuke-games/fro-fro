@@ -127,3 +127,11 @@
  #app[data-phase] .enemy-figure{height:53%;bottom:19%;right:10%}
  #app[data-phase] .scene-message{display:block}
 }
+/* Remove repeated instructions above the mobile controls and learning content. */
+@media(max-width:999px){
+ #app:not([data-phase=win]):not([data-phase=lose]) .panel-heading{display:none}
+ #app[data-phase=quiz] .question-tag{margin-bottom:6px}
+ #app[data-phase=quiz] .question-figure{margin:0 auto}
+ #app[data-phase=quiz] .question-figure svg{height:60px}
+ #app[data-phase=quiz] .choices{margin-top:8px}
+}
