@@ -38,6 +38,12 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.locator('.adv-hd-toggle').click();assert.equal(await p.locator('.adv-canvas').count(),1);                                                // Canvas に戻る
  // 全体マップ（見下ろし）にもできる
  await p.getByRole('button',{name:'全体マップ'}).click();assert.equal(await p.locator('.adv-canvas').count(),1);assert.equal(await p.locator('.is-overview').count(),1);
+ // 絵と、当たり判定（マス）がずれていない：焚き火・宝箱・建物の絵の足元は、そのマスの中。絵をタップすると、そのマスへ歩く
+ await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.adventure.pos={x:5,y:3};s.adventure.campUsed=false;FF.app.state=s;FF.ui.show('adventure');});await p.waitForTimeout(500);
+ const aud=await p.evaluate(()=>{const c=FF.ui.fieldCanvas.current(),P=FF.adventure.PLACES;return c.hitRects().map(h=>{const q=c.project(h.cell.x,h.cell.y);return {kind:h.kind,dx:(h.x+h.w/2-q.x)/(112*.78),dy:(h.y+h.h-q.y)/(71.68*.78),cx:h.x+h.w/2,cy:h.y+h.h/2};});});
+ const fire=aud.find(h=>h.kind==='camp');assert.ok(fire,'焚き火の絵が出ている');assert.ok(Math.abs(fire.dx)<.5&&Math.abs(fire.dy)<.5,'焚き火の絵の足元が、マスの中 '+JSON.stringify(fire));
+ const cr=await p.evaluate(()=>FF.ui.fieldCanvas.current().canvas.getBoundingClientRect().toJSON());
+ await p.mouse.click(cr.x+fire.cx,cr.y+fire.cy);await p.waitForFunction(()=>{const a=FF.app.state.adventure.pos;return a.x===6&&a.y===3;},null,{timeout:6000});
  // 全体マップでも、タップで歩ける（地図ぜんたいが入る大きさ）
  await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.adventure.pos={x:2,y:6};FF.app.state=s;FF.ui.show('adventure');});
  await p.getByRole('button',{name:'全体マップ'}).count();

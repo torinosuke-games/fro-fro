@@ -173,8 +173,8 @@
       }
     }
     var h = PLACES.home, tn = PLACES.town, ch = PLACES.chest;
-    list.push({ kind: 'cabin', x: h.x, y: h.y - .3, w: 176, h: 176 * 495 / 620 });
-    [[0, -.35, 172], [-.75, -.9, 132], [.65, -1.08, 128]].forEach(function (q) { list.push({ kind: 'cabin', x: tn.x + q[0], y: tn.y + q[1], w: q[2], h: q[2] * 495 / 620 }); });
+    list.push({ kind: 'cabin', x: h.x, y: h.y - .3, w: 176, h: 176 * 495 / 620, place: 'home' });
+    [[0, -.35, 172], [-.75, -.9, 132], [.65, -1.08, 128]].forEach(function (q) { list.push({ kind: 'cabin', x: tn.x + q[0], y: tn.y + q[1], w: q[2], h: q[2] * 495 / 620, place: 'town' }); });
     [[1.6, .1], [-.35, .2]].forEach(function (q, i) { list.push({ kind: 'lantern', x: h.x + q[0], y: h.y + q[1], w: 35, h: 35 * 503 / 280, i: i }); });
     [[tn.x - .5, tn.y + 2.1], [tn.x - .7, tn.y + .35]].forEach(function (q) { list.push({ kind: 'lantern', x: q[0], y: q[1], w: 35, h: 35 * 503 / 280 }); });
     list.push({ kind: 'lantern', x: PLACES.camp.x + 1.15, y: PLACES.camp.y + .02, w: 35, h: 35 * 503 / 280 });
@@ -190,7 +190,7 @@
     canvas.className = 'adv-canvas'; canvas.setAttribute('aria-hidden', 'true');
     host.appendChild(canvas);
     var objects = buildObjects(MAP, PLACES), A = null;   // A：読み込んだ絵
-    var width = 0, height = 0, ratio = 1, zoom = 1, back = null, dead = false, queued = 0, ro = null;
+    var hits = [], width = 0, height = 0, ratio = 1, zoom = 1, back = null, dead = false, queued = 0, ro = null;
     var hero = { x: opts.hero.x, y: opts.hero.y, face: 0, diag: false, walking: false, dist: 0 };   // dist：歩いた道のり（マス）。歩くしぐさの位相
     var cam = { x: hero.x, y: hero.y - .3 }, quality = opts.quality || 'std';
     var avatarSheet = opts.sheet, diagSheet = opts.diagSheet, cols = MAP[0].length, rows = MAP.length;
@@ -254,14 +254,17 @@
       // 手前の木・岩が主人公の体をかくすときは、うすくする（足元の影は残す）
       var covers = o.y > hero.y + .05 && Math.abs(p.x - hp.x) < w * .42 && hp.y - 28 > p.y - h && hp.y - 28 < p.y;
       ctx.globalAlpha = (covers ? .36 : 1) * fade; ctx.drawImage(src, p.x - w / 2, p.y - h, w, h); ctx.globalAlpha = 1;
+      if (o.place) hits.push({ x: p.x - w / 2, y: p.y - h, w: w, h: h, cell: PLACES[o.place], kind: o.place });   // 建物をタップしたら、その入口のマスへ
     }
-    function drawProp(kind, x, y, w) {
+    function drawProp(kind, x, y, w, cell) {
       var img = A.props, half = img.width / 2, h = w * img.height / half, p = project(x, y);
       shadow(p, w * zoom); ctx.drawImage(img, kind * half, 0, half, img.height, p.x - w * zoom / 2, p.y - h * zoom + 8 * zoom, w * zoom, h * zoom);
+      hits.push({ x: p.x - w * zoom / 2, y: p.y - h * zoom + 8 * zoom, w: w * zoom, h: h * zoom, cell: cell, kind: kind ? 'camp' : 'chest' });   // 焚き火・宝箱をタップしたら、そのマスへ
     }
     function drawBoss(x, y) {
       var img = A.enemies; if (!img) return; var p = project(x, y), h = 150 * zoom, w = h * 707 / 940;
       shadow(p, w * 1.1, .2); ctx.drawImage(img, 829, 20, 707, 940, p.x - w / 2, p.y - h + 10 * zoom, w, h);
+      hits.push({ x: p.x - w / 2, y: p.y - h + 10 * zoom, w: w, h: h, cell: { x: x, y: y }, kind: 'boss' });
       ctx.font = '700 11px sans-serif'; ctx.fillStyle = '#c8873a'; ctx.textAlign = 'center'; ctx.fillText('★★★', p.x, p.y - h - 2); ctx.textAlign = 'start';
     }
     function drawHero() {
@@ -281,7 +284,7 @@
     function draw() {
       if (dead || !width) return;
       if (!A) { ctx.setTransform(ratio, 0, 0, ratio, 0, 0); ctx.fillStyle = '#dbe9ee'; ctx.fillRect(0, 0, width, height); ctx.fillStyle = '#6d8f9f'; ctx.font = '700 13px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('景色を準備しています…', width / 2, height * .45); ctx.textAlign = 'start'; return; }
-      var st = opts.state(), hp = project(hero.x, hero.y);
+      var st = opts.state(), hp = project(hero.x, hero.y); hits = [];
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0); ctx.clearRect(0, 0, width, height);
       ctx.drawImage(back, 0, 0, width, height);
       var h0 = horizon(), pl = A.plain, tw = 1024 * zoom, th = 512 * zoom, p0 = project(-.5, -.5);
@@ -293,8 +296,8 @@
       var hz = ctx.createLinearGradient(0, h0, 0, h0 + 110 * zoom); hz.addColorStop(0, 'rgba(228,237,241,.95)'); hz.addColorStop(1, 'rgba(228,237,241,0)'); ctx.fillStyle = hz; ctx.fillRect(0, h0, width, 110 * zoom);
       var gd = groundDims(MAP); ctx.drawImage(A.ground, p0.x - GMX * zoom, p0.y - GMY * zoom, gd.GW * zoom, gd.GH * zoom);
       // 動くもの・状態で変わるもの：主人公・焚き火・宝箱・ボス。足元の y 順に、立てた絵の間へ入れる
-      var dyn = [{ y: hero.y, f: drawHero }, { y: PLACES.camp.y - .25, f: function () { drawProp(1, PLACES.camp.x + .65, PLACES.camp.y - .25, 66); } }];
-      if (st && !st.chest) dyn.push({ y: PLACES.chest.y - .3, f: function () { drawProp(0, PLACES.chest.x, PLACES.chest.y - .3, 45); } });
+      var dyn = [{ y: hero.y, f: drawHero }, { y: PLACES.camp.y - .3, f: function () { drawProp(1, PLACES.camp.x + .3, PLACES.camp.y - .3, 66, PLACES.camp); } }];   // 絵の足元は、焚き火のマスの中（右上に少し）。マスとの、ずれは0.5マスいない。主人公は、そのとなりに立つ
+      if (st && !st.chest) dyn.push({ y: PLACES.chest.y - .3, f: function () { drawProp(0, PLACES.chest.x, PLACES.chest.y - .3, 45, PLACES.chest); } });
       if (st && opts.boss && st.cleared.indexOf('boss') < 0) dyn.push({ y: opts.boss.y, f: function () { drawBoss(opts.boss.x, opts.boss.y); } });
       dyn.sort(function (a, b) { return a.y - b.y; });
       var di = 0;
@@ -315,7 +318,9 @@
     canvas.addEventListener('pointerup', function (e) {
       if (!tap || tap.id !== e.pointerId) return; var t = tap; tap = null;
       if (Math.hypot(e.clientX - t.x, e.clientY - t.y) > 12) return;
-      var r = canvas.getBoundingClientRect(), u = unproject(e.clientX - r.left, e.clientY - r.top), cx = Math.round(u.x), cy = Math.round(u.y);
+      var r = canvas.getBoundingClientRect(), tx = e.clientX - r.left, ty = e.clientY - r.top;
+      for (var hi = hits.length - 1; hi >= 0; hi--) { var hh = hits[hi]; if (tx >= hh.x && tx <= hh.x + hh.w && ty >= hh.y && ty <= hh.y + hh.h) { opts.onTap({ x: hh.cell.x, y: hh.cell.y }); return; } }   // 建物・焚き火・宝箱・ボスの絵の上は、そのマスへ
+      var u = unproject(tx, ty), cx = Math.round(u.x), cy = Math.round(u.y);
       if (cy >= 0 && cy < MAP.length && cx >= 0 && cx < MAP[0].length) opts.onTap({ x: cx, y: cy });
     });
     canvas.addEventListener('pointercancel', function () { tap = null; });
@@ -332,6 +337,7 @@
       quality: function () { return quality; },
       requestDraw: requestDraw,
       project: project,
+      hitRects: function () { return hits.slice(); },
       destroy: function () { dead = true; if (ro) ro.disconnect(); if (queued) root.cancelAnimationFrame(queued); if (canvas.parentNode) canvas.parentNode.removeChild(canvas); if (current === api) current = null; }
     };
     current = api;
