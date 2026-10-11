@@ -244,6 +244,8 @@
     function drawObject(o, hp) {
       var p = project(o.x, o.y), w = o.w * zoom, h = o.h * zoom;
       if (p.x + w / 2 < 0 || p.x - w / 2 > width || p.y < 0 || p.y - h > height) return;
+      // 水平線より奥は、足元の地面がない（山のうえに浮いて見える）ので、描かない。水平線のすぐ手前は、もやにとけるように、だんだんうすく
+      var h0 = horizon(), fade = Math.min(1, (p.y - h0) / (80 * zoom)); if (fade <= 0) return;
       var src;
       if (o.kind === 'tree') src = A.parts.trees[o.tone][o.flip];
       else if (o.kind === 'rock') src = A.parts.rocks[o.tone][o.flip];
@@ -251,7 +253,7 @@
       shadow(p, w);
       // 手前の木・岩が主人公の体をかくすときは、うすくする（足元の影は残す）
       var covers = o.y > hero.y + .05 && Math.abs(p.x - hp.x) < w * .42 && hp.y - 28 > p.y - h && hp.y - 28 < p.y;
-      ctx.globalAlpha = covers ? .36 : 1; ctx.drawImage(src, p.x - w / 2, p.y - h, w, h); ctx.globalAlpha = 1;
+      ctx.globalAlpha = (covers ? .36 : 1) * fade; ctx.drawImage(src, p.x - w / 2, p.y - h, w, h); ctx.globalAlpha = 1;
     }
     function drawProp(kind, x, y, w) {
       var img = A.props, half = img.width / 2, h = w * img.height / half, p = project(x, y);
