@@ -67,3 +67,18 @@
 @media(max-width:999px) and (orientation:portrait) and (min-height:651px){
  #app[data-phase=commands]{--scene-height:clamp(90px,calc(100dvh - 590px),228px)}
 }
+/* Give mobile space back to the arena with a lower toolbar. */
+@media(max-width:999px){
+ .battle-toolbar{min-height:36px}
+ .battle-toolbar .flow{height:36px}
+ .battle-toolbar .header-tools button{height:36px}
+}
+@media(max-width:999px) and (orientation:portrait){
+ #app{--scene-height:clamp(148px,calc(27dvh + 8px),288px)}
+ #app[data-phase=commands]{--scene-height:clamp(98px,calc(100dvh - 582px),264px)}
+ #app[data-phase=quiz],#app[data-phase=review]{--scene-height:clamp(108px,calc(18dvh + 8px),168px)}
+}
+@media(max-width:999px) and (max-height:650px) and (orientation:portrait){
+ #app[data-phase=commands]{--scene-height:98px}
+ #app[data-phase=quiz],#app[data-phase=review]{--scene-height:88px}
+}
