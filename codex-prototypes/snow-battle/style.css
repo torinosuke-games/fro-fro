@@ -129,7 +129,7 @@
 }
 /* Remove repeated instructions above the mobile controls and learning content. */
 @media(max-width:999px){
- #app:not([data-phase=win]):not([data-phase=lose]) .panel-heading{display:none}
+ #app:not([data-phase=win]):not([data-phase=lose]):not([data-phase=fled]) .panel-heading{display:none}
  #app[data-phase=quiz] .question-tag{margin-bottom:6px}
  #app[data-phase=quiz] .question-figure{margin:0 auto}
  #app[data-phase=quiz] .question-figure svg{height:60px}
@@ -144,3 +144,7 @@
 .member[data-hp-state=critical] .vitals>span:first-child{color:#a13b43}
 .member[data-hp-state=critical] .meter i{background:#c4515b}
 .member[data-hp-state=down] .vitals>span:first-child{color:#748184}
+
+.battle-toolbar .header-tools #escapeButton{border-radius:9px;font-size:10px;font-weight:500;color:#697d7c;background:#f5f8f2;padding:0 5px}
+.escape-actions{display:flex;gap:10px;margin-top:16px}.escape-actions button{flex:1;min-height:44px}
+.escape-actions [data-escape=confirm]{color:#8c594c;border-color:#d4b8a6;background:#fff7ee}

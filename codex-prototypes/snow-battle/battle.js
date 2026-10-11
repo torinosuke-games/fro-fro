@@ -13,7 +13,7 @@
   const clone = value => JSON.parse(JSON.stringify(value));
 
   function fresh() {
-    return {auto:false,phase:'commands',turn:1,actor:'hero',enemyHp:360,enemyMax:360,potions:2,
+    return {auto:false,escapePending:false,phase:'commands',turn:1,actor:'hero',enemyHp:360,enemyMax:360,potions:2,
       party:D.members.map(m=>({id:m.id,hp:m.startHp,mp:m.mp})),
       orders:Object.fromEntries(D.members.map(m=>[m.id,{type:'attack',target:m.id}])),
       selected:null,hint:false,question:null,history:[],log:[],acknowledged:false,correct:false,outcome:null};
@@ -30,6 +30,8 @@
 
   function renderStatus() {
     $('app').dataset.phase=state.phase;
+    $('escapeButton').disabled=state.escapePending||['resolving','win','lose','fled'].includes(state.phase);
+    $('autoButton').disabled=state.escapePending||['win','lose','fled'].includes(state.phase);
     $('autoButton').setAttribute('aria-pressed',String(state.auto));
     $('autoButton').innerHTML=`<strong>オート ${state.auto?'ON':'OFF'}</strong><small>問題・解答は手動</small>`;
     $('turnLabel').textContent='TURN '+String(state.turn).padStart(2,'0');
@@ -71,13 +73,13 @@
     return heading('LEARNING TURN','ひとつずつ、考えよう')+`<div class="panel-body"><div class="question-tag"><span class="tag">小学4年 · 算数</span><span class="tag">${q.unit}</span></div><p class="question-text">${esc(q.text)}</p>${figure(q)}<div class="choices" role="group" aria-label="答えを選ぶ">`+
       q.choices.map((v,i)=>`<button class="choice" data-choice="${i}" aria-pressed="${state.selected===i}"><span class="letter" aria-hidden="true">${'ABCD'[i]}</span><span>${esc(v)}</span></button>`).join('')+
       `</div><div class="quiz-tools"><button class="quiet" data-do="hint" aria-expanded="${state.hint}">◇ ヒント${state.hint?'を閉じる':'を見る'}</button><button class="quiet" data-do="dontKnow">わからない・解答を見る</button></div>${state.hint?`<p class="hint">${esc(q.hint)}</p>`:''}</div>`+
-      footer(primary('この答えにする','submit',state.selected===null),'時間制限はありません。答えは決定前なら変更できます。');
+      footer(primary('この答えにする','submit',state.selected===null),state.escapePending?'問題と解答を確認してから撤退します。':'時間制限はありません。答えは決定前なら変更できます。');
   }
   function reviewPanel() {
     const q=state.question,h=state.history.at(-1);
     return heading('ANSWER & UNDERSTANDING','答えを確かめよう')+
-      `<div class="panel-body"><div class="answer-status ${h.correct?'':'wrong'}"><span class="seal" aria-hidden="true">${h.correct?'✓':'◇'}</span><strong>${h.correct?'正解！ よく考えたね。':h.selected===null?'いっしょに確認しよう。':'ここが、学びのチャンス。'}</strong></div><p class="answer-question">${esc(q.text)}</p><div class="answer-pair"><div><small>あなたの答え</small><strong>${h.selected===null?'わからない':esc(q.choices[h.selected])}</strong></div><div><small>正しい答え</small><strong>${esc(q.choices[q.answer])}</strong></div></div><p class="explanation">${esc(q.explanation)}</p><div class="learning-effect">${h.correct?'学ぶ力が仲間に届いた。攻撃が1.5倍、受けるダメージが半分に。':'仲間は選んだ作戦で行動します。次の問題でもう一度挑戦しよう。'}</div></div>`+
-      footer(primary('解答を確認した · 行動する','acknowledge'),'正解も、まちがえた問題も、上の「記録」で読み返せます。');
+      `<div class="panel-body"><div class="answer-status ${h.correct?'':'wrong'}"><span class="seal" aria-hidden="true">${h.correct?'✓':'◇'}</span><strong>${h.correct?'正解！ よく考えたね。':h.selected===null?'いっしょに確認しよう。':'ここが、学びのチャンス。'}</strong></div><p class="answer-question">${esc(q.text)}</p><div class="answer-pair"><div><small>あなたの答え</small><strong>${h.selected===null?'わからない':esc(q.choices[h.selected])}</strong></div><div><small>正しい答え</small><strong>${esc(q.choices[q.answer])}</strong></div></div><p class="explanation">${esc(q.explanation)}</p><div class="learning-effect">${state.escapePending?'今回は行動せず、戦闘から撤退します。':h.correct?'学ぶ力が仲間に届いた。攻撃が1.5倍、受けるダメージが半分に。':'仲間は選んだ作戦で行動します。次の問題でもう一度挑戦しよう。'}</div></div>`+
+      footer(primary(state.escapePending?'解答を確認した · 逃げる':'解答を確認した · 行動する','acknowledge'),'正解も、まちがえた問題も、上の「記録」で読み返せます。');
   }
   function logsMarkup() {return `<ul class="action-log">${state.log.map(t=>`<li><span class="log-dot" aria-hidden="true">◇</span><span>${esc(t)}</span></li>`).join('')}</ul>`;}
   function actionPanel() {
@@ -86,10 +88,10 @@
     return heading('TURN COMPLETE',state.auto?'次の問題へ進みます':'次の一手を考えよう')+`<div class="panel-body">${turnLog}</div>`+footer(primary(`ターン ${state.turn+1} へ`,'nextTurn'),state.auto?'オート ON · 1.5秒後に次の作戦を選び、問題で止まります。':'次のターンも、問題と解答を確認してから行動します。');
   }
   function endPanel() {
-    const won=state.phase==='win',correct=state.history.filter(h=>h.correct).length;
-    return heading(won?'VICTORY':'TRY AGAIN',won?'峠の向こうへ。':'ひと休みして、もう一度。')+`<div class="panel-body"><div class="end-mark" aria-hidden="true">${won?'✧':'◇'}</div><p class="result-copy">${won?'学ぶ力と仲間の作戦で、道がひらけました。':'今回はここまで。確認した答えは、あなたの力になります。'}</p><div class="summary-totals"><div><small>取り組んだ問題</small><strong>${state.history.length}<small>問</small></strong></div><div><small>正解した問題</small><strong>${correct}<small>問</small></strong></div></div><button class="secondary" data-do="history" style="width:100%">問題と解答をふり返る</button></div>`+footer(primary('もう一度試す','restart'),'この試作の結果は、本体のセーブには反映されません。');
+    const won=state.phase==='win',fled=state.phase==='fled',correct=state.history.filter(h=>h.correct).length;
+    return heading(fled?'RETREAT':won?'VICTORY':'TRY AGAIN',fled?'いったん引き返そう。':won?'峠の向こうへ。':'ひと休みして、もう一度。')+`<div class="panel-body"><div class="end-mark" aria-hidden="true">${won?'✧':'◇'}</div><p class="result-copy">${fled?'戦闘から撤退しました。確認した問題は「記録」で振り返れます。':won?'学ぶ力と仲間の作戦で、道がひらけました。':'今回はここまで。確認した答えは、あなたの力になります。'}</p><div class="summary-totals"><div><small>取り組んだ問題</small><strong>${state.history.length}<small>問</small></strong></div><div><small>正解した問題</small><strong>${correct}<small>問</small></strong></div></div><button class="secondary" data-do="history" style="width:100%">問題と解答をふり返る</button></div>`+footer(primary('もう一度試す','restart'),'この試作の結果は、本体のセーブには反映されません。');
   }
-  function renderPanel() {stats.renders++;$('panel').innerHTML=state.phase==='commands'?commandsPanel():state.phase==='quiz'?quizPanel():state.phase==='review'?reviewPanel():['win','lose'].includes(state.phase)?endPanel():actionPanel();}
+  function renderPanel() {stats.renders++;$('panel').innerHTML=state.phase==='commands'?commandsPanel():state.phase==='quiz'?quizPanel():state.phase==='review'?reviewPanel():['win','lose','fled'].includes(state.phase)?endPanel():actionPanel();}
   function render() {renderStatus();renderPanel();}
 
   // Reserve enough space for the longest command description once per viewport.
@@ -193,6 +195,7 @@
   function acknowledge() {
     if(state.phase!=='review'||!state.history.length||state.acknowledged)return;
     state.acknowledged=true;state.history.at(-1).acknowledged=true;stats.reviewAcknowledgements++;
+    if(state.escapePending){escapeBattle();return;}
     queue=combatQueue();queueIndex=0;state.log=[];changePhase('resolving');processNext();
   }
   function animateEvent(e) {
@@ -214,6 +217,7 @@
     else if(state.phase==='summary'&&state.auto)timer=setTimeout(()=>{timer=0;if(token===epoch&&state.auto&&!document.hidden&&!$('infoDialog').open)nextTurn();},1500);
   }
   function toggleAuto() {
+    if(state.escapePending||['win','lose','fled'].includes(state.phase))return;
     state.auto=!state.auto;renderStatus();
     if(state.phase==='commands'&&state.auto){autoOrders(true);startQuiz();}
     else if(state.phase==='summary'){renderPanel();schedule();}
@@ -242,11 +246,30 @@
     const html=state.history.length?state.history.map(h=>`<article class="history-item"><small>TURN ${h.turn} · ${h.question.unit} · ${h.correct?'正解':'確認した問題'}</small><h3>${esc(h.question.text)}</h3><p class="history-answer">あなたの答え：${h.selected===null?'わからない':esc(h.question.choices[h.selected])}<br><b>正しい答え：${esc(h.question.choices[h.question.answer])}</b></p><p class="history-explain">${esc(h.question.explanation)}</p></article>`).join(''):'<p>問題に答えると、ここに問題・自分の答え・正解・解説が残ります。</p>';
     openDialog('問題と解答の記録',html);
   }
+  function escapeBattle() {
+    epoch++;clearTimeout(timer);timer=0;stopAnimations();queue=[];queueIndex=0;
+    state.auto=false;state.escapePending=false;paused=false;
+    message('仲間とともに、戦闘から撤退しました。');changePhase('fled');
+  }
+  function requestEscape() {
+    if(state.escapePending||!['commands','quiz','review','summary'].includes(state.phase))return;
+    const pending=['quiz','review'].includes(state.phase);
+    openDialog('戦闘から逃げますか？',`<p>${pending?'このターンの問題と解答を確認したあと、攻撃せずに撤退します。':'この試作では必ず撤退できます。確認した問題の記録は残ります。'}</p><div class="escape-actions"><button class="secondary" data-escape="cancel">戦闘を続ける</button><button class="secondary" data-escape="confirm">逃げる</button></div>`);
+  }
+  function confirmEscape() {
+    if(!['commands','quiz','review','summary'].includes(state.phase))return;
+    state.auto=false;
+    if(['quiz','review'].includes(state.phase)) {
+      state.escapePending=true;render();message('問題と解答を確認してから撤退します。');
+    } else escapeBattle();
+    $('infoDialog').close();focusHeading();
+  }
   function help() {openDialog('戦闘のせつめい',`<p>仲間のカードを押して、作戦を選びます。最初は全員「たたかう」です。</p><ol><li>作戦を選ぶ</li><li>1問に答える</li><li>正しい答えと解説を確認する</li><li>仲間と敵が行動する</li></ol><p>正解すると攻撃が1.5倍、受けるダメージが半分になります。まちがえても仲間は行動します。</p><p>「オート ON」は毎ターンの作戦と次のターンへの進行を自動化します。問題への回答と解答確認は手動です。いつでもOFFにできます。OFFにしても今のターンに予約済みの作戦は変えません。次のターンから再び手動で選べます。「おすすめの作戦」は行動の予約だけです。時間制限はありません。</p><p>MPと回復薬は、実際に行動するときに使います。画面の「演出 ×1」で速さを変えられます。</p><p>このページは戦闘だけの独立試作です。本体・フィールド試作・セーブデータには接続しません。</p>`);}
   $('closeDialog').onclick=()=>$('infoDialog').close();
   $('infoDialog').addEventListener('close',()=>{pendingTarget=null;if(state.phase==='resolving'){paused=false;renderPanel();schedule();}else if(state.phase==='summary')schedule();});
-  $('dialogBody').addEventListener('click',e=>{const b=e.target.closest('[data-target]');if(!b||b.disabled||!pendingTarget||state.phase!=='commands')return;const p=pendingTarget,target=member(b.dataset.target);if(!target?.hp)return;state.orders[p.actor]={type:p.type,target:target.id};$('infoDialog').close();render();});
+  $('dialogBody').addEventListener('click',e=>{const escape=e.target.closest('[data-escape]');if(escape){if(escape.dataset.escape==='confirm')confirmEscape();else $('infoDialog').close();return;}const b=e.target.closest('[data-target]');if(!b||b.disabled||!pendingTarget||state.phase!=='commands')return;const p=pendingTarget,target=member(b.dataset.target);if(!target?.hp)return;state.orders[p.actor]={type:p.type,target:target.id};$('infoDialog').close();render();});
   $('autoButton').onclick=toggleAuto;
+  $('escapeButton').onclick=requestEscape;
   $('historyButton').onclick=history;$('helpButton').onclick=help;
   $('speedButton').onclick=()=>{speed=speed===1?2:1;$('speedButton').textContent='演出 ×'+speed;$('speedButton').setAttribute('aria-label','演出速度 '+speed+'倍。押すと切り替え');};
   $('party').addEventListener('click',e=>{const b=e.target.closest('[data-actor]');if(b&&!b.disabled&&state.phase==='commands'){state.actor=b.dataset.actor;render();}});

@@ -1,0 +1,25 @@
+{
+  "checks": [
+    "Escape opens confirmation without leaving battle",
+    "Cancel preserves battle",
+    "Confirmed command escape ends isolated battle",
+    "Escape result offers restart",
+    "Restart clears retreat state",
+    "Quiz escape waits for answer",
+    "Quiz escape disables auto",
+    "Retreat cannot skip question",
+    "Retreat still displays explanation",
+    "Retreat still waits for explicit acknowledgement",
+    "Acknowledgement completes retreat",
+    "Retreat consumes no resources or damage",
+    "No automatic turn after retreat",
+    "Retreat preserves problem and answer",
+    "Escape from review does not bypass acknowledgement",
+    "Unknown answer can retreat after review",
+    "Escape disabled during action",
+    "Escape confirmation pauses auto next turn",
+    "Turn summary can retreat immediately",
+    "No browser errors"
+  ],
+  "environment": "Linux Chromium; no hardware test"
+}

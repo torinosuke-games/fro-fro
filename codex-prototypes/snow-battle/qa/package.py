@@ -6,7 +6,7 @@ files = [root / p for p in ('index.html','style.css','data.js','battle.js','revi
 files += sorted((root / 'assets').glob('*.webp'))
 files += [root / 'qa' / f for f in ('phone-commands.png','phone-quiz.png','phone-review.png','landscape-quiz.png')]
 results = json.loads((root / 'qa/results.json').read_text())
-report = {'scope':'codex-prototypes/snow-battle/ only', 'baseCommit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(), 'runtimeImageBytes':sum(p.stat().st_size for p in (root/'assets').glob('*.webp')), 'runtimeCodeBytes':sum((root/p).stat().st_size for p in ('index.html','style.css','data.js','battle.js')), 'automatedChecksPassed':len(results['checks']), 'layoutChecksPassed':len(json.loads((root/'qa/layout-results.json').read_text())['checks']), 'questionLayoutChecksPassed':len(json.loads((root/'qa/question-layout-results.json').read_text())['checks']), 'hardwareTested':False, 'files':{str(p.relative_to(root)):{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in files}}
+report = {'scope':'codex-prototypes/snow-battle/ only', 'baseCommit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(), 'runtimeImageBytes':sum(p.stat().st_size for p in (root/'assets').glob('*.webp')), 'runtimeCodeBytes':sum((root/p).stat().st_size for p in ('index.html','style.css','data.js','battle.js')), 'automatedChecksPassed':len(results['checks']), 'layoutChecksPassed':len(json.loads((root/'qa/layout-results.json').read_text())['checks']), 'questionLayoutChecksPassed':len(json.loads((root/'qa/question-layout-results.json').read_text())['checks']), 'escapeChecksPassed':len(json.loads((root/'qa/escape-results.json').read_text())['checks']), 'hardwareTested':False, 'files':{str(p.relative_to(root)):{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in files}}
 (root/'qa/delivery.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 archive = root/'snow-battle-trial.zip'
 with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
@@ -14,6 +14,7 @@ with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
     z.write(root/'qa/results.json','snow-battle/qa/results.json')
     z.write(root/'qa/layout-results.json','snow-battle/qa/layout-results.json')
     z.write(root/'qa/question-layout-results.json','snow-battle/qa/question-layout-results.json')
+    z.write(root/'qa/escape-results.json','snow-battle/qa/escape-results.json')
     z.write(root/'qa/delivery.json','snow-battle/qa/delivery.json')
 with zipfile.ZipFile(archive) as z:
     assert z.testzip() is None
