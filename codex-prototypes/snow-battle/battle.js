@@ -13,7 +13,7 @@
   const clone = value => JSON.parse(JSON.stringify(value));
 
   function fresh() {
-    return {phase:'commands',turn:1,actor:'hero',enemyHp:360,enemyMax:360,potions:2,
+    return {auto:false,phase:'commands',turn:1,actor:'hero',enemyHp:360,enemyMax:360,potions:2,
       party:D.members.map(m=>({id:m.id,hp:m.startHp,mp:m.mp})),
       orders:Object.fromEntries(D.members.map(m=>[m.id,{type:'attack',target:m.id}])),
       selected:null,hint:false,question:null,history:[],log:[],acknowledged:false,correct:false,outcome:null};
@@ -26,10 +26,12 @@
   function message(text) { $('sceneMessage').textContent=text; }
   function focusHeading() {const h=$('panel').querySelector('h1,h2');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
   function clearNotice() {clearTimeout(noticeTimer);$('notice').classList.remove('visible');}
-  function changePhase(phase) {clearNotice();state.phase=phase;render();focusHeading();}
+  function changePhase(phase) {clearTimeout(timer);timer=0;clearNotice();state.phase=phase;render();focusHeading();}
 
   function renderStatus() {
     $('app').dataset.phase=state.phase;
+    $('autoButton').setAttribute('aria-pressed',String(state.auto));
+    $('autoButton').innerHTML=`<strong>オート ${state.auto?'ON':'OFF'}</strong><small>問題・解答は手動</small>`;
     $('turnLabel').textContent='TURN '+String(state.turn).padStart(2,'0');
     const step=state.phase==='commands'?0:state.phase==='quiz'?1:state.phase==='review'?2:3;
     document.querySelectorAll('.flow li').forEach((el,i)=>{el.classList.toggle('current',i===step);el.classList.toggle('done',i<step);if(i===step)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
@@ -79,7 +81,7 @@
   function actionPanel() {
     if(state.phase==='resolving') return heading('PARTY ACTION','仲間たちの行動')+`<div class="panel-body"><p class="resolving-title">${paused?'一時停止中です':'作戦を実行しています'}</p><p class="resolve-note">${paused?'ページに戻ると続きから再開します。':'仲間と敵の行動は、ここに記録されます。'}</p>${logsMarkup()}</div>`+footer(`<button class="secondary" style="width:100%" data-do="fast">演出を短くする</button>`);
     const turnLog=state.log.length?logsMarkup():'';
-    return heading('TURN COMPLETE','次の一手を考えよう')+`<div class="panel-body">${turnLog}</div>`+footer(primary(`ターン ${state.turn+1} へ`,'nextTurn'),'次のターンも、問題と解答を確認してから行動します。');
+    return heading('TURN COMPLETE',state.auto?'次の問題へ進みます':'次の一手を考えよう')+`<div class="panel-body">${turnLog}</div>`+footer(primary(`ターン ${state.turn+1} へ`,'nextTurn'),state.auto?'オート ON · 1.5秒後に次の作戦を選び、問題で止まります。':'次のターンも、問題と解答を確認してから行動します。');
   }
   function endPanel() {
     const won=state.phase==='win',correct=state.history.filter(h=>h.correct).length;
@@ -99,7 +101,7 @@
     pendingTarget={type,actor:state.actor};
     openDialog(type==='item'?'回復薬を使う相手':'いやしの光を届ける相手',`<p>${type==='item'?'HPを45回復します。':'HPを38回復します。'}</p><div class="target-list">${state.party.map(m=>{const d=definitions[m.id];return `<button class="target-option" data-target="${m.id}" ${!m.hp||m.hp===d.hp?'disabled':''}><img src="assets/${m.id}.webp" alt=""><span><b>${d.name}</b><small>HP ${m.hp} / ${d.hp}${!m.hp?' · 戦闘不能':m.hp===d.hp?' · HPは満タン':''}</small></span></button>`}).join('')}</div>`);
   }
-  function autoOrders() {
+  function autoOrders(silent=false) {
     if(state.phase!=='commands')return;
     const low=alive().slice().sort((a,b)=>a.hp/definitions[a.id].hp-b.hp/definitions[b.id].hp)[0];
     let plannedHeal=false;
@@ -111,7 +113,7 @@
       state.orders[m.id]=o;
     }
     if(!plannedHeal&&low.hp/definitions[low.id].hp<.4&&state.potions>0)state.orders[low.id]={type:'item',target:low.id};
-    render();notice('おすすめを予約しました。カードから変更できます。');
+    render();if(!silent)notice('おすすめを予約しました。カードから変更できます。');
   }
   function validOrders() {
     return alive().every(m=>{const o=state.orders[m.id],d=definitions[m.id],target=o&&member(o.target);return o&&['attack','skill','guard','item'].includes(o.type)&&(!(o.type==='skill')||m.mp>=d.cost)&&(!(o.type==='item'||o.type==='skill'&&d.kind==='heal')||target?.hp>0)})&&Object.entries(state.orders).filter(([id,o])=>member(id).hp>0&&o.type==='item').length<=state.potions;
@@ -174,11 +176,22 @@
     if(e.amount){const f=$('floatText');f.textContent=(e.kind==='heal'?'+':'−')+e.amount;f.classList.toggle('heal',e.target!=='enemy');f.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,offset:.15},{opacity:0,transform:'translateY(-24px)'}],{duration:600/speed,fill:'forwards'});}
     stats.animations++;
   }
-  function schedule() {clearTimeout(timer);if(state.phase==='resolving'&&!document.hidden&&!$('infoDialog').open){const token=epoch;timer=setTimeout(()=>{if(token===epoch)processNext();},(motion.matches?180:650)/speed);}}
+  function schedule() {
+    clearTimeout(timer);timer=0;
+    if(document.hidden||$('infoDialog').open)return;
+    const token=epoch;
+    if(state.phase==='resolving')timer=setTimeout(()=>{if(token===epoch)processNext();},(motion.matches?180:650)/speed);
+    else if(state.phase==='summary'&&state.auto)timer=setTimeout(()=>{timer=0;if(token===epoch&&state.auto&&!document.hidden&&!$('infoDialog').open)nextTurn();},1500);
+  }
+  function toggleAuto() {
+    state.auto=!state.auto;renderStatus();
+    if(state.phase==='commands'&&state.auto){autoOrders(true);startQuiz();}
+    else if(state.phase==='summary'){renderPanel();schedule();}
+  }
   function processNext() {
     timer=0;if(state.phase!=='resolving'||!state.acknowledged||document.hidden||$('infoDialog').open)return;
     paused=false;
-    if(queueIndex>=queue.length){state.outcome=state.enemyHp<=0?'win':alive().length?'summary':'lose';message(state.outcome==='win'?'学ぶ力で、道がひらけた。':state.outcome==='lose'?'仲間とともに、ひと休み。':'このターンの行動が終わりました。');changePhase(state.outcome);return;}
+    if(queueIndex>=queue.length){state.outcome=state.enemyHp<=0?'win':alive().length?'summary':'lose';message(state.outcome==='win'?'学ぶ力で、道がひらけた。':state.outcome==='lose'?'仲間とともに、ひと休み。':'このターンの行動が終わりました。');changePhase(state.outcome);schedule();return;}
     const event=queue[queueIndex++];state.party=clone(event.party);state.enemyHp=event.enemyHp;state.potions=event.potions;state.log.push(event.text);stats.appliedEvents++;
     render();message(event.text);animateEvent(event);const scroll=$('panel').querySelector('.panel-body');if(scroll)scroll.scrollTop=scroll.scrollHeight;schedule();
   }
@@ -186,7 +199,7 @@
     if(state.phase!=='summary'||!state.acknowledged||state.history.at(-1)?.turn!==state.turn)return;
     state.turn++;state.question=null;state.selected=null;state.log=[];state.acknowledged=false;state.actor=alive()[0].id;
     for(const m of alive()){const o=state.orders[m.id],d=definitions[m.id];if(!o||o.type==='skill'&&m.mp<d.cost||o.type==='item'||!member(o.target)?.hp)state.orders[m.id]={type:'attack',target:m.id};}
-    message('仲間の状態を見て、次の作戦を。');changePhase('commands');
+    message('仲間の状態を見て、次の作戦を。');changePhase('commands');if(state.auto){autoOrders(true);startQuiz();}
   }
   function stopAnimations() {document.getAnimations().forEach(a=>a.cancel());$('floatText').textContent='';$('effect').className='effect';}
   function restart() {epoch++;clearTimeout(timer);clearNotice();stopAnimations();queue=[];queueIndex=0;pendingTarget=null;paused=false;state=fresh();message('仲間とともに、峠の向こうへ。');render();focusHeading();}
@@ -199,10 +212,11 @@
     const html=state.history.length?state.history.map(h=>`<article class="history-item"><small>TURN ${h.turn} · ${h.question.unit} · ${h.correct?'正解':'確認した問題'}</small><h3>${esc(h.question.text)}</h3><p class="history-answer">あなたの答え：${h.selected===null?'わからない':esc(h.question.choices[h.selected])}<br><b>正しい答え：${esc(h.question.choices[h.question.answer])}</b></p><p class="history-explain">${esc(h.question.explanation)}</p></article>`).join(''):'<p>問題に答えると、ここに問題・自分の答え・正解・解説が残ります。</p>';
     openDialog('問題と解答の記録',html);
   }
-  function help() {openDialog('戦闘のせつめい',`<p>仲間のカードを押して、作戦を選びます。最初は全員「たたかう」です。</p><ol><li>作戦を選ぶ</li><li>1問に答える</li><li>正しい答えと解説を確認する</li><li>仲間と敵が行動する</li></ol><p>正解すると攻撃が1.5倍、受けるダメージが半分になります。まちがえても仲間は行動します。</p><p>「おすすめの作戦」は行動の予約だけです。毎ターン、問題と解答の確認が必要です。時間制限はありません。</p><p>MPと回復薬は、実際に行動するときに使います。画面の「演出 ×1」で速さを変えられます。</p><p>このページは戦闘だけの独立試作です。本体・フィールド試作・セーブデータには接続しません。</p>`);}
+  function help() {openDialog('戦闘のせつめい',`<p>仲間のカードを押して、作戦を選びます。最初は全員「たたかう」です。</p><ol><li>作戦を選ぶ</li><li>1問に答える</li><li>正しい答えと解説を確認する</li><li>仲間と敵が行動する</li></ol><p>正解すると攻撃が1.5倍、受けるダメージが半分になります。まちがえても仲間は行動します。</p><p>「オート ON」は毎ターンの作戦と次のターンへの進行を自動化します。問題への回答と解答確認は手動です。いつでもOFFにできます。OFFにしても今のターンに予約済みの作戦は変えません。次のターンから再び手動で選べます。「おすすめの作戦」は行動の予約だけです。時間制限はありません。</p><p>MPと回復薬は、実際に行動するときに使います。画面の「演出 ×1」で速さを変えられます。</p><p>このページは戦闘だけの独立試作です。本体・フィールド試作・セーブデータには接続しません。</p>`);}
   $('closeDialog').onclick=()=>$('infoDialog').close();
-  $('infoDialog').addEventListener('close',()=>{pendingTarget=null;if(state.phase==='resolving'){paused=false;renderPanel();schedule();}});
+  $('infoDialog').addEventListener('close',()=>{pendingTarget=null;if(state.phase==='resolving'){paused=false;renderPanel();schedule();}else if(state.phase==='summary')schedule();});
   $('dialogBody').addEventListener('click',e=>{const b=e.target.closest('[data-target]');if(!b||b.disabled||!pendingTarget||state.phase!=='commands')return;const p=pendingTarget,target=member(b.dataset.target);if(!target?.hp)return;state.orders[p.actor]={type:p.type,target:target.id};$('infoDialog').close();render();});
+  $('autoButton').onclick=toggleAuto;
   $('historyButton').onclick=history;$('helpButton').onclick=help;
   $('speedButton').onclick=()=>{speed=speed===1?2:1;$('speedButton').textContent='演出 ×'+speed;$('speedButton').setAttribute('aria-label','演出速度 '+speed+'倍。押すと切り替え');};
   $('party').addEventListener('click',e=>{const b=e.target.closest('[data-actor]');if(b&&!b.disabled&&state.phase==='commands'){state.actor=b.dataset.actor;render();}});
@@ -224,13 +238,13 @@
       case 'restart':restart();break;
     }
   });
-  document.addEventListener('visibilitychange',()=>{if(state.phase!=='resolving')return;if(document.hidden){clearTimeout(timer);timer=0;paused=true;stopAnimations();}else if(!$('infoDialog').open){paused=false;renderPanel();schedule();}});
+  document.addEventListener('visibilitychange',()=>{if(state.phase!=='resolving'&&state.phase!=='summary')return;if(document.hidden){clearTimeout(timer);timer=0;paused=true;stopAnimations();}else if(!$('infoDialog').open){paused=false;renderPanel();schedule();}});
   motion.addEventListener('change',()=>{if(motion.matches)stopAnimations();});
   state=fresh();render();
   if(new URLSearchParams(location.search).has('qa'))window.BATTLE_QA={
     snapshot:()=>clone(state),stats,definitions:D.members,questions:D.questions,
     fixture:(patch={})=>{restart();if(patch.turn)state.turn=patch.turn;if(patch.enemyHp){state.enemyHp=patch.enemyHp;state.enemyMax=patch.enemyHp;}for(const m of state.party){if(patch.hp?.[m.id]!==undefined)m.hp=patch.hp[m.id];if(patch.mp?.[m.id]!==undefined)m.mp=patch.mp[m.id];}if(patch.potions!==undefined)state.potions=patch.potions;state.actor=alive()[0]?.id||'hero';render();},
-    drain:()=>{clearTimeout(timer);let max=15;while(state.phase==='resolving'&&max-->0){processNext();clearTimeout(timer);}stopAnimations();},
+    drain:()=>{clearTimeout(timer);let max=15;while(state.phase==='resolving'&&max-->0){processNext();clearTimeout(timer);}stopAnimations();if(state.phase==='summary'&&state.auto)schedule();},
     transitions:{startQuiz,submit,acknowledge,nextTurn},
     animationState:()=>({pending:state.phase==='resolving'&&queueIndex<queue.length,paused,queueIndex,queueLength:queue.length,timer:!!timer})
   };

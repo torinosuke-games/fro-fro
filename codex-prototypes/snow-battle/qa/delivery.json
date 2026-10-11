@@ -2,37 +2,37 @@
   "scope": "codex-prototypes/snow-battle/ only",
   "baseCommit": "41ca94854d104d9262db674116fcf4f6be4eceed",
   "runtimeImageBytes": 417400,
-  "runtimeCodeBytes": 57969,
-  "automatedChecksPassed": 96,
+  "runtimeCodeBytes": 59787,
+  "automatedChecksPassed": 117,
   "hardwareTested": false,
   "files": {
     "index.html": {
-      "bytes": 3321,
-      "sha256": "74be5d911f326a2013b28feac48de003cf3d1cb5a2e8ff807f21e90690c734dc"
+      "bytes": 3390,
+      "sha256": "368a71c556dfbffcd7a994ff2b7dfabbfec22e502354d5dfd9f9c185433a18c9"
     },
     "style.css": {
-      "bytes": 23467,
-      "sha256": "ed5c33bdbcc089e72d7cc31795313f143efddc9733c60f28bb1530d30cfd6dbb"
+      "bytes": 23949,
+      "sha256": "c9bb2cea5938b83b338251c4ce76f10ed323feaf5b3ddcc9bcc575eb7ee21933"
     },
     "data.js": {
       "bytes": 5021,
       "sha256": "b500ffdabd1194284da7251d807808976edf54ea443a1df4958aee9c7d24fc9b"
     },
     "battle.js": {
-      "bytes": 26160,
-      "sha256": "780b480b1f3a57dfa069eff69c5d7e8feec3bb7760ccc21168b0bb02ed6e37f6"
+      "bytes": 27427,
+      "sha256": "78756fad2c80d363b6afdebc30e81905de80f0f436e37d918109f8f73ed15291"
     },
     "review.html": {
-      "bytes": 3169,
-      "sha256": "5adeb7a878b933a17ddf2eafd6474ee93ee89c348e0f325ee8578b6df291df3a"
+      "bytes": 3511,
+      "sha256": "4ad8b11d10bb90f01075de7b39efbc259c1fe6b3c8a276445449047ec4d5abef"
     },
     "README.md": {
-      "bytes": 4227,
-      "sha256": "7a5da5225a8adfa9204bf3c1de09897f5945ae80e286c4bed8e6b6e17f4a8fae"
+      "bytes": 5147,
+      "sha256": "c009deb837d7ccf3991ba4869725f1ccb6ea2c7e46dcd4efabf4f9aaaf0b233e"
     },
     "REVIEW.md": {
-      "bytes": 3457,
-      "sha256": "bd47a0d40a89ec3f17b72043bc568ada88ab72652af8536a7cf5b5bf428b6659"
+      "bytes": 3927,
+      "sha256": "ab41a67717306a5cda980e5a6862ee9c800b78283e6fa9b0f35684a615cce3b4"
     },
     "RESEARCH.md": {
       "bytes": 2421,
@@ -67,20 +67,20 @@
       "sha256": "292a7634b04bf896d050c79b2eeee683e059820000904549338052f0d40eddc3"
     },
     "qa/phone-commands.png": {
-      "bytes": 231626,
-      "sha256": "560e1d3bdde189458e74106a8125392af43a251d7bffae2c7972e13066c65377"
+      "bytes": 227052,
+      "sha256": "1c3a47d3213a1fa4303deab862a039ef02e61024e7bf21dcc87d914c4dee044e"
     },
     "qa/phone-quiz.png": {
-      "bytes": 170593,
-      "sha256": "19baceeeec4043f683bc9a8f41338397ea52962499e4b6eee8469c0b8be035a9"
+      "bytes": 166058,
+      "sha256": "4a8df948ff63bb8d5dffc95eb0ebbcb516f2460cdd2e46c0415deab7afe2bd50"
     },
     "qa/phone-review.png": {
-      "bytes": 176426,
-      "sha256": "fff5ee7f6ee9e8ae5fed967e4bfd679635ac3045387521bdfb63c03d2dc96ac7"
+      "bytes": 171895,
+      "sha256": "75df5de78977331b1c3d2bd0572a827143c7c19d1efcaf705576605e83235e21"
     },
     "qa/landscape-quiz.png": {
-      "bytes": 259670,
-      "sha256": "0fe8ebed0b7c84044311043c4f28572fdc592fa28483f29cd46aab7f0209b1e8"
+      "bytes": 255292,
+      "sha256": "5e22dcd9b4845027e126cc26c320e2e11e02bc5e749e9ed9afed0f7213ce25d9"
     }
   }
 }
