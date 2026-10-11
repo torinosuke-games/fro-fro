@@ -273,7 +273,7 @@
       var scale = map.clientWidth / 936, cx = viewport.scrollLeft, cy = viewport.scrollTop;
       var tx = Math.max(0, Math.min(viewport.scrollWidth - viewport.clientWidth, ex * scale - viewport.clientWidth / 2));
       var ty = Math.max(0, Math.min(viewport.scrollHeight - viewport.clientHeight, ey * scale - viewport.clientHeight / 2));
-      var last = null, elapsed = 0, duration = root.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : (held ? 210 : 300);
+      var last = null, elapsed = 0, duration = root.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : cvNow ? (held ? 280 : 360) * Math.hypot(next.pos.x - old.pos.x, next.pos.y - old.pos.y) : (held ? 210 : 300);   // Canvas は、少しゆっくり（斜めは、距離のぶん長く）
       function frame(time) {
         if (token !== routeId || !traveler.isConnected || FF.app.screen !== 'adventure') { finish(); return; }
         if (last !== null) elapsed += Math.min(34, Math.max(0, time - last));

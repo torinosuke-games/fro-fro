@@ -10,8 +10,12 @@
   // 近景アトラスの切り出し（2048 幅の座標。実際の絵は 1280 幅なので、拡大率で換算する）
   var CROP = { tree: [0, 0, 485, 684], cabin: [514, 142, 620, 495], rock: [1170, 244, 490, 427], lantern: [1744, 170, 280, 503] };
   var OUTLINE = [[28, 95], [98, 35], [300, 30], [370, 49], [650, 24], [920, 42], [1310, 35], [1400, 110], [1402, 515], [1360, 658], [1090, 690], [1020, 673], [700, 700], [610, 680], [170, 689], [62, 647], [35, 464]];
-  // 道（雪が踏まれたところ）。13×9 の地図専用の座標
-  var TRACKS = [[[1, 6], [5, 6], [8, 6], [11, 6], [11, 2]], [[5, 6], [6, 5], [6, 3]], [[2, 6], [2, 3], [3, 1]]];
+  // 以前の地面の絵（img/adventure/snow-world.webp）から切り出した、雪の起伏・枯れ草・岩（座標は、その絵の中。判断387）。ふちをぼかして、雪の地面に重ねる
+  var STAMPS = {
+    mound: [[690, 190, 140, 100], [510, 260, 100, 70], [190, 200, 110, 80], [200, 495, 120, 90], [590, 590, 120, 100], [680, 500, 130, 90], [290, 375, 100, 70]],
+    shrub: [[825, 260, 60, 45], [615, 125, 55, 50], [305, 200, 60, 50], [415, 615, 60, 70], [735, 610, 60, 50], [605, 665, 60, 45], [125, 340, 70, 45], [445, 795, 70, 55], [285, 545, 60, 50]],
+    rock: [[470, 235, 40, 35], [805, 310, 40, 35], [810, 553, 40, 35], [410, 675, 45, 35]]
+  };
   var QUALITY = { low: 1, std: 1.5, high: 2 };
 
   var imgs = null, loading = null, baked = null, current = null;
@@ -27,7 +31,7 @@
   function ensureImages() {
     if (imgs) return Promise.resolve(imgs);
     if (loading) return loading;
-    var urls = { atlas: DIR + 'alpine-atlas.webp', distance: DIR + 'alpine-distance.webp', snow: DIR + 'snow-surface.webp', props: DIR + 'camp-props.webp', enemies: 'img/adventure/snow-enemies.webp' };
+    var urls = { atlas: DIR + 'alpine-atlas.webp', distance: DIR + 'alpine-distance.webp', snow: DIR + 'snow-surface.webp', props: DIR + 'camp-props.webp', enemies: 'img/adventure/snow-enemies.webp', world: 'img/adventure/snow-world.webp' };
     loading = Promise.all(Object.keys(urls).map(function (k) { return loadImage(urls[k]).then(function (i) { return [k, i]; }); })).then(function (list) {
       var o = {}; list.forEach(function (p) { o[p[0]] = p[1]; });
       imgs = o; baked = bake(o); return o;
@@ -60,6 +64,21 @@
     out.ground = bakeGround(o, out);
     return out;
   }
+  // 切り出して、ふちをなめらかに透明にした小さな絵（雪の地面に重ねても、四角いふちが見えない）
+  function stamps(world) {
+    var out = {};
+    Object.keys(STAMPS).forEach(function (k) {
+      out[k] = STAMPS[k].map(function (b) {
+        var c = mk(b[2], b[3]), x = c.getContext('2d');
+        if (world) x.drawImage(world, b[0], b[1], b[2], b[3], 0, 0, b[2], b[3]);
+        x.globalCompositeOperation = 'destination-in'; x.translate(b[2] / 2, b[3] / 2); x.scale(1, b[3] / b[2]);
+        var g = x.createRadialGradient(0, 0, 0, 0, 0, b[2] / 2); g.addColorStop(0, '#000'); g.addColorStop(.62, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+        x.fillStyle = g; x.fillRect(-b[2] / 2, -b[2] / 2, b[2], b[2]);
+        return c;
+      });
+    });
+    return out;
+  }
   function bakeGround(o, parts) {
     var g = mk(GW, GH), c = g.getContext('2d'), r = rng(941);
     var rock = parts.rocks[1][0];
@@ -67,62 +86,36 @@
     poly(c, OUTLINE.map(function (p) { return [p[0], p[1] + 25]; }), '#96b9c5');
     for (var x = 42; x < 1370; x += 64) c.drawImage(rock, 0, 0, rock.width, rock.height, x - 38, 644 + Math.sin(x * .012) * 10 - 24, 125, 92);
     for (var y = 90; y < 635; y += 62) c.drawImage(rock, 0, 0, rock.width, rock.height, 4, y, 100, 96);
-    var snow = c.createLinearGradient(0, 0, 1000, 740); snow.addColorStop(0, '#fcfcf0'); snow.addColorStop(.55, '#e8f0ec'); snow.addColorStop(1, '#c9dfe5');
+    var snow = c.createLinearGradient(0, 0, 1000, 740); snow.addColorStop(0, '#ffffff'); snow.addColorStop(.55, '#f1f7f5'); snow.addColorStop(1, '#dcebef');
     poly(c, OUTLINE, snow);
     c.save(); c.beginPath(); OUTLINE.forEach(function (p, i) { if (i) c.lineTo(p[0], p[1]); else c.moveTo(p[0], p[1]); }); c.closePath(); c.clip();
     // 雪の質感：大きさと向きを変えた3枚を、うすく重ねる（1枚を引き伸ばすと、同じ模様が目立つ）
-    function tex(scale, alpha, flip, ox, oy, rot) {
-      c.save(); c.globalAlpha = alpha; c.translate(ox, oy); c.rotate(rot); c.scale(flip ? -scale : scale, scale);
-      var w = o.snow.width, h = o.snow.height;
-      for (var tx = -1; tx < Math.ceil(GW / (w * scale)) + 1; tx++) for (var ty = -1; ty < Math.ceil(GH / (h * scale)) + 1; ty++) c.drawImage(o.snow, (flip ? -(tx + 1) : tx) * w - (flip ? 1 : 0), ty * h, w + 1, h + 1);
-      c.restore();
+    function tex(alpha, flip, fx, fy, fw) {   // 雪の絵の一部（fx,fy,fw は 0〜1 の割合）を、地面いっぱいに引きのばす（タイルにしない。つなぎ目が出ない）
+      var w = o.snow.width * fw, h = o.snow.height * fw;
+      c.save(); c.globalAlpha = alpha; if (flip) { c.translate(GW, 0); c.scale(-1, 1); }
+      c.drawImage(o.snow, o.snow.width * fx, o.snow.height * fy, w, h, 0, 0, GW, GH); c.restore();
     }
-    tex(1.55, .55, false, 0, 0, 0); tex(.95, .3, true, 140, 60, .05); tex(.55, .22, false, 40, 90, -.12);
+    tex(.5, false, 0, .1, .9); tex(.3, true, .15, 0, .8); tex(.22, false, .05, .25, .65);
     // ゆるやかな色むら：青い窪みと、日の当たる明るいところ
-    var blot = [['#ffffff', .4], ['#9cc3d6', .24], ['#fff0c4', .2], ['#7aa8bf', .18], ['#ffffff', .3]];
+    var blot = [['#ffffff', .4], ['#9cc3d6', .1], ['#fff0c4', .2], ['#7aa8bf', .08], ['#ffffff', .3]];
     for (var i = 0; i < 90; i++) {
       var bx = r() * GW, by = r() * GH, br = 70 + r() * 260, bc = blot[i % blot.length], gr = c.createRadialGradient(bx, by, 0, bx, by, br);
       gr.addColorStop(0, bc[0] + ('0' + Math.round(bc[1] * 255).toString(16)).slice(-2)); gr.addColorStop(1, bc[0] + '00'); c.fillStyle = gr; c.fillRect(bx - br, by - br, br * 2, br * 2);
     }
     // 海べりは、青く沈む
     c.lineJoin = 'round'; c.strokeStyle = 'rgba(80,130,160,.16)'; c.lineWidth = 70; c.beginPath(); OUTLINE.forEach(function (p, i) { if (i) c.lineTo(p[0], p[1]); else c.moveTo(p[0], p[1]); }); c.closePath(); c.stroke();
-    // 雪だまり（ふくらんだ吹きだまり。左上が明るく、右下に青い影）
-    for (i = 0; i < 70; i++) {
-      var dx = 40 + r() * (GW - 80), dy = 40 + r() * (GH - 120), rx = 40 + r() * 130, ry = 7 + r() * 20, rot = (r() - .5) * .3;
-      c.save(); c.translate(dx, dy); c.rotate(rot);
-      c.fillStyle = 'rgba(95,140,170,.17)'; c.beginPath(); c.ellipse(5, 7, rx, ry, 0, 0, Math.PI * 2); c.fill();
-      var dg = c.createLinearGradient(-rx, -ry, rx * .6, ry); dg.addColorStop(0, 'rgba(255,255,255,.75)'); dg.addColorStop(.6, 'rgba(250,252,250,.4)'); dg.addColorStop(1, 'rgba(210,228,236,.2)');
-      c.fillStyle = dg; c.beginPath(); c.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2); c.fill(); c.restore();
+    // 雪の起伏・枯れ草・小さな岩：以前の地面の絵から切り出して、ふちをぼかして置く（大きさ・向き・位置はばらばら）
+    var st = stamps(o.world);
+    function put(list, n, sx, sy, scaleLo, scaleHi, alpha) {
+      for (var q = 0; q < n; q++) {
+        var s0 = list[(r() * list.length) | 0], sc = scaleLo + r() * (scaleHi - scaleLo), w = s0.width * sc * sx, h = s0.height * sc * sy;
+        c.save(); c.globalAlpha = alpha; c.translate(50 + r() * (GW - 100), 50 + r() * (GH - 120)); if (r() < .5) c.scale(-1, 1);
+        c.drawImage(s0, -w / 2, -h / 2, w, h); c.restore();
+      }
     }
-    // 風の筋
-    for (i = 0; i < 110; i++) {
-      var sx = r() * GW, sy = r() * GH, len = 40 + r() * 110, bend = (r() - .5) * 18;
-      c.lineCap = 'round'; c.lineWidth = 1 + r() * 1.4;
-      c.strokeStyle = 'rgba(110,155,185,.16)'; c.beginPath(); c.moveTo(sx, sy + 2); c.quadraticCurveTo(sx + len / 2, sy + 2 + bend, sx + len, sy + 2); c.stroke();
-      c.strokeStyle = 'rgba(255,255,255,.55)'; c.beginPath(); c.moveTo(sx, sy); c.quadraticCurveTo(sx + len / 2, sy + bend, sx + len, sy); c.stroke();
-    }
-    // 凍ったところ（海べりに近い、つるりとした青白い面）
-    for (i = 0; i < 9; i++) {
-      var ix = 80 + r() * (GW - 160), iy = GH - 220 + r() * 120, ig = c.createRadialGradient(ix, iy, 2, ix, iy, 60);
-      ig.addColorStop(0, 'rgba(200,232,244,.7)'); ig.addColorStop(1, 'rgba(200,232,244,0)'); c.fillStyle = ig; c.beginPath(); c.ellipse(ix, iy, 70, 26, 0, 0, Math.PI * 2); c.fill();
-      c.fillStyle = 'rgba(255,255,255,.7)'; c.fillRect(ix - 18, iy - 6, 22, 1.5);
-    }
-    // 雪をかぶった小さな岩
-    for (i = 0; i < 26; i++) { var rr = parts.rocks[i % 3][(r() < .5) | 0], rw = 20 + r() * 26; c.globalAlpha = .95; c.drawImage(rr, 0, 0, rr.width, rr.height, 60 + r() * (GW - 120), 60 + r() * (GH - 140), rw, rw * rr.height / rr.width); }
-    c.globalAlpha = 1;
-    // 枯れ草（雪のあいだから出ている）
-    for (i = 0; i < 46; i++) {
-      var gx = 60 + r() * (GW - 120), gy = 60 + r() * (GH - 130), n = 5 + ((r() * 4) | 0), tone = r() < .5 ? 'rgba(150,126,80,.9)' : 'rgba(112,100,72,.9)';
-      c.strokeStyle = tone; c.lineWidth = 1.2; c.lineCap = 'round';
-      for (var k = 0; k < n; k++) { var a = -Math.PI / 2 + (k - n / 2) * .22 + (r() - .5) * .2, l = 8 + r() * 12; c.beginPath(); c.moveTo(gx, gy); c.quadraticCurveTo(gx + Math.cos(a) * l * .5 + 2, gy + Math.sin(a) * l * .5, gx + Math.cos(a) * l + (k % 2 ? 3 : -3), gy + Math.sin(a) * l); c.stroke(); }
-      c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.ellipse(gx, gy + 1, 9, 3, 0, 0, Math.PI * 2); c.fill();
-    }
-    // 雪の道
-    function track(pts, w, color) {
-      c.beginPath(); pts.forEach(function (p, j) { var px = (p[0] + .5) * T + 28, py = (p[1] + .5) * T * Y + 20; if (j) c.lineTo(px, py); else c.moveTo(px, py); });
-      c.lineWidth = w; c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = color; c.stroke();
-    }
-    TRACKS.forEach(function (p, j) { track(p, j ? 27 : 40, 'rgba(145,174,182,.27)'); track(p, j ? 23 : 34, 'rgba(246,245,233,.58)'); track(p, j ? 11 : 17, 'rgba(215,220,209,.3)'); });
+    put(st.mound, 42, .97, .64, .85, 1.5, .92);
+    put(st.shrub, 56, .9, .8, .8, 1.25, .98);
+    put(st.rock, 22, .9, .8, .8, 1.3, .98);
     for (i = 0; i < 16000; i++) { c.fillStyle = i % 3 ? 'rgba(255,255,255,.4)' : 'rgba(112,157,173,.11)'; c.fillRect(r() * GW, r() * GH, r() * 2 + 1, 1); }
     // きらめき（雪の結晶）
     for (i = 0; i < 260; i++) {
