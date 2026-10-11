@@ -95,3 +95,35 @@
  #app[data-phase=commands] .panel{height:auto}
  #app[data-phase=commands] .panel-body{flex:0 0 auto}
 }
+
+/* Freeze mobile scene geometry across commands, questions, review and actions. */
+@media(max-width:999px) and (orientation:portrait){
+ #app.arena-locked .stage{height:var(--locked-arena-height);min-height:0;flex:0 0 var(--locked-arena-height)}
+ #app.arena-locked .party{height:var(--locked-party-height)}
+ #app.arena-locked .console{height:auto;min-height:0;flex:1}
+ #app.arena-locked .panel{height:100%}
+ #app.arena-locked .panel-body{flex:1;min-height:0;overflow:auto}
+ #app.arena-locked .fighter[data-fighter=healer]{height:28%;bottom:29%}
+ #app.arena-locked .fighter[data-fighter=guardian]{height:30%;bottom:30%}
+ #app.arena-locked .fighter[data-fighter=sword]{height:33%;bottom:13%}
+ #app.arena-locked .fighter[data-fighter=hero]{height:35%;bottom:13%}
+ #app.arena-locked .enemy-figure{height:53%;bottom:19%;right:10%}
+ #app.arena-locked .enemy-status{top:12px;right:12px;padding:8px 10px;width:46%}
+ #app.arena-locked .scene-message{display:block}
+}
+@media(max-width:999px) and (orientation:portrait) and (min-height:651px){
+ #app.arena-locked .portrait{display:block}
+ #app.arena-locked .enemy-status small{display:block}
+}
+@media(max-width:999px) and (orientation:portrait) and (max-height:650px){
+ #app.arena-locked .portrait,#app.arena-locked .enemy-status small{display:none}
+}
+@media(max-width:999px) and (orientation:landscape){
+ #app[data-phase] .fighter[data-fighter=healer]{height:28%;bottom:29%}
+ #app[data-phase] .fighter[data-fighter=guardian]{height:30%;bottom:30%}
+ #app[data-phase] .fighter[data-fighter=sword]{height:33%;bottom:13%}
+ #app[data-phase] .fighter[data-fighter=hero]{height:35%;bottom:13%}
+ #app[data-phase] .enemy-status{top:12px;right:12px;width:46%;padding:6px 8px}
+ #app[data-phase] .enemy-figure{height:53%;bottom:19%;right:10%}
+ #app[data-phase] .scene-message{display:block}
+}

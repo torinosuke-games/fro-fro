@@ -54,8 +54,8 @@
   function footer(button,note='') {return `<footer class="panel-footer">${note?`<p class="footer-note">${note}</p>`:''}${button}</footer>`;}
   function primary(label,action,disabled=false){return `<button class="primary" data-do="${action}" ${disabled?'disabled':''}>${label}<span class="arrow" aria-hidden="true">→</span></button>`;}
 
-  function commandsPanel() {
-    const m=member(state.actor),d=definitions[m.id],o=state.orders[m.id],items=remainingItems(m.id);
+  function commandsPanel(actor=state.actor,order=state.orders[actor]) {
+    const m=member(actor),d=definitions[m.id],o=order,items=remainingItems(m.id);
     const descriptions={attack:'敵1体を攻撃します。MPは使いません。',skill:d.detail,guard:'このターン、自分が受けるダメージを半分にします。',item:`仲間1人のHPを45回復。回復薬は残り${state.potions}こ。`};
     return heading('CHOOSE YOUR PLAN','仲間の作戦を決めよう','仲間のカードを押すと、行動を変更できます。')+
       `<div class="panel-body"><div class="selection-heading"><strong>${d.name}の行動</strong><span>MP ${m.mp} / ${d.mp}</span></div><div class="commands">`+
@@ -89,6 +89,32 @@
   }
   function renderPanel() {stats.renders++;$('panel').innerHTML=state.phase==='commands'?commandsPanel():state.phase==='quiz'?quizPanel():state.phase==='review'?reviewPanel():['win','lose'].includes(state.phase)?endPanel():actionPanel();}
   function render() {renderStatus();renderPanel();}
+
+  // Reserve enough space for the longest command description once per viewport.
+  // Phase changes and actor selection never recalculate the arena height.
+  function lockArena() {
+    const app=$('app');app.classList.remove('arena-locked');
+    if(!matchMedia('(max-width:999px) and (orientation:portrait)').matches)return;
+    const phase=app.dataset.phase,probe=document.createElement('section');
+    probe.className='console';
+    probe.style.cssText=`position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;width:${$('console').getBoundingClientRect().width}px;height:auto;min-height:0;`;
+    app.dataset.phase='commands';app.append(probe);
+    let required=0,partyHeight=0,available=0;
+    try {
+      const target=D.members.reduce((a,b)=>a.name.length>=b.name.length?a:b).id;
+      for(const m of D.members)for(const type of ['attack','skill','guard','item']) {
+        probe.innerHTML=`<div class="panel" style="height:auto">${commandsPanel(m.id,{type,target})}</div>`;
+        probe.querySelector('.panel-body').style.flex='none';
+        required=Math.max(required,probe.getBoundingClientRect().height);
+      }
+      partyHeight=$('party').getBoundingClientRect().height;
+      const layout=document.querySelector('.battle-layout');
+      available=layout.clientHeight-partyHeight-2*parseFloat(getComputedStyle(layout).rowGap)-Math.ceil(required);
+    } finally {probe.remove();app.dataset.phase=phase;}
+    app.style.setProperty('--locked-arena-height',Math.max(80,Math.floor(available))+'px');
+    app.style.setProperty('--locked-party-height',partyHeight+'px');
+    app.classList.add('arena-locked');
+  }
 
   function chooseOrder(type) {
     if(state.phase!=='commands')return;
@@ -202,7 +228,7 @@
     message('仲間の状態を見て、次の作戦を。');changePhase('commands');if(state.auto){autoOrders(true);startQuiz();}
   }
   function stopAnimations() {document.getAnimations().forEach(a=>a.cancel());$('floatText').textContent='';$('effect').className='effect';}
-  function restart() {epoch++;clearTimeout(timer);clearNotice();stopAnimations();queue=[];queueIndex=0;pendingTarget=null;paused=false;state=fresh();message('仲間とともに、峠の向こうへ。');render();focusHeading();}
+  function restart() {epoch++;clearTimeout(timer);clearNotice();stopAnimations();queue=[];queueIndex=0;pendingTarget=null;paused=false;state=fresh();message('仲間とともに、峠の向こうへ。');render();lockArena();focusHeading();}
 
   function openDialog(title,html) {
     clearTimeout(timer);if(state.phase==='resolving'){paused=true;stopAnimations();renderPanel();}
@@ -240,7 +266,9 @@
   });
   document.addEventListener('visibilitychange',()=>{if(state.phase!=='resolving'&&state.phase!=='summary')return;if(document.hidden){clearTimeout(timer);timer=0;paused=true;stopAnimations();}else if(!$('infoDialog').open){paused=false;renderPanel();schedule();}});
   motion.addEventListener('change',()=>{if(motion.matches)stopAnimations();});
-  state=fresh();render();
+  let layoutFrame=0;
+  window.addEventListener('resize',()=>{cancelAnimationFrame(layoutFrame);layoutFrame=requestAnimationFrame(lockArena);});
+  state=fresh();render();lockArena();
   if(new URLSearchParams(location.search).has('qa'))window.BATTLE_QA={
     snapshot:()=>clone(state),stats,definitions:D.members,questions:D.questions,
     fixture:(patch={})=>{restart();if(patch.turn)state.turn=patch.turn;if(patch.enemyHp){state.enemyHp=patch.enemyHp;state.enemyMax=patch.enemyHp;}for(const m of state.party){if(patch.hp?.[m.id]!==undefined)m.hp=patch.hp[m.id];if(patch.mp?.[m.id]!==undefined)m.mp=patch.mp[m.id];}if(patch.potions!==undefined)state.potions=patch.potions;state.actor=alive()[0]?.id||'hero';render();},

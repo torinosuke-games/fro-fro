@@ -121,9 +121,9 @@
   "performance": {
     "cpuThrottle": 4,
     "samples": 8,
-    "selectionToTwoFramesMedianMs": 33.350000001490116,
-    "selectionToTwoFramesP95Ms": 53,
-    "domNodes": 174,
+    "selectionToTwoFramesMedianMs": 32.100000001490116,
+    "selectionToTwoFramesP95Ms": 40.5,
+    "domNodes": 170,
     "liveAnimations": 0
   },
   "environment": "Linux headless Chromium, software rendering. Mobile viewport emulation is not an iOS/Android hardware test."
