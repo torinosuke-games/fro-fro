@@ -12,3 +12,58 @@
 @media(max-width:999px) and (max-height:650px) and (orientation:portrait){#app{--scene-height:110px}.party{height:60px}#app[data-phase=quiz],#app[data-phase=review]{--scene-height:80px}#app[data-phase=quiz] .party,#app[data-phase=review] .party{height:54px}.question-figure{display:none}.panel-heading{padding-top:8px;padding-bottom:7px}.panel-kicker{margin-bottom:3px}.choices{margin-top:8px}.choice{min-height:48px}.question-tag{margin-bottom:5px}.quiz-tools{margin-top:2px}.quiz-tools .quiet{min-height:36px}.panel-footer{padding-top:7px;padding-bottom:9px}.panel-body{padding-top:8px}.command-info{padding:6px 0}.command{min-height:52px}.location{display:none}.enemy-status small{display:none}.scene-message{font-size:8px;padding:5px;bottom:7px}}
 
 .auto-button{position:absolute;top:12px;left:12px;z-index:5;display:grid;align-content:center;gap:2px;min-height:44px;width:106px;padding:6px 8px;border:1px solid #c7d5d4;background:#f6faf1ed;border-radius:10px;text-align:center;color:#315e63}.auto-button strong{font-size:12px;letter-spacing:.5px}.auto-button small{font-size:8px;color:#647e7c}.auto-button[aria-pressed=true]{background:#315e63;color:#fff;border-color:#315e63}.auto-button[aria-pressed=true] small{color:#edf5ef}
+
+/* Compact command layout: keep all plan shortcuts visible without scrolling. */
+.battle-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;margin-bottom:10px;min-height:44px}
+.battle-toolbar .flow{border:0;padding:0;height:44px;gap:16px;min-width:0}
+.battle-toolbar .header-tools{flex-shrink:0;gap:4px}
+.battle-toolbar .header-tools button{height:44px;min-width:44px}
+#app[data-phase=commands] .panel-heading{padding:12px 22px 10px}
+#app[data-phase=commands] .panel-heading h1{font-size:20px}
+#app[data-phase=commands] .panel-kicker,#app[data-phase=commands] .panel-heading p{display:none}
+@media(max-width:999px){
+ .battle-toolbar{gap:6px;margin-bottom:8px}
+ .battle-toolbar .flow{gap:10px}
+ .battle-toolbar .flow ol{gap:12px}
+ .battle-toolbar .flow li{font-size:9px;letter-spacing:0}
+ .battle-toolbar .flow li:not(:last-child):after{right:-8px}
+ .battle-toolbar #turnLabel{font-size:9px;letter-spacing:1px}
+ .battle-toolbar .header-tools button:first-child{padding:0 8px}
+ #app[data-phase=commands] .panel-heading{padding:8px 14px 7px}
+ #app[data-phase=commands] .panel-heading h1{font-size:18px}
+ #app[data-phase=commands] .panel-body{padding:8px 14px}
+ #app[data-phase=commands] .command-info{padding:5px 0}
+ .plan-tools .secondary{min-height:44px}
+}
+@media(max-width:359px){
+ .battle-toolbar{gap:4px}
+ .battle-toolbar .flow{gap:7px}
+ .battle-toolbar .flow ol{gap:10px}
+ .battle-toolbar .flow li:not(:last-child):after{right:-7px}
+ .battle-toolbar .header-tools svg{display:none}
+ .battle-toolbar .header-tools button:first-child{padding:0 5px}
+ #app[data-phase=commands] .panel-body{padding:7px 11px}
+}
+@media(max-width:999px) and (max-height:650px) and (orientation:portrait){
+ #app[data-phase=commands]{--scene-height:100px}
+ #app[data-phase=commands] .command{min-height:48px}
+ #app[data-phase=commands] .selection-heading{margin-bottom:6px}
+ #app[data-phase=commands] .command-info{line-height:1.5}
+}
+@media(max-width:999px) and (orientation:landscape){
+ .battle-toolbar{margin-bottom:5px}
+ #app[data-phase=commands] .panel-heading{padding:6px 12px}
+ #app[data-phase=commands] .panel-heading h1{font-size:16px}
+ #app[data-phase=commands] .panel-body{padding:6px 12px}
+ #app[data-phase=commands] .command{min-height:48px}
+}
+@media(max-width:999px) and (max-height:650px) and (orientation:portrait){
+ #app[data-phase=commands]{--scene-height:90px}
+ #app[data-phase=commands] .party{height:54px}
+ #app[data-phase=commands] .panel-heading{padding:6px 11px}
+ #app[data-phase=commands] .panel-heading h1{font-size:17px;line-height:1.3}
+ #app[data-phase=commands] .command{padding:5px 10px;min-height:48px}
+}
+@media(max-width:999px) and (orientation:portrait) and (min-height:651px){
+ #app[data-phase=commands]{--scene-height:clamp(90px,calc(100dvh - 590px),228px)}
+}

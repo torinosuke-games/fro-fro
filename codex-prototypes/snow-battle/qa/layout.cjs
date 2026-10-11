@@ -1,0 +1,18 @@
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+(async()=>{const browser=await chromium.launch({headless:true,executablePath:'/usr/bin/chromium'});const checks=[];try{const page=await browser.newPage({hasTouch:true,isMobile:true});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+for(const [name,w,h] of [['small',320,568],['phone',390,844],['mid',375,667],['short',360,640],['landscape',844,390],['tablet',768,1024],['desktop',1365,900]]){
+ await page.setViewportSize({width:w,height:h});await page.goto('http://127.0.0.1:8766/codex-prototypes/snow-battle/?qa=1');await page.evaluate(()=>Promise.all([...document.images].map(i=>i.decode())));
+ for(const actor of ['hero','guardian','healer','sword']){
+  await page.locator(`[data-actor="${actor}"]`).click();if(actor==='healer'){await page.locator('[data-order=skill]').click();await page.locator('[data-target=hero]').click();}
+  const r=await page.evaluate(()=>{const body=document.querySelector('.panel-body'),b=body.getBoundingClientRect();return {scroll:body.scrollHeight-body.clientHeight,top:b.top,bottom:b.bottom,controls:[...document.querySelectorAll('.plan-tools button,[data-order]')].map(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,height:r.height}}),overflow:document.documentElement.scrollWidth>innerWidth}});
+  assert.ok(r.scroll<=1,`${name}/${actor}: panel scroll ${r.scroll}`);assert.ok(!r.overflow,`${name}: horizontal overflow`);assert.ok(r.controls.every(c=>c.top>=r.top&&c.bottom<=r.bottom+1&&c.bottom<=h&&c.height>=44),`${name}/${actor}: shortcuts visible and >=44px`);checks.push(`${name}/${actor}: all commands and shortcuts visible without scroll`);
+ }
+ await page.locator('[data-actor=hero]').click();await page.screenshot({path:path.join(__dirname,name+'-commands.png'),scale:'css'});
+ await page.locator('[data-do=startQuiz]').click();await page.screenshot({path:path.join(__dirname,name+'-quiz.png'),scale:'css'});await page.locator('[data-choice="2"]').click();await page.locator('[data-do=submit]').click();await page.screenshot({path:path.join(__dirname,name+'-review.png'),scale:'css'});
+ const toolbar=await page.locator('.battle-toolbar').evaluate(el=>{const a=el.querySelector('.flow').getBoundingClientRect(),b=el.querySelector('.header-tools').getBoundingClientRect();return a.right<=b.left&&Math.abs(a.y-b.y)<1});assert.ok(toolbar,`${name}: single row toolbar`);checks.push(`${name}: single row toolbar`);
+}
+await page.setViewportSize({width:390,height:844});await page.goto('http://127.0.0.1:8766/codex-prototypes/snow-battle/?qa=1');
+await page.locator('#helpButton').click();assert.ok(await page.locator('#infoDialog').isVisible());checks.push('Compact help button opens dialog');await page.locator('#closeDialog').click();
+await page.locator('#historyButton').click();assert.ok(await page.locator('#infoDialog').isVisible());checks.push('Compact history button opens dialog');await page.locator('#closeDialog').click();
+await page.locator('#autoButton').click();assert.equal(await page.evaluate(()=>BATTLE_QA.snapshot().phase),'quiz');checks.push('Auto button still starts question');await page.screenshot({path:path.join(__dirname,'phone-auto-quiz.png'),scale:'css'});
+assert.equal(errors.length,0);checks.push('No browser errors');fs.writeFileSync(path.join(__dirname,'layout-results.json'),JSON.stringify({checks,environment:'Linux Chromium viewport emulation; no hardware test'},null,2));console.log(checks.length+' layout checks PASS');}finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});

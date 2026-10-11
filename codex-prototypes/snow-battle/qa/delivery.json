@@ -2,17 +2,18 @@
   "scope": "codex-prototypes/snow-battle/ only",
   "baseCommit": "41ca94854d104d9262db674116fcf4f6be4eceed",
   "runtimeImageBytes": 417400,
-  "runtimeCodeBytes": 59787,
+  "runtimeCodeBytes": 62488,
   "automatedChecksPassed": 117,
+  "layoutChecksPassed": 39,
   "hardwareTested": false,
   "files": {
     "index.html": {
-      "bytes": 3390,
-      "sha256": "368a71c556dfbffcd7a994ff2b7dfabbfec22e502354d5dfd9f9c185433a18c9"
+      "bytes": 3277,
+      "sha256": "4d6f79ca7e5f7252633179fef4d057441726e5c8c8b7345b936a5983e80b6ad4"
     },
     "style.css": {
-      "bytes": 23949,
-      "sha256": "c9bb2cea5938b83b338251c4ce76f10ed323feaf5b3ddcc9bcc575eb7ee21933"
+      "bytes": 26763,
+      "sha256": "1c184b93fe9f3ed25e574bea26bb514a3d4d5d4f764c9d6881c0c8f6945e6248"
     },
     "data.js": {
       "bytes": 5021,
@@ -27,12 +28,12 @@
       "sha256": "4ad8b11d10bb90f01075de7b39efbc259c1fe6b3c8a276445449047ec4d5abef"
     },
     "README.md": {
-      "bytes": 5147,
-      "sha256": "c009deb837d7ccf3991ba4869725f1ccb6ea2c7e46dcd4efabf4f9aaaf0b233e"
+      "bytes": 5455,
+      "sha256": "94163f041d4b774c0212be7a5c0ef563008940dac1ce5cfd492cef55e410abcb"
     },
     "REVIEW.md": {
-      "bytes": 3927,
-      "sha256": "ab41a67717306a5cda980e5a6862ee9c800b78283e6fa9b0f35684a615cce3b4"
+      "bytes": 4349,
+      "sha256": "80114900510983a427d357308fbf79abb9d94a37cee6eecbd95d55b4cecbe0ad"
     },
     "RESEARCH.md": {
       "bytes": 2421,
@@ -67,20 +68,20 @@
       "sha256": "292a7634b04bf896d050c79b2eeee683e059820000904549338052f0d40eddc3"
     },
     "qa/phone-commands.png": {
-      "bytes": 227052,
-      "sha256": "1c3a47d3213a1fa4303deab862a039ef02e61024e7bf21dcc87d914c4dee044e"
+      "bytes": 221909,
+      "sha256": "13ac90638493405eea5799134d8e12860095d8ddb64eed5ae29e955662c04a19"
     },
     "qa/phone-quiz.png": {
-      "bytes": 166058,
-      "sha256": "4a8df948ff63bb8d5dffc95eb0ebbcb516f2460cdd2e46c0415deab7afe2bd50"
+      "bytes": 162593,
+      "sha256": "50b677dcb16dc8f526510206ef46d262f685e2bb31a98087a060e16f6cc88805"
     },
     "qa/phone-review.png": {
-      "bytes": 171895,
-      "sha256": "75df5de78977331b1c3d2bd0572a827143c7c19d1efcaf705576605e83235e21"
+      "bytes": 168523,
+      "sha256": "bee433dbe265d1f1ce0391f296a7b2f6aa9d50cbc59c531f65e315c04f5a04ad"
     },
     "qa/landscape-quiz.png": {
-      "bytes": 255292,
-      "sha256": "5e22dcd9b4845027e126cc26c320e2e11e02bc5e749e9ed9afed0f7213ce25d9"
+      "bytes": 275415,
+      "sha256": "ba0b1779e61ee8347066fd4be2a0589a6c027663c33930e870c924af7a7aa43a"
     }
   }
 }
