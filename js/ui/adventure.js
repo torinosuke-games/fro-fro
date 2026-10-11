@@ -304,6 +304,8 @@
 
   // ---- HD-2D 風の表示（試作。判断367）：地面を傾け、木・人物・敵は立てた絵。カメラは、主人公の位置を --cx/--cy で追う ----
   // 表示の種類（判断387）：'canvas' ＝ Canvas で描く斜め見下ろし／'css' ＝ CSS の3D で傾ける HD-2D（判断367）／'flat' ＝ これまでの見下ろし。config.ADVENTURE_FIELD（なければ ADVENTURE_HD2D）で、はじめの表示を決める
+  // Canvas の絵は、起動のあと、手があいたときに先に読んでおく（冒険の画面を開いたとき、待たせない。判断390）
+  if (FF.ui.fieldCanvas && root.setTimeout) root.setTimeout(function () { var go = function () { try { FF.ui.fieldCanvas.preload(A.MAP); } catch (e) { /* 先読みだけ。なくてもよい */ } }; if (root.requestIdleCallback) root.requestIdleCallback(go, { timeout: 4000 }); else go(); }, 1500);
   var fieldMode = null, treeUrls = null, cv = null, cvQuality = 'std';
   function mode() { if (!fieldMode) fieldMode = root.FF_FIELD_MODE || (FF.config && FF.config.ADVENTURE_FIELD) || (FF.config && FF.config.ADVENTURE_HD2D === false ? 'flat' : 'css'); return fieldMode; }
   function isHd() { return mode() === 'css' && !overview; }

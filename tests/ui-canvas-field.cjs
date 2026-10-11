@@ -8,6 +8,9 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  const start=()=>p.evaluate(()=>{FF.adventureRng=()=>.99;const s=FF.util.clone(FF.state.createDefaultState(FF.app.now()));s.adventure.started=true;FF.app.state=s;FF.ui.show('adventure');});
  await start();await p.waitForTimeout(1200);
  // はじめの表示は Canvas。DOM の部品は少ない（地図のマスや木の要素がない）
+ await p.waitForFunction(()=>FF.ui.fieldCanvas.timing.ready);
+ // 地面の絵は、焼いてあるものを読む（地図を変えたら、node tests/tools/bake-canvas-ground.cjs で焼きなおす。判断390）
+ assert.equal(await p.evaluate(()=>FF.ui.fieldCanvas.timing.prebaked),true,'焼いた地面の絵がない');
  assert.equal(await p.locator('.adv-canvas').count(),1);
  assert.equal(await p.locator('.adv-tile,.adv-tree').count(),0);
  const w1=await p.evaluate(()=>document.querySelector('.adv-canvas').width);assert.ok(w1>=300);
