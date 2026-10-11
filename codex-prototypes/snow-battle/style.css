@@ -82,3 +82,16 @@
  #app[data-phase=commands]{--scene-height:98px}
  #app[data-phase=quiz],#app[data-phase=review]{--scene-height:88px}
 }
+/* Let the command panel use its content height, and give the rest to the arena. */
+@media(max-width:999px){
+ #app{padding-top:6px}
+ .battle-toolbar{min-height:32px;margin-bottom:4px}
+ .battle-toolbar .flow{height:32px}
+ .battle-toolbar .header-tools button{height:32px}
+}
+@media(max-width:999px) and (orientation:portrait){
+ #app[data-phase=commands] .stage{height:auto;min-height:98px;flex:1 1 0}
+ #app[data-phase=commands] .console{flex:0 0 auto;height:auto}
+ #app[data-phase=commands] .panel{height:auto}
+ #app[data-phase=commands] .panel-body{flex:0 0 auto}
+}

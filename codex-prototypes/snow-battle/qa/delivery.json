@@ -2,7 +2,7 @@
   "scope": "codex-prototypes/snow-battle/ only",
   "baseCommit": "41ca94854d104d9262db674116fcf4f6be4eceed",
   "runtimeImageBytes": 417400,
-  "runtimeCodeBytes": 63188,
+  "runtimeCodeBytes": 63753,
   "automatedChecksPassed": 117,
   "layoutChecksPassed": 39,
   "hardwareTested": false,
@@ -12,8 +12,8 @@
       "sha256": "4d6f79ca7e5f7252633179fef4d057441726e5c8c8b7345b936a5983e80b6ad4"
     },
     "style.css": {
-      "bytes": 27463,
-      "sha256": "f46559d5729fe9eb247e557ffbbd61b109ff11d93fa3a7507cac55a7b8eb3d31"
+      "bytes": 28028,
+      "sha256": "e3bbb4d5dba60f8c93a2e1474fb69f3f80d016ca55c4680f0f8c96517cca226d"
     },
     "data.js": {
       "bytes": 5021,
@@ -32,8 +32,8 @@
       "sha256": "94163f041d4b774c0212be7a5c0ef563008940dac1ce5cfd492cef55e410abcb"
     },
     "REVIEW.md": {
-      "bytes": 4572,
-      "sha256": "205d8321052d4a5f31482eb7d46d75915382f4f5bf20c65b64db7abf0eef8b4d"
+      "bytes": 4692,
+      "sha256": "08c06ba4d7f48350fe7a3fcbeb14c41558744a6ec7b69202e2d7c7ff0b5e109e"
     },
     "RESEARCH.md": {
       "bytes": 2421,
@@ -68,20 +68,20 @@
       "sha256": "292a7634b04bf896d050c79b2eeee683e059820000904549338052f0d40eddc3"
     },
     "qa/phone-commands.png": {
-      "bytes": 244376,
-      "sha256": "1bf1880f8149b7e1a4546ee6889a158557fc357a471b12a9ca9507d72a8a1520"
+      "bytes": 283546,
+      "sha256": "2536da5c5651c741942a75083cfef7df4ba0589f8aca216d5c0510878e6c953b"
     },
     "qa/phone-quiz.png": {
-      "bytes": 169834,
-      "sha256": "e36a9454460d902f17d92f466ff284d9dcdb15d80cb13826972c61671ee3ecbb"
+      "bytes": 169674,
+      "sha256": "c5e5fbc8465e3a60b88e033b8877fc791852e603e81210b850d6145bd7baf68e"
     },
     "qa/phone-review.png": {
-      "bytes": 175760,
-      "sha256": "28377dcffed2fb16c88630cb3ea5023f151336d334dac54f1672792cbab6c9b1"
+      "bytes": 175599,
+      "sha256": "b6b752b9e8dfcab8250608e86155b4f66bf74458152229616f15a01f12e7635d"
     },
     "qa/landscape-quiz.png": {
-      "bytes": 284380,
-      "sha256": "881a137a61f3f43813ee3f08398391dfb7d2eb8b9b27cf5af15b42d1c8b25dc6"
+      "bytes": 290270,
+      "sha256": "263b517b7e124f20905868da65472d05f53b192a5e1e75181c9a01fee1b1fd2f"
     }
   }
 }
