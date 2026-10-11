@@ -1,0 +1,37 @@
+const {chromium}=require('playwright');const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const BASE=process.env.FF_PROTO_URL||'http://127.0.0.1:8765/codex-prototypes/snowfield-canvas/';
+const out=__dirname,results={checks:[],screens:[],performance:{},environment:'Headless Chromium / Linux software rendering. Emulated viewports, not real mobile hardware.'};
+const check=(label,value)=>{assert.ok(value,label);results.checks.push(label)};
+(async()=>{const b=await chromium.launch({headless:true,executablePath:process.env.FF_BROWSER_PATH||'/usr/bin/chromium'});
+const p=await b.newPage({viewport:{width:390,height:844},deviceScaleFactor:3,isMobile:true,hasTouch:true});let errors=[],external=[];p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>{if(!r.url().startsWith(BASE)&&!r.url().includes('127.0.0.1'))external.push(r.url())});
+await p.addInitScript(()=>{window.__writes=[];Storage.prototype.setItem=function(){window.__writes.push('setItem');throw Error('Storage mutation is forbidden in prototype')};});
+await p.goto(BASE+'?qa=1');await p.waitForFunction(()=>window.FIELD_QA?.stats.loaded);await p.waitForTimeout(700);
+check('Mobile auto starts at DPR 1 for responsive movement',await p.evaluate(()=>FIELD_QA.state().ratio===1&&FIELD_QA.state().low));
+await p.locator('#quality').click();await p.locator('#quality').click();check('Standard mode caps DPR 3 at 1.5',await p.evaluate(()=>FIELD_QA.state().ratio===1.5));await p.locator('#quality').click();
+await p.waitForFunction(()=>FIELD_QA.state().raf===0);
+const count=await p.evaluate(()=>FIELD_QA.stats.draws);await p.waitForTimeout(400);check('Idle rendering sleeps',await p.evaluate(n=>FIELD_QA.stats.draws===n,count));
+await p.screenshot({path:path.join(out,'mobile-final.png'),scale:'css'});results.screens.push('mobile-final.png');
+check('All original destinations reachable; no diagonal corner cutting',await p.evaluate(()=>{const q=FIELD_QA;for(const goal of Object.values(q.PLACES)){const path=q.pathTo(1,6,goal.x,goal.y);if(!path)return false;let x=1,y=6;for(const n of path){if(!q.walk(n.x,n.y)||(n.x!==x&&n.y!==y&&(!q.walk(n.x,y)||!q.walk(x,n.y))))return false;x=n.x;y=n.y;}}return q.pathTo(1,6,0,0)===null;}));
+// Actual pointer drag, including changing direction while held.
+const r=await p.locator('#pad').boundingBox(),cx=r.x+r.width/2,cy=r.y+r.height/2;
+await p.mouse.move(cx,cy);await p.mouse.down();await p.mouse.move(cx+48,cy);await p.waitForTimeout(600);await p.mouse.move(cx+32,cy-32);await p.waitForTimeout(400);await p.mouse.up();await p.waitForTimeout(350);
+let s=await p.evaluate(()=>FIELD_QA.state());check('Hold and turn moves east then northeast with diagonal sprite',s.hero.x>2&&s.hero.y<6&&s.hero.diag);
+const stopped=s.hero;await p.waitForTimeout(300);check('Release stops movement',JSON.stringify((await p.evaluate(()=>FIELD_QA.state())).hero)===JSON.stringify(stopped));
+await p.evaluate(()=>FIELD_QA.reset(1,1));await p.keyboard.down('ArrowLeft');await p.waitForTimeout(350);await p.keyboard.up('ArrowLeft');check('Wall blocks keyboard movement',await p.evaluate(()=>FIELD_QA.state().hero.x===1));
+await p.evaluate(()=>FIELD_QA.reset(3,6));await p.mouse.move(cx,cy);await p.mouse.down();await p.mouse.move(cx+45,cy);await p.waitForTimeout(150);await p.evaluate(()=>document.getElementById('pad').dispatchEvent(new PointerEvent('pointercancel',{pointerId:1})));await p.mouse.up();await p.waitForTimeout(350);const canceled=await p.evaluate(()=>FIELD_QA.state());await p.waitForTimeout(300);check('Pointer cancellation clears held input and stops',canceled.held===null&&JSON.stringify(canceled.hero)===JSON.stringify((await p.evaluate(()=>FIELD_QA.state())).hero));
+await p.evaluate(()=>FIELD_QA.reset(3,6));await p.keyboard.down('ArrowRight');await p.waitForTimeout(120);await p.evaluate(()=>window.dispatchEvent(new Event('blur')));await p.keyboard.up('ArrowRight');await p.waitForTimeout(300);check('Focus loss clears inputs',await p.evaluate(()=>!FIELD_QA.state().moving&&!FIELD_QA.state().held));
+// Tap a projected ground point through the real canvas.
+await p.evaluate(()=>FIELD_QA.reset(4,6));await p.waitForTimeout(150);const target=await p.evaluate(()=>FIELD_QA.project(5,6));await p.touchscreen.tap(target.x,target.y);await p.waitForFunction(()=>FIELD_QA.state().hero.x===5&&!FIELD_QA.state().moving);check('Touching ground walks to selected tile',true);
+// Modal must pause and destination buttons navigate all the way around the ridge.
+await p.locator('#mapButton').click();await p.screenshot({path:path.join(out,'map-final.png'),scale:'css'});await p.getByRole('button',{name:'集落',exact:true}).click();await p.waitForFunction(()=>FIELD_QA.state().hero.x===11&&FIELD_QA.state().hero.y===2&&!FIELD_QA.state().moving,null,{timeout:15000});check('Map destination routes around ridge to town',true);await p.locator('#action').click();check('Landmark interaction gives feedback',(await p.locator('#toast').textContent()).includes('到着'));
+await p.waitForTimeout(500);await p.screenshot({path:path.join(out,'town-final.png'),scale:'css'});
+await p.evaluate(()=>FIELD_QA.reset(1,6));await p.locator('#quality').click();check('Manual low mode sets DPR 1',await p.evaluate(()=>FIELD_QA.state().low&&FIELD_QA.state().ratio===1));await p.locator('#quality').click();await p.locator('#quality').click();
+// CPU throttling exposes script/layout costs; it is not a mobile GPU benchmark.
+const cdp=await p.context().newCDPSession(p);await cdp.send('Emulation.setCPUThrottlingRate',{rate:4});await p.evaluate(()=>{FIELD_QA.stats.drawMs=[];FIELD_QA.stats.intervals=[];FIELD_QA.go(11,6)});await p.waitForFunction(()=>FIELD_QA.state().hero.x===11&&!FIELD_QA.state().moving,null,{timeout:20000});
+results.performance=await p.evaluate(()=>{const q=(a,n)=>{const s=a.slice().sort((a,b)=>a-b);return s[Math.floor((s.length-1)*n)]||0};const s=FIELD_QA.stats;return{cpuThrottle:4,drawSamples:s.drawMs.length,drawMedianMs:q(s.drawMs,.5),drawP95Ms:q(s.drawMs,.95),frameMedianMs:q(s.intervals,.5),frameP95Ms:q(s.intervals,.95),framesOver50ms:s.intervals.filter(x=>x>50).length,autoReduced:s.autoReduced,state:FIELD_QA.state(),domNodes:document.querySelectorAll('*').length};});await cdp.send('Emulation.setCPUThrottlingRate',{rate:1});
+for(const [name,w,h,x,y] of [['small-phone',320,568,4,6],['landscape-final',844,390,4,6],['desktop-final',1365,900,5,5],['pass-final',390,844,8,6],['camp-final',390,844,6,3]]){
+ await p.setViewportSize({width:w,height:h});await p.evaluate(([x,y])=>FIELD_QA.reset(x,y),[x,y]);await p.waitForTimeout(600);check(name+' no page overflow',await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.documentElement.scrollHeight<=innerHeight));
+ const hp=await p.evaluate(()=>{const s=FIELD_QA.state();return FIELD_QA.project(s.hero.x,s.hero.y)}),pad=await p.locator('#pad').boundingBox();check(name+' hero clear of movement pad',!(hp.x>pad.x&&hp.x<pad.x+pad.width&&hp.y>pad.y&&hp.y<pad.y+pad.height));await p.screenshot({path:path.join(out,name+'.png'),scale:'css'});results.screens.push(name+'.png');
+}
+check('No save writes',await p.evaluate(()=>__writes.length===0));check('No external requests',external.length===0);check('No page errors',errors.length===0);
+fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));await b.close();})().catch(e=>{console.error(e);process.exit(1)});

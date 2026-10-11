@@ -1,0 +1,73 @@
+{
+  "checks": [
+    "Mobile auto starts at DPR 1 for responsive movement",
+    "Standard mode caps DPR 3 at 1.5",
+    "Idle rendering sleeps",
+    "All original destinations reachable; no diagonal corner cutting",
+    "Hold and turn moves east then northeast with diagonal sprite",
+    "Release stops movement",
+    "Wall blocks keyboard movement",
+    "Pointer cancellation clears held input and stops",
+    "Focus loss clears inputs",
+    "Touching ground walks to selected tile",
+    "Map destination routes around ridge to town",
+    "Landmark interaction gives feedback",
+    "Manual low mode sets DPR 1",
+    "small-phone no page overflow",
+    "small-phone hero clear of movement pad",
+    "landscape-final no page overflow",
+    "landscape-final hero clear of movement pad",
+    "desktop-final no page overflow",
+    "desktop-final hero clear of movement pad",
+    "pass-final no page overflow",
+    "pass-final hero clear of movement pad",
+    "camp-final no page overflow",
+    "camp-final hero clear of movement pad",
+    "No save writes",
+    "No external requests",
+    "No page errors"
+  ],
+  "screens": [
+    "mobile-final.png",
+    "small-phone.png",
+    "landscape-final.png",
+    "desktop-final.png",
+    "pass-final.png",
+    "camp-final.png"
+  ],
+  "performance": {
+    "cpuThrottle": 4,
+    "drawSamples": 71,
+    "drawMedianMs": 1.3999999985098839,
+    "drawP95Ms": 2.2999999970197678,
+    "frameMedianMs": 33.30000000000109,
+    "frameP95Ms": 33.400000000001455,
+    "framesOver50ms": 0,
+    "autoReduced": false,
+    "state": {
+      "hero": {
+        "x": 11,
+        "y": 6,
+        "face": 3,
+        "diag": false
+      },
+      "camera": {
+        "x": 10.314032334974943,
+        "y": 5.7
+      },
+      "route": [],
+      "moving": false,
+      "held": null,
+      "quality": "auto",
+      "low": true,
+      "ratio": 1,
+      "canvas": [
+        390,
+        844
+      ],
+      "raf": 801
+    },
+    "domNodes": 72
+  },
+  "environment": "Headless Chromium / Linux software rendering. Emulated viewports, not real mobile hardware."
+}

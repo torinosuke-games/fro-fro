@@ -1,0 +1,72 @@
+{
+  "note": "Same Chromium, viewport 390×844, deviceScaleFactor 3. 4× CPU slowdown, software GPU. RAF intervals include browser raster/compositing; not real mobile FPS.",
+  "baseline": {
+    "frames": {
+      "samples": 64,
+      "median": 83.29999999999927,
+      "p95": 150,
+      "over50": 55
+    },
+    "metrics": {
+      "LayoutCount": 8,
+      "RecalcStyleCount": 72,
+      "ScriptDuration": 0.112493,
+      "LayoutDuration": 0.019169,
+      "TaskDuration": 1.551482
+    },
+    "nodes": 437,
+    "prototype": null
+  },
+  "prototype-auto": {
+    "frames": {
+      "samples": 287,
+      "median": 16.699999999999818,
+      "p95": 16.799999999999955,
+      "over50": 0
+    },
+    "metrics": {
+      "LayoutCount": 3,
+      "RecalcStyleCount": 5,
+      "ScriptDuration": 0.256974,
+      "LayoutDuration": 0.003897,
+      "TaskDuration": 3.5075779999999996
+    },
+    "nodes": 72,
+    "prototype": {
+      "low": true,
+      "autoReduced": false,
+      "draw": {
+        "samples": 144,
+        "median": 1.199999999254942,
+        "p95": 2.699999999254942,
+        "over50": 0
+      }
+    }
+  },
+  "prototype-low": {
+    "frames": {
+      "samples": 280,
+      "median": 16.699999999999818,
+      "p95": 16.800000000000182,
+      "over50": 0
+    },
+    "metrics": {
+      "LayoutCount": 3,
+      "RecalcStyleCount": 5,
+      "ScriptDuration": 0.253919,
+      "LayoutDuration": 0.002697,
+      "TaskDuration": 3.820006
+    },
+    "nodes": 72,
+    "prototype": {
+      "low": true,
+      "autoReduced": false,
+      "draw": {
+        "samples": 145,
+        "median": 1.199999999254942,
+        "p95": 2.100000001490116,
+        "over50": 0
+      }
+    }
+  }
+}

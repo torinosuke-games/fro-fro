@@ -1,0 +1,68 @@
+{
+  "base_commit": "1123b06ca3e8953c758ff16b463b3dbb06f84ad3",
+  "existing_tracked_files": "all SHA-256 hashes match the pre-work snapshot",
+  "changed_scope": "new files only in codex-prototypes/snowfield-canvas/",
+  "runtime_files": [
+    {
+      "path": "index.html",
+      "bytes": 3136,
+      "sha256": "1d8f06b16c91abab617ffcaedc18ea567c180d04d770e87856ba455ab477c9c5"
+    },
+    {
+      "path": "style.css",
+      "bytes": 8198,
+      "sha256": "05f6916294b0a148dac582d512dce7c61eb79fc15c777c920e27bc03b6837015"
+    },
+    {
+      "path": "field.js",
+      "bytes": 17546,
+      "sha256": "13c59ede7a5645ac8b312825f17269c6c28a6e71f031e2f75cadcde9bd314ec9"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4515,
+      "sha256": "394fad5ee45eeaf50479a6b6b4d41ccad285bf5b3abe2dd0bf149cb4617bd6a6"
+    },
+    {
+      "path": "REVIEW.md",
+      "bytes": 6318,
+      "sha256": "f3e7da07920783ffb6178b4d4e8b462edc893347549840d487c589deec5cd980"
+    },
+    {
+      "path": "ASSETS.md",
+      "bytes": 2611,
+      "sha256": "380858b29dcfb6c385e050358a04741393bfcaac209a1cf8401c691a029c7e1b"
+    },
+    {
+      "path": "assets/alpine-atlas.webp",
+      "bytes": 160194,
+      "sha256": "3e2c73f5c4fd54759a9c42b76b75372010cca8a204d54ff8d966aa62dab06820"
+    },
+    {
+      "path": "assets/alpine-distance.webp",
+      "bytes": 199846,
+      "sha256": "a6c4adfd40412f2e403a9cc84687bb30ecf9770640880bd806adfec193a52608"
+    },
+    {
+      "path": "assets/camp-props.webp",
+      "bytes": 58286,
+      "sha256": "54e0b63fdb4fb814f626040cfdf6a4bbc4ece94d77dfde67f95bd27cf8686a39"
+    },
+    {
+      "path": "assets/hero-diagonal.webp",
+      "bytes": 38652,
+      "sha256": "11c3a2e351938c462b2377c1634efd670a8da155a40a6ba0ca6cfa9547097434"
+    },
+    {
+      "path": "assets/hero.webp",
+      "bytes": 34980,
+      "sha256": "dc9978eec95699fc189fa1aa5b0fcba3756fe9d198db5cc709c9c145c4fe7f09"
+    },
+    {
+      "path": "assets/snow-surface.webp",
+      "bytes": 88760,
+      "sha256": "f9dfdb399d9bef9cafef7aeb4bc583839d30b3a4b853d0e3a0934739a2ef2698"
+    }
+  ],
+  "zip_bytes": 600650
+}

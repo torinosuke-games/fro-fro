@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ja">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#203b47"><title>雪あかりの峠 · Frozen Frontier 試作</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<main id="game" aria-label="雪山のフィールド試作">
+<div class="distant" aria-hidden="true"></div><div class="sky-light" aria-hidden="true"></div>
+<canvas id="field" tabindex="0" aria-label="雪山のフィールド。方向キーか下の移動パッドで歩けます。地面のタップでも移動できます。"></canvas>
+<header class="topbar"><div class="brand"><span class="eyebrow">FROZEN FRONTIER <b>FIELD STUDY 01</b></span><h1>雪あかりの峠</h1><p>白銀の辺境 <span>／ 昼</span></p></div><button id="mapButton" class="icon-button" aria-label="全体マップを開く"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Zm6-2v16m6-14v16"/></svg><span>マップ</span></button></header>
+<div class="quest"><span class="quest-mark">◇</span><div><small>次の目的地</small><strong>雪灯りの集落</strong></div><span class="quest-direction">峠を越えて東へ →</span></div>
+<div class="compass" aria-hidden="true">N<span>↑</span></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div class="bottom-hud"><div class="party-pill"><span class="party-dot"></span>旅の仲間 <b>4</b><span>人</span></div><button id="quality" class="quality" aria-label="描画品質を切り替える">画質：自動</button></div>
+<div class="controls"><p id="hint">地面をタップ / パッドを押したまま移動</p><div id="pad" role="group" aria-label="移動パッド"><span class="pad-ring"></span><button data-dx="0" data-dy="-1" class="north" aria-label="北へ">↑</button><button data-dx="1" data-dy="0" class="east" aria-label="東へ">→</button><button data-dx="0" data-dy="1" class="south" aria-label="南へ">↓</button><button data-dx="-1" data-dy="0" class="west" aria-label="西へ">←</button><span class="diag nw">↖</span><span class="diag ne">↗</span><span class="diag sw">↙</span><span class="diag se">↘</span><span id="knob"></span></div><button id="action" disabled><span>◇</span><b>しらべる</b></button></div>
+<div id="loading" role="status"><span>FROZEN FRONTIER</span><strong>雪山へ、出かけよう。</strong><p>景色を準備しています…</p></div>
+<dialog id="mapDialog"><div class="dialog-top"><div><small>WHITE FRONTIER</small><h2>雪原の道しるべ</h2></div><button id="closeMap" aria-label="マップを閉じる">×</button></div><p>行きたい場所をタップすると歩き出します。</p><canvas id="minimap" width="624" height="432" aria-label="全体マップ"></canvas><div class="destinations"><button data-place="home">山小屋</button><button data-place="camp">焚き火</button><button data-place="town">集落</button></div><p class="legend">● 現在地　 ··· 通れる道　 ▧ 岩・林</p></dialog>
+</main><script src="field.js"></script>
+</body></html>
