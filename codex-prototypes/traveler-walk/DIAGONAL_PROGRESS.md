@@ -3,7 +3,7 @@
 対象ブランチ：claude/walk-sprite。e1：ユーザー確認済み（OK）、Claude取り込み済み（判断425）。
 
 - e2：PNG作成・寸法と確認ページの検証済み。Claudeによる確認待ち。確認ページ：e2-diagonal/review.html
-- e3：作成予定。
+- e3：PNG作成・寸法と確認ページの検証済み。Claudeによる確認待ち。確認ページ：e3-diagonal/review.html
 - e4：作成予定。
 - e5：作成予定。
 - e6：作成予定。
