@@ -89,7 +89,7 @@
     return WALK_SHEETS.indexOf(sheet) >= 0 ? 'img/adventure/travelers/' + sheet + '-w.webp' : null;
   }
   // ななめ向きの歩く絵（<シート>-wd.webp。4列×4行：列＝歩きの4コマ、行＝左前・右前・左後ろ・右後ろ。判断425）があるシート
-  var WALK_DIAG_SHEETS = ['e1'];
+  var WALK_DIAG_SHEETS = ['e1','e2'];
   function travelerWalkDiag(avatar) {
     var sheet = sheetOf(avatar);
     return WALK_DIAG_SHEETS.indexOf(sheet) >= 0 ? 'img/adventure/travelers/' + sheet + '-wd.webp' : null;
