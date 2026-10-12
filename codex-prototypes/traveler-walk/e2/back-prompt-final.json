@@ -1,0 +1,9 @@
+{
+  "references": [
+    "e2 standing back crop",
+    "img/adventure/travelers/e2.png",
+    "img/adventure/travelers/e1-w.png"
+  ],
+  "prompt": "Generate EXACTLY FOUR back-facing e2 walking sprites in ONE horizontal strip, transparent RGBA. FIRST image is the exact BACK APPEARANCE reference and must control all clothing placement. Second is the same character's full standing sheet. Third is e1's walking template for 4-step gait and scale only, NEVER copy purple scarf or brown outfit. Every sprite has one exposed bright silver armor pauldron on the LEFT SIDE OF THE IMAGE above the leftmost arm (same visible side as the first reference). The RIGHT SIDE OF THE IMAGE shoulder is completely covered by NAVY BLUE CAPE CLOTH, NO visible silver plate there. Do not swap sides. Brown pouch remains imageLEFT hip, cape gold trim trails imageRIGHT slightly throughout all four, no cape flipping. Same brown tousled hair and NO visible face. Same brown gloves, boots, blue/gold tunic and charcoal pants as first image. Four whole bodies equally centered in 512px imaginary cells, character400px tall, lowest supporting boot sole at472, no text/floor/shadow/grid. Column1 anatomical right-foot contact, column2 pass on right support with opposite boot visibly lifted, column3 left-foot contact, column4 opposite passing support. Calm WALK, boots articulated and clearly alternate grounded/lifted, torso upright unchanged position. Keep cape and armor configuration EXACTLY as FIRST reference, with exposed silver on IMAGE LEFT and blue cloth on IMAGE RIGHT. No extra shoulder plates or duplicated gear.",
+  "source": "/workspace/generated_images/exec-a2f6e540-daf0-40ad-889a-d830472bde88.png"
+}
