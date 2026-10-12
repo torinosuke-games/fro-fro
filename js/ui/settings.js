@@ -117,6 +117,26 @@
       ])
     ]));
 
+    // 町の音楽（判断411）：オン・オフと大きさ
+    var bgmOn = s.settings.bgm !== false, bgmVol = ['low', 'mid', 'high'].indexOf(s.settings.bgmVolume) >= 0 ? s.settings.bgmVolume : 'mid';
+    function setBgm(patch) {
+      app.commit(Object.assign({}, app.state, { settings: Object.assign({}, app.state.settings, patch) }));
+      U.rerender();
+    }
+    main.appendChild(U.el('div', { class: 'panel row between' }, [
+      U.R('h3', '', U.T('bgmEffect')),
+      U.el('div', { class: 'switch', attrs: { role: 'group' } }, [
+        U.el('button', { class: bgmOn ? 'on' : '', rich: U.T('on'), attrs: { 'aria-pressed': bgmOn ? 'true' : 'false' }, on: { click: function () { setBgm({ bgm: true }); } } }),
+        U.el('button', { class: bgmOn ? '' : 'on', rich: U.T('off'), attrs: { 'aria-pressed': bgmOn ? 'false' : 'true' }, on: { click: function () { setBgm({ bgm: false }); } } })
+      ])
+    ]));
+    if (bgmOn) main.appendChild(U.el('div', { class: 'panel stack' }, [
+      U.R('h3', '', U.T('bgmVolume')),
+      U.el('div', { class: 'grid2' }, [['low', 'bgmLow'], ['mid', 'bgmMid'], ['high', 'bgmHigh']].map(function (v) {
+        return U.el('button', { class: 'btn small' + (bgmVol === v[0] ? ' primary' : ''), rich: (bgmVol === v[0] ? '✓ ' : '') + U.T(v[1]), attrs: { type: 'button', 'aria-pressed': bgmVol === v[0] ? 'true' : 'false' }, on: { click: function () { setBgm({ bgmVolume: v[0] }); } } });
+      }))
+    ]));
+
     // 正解の音の種類（判断262）：押すと、その音が鳴る
     var curStyle = FF.defs.SOUND_STYLES.some(function (x) { return x.id === s.settings.soundStyle; }) ? s.settings.soundStyle : 'bright';
     main.appendChild(U.el('div', { class: 'panel stack' }, [
