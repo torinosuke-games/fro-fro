@@ -398,7 +398,7 @@
     var n = p(), host = E('div', { class: 'adv-map-viewport adv-cv' }), places = ['home', 'camp', 'chest', 'town'];
     var labels = { home: T.home, camp: T.camp, town: T.town };
     var reduced = root.matchMedia && root.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    cv = FF.ui.fieldCanvas.create(host, { map: A.MAP, places: A.PLACES, boss: A.ENEMIES.boss, hero: n.pos, overview: overview, quality: cvQuality, reduced: reduced, labels: labels, sheet: scene.traveler(FF.app.state.player.avatar), diagSheet: scene.travelerDiag(FF.app.state.player.avatar), walkSheet: scene.travelerWalk(FF.app.state.player.avatar),
+    cv = FF.ui.fieldCanvas.create(host, { map: A.MAP, places: A.PLACES, boss: A.ENEMIES.boss, hero: n.pos, overview: overview, quality: cvQuality, reduced: reduced, labels: labels, sheet: scene.traveler(FF.app.state.player.avatar), diagSheet: scene.travelerDiag(FF.app.state.player.avatar), walkSheet: scene.travelerWalk(FF.app.state.player.avatar), walkMirrorLeft: scene.walkMirrorLeft(FF.app.state.player.avatar),
       state: p, onTap: function (cell) { walk(cell); } });
     cv.face(n.facing, null);
     var list = E('div', { class: 'adv-cv-places', attrs: { role: 'group', 'aria-label': T.map } }, places.map(function (k) {

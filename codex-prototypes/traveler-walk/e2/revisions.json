@@ -1,0 +1,30 @@
+{
+  "prompts": [
+    {
+      "direction": "front",
+      "path": "/workspace/generated_images/exec-d73d5a76-4135-427e-be97-bda992780b81.png",
+      "prompt": "Edit the FIRST image, a horizontal four-frame e2 walk strip. Second image is e2's exact appearance; third is e1's approved motion/scale example. Fully transparent background, NO floor/shadows/text/grids. Preserve all four sprites' identity, colors and costume, keep full head/feet visible in equal cells. Do not introduce new poses except the targeted correction below. Calm walking, stable head/body position and ground support baseline.\nKeep frames 1, 2 and 3 exactly as drawn. ONLY frame4 (rightmost): it must have anatomical LEFT boot, VIEWER RIGHT, flat on ground as support, and anatomical RIGHT boot, VIEWER LEFT, visibly lifted higher passing under the torso. The current last sprite wrongly repeats frame2's same supporting foot. Make the two passing frames 2 and 4 use opposite supporting feet without mirroring the upper outfit, pauldron or face. Low boot on viewerRIGHT and raised boot on viewerLEFT in LAST frame. Blue eyes and silver pauldron on viewerRIGHT stay unchanged."
+    },
+    {
+      "direction": "back",
+      "path": "/workspace/generated_images/exec-7520a02c-49b0-4b3e-8019-d475fe5b44d9.png",
+      "prompt": "Edit the FIRST image, a horizontal four-frame e2 walk strip. Second image is e2's exact appearance; third is e1's approved motion/scale example. Fully transparent background, NO floor/shadows/text/grids. Preserve all four sprites' identity, colors and costume, keep full head/feet visible in equal cells. Do not introduce new poses except the targeted correction below. Calm walking, stable head/body position and ground support baseline.\nFix costume consistency: ALL FOUR sprites must have the same BACK outfit as the first sprite and the e2 standing reference. The navy gold-trim cape ALWAYS trails to VIEWER RIGHT. Frame2 must NOT mirror the cape to viewerLEFT; remove that big reversed cape and keep matching right-draped cape throughout. Chest/back diagonal strap, belt pouches and shoulder armor must NOT flip sides at any time. Cape barely flutters; do NOT hide moving feet. Preserve walking boot differences contact/pass, four back-facing sprites, no faces. No adding extra armor pieces beyond the reference."
+    },
+    {
+      "direction": "left",
+      "path": "/workspace/generated_images/exec-b2dac7f6-69a3-44dc-8ac8-12343f73e5f6.png",
+      "prompt": "Edit the FIRST image, a horizontal four-frame e2 walk strip. Second image is e2's exact appearance; third is e1's approved motion/scale example. Fully transparent background, NO floor/shadows/text/grids. Preserve all four sprites' identity, colors and costume, keep full head/feet visible in equal cells. Do not introduce new poses except the targeted correction below. Calm walking, stable head/body position and ground support baseline.\nShorten ONLY the wide contact strides in frames1 and3: bring ankles roughly HALF as far apart as currently, around22-25% of total crown-to-ground height, NOT the current running/lunging leg split. Keep boots full sized. Feet remain visibly apart in contacts, but only a SHORT walking step. Keep PASSING frames2/4 narrow, lifted boot immediately above grounded boot underneath pelvis, not far behind. Preserve the pronounced OPEN/CLOSED/OPEN/CLOSED alternation even with shorter contacts. All four remain strictly LEFT-facing. The near LEFT arm swings gently forward in frame1 and back in frame3."
+    },
+    {
+      "direction": "right",
+      "path": "/workspace/generated_images/exec-8762d5b7-7a1b-45b5-a5da-3aa624c717e4.png",
+      "prompt": "Edit the FIRST image, a horizontal four-frame e2 walk strip. Second image is e2's exact appearance; third is e1's approved motion/scale example. Fully transparent background, NO floor/shadows/text/grids. Preserve all four sprites' identity, colors and costume, keep full head/feet visible in equal cells. Do not introduce new poses except the targeted correction below. Calm walking, stable head/body position and ground support baseline.\nShorten ONLY the wide contact strides in frames1 and3: bring ankles roughly HALF as far apart as currently, around22-25% of total crown-to-ground height, not the current huge running split. Keep boots full sized. Contacts remain visibly apart but only a SHORT natural walking step. Keep passing frames2/4 distinctly CLOSED with raised boot immediately above standing boot beneath the pelvis. All four stay strictly RIGHT-facing, no costume or cloak-side change. Open/closed leg alternation is the primary requirement; same exact face/hair/outfit as before."
+    }
+  ],
+  "sources": {
+    "front": "/workspace/generated_images/exec-a9c8b7df-31fd-49a0-b0f7-941673d1c056.png",
+    "back": "/workspace/generated_images/exec-57cf858e-0313-45ca-a51a-9e1445b49d0c.png",
+    "left": "/workspace/generated_images/exec-40ddb980-f06e-4b19-b08e-433b4ec82313.png",
+    "right": "/workspace/generated_images/exec-81508cf8-5d91-45c5-9e43-a6ee53924e6d.png"
+  }
+}

@@ -193,7 +193,7 @@
     var hits = [], width = 0, height = 0, ratio = 1, zoom = 1, back = null, dead = false, queued = 0, ro = null;
     var hero = { x: opts.hero.x, y: opts.hero.y, face: 0, diag: false, walking: false, dist: 0 };   // dist：歩いた道のり（マス）。歩くしぐさの位相
     var cam = { x: hero.x, y: hero.y - .3 }, quality = opts.quality || 'std';
-    var avatarSheet = opts.sheet, diagSheet = opts.diagSheet, walkSheet = opts.walkSheet, cols = MAP[0].length, rows = MAP.length;
+    var avatarSheet = opts.sheet, diagSheet = opts.diagSheet, walkSheet = opts.walkSheet, walkMirrorLeft = !!opts.walkMirrorLeft, cols = MAP[0].length, rows = MAP.length;
 
     var overview = !!opts.overview, cy0 = overview ? .5 : .55;   // 全体マップ：地図ぜんたいが入る大きさで、動かさない
     function project(x, y) { return { x: width * .5 + (x - cam.x) * T * zoom, y: height * cy0 + (y - cam.y) * T * Y * zoom }; }
@@ -279,7 +279,7 @@
       if (wimg) {
         var wq = wimg.width / 4, ws = s * 1.229, col = Math.floor((hero.dist / 2 % 1 + 1) % 1 * 4) % 4;   // 1マスで1歩（2コマ）、2マスで歩き1周。1コマの人物の高さは枠の約78%なので、立ち姿（約96%）と同じ大きさにそろえる
         // ななめ向きは、歩く絵のななめがないので、前向き（手前へ）・後ろ向き（奥へ）の行を、進む側へ向けて（左右反転）使う。跳ねない
-        var flip = hero.diag ? hero.face % 2 === 0 : hero.face === 2, row = hero.diag ? (hero.face < 2 ? 0 : 1) : flip ? 3 : hero.face;   // 左向きは、右向きの行を左右反転（e1 の左向きの行は、足の動きがほとんどなかった。判断399）
+        var flip = hero.diag ? hero.face % 2 === 0 : hero.face === 2 && walkMirrorLeft, row = hero.diag ? (hero.face < 2 ? 0 : 1) : flip ? 3 : hero.face;   // 左向きは、e1 だけ右向きの行を左右反転（e1 の左向きの行は、足の動きがほとんどなかった。判断399）
         ctx.save(); ctx.translate(p.x, 0); if (flip) ctx.scale(-1, 1);
         ctx.drawImage(wimg, col * wq, row * wq, wq, wq, -ws / 2, p.y + 4 - .015 * s - .922 * ws, ws, ws); ctx.restore(); return;
       }

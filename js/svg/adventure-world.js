@@ -82,11 +82,13 @@
     return DIAG_SHEETS.indexOf(sheet) >= 0 ? 'img/adventure/travelers/' + sheet + '-d.webp' : null;
   }
   // 歩く絵（<シート>-w.webp。4列×4行：列＝歩きの4コマ〔右足接地・通過・左足接地・通過〕、行＝前・後ろ・左・右。判断397）があるシート。届いたぶんだけ足す。ないシートは、立ち姿を跳ねさせて見せる
-  var WALK_SHEETS = ['e1'];
+  var WALK_SHEETS = ['e1','e2'];
+  var WALK_MIRROR_LEFT = ['e1'];   // 左向きの行の足が動かない絵は、右向きの行を左右反転して使う（判断399）
   function travelerWalk(avatar) {
     var sheet = sheetOf(avatar);
     return WALK_SHEETS.indexOf(sheet) >= 0 ? 'img/adventure/travelers/' + sheet + '-w.webp' : null;
   }
+  function walkMirrorLeft(avatar) { return WALK_MIRROR_LEFT.indexOf(sheetOf(avatar)) >= 0; }
   function enemy(id) {
     var boxes={cub:'0 550 340 405',wolf:'337 278 497 675',boss:'829 20 707 940'};
     var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -119,5 +121,5 @@
       if (image.decode) image.decode().catch(function(){});
     });
   }
-  FF.adventureScene={background:'img/adventure/snow-world.webp',world:world,traveler:traveler,travelerDiag:travelerDiag,travelerWalk:travelerWalk,diagSheets:DIAG_SHEETS,enemy:enemy,chest:chest,preload:preload,tile:S};
+  FF.adventureScene={background:'img/adventure/snow-world.webp',world:world,traveler:traveler,travelerDiag:travelerDiag,travelerWalk:travelerWalk,walkMirrorLeft:walkMirrorLeft,diagSheets:DIAG_SHEETS,enemy:enemy,chest:chest,preload:preload,tile:S};
 })(this);

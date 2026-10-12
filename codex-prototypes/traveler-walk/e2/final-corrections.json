@@ -1,0 +1,24 @@
+{
+  "edits": [
+    {
+      "key": "front4",
+      "references": [
+        "/tmp/e2-front4.png",
+        "/tmp/fro-walk-series/img/adventure/travelers/e2.png"
+      ],
+      "prompt": "Edit the FIRST image, a SINGLE front-facing e2 boy walking sprite. Keep exact whole head, blue eyes, brown hair, face, upper body, navy cape and gold trim, single silver pauldron on viewer RIGHT, gauntlets, belt, tunic and trousers unchanged. Transparent PNG. Change ONLY leg pose to the opposite passing step: VIEWER RIGHT boot must be the grounded supporting boot at the BOTTOM, fully visible and flat, directly under the right side of pelvis. VIEWER LEFT boot must be RAISED UP toward the body, its sole distinctly ABOVE the right boot by50-65px in this roughly650px-tall drawing. The anatomical RIGHT foot (viewerLEFT) passes lifted, anatomical LEFT foot (viewerRIGHT) supports. Current left-of-image boot incorrectly supports; swap support/raised roles without mirroring the face, armor, buckle or cape. Both boots close under hips, softly bent raised knee, upright calm body. No new gear, shadows, floor, text or extra sprites. ONE whole-body sprite only. Grounded boot on RIGHT side of the image, raised boot on LEFT side of the image."
+    },
+    {
+      "key": "back_final",
+      "references": [
+        "/workspace/generated_images/exec-57cf858e-0313-45ca-a51a-9e1445b49d0c.png",
+        "/tmp/fro-walk-series/img/adventure/travelers/e2.png"
+      ],
+      "prompt": "Edit FIRST image, the four-sprite BACK walk strip of e2. Keep exact four walking leg poses, full bodies, dark brown hair, gloves, belt, boots and cape flowing viewerRIGHT in every frame. Match TOP-RIGHT standing reference in SECOND image. Specific costume correction: only the VIEWER LEFT silver shoulder pauldron is exposed in reference. Cover the exposed extra VIEWER RIGHT silver shoulder armor in ALL FOUR sprites with NAVY CAPE FABRIC, same collar-to-right-shoulder cape drape as the standing reference. Do not mirror cape or change any leg poses. Preserve same face-less pure back views, outlined chibi style, full head-to-boots sprites, alpha transparent background. No shadow, floor, labels, grids, extra rows or gear. Maintain all four original contact/passing foot differences and supporting sole baseline. Only change right-shoulder cape coverage to match reference."
+    }
+  ],
+  "results": {
+    "front4": "/workspace/generated_images/exec-60bd3b87-ba79-454b-be7b-3c6bac327eb9.png",
+    "back": "/workspace/generated_images/exec-a59a9b44-2e87-42bf-8074-8688882188ee.png"
+  }
+}
