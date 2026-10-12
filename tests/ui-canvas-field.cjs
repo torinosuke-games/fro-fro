@@ -54,7 +54,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  assert.equal(await p.evaluate(()=>FF.app.state.adventure.pos.x),5);
  for(const w of [360,768]){await p.setViewportSize({width:w,height:844});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
  // 歩く絵（判断397）：届いた人（e1）だけ。ほかは、立ち姿を跳ねさせる
- assert.equal(await p.evaluate(()=>FF.adventureScene.travelerWalk('e1')),'img/adventure/travelers/e1-w.webp');assert.equal(await p.evaluate(()=>FF.adventureScene.travelerWalk('e2')),'img/adventure/travelers/e2-w.webp');assert.equal(await p.evaluate(()=>FF.adventureScene.travelerWalk('e3')),'img/adventure/travelers/e3-w.webp');assert.equal(await p.evaluate(()=>FF.adventureScene.travelerWalk('e4')),null);
+ assert.equal(await p.evaluate(()=>FF.adventureScene.travelerWalk('e1')),'img/adventure/travelers/e1-w.webp');assert.equal(await p.evaluate(()=>FF.adventureScene.travelerWalk('e2')),'img/adventure/travelers/e2-w.webp');assert.equal(await p.evaluate(()=>FF.adventureScene.travelerWalk('e3')),'img/adventure/travelers/e3-w.webp');assert.equal(await p.evaluate(()=>FF.adventureScene.travelerWalk('e4')),'img/adventure/travelers/e4-w.webp');assert.equal(await p.evaluate(()=>FF.adventureScene.travelerWalk('e5')),null);
  assert.equal(await p.evaluate(()=>new Promise(r=>{const i=new Image();i.onload=()=>r([i.width,i.height].join('x'));i.onerror=()=>r('err');i.src='img/adventure/travelers/e1-w.webp';})),'2048x2048');
  assert.deepEqual(errors,[]);await b.close();console.log('PASS: canvas field draws, walks via buttons/tap/pad, toggles quality and mode');
 })().catch(e=>{console.error(e);process.exit(1);});
