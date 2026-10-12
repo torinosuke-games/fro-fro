@@ -1,0 +1,202 @@
+{
+  "size": [
+    2048,
+    2048
+  ],
+  "alpha": true,
+  "frames": [
+    {
+      "row": 0,
+      "col": 0,
+      "bounds": [
+        111,
+        72,
+        357,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "bounds": [
+        109,
+        72,
+        378,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 0,
+      "col": 2,
+      "bounds": [
+        114,
+        72,
+        369,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 0,
+      "col": 3,
+      "bounds": [
+        121,
+        72,
+        371,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 1,
+      "col": 0,
+      "bounds": [
+        93,
+        72,
+        361,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "bounds": [
+        112,
+        72,
+        351,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "bounds": [
+        92,
+        72,
+        359,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 1,
+      "col": 3,
+      "bounds": [
+        96,
+        72,
+        351,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 2,
+      "col": 0,
+      "bounds": [
+        140,
+        72,
+        413,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 2,
+      "col": 1,
+      "bounds": [
+        134,
+        72,
+        413,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 2,
+      "col": 2,
+      "bounds": [
+        142,
+        72,
+        413,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 2,
+      "col": 3,
+      "bounds": [
+        131,
+        72,
+        411,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 3,
+      "col": 0,
+      "bounds": [
+        90,
+        72,
+        363,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 3,
+      "col": 1,
+      "bounds": [
+        108,
+        72,
+        346,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 3,
+      "col": 2,
+      "bounds": [
+        106,
+        72,
+        351,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    },
+    {
+      "row": 3,
+      "col": 3,
+      "bounds": [
+        104,
+        72,
+        361,
+        472
+      ],
+      "height": 400,
+      "bottom": 472
+    }
+  ],
+  "method": "Alpha >20 for bounds. Ground reference uses lowest opaque foot pixel; waist anchors from costume color region. Final gait approval remains visual."
+}
