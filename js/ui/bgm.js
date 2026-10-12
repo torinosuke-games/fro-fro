@@ -78,7 +78,7 @@
     if (!w) jingleDone = false;   // 勝利の画面を出たら、次に勝つとき、また鳴らす
   }
   // 効果音（単発。BGM は止めない）。設定の音楽がオフなら鳴らさない。音量は、曲より少し大きめ（判断418）
-  var SFX = { sword: 'audio/se-sword.mp3' }, sfxAudio = {};
+  var SFX = { sword: 'audio/se-sword.mp3', punch: 'audio/se-punch.mp3' }, sfxAudio = {};
   function sfx(name) {
     if (!enabled() || (doc && doc.hidden) || !SFX[name] || !root.Audio) return;
     var a = sfxAudio[name] || (sfxAudio[name] = new root.Audio(SFX[name]));

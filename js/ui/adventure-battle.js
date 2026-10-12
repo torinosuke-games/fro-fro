@@ -263,12 +263,13 @@
     var f = app.querySelector('[data-fighter="' + (line.actor || line.who) + '"]');
     if (f && f.animate) f.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(12px)', offset: .4 }, { transform: 'translateX(0)' }], { duration: 360 / S.speed });
   }
-  // 剣を装備している仲間が、「たたかう」で攻撃したとき、剣の音を、単発で鳴らす（魔法・剣なしでは鳴らさない。戦闘の曲は止めない。判断418）
+  // 「たたかう」で攻撃したとき、攻撃の音を、単発で鳴らす（戦闘の曲は止めない。魔法・どうぐ・まもるでは、まだ鳴らさない。判断418・419）：
+  //   剣を装備している仲間 → 剣の音（se-sword）／剣以外の装備（装備なしも）の仲間 → なぐる音（se-punch）
   function swordSound(line) {
     var acting = line.actor || line.who, order = p().battle.orders[acting];
-    if (!FF.bgm || !FF.bgm.sfx || !order || order.type === 'magic' || order.type === 'item' || order.type === 'defend') return;
-    var eq = FF.shop && FF.shop.equippedOf(FF.app.state, acting);
-    if (eq && eq.weapon) FF.bgm.sfx('sword');
+    if (!FF.bgm || !FF.bgm.sfx || !order || order.type !== 'attack') return;
+    var eq = FF.shop && FF.shop.equippedOf(FF.app.state, acting), w = eq && eq.weapon;
+    FF.bgm.sfx(w && /sword/.test(w) ? 'sword' : 'punch');   // 武器は、いまは5種類とも剣（id が sword で終わる）
   }
   // 行動のようす：ひとりずつ、宣言 → 命中 → 結果。終わったら、敵の行動へ
   function play(app, seq) {

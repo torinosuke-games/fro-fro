@@ -9,7 +9,7 @@
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
 - 仕様：`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 419。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 420。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
 - リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`。算数の文章題55問への図（判断223）：`MATH_WORD_DIAGRAMS.md`（図の種類・使った問題）、依頼の記録は `DIAGRAM_REQUESTS.md`（完了）
 - 完成報告：`REPORT.md`（v0.1）、`REPORT_v0.2.md`、`REPORT_v0.3.md`、`REPORT_v0.4.md`、`REPORT_sync.md`（データの保存）
@@ -60,7 +60,7 @@
 - 雪原のフィールドの HD-2D 風の表示（試作。判断367。CSS の 3D 変換で地面を傾け、木・人物・敵を立てる。`config.ADVENTURE_HD2D`・画面右上の切りかえ。`tests/ui-hd2d.cjs`。画面は上の帯をなくして広く、ぼかしをやめて軽くした＝判断368。移動パッドは8方向で、押したまま歩き続ける＝判断369。`tests/ui-joystick.cjs`。円は中央下で同心円、ななめはかたむけて見せる＝判断370。ななめ向きの絵の依頼書は `SPRITE_REQUESTS_1.md`＝判断371。14種類すべて取り込み済み＝判断372・373）
 - 雪原のフィールドの Canvas 表示（判断387。`js/ui/adventure-canvas.js`・`img/adventure/canvas/`。ChatGPT の試作 `codex-prototypes/snowfield-canvas` を本体につないだ。ブランチ `claude/canvas-field`、実機で確認中。画面右上の「表示」で、Canvas・CSS の HD-2D・平面を切りかえる。`config.ADVENTURE_FIELD`。`tests/ui-canvas-field.cjs`。判断388：道をなくし・雪面を以前の絵の起伏に・歩く速さを遅く。判断389：地図を20×14に広げ、全体マップも Canvas。判断390：地図の外を林と雪原でうめる・地面をあらかじめ焼いて（`tests/tools/bake-canvas-ground.cjs`）起動を速く）
 - 戦闘の画面（判断394。ChatGPT の戦闘試作 `codex-prototypes/snow-battle`〔ブランチ `codex/snow-battle`、本編にはマージしていない〕をもとに、画面だけ差しかえた。`js/ui/adventure-battle.js`・`css/battle.css`・`js/battle-texts.js`。戦闘の計算は変えず、新しい作戦「まもる」だけ足した。作戦→問題→解答（確認してから行動）→行動の流れ。`tests/ui-battle.cjs`。ブランチ `claude/snow-battle`、実機で確認待ち）
-- BGM・効果音（判断411〜418。勝ったときは `bgm-victory.mp3` を単発で。剣を装備して「たたかう」で攻撃すると `se-sword.mp3`。`js/ui/bgm.js`・`audio/bgm-town.ogg`・`bgm-field.ogg`・`bgm-battle.ogg`〔`.mp4`（AAC）は古い Safari 用〕。町のメイン画面は町の曲、雪原のフィールドはフィールドの曲、戦闘中は戦闘の曲を、ループで流す。フィールド・戦闘の曲は、止めたあと最初から。設定で、オン・オフと大きさ〔共通〕。`tests/ui-bgm.cjs`）
+- BGM・効果音（判断411〜419。勝ったときは `bgm-victory.mp3` を単発で。「たたかう」の攻撃で、剣なら `se-sword.mp3`、剣以外・装備なしなら `se-punch.mp3`。`js/ui/bgm.js`・`audio/bgm-town.ogg`・`bgm-field.ogg`・`bgm-battle.ogg`〔`.mp4`（AAC）は古い Safari 用〕。町のメイン画面は町の曲、雪原のフィールドはフィールドの曲、戦闘中は戦闘の曲を、ループで流す。フィールド・戦闘の曲は、止めたあと最初から。設定で、オン・オフと大きさ〔共通〕。`tests/ui-bgm.cjs`）
 - 雪原の冒険（Codex の試作。判断328〜337・341。`ADVENTURE_PROTOTYPE.md`）：町から町へ進む見下ろしのフィールド・コマンド式のクイズ戦闘・仲間4人・経験値とレベル・ゴールド（`state.adventure.gold`。武器屋でも同じゴールドを使う＝判断342）。町の画面の「雪原へ出発」から遊ぶ
 - 手書き（判断266・282）：国語で、答えが漢字の書き問題と、英語で、答えが英語の単語（2〜12文字）の書き問題は、手書きの欄に書いて、お手本とくらべて、自分で「かけた」「まちがえた」を選ぶ（ポイントは半分＝`balance.HANDWRITING.REWARD_RATE`。英語は四本線）。端末の手書き入力（iPad のスクリブル・Android の手書き入力）が使えれば、「キーボードで入力する」で、自動判定（満点）。`js/ui/handwriting.js`。AI での判定は、サーバーを持つときの課題
 - データの保存（サーバー同期。判断299〜310、`SPEC_sync.md`、`REPORT_sync.md`）：Supabase。ログインはプレイヤーコード＝1人に1つ（メール・本名なし。判断307）。S-1〜S-7 完了（設計・SQL（`supabase/1〜4_*.sql`は実行済み）・通信とセーブの同期・競合の画面・コードの印刷と引き継ぎ・学習の履歴の送信・保護者の記録画面・手動確認の手順と完成報告）。設定の「データの保存」は、ふつうの画面に出る（判断310。`config.SYNC.ENABLED: true`）が、同期は、おうちの方が同意してオンにした端末だけが行う（既定はオフ）。ここだけは `fetch` を使う（オフなら通信ゼロ）。結合テストの道具：`node tests/tools/sync-e2e-pg.cjs`（Postgres 16 が要る）。Supabase の一時停止の対策：`.github/workflows/supabase-keepalive.yml`（判断309）
