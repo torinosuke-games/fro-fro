@@ -1,0 +1,26 @@
+[
+  {
+    "col": 0,
+    "source": "/workspace/generated_images/exec-b78a1eed-c933-47b7-a123-39fd2e28c94a.png",
+    "cropTop": 42,
+    "reason": "Rectangular crop above the hood, excludes isolated flecks only"
+  },
+  {
+    "col": 1,
+    "source": "/workspace/generated_images/exec-b78a1eed-c933-47b7-a123-39fd2e28c94a.png",
+    "cropTop": 42,
+    "reason": "Rectangular crop above the hood, excludes isolated flecks only"
+  },
+  {
+    "col": 2,
+    "source": "/workspace/generated_images/exec-abe52fd0-6b71-48d9-8c4f-66970782f7db.png",
+    "cropTop": 31,
+    "reason": "Rectangular crop above the hood, excludes isolated flecks only"
+  },
+  {
+    "col": 3,
+    "source": "/workspace/generated_images/exec-b78a1eed-c933-47b7-a123-39fd2e28c94a.png",
+    "cropTop": 42,
+    "reason": "Rectangular crop above the hood, excludes isolated flecks only"
+  }
+]
