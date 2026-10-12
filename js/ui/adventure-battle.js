@@ -261,7 +261,14 @@
   function lunge(app, line) {
     if (reduced() || document.hidden || line.key !== 'hit') return;
     var f = app.querySelector('[data-fighter="' + (line.actor || line.who) + '"]');
-    if (f && f.animate) f.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(12px)', offset: .4 }, { transform: 'translateX(0)' }], { duration: 360 / S.speed });
+    if (!f || !f.animate) return;
+    var d = 360 / S.speed, img = f.querySelector('img,.bt-sheet');
+    f.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(12px)', offset: .4 }, { transform: 'translateX(0)' }], { duration: d });
+    // 直立のまま滑らないように、歩くように、足どりに合わせて、小さく跳ねて、体をかたむける（出るとき・戻るとき）
+    if (img && img.animate) img.animate([
+      { transform: 'translateY(0) rotate(0)' }, { transform: 'translateY(-4px) rotate(4deg)', offset: .2 }, { transform: 'translateY(0) rotate(0)', offset: .4 },
+      { transform: 'translateY(0) rotate(0)', offset: .5 }, { transform: 'translateY(-4px) rotate(-3deg)', offset: .7 }, { transform: 'translateY(0) rotate(0)' }
+    ], { duration: d, easing: 'ease-in-out' });
   }
   // 行動のようす：ひとりずつ、宣言 → 命中 → 結果。終わったら、敵の行動へ
   function play(app, seq) {
