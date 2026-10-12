@@ -263,6 +263,14 @@
     var f = app.querySelector('[data-fighter="' + (line.actor || line.who) + '"]');
     if (f && f.animate) f.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(12px)', offset: .4 }, { transform: 'translateX(0)' }], { duration: 360 / S.speed });
   }
+  // 「たたかう」で攻撃したとき、攻撃の音を、単発で鳴らす（戦闘の曲は止めない。魔法・どうぐ・まもるでは、まだ鳴らさない。判断418・419）：
+  //   剣を装備している仲間 → 剣の音（se-sword）／剣以外の装備（装備なしも）の仲間 → なぐる音（se-punch）
+  function swordSound(line) {
+    var acting = line.actor || line.who, order = p().battle.orders[acting];
+    if (!FF.bgm || !FF.bgm.sfx || !order || order.type !== 'attack') return;
+    var eq = FF.shop && FF.shop.equippedOf(FF.app.state, acting), w = eq && eq.weapon;
+    FF.bgm.sfx(w && /sword/.test(w) ? 'sword' : 'punch');   // 武器は、いまは5種類とも剣（id が sword で終わる）
+  }
   // 行動のようす：ひとりずつ、宣言 → 命中 → 結果。終わったら、敵の行動へ
   function play(app, seq) {
     var gen = S.gen;
@@ -280,6 +288,7 @@
       lunge(app, line);
       later(350, function () {
         if (!ok()) return;
+        if (line.key === 'hit') swordSound(line);
         if (line.key === 'hit' && !reduced()) fig.classList.add('is-hit');
         later(line.key === 'hit' ? 460 : 150, function () {
           if (!ok()) return;
@@ -409,7 +418,7 @@
     else if (b.phase === 'commands') panel = n.auto && n.auto.on ? autoPanel() : commandsPanel();
     else if (b.phase === 'attack') panel = quizPanel();
     else if (b.phase === 'explanation') panel = reviewPanel();
-    else if (b.phase === 'win') panel = endPanel(true);
+    else if (b.phase === 'win') { panel = endPanel(true); if (FF.bgm && FF.bgm.victory) FF.bgm.victory(); }   // 勝利の画面が出たとき、勝利の音（判断420）
     else if (b.phase === 'lose') panel = endPanel(false);
     else panel = actingPanel(app, b.phase === 'enemyAction' ? BT.enemyTitle : BT.actingTitle);
     con.appendChild(panel);
@@ -434,6 +443,12 @@
     // 行動の再生・自動の進行
     if (seq && !seq.started) { seq.started = true; play(app, seq); }
     var key = b.enemy + ':' + b.turn + ':' + b.phase;
+    // 敵が攻撃してきたとき（敵の行動の画面が出たとき。全員やられて負けたときも）、敵の攻撃の音を、1回、鳴らす（判断421）
+    if (b.phase === 'commands' || b.phase === 'attack') S.enemySfx = null;   // 次のターン・次の戦闘で、また鳴らす
+    if (!seq && (b.phase === 'enemyAction' || b.phase === 'lose') && S.enemySfx !== key && b.log.some(function (l) { return l.key === 'hurt'; })) {
+      S.enemySfx = key;
+      if (FF.bgm && FF.bgm.sfx) FF.bgm.sfx('enemy');
+    }
     if (!seq && (b.phase === 'playerAction' || b.phase === 'enemyAction') && S.sched !== key) {
       S.sched = key;
       var lines = b.phase === 'enemyAction' ? b.log.filter(function (l) { return l.key !== 'hit' || true; }) : [];
