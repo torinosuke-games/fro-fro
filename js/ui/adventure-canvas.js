@@ -193,7 +193,7 @@
     var hits = [], width = 0, height = 0, ratio = 1, zoom = 1, back = null, dead = false, queued = 0, ro = null;
     var hero = { x: opts.hero.x, y: opts.hero.y, face: 0, diag: false, walking: false, dist: 0 };   // dist：歩いた道のり（マス）。歩くしぐさの位相
     var cam = { x: hero.x, y: hero.y - .3 }, quality = opts.quality || 'std';
-    var avatarSheet = opts.sheet, diagSheet = opts.diagSheet, cols = MAP[0].length, rows = MAP.length;
+    var avatarSheet = opts.sheet, diagSheet = opts.diagSheet, walkSheet = opts.walkSheet, cols = MAP[0].length, rows = MAP.length;
 
     var overview = !!opts.overview, cy0 = overview ? .5 : .55;   // 全体マップ：地図ぜんたいが入る大きさで、動かさない
     function project(x, y) { return { x: width * .5 + (x - cam.x) * T * zoom, y: height * cy0 + (y - cam.y) * T * Y * zoom }; }
@@ -270,10 +270,19 @@
     function drawHero() {
       var p = project(hero.x, hero.y), s = 72 * zoom;
       // 歩くしぐさ：絵は、立ち姿の1枚ずつなので、1マスに2歩ぶん、はずんで、体をかたむける（歩いた道のりで決まるので、足を止めるとぴたりと止まる）
-      var ph = hero.walking && !opts.reduced && !overview ? hero.dist * Math.PI * 2 : 0, hop = Math.abs(Math.sin(ph)), tilt = Math.sin(ph);
+      var wimg = walkSheet && hero.walking && !opts.reduced && !overview ? sheet(walkSheet) : null;
+      var ph = hero.walking && !opts.reduced && !overview && !wimg ? hero.dist * Math.PI * 2 : 0, hop = Math.abs(Math.sin(ph)), tilt = Math.sin(ph);
       if (overview) { ctx.fillStyle = 'rgba(224,181,104,.55)'; ctx.beginPath(); ctx.arc(p.x, p.y - 8, 15, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#d09233'; ctx.lineWidth = 2.5; ctx.stroke(); }
       shadow(p, 43 * zoom * 1.2 * (1 - .25 * hop), .22 - .08 * hop);
       ctx.strokeStyle = '#e0b568'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(p.x, p.y + 1, 20 * zoom, 7 * zoom, 0, 0, Math.PI * 2); ctx.stroke();
+      // 歩く絵（判断397）：歩いているあいだ、歩いた道のり（1マス＝歩き1周＝4コマ）でコマを選ぶ。ななめ向き・絵がない人は、下の立ち姿を跳ねさせる
+      if (wimg) {
+        var wq = wimg.width / 4, ws = s * 1.229, col = Math.floor((hero.dist / 2 % 1 + 1) % 1 * 4) % 4;   // 1マスで1歩（2コマ）、2マスで歩き1周。1コマの人物の高さは枠の約78%なので、立ち姿（約96%）と同じ大きさにそろえる
+        // ななめ向きは、歩く絵のななめがないので、前向き（手前へ）・後ろ向き（奥へ）の行を、進む側へ向けて（左右反転）使う。跳ねない
+        var flip = hero.diag ? hero.face % 2 === 0 : hero.face === 2, row = hero.diag ? (hero.face < 2 ? 0 : 1) : flip ? 3 : hero.face;   // 左向きは、右向きの行を左右反転（e1 の左向きの行は、足の動きがほとんどなかった。判断399）
+        ctx.save(); ctx.translate(p.x, 0); if (flip) ctx.scale(-1, 1);
+        ctx.drawImage(wimg, col * wq, row * wq, wq, wq, -ws / 2, p.y + 4 - .015 * s - .922 * ws, ws, ws); ctx.restore(); return;
+      }
       var img = (hero.diag && sheet(diagSheet)) || sheet(avatarSheet); if (!img) return;
       var diag = hero.diag && img === sheets[diagSheet], q = img.width / 2, face = hero.face;
       if (hero.diag && !diag) face = ({ 0: 0, 1: 0, 2: 3, 3: 3 })[face];   // ななめの絵がないときは、前向き・左右の絵
