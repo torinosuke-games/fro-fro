@@ -77,6 +77,14 @@
     } else if (jingle && !jingle.paused) jingle.pause();
     if (!w) jingleDone = false;   // 勝利の画面を出たら、次に勝つとき、また鳴らす
   }
+  // 効果音（単発。BGM は止めない）。設定の音楽がオフなら鳴らさない。音量は、曲より少し大きめ（判断418）
+  var SFX = { sword: 'audio/se-sword.mp3' }, sfxAudio = {};
+  function sfx(name) {
+    if (!enabled() || (doc && doc.hidden) || !SFX[name] || !root.Audio) return;
+    var a = sfxAudio[name] || (sfxAudio[name] = new root.Audio(SFX[name]));
+    a.volume = Math.min(1, target() * 2); a.currentTime = 0;
+    var p = a.play(); if (p && p.catch) p.catch(function () {});
+  }
   // 画面・設定が変わるたびに呼ぶ
   function sync() {
     syncJingle();
@@ -102,5 +110,5 @@
   });
   if (doc) doc.addEventListener('visibilitychange', sync);
 
-  FF.bgm = { sync: sync, enabled: enabled, volumes: VOLUMES, wanted: wanted, jingle: function () { return jingle; }, audio: function (name) { var t = tracks[name || 'town']; return t ? t.audio : null; } };
+  FF.bgm = { sync: sync, enabled: enabled, volumes: VOLUMES, wanted: wanted, jingle: function () { return jingle; }, sfx: sfx, sfxAudio: function (n) { return sfxAudio[n] || null; }, audio: function (name) { var t = tracks[name || 'town']; return t ? t.audio : null; } };
 })(this);

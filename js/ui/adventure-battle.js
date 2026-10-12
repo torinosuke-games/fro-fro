@@ -263,6 +263,13 @@
     var f = app.querySelector('[data-fighter="' + (line.actor || line.who) + '"]');
     if (f && f.animate) f.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(12px)', offset: .4 }, { transform: 'translateX(0)' }], { duration: 360 / S.speed });
   }
+  // 剣を装備している仲間が、「たたかう」で攻撃したとき、剣の音を、単発で鳴らす（魔法・剣なしでは鳴らさない。戦闘の曲は止めない。判断418）
+  function swordSound(line) {
+    var acting = line.actor || line.who, order = p().battle.orders[acting];
+    if (!FF.bgm || !FF.bgm.sfx || !order || order.type === 'magic' || order.type === 'item' || order.type === 'defend') return;
+    var eq = FF.shop && FF.shop.equippedOf(FF.app.state, acting);
+    if (eq && eq.weapon) FF.bgm.sfx('sword');
+  }
   // 行動のようす：ひとりずつ、宣言 → 命中 → 結果。終わったら、敵の行動へ
   function play(app, seq) {
     var gen = S.gen;
@@ -280,6 +287,7 @@
       lunge(app, line);
       later(350, function () {
         if (!ok()) return;
+        if (line.key === 'hit') swordSound(line);
         if (line.key === 'hit' && !reduced()) fig.classList.add('is-hit');
         later(line.key === 'hit' ? 460 : 150, function () {
           if (!ok()) return;

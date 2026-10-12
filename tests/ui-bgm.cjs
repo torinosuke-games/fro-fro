@@ -73,6 +73,20 @@ const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');const a
  assert.ok(await p.evaluate(()=>FF.bgm.audio('field').currentTime)<10,'復帰したら、フィールドの曲は最初から');
  await win();   // 次の勝利：最初から
  await p.waitForFunction(t=>{const j=FF.bgm.jingle();return j&&!j.paused&&j.currentTime<t-0.2;},t1,{timeout:10000});
+ // 剣の音：剣を装備している仲間が「たたかう」で攻撃したときだけ、単発で鳴る。戦闘の曲は止まらない
+ const fight=async(equip)=>{
+  await p.evaluate(eq=>{window.__sfx=[];const o=FF.bgm.sfx;FF.bgm.sfx=function(n){window.__sfx.push(n);return o.apply(this,arguments);};
+   FF.adventureRng=()=>.99;const s=FF.util.clone(FF.app.state);s.equipment=eq?{owned:['wood_sword'],ownedArmor:[],equipped:{hero:{weapon:'wood_sword',armor:null}}}:{owned:[],ownedArmor:[],equipped:{}};
+   let a=FF.adventure.create();a.started=true;a.pos={x:3,y:6};a=FF.adventure.encounter(a,'wolf');s.adventure=a;FF.app.commit(s);FF.ui.show('adventure');},equip);
+  await p.locator('[data-do="allAttack"]').click();await p.locator('[data-do="startQuiz"]').click();await p.locator('[data-choice="0"]').waitFor();
+  const c=await p.evaluate(()=>{const q=FF.app.state.adventure.battle;return q.choices.indexOf(q.question.answer)});
+  await p.locator('[data-choice="'+c+'"]').click();await p.locator('[data-do="submit"]').click();await p.locator('[data-do="ack"]').click();
+  await p.waitForFunction(()=>{const b=FF.app.state.adventure.battle;return b&&b.phase==='commands'&&b.turn===2;},null,{timeout:30000});
+  return p.evaluate(()=>({sfx:window.__sfx.slice(),battlePaused:FF.bgm.audio('battle').paused}));
+ };
+ let r=await fight(true);assert.equal(r.sfx.length,1,'剣を持つ主人公だけ、1回');assert.equal(r.sfx[0],'sword');assert.equal(r.battlePaused,false,'戦闘の曲は止まらない');
+ assert.ok(/se-sword\.mp3$/.test(await p.evaluate(()=>FF.bgm.sfxAudio('sword').src)));assert.equal(await p.evaluate(()=>FF.bgm.sfxAudio('sword').loop),false);
+ r=await fight(false);assert.equal(r.sfx.length,0,'剣がなければ、鳴らない');
  // 保存の読み込みで、ない設定は、オン・ふつうに補われる
  assert.deepEqual(await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);delete s.settings.bgm;delete s.settings.bgmVolume;const r=FF.state.normalize?FF.state.normalize(s):s;return [r.settings.bgm!==false];}),[true]);
  assert.deepEqual(errors,[]);await b.close();console.log('PASS: town/field/battle BGM loop, victory jingle once, switch by screen, stop in battle/elsewhere/off, shared volume');
