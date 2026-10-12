@@ -81,6 +81,12 @@
     var sheet = sheetOf(avatar);
     return DIAG_SHEETS.indexOf(sheet) >= 0 ? 'img/adventure/travelers/' + sheet + '-d.webp' : null;
   }
+  // 歩く絵（<シート>-w.webp。4列×4行：列＝歩きの4コマ〔右足接地・通過・左足接地・通過〕、行＝前・後ろ・左・右。判断397）があるシート。届いたぶんだけ足す。ないシートは、立ち姿を跳ねさせて見せる
+  var WALK_SHEETS = ['e1'];
+  function travelerWalk(avatar) {
+    var sheet = sheetOf(avatar);
+    return WALK_SHEETS.indexOf(sheet) >= 0 ? 'img/adventure/travelers/' + sheet + '-w.webp' : null;
+  }
   function enemy(id) {
     var boxes={cub:'0 550 340 405',wolf:'337 278 497 675',boss:'829 20 707 940'};
     var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -107,11 +113,11 @@
   }
   var prepared = {};
   function preload(avatar) {
-    ['img/adventure/snow-world.webp','img/adventure/snow-battle.webp','img/adventure/snow-enemies.webp',traveler(avatar),travelerDiag(avatar)].filter(Boolean).forEach(function(url){
+    ['img/adventure/snow-world.webp','img/adventure/snow-battle.webp','img/adventure/snow-enemies.webp',traveler(avatar),travelerDiag(avatar),travelerWalk(avatar)].filter(Boolean).forEach(function(url){
       if (prepared[url]) return;
       var image=new Image();prepared[url]=image;image.decoding='async';image.src=url;
       if (image.decode) image.decode().catch(function(){});
     });
   }
-  FF.adventureScene={background:'img/adventure/snow-world.webp',world:world,traveler:traveler,travelerDiag:travelerDiag,diagSheets:DIAG_SHEETS,enemy:enemy,chest:chest,preload:preload,tile:S};
+  FF.adventureScene={background:'img/adventure/snow-world.webp',world:world,traveler:traveler,travelerDiag:travelerDiag,travelerWalk:travelerWalk,diagSheets:DIAG_SHEETS,enemy:enemy,chest:chest,preload:preload,tile:S};
 })(this);
