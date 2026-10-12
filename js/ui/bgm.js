@@ -9,6 +9,7 @@
   var FF = root.FF, doc = root.document;
   var VOLUMES = { low: 0.12, mid: 0.28, high: 0.5 };
   var TRACKS = { town: 'audio/bgm-town', field: 'audio/bgm-field' };
+  var RESTART = { field: true };   // 止めたあと、また流すときは、曲の最初から（戦闘から戻ったとき。判断413）。町の曲は、続きから
   var tracks = {};   // 曲の名前 → { audio, fade, want, blocked }
 
   function settings() { var s = FF.app && FF.app.state; return (s && s.settings) || {}; }
@@ -47,9 +48,9 @@
     if (p && p.then) p.then(function () { if (t.want) ramp(t, target()); }, function () { t.blocked = true; });
     else ramp(t, target());
   }
-  function stop(t) {
+  function stop(name, t) {
     if (t.audio.paused) return;
-    ramp(t, 0, function () { if (!t.want) t.audio.pause(); });
+    ramp(t, 0, function () { if (!t.want) { t.audio.pause(); if (RESTART[name]) t.audio.currentTime = 0; } });
   }
   // 画面・設定が変わるたびに呼ぶ
   function sync() {
@@ -61,7 +62,7 @@
       if (t.want) {
         if (t.audio.paused) { if (!t.blocked) start(t); }
         else ramp(t, target());
-      } else stop(t);
+      } else stop(name, t);
     });
   }
   // 最初の操作（ブラウザが、音を許すとき）に、止められていた BGM を鳴らす
