@@ -9,7 +9,7 @@
   var FF = root.FF, doc = root.document;
   var VOLUMES = { low: 0.12, mid: 0.28, high: 0.5 };
   var TRACKS = { town: 'audio/bgm-town', field: 'audio/bgm-field' };
-  var RESTART = { field: true };   // 止めたあと、また流すときは、曲の最初から（戦闘から戻ったとき。判断413）。町の曲は、続きから
+  var RESTART = { field: true };   // 止めたあと、また流すときは、曲の最初から（戦闘から戻ったとき。判断413）。町の曲は、続きから（ただし、フィールドから町へ移ったときは、最初から。判断415）
   var tracks = {};   // 曲の名前 → { audio, fade, want, blocked }
 
   function settings() { var s = FF.app && FF.app.state; return (s && s.settings) || {}; }
@@ -43,14 +43,19 @@
     }, 40);
   }
   function start(t) {
+    t.fromField = false;
     var p = t.audio.play();
     t.blocked = false;
     if (p && p.then) p.then(function () { if (t.want) ramp(t, target()); }, function () { t.blocked = true; });
     else ramp(t, target());
   }
   function stop(name, t) {
-    if (t.audio.paused) return;
-    ramp(t, 0, function () { if (!t.want) { t.audio.pause(); if (RESTART[name]) t.audio.currentTime = 0; } });
+    if (t.audio.paused) { if (t.fromField) { t.audio.currentTime = 0; t.fromField = false; } return; }
+    ramp(t, 0, function () {
+      if (t.want) return;
+      t.audio.pause();
+      if (RESTART[name] || t.fromField) { t.audio.currentTime = 0; t.fromField = false; }
+    });
   }
   // 画面・設定が変わるたびに呼ぶ
   function sync() {
@@ -59,6 +64,7 @@
       var t = name === w ? track(name) : tracks[name];
       if (!t) return;
       t.want = name === w;
+      if (name === 'town' && w === 'field') t.fromField = true;   // フィールドへ移ったら、町の曲は、止めたあと最初に戻す（判断415）
       if (t.want) {
         if (t.audio.paused) { if (!t.blocked) start(t); }
         else ramp(t, target());

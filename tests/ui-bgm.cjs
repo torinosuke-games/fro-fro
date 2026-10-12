@@ -22,6 +22,10 @@ const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');const a
  await p.waitForFunction(()=>{const a=FF.bgm.audio();return !a.paused&&a.volume>0.45;},null,{timeout:10000});
  await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.settings.bgm=false;FF.app.commit(s);FF.ui.show('base');});
  await p.waitForFunction(()=>FF.bgm.audio().paused,null,{timeout:10000});
+ // 町の曲を50秒まで進めてから、フィールドへ移る（フィールドから町へ戻ったら、町の曲は最初から）
+ await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.settings.bgm=true;FF.app.commit(s);FF.ui.show('base');});
+ await p.waitForFunction(()=>{const a=FF.bgm.audio('town');return !a.paused&&a.volume>0.05;},null,{timeout:10000});
+ await p.evaluate(()=>{FF.bgm.audio('town').currentTime=50;});
  // フィールド：別の曲（bgm-field）が流れ、町の曲は止まる。戦闘中は止まる。音量は、町と同じ設定
  await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.settings.bgm=true;s.settings.bgmVolume='mid';s.adventure.started=true;s.adventure.battle=null;FF.app.commit(s);FF.ui.show('adventure');});
  await p.waitForFunction(()=>{const a=FF.bgm.audio('field');return a&&!a.paused&&a.volume>0.2;},null,{timeout:10000});
@@ -40,6 +44,7 @@ const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');const a
  await p.evaluate(()=>FF.ui.show('base'));
  await p.waitForFunction(()=>{const a=FF.bgm.audio('town');return !a.paused&&a.volume>0.2;},null,{timeout:10000});
  await p.waitForFunction(()=>FF.bgm.audio('field').paused,null,{timeout:10000});
+ assert.ok(await p.evaluate(()=>FF.bgm.audio('town').currentTime)<10,'フィールドから町へ移ったら、町の曲は最初から');
  // 保存の読み込みで、ない設定は、オン・ふつうに補われる
  assert.deepEqual(await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);delete s.settings.bgm;delete s.settings.bgmVolume;const r=FF.state.normalize?FF.state.normalize(s):s;return [r.settings.bgm!==false];}),[true]);
  assert.deepEqual(errors,[]);await b.close();console.log('PASS: town/field BGM loop, switch by screen, stop in battle/elsewhere/off, shared volume');
