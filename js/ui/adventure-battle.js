@@ -153,7 +153,7 @@
       rich('p', 'bt-info', infoText()),
       E('div', { class: 'bt-plan' }, [
         E('button', { class: 'bt-secondary', attrs: { type: 'button', 'data-do': 'recommend' }, rich: BT.recommend, on: { click: function () {
-          S.orders = A.autoOrders(p(), p().auto.tactic); A.alive(p()).forEach(function (m) { if (!S.orders[m]) S.orders[m] = { type: 'attack', target: m }; }); U.toast(BT.recommended); host.paint(); } } }),
+          S.orders = A.autoOrders(p(), 'recommend'); A.alive(p()).forEach(function (m) { if (!S.orders[m]) S.orders[m] = { type: 'attack', target: m }; }); U.toast(BT.recommended); host.paint(); } } }),
         E('button', { class: 'bt-secondary', attrs: { type: 'button', 'data-do': 'allAttack' }, rich: BT.allAttack, on: { click: function () {
           S.orders = {}; A.alive(p()).forEach(function (m) { S.orders[m] = { type: 'attack', target: m }; }); U.toast(BT.allAttacked); host.paint(); } } })
       ])

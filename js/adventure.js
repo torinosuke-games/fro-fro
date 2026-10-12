@@ -229,7 +229,7 @@
   function ratioOf(p, id) { var r = p.roster[id]; return r.hp / stats(id, r.xp).hp; }
   function autoOrders(p, tactic) {
     var T = B.AUTO, orders = {}, potions = p.potions, healed = {};
-    if (T.TACTICS.indexOf(tactic) < 0) tactic = T.DEFAULT;
+    if (tactic !== 'recommend' && T.TACTICS.indexOf(tactic) < 0) tactic = T.DEFAULT;   // 'recommend'＝「おすすめの作戦」（判断395）
     var order = p.party.slice().sort(function (a, c) { return ratioOf(p, a) - ratioOf(p, c); }), low = order[0], lr = ratioOf(p, low);
     var members = alive(p), avg = members.reduce(function (t, id) { return t + ratioOf(p, id); }, 0) / Math.max(1, members.length);
     var rank = { heal: 0, guard: 1, ward: 1, attack: 2 };   // 回復役を先に決める（回復薬は、そのあまりに）
@@ -243,6 +243,7 @@
       if (tactic === 'gungun') o = blast(false);
       else if (tactic === 'noMp') o = potion(T.LOW);
       else if (tactic === 'life') o = heal(T.HIGH) || buff(true) || potion(T.MID);
+      else if (tactic === 'recommend') o = heal(0.75) || buff(kind === 'guard' ? lr < T.MID : avg < T.HIGH) || potion(T.LOW) || blast(false);   // 魔法で戦う仲間は、MP があるかぎり魔法（試作と同じ）
       else o = heal(T.MID) || buff(kind === 'guard' ? lr < T.MID : avg < T.HIGH) || potion(T.LOW) || blast(true);
       orders[id] = o || { type: 'attack', target: id };
     });
