@@ -10,7 +10,8 @@
 - e6：Claudeによる取り込み済み（判断405）。
 - e7：Claudeによる取り込み済み（判断406）。
 - e8：PNG作成・寸法確認済み。確認用ページと生成・検証記録を追加。
-- e9〜e12・j4・j6：1人ずつ作成・追加する予定。
+- e9：PNG作成・寸法確認済み。確認用ページと生成・検証記録を追加。
+- e10〜e12・j4・j6：1人ずつ作成・追加する予定。
 
 依頼書の手順：「1人目（e2）は、仕上がりをClaudeが確認してから、残りを進めると、直しが少なくて済む。」
 
@@ -41,5 +42,9 @@ e7の確認ページ：`codex-prototypes/traveler-walk/e7/review.html`
 e8の確認ページ：`codex-prototypes/traveler-walk/e8/review.html`
 成果物：`img/adventure/travelers/e8-w.png`
 指示・検証記録：`codex-prototypes/traveler-walk/e8/`
+
+e9の確認ページ：`codex-prototypes/traveler-walk/e9/review.html`
+成果物：`img/adventure/travelers/e9-w.png`
+指示・検証記録：`codex-prototypes/traveler-walk/e9/`
 
 1人完成ごとにこのブランチへ追加する。
