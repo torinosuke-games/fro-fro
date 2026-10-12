@@ -257,17 +257,11 @@
     var node = E('span', { class: 'bt-float ' + cls, text: text, attrs: { 'aria-hidden': 'true' } }); stage.appendChild(node);
     root.setTimeout(function () { node.remove(); }, 1000);
   }
-  // 攻撃する仲間が、敵のほうへ前に出て、元の場所へ戻る（ChatGPT の試作と同じ、攻撃している感じ）
-  function lunge(app, line, phase) {
-    if (reduced() || document.hidden) return;
-    var f = app.querySelector('[data-fighter="' + (line.actor || line.who) + '"]'); if (!f) return;
-    var att = line.key === 'hit', t = f.getBoundingClientRect(), fig = app.querySelector('.bt-enemy-figure'), e = fig && fig.getBoundingClientRect();
-    var dx = att && e ? Math.max(24, (e.left + e.width * .2 - (t.left + t.width / 2)) * .55) : 0, dy = att ? 0 : -10;
-    var out = 'translate(' + dx + 'px,' + dy + 'px) scale(' + (att ? 1.1 : 1.04) + ')';
-    if (!f.animate) return;
-    if (phase === 'out') { f.btOut = out; f.animate([{ transform: 'none' }, { transform: out }], { duration: 300 / S.speed, easing: 'ease-out', fill: 'forwards' }); return; }
-    var back = f.animate([{ transform: f.btOut || out }, { transform: 'none' }], { duration: 260 / S.speed, easing: 'ease-in-out' });
-    f.getAnimations().forEach(function (x) { if (x !== back) x.cancel(); });
+  // 攻撃する仲間が、少し前に出て戻る（ChatGPT の試作と同じ。右へ12px）
+  function lunge(app, line) {
+    if (reduced() || document.hidden || line.key !== 'hit') return;
+    var f = app.querySelector('[data-fighter="' + (line.actor || line.who) + '"]');
+    if (f && f.animate) f.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(12px)', offset: .4 }, { transform: 'translateX(0)' }], { duration: 360 / S.speed });
   }
   // 行動のようす：ひとりずつ、宣言 → 命中 → 結果。終わったら、敵の行動へ
   function play(app, seq) {
@@ -283,13 +277,12 @@
       }
       var line = seq.events[seq.index], fig = app.querySelector('.bt-enemy-figure');
       fig.classList.remove('is-hit'); S.message = declareText(line); setMessage(app);
-      lunge(app, line, 'out');
+      lunge(app, line);
       later(350, function () {
         if (!ok()) return;
         if (line.key === 'hit' && !reduced()) fig.classList.add('is-hit');
         later(line.key === 'hit' ? 460 : 150, function () {
           if (!ok()) return;
-          lunge(app, line, 'back');
           if (line.key === 'hit') { seq.hp = Math.max(0, seq.hp - line.amount); hpSet(); floatText(app, 'enemy', '−' + line.amount); }
           else if (line.key === 'heal') floatText(app, 'heal', '＋' + line.amount);
           S.message = logText(line); setMessage(app); S.actLines.push(logText(line)); refreshPanel(app);
