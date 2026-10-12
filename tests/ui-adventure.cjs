@@ -92,88 +92,55 @@ fs.mkdirSync(out, { recursive: true });
       await quiet();
     }
     await goFight(3, 6);
-    await page.screenshot({ path: out + '/commands-phone.png', fullPage: true });
-    assert.equal(await page.locator('.adv-rpg-stats .adv-status').count(), 4);
-    await page.getByRole('button', { name: 'ミレイの行動を選ぶ', exact: true }).click();
-    await page.getByRole('button', { name: 'まほう', exact: true }).click();
-    await page.locator('.adv-subcommand-menu .adv-command').first().click();
-    await page.locator('.adv-subcommand-menu .adv-command').first().click();
-    await page.getByRole('button', { name: 'ゆきの行動を選ぶ', exact: true }).click();
-    await page.getByRole('button', { name: 'どうぐ', exact: true }).click();
-    await page.locator('.adv-subcommand-menu .adv-command').first().click();
-    await page.locator('.adv-subcommand-menu .adv-command').nth(1).click();
-    assert.equal(await page.locator('.adv-order-chip').count(),0);
-    assert.equal(await page.getByRole('button',{name:'クイズで行動する',exact:true}).count(),0);
-    assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
-    // Planning commands never spends MP or supplies before answering.
-    assert.equal(await page.evaluate(() => FF.app.state.adventure.potions), 3);
-    for (const width of [360, 768, 1440]) { await page.setViewportSize({ width, height: 1000 }); await checkWidth(); }
-    await page.screenshot({ path: out + '/commands-desktop.png', fullPage: true });
-    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator('.bt-app').waitFor();
+    await page.screenshot({ path: out + '/commands-phone.png' });
+    assert.equal(await page.locator('.bt-member').count(), 4);
     assert.equal(await page.evaluate(() => FF.app.state.adventure.battle.enemy), 'cub');
-    assert.equal(await page.locator('.adv-status[aria-pressed="true"]').getAttribute('aria-label'),'ガルドの行動を選ぶ');
-    await page.getByRole('button',{name:'たたかう',exact:true}).click();
-    assert.equal(await page.locator('.adv-status[aria-pressed="true"]').getAttribute('aria-label'),'アカネの行動を選ぶ');
-    assert.equal(await page.locator('.adv-quiz-dialog').count(),0);
-    await page.getByRole('button',{name:'たたかう',exact:true}).click();
-    await page.locator('.adv-quiz-dialog[open]').waitFor();
-    assert.deepEqual(await page.evaluate(()=>FF.app.state.adventure.battle.orders.hero),{type:'item',target:'juushouhei'});
-    assert.deepEqual(await page.evaluate(()=>FF.app.state.adventure.battle.orders.shiromadoushi),{type:'magic',target:'hero'});
-    assert.equal(await page.evaluate(()=>FF.app.state.adventure.potions),3);
-    await page.getByRole('button', { name: '戦闘からにげる', exact: true }).click();
-    assert.equal(await page.evaluate(() => FF.app.state.adventure.battle), null);
+    // 作戦を決めるだけでは、MP・回復薬は減らない（判断394。戦闘の画面の細かい確認は tests/ui-battle.cjs）
+    await page.locator('[data-order="defend"]').click();
+    assert.equal(await page.evaluate(() => FF.app.state.adventure.potions), 3);
+    await page.locator('.bt-escape').click(); await page.locator('.overlay .actions .btn.primary').click();
+    await page.waitForFunction(() => !FF.app.state.adventure.battle);
     await goFight(3, 6);
-    let seenMagic = false, seenDefense = false, checkedReload = false, seenWrong = false;
+    let checkedReload = false, seenWrong = false;
     async function fight() {
-      for (let turn = 0; turn < 70; turn++) {
+      for (let step = 0; step < 90; step++) {
         const b = await page.evaluate(() => FF.app.state.adventure.battle);
         if (b.phase === 'win') {
-          await page.locator('.adv-result.win').waitFor({state:'visible'});
+          await page.locator('[data-do="finish"].win').waitFor({ state: 'visible' });
           const gold = await page.evaluate(() => FF.app.state.adventure.gold);
-          await page.getByRole('button', { name: '旅をつづける', exact: true }).click();
+          await page.locator('[data-do="finish"]').click();
+          await page.waitForFunction(() => !FF.app.state.adventure.battle);
           assert.equal(await page.evaluate(() => FF.app.state.adventure.gold), gold);
           return;
         }
         assert.notEqual(b.phase, 'lose');
         if (b.phase === 'commands') {
-          if (b.turn >= 2) assert.equal(await page.locator('.adv-rpg-shell.encounter').count(), 0, 'encounter flash class is removed after it plays (decision 347)');
-          if (b.turn === 1) await page.screenshot({ path: out + '/enemy-' + b.enemy + '-phone.png', fullPage: true });
-          if (!seenMagic) { await page.getByRole('button', { name: 'まほう', exact: true }).click(); await page.locator('.adv-subcommand-menu .adv-command').first().click(); seenMagic = true; }
-          for(let i=0;i<4 && await page.evaluate(()=>FF.app.state.adventure.battle.phase==='commands');i++) await page.getByRole('button',{name:'たたかう',exact:true}).click();
+          await page.locator('[data-do="startQuiz"]').click();
         } else if (b.phase === 'attack') {
-          await page.locator('.adv-quiz-dialog[open]').waitFor();
-          assert.ok(await page.evaluate(() => {
-            const d=document.querySelector('.adv-quiz-dialog').getBoundingClientRect(), c=document.querySelector('.adv-choices').getBoundingClientRect();
-            return scrollY === 0 && d.top >= 0 && d.bottom <= innerHeight && c.bottom <= innerHeight;
-          }), 'Quiz and answers fit the viewport without scrolling the battle');
+          await page.locator('[data-choice="0"]').waitFor();
+          assert.ok(await page.evaluate(() => { const c = document.querySelector('.bt-primary').getBoundingClientRect(); return c.bottom <= innerHeight; }), '決定のボタンが画面におさまる');
           if (!checkedReload) {
-            await page.screenshot({ path: out + '/battle-phone.png', fullPage: true });
             const before = await page.evaluate(() => JSON.stringify(FF.app.state.adventure));
             await page.reload({ waitUntil: 'domcontentloaded' }); await quiet();
             assert.equal(await page.evaluate(() => JSON.stringify(FF.app.state.adventure)), before);
             await page.getByRole('button', { name: '冒険のつづき', exact: true }).click();
             assert.equal(await page.evaluate(() => FF.app.state.adventure.battle), null);
-            assert.deepEqual(await page.evaluate(() => FF.app.state.adventure.pos), { x: 1, y: 6 });
-            checkedReload = true;
-            await goFight(3,6); continue;
+            checkedReload = true; await goFight(3, 6); continue;
           }
           const wrong = !seenWrong; seenWrong = true;
           const index = b.choices.findIndex(c => wrong ? c !== b.question.answer : c === b.question.answer);
-          await page.locator('.adv-answer').nth(index).click();
-          const damaged = await page.evaluate(() => document.querySelector('.adv-enemy-art').classList.contains('is-hit'));
-          assert.equal(damaged, false, 'Explanation precedes damage');
-          await page.locator('.adv-feedback').waitFor({state:'visible'});
-          await checkWidth();
-        } else if (b.phase === 'explanation') await page.getByRole('button', { name: '戦闘へ戻る', exact: true }).click();
-        else if (b.phase === 'playerAction' || b.phase === 'enemyAction') {
-          seenDefense = seenDefense || b.phase === 'enemyAction';
-          assert.equal(await page.locator('.adv-quiz-dialog').count(), 0);
-          await page.waitForFunction(phase => FF.app.state.adventure.battle.phase !== phase, b.phase);
-        }
+          await page.locator('[data-choice="' + index + '"]').click();
+          await page.locator('[data-do="submit"]').click();
+          await page.locator('[data-do="ack"]').waitFor();
+        } else if (b.phase === 'explanation') {
+          await page.locator('[data-do="ack"]').click();
+          await page.waitForFunction(() => { const x = FF.app.state.adventure.battle; return !x || x.phase === 'commands' || x.phase === 'win' || x.phase === 'lose'; }, null, { timeout: 30000 });
+        } else await page.waitForTimeout(300);
       }
       throw Error('Battle did not finish');
     }
-    await fight(); assert.ok(seenMagic && seenDefense && checkedReload);
+    await fight(); assert.ok(checkedReload);
     await goFight(6, 5); await fight();
     await go(6, 3); // 焚き火で回復
     await go(8, 6); await fight();

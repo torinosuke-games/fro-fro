@@ -46,8 +46,7 @@ python3 -m http.server 8765 --bind 127.0.0.1
 # 別の端末セッションから実行
 node tests/run.js
 node tests/simulate.js
-node tests/ui-adventure-feedback.cjs
-node tests/ui-adventure-layout.cjs
+node tests/ui-battle.cjs   # 戦闘の画面（判断394）
 FF_BROWSER_PATH=/usr/bin/chromium node tests/ui-adventure.cjs
 ```
 

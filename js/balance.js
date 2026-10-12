@@ -15,7 +15,8 @@
       MAX_LEVEL: 10, XP_STEP: 24, HP_GROWTH: 7, MP_GROWTH: 2, STAT_GROWTH: 2,
       DEFENSE_RATE: 0.5, ARMOR_RATE: 0.45, MAGIC_COST: 3, MAGIC_POWER: 1.7,
       HEAL: 30, POTION_HEAL: 35, POTIONS: 3, POTION_PRICE: 25, POTION_MAX: 99, CHEST_GOLD: 30, CHEST_POTIONS: 2,
-      GUARD_RATE: 0.6, WARD_RATE: 0.7, RECENT: 12, HISTORY: 200,
+      GUARD_RATE: 0.6, WARD_RATE: 0.7, DEFEND_RATE: 0.5,   // DEFEND_RATE：「まもる」を選んだ仲間が、そのターンに受けるダメージの割合（判断394）
+      RECENT: 12, HISTORY: 200,
       // オートバトルの作戦（判断375）：HP の割合の目安。LOW＝かなり減っている、MID＝減ってきた、HIGH＝少し減った
       // ランダムエンカウント（判断376）：町・焚き火・宝箱などの場所以外を歩くと、ときどき、ザコ敵が現れる。SAFE_STEPS 歩までは出ない。そのあと、1歩ごとに、BASE から始まり GROWTH ずつ上がる確率（上限 MAX）。WOLF_FROM_X より東では、オオカミも出る（WOLF_SHARE の割合）
       ENCOUNTER: { SAFE_STEPS: 4, BASE: 0.02, GROWTH: 0.008, MAX: 0.1, WOLF_FROM_X: 5, WOLF_SHARE: 0.5 },
