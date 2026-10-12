@@ -1,0 +1,458 @@
+{
+  "name": "e2",
+  "size": [
+    2048,
+    2048
+  ],
+  "rgba": true,
+  "cell": 512,
+  "groundLine": 472,
+  "height": 400,
+  "bootSpanMethod": "Brown pixels in bottom 82px: R>1.05G, G>1.05B, R<2.5G; excludes purple scarf and red edge artifacts",
+  "frames": [
+    {
+      "row": 0,
+      "col": 0,
+      "sourceBounds": [
+        0,
+        0,
+        459,
+        652
+      ],
+      "placement": [
+        152,
+        72,
+        282,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        152,
+        72,
+        434,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 181
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "sourceBounds": [
+        0,
+        0,
+        404,
+        654
+      ],
+      "placement": [
+        164,
+        72,
+        247,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        164,
+        72,
+        411,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 78
+    },
+    {
+      "row": 0,
+      "col": 2,
+      "sourceBounds": [
+        0,
+        0,
+        469,
+        652
+      ],
+      "placement": [
+        153,
+        72,
+        288,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        153,
+        72,
+        441,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 165
+    },
+    {
+      "row": 0,
+      "col": 3,
+      "sourceBounds": [
+        0,
+        0,
+        414,
+        651
+      ],
+      "placement": [
+        160,
+        72,
+        254,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        160,
+        72,
+        414,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 148
+    },
+    {
+      "row": 1,
+      "col": 0,
+      "sourceBounds": [
+        0,
+        0,
+        483,
+        627
+      ],
+      "placement": [
+        63,
+        72,
+        308,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        63,
+        72,
+        371,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 205
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "sourceBounds": [
+        0,
+        0,
+        391,
+        627
+      ],
+      "placement": [
+        103,
+        72,
+        249,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        103,
+        72,
+        352,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 75
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "sourceBounds": [
+        0,
+        0,
+        494,
+        624
+      ],
+      "placement": [
+        53,
+        72,
+        317,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        53,
+        72,
+        370,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 227
+    },
+    {
+      "row": 1,
+      "col": 3,
+      "sourceBounds": [
+        0,
+        0,
+        417,
+        626
+      ],
+      "placement": [
+        93,
+        72,
+        266,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        93,
+        72,
+        359,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 83
+    },
+    {
+      "row": 2,
+      "col": 0,
+      "sourceBounds": [
+        0,
+        0,
+        410,
+        597
+      ],
+      "placement": [
+        152,
+        72,
+        275,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        152,
+        72,
+        427,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 215
+    },
+    {
+      "row": 2,
+      "col": 1,
+      "sourceBounds": [
+        0,
+        0,
+        379,
+        603
+      ],
+      "placement": [
+        157,
+        72,
+        251,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        157,
+        72,
+        408,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 112
+    },
+    {
+      "row": 2,
+      "col": 2,
+      "sourceBounds": [
+        0,
+        0,
+        410,
+        597
+      ],
+      "placement": [
+        144,
+        72,
+        275,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        144,
+        72,
+        419,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 222
+    },
+    {
+      "row": 2,
+      "col": 3,
+      "sourceBounds": [
+        0,
+        0,
+        377,
+        610
+      ],
+      "placement": [
+        164,
+        72,
+        247,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        164,
+        72,
+        411,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 114
+    },
+    {
+      "row": 3,
+      "col": 0,
+      "sourceBounds": [
+        0,
+        0,
+        462,
+        644
+      ],
+      "placement": [
+        64,
+        72,
+        287,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        64,
+        72,
+        351,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 212
+    },
+    {
+      "row": 3,
+      "col": 1,
+      "sourceBounds": [
+        0,
+        0,
+        418,
+        651
+      ],
+      "placement": [
+        88,
+        72,
+        257,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        88,
+        72,
+        345,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 118
+    },
+    {
+      "row": 3,
+      "col": 2,
+      "sourceBounds": [
+        0,
+        0,
+        455,
+        654
+      ],
+      "placement": [
+        71,
+        72,
+        278,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        71,
+        72,
+        349,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 198
+    },
+    {
+      "row": 3,
+      "col": 3,
+      "sourceBounds": [
+        0,
+        0,
+        424,
+        650
+      ],
+      "placement": [
+        90,
+        72,
+        261,
+        400
+      ],
+      "anchorMethod": "median alpha head region; stable upright head/body axis",
+      "bounds": [
+        90,
+        72,
+        351,
+        472
+      ],
+      "height": 400,
+      "ground": 472,
+      "bootSpan": 121
+    }
+  ],
+  "checks": [
+    "16 nonempty frames",
+    "RGBA transparent PNG",
+    "400px height / 472px foot baseline",
+    "No cell overflow",
+    "All four diagonal rows: contact lower-boot silhouettes at least 15px wider than passing"
+  ],
+  "approval": "Character, anatomy and loop timing require visual review",
+  "browserCheck": {
+    "browser": "Chromium",
+    "viewport": [
+      390,
+      844
+    ],
+    "loadedSize": [
+      2048,
+      2048
+    ],
+    "canvasCount": 8,
+    "allFourFrames": true,
+    "directionLabels": [
+      "左前 ↙",
+      "右前 ↘",
+      "左後ろ ↖",
+      "右後ろ ↗"
+    ],
+    "pageErrors": []
+  }
+}
