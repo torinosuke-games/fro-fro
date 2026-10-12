@@ -1,0 +1,17 @@
+{
+  "name": "e8",
+  "paths": [
+    "/workspace/generated_images/exec-859b2520-5150-449c-ae38-cc2ed022def0.png",
+    "/workspace/generated_images/exec-5d70a180-a9bd-4430-a0c0-a91fb94f25de.png",
+    "/workspace/generated_images/exec-41c099a6-e8f5-4249-a511-db0a1327ee2e.png",
+    "/workspace/generated_images/exec-6ba4a270-cae5-41df-865a-8e00c6d7a327.png"
+  ],
+  "overrides": {
+    "0,0": "/workspace/generated_images/exec-e1233102-b5ad-484d-a290-6398df82a366.png",
+    "0,3": "/workspace/generated_images/e8-front4-crop.png",
+    "1,1": "/workspace/generated_images/exec-a8f0c301-b53f-4aa5-82b1-abe619c858a6.png",
+    "1,2": "/workspace/generated_images/exec-2fe92ebf-be87-4037-a9b1-df92f2894bfc.png",
+    "2,3": "/workspace/generated_images/exec-65c08372-1017-4f5a-8df7-2ee6d4aa1731.png",
+    "3,3": "/workspace/generated_images/exec-ba0f7396-3061-4722-8dfb-78fcd966aca4.png"
+  }
+}
