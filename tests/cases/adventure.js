@@ -279,4 +279,34 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.ok(FF.texts.adventure.notices.camp && FF.texts.adventure.notices.campUsed);
     assert.equal(A.rest(p, 'home').campUsed, false);   // 町で休むと、また使える
   });
+  test('まもる（判断394）：MPを使わず、選んだ仲間だけ、そのターンに受けるダメージが半分。次のターンには、もどる', () => {
+    const base = atEnemy('boss');
+    // 全員まもる／まもらない、で、敵の攻撃は、同じ（乱数も同じ）。正解のときの受けるダメージを比べる
+    const run = (type) => {
+      let p = A.command(base, orders(base, Object.fromEntries(base.party.map(id => [id, { type, target: id }]))), bank, 4, rng, now);
+      p = A.answer(p, p.battle.question.answer, now); p = A.advance(p, bank, 4, rng, now);
+      if (p.battle.phase === 'win') return null;
+      const hpBefore = Object.fromEntries(p.party.map(id => [id, p.roster[id].hp]));
+      p = A.advance(p, bank, 4, rng, now);   // 敵の行動
+      return { p, loss: Object.fromEntries(p.party.map(id => [id, hpBefore[id] - p.roster[id].hp])), mp: Object.fromEntries(p.party.map(id => [id, p.roster[id].mp])) };
+    };
+    const a = run('attack'), d = run('defend');
+    assert.ok(a && d);
+    const hurt = p => p.party.filter(id => a.loss[id] > 0);
+    assert.ok(hurt(a.p).length > 0);
+    for (const id of hurt(a.p)) assert.ok(d.loss[id] <= Math.ceil(a.loss[id] * B.DEFEND_RATE) + 1 && d.loss[id] < a.loss[id], id + ': ' + a.loss[id] + ' → ' + d.loss[id]);
+    for (const id of d.p.party) assert.equal(d.mp[id], a.mp[id]);                 // MPは使わない
+    assert.deepStrictEqual(plain(d.p.battle.defending).sort(), plain(d.p.party).slice().sort());
+    assert.ok(d.p.battle.log.some(l => l.key === 'hurt'));
+    // ひとりだけ、まもる
+    let p = A.command(base, orders(base, { hero: { type: 'defend', target: 'hero' } }), bank, 4, rng, now);
+    p = A.answer(p, p.battle.question.answer, now); p = A.advance(p, bank, 4, rng, now);
+    assert.ok(p.battle.log.some(l => l.key === 'defend' && l.who === 'hero'));
+    assert.deepStrictEqual(plain(p.battle.defending), ['hero']);
+    // 保存・読み込みで残り、次のターンの作戦で、消える
+    assert.deepStrictEqual(plain(A.normalize(plain(p)).battle.defending), ['hero']);
+    const bad = plain(p); bad.battle.defending = ['hero', 'hero', 'nobody', 7]; assert.deepStrictEqual(plain(A.normalize(bad).battle.defending), ['hero']);
+    p = A.advance(p, bank, 4, rng, now); p = A.advance(p, bank, 4, rng, now);
+    if (p.battle.phase === 'commands') { p = A.command(p, orders(p), bank, 4, rng, now); assert.deepStrictEqual(plain(p.battle.defending), []); }
+  });
 };

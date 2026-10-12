@@ -1,0 +1,187 @@
+/* 戦闘の画面（判断394）。ChatGPT の戦闘試作（codex-prototypes/snow-battle）の見た目をもとにした。画面ぜんたいを使う（上の帯・下のナビのうえに重ねる）。
+   戦場と仲間カードの高さは、戦闘中に変えない（作戦・問題・解答・行動で、同じ。画面の大きさ・向きが変わったときだけ変わる）。長い問題・解説・行動の記録は、パネルの中でスクロールする。 */
+.bt-app{--ink:#273d45;--muted:#6d7f84;--gold:#b48a4b;--paper:#f8faf6;--stage:clamp(120px,calc(100dvh - 505px),340px);position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;box-sizing:border-box;padding:max(6px,env(safe-area-inset-top)) 12px max(10px,env(safe-area-inset-bottom));background:#e6eeed;color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;overflow:hidden}
+.bt-app *{box-sizing:border-box}
+.bt-app button{font-family:inherit;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+.bt-app button:disabled{cursor:default;opacity:.45}
+.bt-app button:focus-visible{outline:3px solid #bf8c3b;outline-offset:3px}
+.bt-app h2,.bt-app p{margin:0}
+.bt-inner{display:flex;flex-direction:column;flex:1;min-height:0;width:100%;max-width:1320px;margin:0 auto}
+.bt-bar{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-shrink:0;min-height:36px;margin-bottom:6px}
+.bt-flow{display:flex;gap:10px;align-items:center;min-width:0}
+.bt-turn{font-size:9px;letter-spacing:1px;font-weight:800;white-space:nowrap}
+.bt-flow ol{list-style:none;display:flex;align-items:center;gap:12px;padding:0;margin:0}
+.bt-flow li{position:relative;font-size:9px;color:#869495;white-space:nowrap}
+.bt-flow li:not(:last-child):after{content:'›';position:absolute;right:-8px;color:#8a9d9d}
+.bt-flow li.current{color:#9c722f;font-weight:800}
+.bt-flow li.done{color:#517c72}
+.bt-flow li.current:before{content:'';height:3px;background:#bb975e;position:absolute;bottom:-7px;left:0;right:0;border-radius:3px}
+.bt-tools{display:flex;gap:4px;flex-shrink:0}
+.bt-tools button{height:34px;min-width:34px;display:flex;align-items:center;justify-content:center;background:#f6faf6b0;border:1px solid #c7d5d4;border-radius:50%;font-size:15px;padding:0}
+.bt-tools .bt-log{border-radius:10px;padding:0 9px;font-size:10px;gap:4px}
+.bt-tools .bt-escape{border-radius:9px;font-size:10px;font-weight:500;color:#697d7c;background:#f5f8f2;padding:0 8px}
+.bt-layout{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}
+.bt-scene{display:contents}
+.bt-stage{position:relative;height:var(--stage);flex:0 0 var(--stage);overflow:hidden;border-radius:14px;background:#c5d8de;isolation:isolate}
+.bt-arena{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 52%}
+.bt-wash{position:absolute;inset:0;background:linear-gradient(180deg,#1d404322 0,transparent 30%,#c4d9e010 70%,#dfebea99)}
+.bt-auto{position:absolute;top:10px;left:10px;z-index:5;display:grid;align-content:center;gap:2px;min-height:40px;width:104px;padding:5px 8px;border:1px solid #c7d5d4;background:#f6faf1ed;border-radius:10px;text-align:center;color:#315e63}
+.bt-auto strong{font-size:11px;letter-spacing:.5px}
+.bt-auto small{font-size:8px;color:#647e7c}
+.bt-auto[aria-pressed=true]{background:#315e63;color:#fff;border-color:#315e63}
+.bt-auto[aria-pressed=true] small{color:#edf5ef}
+.bt-enemy-status{position:absolute;right:10px;top:10px;width:46%;max-width:240px;background:#f6faf1e6;border:1px solid #fff9;padding:7px 10px;border-radius:10px;z-index:3;box-shadow:0 4px 18px #213f4a0a}
+.bt-enemy-row{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.bt-enemy-name{font-size:11px;letter-spacing:.5px}
+.bt-enemy-num{font-size:9px;color:#6b787b;font-variant-numeric:tabular-nums}
+.bt-enemy-note{display:block;font-size:8px;color:#6f8082;margin-top:4px}
+.bt-meter{display:block;height:5px;background:#263d4414;border-radius:6px;overflow:hidden}
+.bt-meter i{display:block;width:100%;height:100%;border-radius:6px;background:#609d8c;transition:width .22s}
+.bt-enemy-meter{margin-top:6px;height:5px}
+.bt-enemy-meter i{background:linear-gradient(90deg,#a97b53,#d5b579)}
+.bt-formation{position:absolute;inset:0;pointer-events:none}
+.bt-fighter{position:absolute;width:18%;z-index:3;transform-origin:center bottom}
+.bt-fighter img,.bt-fighter .bt-sheet{display:block;width:100%;height:100%;object-fit:contain;position:relative;z-index:1}
+.bt-fighter .bt-sheet{background-repeat:no-repeat;background-size:200% 200%;background-position:100% 100%}
+.bt-fighter[data-slot="0"]{left:22%;bottom:13%;height:35%;z-index:5}
+.bt-fighter[data-slot="1"]{left:4%;bottom:13%;height:33%;z-index:4}
+.bt-fighter[data-slot="2"]{left:17%;bottom:30%;height:30%;z-index:2}
+.bt-fighter[data-slot="3"]{left:3%;bottom:29%;height:28%;z-index:1}
+.bt-fighter.selected:after{content:'';position:absolute;bottom:-3px;left:22%;width:57%;height:10px;border:2px solid #d2aa59;border-radius:50%;z-index:0}
+.bt-fighter.down{opacity:.35}
+.bt-fighter.defending:before{content:'';position:absolute;left:-6%;right:-6%;top:6%;bottom:2%;border:2px solid #abd7e9a8;background:linear-gradient(transparent,#bfe6ef33);border-radius:60% 60% 40% 40%;z-index:2}
+.bt-shadow{position:absolute;width:75%;height:12%;left:13%;bottom:-2%;background:radial-gradient(ellipse,#29485a60,transparent 70%);border-radius:50%;pointer-events:none}
+.bt-enemy-figure{position:absolute;right:10%;bottom:19%;height:53%;width:35%;transform-origin:center bottom;z-index:2}
+.bt-enemy-figure svg{display:block;width:100%;height:100%}
+.bt-enemy-figure.defeated{opacity:.25;transform:translateY(6px);transition:opacity .3s}
+.bt-enemy-figure.is-hit{animation:bt-hit .42s}
+@keyframes bt-hit{0%,100%{transform:none;filter:none}20%{transform:translateX(-8px);filter:brightness(1.6)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+.bt-message{position:absolute;bottom:9px;left:10px;right:86px;color:#395762;font-size:10px;line-height:1.5;padding:6px 9px;border-left:2px solid #bc9b65;background:#f4f8f0d9;border-radius:0 8px 8px 0;z-index:8}
+.bt-speed{position:absolute;bottom:9px;right:9px;height:32px;padding:0 9px;border:1px solid #fff9;background:#f4f8f0cf;border-radius:11px;font-size:9px;z-index:9}
+.bt-float{position:absolute;font:bold 28px Georgia,serif;color:#fff1bc;text-shadow:0 2px 3px #4b4a31,1px 0 #4b4a31;pointer-events:none;z-index:9;animation:bt-float .9s forwards}
+.bt-float.enemy{right:22%;top:34%}
+.bt-float.heal{color:#f0ffdf;left:20%;top:40%}
+@keyframes bt-float{0%{opacity:0;transform:translateY(8px)}15%{opacity:1}100%{opacity:0;transform:translateY(-26px)}}
+.bt-party{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;height:74px;flex-shrink:0}
+.bt-member{position:relative;border:1px solid #ccd9d6;background:#f7faf4;border-radius:9px;padding:5px 6px 4px;text-align:left;min-width:0;overflow:hidden}
+.bt-member[aria-pressed=true]{border:2px solid #bb9657;padding:4px 5px 3px;box-shadow:0 2px 10px #9275460b}
+.bt-app .bt-member:disabled{opacity:1;cursor:default}
+.bt-app .bt-member.is-down{opacity:.55}
+.bt-member-top{display:flex;align-items:center;gap:3px;margin-bottom:2px}
+.bt-portrait{width:22px;height:22px;flex-shrink:0;border-radius:50%;overflow:hidden}
+.bt-portrait .adv-ally-art{width:100%;height:100%;object-fit:cover;object-position:50% 8%;border-radius:50%;display:block}
+.bt-member-name{font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bt-vitals{display:flex;gap:2px;justify-content:space-between;font-size:8px;margin:2px 0;color:#536c70;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bt-vitals .mp{color:#718ba4}
+.bt-member .bt-meter{height:4px}
+.bt-order{display:block;font-size:8px;margin-top:3px;color:#526f6e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:11px}
+.bt-order b{color:var(--gold);margin-right:2px;font-weight:400}
+.bt-dmg{position:absolute;right:5px;top:3px;font:bold 14px Georgia,serif;color:#a13b43;animation:bt-float .9s forwards}
+.bt-member[data-hp-state=caution]{background:#fff8e8}
+.bt-member[data-hp-state=caution] .bt-vitals>span:first-child{color:#965b16}
+.bt-member[data-hp-state=caution] .bt-meter i{background:#d28a2f}
+.bt-member[data-hp-state=critical]{background:#fff0ed}
+.bt-member[data-hp-state=critical] .bt-vitals>span:first-child{color:#a13b43}
+.bt-member[data-hp-state=critical] .bt-meter i{background:#c4515b}
+.bt-member[data-hp-state=down] .bt-vitals>span:first-child{color:#748184}
+.bt-console{flex:1;min-height:0;background:var(--paper);border:1px solid #d8e3de;border-radius:14px;overflow:hidden;min-width:0;box-shadow:0 6px 24px #23454606}
+.bt-panel{height:100%;display:flex;flex-direction:column;min-height:0}
+.bt-body{padding:9px 14px;flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.bt-foot{padding:8px 14px 10px;border-top:1px solid #e2e8e2;background:#f7faf5;flex-shrink:0}
+.bt-note{font-size:8px;line-height:1.5;text-align:center;color:#7d8d88;margin-bottom:6px}
+.bt-primary{width:100%;min-height:46px;border:1px solid #355c62;border-radius:11px;background:#335e64;color:#fff9e9;font-size:12px;font-weight:700;letter-spacing:1px;box-shadow:0 3px 10px #1d464417;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 12px}
+.bt-primary:after{content:'→';font-size:16px;line-height:1}
+.bt-secondary{border:1px solid #cddbd5;border-radius:9px;background:#fdfefb;min-height:42px;padding:6px 10px;font-size:10px}
+.bt-quiet{background:none;border:0;padding:8px 5px;font-size:10px;min-height:38px;color:#537276}
+.bt-selhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.bt-selhead strong{font-size:12px}
+.bt-selhead span{font-size:9px;color:#7b908b}
+.bt-commands{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.bt-command{min-height:56px;position:relative;text-align:left;border:1px solid #d3dfd8;border-radius:11px;background:#fffef9;padding:7px 10px;color:#355157;display:grid;grid-template-columns:26px 1fr;align-content:center;column-gap:7px}
+.bt-command.active{background:#eaf1e9;border-color:#7d9c89;box-shadow:inset 0 0 0 1px #7d9c89}
+.bt-command.active:after{content:'✓';position:absolute;top:5px;right:8px;color:#5d8066;font-size:10px}
+.bt-command-icon{grid-row:1/3;font-size:22px;font-family:serif;color:#7d927e;line-height:1;align-self:center}
+.bt-command strong{display:block;font-size:12px}
+.bt-command small{display:block;font-size:8px;color:#809088;margin-top:3px}
+.bt-info{padding:7px 1px;font-size:10px;line-height:1.6;color:#6d817d;min-height:36px}
+.bt-plan{display:flex;gap:7px}
+.bt-plan>*{flex:1}
+.bt-tags{display:flex;gap:6px;margin-bottom:6px}
+.bt-tag{padding:3px 8px;border-radius:20px;font-size:8px;background:#e9efea;color:#6c8278}
+.bt-question{font-size:16px;font-weight:650;line-height:1.75;letter-spacing:.3px;color:#253d45}
+.bt-question .lesson-figure,.bt-body .lesson-figure{max-width:260px;margin:6px auto}
+.bt-choices{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}
+.bt-choice{display:flex;align-items:center;gap:7px;text-align:left;min-height:50px;border:1px solid #d1ddd5;border-radius:10px;background:#fffefb;padding:8px;font-size:13px;font-weight:600}
+.bt-choice[aria-pressed=true]{border:2px solid #628675;background:#eaf1e7;padding:7px}
+.bt-letter{display:grid;place-items:center;flex-shrink:0;width:21px;height:21px;border-radius:50%;font:10px Georgia,serif;background:#edf1eb;color:#8b9b8f}
+.bt-choice[aria-pressed=true] .bt-letter{background:#618575;color:#fff}
+.bt-tools2{display:flex;align-items:center;justify-content:space-between;margin-top:3px;gap:8px}
+.bt-hint{border-left:2px solid #c7ae79;background:#f2efdf;padding:8px 10px;margin-top:6px;font-size:11px;line-height:1.7;color:#697459}
+.bt-input{display:flex;gap:8px;margin-top:10px}
+.bt-input input{flex:1;min-width:0;min-height:46px;border:1px solid #cfdcd5;border-radius:10px;padding:0 12px;font-size:16px;background:#fff}
+.bt-status{display:flex;gap:8px;align-items:center;color:#4f7b64;font-size:13px;margin-bottom:9px}
+.bt-seal{display:grid;place-items:center;width:25px;height:25px;border:1px solid #93b199;border-radius:50%;font-size:15px}
+.bt-status.wrong{color:#9b7850}
+.bt-aq{font-size:12px;line-height:1.7;color:#637679;border-bottom:1px solid #e1e7dd;padding-bottom:8px}
+.bt-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:9px 0}
+.bt-pair>div{padding:9px;background:#edf3e9;border-radius:10px;min-width:0}
+.bt-pair>div:first-child{background:#eef0e9}
+.bt-pair small{display:block;font-size:9px;color:#7b8d7f;margin-bottom:5px}
+.bt-pair strong{font-size:17px;color:#456854;overflow-wrap:anywhere}
+.bt-explain{font-size:13px;line-height:1.8;color:#3e5b59;white-space:pre-line}
+.bt-effect{font-size:10px;line-height:1.8;color:#9a7846;background:#f3efdf;padding:8px 10px;border-radius:8px;margin-top:10px}
+.bt-actlog{list-style:none;margin:0;padding:0;display:grid;gap:3px}
+.bt-actlog li{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #e4eae0;font-size:11px;line-height:1.6}
+.bt-actlog li:last-child{border-bottom:0}
+.bt-actlog .dot{color:#b39c6d}
+.bt-acting{display:flex;align-items:center;gap:9px;font-size:13px;line-height:1.7;margin-bottom:6px}
+.bt-acting:before{content:'';width:7px;height:7px;border-radius:50%;background:#c3a164;flex-shrink:0}
+.bt-endmark{font:42px Georgia,serif;color:#bf9c5b;text-align:center;margin-bottom:8px}
+.bt-result{font-size:12px;line-height:1.9;color:#657a76;margin-bottom:8px}
+.bt-levelups{display:grid;gap:3px;font-size:12px;color:#587b67;margin-bottom:8px}
+.bt-loot{display:flex;align-items:center;gap:10px;background:#f1e8d0;border-radius:10px;padding:8px 10px;font-size:11px;line-height:1.6}
+.bt-loot svg{width:40px;height:34px;flex-shrink:0}
+/* 作戦・どうぐ・記録・せつめい・撤退の窓 */
+.overlay .bt-list{display:grid;gap:8px;margin:10px 0}
+.overlay .bt-option{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;min-height:62px;width:100%;padding:10px 12px;border:1px solid #d5dfd5;border-radius:10px;background:#fff;color:#354f56;font:inherit;cursor:pointer}
+.overlay .bt-option:disabled{opacity:.5;cursor:default}
+.overlay .bt-option b{display:block;font-size:14px}
+.overlay .bt-option small{display:block;font-size:11px;color:#718679;line-height:1.6}
+.overlay .bt-option .count{flex-shrink:0;font-size:12px;text-align:right}
+.overlay .bt-option.is-low b{color:#a13b43}
+.overlay .bt-history{border-top:1px solid #dbe4d7;padding:12px 0}
+.overlay .bt-history small{color:#85947e}
+.overlay .bt-history h3{font-size:13px;margin:5px 0;line-height:1.7;font-weight:600}
+.overlay .bt-history p{font-size:12px;line-height:1.7;margin:4px 0}
+.overlay .bt-help p{font-size:13px;line-height:1.8;margin:8px 0}
+/* 広い画面（PC・横持ちのタブレット）：戦場と仲間は左、操作は右 */
+@media(min-width:1000px){
+  .bt-app{padding:20px 28px 28px;--stage:515px}
+  .bt-layout{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:20px;align-items:stretch;flex:0 0 auto;height:625px}
+  .bt-scene{display:flex;flex-direction:column;gap:12px;min-width:0;height:625px}
+  .bt-stage{border-radius:20px}
+  .bt-party{height:98px;gap:8px}
+  .bt-member{padding:9px 10px 8px;border-radius:12px}.bt-portrait{width:30px;height:30px}.bt-member-name{font-size:12px}.bt-vitals{font-size:9px}.bt-order{font-size:9px}
+  .bt-console{height:625px;border-radius:18px}
+  .bt-inner{justify-content:center}
+  .bt-body{padding:16px 22px}.bt-foot{padding:14px 22px 19px}
+  .bt-command{min-height:84px;display:block;padding:12px}.bt-command-icon{font-size:23px;display:block;margin-bottom:3px}.bt-command strong{font-size:13px}.bt-command small{font-size:9px}
+  .bt-question{font-size:19px}.bt-choice{min-height:57px;font-size:14px}
+  .bt-bar{margin-bottom:14px}.bt-flow li,.bt-turn{font-size:11px}
+  .bt-enemy-name{font-size:13px}.bt-message{font-size:11px}
+}
+/* 横持ちのスマホ：左に戦場と仲間、右に操作 */
+@media(max-width:999px) and (orientation:landscape){
+  .bt-app{padding:6px 12px}
+  .bt-layout{display:grid;grid-template-columns:minmax(0,1fr) 43%;gap:12px}
+  .bt-scene{display:flex;flex-direction:column;gap:6px;min-height:0;min-width:0}
+  .bt-stage{height:auto;flex:1;min-height:90px}
+  .bt-party{height:62px}
+  .bt-console{min-height:0}
+  .bt-note{display:none}
+  .bt-command{min-height:48px;padding:5px 8px}.bt-info{padding:4px 0;min-height:0}
+  .bt-bar{margin-bottom:3px}
+}
+@media(max-width:359px){.bt-app{padding-left:8px;padding-right:8px}.bt-member-name{font-size:9px}.bt-portrait{display:none}.bt-question{font-size:15px}}
+@media(max-width:999px) and (max-height:650px) and (orientation:portrait){.bt-app{--stage:clamp(90px,calc(100dvh - 470px),140px)}.bt-portrait{display:none}.bt-party{height:58px}.bt-note{display:none}}
+@media(prefers-reduced-motion:reduce){.bt-app *{transition:none!important;animation:none!important}}

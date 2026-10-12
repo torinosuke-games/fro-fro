@@ -272,12 +272,12 @@
       // 歩くしぐさ：絵は、立ち姿の1枚ずつなので、1マスに2歩ぶん、はずんで、体をかたむける（歩いた道のりで決まるので、足を止めるとぴたりと止まる）
       var ph = hero.walking && !opts.reduced && !overview ? hero.dist * Math.PI * 2 : 0, hop = Math.abs(Math.sin(ph)), tilt = Math.sin(ph);
       if (overview) { ctx.fillStyle = 'rgba(224,181,104,.55)'; ctx.beginPath(); ctx.arc(p.x, p.y - 8, 15, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#d09233'; ctx.lineWidth = 2.5; ctx.stroke(); }
-      shadow(p, 43 * zoom * 1.2 * (1 - .18 * hop), .22 - .06 * hop);
+      shadow(p, 43 * zoom * 1.2 * (1 - .25 * hop), .22 - .08 * hop);
       ctx.strokeStyle = '#e0b568'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(p.x, p.y + 1, 20 * zoom, 7 * zoom, 0, 0, Math.PI * 2); ctx.stroke();
       var img = (hero.diag && sheet(diagSheet)) || sheet(avatarSheet); if (!img) return;
       var diag = hero.diag && img === sheets[diagSheet], q = img.width / 2, face = hero.face;
       if (hero.diag && !diag) face = ({ 0: 0, 1: 0, 2: 3, 3: 3 })[face];   // ななめの絵がないときは、前向き・左右の絵
-      ctx.save(); ctx.translate(p.x, p.y - hop * 7 * zoom); ctx.rotate(tilt * .075); ctx.scale(1 - .035 * hop, 1 + .06 * hop);   // 足元を軸に、はずんで・かたむく
+      ctx.save(); ctx.translate(p.x + tilt * 2.5 * zoom, p.y - hop * 11 * zoom); ctx.rotate(tilt * .13); ctx.scale(1 + .05 * (1 - hop), 1 + .08 * hop);   // 足元を軸に、はずんで・かたむく
       ctx.drawImage(img, (face % 2) * q, Math.floor(face / 2) * q, q, q, -s / 2, -s + 4, s, s); ctx.restore();
     }
 

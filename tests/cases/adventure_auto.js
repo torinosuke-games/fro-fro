@@ -55,4 +55,12 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.ok(!A.alive(p).includes('kenshi')); assert.equal(Object.keys(o).includes('kenshi'), false);
     p.potions = 5; assert.equal(A.alive(p).filter(id => o[id].type === 'item' || (o[id].type === 'magic' && o[id].target === 'kenshi')).length, 1);
   });
+  test('おすすめの作戦（判断395）：全員元気でも、魔法で戦う人は魔法。回復役は、HPが減ったら回復', () => {
+    let p = full(); const o = A.autoOrders(p, 'recommend');
+    assert.deepStrictEqual(plain(o.hero), { type: 'magic', target: 'hero' });   // 魔法のほうが強い主人公
+    assert.equal(o.shiromadoushi.type, 'attack');
+    p = hurt(p, 'kenshi', .6); assert.deepStrictEqual(plain(A.autoOrders(p, 'recommend').shiromadoushi), { type: 'magic', target: 'kenshi' });
+    p.roster.hero.mp = 0; assert.equal(A.autoOrders(p, 'recommend').hero.type, 'attack');   // MP がなければ攻撃
+    assert.notStrictEqual(A.command(full(), A.autoOrders(full(), 'recommend'), bank, 4, rng, now), full());
+  });
 };

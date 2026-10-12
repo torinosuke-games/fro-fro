@@ -92,6 +92,7 @@
       p.battle.flowVersion = 2;
       p.battle.hp = int(bat.hp, B.ENEMIES[bat.enemy].hp, B.ENEMIES[bat.enemy].hp);
       p.battle.turn = Math.max(1, int(bat.turn, 1, 10000));
+      p.battle.defending = Array.isArray(bat.defending) ? bat.defending.filter(function (id, i, a) { return p.party.indexOf(id) >= 0 && a.indexOf(id) === i; }) : [];
     }
     if (!p.battle && !p.party.some(function (id) { return p.roster[id].hp > 0; })) p = rest(p, p.lastTown);
     return p;
@@ -212,14 +213,14 @@
     var n = clone(p), count = 0;
     for (var id of alive(n)) {
       var o = orders[id];
-      if (!o || ['attack', 'magic', 'item'].indexOf(o.type) < 0) return p;
+      if (!o || ['attack', 'magic', 'item', 'defend'].indexOf(o.type) < 0) return p;
       if (o.type === 'magic' && n.roster[id].mp < B.MAGIC_COST) return p;
       if (o.type === 'item') count++;
       if ((o.type === 'item' || o.type === 'magic' && magicKind(id) === 'heal') && n.party.indexOf(o.target) < 0) return p;
       n.battle.orders[id] = { type: o.type, target: o.target || id };
     }
     if (count > n.potions) return p;
-    n.battle.guarded = false; n.battle.ward = false; n.battle.log = [];
+    n.battle.guarded = false; n.battle.ward = false; n.battle.defending = []; n.battle.log = [];
     if (!setQuestion(n, bank, grade, rng, now)) return p;
     n.battle.phase = 'attack';
     return n;
@@ -228,7 +229,7 @@
   function ratioOf(p, id) { var r = p.roster[id]; return r.hp / stats(id, r.xp).hp; }
   function autoOrders(p, tactic) {
     var T = B.AUTO, orders = {}, potions = p.potions, healed = {};
-    if (T.TACTICS.indexOf(tactic) < 0) tactic = T.DEFAULT;
+    if (tactic !== 'recommend' && T.TACTICS.indexOf(tactic) < 0) tactic = T.DEFAULT;   // 'recommend'＝「おすすめの作戦」（判断395）
     var order = p.party.slice().sort(function (a, c) { return ratioOf(p, a) - ratioOf(p, c); }), low = order[0], lr = ratioOf(p, low);
     var members = alive(p), avg = members.reduce(function (t, id) { return t + ratioOf(p, id); }, 0) / Math.max(1, members.length);
     var rank = { heal: 0, guard: 1, ward: 1, attack: 2 };   // 回復役を先に決める（回復薬は、そのあまりに）
@@ -242,6 +243,7 @@
       if (tactic === 'gungun') o = blast(false);
       else if (tactic === 'noMp') o = potion(T.LOW);
       else if (tactic === 'life') o = heal(T.HIGH) || buff(true) || potion(T.MID);
+      else if (tactic === 'recommend') o = heal(0.75) || buff(kind === 'guard' ? lr < T.MID : avg < T.HIGH) || potion(T.LOW) || blast(false);   // 魔法で戦う仲間は、MP があるかぎり魔法（試作と同じ）
       else o = heal(T.MID) || buff(kind === 'guard' ? lr < T.MID : avg < T.HIGH) || potion(T.LOW) || blast(true);
       orders[id] = o || { type: 'attack', target: id };
     });
@@ -281,6 +283,7 @@
     alive(n).sort(function (a, c) { return stats(c, n.roster[c].xp).speed - stats(a, n.roster[a].xp).speed; }).forEach(function (id) {
       var o = b.orders[id], r = n.roster[id], s = stats(id, r.xp), target = o && n.roster[o.target];
       if (!o || b.hp <= 0) return;
+      if (o.type === 'defend') { b.defending = (b.defending || []).concat([id]); log(b, 'defend', id, 0); return; }   // まもる：このターン、自分が受けるダメージが半分（判断394）
       if (o.type === 'item') {
         if (!n.potions || !target) return;
         var healed = Math.min(B.POTION_HEAL, stats(o.target, target.xp).hp - target.hp);
@@ -309,7 +312,7 @@
     targets.forEach(function (id) {
       var r = n.roster[id], s = stats(id, r.xp);
       var damage = Math.max(1, Math.round((e.attack * (correct ? B.QUIZ_ENEMY_RATE : 1) * (plan.heavy ? 1.5 : 1) - (s.defense + (gear[id] && gear[id].defense || 0)) * B.ARMOR_RATE) *
-        (b.ward ? Math.max(.1, B.WARD_RATE - (fx.guardBonus || 0)) : 1) * (id === guard && b.guarded ? Math.max(.1, B.GUARD_RATE - (fx.guardBonus || 0)) : 1)));
+        (b.ward ? Math.max(.1, B.WARD_RATE - (fx.guardBonus || 0)) : 1) * (id === guard && b.guarded ? Math.max(.1, B.GUARD_RATE - (fx.guardBonus || 0)) : 1) * ((b.defending || []).indexOf(id) >= 0 ? B.DEFEND_RATE : 1)));
       damage = Math.min(r.hp, damage); r.hp -= damage; log(b, 'hurt', id, damage);
       if (!r.hp) log(b, 'down', id, 0);
     });
