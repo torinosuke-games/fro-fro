@@ -10,7 +10,7 @@ const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');const a
  // 町の画面：流れる・ループ
  await p.evaluate(()=>FF.ui.show('base'));
  await p.waitForFunction(()=>{const a=FF.bgm.audio();return a&&!a.paused&&a.volume>0.2;},null,{timeout:10000});
- let s=await st();assert.equal(s.loop,true);assert.ok(/^bgm-town\.(ogg|m4a)$/.test(s.src),s.src);assert.ok(s.vol<=0.3);
+ let s=await st();assert.equal(s.loop,true);assert.ok(/^bgm-town\.(ogg|mp4)$/.test(s.src),s.src);assert.ok(s.vol<=0.3);
  // ほかの画面：止まる
  await p.evaluate(()=>FF.ui.show('settings'));
  await p.waitForFunction(()=>FF.bgm.audio().paused,null,{timeout:10000});

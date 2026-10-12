@@ -1,7 +1,7 @@
 // 町のBGM（判断411）。町のメインの画面（base）を開いているあいだだけ、audio/bgm-town.ogg をループで流す。
 // 設定の「町の音楽」（state.settings.bgm。ない・知らない値は true）と「音の大きさ」（bgmVolume：low／mid／high）。
 // ブラウザは、画面をさわるまで音を出せないので、最初の操作のあとに鳴らす。出る・消えるときは、少しずつ大きく・小さく。
-// ogg が使えない端末（古い Safari）のために、audio/bgm-town.m4a を代わりに読む。
+// ogg が使えない端末（古い Safari）のために、audio/bgm-town.mp4 を代わりに読む。
 (function (root) {
   'use strict';
   var FF = root.FF, doc = root.document;
@@ -18,7 +18,7 @@
     audio = new root.Audio();
     audio.loop = true; audio.preload = 'auto'; audio.volume = 0;
     var ogg = audio.canPlayType && audio.canPlayType('audio/ogg; codecs="vorbis"');
-    audio.src = ogg ? 'audio/bgm-town.ogg' : 'audio/bgm-town.m4a';
+    audio.src = ogg ? 'audio/bgm-town.ogg' : 'audio/bgm-town.mp4';
     return audio;
   }
   function ramp(to, done) {

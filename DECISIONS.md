@@ -1572,7 +1572,7 @@
 ## 判断411：町のBGM
 
 - 依頼：町のメインページを開いているあいだ、指定の ogg（`odayaka-ienami_Loop.ogg`。約107秒、Vorbis）を、ループで流したい。
-- **ファイル**：`audio/bgm-town.ogg`（そのまま）。ogg が使えない端末（古い Safari など）のために、同じ曲を AAC にした `audio/bgm-town.m4a` も置き、`canPlayType` で選ぶ。
+- **ファイル**：`audio/bgm-town.ogg`（そのまま）。ogg が使えない端末（古い Safari など）のために、同じ曲を AAC にした `audio/bgm-town.mp4` も置き、`canPlayType` で選ぶ。
 - **しくみ**（`js/ui/bgm.js`。`FF.bgm.sync()` を、画面を描くたび〔`core.js` の `rerender`〕に呼ぶ）：画面が町のメイン（`base`）で、設定がオンのときだけ、`<audio loop>` を鳴らす。ほかの画面（学ぶ・冒険・設定ほか）へ行くと、少しずつ小さくして止める。タブを隠したときも止める。ブラウザは、画面をさわるまで音を出せないので、止められたときは、最初の操作のあとに鳴らす。出る・消えるときは、少しずつ大きく・小さく。
 - **設定**：「町の音楽（BGM）」のオン・オフ（`settings.bgm`。既定オン）と、大きさ「小さい・ふつう・大きい」（`settings.bgmVolume`。音量 0.12／0.28／0.5。既定ふつう）。saveVersion は上げず、読み込み時に補う。
 - **ループのつなぎ目**：`<audio loop>` は、つなぎ目に、ごくわずかな間が空くことがある（ogg は、ほぼ気にならない。AAC は、少し出やすい）。気になれば、Web Audio のループへ変える。
