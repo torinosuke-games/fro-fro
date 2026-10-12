@@ -418,7 +418,7 @@
     else if (b.phase === 'commands') panel = n.auto && n.auto.on ? autoPanel() : commandsPanel();
     else if (b.phase === 'attack') panel = quizPanel();
     else if (b.phase === 'explanation') panel = reviewPanel();
-    else if (b.phase === 'win') panel = endPanel(true);
+    else if (b.phase === 'win') { panel = endPanel(true); if (FF.bgm && FF.bgm.victory) FF.bgm.victory(); }   // 勝利の画面が出たとき、勝利の音（判断420）
     else if (b.phase === 'lose') panel = endPanel(false);
     else panel = actingPanel(app, b.phase === 'enemyAction' ? BT.enemyTitle : BT.actingTitle);
     con.appendChild(panel);
