@@ -1,0 +1,210 @@
+[
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-0-0.png",
+    "sourceSize": [
+      428,
+      584
+    ],
+    "bounds": [
+      0,
+      0,
+      428,
+      584
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-0-1.png",
+    "sourceSize": [
+      511,
+      579
+    ],
+    "bounds": [
+      85,
+      0,
+      511,
+      579
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-0-2.png",
+    "sourceSize": [
+      451,
+      584
+    ],
+    "bounds": [
+      0,
+      0,
+      451,
+      584
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-0-3.png",
+    "sourceSize": [
+      425,
+      583
+    ],
+    "bounds": [
+      0,
+      0,
+      425,
+      583
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-1-0.png",
+    "sourceSize": [
+      501,
+      648
+    ],
+    "bounds": [
+      0,
+      0,
+      501,
+      648
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-1-1.png",
+    "sourceSize": [
+      409,
+      632
+    ],
+    "bounds": [
+      0,
+      0,
+      409,
+      632
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-1-2.png",
+    "sourceSize": [
+      438,
+      626
+    ],
+    "bounds": [
+      0,
+      0,
+      438,
+      626
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-1-3.png",
+    "sourceSize": [
+      432,
+      645
+    ],
+    "bounds": [
+      0,
+      0,
+      432,
+      645
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-2-0.png",
+    "sourceSize": [
+      454,
+      630
+    ],
+    "bounds": [
+      0,
+      0,
+      454,
+      630
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-2-1.png",
+    "sourceSize": [
+      437,
+      627
+    ],
+    "bounds": [
+      0,
+      0,
+      437,
+      627
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-2-2.png",
+    "sourceSize": [
+      458,
+      635
+    ],
+    "bounds": [
+      0,
+      0,
+      458,
+      635
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-2-3.png",
+    "sourceSize": [
+      447,
+      608
+    ],
+    "bounds": [
+      0,
+      0,
+      447,
+      608
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-3-0.png",
+    "sourceSize": [
+      475,
+      628
+    ],
+    "bounds": [
+      0,
+      0,
+      475,
+      628
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-3-1.png",
+    "sourceSize": [
+      485,
+      616
+    ],
+    "bounds": [
+      108,
+      0,
+      485,
+      616
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-3-2.png",
+    "sourceSize": [
+      445,
+      587
+    ],
+    "bounds": [
+      0,
+      0,
+      445,
+      587
+    ]
+  },
+  {
+    "path": "codex-prototypes/traveler-walk/e1-diagonal/frame-3-3.png",
+    "sourceSize": [
+      406,
+      583
+    ],
+    "bounds": [
+      0,
+      0,
+      406,
+      583
+    ]
+  }
+]
