@@ -82,7 +82,7 @@
     return DIAG_SHEETS.indexOf(sheet) >= 0 ? 'img/adventure/travelers/' + sheet + '-d.webp' : null;
   }
   // 歩く絵（<シート>-w.webp。4列×4行：列＝歩きの4コマ〔右足接地・通過・左足接地・通過〕、行＝前・後ろ・左・右。判断397）があるシート。届いたぶんだけ足す。ないシートは、立ち姿を跳ねさせて見せる
-  var WALK_SHEETS = ['e1','e2','e3','e4','e5','e6','e7','e8','e9','e10','e11','e12','j4'];
+  var WALK_SHEETS = ['e1','e2','e3','e4','e5','e6','e7','e8','e9','e10','e11','e12','j4','j6'];
   var WALK_MIRROR_LEFT = ['e1'];   // 左向きの行の足が動かない絵は、右向きの行を左右反転して使う（判断399）
   function travelerWalk(avatar) {
     var sheet = sheetOf(avatar);
