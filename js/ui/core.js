@@ -254,6 +254,7 @@
     // 「自動」で昼と夜の境目をまたいだら描き直す
     if (currentTheme() !== FF.app.theme) { rerender(); return; }
     renderHud();
+    if (FF.bgm) FF.bgm.sync();   // 冒険の戦闘の始まり・終わりでも、曲を切りかえる（判断412）
     var sc = screens[FF.app.screen];
     if (sc && sc.onTick) sc.onTick();
   }
