@@ -58,7 +58,22 @@ const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');const a
  await p.evaluate(()=>{FF.adventureRng=()=>.99;const s=FF.util.clone(FF.app.state);let a=FF.adventure.create();a.started=true;a.pos={x:3,y:6};a=FF.adventure.encounter(a,'cub');s.adventure=a;FF.app.commit(s);FF.ui.show('adventure');});   // 次の戦闘
  await p.waitForFunction(()=>{const a=FF.bgm.audio('battle');return !a.paused&&a.volume>0.05;},null,{timeout:10000});
  assert.ok(await p.evaluate(()=>FF.bgm.audio('battle').currentTime)<10,'次の戦闘も、最初から');
+ // 戦闘に勝ったら、勝利の音を単発で。戦闘の曲は止まり、そのあとは無音。戦闘の画面を出ると、フィールドの曲が最初から。勝つたびに、勝利の音は最初から
+ const win=()=>p.evaluate(()=>{FF.adventureRng=()=>.99;const s=FF.util.clone(FF.app.state);let a=FF.adventure.create();a.started=true;a.pos={x:3,y:6};a=FF.adventure.encounter(a,'cub');a.battle.phase='win';a.battle.reward={xp:1,gold:1,levels:[]};s.adventure=a;FF.app.commit(s);FF.ui.show('adventure');});
+ await win();
+ await p.waitForFunction(()=>{const j=FF.bgm.jingle();return j&&!j.paused;},null,{timeout:10000});
+ assert.equal(await p.evaluate(()=>FF.bgm.jingle().loop),false,'勝利の音は、単発');
+ assert.ok(/bgm-victory\.mp3$/.test(await p.evaluate(()=>FF.bgm.jingle().src)));
+ await p.waitForFunction(()=>FF.bgm.audio('battle').paused,null,{timeout:10000});   // 戦闘の曲は止まる
+ await p.waitForTimeout(1500);
+ assert.ok(await p.evaluate(()=>FF.bgm.audio('field').paused&&FF.bgm.audio('battle').paused),'勝ったあと、戦闘の画面では、曲は流れない');
+ const t1=await p.evaluate(()=>FF.bgm.jingle().currentTime);assert.ok(t1>0.5,'勝利の音が進んでいる');
+ await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.adventure.battle=null;FF.app.commit(s);FF.ui.show('adventure');});   // フィールドへ復帰
+ await p.waitForFunction(()=>{const a=FF.bgm.audio('field');return !a.paused&&a.volume>0.05;},null,{timeout:10000});
+ assert.ok(await p.evaluate(()=>FF.bgm.audio('field').currentTime)<10,'復帰したら、フィールドの曲は最初から');
+ await win();   // 次の勝利：最初から
+ await p.waitForFunction(t=>{const j=FF.bgm.jingle();return j&&!j.paused&&j.currentTime<t-0.2;},t1,{timeout:10000});
  // 保存の読み込みで、ない設定は、オン・ふつうに補われる
  assert.deepEqual(await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);delete s.settings.bgm;delete s.settings.bgmVolume;const r=FF.state.normalize?FF.state.normalize(s):s;return [r.settings.bgm!==false];}),[true]);
- assert.deepEqual(errors,[]);await b.close();console.log('PASS: town/field BGM loop, switch by screen, stop in battle/elsewhere/off, shared volume');
+ assert.deepEqual(errors,[]);await b.close();console.log('PASS: town/field/battle BGM loop, victory jingle once, switch by screen, stop in battle/elsewhere/off, shared volume');
 })().catch(e=>{console.error(e);process.exit(1);});

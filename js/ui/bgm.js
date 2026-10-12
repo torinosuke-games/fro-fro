@@ -2,6 +2,7 @@
 //   町のメイン画面（base）…… audio/bgm-town.ogg
 //   雪原のフィールド（adventure で、戦闘中でないとき）…… audio/bgm-field.ogg
 //   戦闘中（adventure で、戦闘が始まっているあいだ）…… audio/bgm-battle.ogg（戦闘が始まるたびに、最初から。判断416）
+//   戦闘に勝ったとき（battle.phase が win）…… audio/bgm-victory.mp3 を、単発で（ループなし）。そのあと、戦闘の画面にいるあいだは無音。勝つたびに、最初から。
 // ほかの画面・タブを隠したときは、止める。設定の「町の音楽（BGM）」（state.settings.bgm。ない・知らない値は true）と
 // 「音楽の大きさ」（bgmVolume：low／mid／high）は、どの曲も同じ。ブラウザは、画面をさわるまで音を出せないので、止められたときは、最初の操作のあとに鳴らす。
 // 出る・消えるときは、少しずつ大きく・小さく。ogg が使えない端末（古い Safari）のために、同じ曲の .mp4（AAC）を代わりに読む。
@@ -23,7 +24,7 @@
     if (!enabled() || (doc && doc.hidden) || !FF.app) return null;
     if (FF.app.screen === 'base') return 'town';
     var a = FF.app.state && FF.app.state.adventure;
-    if (FF.app.screen === 'adventure') return a && a.battle ? 'battle' : 'field';
+    if (FF.app.screen === 'adventure') return a && a.battle ? (a.battle.phase === 'win' ? null : 'battle') : 'field';   // 勝ったあとは、戦闘の曲を止めて、無音（勝利の音を鳴らす。判断417）
     return null;
   }
   function track(name) {
@@ -58,8 +59,27 @@
       if (RESTART[name] || t.fromField) { t.audio.currentTime = 0; t.fromField = false; }
     });
   }
+  // 勝利の音（単発）。戦闘に勝つたびに、最初から鳴らす。戦闘の画面を出る・タブを隠す・設定オフで止める
+  var jingle = null, jingleDone = false;
+  function winning() {
+    var a = FF.app && FF.app.state && FF.app.state.adventure;
+    return !!(FF.app && FF.app.screen === 'adventure' && a && a.battle && a.battle.phase === 'win');
+  }
+  function syncJingle() {
+    var w = winning();
+    if (w && enabled() && !(doc && doc.hidden)) {
+      if (!jingleDone && root.Audio) {
+        if (!jingle) { jingle = new root.Audio(); jingle.preload = 'auto'; jingle.loop = false; jingle.src = 'audio/bgm-victory.mp3'; }
+        jingle.currentTime = 0; jingle.volume = target();
+        var p = jingle.play(); if (p && p.catch) p.catch(function () {});
+        jingleDone = true;
+      }
+    } else if (jingle && !jingle.paused) jingle.pause();
+    if (!w) jingleDone = false;   // 勝利の画面を出たら、次に勝つとき、また鳴らす
+  }
   // 画面・設定が変わるたびに呼ぶ
   function sync() {
+    syncJingle();
     var w = wanted();
     Object.keys(TRACKS).forEach(function (name) {
       var t = name === w ? track(name) : tracks[name];
@@ -82,5 +102,5 @@
   });
   if (doc) doc.addEventListener('visibilitychange', sync);
 
-  FF.bgm = { sync: sync, enabled: enabled, volumes: VOLUMES, wanted: wanted, audio: function (name) { var t = tracks[name || 'town']; return t ? t.audio : null; } };
+  FF.bgm = { sync: sync, enabled: enabled, volumes: VOLUMES, wanted: wanted, jingle: function () { return jingle; }, audio: function (name) { var t = tracks[name || 'town']; return t ? t.audio : null; } };
 })(this);
