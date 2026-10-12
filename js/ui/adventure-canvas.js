@@ -277,8 +277,10 @@
       ctx.strokeStyle = '#e0b568'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(p.x, p.y + 1, 20 * zoom, 7 * zoom, 0, 0, Math.PI * 2); ctx.stroke();
       // 歩く絵（判断397）：歩いているあいだ、歩いた道のり（1マス＝歩き1周＝4コマ）でコマを選ぶ。ななめ向き・絵がない人は、下の立ち姿を跳ねさせる
       if (wimg) {
-        var wq = wimg.width / 4, ws = s * 1.229, col = Math.floor((hero.dist % 1 + 1) % 1 * 4) % 4;   // 1コマの人物の高さは枠の約78%。立ち姿（約96%）と同じ大きさにそろえる
-        ctx.drawImage(wimg, col * wq, hero.face * wq, wq, wq, p.x - ws / 2, p.y + 4 - .015 * s - .922 * ws, ws, ws); return;
+        var wq = wimg.width / 4, ws = s * 1.229, col = Math.floor((hero.dist / 2 % 1 + 1) % 1 * 4) % 4;   // 1マスで1歩（2コマ）、2マスで歩き1周。1コマの人物の高さは枠の約78%なので、立ち姿（約96%）と同じ大きさにそろえる
+        var flip = hero.face === 2, row = flip ? 3 : hero.face;   // 左向きは、右向きの行を左右反転（e1 の左向きの行は、足の動きがほとんどなかった。判断399）
+        ctx.save(); ctx.translate(p.x, 0); if (flip) ctx.scale(-1, 1);
+        ctx.drawImage(wimg, col * wq, row * wq, wq, wq, -ws / 2, p.y + 4 - .015 * s - .922 * ws, ws, ws); ctx.restore(); return;
       }
       var img = (hero.diag && sheet(diagSheet)) || sheet(avatarSheet); if (!img) return;
       var diag = hero.diag && img === sheets[diagSheet], q = img.width / 2, face = hero.face;
