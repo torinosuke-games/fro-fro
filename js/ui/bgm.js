@@ -1,15 +1,18 @@
 // BGM（判断411・412）。画面によって、曲を切りかえて、ループで流す：
 //   町のメイン画面（base）…… audio/bgm-town.ogg
 //   雪原のフィールド（adventure で、戦闘中でないとき）…… audio/bgm-field.ogg
-// ほかの画面・戦闘中・タブを隠したときは、止める。設定の「町の音楽（BGM）」（state.settings.bgm。ない・知らない値は true）と
+//   戦闘中（adventure で、戦闘が始まっているあいだ）…… audio/bgm-battle.ogg（戦闘が始まるたびに、最初から。判断416）
+//   戦闘に勝ったとき（battle.phase が win）…… audio/bgm-victory.mp3 を、単発で（ループなし）。そのあと、戦闘の画面にいるあいだは無音。勝つたびに、最初から。
+// ほかの画面・タブを隠したときは、止める。設定の「町の音楽（BGM）」（state.settings.bgm。ない・知らない値は true）と
 // 「音楽の大きさ」（bgmVolume：low／mid／high）は、どの曲も同じ。ブラウザは、画面をさわるまで音を出せないので、止められたときは、最初の操作のあとに鳴らす。
 // 出る・消えるときは、少しずつ大きく・小さく。ogg が使えない端末（古い Safari）のために、同じ曲の .mp4（AAC）を代わりに読む。
 (function (root) {
   'use strict';
   var FF = root.FF, doc = root.document;
   var VOLUMES = { low: 0.12, mid: 0.28, high: 0.5 };
-  var TRACKS = { town: 'audio/bgm-town', field: 'audio/bgm-field' };
-  var RESTART = { field: true };   // 止めたあと、また流すときは、曲の最初から（戦闘から戻ったとき。判断413）。町の曲は、続きから（ただし、フィールドから町へ移ったときは、最初から。判断415）
+  var TRACKS = { town: 'audio/bgm-town', field: 'audio/bgm-field', battle: 'audio/bgm-battle' };
+  var RESTART = { field: true, battle: true };   // 止めたあと、また流すときは、曲の最初から（戦闘から戻ったとき。判断413）。町の曲は、続きから（ただし、フィールドから町へ移ったときは、最初から。判断415）
+  var SFX = { sword: 'audio/se-sword.mp3', punch: 'audio/se-punch.mp3', enemy: 'audio/se-enemy.mp3' }, sfxAudio = {};   // 効果音（判断418・419）
   var tracks = {};   // 曲の名前 → { audio, fade, want, blocked }
 
   function settings() { var s = FF.app && FF.app.state; return (s && s.settings) || {}; }
@@ -22,7 +25,7 @@
     if (!enabled() || (doc && doc.hidden) || !FF.app) return null;
     if (FF.app.screen === 'base') return 'town';
     var a = FF.app.state && FF.app.state.adventure;
-    if (FF.app.screen === 'adventure' && !(a && a.battle)) return 'field';
+    if (FF.app.screen === 'adventure') return a && a.battle ? (a.battle.phase === 'win' && victoryShown ? null : 'battle') : 'field';   // 勝利の画面が出たら、戦闘の曲を止めて、勝利の音を鳴らす。そのあとは無音（判断417・420）
     return null;
   }
   function track(name) {
@@ -57,13 +60,54 @@
       if (RESTART[name] || t.fromField) { t.audio.currentTime = 0; t.fromField = false; }
     });
   }
+  // 勝利の音（単発）。戦闘の画面に「勝利」の画面（報酬）が出た瞬間に、`FF.bgm.victory()` を呼んで、最初から鳴らす。
+  // 戦闘の状態が win になっても、行動の再生（全員の攻撃）が終わって、勝利の画面が出るまでは、戦闘の曲のまま（フライングしない。判断420）。
+  // 音のファイルは、冒険の画面に入ったときに、先に読み込んでおく（最初の戦闘でも、遅れないように）。
+  var jingle = null, victoryShown = false;
+  function ensureJingle() {
+    if (jingle || !root.Audio) return jingle;
+    jingle = new root.Audio(); jingle.preload = 'auto'; jingle.loop = false; jingle.src = 'audio/bgm-victory.mp3'; jingle.load();
+    return jingle;
+  }
+  function winning() {
+    var a = FF.app && FF.app.state && FF.app.state.adventure;
+    return !!(FF.app && FF.app.screen === 'adventure' && a && a.battle && a.battle.phase === 'win');
+  }
+  function victory() {
+    if (!winning() || victoryShown) return;
+    victoryShown = true;
+    if (enabled() && !(doc && doc.hidden) && ensureJingle()) {
+      jingle.currentTime = 0; jingle.volume = target();
+      var p = jingle.play(); if (p && p.catch) p.catch(function () {});
+    }
+    sync();   // 戦闘の曲を、少しずつ小さくして止める
+  }
+  function syncJingle() {
+    if (FF.app && FF.app.screen === 'adventure') { ensureJingle(); Object.keys(SFX).forEach(preloadSfx); }   // 先に読み込む
+    if (!winning()) victoryShown = false;   // 勝利の画面を出たら、次に勝つとき、また鳴らす
+    if (jingle && !jingle.paused && (!winning() || !enabled() || (doc && doc.hidden))) jingle.pause();
+  }
+  // 効果音（単発。BGM は止めない）。設定の音楽がオフなら鳴らさない。音量は、曲より少し大きめ（判断418）
+  function preloadSfx(name) {
+    if (!sfxAudio[name] && root.Audio) { var a = new root.Audio(SFX[name]); a.preload = 'auto'; a.load(); sfxAudio[name] = a; }
+  }
+  function sfx(name) {
+    if (!enabled() || (doc && doc.hidden) || !SFX[name] || !root.Audio) return;
+    preloadSfx(name);
+    var a = sfxAudio[name];
+    a.volume = Math.min(1, target() * 2); a.currentTime = 0;
+    var p = a.play(); if (p && p.catch) p.catch(function () {});
+  }
   // 画面・設定が変わるたびに呼ぶ
   function sync() {
+    syncJingle();
     var w = wanted();
     Object.keys(TRACKS).forEach(function (name) {
       var t = name === w ? track(name) : tracks[name];
       if (!t) return;
+      var was = t.want;
       t.want = name === w;
+      if (t.want && !was && name === 'battle') t.audio.currentTime = 0;   // 戦闘が始まるたびに、最初から（判断416）
       if (name === 'town' && w === 'field') t.fromField = true;   // フィールドへ移ったら、町の曲は、止めたあと最初に戻す（判断415）
       if (t.want) {
         if (t.audio.paused) { if (!t.blocked) start(t); }
@@ -79,5 +123,5 @@
   });
   if (doc) doc.addEventListener('visibilitychange', sync);
 
-  FF.bgm = { sync: sync, enabled: enabled, volumes: VOLUMES, wanted: wanted, audio: function (name) { var t = tracks[name || 'town']; return t ? t.audio : null; } };
+  FF.bgm = { sync: sync, enabled: enabled, volumes: VOLUMES, wanted: wanted, jingle: function () { return jingle; }, victory: victory, sfx: sfx, sfxAudio: function (n) { return sfxAudio[n] || null; }, audio: function (name) { var t = tracks[name || 'town']; return t ? t.audio : null; } };
 })(this);
