@@ -1,0 +1,15 @@
+{
+  "name": "e5",
+  "paths": [
+    "/workspace/generated_images/exec-c95f27b1-ec8d-4ce0-9148-bb5f113ac72a.png",
+    "/workspace/generated_images/exec-1c6d2a4b-4951-4195-b4a8-98d2238376c5.png",
+    "/workspace/generated_images/exec-537d57cc-53a8-4603-9dab-604fcdf50362.png",
+    "/workspace/generated_images/exec-9da2d2d2-e2b0-4cf6-bfd1-b08df1fe4ec5.png"
+  ],
+  "overrides": {
+    "3,1": "/workspace/generated_images/e5-cell-3-1.png",
+    "0,3": "/workspace/generated_images/exec-fba7c42d-e82b-40ef-8136-a9cbcaac59a0.png",
+    "1,2": "/workspace/generated_images/exec-69514c14-4a81-44d4-b4e9-ac5f9a195f5e.png",
+    "2,3": "/workspace/generated_images/exec-6637e93a-0659-44f1-aca0-3d3d75bcd419.png"
+  }
+}
