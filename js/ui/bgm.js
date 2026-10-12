@@ -1,15 +1,16 @@
 // BGM（判断411・412）。画面によって、曲を切りかえて、ループで流す：
 //   町のメイン画面（base）…… audio/bgm-town.ogg
 //   雪原のフィールド（adventure で、戦闘中でないとき）…… audio/bgm-field.ogg
-// ほかの画面・戦闘中・タブを隠したときは、止める。設定の「町の音楽（BGM）」（state.settings.bgm。ない・知らない値は true）と
+//   戦闘中（adventure で、戦闘が始まっているあいだ）…… audio/bgm-battle.ogg（戦闘が始まるたびに、最初から。判断416）
+// ほかの画面・タブを隠したときは、止める。設定の「町の音楽（BGM）」（state.settings.bgm。ない・知らない値は true）と
 // 「音楽の大きさ」（bgmVolume：low／mid／high）は、どの曲も同じ。ブラウザは、画面をさわるまで音を出せないので、止められたときは、最初の操作のあとに鳴らす。
 // 出る・消えるときは、少しずつ大きく・小さく。ogg が使えない端末（古い Safari）のために、同じ曲の .mp4（AAC）を代わりに読む。
 (function (root) {
   'use strict';
   var FF = root.FF, doc = root.document;
   var VOLUMES = { low: 0.12, mid: 0.28, high: 0.5 };
-  var TRACKS = { town: 'audio/bgm-town', field: 'audio/bgm-field' };
-  var RESTART = { field: true };   // 止めたあと、また流すときは、曲の最初から（戦闘から戻ったとき。判断413）。町の曲は、続きから（ただし、フィールドから町へ移ったときは、最初から。判断415）
+  var TRACKS = { town: 'audio/bgm-town', field: 'audio/bgm-field', battle: 'audio/bgm-battle' };
+  var RESTART = { field: true, battle: true };   // 止めたあと、また流すときは、曲の最初から（戦闘から戻ったとき。判断413）。町の曲は、続きから（ただし、フィールドから町へ移ったときは、最初から。判断415）
   var tracks = {};   // 曲の名前 → { audio, fade, want, blocked }
 
   function settings() { var s = FF.app && FF.app.state; return (s && s.settings) || {}; }
@@ -22,7 +23,7 @@
     if (!enabled() || (doc && doc.hidden) || !FF.app) return null;
     if (FF.app.screen === 'base') return 'town';
     var a = FF.app.state && FF.app.state.adventure;
-    if (FF.app.screen === 'adventure' && !(a && a.battle)) return 'field';
+    if (FF.app.screen === 'adventure') return a && a.battle ? 'battle' : 'field';
     return null;
   }
   function track(name) {
@@ -63,7 +64,9 @@
     Object.keys(TRACKS).forEach(function (name) {
       var t = name === w ? track(name) : tracks[name];
       if (!t) return;
+      var was = t.want;
       t.want = name === w;
+      if (t.want && !was && name === 'battle') t.audio.currentTime = 0;   // 戦闘が始まるたびに、最初から（判断416）
       if (name === 'town' && w === 'field') t.fromField = true;   // フィールドへ移ったら、町の曲は、止めたあと最初に戻す（判断415）
       if (t.want) {
         if (t.audio.paused) { if (!t.blocked) start(t); }
