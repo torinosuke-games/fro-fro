@@ -267,7 +267,7 @@
     if (!f.animate) return;
     if (phase === 'out') { f.btOut = out; f.animate([{ transform: 'none' }, { transform: out }], { duration: 300 / S.speed, easing: 'ease-out', fill: 'forwards' }); return; }
     var back = f.animate([{ transform: f.btOut || out }, { transform: 'none' }], { duration: 260 / S.speed, easing: 'ease-in-out' });
-    f.getAnimations().forEach(function (x) { if (x !== back && x.effect && x.fill !== undefined) x.cancel(); });
+    f.getAnimations().forEach(function (x) { if (x !== back) x.cancel(); });
   }
   // 行動のようす：ひとりずつ、宣言 → 命中 → 結果。終わったら、敵の行動へ
   function play(app, seq) {
