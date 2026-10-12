@@ -82,13 +82,22 @@ const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');const a
   const c=await p.evaluate(()=>{const q=FF.app.state.adventure.battle;return q.choices.indexOf(q.question.answer)});
   await p.locator('[data-choice="'+c+'"]').click();await p.locator('[data-do="submit"]').click();await p.locator('[data-do="ack"]').click();
   await p.waitForFunction(()=>{const b=FF.app.state.adventure.battle;return b&&b.phase==='commands'&&b.turn===2;},null,{timeout:30000});
-  return p.evaluate(()=>({sfx:window.__sfx.slice(),battlePaused:FF.bgm.audio('battle').paused}));
+  return p.evaluate(()=>({sfx:window.__sfx.filter(n=>n!=='enemy'),battlePaused:FF.bgm.audio('battle').paused}));
  };
  let r=await fight(true);assert.equal(r.sfx.filter(n=>n==='sword').length,1,'剣を持つ主人公だけ、剣の音が1回');assert.equal(r.battlePaused,false,'戦闘の曲は止まらない');
  assert.ok(/se-sword\.mp3$/.test(await p.evaluate(()=>FF.bgm.sfxAudio('sword').src)));assert.equal(await p.evaluate(()=>FF.bgm.sfxAudio('sword').loop),false);
  r=await fight(false);assert.ok(r.sfx.length>=1&&r.sfx.every(n=>n==='punch'),'剣がなければ、なぐる音');assert.equal(r.battlePaused,false,'戦闘の曲は止まらない');
  assert.ok(/se-punch\.mp3$/.test(await p.evaluate(()=>FF.bgm.sfxAudio('punch').src)));
  r=await fight(true);assert.equal(r.sfx.filter(n=>n==='sword').length,1,'剣を持つ主人公は、剣の音');assert.ok(r.sfx.filter(n=>n==='punch').length>=1,'ほかの仲間は、なぐる音');
+ // 敵の攻撃の音：敵が攻撃してきたとき、1回。戦闘の曲は止まらない
+ await p.evaluate(()=>{window.__sfx=[];FF.adventureRng=()=>.99;const s=FF.util.clone(FF.app.state);s.equipment={owned:[],ownedArmor:[],equipped:{}};let a=FF.adventure.create();a.started=true;a.pos={x:3,y:6};a=FF.adventure.encounter(a,'wolf');s.adventure=a;FF.app.commit(s);FF.ui.show('adventure');});
+ await p.locator('[data-do="allAttack"]').click();await p.locator('[data-do="startQuiz"]').click();await p.locator('[data-choice="0"]').waitFor();
+ const c3=await p.evaluate(()=>{const q=FF.app.state.adventure.battle;return q.choices.indexOf(q.question.answer)});
+ await p.locator('[data-choice="'+c3+'"]').click();await p.locator('[data-do="submit"]').click();await p.locator('[data-do="ack"]').click();
+ await p.waitForFunction(()=>{const b=FF.app.state.adventure.battle;return b&&b.phase==='commands'&&b.turn===2;},null,{timeout:30000});
+ assert.equal(await p.evaluate(()=>window.__sfx.filter(n=>n==='enemy').length),1,'敵の攻撃の音は、1ターンに1回');
+ assert.ok(/se-enemy\.mp3$/.test(await p.evaluate(()=>FF.bgm.sfxAudio('enemy').src)));
+ assert.equal(await p.evaluate(()=>FF.bgm.audio('battle').paused),false,'戦闘の曲は止まらない');
  // 勝利の音の、タイミング：全員の攻撃が終わって、勝利の画面（報酬）が出てから鳴る。それより前には鳴らない。2回目の戦闘でも同じ
  for(let round=0;round<2;round++){
   await p.evaluate(()=>{window.__early=false;clearInterval(window.__iv);window.__iv=setInterval(()=>{const j=FF.bgm.jingle();if(j&&!j.paused&&!document.querySelector('[data-do="finish"].win'))window.__early=true;},10);

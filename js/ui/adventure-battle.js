@@ -443,6 +443,12 @@
     // 行動の再生・自動の進行
     if (seq && !seq.started) { seq.started = true; play(app, seq); }
     var key = b.enemy + ':' + b.turn + ':' + b.phase;
+    // 敵が攻撃してきたとき（敵の行動の画面が出たとき。全員やられて負けたときも）、敵の攻撃の音を、1回、鳴らす（判断421）
+    if (b.phase === 'commands' || b.phase === 'attack') S.enemySfx = null;   // 次のターン・次の戦闘で、また鳴らす
+    if (!seq && (b.phase === 'enemyAction' || b.phase === 'lose') && S.enemySfx !== key && b.log.some(function (l) { return l.key === 'hurt'; })) {
+      S.enemySfx = key;
+      if (FF.bgm && FF.bgm.sfx) FF.bgm.sfx('enemy');
+    }
     if (!seq && (b.phase === 'playerAction' || b.phase === 'enemyAction') && S.sched !== key) {
       S.sched = key;
       var lines = b.phase === 'enemyAction' ? b.log.filter(function (l) { return l.key !== 'hit' || true; }) : [];

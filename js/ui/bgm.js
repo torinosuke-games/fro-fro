@@ -12,7 +12,7 @@
   var VOLUMES = { low: 0.12, mid: 0.28, high: 0.5 };
   var TRACKS = { town: 'audio/bgm-town', field: 'audio/bgm-field', battle: 'audio/bgm-battle' };
   var RESTART = { field: true, battle: true };   // 止めたあと、また流すときは、曲の最初から（戦闘から戻ったとき。判断413）。町の曲は、続きから（ただし、フィールドから町へ移ったときは、最初から。判断415）
-  var SFX = { sword: 'audio/se-sword.mp3', punch: 'audio/se-punch.mp3' }, sfxAudio = {};   // 効果音（判断418・419）
+  var SFX = { sword: 'audio/se-sword.mp3', punch: 'audio/se-punch.mp3', enemy: 'audio/se-enemy.mp3' }, sfxAudio = {};   // 効果音（判断418・419）
   var tracks = {};   // 曲の名前 → { audio, fade, want, blocked }
 
   function settings() { var s = FF.app && FF.app.state; return (s && s.settings) || {}; }
