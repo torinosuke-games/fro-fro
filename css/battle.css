@@ -41,7 +41,6 @@
 .bt-enemy-meter i{background:linear-gradient(90deg,#a97b53,#d5b579)}
 .bt-formation{position:absolute;inset:0;pointer-events:none}
 .bt-fighter{position:absolute;width:18%;z-index:3;transform-origin:center bottom}
-.bt-fighter img,.bt-fighter .bt-sheet{transform-origin:center bottom}
 .bt-fighter img,.bt-fighter .bt-sheet{display:block;width:100%;height:100%;object-fit:contain;position:relative;z-index:1}
 .bt-fighter .bt-sheet{background-repeat:no-repeat;background-size:200% 200%;background-position:100% 100%}
 .bt-fighter[data-slot="0"]{left:22%;bottom:13%;height:35%;z-index:5}
