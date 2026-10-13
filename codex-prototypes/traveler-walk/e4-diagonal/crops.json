@@ -1,0 +1,262 @@
+[
+  {
+    "row": 0,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-9a21b03a-16fe-42a9-8878-32048f71e954.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      96,
+      42,
+      460,
+      673
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 0,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-9a21b03a-16fe-42a9-8878-32048f71e954.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      650,
+      41,
+      1010,
+      664
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 0,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-9a21b03a-16fe-42a9-8878-32048f71e954.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      1184,
+      42,
+      1546,
+      673
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 0,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-b9255975-82ef-4036-92dd-8471d1fdc474.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1122,
+      1402
+    ],
+    "bounds": [
+      178,
+      14,
+      890,
+      1364
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 1,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-ec32f860-8023-4188-93d9-196755c982d4.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      114,
+      23,
+      505,
+      675
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 1,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-ec32f860-8023-4188-93d9-196755c982d4.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      642,
+      20,
+      954,
+      670
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 1,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-ec32f860-8023-4188-93d9-196755c982d4.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      1161,
+      24,
+      1557,
+      680
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 1,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-a050bdf8-b23a-4be8-8129-be075412593c.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1026,
+      1533
+    ],
+    "bounds": [
+      151,
+      0,
+      1013,
+      1511
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 2,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-ef3c7be6-7f1a-475c-8a70-594bd5dba328.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      107,
+      55,
+      472,
+      665
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 2,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-ef3c7be6-7f1a-475c-8a70-594bd5dba328.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      678,
+      51,
+      1003,
+      664
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 2,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-ef3c7be6-7f1a-475c-8a70-594bd5dba328.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      1182,
+      55,
+      1562,
+      668
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 2,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-51cf6ea3-c840-4738-91b1-7f33574b87bc.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1089,
+      1444
+    ],
+    "bounds": [
+      33,
+      9,
+      799,
+      1381
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 3,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-6964fddb-1940-4c1a-ac81-17feb664750b.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      100,
+      29,
+      469,
+      686
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 3,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-6964fddb-1940-4c1a-ac81-17feb664750b.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      680,
+      33,
+      1014,
+      678
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 3,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-6964fddb-1940-4c1a-ac81-17feb664750b.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      1195,
+      32,
+      1547,
+      687
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 3,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-dbe3448b-0ae4-40ed-a66a-f3ac6c7b2558.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1122,
+      1402
+    ],
+    "bounds": [
+      256,
+      9,
+      1046,
+      1357
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  }
+]

@@ -1,0 +1,266 @@
+[
+  {
+    "row": 0,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-0fb40737-a43b-40cb-a6a5-5a3009154cb6.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      117,
+      38,
+      459,
+      689
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 0,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-0fb40737-a43b-40cb-a6a5-5a3009154cb6.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      679,
+      27,
+      994,
+      685
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 0,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-d55b1591-6468-44f6-b42e-aa0e1bc673b5.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      110,
+      21,
+      428,
+      682
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 0,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-d55b1591-6468-44f6-b42e-aa0e1bc673b5.png",
+    "sourceCol": 1,
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      678,
+      20,
+      981,
+      685
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 1,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-eabcc90c-0e45-40d7-9c98-810054bcbedf.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      129,
+      38,
+      469,
+      686
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 1,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-eabcc90c-0e45-40d7-9c98-810054bcbedf.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      673,
+      32,
+      973,
+      686
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 1,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-244ee30d-6ea8-4f35-9be6-7ae2cd3a2284.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      153,
+      12,
+      495,
+      687
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 1,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-244ee30d-6ea8-4f35-9be6-7ae2cd3a2284.png",
+    "sourceCol": 1,
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      693,
+      12,
+      994,
+      690
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 2,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-cbf72477-60cf-4408-bf9d-e3d38c8f7092.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      121,
+      54,
+      436,
+      672
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 2,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-cbf72477-60cf-4408-bf9d-e3d38c8f7092.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      716,
+      52,
+      983,
+      672
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 2,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-b0589135-8742-44bd-a5b1-f0e4e945f1f8.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      121,
+      75,
+      427,
+      655
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 2,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-b0589135-8742-44bd-a5b1-f0e4e945f1f8.png",
+    "sourceCol": 1,
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      686,
+      70,
+      969,
+      656
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 3,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-7a0dc5d3-50f8-4804-8d9e-bf28be6687eb.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      113,
+      21,
+      489,
+      697
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 3,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-7a0dc5d3-50f8-4804-8d9e-bf28be6687eb.png",
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      662,
+      28,
+      989,
+      690
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 3,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-801300ed-47c8-4d48-898f-6f0491464d6c.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      153,
+      51,
+      483,
+      682
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  },
+  {
+    "row": 3,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-801300ed-47c8-4d48-898f-6f0491464d6c.png",
+    "sourceCol": 1,
+    "sourceSize": [
+      2172,
+      724
+    ],
+    "bounds": [
+      686,
+      49,
+      1006,
+      685
+    ],
+    "method": "Bounding box of main connected character, alpha>20"
+  }
+]

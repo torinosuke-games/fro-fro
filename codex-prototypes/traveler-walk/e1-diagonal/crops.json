@@ -1,0 +1,295 @@
+[
+  {
+    "row": 0,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-10f3ec55-23a4-43db-a914-5e96175f0caf.png",
+    "bounds": [
+      94,
+      78,
+      543,
+      665
+    ]
+  },
+  {
+    "row": 0,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-10f3ec55-23a4-43db-a914-5e96175f0caf.png",
+    "bounds": [
+      543,
+      79,
+      1054,
+      658
+    ]
+  },
+  {
+    "row": 0,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-10f3ec55-23a4-43db-a914-5e96175f0caf.png",
+    "bounds": [
+      1127,
+      79,
+      1578,
+      663
+    ]
+  },
+  {
+    "row": 0,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-10f3ec55-23a4-43db-a914-5e96175f0caf.png",
+    "bounds": [
+      1678,
+      80,
+      2103,
+      663
+    ]
+  },
+  {
+    "row": 1,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-eca76104-8fb7-47da-97c9-a4699a0de3ff.png",
+    "bounds": [
+      38,
+      39,
+      539,
+      687
+    ]
+  },
+  {
+    "row": 1,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-eca76104-8fb7-47da-97c9-a4699a0de3ff.png",
+    "bounds": [
+      625,
+      40,
+      1049,
+      685
+    ]
+  },
+  {
+    "row": 1,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-eca76104-8fb7-47da-97c9-a4699a0de3ff.png",
+    "bounds": [
+      1119,
+      39,
+      1620,
+      683
+    ]
+  },
+  {
+    "row": 1,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-eca76104-8fb7-47da-97c9-a4699a0de3ff.png",
+    "bounds": [
+      1699,
+      41,
+      2131,
+      686
+    ]
+  },
+  {
+    "row": 2,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-55dcbd28-ec7c-4f88-9d9b-9ab404b458d0.png",
+    "bounds": [
+      61,
+      50,
+      515,
+      680
+    ]
+  },
+  {
+    "row": 2,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-55dcbd28-ec7c-4f88-9d9b-9ab404b458d0.png",
+    "bounds": [
+      614,
+      50,
+      1051,
+      677
+    ]
+  },
+  {
+    "row": 2,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-55dcbd28-ec7c-4f88-9d9b-9ab404b458d0.png",
+    "bounds": [
+      1141,
+      45,
+      1599,
+      680
+    ]
+  },
+  {
+    "row": 2,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-55dcbd28-ec7c-4f88-9d9b-9ab404b458d0.png",
+    "bounds": [
+      1705,
+      50,
+      2141,
+      677
+    ]
+  },
+  {
+    "row": 3,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-e1f2b53c-a8ca-4ab2-b961-ded69e213a74.png",
+    "bounds": [
+      68,
+      50,
+      543,
+      678
+    ]
+  },
+  {
+    "row": 3,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-e1f2b53c-a8ca-4ab2-b961-ded69e213a74.png",
+    "bounds": [
+      543,
+      49,
+      1028,
+      665
+    ]
+  },
+  {
+    "row": 3,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-e1f2b53c-a8ca-4ab2-b961-ded69e213a74.png",
+    "bounds": [
+      1161,
+      49,
+      1624,
+      678
+    ]
+  },
+  {
+    "row": 3,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-e1f2b53c-a8ca-4ab2-b961-ded69e213a74.png",
+    "bounds": [
+      1742,
+      46,
+      2122,
+      674
+    ]
+  },
+  {
+    "row": 0,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-af5df125-8ca8-4986-8844-64da4880176b.png",
+    "sourceCol": 0,
+    "bounds": [
+      92,
+      61,
+      520,
+      645
+    ],
+    "override": true
+  },
+  {
+    "row": 1,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-4c312f76-8629-40d4-bfdb-6e1e1b9649e2.png",
+    "sourceCol": 0,
+    "bounds": [
+      29,
+      32,
+      467,
+      658
+    ],
+    "override": true
+  },
+  {
+    "row": 1,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-4c312f76-8629-40d4-bfdb-6e1e1b9649e2.png",
+    "sourceCol": 1,
+    "bounds": [
+      589,
+      32,
+      998,
+      664
+    ],
+    "override": true
+  },
+  {
+    "row": 3,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-5080a490-7f15-4ff0-9714-9c61312d1c63.png",
+    "sourceCol": 0,
+    "bounds": [
+      60,
+      62,
+      505,
+      649
+    ],
+    "override": true
+  },
+  {
+    "row": 3,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-5080a490-7f15-4ff0-9714-9c61312d1c63.png",
+    "sourceCol": 1,
+    "bounds": [
+      624,
+      66,
+      1030,
+      649
+    ],
+    "override": true
+  },
+  {
+    "row": 2,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-5d6cd27a-ce62-48d3-a4e3-f636f0cc7ce1.png",
+    "sourceCol": 0,
+    "bounds": [
+      91,
+      53,
+      538,
+      661
+    ],
+    "override": true
+  },
+  {
+    "row": 2,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-43dd1779-520b-4eb7-9ba5-59406b09303e.png",
+    "sourceCol": 0,
+    "bounds": [
+      91,
+      70,
+      514,
+      631
+    ],
+    "override": true
+  },
+  {
+    "row": 2,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-aeb9c115-9661-478f-8e4e-637cff0e1d86.png",
+    "sourceCol": 0,
+    "bounds": [
+      97,
+      64,
+      518,
+      647
+    ],
+    "override": true
+  },
+  {
+    "row": 2,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-ca789297-42bf-4e05-b2aa-74ab2a8596ba.png",
+    "sourceCol": 0,
+    "bounds": [
+      86,
+      62,
+      515,
+      644
+    ],
+    "override": true
+  }
+]

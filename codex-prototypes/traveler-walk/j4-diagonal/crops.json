@@ -1,0 +1,258 @@
+[
+  {
+    "row": 0,
+    "col": 0,
+    "source": "/workspace/scratch/diagonal-work/j4-phase0.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      160,
+      58,
+      598,
+      621
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 1,
+    "col": 0,
+    "source": "/workspace/scratch/diagonal-work/j4-phase0.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      679,
+      58,
+      1114,
+      625
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 2,
+    "col": 0,
+    "source": "/workspace/scratch/diagonal-work/j4-phase0.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      159,
+      657,
+      606,
+      1214
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 3,
+    "col": 0,
+    "source": "/workspace/scratch/diagonal-work/j4-phase0.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      682,
+      658,
+      1119,
+      1214
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 0,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-d2644a8c-1f8b-49c0-a327-a78a54bee99e.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      185,
+      71,
+      572,
+      601
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 1,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-d2644a8c-1f8b-49c0-a327-a78a54bee99e.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      718,
+      71,
+      1073,
+      600
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 2,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-d2644a8c-1f8b-49c0-a327-a78a54bee99e.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      200,
+      671,
+      569,
+      1199
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 3,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-d2644a8c-1f8b-49c0-a327-a78a54bee99e.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      724,
+      671,
+      1078,
+      1202
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 0,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-f9a95379-a431-4cb5-82e5-de7556baf70a.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      165,
+      71,
+      602,
+      609
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 1,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-f9a95379-a431-4cb5-82e5-de7556baf70a.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      718,
+      72,
+      1099,
+      608
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 2,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-f9a95379-a431-4cb5-82e5-de7556baf70a.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      174,
+      677,
+      595,
+      1199
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 3,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-f9a95379-a431-4cb5-82e5-de7556baf70a.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      685,
+      677,
+      1101,
+      1199
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 0,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-59cda2e1-4463-406b-b476-152ece5ea7c3.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      192,
+      48,
+      597,
+      601
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 1,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-59cda2e1-4463-406b-b476-152ece5ea7c3.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      702,
+      50,
+      1080,
+      603
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 2,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-59cda2e1-4463-406b-b476-152ece5ea7c3.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      185,
+      647,
+      600,
+      1200
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 3,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-59cda2e1-4463-406b-b476-152ece5ea7c3.png",
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      701,
+      647,
+      1110,
+      1204
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  }
+]
