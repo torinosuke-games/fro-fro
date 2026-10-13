@@ -11,3 +11,7 @@ SPRITE_REQUESTS_3.md と e1 のOK後の依頼に基づく確認用画像。成�
 review.html は160pxと80pxの再生・停止・コマ送り、立ち姿と上下左右の歩く絵への比較リンク。390×844のChromiumで画像読み込み・8プレビュー・全4コマ・方向表示・ページエラーなしを確認。
 
 frame-*.png は採用した16コマ。再組み立てはリポジトリのルートで node codex-prototypes/traveler-walk/tools/assemble-walk.cjs codex-prototypes/traveler-walk/e3-diagonal/assembly-input.json。prompts.json は生成指示、crops.json は切り出し記録、results.json は検証結果。WebP化とゲームへの取り込みはClaude側で行う。
+
+## 今回の見直し
+
+3・4列目を方向ごとに再生成し、逆の足の接地・通過を見直した。後ろ向きの通過は上げた靴底が見える。全体を一度に生成した試行は足の入れ替えと楽器の向きが揃わず不採用。既存と同じ組み立て・検証を実行し、4方向の接地のブーツ外形幅が通過より15px以上広いことを確認した。確認ページのスマートフォン幅での操作も再確認した。
