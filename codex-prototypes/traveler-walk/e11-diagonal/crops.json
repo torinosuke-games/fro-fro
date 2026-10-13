@@ -1,0 +1,274 @@
+[
+  {
+    "row": 0,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-93847f1b-5a0c-4a99-95fa-dedc667240e2.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      155,
+      53,
+      610,
+      615
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 1,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-93847f1b-5a0c-4a99-95fa-dedc667240e2.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      658,
+      54,
+      1122,
+      618
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 2,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-93847f1b-5a0c-4a99-95fa-dedc667240e2.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      169,
+      635,
+      623,
+      1188
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 3,
+    "col": 0,
+    "source": "/workspace/generated_images/exec-93847f1b-5a0c-4a99-95fa-dedc667240e2.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      648,
+      636,
+      1110,
+      1189
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 0,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-e2328163-8806-49e6-9bd7-69396f0a0263.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      159,
+      29,
+      612,
+      599
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 1,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-e2328163-8806-49e6-9bd7-69396f0a0263.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      685,
+      27,
+      1124,
+      601
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 2,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-e2328163-8806-49e6-9bd7-69396f0a0263.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      172,
+      634,
+      616,
+      1187
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 3,
+    "col": 1,
+    "source": "/workspace/generated_images/exec-e2328163-8806-49e6-9bd7-69396f0a0263.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      687,
+      631,
+      1108,
+      1187
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 0,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-f3a36f8c-7c6b-4c79-9c65-86469b6850d2.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      179,
+      83,
+      598,
+      606
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 1,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-f3a36f8c-7c6b-4c79-9c65-86469b6850d2.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      708,
+      81,
+      1098,
+      606
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 2,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-f3a36f8c-7c6b-4c79-9c65-86469b6850d2.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      190,
+      692,
+      598,
+      1191
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 3,
+    "col": 2,
+    "source": "/workspace/generated_images/exec-f3a36f8c-7c6b-4c79-9c65-86469b6850d2.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      711,
+      682,
+      1117,
+      1193
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 0,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-a9cf8f13-4926-46a8-abd2-afd09adbd3f7.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      169,
+      62,
+      594,
+      627
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 1,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-a9cf8f13-4926-46a8-abd2-afd09adbd3f7.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      700,
+      59,
+      1098,
+      627
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 2,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-a9cf8f13-4926-46a8-abd2-afd09adbd3f7.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      168,
+      689,
+      576,
+      1206
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  },
+  {
+    "row": 3,
+    "col": 3,
+    "source": "/workspace/generated_images/exec-a9cf8f13-4926-46a8-abd2-afd09adbd3f7.png",
+    "sourceCol": 0,
+    "sourceSize": [
+      1254,
+      1254
+    ],
+    "bounds": [
+      693,
+      686,
+      1098,
+      1209
+    ],
+    "method": "Bounding box of main connected character, alpha>20 within 2x2 phase/direction source"
+  }
+]
