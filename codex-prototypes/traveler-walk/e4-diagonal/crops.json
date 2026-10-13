@@ -50,16 +50,17 @@
   {
     "row": 0,
     "col": 3,
-    "source": "/workspace/generated_images/exec-9a21b03a-16fe-42a9-8878-32048f71e954.png",
+    "source": "/workspace/generated_images/exec-b9255975-82ef-4036-92dd-8471d1fdc474.png",
+    "sourceCol": 0,
     "sourceSize": [
-      2172,
-      724
+      1122,
+      1402
     ],
     "bounds": [
-      1737,
-      41,
-      2094,
-      664
+      178,
+      14,
+      890,
+      1364
     ],
     "method": "Bounding box of main connected character, alpha>20"
   },
@@ -114,16 +115,17 @@
   {
     "row": 1,
     "col": 3,
-    "source": "/workspace/generated_images/exec-ec32f860-8023-4188-93d9-196755c982d4.png",
+    "source": "/workspace/generated_images/exec-a050bdf8-b23a-4be8-8129-be075412593c.png",
+    "sourceCol": 0,
     "sourceSize": [
-      2172,
-      724
+      1026,
+      1533
     ],
     "bounds": [
-      1715,
-      22,
-      2033,
-      673
+      151,
+      0,
+      1013,
+      1511
     ],
     "method": "Bounding box of main connected character, alpha>20"
   },
@@ -178,16 +180,17 @@
   {
     "row": 2,
     "col": 3,
-    "source": "/workspace/generated_images/exec-ef3c7be6-7f1a-475c-8a70-594bd5dba328.png",
+    "source": "/workspace/generated_images/exec-51cf6ea3-c840-4738-91b1-7f33574b87bc.png",
+    "sourceCol": 0,
     "sourceSize": [
-      2172,
-      724
+      1089,
+      1444
     ],
     "bounds": [
-      1763,
-      51,
-      2088,
-      664
+      33,
+      9,
+      799,
+      1381
     ],
     "method": "Bounding box of main connected character, alpha>20"
   },
@@ -242,16 +245,17 @@
   {
     "row": 3,
     "col": 3,
-    "source": "/workspace/generated_images/exec-6964fddb-1940-4c1a-ac81-17feb664750b.png",
+    "source": "/workspace/generated_images/exec-dbe3448b-0ae4-40ed-a66a-f3ac6c7b2558.png",
+    "sourceCol": 0,
     "sourceSize": [
-      2172,
-      724
+      1122,
+      1402
     ],
     "bounds": [
-      1765,
-      34,
-      2091,
-      678
+      256,
+      9,
+      1046,
+      1357
     ],
     "method": "Bounding box of main connected character, alpha>20"
   }

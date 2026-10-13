@@ -11,3 +11,7 @@ SPRITE_REQUESTS_3.md と e1 のOK後の依頼に基づく確認用画像。成�
 review.html は160pxと80pxの再生・停止・コマ送り、立ち姿と上下左右の歩く絵への比較リンク。390×844のChromiumで画像読み込み・8プレビュー・全4コマ・方向表示・ページエラーなしを確認。
 
 frame-*.png は採用した16コマ。再組み立てはリポジトリのルートで node codex-prototypes/traveler-walk/tools/assemble-walk.cjs codex-prototypes/traveler-walk/e4-diagonal/assembly-input.json。prompts.json は生成指示、crops.json は切り出し記録、results.json は検証結果。WebP化とゲームへの取り込みはClaude側で行う。
+
+## 今回の見直し
+
+4列目の逆足の通過を単独コマで再生成。e1 の対応する通過コマを姿勢の参考、自分の立ち姿・歩行シートを衣装の参考とし、左右の支持足を入れ替えた。後ろ向きは上げたブーツの靴底がはっきり見える。4コマ一列の再試行は足の入れ替えと足幅に不足があり不採用。高さ・接地線・全4行の足幅の差と確認ページの操作を再確認した。

@@ -94,25 +94,25 @@
       "sourceBounds": [
         0,
         0,
-        357,
-        623
+        712,
+        1350
       ],
       "placement": [
-        171,
+        161,
         72,
-        229,
+        211,
         400
       ],
       "anchorMethod": "median alpha head region; stable upright head/body axis",
       "bounds": [
-        171,
+        161,
         72,
-        400,
+        372,
         472
       ],
       "height": 400,
       "ground": 472,
-      "bootSpan": 137
+      "bootSpan": 126
     },
     {
       "row": 1,
@@ -198,25 +198,25 @@
       "sourceBounds": [
         0,
         0,
-        318,
-        651
+        862,
+        1511
       ],
       "placement": [
-        144,
+        120,
         72,
-        195,
+        228,
         400
       ],
       "anchorMethod": "median alpha head region; stable upright head/body axis",
       "bounds": [
-        144,
+        120,
         72,
-        339,
+        348,
         472
       ],
       "height": 400,
       "ground": 472,
-      "bootSpan": 120
+      "bootSpan": 165
     },
     {
       "row": 2,
@@ -302,25 +302,25 @@
       "sourceBounds": [
         0,
         0,
-        325,
-        613
+        766,
+        1372
       ],
       "placement": [
-        171,
+        153,
         72,
-        212,
+        223,
         400
       ],
       "anchorMethod": "median alpha head region; stable upright head/body axis",
       "bounds": [
-        171,
+        153,
         72,
-        383,
+        376,
         472
       ],
       "height": 400,
       "ground": 472,
-      "bootSpan": 120
+      "bootSpan": 176
     },
     {
       "row": 3,
@@ -406,25 +406,25 @@
       "sourceBounds": [
         0,
         0,
-        326,
-        644
+        790,
+        1348
       ],
       "placement": [
-        147,
+        119,
         72,
-        202,
+        234,
         400
       ],
       "anchorMethod": "median alpha head region; stable upright head/body axis",
       "bounds": [
-        147,
+        119,
         72,
-        349,
+        353,
         472
       ],
       "height": 400,
       "ground": 472,
-      "bootSpan": 107
+      "bootSpan": 105
     }
   ],
   "checks": [
@@ -434,25 +434,5 @@
     "No cell overflow",
     "All four diagonal rows: contact lower-boot silhouettes at least 15px wider than passing"
   ],
-  "approval": "Character, anatomy and loop timing require visual review",
-  "browserCheck": {
-    "browser": "Chromium",
-    "viewport": [
-      390,
-      844
-    ],
-    "loadedSize": [
-      2048,
-      2048
-    ],
-    "canvasCount": 8,
-    "allFourFrames": true,
-    "directionLabels": [
-      "左前 ↙",
-      "右前 ↘",
-      "左後ろ ↖",
-      "右後ろ ↗"
-    ],
-    "pageErrors": []
-  }
+  "approval": "Character, anatomy and loop timing require visual review"
 }
