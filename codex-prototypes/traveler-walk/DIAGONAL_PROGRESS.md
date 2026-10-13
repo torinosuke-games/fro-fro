@@ -14,6 +14,6 @@
 - e11：作成予定。
 - e12：PNG作成・寸法と確認ページの検証済み。Claudeによる確認待ち。確認ページ：e12-diagonal/review.html
 - j4：PNG作成・寸法と確認ページの検証済み。Claudeによる確認待ち。確認ページ：j4-diagonal/review.html
-- j6：作成予定。
+- j6：PNG作成・寸法と確認ページの検証済み。Claudeによる確認待ち。確認ページ：j6-diagonal/review.html
 
 1人ずつ作成して、完成ごとにプッシュする。後ろ向きの通過コマも片足の上げ下げを見えるようにする。
