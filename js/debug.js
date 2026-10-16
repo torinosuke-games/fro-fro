@@ -177,6 +177,16 @@
       ])
     ]));
 
+    // ---- 酒場の依頼（判断438。テスト用） ----
+    main.appendChild(U.el('div', { class: 'panel stack' }, [
+      U.el('h3', { text: '酒場の依頼（テスト用）' }),
+      U.el('div', { class: 'small muted', text: '依頼は、朝4時に入れかわる。「時刻」の操作で日をまたぐか、ここで作り直す／受けた依頼を達成にできる。' }),
+      U.el('div', { class: 'grid2' }, [
+        U.el('button', { class: 'btn small', text: '今日の依頼を作り直す', on: { click: function () { var s = FF.util.clone(app.state); s.quests = FF.quests.create(); app.commit(FF.quests.today(s, app.now())); U.toast('今日の依頼を作り直した'); } } }),
+        U.el('button', { class: 'btn small', text: '受けた依頼を、すべて達成にする', on: { click: function () { var s = FF.util.clone(app.state); (s.quests && s.quests.board || []).forEach(function (q) { if (q.accepted && !q.claimed) q.progress = q.need; }); app.commit(s); U.toast('受けた依頼を達成にした'); } } })
+      ])
+    ]));
+
     // ---- 探索（v0.2） ----
     main.appendChild(U.el('div', { class: 'panel stack' }, [
       U.el('h3', { text: '探索（テスト用）' }),

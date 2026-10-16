@@ -56,7 +56,7 @@ state.quests = {
 - 読み込み時：形がおかしい・日がちがう場合は、今日の分を作り直す。数値は整数・範囲内にする（`state.js` の整合と同じ方針）。`integrity` に含める。
 - 純粋関数（`js/quests.js`。DOM・localStorage に触れない。時刻は `FF.clock.now()`）：`board(state)`・`accept(state, id)`・`onCorrect(state, subject)`・`onVictory(state, enemyId)`・`deliver(state, id)`・`claim(state, id)`。
 
-## 7. 作る順番（1フェーズごとに報告して止まる）
+## 7. 作る順番（1フェーズごとに報告して止まる）。**Q-1〜Q-4 は完了**（判断435〜438。`REPORT_quest.md`）
 
 - **Q-1**：`js/quests.js`（日替わりの決め方・受ける・進める・報酬）と、`balance.QUESTS`、セーブの整合、自動テスト。画面なし。
 - **Q-2**：酒場の画面（看板娘の絵・吹き出し・依頼のカード・「受ける／渡す／報告する」）。スマホ幅で確認。
