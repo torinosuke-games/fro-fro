@@ -57,6 +57,7 @@
       },
       exploration: defaultExploration(),
       adventure: FF.adventure ? FF.adventure.create() : null,
+      quests: FF.quests ? FF.quests.create() : null,   // 住民の依頼クエスト（酒場。判断434。saveVersion は上げない）
       // 勉強量ポイント（SPEC 8.4・14.2）：残高・累計・引換券の履歴
       studyPoints: 0,
       studyPointsEarnedTotal: 0,
@@ -162,6 +163,7 @@
     if (FF.research && FF.adventure) FF.research.applyJoins(state);   // すでに熱量が足りている人も、仲間にする
     if (FF.battle && FF.battle.rescueBackfill) state = FF.battle.rescueBackfill(state);
     if (FF.shop && FF.shop.normalizeShop) state = FF.shop.normalizeShop(state, undefined, legacyGold);
+    if (FF.quests && FF.quests.normalize) state = FF.quests.normalize(state);   // 依頼クエストの整合（形のおかしい依頼を捨てる。判断434）
     state.player.name = util.normalizeName(state.player.name, cfg);
     // 学年（1〜9 の整数）と主人公の絵（AVATARS のどれか）。それ以外は未設定（null）に（判断198。saveVersion は上げない）
     state.player.grade = normalizeGrade(state.player.grade);

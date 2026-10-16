@@ -87,6 +87,17 @@
     // ---- 学習 ----
     INPUT_MAX_ATTEMPTS: 3,
     HANDWRITING: { REWARD_RATE: 0.5 },   // 手書きの自己採点で「書けた」を選んだときの、資源・勉強量ポイントの割合（判断266）
+    // 住民の依頼クエスト（酒場。判断434・SPEC_quest.md）。配列は、中央炉のレベル（1〜5）ごとの数（Lv1 は先頭）
+    QUESTS: {
+      PER_DAY: 3,                                 // 1日の依頼の数（納品・討伐・学習が1つずつ。討伐が出せないときは納品を足す）
+      KINDS: ['deliver', 'hunt', 'study'],
+      RESIDENTS: ['baker', 'woodcutter', 'hunter', 'nurse', 'child', 'elder'],   // 依頼を出す町の人（名前・口調は texts）。救出した旅人も、依頼を出す
+      DELIVER: { NEED: [10, 14, 18, 24, 30], GOLD_PER_UNIT: 2, RETURN_BONUS: 0.2 },   // 納品：資材の数。渡した分の 1.2 倍の資材が、お礼で返る
+      HUNT: { COUNT: [2, 3, 4, 5, 6], ENEMIES: ['cub', 'wolf'], GOLD_PER_KILL: 30, WOLF_FROM_LEVEL: 2 },   // 討伐：体数。雪原の冒険を始めていて、ザコ敵の種類を絞る（オオカミは中央炉 Lv2 から）
+      STUDY: { COUNT: [5, 8, 10, 12, 15], GOLD_PER_CORRECT: 5, ANY_SHARE: 0.34 },   // 学習：正解の数。教科を決めない依頼（'any'）の割合
+      POTION_CHANCE: 0.3, POTION_COUNT: 1,        // 回復薬がつく割合
+      GOLD_MAX_PER_QUEST: 400
+    },
     DAILY_RESOURCE: { RESET_HOUR: 4 },   // その日に獲得できる資材の割り当てが切りかわる時刻（朝4時。判断319）
     INITIAL_UNLOCKED_GRADE: 2,
     FURIGANA_AUTO_MAX_GRADE: 3,   // 学年を入れたとき、ふりがなを自動でオンにするのはこの学年まで（判断198）
