@@ -7,7 +7,12 @@
   var beforeShow = FF.renewalBeforeShow;
   FF.renewalBeforeShow = function (screen, params) { routeId++; moving = false; battleUi.reset(); if (screen === 'adventureParty' && FF.app.screen === 'base') { ensure(); save(A.depart(p(), 'home')); } if (beforeShow) beforeShow(screen, params); };
   function p() { return FF.app.state.adventure || A.create(); }
-  function save(next) { FF.app.commit(Object.assign({}, FF.app.state, { adventure: next })); }
+  // 戦闘に勝った瞬間に、酒場の依頼（討伐）を1つ進める（判断437）
+  function save(next) {
+    var cur = FF.app.state, st = Object.assign({}, cur, { adventure: next });
+    if (FF.quests) st = FF.quests.onBattleWin(cur.adventure, st, FF.app.now());
+    FF.app.commit(st);
+  }
   function ensure() { if (!p().started) { var n = FF.util.clone(p()); n.started = true; save(n); } }
   function name(id) { return id === 'hero' ? FF.app.state.player.name : T.members[id].name; }
   function text(tag, cls, value) { return E(tag, { class: cls, rich: value }); }

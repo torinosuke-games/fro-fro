@@ -25,14 +25,22 @@
     return E('div', { class: 'qt-reward' }, [E('span', { class: 'qt-reward-label', rich: T.rewardLabel }), E('span', { class: 'qt-reward-items' }, kids)]);
   }
 
+  // 報酬の文字（お知らせ用）
+  function rewardText(r) {
+    var t = ['+' + U.fmt(r.gold) + ' G'];
+    Object.keys(r.res || {}).forEach(function (k) { t.push(resDef(k).icon + U.fmt(r.res[k])); });
+    if (r.potions) t.push('🧪×' + r.potions);
+    return t.join('　');
+  }
+
   function card(qu, again) {
     var a = FF.app, s = a.state, done = Q.done(qu), act;
     if (qu.claimed) act = E('span', { class: 'qt-state is-claimed', rich: T.claimed });
     else if (!qu.accepted) act = E('button', { class: 'rn-button primary shop-btn qt-btn', attrs: { type: 'button', 'data-act': 'accept' }, rich: T.accept, on: { click: function () { var r = Q.accept(a.state, qu.id); if (r.ok) { a.commit(r.state); U.toast(T.toastAccept); again(); } } } });
-    else if (done) act = E('button', { class: 'rn-button primary shop-btn qt-btn', attrs: { type: 'button', 'data-act': 'claim' }, rich: T.claim, on: { click: function () { var r = Q.claim(a.state, qu.id); if (r.ok) { a.commit(r.state); U.toast(T.toastClaim); again(); } } } });
+    else if (done) act = E('button', { class: 'rn-button primary shop-btn qt-btn', attrs: { type: 'button', 'data-act': 'claim' }, rich: T.claim, on: { click: function () { var r = Q.claim(a.state, qu.id); if (r.ok) { a.commit(r.state); U.toast(T.toastClaim + ' ' + rewardText(r.reward)); again(); } } } });
     else if (qu.kind === 'deliver') {
       var can = Q.canDeliver(s, qu.id).ok;
-      act = E('button', { class: 'rn-button primary shop-btn qt-btn', attrs: { type: 'button', 'data-act': 'deliver', disabled: can ? null : 'true' }, rich: T.deliverBtn, on: { click: function () { var r = Q.deliver(a.state, qu.id); if (r.ok) { a.commit(r.state); U.toast(T.toastDeliver); again(); } } } });
+      act = E('button', { class: 'rn-button primary shop-btn qt-btn', attrs: { type: 'button', 'data-act': 'deliver', disabled: can ? null : 'true' }, rich: T.deliverBtn, on: { click: function () { var r = Q.deliver(a.state, qu.id); if (r.ok) { a.commit(r.state); again(); } } } });
     } else act = E('span', { class: 'qt-state', rich: T.accepted });
     var pct = Math.round(100 * qu.progress / qu.need);
     return E('div', { class: 'qt-card' + (qu.claimed ? ' is-claimed' : '') + (qu.accepted && !qu.claimed ? ' is-accepted' : ''), attrs: { 'data-quest': qu.id, 'data-kind': qu.kind } }, [

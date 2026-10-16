@@ -399,7 +399,7 @@
     if(f.open){f.open();return;}
     U.modal({title:f.name,body:E('p',{class:'facility-soon',rich:R.facSoonText}),buttons:[{label:U.T('back'),class:'ghost'}]});
    }}},[
-    U.artImg('fac-'+f.id+'.webp','facility-icon'),E('span',{class:'facility-name',rich:f.name})
+    U.artImg('fac-'+f.id+'.webp','facility-icon'),E('span',{class:'facility-name',rich:f.name}),f.id==='tavern'&&FF.quests&&FF.quests.claimable(FF.app.state)?E('span',{class:'facility-badge',text:'!',attrs:{'aria-label':U.plain(FF.texts.quest.toastDone)}}):null
    ]);
   }));
  }

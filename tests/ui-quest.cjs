@@ -26,9 +26,16 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.evaluate((q)=>{const s=FF.util.clone(FF.app.state);s.resources[q.target]=q.need;FF.app.commit(s);},q);
  await p.evaluate(()=>FF.ui.openTavern());
  await p.locator('.qt-card[data-kind="deliver"] [data-act="deliver"]').click();
+ // 達成のお知らせ（判断437）。酒場のアイコンに「!」の目印（報告できる依頼があるあいだ）
+ assert.ok((await p.locator('.toast').innerText()).includes('達成'));
+ await p.locator('.overlay .btn').click();await p.evaluate(()=>FF.ui.show('base'));await p.waitForTimeout(300);
+ assert.equal(await p.locator('.facility-btn[data-facility="tavern"] .facility-badge').count(),1);
+ await p.locator('.facility-btn[data-facility="tavern"]').click();
  const g0=await p.evaluate(()=>FF.shop.gold(FF.app.state));
  await p.locator('.qt-card[data-kind="deliver"] [data-act="claim"]').click();
  assert.equal(await p.evaluate(()=>FF.shop.gold(FF.app.state)),g0+q.reward.gold);
+ assert.ok((await p.locator('.toast').innerText()).includes('G'));   // 報酬の中身も、お知らせに出る
+
  assert.ok((await p.locator('.qt-card[data-kind="deliver"]').getAttribute('class')).includes('is-claimed'));
  // 学習・討伐は、ボタンがなく「受けた」と出る（受ける→進める は、Q-3 で、学習・戦闘とつなぐ）
  await p.locator('.qt-card[data-kind="hunt"] [data-act="accept"]').click();
@@ -36,5 +43,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.screenshot({path:process.env.FF_SHOT2||'/tmp/quest2.png'});
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  await p.locator('.overlay .btn').click();assert.equal(await p.locator('.overlay').count(),0);
+ await p.evaluate(()=>FF.ui.show('base'));await p.waitForTimeout(300);
+ assert.equal(await p.locator('.facility-badge').count(),0);   // 報告をすませたら、目印は消える
  assert.deepEqual(errors,[]);await b.close();console.log('PASS: tavern opens, 3 quests, accept/deliver/claim, gold paid');
 })().catch(e=>{console.error(e);process.exit(1);});

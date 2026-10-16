@@ -125,4 +125,55 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.ok(fixed.quests.board[0].reward.gold <= B.QUESTS.GOLD_MAX_PER_QUEST);
     assert.deepStrictEqual(plain(Q.normalize({ quests: 'x' }).quests), plain(Q.create()));
   });
+
+  // ---- Q-3：学習・冒険とのつながり ----
+  test('依頼：日がちがう（日がかわったのに作り直していない）依頼は、now を渡すと進まない', () => {
+    let s = Q.today(fresh(), T0); const st = s.quests.board.find(x => x.kind === 'study');
+    s = Q.accept(s, st.id).state;
+    const subj = st.target === 'any' ? 'math' : st.target;
+    assert.strictEqual(Q.onCorrect(s, subj, T0 + DAY), s);
+    assert.notStrictEqual(Q.onCorrect(s, subj, T0 + 1000), s);
+  });
+  test('依頼：学習の依頼は、本物の回答処理（正解）で進む。まちがい・ほかの人の画面の回答では進まない', () => {
+    const L = FF.learning;
+    const choiceQ = { id: 'qz_c1', subject: 'math', gradeLevel: 2, unit: 'x', difficulty: 'standard', answerType: 'choice', question: '1+1', answer: '2', choices: ['2', '3', '4', '5'], acceptedAnswers: [], validationMode: 'exact', hints: ['a', 'b', 'c'], explanation: 'e', reviewed: false };
+    let s = FF.exam.applyFuriganaAuto(fresh()); s = Q.today(s, T0);
+    const st = s.quests.board.find(x => x.kind === 'study');
+    s.quests.board.forEach(x => { if (x.id === st.id) { x.target = 'math'; x.accepted = true; } });
+    let a = L.startAttempt(choiceQ, () => 0.5);
+    let r = L.submitAnswer(s, a, '3', { now: T0, resource: 'wood' });   // まちがい
+    assert.strictEqual(Q.find(r.state, st.id).progress, 0);
+    a = L.startAttempt(choiceQ, () => 0.5);
+    r = L.submitAnswer(s, a, '2', { now: T0, resource: 'wood' });
+    assert.strictEqual(r.outcome.status, 'correct');
+    assert.strictEqual(Q.find(r.state, st.id).progress, 1);
+    // 理科の依頼は、算数の正解では進まない
+    const t = JSON.parse(JSON.stringify(s)); t.quests.board.forEach(x => { if (x.id === st.id) x.target = 'science'; });
+    a = L.startAttempt(choiceQ, () => 0.5);
+    r = L.submitAnswer(t, a, '2', { now: T0, resource: 'wood' });
+    assert.strictEqual(Q.find(r.state, st.id).progress, 0);
+  });
+  test('依頼：冒険の戦闘に勝った瞬間に、討伐が1つ進む（勝利の画面のあいだ、何度保存しても1回だけ）', () => {
+    let s = Q.today(hunter(fresh()), T0); const h = s.quests.board.find(x => x.kind === 'hunt');
+    s = Q.accept(s, h.id).state;
+    const mk = (phase) => Object.assign({}, s, { adventure: Object.assign({}, s.adventure, { battle: { enemy: h.target, phase } }) });
+    const fighting = mk('quiz'), won = mk('win');
+    const after = Q.onBattleWin(fighting.adventure, won, T0);
+    assert.strictEqual(Q.find(after, h.id).progress, 1);
+    assert.strictEqual(Q.onBattleWin(won.adventure, after, T0), after);   // もう勝利のあいだ
+    assert.strictEqual(Q.onBattleWin(fighting.adventure, mk('quiz'), T0).quests, mk('quiz').quests);   // 勝っていない
+    const other = Object.assign({}, won, { adventure: Object.assign({}, won.adventure, { battle: { enemy: 'boss', phase: 'win' } }) });
+    assert.strictEqual(Q.onBattleWin(fighting.adventure, other, T0), other);   // ほかの敵
+  });
+  test('依頼：新しく達成した依頼を知らせる（newlyDone）。報告できる数（claimable）は、報告すると減る', () => {
+    let s = Q.today(fresh(), T0); const d = s.quests.board[0];
+    s = Q.accept(s, d.id).state; s.resources[d.target] = d.need;
+    assert.deepStrictEqual(plain(Q.newlyDone(Q.accept(Q.today(fresh(), T0), d.id).state, s)), []);
+    const done = Q.deliver(s, d.id).state;
+    assert.deepStrictEqual(plain(Q.newlyDone(s, done)), [d.id]);
+    assert.deepStrictEqual(plain(Q.newlyDone(done, done)), []);
+    assert.strictEqual(Q.claimable(s), 0);
+    assert.strictEqual(Q.claimable(done), 1);
+    assert.strictEqual(Q.claimable(Q.claim(done, d.id).state), 0);
+  });
 };

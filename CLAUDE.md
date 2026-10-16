@@ -7,9 +7,9 @@
 ## 文書の場所（必要なときだけ読む）
 
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
-- 仕様：`SPEC_quest.md`（住民の依頼クエスト＝酒場。判断434〜436。Q-1〔ロジック。`js/quests.js`〕・Q-2〔酒場の画面。`js/ui/quest.js`・`js/quest-texts.js`〕は完了、Q-3〜Q-4 はこれから）、`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
+- 仕様：`SPEC_quest.md`（住民の依頼クエスト＝酒場。判断434〜437。Q-1〔ロジック。`js/quests.js`〕・Q-2〔酒場の画面。`js/ui/quest.js`・`js/quest-texts.js`〕・Q-3〔学習の正解・戦闘の勝利とのつながり、お知らせ〕は完了、Q-4〔手動確認と報告〕はこれから）、`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 437。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 438。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
 - リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`。算数の文章題55問への図（判断223）：`MATH_WORD_DIAGRAMS.md`（図の種類・使った問題）、依頼の記録は `DIAGRAM_REQUESTS.md`（完了）
 - 完成報告：`REPORT.md`（v0.1）、`REPORT_v0.2.md`、`REPORT_v0.3.md`、`REPORT_v0.4.md`、`REPORT_sync.md`（データの保存）

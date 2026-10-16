@@ -117,8 +117,11 @@
     return { ok: true, state: s };
   }
   // 受けた依頼を進める（受けていない・終わった依頼は進まない）
-  function advance(state, match, n) {
-    var list = state.quests && state.quests.board || [], hit = false;
+  // now を渡すと、依頼の日がちがう（日がかわったのに、まだ作り直していない）ときは、進めない
+  function advance(state, match, n, now) {
+    if (!state.quests || !Array.isArray(state.quests.board)) return state;
+    if (now != null && state.quests.day !== FF.daily.dayKey(now)) return state;
+    var hit = false;
     var s = clone(state);
     s.quests.board.forEach(function (qu) {
       if (!qu.accepted || done(qu) || !match(qu)) return;
@@ -126,8 +129,21 @@
     });
     return hit ? s : state;
   }
-  function onCorrect(state, subject) { return advance(state, function (qu) { return qu.kind === 'study' && (qu.target === 'any' || qu.target === subject); }, 1); }
-  function onVictory(state, enemyId) { return advance(state, function (qu) { return qu.kind === 'hunt' && qu.target === enemyId; }, 1); }
+  function onCorrect(state, subject, now) { return advance(state, function (qu) { return qu.kind === 'study' && (qu.target === 'any' || qu.target === subject); }, 1, now); }
+  function onVictory(state, enemyId, now) { return advance(state, function (qu) { return qu.kind === 'hunt' && qu.target === enemyId; }, 1, now); }
+  // 冒険の戦闘に勝ったとき（前の冒険の状態 prevAdv から、勝利の画面に変わった瞬間だけ、1回数える）。state は、新しい冒険を入れたあとの全体の状態
+  function onBattleWin(prevAdv, state, now) {
+    var b = state && state.adventure && state.adventure.battle, was = prevAdv && prevAdv.battle && prevAdv.battle.phase;
+    if (!b || b.phase !== 'win' || was === 'win') return state;
+    return onVictory(state, b.enemy, now);
+  }
+  // 前の状態から、新しく達成になった依頼の id（お知らせ用）
+  function newlyDone(prev, next) {
+    var before = {}; ((prev && prev.quests && prev.quests.board) || []).forEach(function (qu) { before[qu.id] = done(qu); });
+    return ((next && next.quests && next.quests.board) || []).filter(function (qu) { return done(qu) && qu.accepted && !qu.claimed && before[qu.id] === false; }).map(function (qu) { return qu.id; });
+  }
+  // 報告できる（達成して、まだ報酬をもらっていない）依頼の数。酒場のアイコンの目印に使う
+  function claimable(state) { return ((state && state.quests && state.quests.board) || []).filter(function (qu) { return qu.accepted && done(qu) && !qu.claimed; }).length; }
 
   // 報告：達成した依頼の報酬をもらう（1回だけ）
   function canClaim(state, id) {
@@ -170,6 +186,6 @@
     return s;
   }
 
-  FF.quests = { create: create, today: today, find: find, done: done, accept: accept, canDeliver: canDeliver, deliver: deliver, onCorrect: onCorrect, onVictory: onVictory,
+  FF.quests = { create: create, today: today, find: find, done: done, accept: accept, canDeliver: canDeliver, deliver: deliver, onCorrect: onCorrect, onVictory: onVictory, onBattleWin: onBattleWin, newlyDone: newlyDone, claimable: claimable,
     canClaim: canClaim, claim: claim, remaining: remaining, normalize: normalize, residents: residents, tier: tier };
 })(this);

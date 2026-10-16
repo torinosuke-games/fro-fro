@@ -551,3 +551,5 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .qt-state.is-claimed{color:#3d7a30}
 .qt-btn{min-width:96px}
 @media (max-width:420px){.qt-girl{grid-template-columns:64px minmax(0,1fr)}.qt-portrait{width:64px;height:64px}}
+.facility-btn{position:relative}
+.facility-badge{position:absolute;top:-2px;right:6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#e5533d;color:#fff;font-size:.8125rem;line-height:20px;text-align:center;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
