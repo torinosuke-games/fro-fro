@@ -518,3 +518,36 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 /* 魔法研究所（判断363） */
 .lab-body .lab-intro{line-height:1.8;margin:6px 0 10px}.lab-locked{line-height:1.8}.lab-progress{font-size:.8125rem;color:#6a8796;line-height:1.7}
 .lab-meter{height:10px;border-radius:6px;background:#dde9ef;overflow:hidden;margin:8px 0 4px}.lab-meter span{display:block;height:100%;background:linear-gradient(90deg,#f2b25a,#e07a3a)}
+
+/* 酒場（住民の依頼クエスト。判断436） */
+.qt-body{display:grid;gap:10px;margin:6px 0 12px;max-height:min(70vh,600px);overflow-y:auto}
+.qt-girl{display:grid;grid-template-columns:84px minmax(0,1fr);gap:10px;align-items:start}
+.qt-portrait{width:84px;height:84px;border-radius:50%;object-fit:cover;object-position:34% 20%;border:2px solid #efa64b;background:#fff3e0}
+.qt-bubble{position:relative;padding:8px 12px;border-radius:14px;background:#fff8ea;border:1px solid #efc27a;color:#5a3a14;font-size:.875rem;line-height:1.6}
+.qt-bubble::before{content:"";position:absolute;left:-7px;top:22px;width:12px;height:12px;background:#fff8ea;border-left:1px solid #efc27a;border-bottom:1px solid #efc27a;transform:rotate(45deg)}
+.qt-bubble p{margin:2px 0}
+.qt-speaker{display:block;font-size:.8125rem;color:#885219}
+.qt-intro{font-weight:700}
+.qt-list{display:grid;gap:8px}
+.qt-card{display:grid;gap:6px;padding:10px 12px;border:1px solid var(--rn-line,#d3e3ee);border-radius:14px;background:#fff}
+.qt-card.is-accepted{border-color:#efa64b;background:#fffaf0}
+.qt-card.is-claimed{opacity:.6}
+.qt-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.qt-kind{padding:1px 8px;border-radius:999px;background:#eaf3fb;color:#2c5d86;font-size:.75rem;font-weight:800}
+.qt-card[data-kind="hunt"] .qt-kind{background:#fde9e4;color:#9b3d2a}
+.qt-card[data-kind="study"] .qt-kind{background:#e9f5e6;color:#3d7a30}
+.qt-who{font-size:.9375rem}
+.qt-ask{margin:0;font-size:.875rem;line-height:1.6}
+.qt-reward{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.8125rem}
+.qt-reward-label{font-weight:800;color:#885219}
+.qt-reward-items{display:flex;gap:10px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.qt-gold{font-weight:800;color:#885219}
+.qt-progress{display:flex;align-items:center;gap:8px;font-size:.8125rem}
+.qt-bar{flex:1;height:8px;border-radius:999px;background:#eadfcc;overflow:hidden}
+.qt-bar i{display:block;height:100%;background:#e0a042;border-radius:999px}
+.qt-count{white-space:nowrap;font-variant-numeric:tabular-nums}
+.qt-act{display:flex;justify-content:flex-end}
+.qt-state{font-weight:800;color:#885219;font-size:.875rem}
+.qt-state.is-claimed{color:#3d7a30}
+.qt-btn{min-width:96px}
+@media (max-width:420px){.qt-girl{grid-template-columns:64px minmax(0,1fr)}.qt-portrait{width:64px;height:64px}}

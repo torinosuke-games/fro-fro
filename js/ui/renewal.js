@@ -308,7 +308,7 @@
  }
  // 町のほかの施設（判断324）。絵は img/art/fac-*.webp。仲間紹介所は冒険の編成、チケット引換所は引換所を開く。
  var FACILITIES=[
-  {id:'weapon',name:R.facWeapon,open:function(){openWeaponShop();}},{id:'armor',name:R.facArmor,open:function(){openArmorShop();}},{id:'item',name:R.facItem,open:function(){openItemShop();}},{id:'tavern',name:R.facTavern},
+  {id:'weapon',name:R.facWeapon,open:function(){openWeaponShop();}},{id:'armor',name:R.facArmor,open:function(){openArmorShop();}},{id:'item',name:R.facItem,open:function(){openItemShop();}},{id:'tavern',name:R.facTavern,open:function(){FF.ui.openTavern();}},
   {id:'party',name:R.facParty,open:function(){U.show('adventureParty');}},{id:'magic',name:R.facMagic,open:function(){openLab();}},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
  ];
  // 武器屋・防具屋（判断340・343）：ゴールドで買い、装備する。武器は正解1回のダメージ（冒険では主人公の攻撃力）、防具は受けるダメージを減らす
