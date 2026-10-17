@@ -251,8 +251,9 @@
   function button(label, cls, fn, attrs) { return E('button', { class: 'rn-button ' + (cls || ''), rich: label, attrs: Object.assign({ type: 'button' }, attrs || {}), on: { click: fn } }); }
 
   function renderStart(main) {
-    var s = FF.app.state, max = X.practiceMax(s), picked = Math.min(max, X.raidDifficulty(s)), ids = X.roster(s), opts = [];
-    for (var d = 1; d <= max; d++) opts.push(E('option', { text: fill(U.plain(TT.level), { n: d }), attrs: { value: String(d) } }));
+    var s = FF.app.state, max = X.unlockedMax(s), picked = max, ids = X.roster(s), opts = [], ropts = [];   // 挑める難しさ（勝って解放。中央炉のレベルとは、つながらない。判断461）。はじめに選ばれるのは、いちばん先
+    function stageText(d) { return fill(U.plain(TT.stageOpt), { n: d, lanes: X.lanesOf(d) }) + (s.tower && s.tower.cleared && s.tower.cleared[d] ? ' ✓' : ''); }
+    for (var d = 1; d <= max; d++) { opts.push(E('option', { text: stageText(d), attrs: { value: String(d) } })); ropts.push(E('option', { text: stageText(d), attrs: { value: String(d) } })); }
     var sel = E('select', { class: 'tw-select', attrs: { 'aria-label': U.plain(TT.difficulty) } }, opts);
     sel.value = String(picked);
     var lanesSel = E('select', { class: 'tw-select', attrs: { 'aria-label': U.plain(TT.lanes) } }, bal().LANES_CHOICES.map(function (n) { return E('option', { text: fill(U.plain(TT.lanesN), { n: n }), attrs: { value: String(n) } }); }));
@@ -260,13 +261,23 @@
     sel.addEventListener('change', function () { lanesSel.value = String(X.lanesOf(+sel.value)); });   // 難しさを変えたら、その難しさの道の数にそろえる（変えて試すこともできる）
     var a = FF.app, fresh = X.today(s, a.now());
     if (fresh !== s) { a.commit(fresh); s = a.state; }
-    var rd = X.raidDifficulty(s), left = X.raidsLeft(s, a.now()), rw = X.rewardFor(s, rd, a.now());
+    var left = X.raidsLeft(s, a.now());
+    var raidSel = E('select', { class: 'tw-select', attrs: { 'aria-label': U.plain(TT.stage), 'data-act': 'raid-stage' } }, ropts), raidInfo = E('div', { class: 'tw-raid-info' });
+    raidSel.value = String(picked);
+    function paintRaid() {
+      var rd = +raidSel.value, rw = X.rewardFor(s, rd, a.now());
+      U.clear(raidInfo);
+      [E('p', { class: 'tw-raid-meta' }, [E('span', { class: 'tw-badge', rich: fill(TT.level, { n: rd }) }), E('span', { class: 'tw-badge is-lanes', rich: fill(TT.lanesN, { n: X.lanesOf(rd) }) }), E('span', { rich: left ? fill(TT.raidLeft, { n: left }) : TT.raidNone })]),
+       E('p', { class: 'tw-reward' }, [E('span', { rich: TT.raidReward }), E('b', { text: ' ' + rewardText(rw) })]),
+       rw.first && left ? E('p', { class: 'tw-note', rich: TT.raidFirst }) : null,
+       max < bal().MAX_LEVEL ? E('p', { class: 'tw-note', rich: fill(TT.nextLock, { n: max + 1, m: max }) }) : E('p', { class: 'tw-note', rich: TT.allOpen }),
+       button(TT.raidStart, 'primary', function () { begin(rd, 'raid'); U.rerender(); }, ids.length ? { 'data-act': 'raid' } : { 'data-act': 'raid', disabled: 'true' })
+      ].forEach(function (n) { if (n) raidInfo.appendChild(n); });
+    }
+    raidSel.addEventListener('change', paintRaid); paintRaid();
     var raid = E('div', { class: 'tw-raid' }, [
       E('strong', { rich: TT.raid }), E('p', { class: 'tw-note', rich: TT.raidLead }),
-      E('p', { class: 'tw-raid-meta' }, [E('span', { class: 'tw-badge', rich: fill(TT.level, { n: rd }) }), E('span', { class: 'tw-badge is-lanes', rich: fill(TT.lanesN, { n: X.lanesOf(rd) }) }), E('span', { rich: left ? fill(TT.raidLeft, { n: left }) : TT.raidNone })]),
-      E('p', { class: 'tw-reward' }, [E('span', { rich: TT.raidReward }), E('b', { text: ' ' + rewardText(rw) })]),
-      rw.first && left ? E('p', { class: 'tw-note', rich: TT.raidFirst }) : null,
-      button(TT.raidStart, 'primary', function () { begin(rd, 'raid'); U.rerender(); }, ids.length ? { 'data-act': 'raid' } : { 'data-act': 'raid', disabled: 'true' })
+      E('label', { class: 'tw-label' }, [E('span', { rich: TT.stage }), raidSel]), raidInfo
     ]);
     var pop = FF.buildings.population(s), pm = X.popMult(s);
     var cheerIds = X.cheers(s);

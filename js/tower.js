@@ -53,16 +53,19 @@
   function lanesOf(d, b) { var t = T(b), n = t.LANES_BY_LEVEL && t.LANES_BY_LEVEL[d - 1]; return n || t.LANES; }
 
   // ---- 戦いを作る ----
+  // 難しさ d のときの、増え方の倍率（難しさ1が 1）。5まで：1つにつき key の割合。6以降：TAIL の割合
+  function grow(key, d, b) { var L = T(b).LEVEL; return 1 + L[key] * (Math.min(d, 5) - 1) + L.TAIL[key] * Math.max(0, d - 5); }
+
   function waveList(d, b, lanes) {
     var t = T(b), L = t.LEVEL, list = [], lf = (lanes || t.LANES) / t.LANES;   // レーンがふえると、魔物の数も、レーンの数に合わせてふえる
     t.WAVES.forEach(function (w, i) {
       var items = [];
       Object.keys(t.WAVES_NEW || {}).forEach(function (k) {   // 新しい魔物（氷の精霊・雪の巨人）
         var nw = t.WAVES_NEW[k], base = nw.PER_WAVE[i] || 0;
-        if (d >= nw.FROM && base) for (var q = 0, n = Math.round(base * (1 + L.COUNT * (d - nw.FROM)) * lf); q < n; q++) items.push(k);
+        if (d >= nw.FROM && base) for (var q = 0, n = Math.round(base * (1 + grow('COUNT', d, b) - grow('COUNT', nw.FROM, b)) * lf); q < n; q++) items.push(k);
       });
       Object.keys(w).forEach(function (k) {
-        var n = k === 'boss' ? w[k] + Math.floor((d - 1) / L.BOSS_EVERY) : Math.round(w[k] * (1 + L.COUNT * (d - 1)) * lf);
+        var n = k === 'boss' ? w[k] + Math.floor((d - 1) / L.BOSS_EVERY) : Math.round(w[k] * grow('COUNT', d, b) * lf);
         for (var j = 0; j < n; j++) items.push(k);
       });
       list.push(items);
@@ -71,7 +74,7 @@
   }
   // opts：difficulty（1〜5）、seed（整数）、mode（'raid'｜'practice'）
   function create(state, opts, b) {
-    var t = T(b), d = clamp(Math.floor(opts && opts.difficulty) || 1, 1, 5), seed = (opts && opts.seed != null ? opts.seed : 1) >>> 0;
+    var t = T(b), d = clamp(Math.floor(opts && opts.difficulty) || 1, 1, t.MAX_LEVEL), seed = (opts && opts.seed != null ? opts.seed : 1) >>> 0;
     var lanes = opts && opts.lanes && T(b).LANES_CHOICES.indexOf(opts.lanes) >= 0 && opts.mode !== 'raid' ? opts.lanes : lanesOf(d, b);
     var bt = { version: 1, lanes: lanes, mode: opts && opts.mode === 'raid' ? 'raid' : 'practice', difficulty: d, seed: seed, rng: seed, t: 0,
       core: { hp: t.CORE_HP, max: t.CORE_HP }, light: t.LIGHT.START, quizLock: 0, units: [], enemies: [], schedule: [], nextId: 1, placed: {},
@@ -173,9 +176,9 @@
     bt.schedule.forEach(function (s) {
       if (s.done || s.at > bt.t) return;
       s.done = true; bt.wave = Math.max(bt.wave, s.wave);
-      var def = t.ENEMIES[s.type], hp = Math.round(def.hp * (1 + L.HP * (d - 1)));
-      bt.enemies.push({ id: bt.nextId++, type: s.type, lane: s.lane, x: t.COLS, hp: hp, max: hp, atk: def.atk * (1 + L.ATK * (d - 1)), interval: def.interval,
-        speed: def.speed * (1 + L.SPEED * (d - 1)), cd: def.interval, core: def.core, sk: def.freeze ? def.freeze.cd * 0.6 : 0 });
+      var def = t.ENEMIES[s.type], hp = Math.round(def.hp * grow('HP', d, b));
+      bt.enemies.push({ id: bt.nextId++, type: s.type, lane: s.lane, x: t.COLS, hp: hp, max: hp, atk: def.atk * grow('ATK', d, b), interval: def.interval,
+        speed: def.speed * grow('SPEED', d, b), cd: def.interval, core: def.core, sk: def.freeze ? def.freeze.cd * 0.6 : 0 });
     });
     // 住民の応援：猟師の矢（各道の、いちばん炉に近い魔物）・看護の手当て（仲間みんなの HP）
     var C = t.CHEER;
@@ -261,7 +264,7 @@
     var s = clone(state), r = s.tower;
     if (!r || typeof r !== 'object') { s.tower = createState(); return s; }
     var cl = {}, best = {};
-    for (var d = 1; d <= 5; d++) { if (r.cleared && r.cleared[d]) cl[d] = true; var v = r.best && r.best[d]; if (typeof v === 'number') best[d] = int(v, 0, T(b).WAVES.length); }
+    for (var d = 1; d <= T(b).MAX_LEVEL; d++) { if (r.cleared && r.cleared[d]) cl[d] = true; var v = r.best && r.best[d]; if (typeof v === 'number') best[d] = int(v, 0, T(b).WAVES.length); }
     s.tower = { version: 1, day: typeof r.day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.day) ? r.day : null, rewards: int(r.rewards, 0, T(b).RAIDS_PER_DAY), cleared: cl, wins: int(r.wins, 0, 1e7), best: best };
     return s;
   }
@@ -273,11 +276,14 @@
     return s;
   }
   function raidsLeft(state, now, b) { var s = today(state, now); return Math.max(0, T(b).RAIDS_PER_DAY - (s.tower.rewards || 0)); }
-  // 今夜の襲撃の難しさ：中央炉のレベル（1〜5）
-  function raidDifficulty(state) { var f = state.buildings && state.buildings.furnace; return clamp(f ? Math.floor(f.level) || 1 : 1, 1, 5); }
-  function maxCleared(state) { var m = 0, c = state.tower && state.tower.cleared || {}; for (var d = 1; d <= 5; d++) if (c[d]) m = d; return m; }
-  // 練習で選べる、いちばん上の難しさ
-  function practiceMax(state) { return clamp(Math.max(raidDifficulty(state), maxCleared(state) + 1), 1, 5); }
+  // 勝ったことのある、いちばん上の難しさ
+  function maxCleared(state, b) { var m = 0, c = state.tower && state.tower.cleared || {}; for (var d = 1; d <= T(b).MAX_LEVEL; d++) if (c[d]) m = d; return m; }
+  // 挑める、いちばん上の難しさ（勝って解放：前の難しさに勝つと、次に進める。中央炉のレベルとは、つながらない。判断461）
+  function unlockedMax(state, b) { return clamp(maxCleared(state, b) + 1, 1, T(b).MAX_LEVEL); }
+  function isUnlocked(state, d, b) { return d >= 1 && d <= unlockedMax(state, b); }
+  // 練習・襲撃で、はじめに選ばれている難しさ（いちばん先）
+  function raidDifficulty(state, b) { return unlockedMax(state, b); }
+  function practiceMax(state, b) { return unlockedMax(state, b); }
   function rewardFor(state, d, now, b) {
     var R = T(b).REWARD, first = !(state.tower && state.tower.cleared && state.tower.cleared[d]);
     var ids = FF.defs.RESOURCES.map(function (x) { return x.id; }), rand2 = FF.daily.rng(FF.daily.seedOf('tower:' + FF.daily.dayKey(now) + ':' + d)), pool = ids.slice(), res = {};
@@ -305,6 +311,6 @@
   }
 
   FF.tower = { lanesOf: lanesOf, popMult: popMult, cheers: cheers, roster: roster, unitStats: unitStats, create: create, cost: cost, canPlace: canPlace, place: place, remove: remove, unitAt: unitAt, canQuiz: canQuiz, answer: answer,
-    step: step, run: run, createState: createState, normalize: normalize, today: today, raidsLeft: raidsLeft, raidDifficulty: raidDifficulty, maxCleared: maxCleared,
+    step: step, run: run, createState: createState, normalize: normalize, today: today, raidsLeft: raidsLeft, raidDifficulty: raidDifficulty, maxCleared: maxCleared, unlockedMax: unlockedMax, isUnlocked: isUnlocked,
     practiceMax: practiceMax, rewardFor: rewardFor, finish: finish };
 })(this);

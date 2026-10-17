@@ -154,7 +154,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const t = Tw.today(s, T0); assert.strictEqual(t.tower.day, FF.daily.dayKey(T0)); assert.strictEqual(Tw.today(t, T0 + 1000), t);
     assert.strictEqual(Tw.raidsLeft(s, T0), B.RAIDS_PER_DAY);
     assert.strictEqual(Tw.raidDifficulty(s), 1);
-    const f = JSON.parse(JSON.stringify(s)); f.buildings.furnace.level = 4; assert.strictEqual(Tw.raidDifficulty(f), 4);
+    const f = JSON.parse(JSON.stringify(s)); f.buildings.furnace.level = 4; assert.strictEqual(Tw.raidDifficulty(f), 1, '中央炉のレベルとは、つながらない（判断461）');
   });
   test('防衛戦の報酬：今夜の襲撃に勝つと、ゴールド・資材・回復薬（難しさ3から）。熱量は入らない。1日3回まで', () => {
     let s = fresh(true); const g0 = FF.shop.gold(s), pts = s.studyPoints;
@@ -186,20 +186,37 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(Tw.finish(s, battle(), T0).reward, null);   // 終わっていない戦いは、何も変えない
     assert.strictEqual(Tw.finish(s, battle(), T0).state, s);
   });
-  test('防衛戦：練習で選べる難しさは、中央炉のレベルか、勝った難しさの次まで', () => {
-    let s = fresh(true); assert.strictEqual(Tw.practiceMax(s), 1);
-    s = won(s, 1, 'practice').state; assert.strictEqual(Tw.practiceMax(s), 2);
-    s = won(s, 2, 'practice').state; s = won(s, 3, 'practice').state; assert.strictEqual(Tw.practiceMax(s), 4);
-    s = won(s, 5, 'practice').state; assert.strictEqual(Tw.practiceMax(s), 5);
-    const f = fresh(true); f.buildings.furnace.level = 3; assert.strictEqual(Tw.practiceMax(f), 3);
+  test('防衛戦：挑める難しさは、勝った難しさの次まで（勝って解放）。10段階。襲撃も練習も同じ。中央炉のレベルとは、つながらない（判断461）', () => {
+    let s = fresh(true); assert.strictEqual(Tw.unlockedMax(s), 1); assert.strictEqual(Tw.practiceMax(s), 1);
+    assert.ok(Tw.isUnlocked(s, 1) && !Tw.isUnlocked(s, 2));
+    s = won(s, 1, 'practice').state; assert.strictEqual(Tw.unlockedMax(s), 2);
+    s = won(s, 2, 'raid').state; s = won(s, 3, 'practice').state; assert.strictEqual(Tw.unlockedMax(s), 4);   // 襲撃で勝っても、解放される
+    s = won(s, 5, 'practice').state; assert.strictEqual(Tw.unlockedMax(s), 6);
+    for (let d = 6; d <= 10; d++) s = won(s, d, 'practice').state;
+    assert.strictEqual(Tw.unlockedMax(s), 10); assert.strictEqual(B.MAX_LEVEL, 10);
+    const f = fresh(true); f.buildings.furnace.level = 5; assert.strictEqual(Tw.unlockedMax(f), 1);
+    assert.strictEqual(B.LANES_BY_LEVEL.length, 10);
+  });
+  test('難しさ6〜10（判断461）：数・体力・攻撃・速さが、段々に増える（5までより、ゆるやか）。ボスもふえる。どの難しさでも、報酬が出る（1日3回まで）', () => {
+    const cnt = d => battle({ difficulty: d }).schedule.length;
+    for (let d = 2; d <= 10; d++) assert.ok(cnt(d) >= cnt(d - 1), 'count d' + d);
+    assert.ok(cnt(10) > cnt(5) * 1.2);
+    const stat = (d, k) => { const b = battle({ difficulty: d }); b.schedule.forEach(x => { x.done = true; }); const t = B.ENEMIES.wolf; b.schedule.push({ at: 0, wave: 1, type: 'wolf', lane: 0, done: false }); Tw.step(b, B.TICK); return b.enemies[0][k]; };
+    for (let d = 2; d <= 10; d++) assert.ok(stat(d, 'max') > stat(d - 1, 'max') && stat(d, 'atk') > stat(d - 1, 'atk') && stat(d, 'speed') > stat(d - 1, 'speed'), 'stat d' + d);
+    assert.ok(stat(10, 'max') < stat(1, 'max') * 3, '増えすぎない');
+    const bosses = d => battle({ difficulty: d }).schedule.filter(x => x.type === 'boss').length;
+    assert.ok(bosses(10) > bosses(1));
+    let s = fresh(true); s.tower.cleared = { 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: true, 9: true };
+    const r = won(s, 10, 'raid'); assert.ok(r.reward && r.reward.gold === 10 * B.REWARD.GOLD_PER_LEVEL * B.REWARD.FIRST_CLEAR);   // どの難しさでも、数える
+    assert.ok(r.state.tower.cleared[10]);
   });
   test('防衛戦のセーブ：保存して読み込んでも同じ。形のおかしい記録は直す', () => {
     let s = won(fresh(true), 3, 'raid').state;
     const text = FF.state.serialize(s), back = FF.state.migrate(JSON.parse(text), T0);
     assert.ok(back.ok); assert.deepStrictEqual(plain(back.state.tower), plain(s.tower));
-    const bad = JSON.parse(text); bad.tower = { day: 'x', rewards: 999, cleared: { 1: true, 9: true, x: true }, wins: -5, best: { 1: 99, 2: 'a' } };
+    const bad = JSON.parse(text); bad.tower = { day: 'x', rewards: 999, cleared: { 1: true, 9: true, 11: true, x: true }, wins: -5, best: { 1: 99, 2: 'a' } };
     const f = Tw.normalize(bad);
-    assert.deepStrictEqual(plain(f.tower), { version: 1, day: null, rewards: B.RAIDS_PER_DAY, cleared: { 1: true }, wins: 0, best: { 1: B.WAVES.length } });
+    assert.deepStrictEqual(plain(f.tower), { version: 1, day: null, rewards: B.RAIDS_PER_DAY, cleared: { 1: true, 9: true }, wins: 0, best: { 1: B.WAVES.length } });
     assert.deepStrictEqual(plain(Tw.normalize({ tower: 'x' }).tower), plain(Tw.createState()));
   });
   test('氷の精霊（判断455）：射程の中の最前列の仲間を凍らせる。凍っているあいだは、攻撃も回復もしない。解けると、また動く', () => {
