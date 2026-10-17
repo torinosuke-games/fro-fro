@@ -147,7 +147,7 @@
       ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(cx, cy, CELL - 24, 124, 18); else ctx.rect(cx, cy, CELL - 24, 124);
       ctx.fill(); ctx.stroke();
       var im = allyImg(cur.sel.id);
-      if (ready(im)) { var ih = 150, iw = ih * im.naturalWidth / im.naturalHeight; ctx.globalAlpha = ok ? 0.7 : 0.35; ctx.drawImage(im, (h.col + 0.5) * CELL - iw / 2, LANE_Y[h.lane] + 58 - ih, iw, ih); ctx.globalAlpha = 1; }
+      if (ready(im) && !X.unitAt(bt, h.lane, h.col)) { var ih = 150, iw = ih * im.naturalWidth / im.naturalHeight; ctx.globalAlpha = ok ? 0.7 : 0.35; ctx.drawImage(im, (h.col + 0.5) * CELL - iw / 2, LANE_Y[h.lane] + 58 - ih, iw, ih); ctx.globalAlpha = 1; }
     }
     ctx.restore();
   }
@@ -266,6 +266,7 @@
         if (!ghost) { ghost = E('img', { class: 'tw-ghost', attrs: { src: art.src, alt: '', draggable: 'false' } }); root.document.body.appendChild(ghost); }
         ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px';
         cur.sel = { kind: 'card', id: id }; cur.hover = cellAt(e);
+        ghost.style.display = cur.hover ? 'none' : '';   // 戦場の上では、絵は出さない（上のマスにかぶって、そこが空いているか分からなくなる）。マスに、うすい絵が出る
         draw();
       }
       function up(e) {

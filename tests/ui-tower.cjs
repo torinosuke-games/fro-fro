@@ -38,7 +38,9 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.locator('.tw-card[data-member="kenshi"]').scrollIntoViewIfNeeded();
  const cb=await p.locator('.tw-card[data-member="kenshi"]').boundingBox();
  await p.mouse.move(cb.x+cb.width/2,cb.y+cb.height/2);await p.mouse.down();await p.mouse.move(box.x+cw*3.5,box.y+box.height*550/800,{steps:6});
- assert.equal(await p.locator('.tw-ghost').count(),1);await p.mouse.up();
+ assert.equal(await p.locator('.tw-ghost').isVisible(),false);   // 戦場の上では、指の上に絵は出ない
+ await p.mouse.move(cb.x+cb.width/2,cb.y-10);assert.equal(await p.locator('.tw-ghost').isVisible(),true);   // 戦場の外では、出る
+ await p.mouse.move(box.x+cw*3.5,box.y+box.height*550/800,{steps:4});await p.mouse.up();
  assert.equal(await p.locator('.tw-ghost').count(),0);
  assert.deepEqual(await p.evaluate(()=>FF.ui.towerBattle().units.map(u=>[u.member,u.lane,u.col])),[['kenshi',3,3]]);
  await p.mouse.move(cb.x+cb.width/2,cb.y+cb.height/2);await p.mouse.down();await p.mouse.move(box.x+cw*7.5,box.y+box.height*250/800,{steps:6});await p.mouse.up();
