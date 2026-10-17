@@ -6,18 +6,18 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   const board = (s, now = T0) => Q.today(s, now).quests.board;
   const hunter = (s) => withAdv(s);
 
-  test('依頼：新しいゲームでは依頼は空。今日の分を作ると、3件（納品・納品・学習。冒険を始めていないので、討伐は納品に）', () => {
+  test('依頼：新しいゲームでは依頼は空。今日の分を作ると、4件（納品・納品・学習・防衛。冒険を始めていないので、討伐は納品に）', () => {
     const s = fresh();
     assert.deepStrictEqual(plain(s.quests), { version: 1, day: null, board: [], history: { completed: 0 }, trust: {}, specials: [], specialDone: {} });
     const b = board(s);
     assert.strictEqual(b.length, B.QUESTS.PER_DAY);
-    assert.deepStrictEqual(plain(b.map(x => x.kind)), ['deliver', 'deliver', 'study']);
+    assert.deepStrictEqual(plain(b.map(x => x.kind)), ['deliver', 'deliver', 'study', 'defend']);
     assert.notStrictEqual(b[0].target, b[1].target);   // 納品の資材は、重ならない
   });
-  test('依頼：冒険を始めていると、討伐が出る（納品・討伐・学習）。オオカミは中央炉 Lv2 から', () => {
+  test('依頼：冒険を始めていると、討伐が出る（納品・討伐・学習・防衛）。オオカミは中央炉 Lv2 から', () => {
     const s = hunter(fresh());
     const k = board(s).map(x => x.kind);
-    assert.deepStrictEqual(plain(k), ['deliver', 'hunt', 'study']);
+    assert.deepStrictEqual(plain(k), ['deliver', 'hunt', 'study', 'defend']);
     for (let d = 0; d < 20; d++) assert.strictEqual(board(s, T0 + d * DAY)[1].target, 'cub');   // 中央炉 Lv1 は、野獣だけ
     const s2 = JSON.parse(JSON.stringify(s)); s2.buildings.furnace.level = 3;
     const seen = new Set(); for (let d = 0; d < 40; d++) seen.add(board(s2, T0 + d * DAY)[1].target);
@@ -91,7 +91,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(r.state.adventure.potions, p0 + d.reward.potions);
     assert.strictEqual(r.state.quests.history.completed, 1);
     assert.strictEqual(Q.claim(r.state, d.id).reason, 'claimed');
-    assert.strictEqual(Q.remaining(r.state), 2);
+    assert.strictEqual(Q.remaining(r.state), 3);
     assert.strictEqual(r.state.studyPoints, s.studyPoints);   // 熱量（勉強量ポイント）は、報酬にならない
   });
   test('依頼：日がかわると、新しい依頼になる。終えた数の記録は、残る', () => {
@@ -301,5 +301,23 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(f.quests.trust.baker, TR.MAX);
     assert.strictEqual(f.quests.trust.ok, 0);
     assert.deepStrictEqual(plain(f.quests.specialDone), { 'baker-1': true });
+  });
+  test('防衛の依頼（判断449）：今夜の襲撃に勝つと進む（受けたあと・練習や負けは数えない）。報告で、ゴールド。読み込みで形を整える', () => {
+    let s = Q.today(fresh(), T0); const d = s.quests.board.find(x => x.kind === 'defend');
+    assert.ok(d); assert.strictEqual(d.target, 'raid'); assert.strictEqual(d.need, B.QUESTS.DEFEND.COUNT[0]);
+    assert.strictEqual(d.reward.gold, Math.min(B.QUESTS.GOLD_MAX_PER_QUEST, d.need * B.QUESTS.DEFEND.GOLD_PER_WIN));
+    assert.strictEqual(Q.onRaidWin(s, T0), s);   // 受けていないと進まない
+    s = Q.accept(s, d.id).state;
+    assert.strictEqual(Q.onRaidWin(s, T0 + DAY), s);   // 日がちがうと進まない
+    for (let i = 0; i < d.need; i++) s = Q.onRaidWin(s, T0);
+    assert.ok(Q.done(Q.find(s, d.id)));
+    const g0 = FF.shop.gold(s), r = Q.claim(s, d.id);
+    assert.ok(r.ok); assert.ok(FF.shop.gold(r.state) >= g0 + d.reward.gold);
+    // 中央炉が高いほど、回数が増える
+    const hi = fresh(); hi.buildings.furnace.level = 5;
+    assert.strictEqual(Q.today(hi, T0).quests.board.find(x => x.kind === 'defend').need, B.QUESTS.DEFEND.COUNT[4]);
+    // セーブをいじっても、形が直る
+    const bad = JSON.parse(JSON.stringify(s)); bad.quests.board.find(x => x.kind === 'defend').target = 'xxx';
+    assert.ok(!Q.normalize(bad).quests.board.some(x => x.kind === 'defend'));
   });
 };

@@ -1,0 +1,64 @@
+/* 夜の防衛戦（判断442・443）。昼の見た目だけ。戦場は Canvas（1440×800）を、幅いっぱいに縮めて出す */
+body[data-screen="tower"] #screen{max-width:980px;margin:auto;padding:14px 12px 100px}
+.tw-start{background:#fff;padding:22px 20px;display:flex;flex-direction:column;gap:12px}
+.tw-h1{font-size:1.5rem;margin:0;color:var(--rn-navy)}.tw-h2{font-size:1.0625rem;margin:6px 0 0;color:var(--rn-navy)}
+.tw-lead{margin:0;line-height:1.9;color:var(--muted)}
+.tw-how{margin:0;padding-left:1.3em;line-height:1.9;color:var(--text)}
+.tw-pick{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;background:var(--rn-pale);border-radius:12px}
+.tw-label{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.875rem}
+.tw-select{min-height:44px;border:1px solid #cbdfea;background:#fafdff;color:var(--rn-navy);padding:8px 12px;border-radius:8px}
+.tw-note{margin:0;color:var(--muted);font-size:.875rem}
+.tw-actions{display:flex;gap:10px;flex-wrap:wrap}.tw-actions .rn-button{flex:1;min-width:120px}
+.tw-screen{display:flex;flex-direction:column;gap:10px}
+.tw-top{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
+.tw-stat{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--rn-line);border-radius:10px;padding:6px 10px;min-height:40px;white-space:nowrap}
+.tw-lbl{font-size:.75rem;color:var(--muted)}.tw-val{font:800 1rem/1 Nunito,var(--font);font-variant-numeric:tabular-nums;color:var(--rn-navy)}
+.tw-core{min-width:0}.tw-meter{flex:1;min-width:30px;height:12px;border-radius:7px;background:#e4edf3;overflow:hidden}
+.tw-meter i{display:block;height:100%;width:100%;background:#f09a3a;transition:width .2s}.tw-meter i.is-mid{background:#e0742f}.tw-meter i.is-low{background:#c9463a}
+.tw-stage{position:relative;border-radius:12px;overflow:hidden;background:#0f1d34;box-shadow:var(--rn-shadow);line-height:0}
+.tw-canvas{display:block;width:100%;height:auto;aspect-ratio:9/5;touch-action:manipulation;cursor:pointer}
+.tw-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0f1d34b3;line-height:1.7}
+.tw-overlay[hidden]{display:none}
+.tw-over-card{background:#fff;border-radius:16px;padding:18px 20px;max-width:340px;width:calc(100% - 32px);text-align:center;display:flex;flex-direction:column;gap:8px}
+.tw-over-card h2{margin:0;font-size:1.375rem;color:var(--rn-navy)}.tw-over-card p{margin:0;font-size:.9375rem;color:var(--text)}.tw-result{font-size:.8125rem!important;color:var(--muted)!important}
+.tw-overlay.is-win .tw-over-card{border:3px solid #f0b345}.tw-overlay.is-lose .tw-over-card{border:3px solid #8fa7bb}
+.tw-bar{display:flex;gap:8px;flex-wrap:wrap}.tw-small{min-height:44px;padding:8px 12px!important;font-size:.875rem}.tw-bar .tw-small{flex:1;white-space:nowrap}
+.tw-info{display:flex;align-items:center;gap:10px;min-height:46px;padding:4px 10px;background:#fff;border:1px solid var(--rn-line);border-radius:10px;flex-wrap:wrap}
+.tw-info-name{color:var(--rn-navy)}.tw-info-hp{font-size:.8125rem;color:var(--muted);margin-right:auto}.tw-hint{font-size:.875rem;color:var(--muted)}
+.tw-cards{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:thin}
+.tw-card{touch-action:pan-x;user-select:none;-webkit-user-select:none;flex:0 0 84px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border:2px solid var(--rn-line);background:#fff;border-radius:12px;color:var(--rn-navy);cursor:pointer;min-height:112px}
+.tw-card-img{width:60px;height:64px;object-fit:cover;object-position:top;border-radius:8px;background:#e6f0f7}
+.tw-card-name{font-size:.75rem;font-weight:700}.tw-cost{font:800 .8125rem Nunito,var(--font);color:#b57623}
+.tw-card.is-on{border-color:#f0a53a;background:#fff7e5}.tw-card.is-poor{opacity:.5}
+@media(min-width:700px){.tw-card{flex-basis:96px}.tw-card-img{width:70px;height:74px}}
+@media(max-width:520px){.tw-overlay.is-paused .tw-over-card{padding:10px 14px;gap:4px}.tw-overlay.is-paused .tw-over-card h2{font-size:1.125rem}.tw-overlay.is-paused .tw-over-card p{font-size:.8125rem}.tw-overlay.is-paused .tw-over-card .tw-actions .rn-button{min-height:38px;padding:6px 10px}.tw-top{gap:6px}.tw-stat{padding:4px 8px}}
+.tw-raid{display:flex;flex-direction:column;gap:6px;padding:14px;background:#fff7e5;border:1px solid #efdfbb;border-radius:12px}
+.tw-raid>strong{color:#8d6a2b;font-size:1.0625rem}.tw-raid p{margin:0}
+.tw-raid-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.875rem;color:var(--text)}
+.tw-badge{background:#f0a53a;color:#fff;border-radius:7px;padding:2px 9px;font:800 .8125rem Nunito,var(--font)}
+.tw-reward{font-size:.875rem;color:var(--muted)}.tw-reward b{color:#b57623}
+.tw-gain{display:flex;flex-direction:column;gap:3px;background:#fff7e5;border-radius:10px;padding:8px}.tw-gain b{color:#b57623}
+.tw-quiz{display:flex;flex-direction:column;gap:12px}.tw-quiz-note{margin:0;font-size:.8125rem;color:var(--muted)}
+.tw-quiz-q{margin:0;font-size:1.125rem;line-height:1.8;color:var(--rn-navy);white-space:pre-line}
+.tw-quiz-choices{display:grid;gap:8px}
+.tw-quiz-choice{display:flex;align-items:center;gap:10px;text-align:left;min-height:50px;padding:10px 12px;border:1px solid #d3e4ef;background:#fff;border-radius:10px;font-size:1rem;color:var(--text);cursor:pointer}
+.tw-quiz-choice:hover{background:#f0f8fc;border-color:#92c0db}
+.tw-quiz-letter{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border:1px solid #c2d7e4;border-radius:50%;font:700 .8125rem Nunito,var(--font);color:#6d93a9;flex-shrink:0}
+/* 結果は、戦場（小さい）のなかに収まらないので、画面いっぱいに出す */
+.tw-overlay.is-win,.tw-overlay.is-lose{position:fixed;z-index:80;overflow:auto;padding:16px 0}
+.tw-overlay.is-win .tw-over-card,.tw-overlay.is-lose .tw-over-card{max-width:380px;padding:18px 20px;gap:8px}
+.tw-overlay.is-win .tw-over-card h2,.tw-overlay.is-lose .tw-over-card h2{font-size:1.375rem}
+.tw-overlay.is-win .tw-over-card p,.tw-overlay.is-lose .tw-over-card p{font-size:.9375rem}
+/* 戦っているあいだは、上の資材の行と下のナビを隠して、スマホの1画面に収める（上下にスクロールしない） */
+body[data-screen="tower"][data-tower="battle"] #hud .resource-strip{display:none}   /* 上の帯（Frozen Frontier）は残し、資材の行だけ隠す */
+body[data-screen="tower"][data-tower="battle"] main#screen{padding:8px 10px!important}
+body[data-screen="tower"][data-tower="battle"] .tw-screen{gap:6px;min-height:calc(100dvh - 90px)}
+body[data-screen="tower"][data-tower="battle"] .tw-cards{margin-top:auto}
+body[data-screen="tower"][data-tower="battle"] .tw-stat{min-height:36px}
+body[data-screen="tower"][data-tower="battle"] .tw-small{min-height:40px}
+body[data-screen="tower"][data-tower="battle"] .tw-info{min-height:40px}
+/* デバッグ版の「DEBUG」の目印が、下に寄せた仲間のカードに重ならないようにする */
+body[data-screen="tower"][data-tower="battle"] .debug-flag{top:2px;bottom:auto;left:auto;right:2px;pointer-events:none;opacity:.6}
+.tw-ghost{position:fixed;z-index:95;width:44px;height:46px;object-fit:cover;object-position:top;border-radius:9px;border:2px solid #ffd45a;background:#e6f0f7;transform:translate(-50%,-190%);pointer-events:none;opacity:.92;box-shadow:0 3px 10px #0004}
+/* 戦っているあいだの知らせ（正解・灯など）は、戦場にかぶさらないように、カードの上に出し、指をじゃましない */
+body[data-screen="tower"][data-tower="battle"] .toast{top:auto;bottom:calc(176px + env(safe-area-inset-bottom,0px));pointer-events:none;font-size:.9375rem;padding:8px 12px}

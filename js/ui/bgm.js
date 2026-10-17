@@ -9,7 +9,7 @@
 (function (root) {
   'use strict';
   var FF = root.FF, doc = root.document;
-  var VOLUMES = { low: 0.12, mid: 0.28, high: 0.5 };
+  var VOLUMES = { low: 0.12, mid: 0.28, high: 0.5 }, QUIET_RATE = 0.3;
   var TRACKS = { town: 'audio/bgm-town', field: 'audio/bgm-field', battle: 'audio/bgm-battle' };
   var RESTART = { field: true, battle: true };   // 止めたあと、また流すときは、曲の最初から（戦闘から戻ったとき。判断413）。町の曲は、続きから（ただし、フィールドから町へ移ったときは、最初から。判断415）
   var SFX = { sword: 'audio/se-sword.mp3', punch: 'audio/se-punch.mp3', enemy: 'audio/se-enemy.mp3' }, sfxAudio = {};   // 効果音（判断418・419）
@@ -18,7 +18,8 @@
   function settings() { var s = FF.app && FF.app.state; return (s && s.settings) || {}; }
   function enabled() { return settings().bgm !== false; }
   function volumeId() { var v = settings().bgmVolume; return VOLUMES[v] ? v : 'mid'; }
-  function target() { return VOLUMES[volumeId()]; }
+  function quiet() { return !!(FF.ui && FF.ui.towerQuiet && FF.ui.towerQuiet()); }   // 夜の防衛戦で、問題を解いているあいだ・一時停止中は、曲を止めずに、小さくする
+  function target() { return VOLUMES[volumeId()] * (quiet() ? QUIET_RATE : 1); }
 
   // いま流す曲（なければ null）
   function wanted() {
@@ -26,6 +27,7 @@
     if (FF.app.screen === 'base') return 'town';
     var a = FF.app.state && FF.app.state.adventure;
     if (FF.app.screen === 'adventure') return a && a.battle ? (a.battle.phase === 'win' && victoryShown ? null : 'battle') : 'field';   // 勝利の画面が出たら、戦闘の曲を止めて、勝利の音を鳴らす。そのあとは無音（判断417・420）
+    if (FF.app.screen === 'tower') return FF.ui.towerActive && FF.ui.towerActive() ? 'battle' : null;   // 夜の防衛戦は、戦いが終わるまで、戦闘の曲（問題・一時停止のあいだは、小さくして、続ける）
     return null;
   }
   function track(name) {

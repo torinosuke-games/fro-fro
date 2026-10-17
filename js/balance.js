@@ -91,7 +91,7 @@
     TOWER: {
       TICK: 1 / 30, LANES: 5, COLS: 9, PLACE_FROM: 1, PLACE_TO: 5,   // 戦場は 5レーン×9マス。左端の列（0）＝中央炉。仲間を置けるのは、1〜5 列目（左から2〜6列目）
       CORE_HP: 100, CORE_X: 0.4,                 // 魔物の中心が、この位置より左へ行くと、中央炉にたどりつく
-      LIGHT: { START: 90, TRICKLE: 1.0, PER_CORRECT: { basic: 8, standard: 10, advanced: 14 }, CORRECT_LOCK: 3, WRONG_LOCK: 6, REFUND: 0.5, COST_STEP: 6, MAX: 999 },   // 灯
+      LIGHT: { START: 90, TRICKLE: 1.0, PER_CORRECT: { basic: 5, standard: 6, advanced: 8 }, CORRECT_LOCK: 2, WRONG_LOCK: 5, REFUND: 0.5, COST_STEP: 9, MAX: 999 },   // 灯
       HP_RATE: 1.5, ARMOR_HP: 10, ATK_RATE: 0.8, WEAPON_ATK: 3, LEVEL_RATE: 0.04,   // 冒険の能力 → 戦場の能力。レベル1つにつき +4%
       // 仲間ごと：role＝役目、cost＝灯の値段、hp＝HP の倍率、interval＝攻撃の間隔（秒。冒険の speed で、速いほど短くなる）、range＝射程（マス）、stat＝攻撃力のもとの能力、atk＝攻撃力の倍率、aoe＝範囲（マス）
       UNITS: {
@@ -120,16 +120,17 @@
     },
     // 住民の依頼クエスト（酒場。判断434・SPEC_quest.md）。配列は、中央炉のレベル（1〜5）ごとの数（Lv1 は先頭）
     QUESTS: {
-      PER_DAY: 3,                                 // 1日の依頼の数（納品・討伐・学習が1つずつ。討伐が出せないときは納品を足す）
-      KINDS: ['deliver', 'hunt', 'study'],
+      PER_DAY: 4,                                 // 1日の依頼の数（納品・討伐・学習が1つずつ。討伐が出せないときは納品を足す）
+      KINDS: ['deliver', 'hunt', 'study', 'defend'],
       RESIDENTS: ['baker', 'woodcutter', 'hunter', 'nurse', 'child', 'elder'],   // 依頼を出す町の人（名前・口調は texts）。救出した旅人も、依頼を出す
       DELIVER: { NEED: [10, 14, 18, 24, 30], GOLD_PER_UNIT: 2, RETURN_BONUS: 0.2 },   // 納品：資材の数。渡した分の 1.2 倍の資材が、お礼で返る
       HUNT: { COUNT: [2, 3, 4, 5, 6], ENEMIES: ['cub', 'wolf'], GOLD_PER_KILL: 30, WOLF_FROM_LEVEL: 2 },   // 討伐：体数。雪原の冒険を始めていて、ザコ敵の種類を絞る（オオカミは中央炉 Lv2 から）
+      DEFEND: { COUNT: [1, 1, 1, 2, 2], GOLD_PER_WIN: 120 },   // 防衛（判断449）：今夜の襲撃に勝った回数。中央炉のレベルごとの数
       STUDY: { COUNT: [5, 8, 10, 12, 15], GOLD_PER_CORRECT: 5, ANY_SHARE: 0.34 },   // 学習：正解の数。教科を決めない依頼（'any'）の割合
       POTION_CHANCE: 0.3, POTION_COUNT: 1,        // 回復薬がつく割合
       GOLD_MAX_PER_QUEST: 400,
       // 住民の信頼（判断440）：依頼を報告するたびに、その住民との信頼がたまる。段階は LEVELS の数に達すると上がる（顔見知り・仲良し・親友・恩人）。BONUS：その段階の住民の依頼は、ゴールドが増える割合
-      TRUST: { LEVELS: [0, 3, 8, 15], BONUS: [0, 0.05, 0.1, 0.15], GAIN: { deliver: 1, hunt: 1, study: 1, special: 3 }, MAX: 9999, MAX_VISIBLE_SPECIALS: 2, GOLD_MAX_SPECIAL: 1000 },
+      TRUST: { LEVELS: [0, 3, 8, 15], BONUS: [0, 0.05, 0.1, 0.15], GAIN: { deliver: 1, hunt: 1, study: 1, defend: 1, special: 3 }, MAX: 9999, MAX_VISIBLE_SPECIALS: 2, GOLD_MAX_SPECIAL: 1000 },
       // 特別な依頼（判断440）：町の人6人が、信頼が「仲間」「親友」「恩人」になるたびに、1つずつ出す（全部で18件。1回ずつ。日がかわっても消えない）。i 番目は、信頼の段階が i+1 になると出る
       SPECIAL: {
         baker:      [{ kind: 'deliver', target: 'food', need: 20, reward: { gold: 120, res: {}, potions: 1 } }, { kind: 'deliver', target: 'wood', need: 30, reward: { gold: 200, res: {}, potions: 1 } }, { kind: 'study', target: 'any', need: 20, reward: { gold: 300, res: { food: 30 }, potions: 2 } }],
