@@ -113,14 +113,20 @@
         boss: { hp: 300, atk: 24, interval: 1.4, speed: 0.2,  core: 50 },
         // 新しい魔物（判断455）：氷の精霊＝仲間を凍らせて、しばらく動けなくする（range マス先の最前列の仲間を、cd 秒ごとに、dur 秒）／雪の巨人＝壁役の仲間に、wall 倍のダメージ
         spirit: { hp: 40,  atk: 4,  interval: 1,   speed: 0.45, core: 10, freeze: { range: 3, cd: 6, dur: 2 } },
-        giant:  { hp: 220, atk: 14, interval: 1.6, speed: 0.22, core: 35, wall: 3 }
+        giant:  { hp: 220, atk: 14, interval: 1.6, speed: 0.22, core: 35, wall: 3 },
+        // 難しさ6以降の魔物（判断462）：吹雪の鳥＝fly（前の仲間をとびこえて、いちばん後ろの仲間を狙う）／氷の盾兵＝guard（1体を狙う攻撃を、この倍率にへらす。範囲の魔法はへらない）／霜の魔女＝range（その距離から、氷の弾）／氷竜＝breath（cd 秒ごとに、range マス先までの道の仲間みんなに、atk×dmg）
+        bird:   { hp: 60,  atk: 7,  interval: 1.2, speed: 0.5,  core: 12, fly: true },
+        shield: { hp: 200, atk: 10, interval: 1.4, speed: 0.2,  core: 25, guard: 0.5 },
+        witch:  { hp: 70,  atk: 9,  interval: 2,   speed: 0.3,  core: 15, range: 4 },
+        dragon: { hp: 600, atk: 30, interval: 1.6, speed: 0.15, core: 80, breath: { cd: 10, range: 9, dmg: 0.6 } }
       },
       // 難しさ（1〜5）ごとの増え方（難しさ1が基準）
       LEVEL: { HP: 0.15, ATK: 0.08, SPEED: 0.05, COUNT: 0.2, BOSS_EVERY: 3, TAIL: { HP: 0.08, ATK: 0.04, SPEED: 0.02, COUNT: 0.06 } },   // TAIL：難しさ6〜10 の、1つにつきの増え方（5までより、ゆるやか。判断461）
       // 難しさ（ステージ）は10段階。前の難しさに勝つと、次が解放される（中央炉のレベルとは、つながらない）。   // COUNT：数が増える割合（難しさ1つにつき +20%）。BOSS_EVERY：ボスが1体増える難しさの間隔
       WAVES: [{ cub: 4 }, { cub: 5, wolf: 1 }, { cub: 5, wolf: 3 }, { cub: 5, wolf: 5 }, { cub: 3, wolf: 3, boss: 1 }],
       // 新しい魔物の、波ごとの数（難しさが FROM 以上のときだけ出る。数は、難しさで増える。判断455）
-      WAVES_NEW: { spirit: { FROM: 2, PER_WAVE: [0, 0, 1, 1, 1] }, giant: { FROM: 3, PER_WAVE: [0, 0, 0, 0, 1] } },
+      WAVES_NEW: { spirit: { FROM: 2, PER_WAVE: [0, 0, 1, 1, 1] }, giant: { FROM: 3, PER_WAVE: [0, 0, 0, 0, 1] },
+        bird: { FROM: 6, PER_WAVE: [0, 0, 1, 1, 2] }, shield: { FROM: 7, PER_WAVE: [0, 0, 0, 1, 1] }, witch: { FROM: 8, PER_WAVE: [0, 0, 0, 1, 1] }, dragon: { FROM: 9, PER_WAVE: [0, 0, 0, 0, 1] } },
       WAVE_START: [6, 40, 78, 118, 160], SPAWN_GAP: 1.6,   // 波の始まる時刻（秒）・1体ずつ出す間隔
       MAX_TIME: 400,
       // 住民の応援（判断456）：信頼が LEVEL（恩人＝3）になった町の人が、戦いに加わる。人ごとに、はたらきが1つ

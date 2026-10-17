@@ -31,8 +31,9 @@
     if (!k || !ready(im)) return im;
     return cache.core[key] || (cache.core[key] = composite(im, k, 800, 320, 160, 160));
   }
-  var ENEMY_BOX = { cub: [0, 550, 340, 405, 115], wolf: [337, 278, 497, 675, 155], boss: [829, 20, 707, 940, 225], spirit: [179, 306, 411, 624, 155, 'e2'], giant: [812, 79, 681, 851, 225, 'e2'] };   // 6つ目：絵のシート（なければ snow-enemies.webp。'e2' は enemies-2.webp＝氷の精霊・雪の巨人。判断455）   // snow-enemies.webp の切り出し（x, y, 幅, 高さ）と、戦場での高さ
-  var FX = { arrow: [0, 120], ice: [1, 210], heal: [2, 150], spark: [3, 130], smash: [1, 190, 'fx2'] };   // tower-fx.webp の行と、描く大きさ（3つ目：tower-fx-2.webp のシートのとき。凍結は 0行目、壁が壊れるのは 1行目）   // tower-fx.webp の行と、描く大きさ
+  var ENEMY_BOX = { cub: [0, 550, 340, 405, 115], wolf: [337, 278, 497, 675, 155], boss: [829, 20, 707, 940, 225], spirit: [179, 306, 411, 624, 155, 'e2'], giant: [812, 79, 681, 851, 225, 'e2'],
+    bird: [24, 625, 630, 305, 155, 'e3'], shield: [670, 224, 432, 706, 190, 'e3'], witch: [1118, 306, 393, 624, 155, 'e3'], dragon: [80, 40, 1375, 944, 270, 'e4'] };   // 'e3'：enemies-3.webp＝吹雪の鳥・氷の盾兵・霜の魔女／'e4'：enemies-4.webp＝氷竜（判断462）   // 6つ目：絵のシート（なければ snow-enemies.webp。'e2' は enemies-2.webp＝氷の精霊・雪の巨人。判断455）   // snow-enemies.webp の切り出し（x, y, 幅, 高さ）と、戦場での高さ
+  var FX = { arrow: [0, 120], ice: [1, 210], heal: [2, 150], spark: [3, 130], smash: [1, 190, 'fx2'], bolt: [0, 150, 'fx3'], block: [1, 150, 'fx3'], gust: [2, 190, 'fx3'], breath: [3, 0, 'fx3'] };   // 'fx3'：tower-fx-3.webp＝氷の弾・盾で防ぐ・突風・冷気のブレス（ブレスは、帯を横にのばして、道にかぶせる）   // tower-fx.webp の行と、描く大きさ（3つ目：tower-fx-2.webp のシートのとき。凍結は 0行目、壁が壊れるのは 1行目）   // tower-fx.webp の行と、描く大きさ
   var imgs = null, cur = null, token = 0, refs = null;
 
   function bal() { return FF.balance.TOWER; }
@@ -40,7 +41,7 @@
   function images() {
     if (imgs) return imgs;
     imgs = { field: loadImg(DIR + 'tower-field.webp'), core1: loadImg(DIR + 'tower-core-1.webp'), core2: loadImg(DIR + 'tower-core-2.webp'), core3: loadImg(DIR + 'tower-core-3.webp'),
-      fx: loadImg(DIR + 'tower-fx.webp'), fx2: loadImg(DIR + 'tower-fx-2.webp'), enemies2: loadImg(DIR + 'enemies-2.webp'), enemies: loadImg('img/adventure/snow-enemies.webp'), allies: {} };
+      fx: loadImg(DIR + 'tower-fx.webp'), fx2: loadImg(DIR + 'tower-fx-2.webp'), enemies2: loadImg(DIR + 'enemies-2.webp'), fx3: loadImg(DIR + 'tower-fx-3.webp'), enemies3: loadImg(DIR + 'enemies-3.webp'), enemies4: loadImg(DIR + 'enemies-4.webp'), enemies: loadImg('img/adventure/snow-enemies.webp'), allies: {} };
     return imgs;
   }
   function allyImg(id) {
@@ -98,6 +99,14 @@
       }
       p.cd[u.id] = u.cd; p.hp[u.id] = u.hp;
     });
+    (bt.fxLog || []).slice(p.fxSeen || 0).forEach(function (ev) {   // 新しい魔物のわざ（判断462）
+      var y = LANE_Y[ev.lane];
+      if (ev.kind === 'breath') addFx('breath', ev.x * CELL - 20, y + 10, { dur: 0.9 });
+      else if (ev.kind === 'bolt') addFx('bolt', ev.x * CELL - 30, y - 30, { toX: ev.tx * CELL, dur: 0.35 });
+      else if (ev.kind === 'gust') addFx('gust', ev.x * CELL, y - 10, { dur: 0.45 });
+      else if (ev.kind === 'block') addFx('block', ev.x * CELL - 40, y - 40, { dur: 0.3 });
+    });
+    p.fxSeen = (bt.fxLog || []).length;
     (bt.cheerLog || []).slice(p.cheerSeen || 0).forEach(function (ev) {   // 住民の応援（矢・手当て）：絵と知らせを出す
       if (ev.who === 'hunter') {
         for (var ln = 0; ln < bt.lanes; ln++) { var fr = null; bt.enemies.forEach(function (e) { if (e.lane === ln && (!fr || e.x < fr.x)) fr = e; }); if (fr) addFx('arrow', fr.x * CELL - 60, LANE_Y[ln] - 140, { toX: fr.x * CELL, toY: LANE_Y[ln] - 30, dur: 0.3 }); }
@@ -219,7 +228,7 @@
     if (cur.sel && cur.sel.kind === 'unit' && cur.sel.uid === u.id) { ctx.strokeStyle = '#ffd36b'; ctx.lineWidth = 5; ctx.strokeRect(cx - 70, LANE_Y[u.lane] - 66, 140, 132); }
   }
   function drawEnemy(ctx, e) {
-    var b = ENEMY_BOX[e.type] || ENEMY_BOX.cub, i = b[5] === 'e2' ? images().enemies2 : images().enemies, cx = e.x * CELL, base = LANE_Y[e.lane] + 60, h = b[4], w = h * b[2] / b[3];
+    var b = ENEMY_BOX[e.type] || ENEMY_BOX.cub, i = b[5] === 'e2' ? images().enemies2 : b[5] === 'e3' ? images().enemies3 : b[5] === 'e4' ? images().enemies4 : images().enemies, cx = e.x * CELL, base = LANE_Y[e.lane] + 60, h = b[4], w = h * b[2] / b[3];
     ctx.fillStyle = 'rgba(10,20,40,0.3)'; ctx.beginPath(); ctx.ellipse(cx, base - 3, w * 0.42, 12, 0, 0, Math.PI * 2); ctx.fill();
     if (ready(i)) ctx.drawImage(i, b[0], b[1], b[2], b[3], cx - w / 2, base - h, w, h);
     else { ctx.fillStyle = '#c0504a'; ctx.fillRect(cx - 30, base - h, 60, h); }
@@ -227,7 +236,12 @@
   }
   function drawFx(ctx) {
     cur.fx.forEach(function (f) {
-      var row = FX[f.kind][0], size = FX[f.kind][1], k = Math.min(3, Math.floor(f.t / f.dur * 4)), x = f.x, y = f.y, i = FX[f.kind][2] === 'fx2' ? images().fx2 : images().fx;
+      var row = FX[f.kind][0], size = FX[f.kind][1], k = Math.min(3, Math.floor(f.t / f.dur * 4)), x = f.x, y = f.y, i = FX[f.kind][2] === 'fx3' ? images().fx3 : FX[f.kind][2] === 'fx2' ? images().fx2 : images().fx;
+      if (f.kind === 'breath') {   // 帯（コマ内 [20,80,216,96]）を、竜の口から、炉の近くまで、横にのばす
+        if (ready(i)) ctx.drawImage(i, k * 256 + 20, 848, 216, 96, CELL * 0.5, f.y - 70, f.x - CELL * 0.5, 140);
+        return;
+      }
+      if (f.kind === 'bolt') { var qb = Math.min(1, f.t / f.dur); x = f.x + (f.toX - f.x) * qb; k = qb < 0.8 ? 1 : 2; }
       if (f.kind === 'arrow') { var q = Math.min(1, f.t / f.dur); x = f.x + (f.toX - f.x) * q; y = f.y + (f.toY - f.y) * q; }
       if (ready(i)) ctx.drawImage(i, k * 256, row * 256, 256, 256, x - size / 2, y - size / 2, size, size);
       else { ctx.fillStyle = 'rgba(255,230,150,0.8)'; ctx.fillRect(x - 6, y - 6, 12, 12); }

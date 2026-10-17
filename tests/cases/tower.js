@@ -9,7 +9,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   function solo(type, lane, x, o = {}) {
     const bt = battle(o); bt.schedule.forEach(s => { s.done = true; });
     const t = B.ENEMIES[type];
-    bt.enemies.push({ id: 999, type, lane, x, hp: t.hp, max: t.hp, atk: t.atk, interval: t.interval, speed: t.speed, cd: t.interval, core: t.core });
+    bt.enemies.push({ id: 999, type, lane, x, hp: t.hp, max: t.hp, atk: t.atk, interval: t.interval, speed: t.speed, cd: t.interval, core: t.core, sk: 0, guard: t.guard || 0 });
     return bt;
   };
 
@@ -254,6 +254,29 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.ok(count(3, 'giant') > 0);
     assert.ok(count(5, 'spirit') >= count(2, 'spirit'));
     for (const k of ['spirit', 'giant']) assert.ok(B.ENEMIES[k] && B.ENEMIES[k].core > 0);
+  });
+  test('難しさ6以降の魔物（判断462）：出る難しさ・鳥は後ろの仲間を狙う・盾兵は1体への攻撃をへらす・魔女は遠くから・氷竜のブレスは道の全員', () => {
+    const count = (d, k) => battle({ difficulty: d }).schedule.filter(x => x.type === k).length;
+    for (const [k, from] of [['bird', 6], ['shield', 7], ['witch', 8], ['dragon', 9]]) {
+      assert.strictEqual(count(from - 1, k), 0, k); assert.ok(count(from, k) > 0, k); assert.ok(B.ENEMIES[k].core > 0);
+    }
+    // 吹雪の鳥：前の仲間を飛びこえて、いちばん後ろの仲間を殴る
+    let bt = solo('bird', 2, 4.2); bt.light = 999; Tw.place(bt, 'kenshi', 2, 4); Tw.place(bt, 'shiromadoushi', 2, 1);
+    for (let i = 0; i < 30 * 20 && bt.units.every(u => u.hp === u.max); i++) Tw.step(bt, B.TICK);
+    const front = bt.units.find(u => u.member === 'kenshi'), rear = bt.units.find(u => u.member === 'shiromadoushi');
+    assert.ok(rear.hp < rear.max && front.hp === front.max, 'rear hit');
+    // 氷の盾兵：1体を狙う攻撃は guard 倍。範囲の魔法は、へらない
+    bt = solo('shield', 2, 2.3); bt.light = 999; Tw.place(bt, 'kenshi', 2, 1); const e = bt.enemies[0], u = bt.units[0];
+    const h0 = e.hp; u.cd = 0; Tw.step(bt, B.TICK); const dmg1 = h0 - e.hp;
+    assert.ok(dmg1 > 0 && dmg1 < bt.defs.kenshi.atk * 0.6, 'guard'); assert.ok(bt.fxLog.some(f => f.kind === 'block'));
+    // 霜の魔女：遠くから、仲間を撃つ（近づかなくても、ダメージ）
+    bt = solo('witch', 2, 5.5); bt.light = 999; Tw.place(bt, 'juushouhei', 2, 3);
+    const w = bt.enemies[0]; w.cd = 0; Tw.step(bt, B.TICK);
+    assert.ok(bt.units[0].hp < bt.units[0].max && w.x > 5, 'ranged'); assert.ok(bt.fxLog.some(f => f.kind === 'bolt'));
+    // 氷竜：ブレスで、道の仲間みんなに、ダメージ
+    bt = solo('dragon', 2, 8); bt.light = 999; Tw.place(bt, 'juushouhei', 2, 1); Tw.place(bt, 'kenshi', 2, 4);
+    bt.enemies[0].sk = 0; Tw.step(bt, B.TICK);
+    assert.ok(bt.units.every(x => x.hp < x.max), 'breath all'); assert.ok(bt.fxLog.some(f => f.kind === 'breath'));
   });
   test('住民の応援（判断456）：信頼が「恩人」の町の人だけが、戦いに加わる。はたらきは人ごとに1つ', () => {
     const withTrust = (t, all) => { const st = fresh(all); st.quests = FF.quests.create(); st.quests.trust = t; return st; };
