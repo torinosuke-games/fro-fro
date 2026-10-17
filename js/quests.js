@@ -1,9 +1,10 @@
 // 住民の依頼クエスト（酒場。判断434・SPEC_quest.md）：純粋関数のみ。DOM・localStorage に触れない。時刻は呼び出し側が FF.clock.now() で渡す。
 // 状態は state.quests = { version, day, board: [依頼...], history: { completed } }。関数は、新しい state を返す（もとは変えない）。
-// 依頼：{ id, kind: 'deliver'|'hunt'|'study', who, target, need, reward: { gold, res: {id: n}, potions }, accepted, progress, claimed }
+// 依頼：{ id, kind: 'deliver'|'hunt'|'study'|'defend', who, target, need, reward: { gold, res: {id: n}, potions }, accepted, progress, claimed }
 //   deliver：target＝資材の id。「渡す」で、資材を need 個引く（progress が need になる）。
 //   hunt：target＝敵の id（'cub'|'wolf'）。受けたあとに雪原の冒険で勝った数が progress。
 //   study：target＝教科の id か 'any'。受けたあとに正解した数が progress。
+//   defend：target＝'raid'。受けたあとに、夜の防衛戦の「今夜の襲撃」に勝った数が progress（判断449）。
 (function (root) {
   'use strict';
   var FF = root.FF = root.FF || {};
@@ -38,6 +39,8 @@
       r.res[target] = Math.ceil(need * (1 + q.DELIVER.RETURN_BONUS));   // お礼：渡した分より少し多く返る
     } else if (kind === 'hunt') {
       r.gold = need * q.HUNT.GOLD_PER_KILL * (target === 'wolf' ? 1.5 : 1);
+    } else if (kind === 'defend') {
+      r.gold = need * q.DEFEND.GOLD_PER_WIN;
     } else {
       r.gold = need * q.STUDY.GOLD_PER_CORRECT;
     }
@@ -65,6 +68,8 @@
     } else if (kind === 'hunt') {
       var es = q.HUNT.ENEMIES.filter(function (x) { return x !== 'wolf' || t + 1 >= q.HUNT.WOLF_FROM_LEVEL; });
       target = pick(es, rand); need = q.HUNT.COUNT[t];
+    } else if (kind === 'defend') {
+      target = 'raid'; need = q.DEFEND.COUNT[Math.min(t, q.DEFEND.COUNT.length - 1)];
     } else {
       target = rand() < q.STUDY.ANY_SHARE ? 'any' : pick(subjectIds(), rand); need = q.STUDY.COUNT[t];
     }
@@ -177,6 +182,8 @@
     return hit ? s : state;
   }
   function onCorrect(state, subject, now) { return advance(state, function (qu) { return qu.kind === 'study' && (qu.target === 'any' || qu.target === subject); }, 1, now); }
+  // 夜の防衛戦の「今夜の襲撃」に勝ったとき（練習・負けは数えない）
+  function onRaidWin(state, now) { return advance(state, function (qu) { return qu.kind === 'defend'; }, 1, now); }
   function onVictory(state, enemyId, now) { return advance(state, function (qu) { return qu.kind === 'hunt' && qu.target === enemyId; }, 1, now); }
   // 冒険の戦闘に勝ったとき（前の冒険の状態 prevAdv から、勝利の画面に変わった瞬間だけ、1回数える）。state は、新しい冒険を入れたあとの全体の状態
   function onBattleWin(prevAdv, state, now) {
@@ -240,7 +247,7 @@
     if (!raw || typeof raw !== 'object') { s.quests = create(); return s; }
     var board = (Array.isArray(raw.board) ? raw.board : []).filter(function (qu) {
       if (!qu || typeof qu.id !== 'string' || kinds.indexOf(qu.kind) < 0) return false;
-      return qu.kind === 'deliver' ? ress.indexOf(qu.target) >= 0 : qu.kind === 'hunt' ? ens.indexOf(qu.target) >= 0 : subs.indexOf(qu.target) >= 0;
+      return qu.kind === 'deliver' ? ress.indexOf(qu.target) >= 0 : qu.kind === 'hunt' ? ens.indexOf(qu.target) >= 0 : qu.kind === 'defend' ? qu.target === 'raid' : subs.indexOf(qu.target) >= 0;
     }).slice(0, 12).map(function (qu) {
       var need = Math.max(1, int(qu.need, 1, 1000)), r = qu.reward && typeof qu.reward === 'object' ? qu.reward : {}, res = {};
       Object.keys(r.res && typeof r.res === 'object' ? r.res : {}).forEach(function (k) { if (ress.indexOf(k) >= 0) res[k] = int(r.res[k], 0, 10000); });
@@ -265,7 +272,7 @@
     return s;
   }
 
-  FF.quests = { create: create, today: today, find: find, done: done, accept: accept, canDeliver: canDeliver, deliver: deliver, onCorrect: onCorrect, onVictory: onVictory, onBattleWin: onBattleWin, newlyDone: newlyDone, claimable: claimable,
+  FF.quests = { create: create, today: today, find: find, done: done, accept: accept, canDeliver: canDeliver, deliver: deliver, onCorrect: onCorrect, onRaidWin: onRaidWin, onVictory: onVictory, onBattleWin: onBattleWin, newlyDone: newlyDone, claimable: claimable,
     canClaim: canClaim, claim: claim, remaining: remaining, normalize: normalize, residents: residents, tier: tier,
     trustOf: trustOf, trustLevel: trustLevel, trustProgress: trustProgress, bonusRate: bonusRate, refreshSpecials: refreshSpecials, specials: specials, specialDefs: specialDefs };
 })(this);

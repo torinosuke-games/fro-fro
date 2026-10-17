@@ -12,6 +12,8 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.screenshot({path:process.env.FF_SHOT||'/tmp/tower-raid0.png'});
  await p.locator('[data-act="raid"]').click();await p.waitForTimeout(400);
  assert.equal(await p.evaluate(()=>FF.ui.towerBattle().mode),'raid');
+ // 酒場の依頼「防衛」を受けておく（判断449）
+ await p.evaluate(()=>{let s=FF.quests.today(FF.app.state,FF.app.now());const d=s.quests.board.find(x=>x.kind==='defend');s=FF.quests.accept(s,d.id).state;FF.app.commit(s)});
  // 問題：戦場が止まる。正解で灯が増え、しばらく次の問題を出せない
  const L0=await p.evaluate(()=>FF.ui.towerBattle().light);
  await p.evaluate(()=>{FF.__judge=FF.answer.judge;FF.answer.judge=()=>({correct:true})});
@@ -44,6 +46,8 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  assert.equal(await p.evaluate(()=>FF.app.state.adventure.gold),g0+160);
  assert.equal(await p.evaluate(()=>FF.app.state.tower.rewards),1);
  await p.screenshot({path:process.env.FF_SHOT3||'/tmp/tower-raid1.png'});
+ // 防衛の依頼：襲撃に勝つと、達成（報告できる）
+ assert.ok(await p.evaluate(()=>FF.quests.done(FF.app.state.quests.board.find(x=>x.kind==='defend'))));assert.equal(await p.evaluate(()=>FF.quests.claimable(FF.app.state)),1);
  // もう一度（襲撃）：2回目は、ゴールド80（はじめてではない）
  await p.locator('[data-act="again"]').click();await p.waitForTimeout(300);assert.equal(await p.evaluate(()=>FF.ui.towerBattle().mode),'raid');
  await win();assert.equal(await p.evaluate(()=>FF.app.state.adventure.gold),g0+160+80);

@@ -11,7 +11,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  assert.equal(await p.locator('.overlay h2').innerText(),'酒場');
  // 看板娘の絵が読め、依頼が3件（納品・討伐・学習）
  assert.ok(await p.locator('.qt-portrait').evaluate(i=>i.complete&&i.naturalWidth>0));
- assert.deepEqual(await p.locator('.qt-card').evaluateAll(l=>l.map(e=>e.dataset.kind)),['deliver','hunt','study']);
+ assert.deepEqual(await p.locator('.qt-card').evaluateAll(l=>l.map(e=>e.dataset.kind)),['deliver','hunt','study','defend']);
  assert.ok((await p.locator('.qt-bubble').innerText()).includes('いらっしゃい'));
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  await p.screenshot({path:process.env.FF_SHOT||'/tmp/quest1.png'});

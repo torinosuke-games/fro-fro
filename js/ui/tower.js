@@ -84,7 +84,9 @@
     snd(bt.result === 'win' ? 'win' : 'lose');
     var r = X.finish(a.state, bt, a.now());
     cur.reward = r.reward;
-    if (r.state !== a.state) a.commit(r.state);
+    var next = r.state;
+    if (bt.mode === 'raid' && bt.result === 'win' && FF.quests) next = FF.quests.onRaidWin(next, a.now());   // 住民の依頼「防衛」（判断449）
+    if (next !== a.state) a.commit(next);
     showOverlay();
   }
 

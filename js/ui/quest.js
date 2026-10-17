@@ -14,6 +14,7 @@
 
   function askText(qu) {
     if (qu.kind === 'deliver') return T.ask.deliver.replace('{res}', resDef(qu.target).name).replace('{n}', qu.need);
+    if (qu.kind === 'defend') return T.ask.defend.replace('{n}', qu.need);
     if (qu.kind === 'hunt') return T.ask.hunt.replace('{enemy}', enemyName(qu.target)).replace('{n}', qu.need);
     if (qu.target === 'any') return T.ask.studyAny.replace('{n}', qu.need);
     return T.ask.study.replace('{subject}', subjectName(qu.target)).replace('{n}', qu.need);
