@@ -138,7 +138,8 @@
     doc.addEventListener('keydown', onKey);
     doc.body.appendChild(overlay);
     var first = box.querySelector('.actions .btn.primary') || box.querySelector('.actions .btn');
-    if (first) first.focus();
+    if (first) { try { first.focus({ preventScroll: true }); } catch (e) { first.focus(); } }   // 下のボタンに合わせて、長い画面が、下までスクロールされない（問題文が、上で切れない）
+    box.scrollTop = 0;
     return close;
   }
 

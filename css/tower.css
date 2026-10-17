@@ -70,3 +70,4 @@ body[data-screen="tower"][data-tower="battle"] .toast{top:auto;bottom:calc(176px
 .tw-cheer .qt-face{width:26px;height:26px}
 body[data-screen="tower"][data-tower="battle"] .tw-cheer{min-height:28px}
 .tw-pop{margin:0;padding:8px 12px;background:#eef6fa;border-radius:10px;font-size:.875rem;color:var(--rn-navy);line-height:1.7}
+@media(max-width:520px){.tw-quiz-q{font-size:1.0625rem;line-height:1.7}.tw-quiz{gap:8px}}
