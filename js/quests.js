@@ -13,7 +13,7 @@
   function int(v, d, max) { v = Math.floor(v); return isFinite(v) && v >= 0 ? Math.min(max == null ? 1e9 : max, v) : d; }
   function pick(list, rand) { return list[Math.floor(rand() * list.length) % list.length]; }
 
-  function create() { return { version: 1, day: null, board: [], history: { completed: 0 } }; }
+  function create() { return { version: 1, day: null, board: [], history: { completed: 0 }, trust: {}, specials: [], specialDone: {} }; }
 
   // 中央炉のレベル（1〜）。数量の表の、何番目を使うか
   function tier(state, b) {
@@ -81,15 +81,61 @@
     return board;
   }
 
-  // 今日の依頼にそろえた state を返す（日がかわっていたら、作り直す。受けたまま終わっていない依頼は消える）
-  function today(state, now, b) {
-    var key = FF.daily.dayKey(now), cur = state.quests;
-    if (cur && cur.day === key && Array.isArray(cur.board) && cur.board.length) return state;
-    var s = clone(state), old = cur && cur.history ? cur.history : { completed: 0 };
-    s.quests = { version: 1, day: key, board: generate(state, now, b), history: { completed: int(old.completed, 0) } };
+  // ---- 住民の信頼と特別な依頼（判断440） ----
+  function trustOf(state, who) { var t = state && state.quests && state.quests.trust; return t && typeof t[who] === 'number' ? Math.max(0, Math.floor(t[who])) : 0; }
+  // 信頼の段階（0＝顔見知り・1＝仲良し・2＝親友・3＝恩人）
+  function trustLevel(state, who, b) {
+    var L = Q(b).TRUST.LEVELS, n = trustOf(state, who), lv = 0;
+    for (var i = 0; i < L.length; i++) if (n >= L[i]) lv = i;
+    return lv;
+  }
+  // 次の段階まで：{ level, have, next（なければ null）, need }
+  function trustProgress(state, who, b) {
+    var L = Q(b).TRUST.LEVELS, n = trustOf(state, who), lv = trustLevel(state, who, b);
+    return { level: lv, have: n, next: lv + 1 < L.length ? L[lv + 1] : null };
+  }
+  function bonusRate(state, who, b) { return Q(b).TRUST.BONUS[trustLevel(state, who, b)] || 0; }
+  function specialDefs(who, b) { return Q(b).SPECIAL[who] || []; }
+  function specialId(who, i) { return who + '-' + (i + 1); }
+  function makeSpecial(who, i, b) {
+    var d = specialDefs(who, b)[i];
+    return { id: 'sp:' + specialId(who, i), special: specialId(who, i), kind: d.kind, who: who, target: d.target, need: d.need,
+      reward: { gold: d.reward.gold, res: clone(d.reward.res || {}), potions: d.reward.potions || 0 }, accepted: false, progress: 0, claimed: false };
+  }
+  // 信頼が足りていて、まだ出していない特別な依頼を出す。終えた依頼（報告ずみ）は片づける。変わらなければ、同じ state を返す
+  function refreshSpecials(state, b) {
+    if (!state.quests) return state;
+    var cur = Array.isArray(state.quests.specials) ? state.quests.specials : [], doneMap = state.quests.specialDone || {}, add = [];
+    Object.keys(Q(b).SPECIAL).forEach(function (who) {
+      var defs = specialDefs(who, b), lv = trustLevel(state, who, b);
+      for (var i = 0; i < defs.length; i++) {
+        var sid = specialId(who, i);
+        if (doneMap[sid]) continue;
+        if (lv >= i + 1 && !cur.some(function (qu) { return qu.special === sid; })) add.push(makeSpecial(who, i, b));
+        break;   // 前の依頼を終えてから、次の依頼が出る
+      }
+    });
+    var keep = cur.filter(function (qu) { return !qu.claimed; });
+    if (!add.length && keep.length === cur.length) return state;
+    var s = clone(state); s.quests.specials = keep.concat(add);
     return s;
   }
-  function find(state, id) { var l = state.quests && state.quests.board || []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+  // 画面に出す特別な依頼（まだ報告していないもの。MAX_VISIBLE_SPECIALS まで）
+  function specials(state, b) { return ((state && state.quests && state.quests.specials) || []).filter(function (qu) { return !qu.claimed; }).slice(0, Q(b).TRUST.MAX_VISIBLE_SPECIALS); }
+
+  // 今日の依頼にそろえた state を返す（日がかわっていたら、作り直す。受けたまま終わっていない依頼は消える）
+  function today(state, now, b) {
+    var key = FF.daily.dayKey(now), cur = state.quests, s = state;
+    if (!(cur && cur.day === key && Array.isArray(cur.board) && cur.board.length)) {
+      s = clone(state);
+      var old = cur || {};
+      s.quests = { version: 1, day: key, board: generate(state, now, b), history: { completed: int(old.history && old.history.completed, 0) },
+        trust: old.trust || {}, specials: old.specials || [], specialDone: old.specialDone || {} };
+    }
+    return refreshSpecials(s, b);
+  }
+  function lists(state) { return [(state.quests && state.quests.board) || [], (state.quests && state.quests.specials) || []]; }
+  function find(state, id) { var ls = lists(state); for (var k = 0; k < ls.length; k++) for (var i = 0; i < ls[k].length; i++) if (ls[k][i].id === id) return ls[k][i]; return null; }
   function done(qu) { return !!qu && qu.progress >= qu.need; }
   function gold(state) { return Math.max(0, Math.floor(state && state.adventure && state.adventure.gold) || 0); }
 
@@ -119,14 +165,15 @@
   // 受けた依頼を進める（受けていない・終わった依頼は進まない）
   // now を渡すと、依頼の日がちがう（日がかわったのに、まだ作り直していない）ときは、進めない
   function advance(state, match, n, now) {
-    if (!state.quests || !Array.isArray(state.quests.board)) return state;
-    if (now != null && state.quests.day !== FF.daily.dayKey(now)) return state;
-    var hit = false;
-    var s = clone(state);
-    s.quests.board.forEach(function (qu) {
+    if (!state.quests) return state;
+    var boardOk = Array.isArray(state.quests.board) && !(now != null && state.quests.day !== FF.daily.dayKey(now));
+    var hit = false, s = clone(state);
+    function step(qu) {
       if (!qu.accepted || done(qu) || !match(qu)) return;
       qu.progress = Math.min(qu.need, qu.progress + (n || 1)); hit = true;
-    });
+    }
+    if (boardOk) s.quests.board.forEach(step);
+    (s.quests.specials || []).forEach(step);   // 特別な依頼は、日がかわっても続く
     return hit ? s : state;
   }
   function onCorrect(state, subject, now) { return advance(state, function (qu) { return qu.kind === 'study' && (qu.target === 'any' || qu.target === subject); }, 1, now); }
@@ -139,11 +186,11 @@
   }
   // 前の状態から、新しく達成になった依頼の id（お知らせ用）
   function newlyDone(prev, next) {
-    var before = {}; ((prev && prev.quests && prev.quests.board) || []).forEach(function (qu) { before[qu.id] = done(qu); });
-    return ((next && next.quests && next.quests.board) || []).filter(function (qu) { return done(qu) && qu.accepted && !qu.claimed && before[qu.id] === false; }).map(function (qu) { return qu.id; });
+    var before = {}; [].concat((prev && prev.quests && prev.quests.board) || [], (prev && prev.quests && prev.quests.specials) || []).forEach(function (qu) { before[qu.id] = done(qu); });
+    return [].concat((next && next.quests && next.quests.board) || [], (next && next.quests && next.quests.specials) || []).filter(function (qu) { return done(qu) && qu.accepted && !qu.claimed && before[qu.id] === false; }).map(function (qu) { return qu.id; });
   }
   // 報告できる（達成して、まだ報酬をもらっていない）依頼の数。酒場のアイコンの目印に使う
-  function claimable(state) { return ((state && state.quests && state.quests.board) || []).filter(function (qu) { return qu.accepted && done(qu) && !qu.claimed; }).length; }
+  function claimable(state) { return [].concat((state && state.quests && state.quests.board) || [], (state && state.quests && state.quests.specials) || []).filter(function (qu) { return qu.accepted && done(qu) && !qu.claimed; }).length; }
 
   // 報告：達成した依頼の報酬をもらう（1回だけ）
   function canClaim(state, id) {
@@ -153,19 +200,40 @@
     if (!done(qu)) return { ok: false, reason: 'notDone' };
     return { ok: true };
   }
+  // 報告：報酬は、その住民との信頼の段階のぶん、ゴールドが増える。信頼がたまり、段階が上がると、特別な依頼が出る。
+  // 返すもの：{ ok, state, reward（ボーナス込み）, trust: { who, gain, from, to, levelUp }, unlocked: [新しく出た特別な依頼の id] }
   function claim(state, id, b) {
     var c = canClaim(state, id);
     if (!c.ok) return { ok: false, state: state, reason: c.reason };
-    var s = clone(state), qu = find(s, id), r = qu.reward;
+    var s = clone(state), qu = find(s, id), r = clone(qu.reward), who = qu.who, T = Q(b).TRUST;
+    var rate = who ? bonusRate(state, who, b) : 0;
+    if (rate) r.gold = Math.round(r.gold * (1 + rate));
     s.adventure = s.adventure || (FF.adventure ? FF.adventure.create() : {});
     s.adventure.gold = Math.max(0, gold(state) + r.gold);
     if (r.potions) s.adventure.potions = Math.min((b || FF.balance).ADVENTURE.POTION_MAX, Math.max(0, Math.floor(s.adventure.potions) || 0) + r.potions);
     Object.keys(r.res || {}).forEach(function (k) { s.resources[k] = (s.resources[k] || 0) + r.res[k]; });
     qu.claimed = true; s.quests.history.completed += 1;
-    return { ok: true, state: s, reward: clone(r) };
+    var trust = null;
+    if (who) {
+      var from = trustLevel(s, who, b), gain = qu.special ? T.GAIN.special : (T.GAIN[qu.kind] || 0);
+      s.quests.trust = s.quests.trust || {};
+      s.quests.trust[who] = Math.min(T.MAX, trustOf(s, who) + gain);
+      var to = trustLevel(s, who, b);
+      trust = { who: who, gain: gain, from: from, to: to, levelUp: to > from, bonus: rate };
+    }
+    if (qu.special) { s.quests.specialDone = s.quests.specialDone || {}; s.quests.specialDone[qu.special] = true; }
+    var before = (s.quests.specials || []).map(function (x) { return x.special; });
+    s = refreshSpecials(s, b);
+    var unlocked = (s.quests.specials || []).filter(function (x) { return before.indexOf(x.special) < 0; }).map(function (x) { return x.special; });
+    return { ok: true, state: s, reward: r, trust: trust, unlocked: unlocked };
   }
   function remaining(state) { return (state.quests && state.quests.board || []).filter(function (qu) { return !qu.claimed; }).length; }
 
+  function validSpecial(sid, b) {
+    if (typeof sid !== 'string') return false;
+    var m = /^([a-z]+)-(\d)$/.exec(sid);
+    return !!m && !!Q(b).SPECIAL[m[1]] && +m[2] >= 1 && +m[2] <= Q(b).SPECIAL[m[1]].length;
+  }
   // 読み込み時の整合：形がおかしい依頼を捨てる、数値は整数・範囲内に。日付の入れかえは today() が行う
   function normalize(state, b) {
     var s = clone(state), raw = s.quests, kinds = Q(b).KINDS, subs = subjectIds().concat(['any']), ress = resourceIds(), ens = Q(b).HUNT.ENEMIES;
@@ -180,12 +248,24 @@
         reward: { gold: int(r.gold, 0, Q(b).GOLD_MAX_PER_QUEST), res: res, potions: int(r.potions, 0, 5) },
         accepted: !!qu.accepted, progress: Math.min(need, int(qu.progress, 0, 1000)), claimed: !!qu.claimed };
     });
+    // 信頼：知らない住民も残す（救出した旅人）が、数は 0 以上の整数・上限内。特別な依頼は、定義から作り直す（進み具合だけ引きつぐ）
+    var trust = {}, T = Q(b).TRUST;
+    Object.keys(raw.trust && typeof raw.trust === 'object' ? raw.trust : {}).slice(0, 40).forEach(function (k) { if (typeof k === 'string' && k.length <= 20) trust[k] = int(raw.trust[k], 0, T.MAX); });
+    var specialDone = {}, sp = [];
+    Object.keys(raw.specialDone && typeof raw.specialDone === 'object' ? raw.specialDone : {}).forEach(function (sid) { if (validSpecial(sid, b) && raw.specialDone[sid]) specialDone[sid] = true; });
+    (Array.isArray(raw.specials) ? raw.specials : []).forEach(function (qu) {
+      if (!qu || !validSpecial(qu.special, b) || specialDone[qu.special] || sp.some(function (x) { return x.special === qu.special; })) return;
+      var parts = qu.special.split('-'), m = makeSpecial(parts[0], +parts[1] - 1, b);
+      m.accepted = !!qu.accepted; m.progress = Math.min(m.need, int(qu.progress, 0, 1000));
+      sp.push(m);
+    });
     s.quests = { version: 1, day: typeof raw.day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.day) ? raw.day : null, board: board,
-      history: { completed: int(raw.history && raw.history.completed, 0, 1e7) } };
+      history: { completed: int(raw.history && raw.history.completed, 0, 1e7) }, trust: trust, specials: sp, specialDone: specialDone };
     if (!board.length) s.quests.day = null;
     return s;
   }
 
   FF.quests = { create: create, today: today, find: find, done: done, accept: accept, canDeliver: canDeliver, deliver: deliver, onCorrect: onCorrect, onVictory: onVictory, onBattleWin: onBattleWin, newlyDone: newlyDone, claimable: claimable,
-    canClaim: canClaim, claim: claim, remaining: remaining, normalize: normalize, residents: residents, tier: tier };
+    canClaim: canClaim, claim: claim, remaining: remaining, normalize: normalize, residents: residents, tier: tier,
+    trustOf: trustOf, trustLevel: trustLevel, trustProgress: trustProgress, bonusRate: bonusRate, refreshSpecials: refreshSpecials, specials: specials, specialDefs: specialDefs };
 })(this);

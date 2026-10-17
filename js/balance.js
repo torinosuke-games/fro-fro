@@ -96,7 +96,18 @@
       HUNT: { COUNT: [2, 3, 4, 5, 6], ENEMIES: ['cub', 'wolf'], GOLD_PER_KILL: 30, WOLF_FROM_LEVEL: 2 },   // 討伐：体数。雪原の冒険を始めていて、ザコ敵の種類を絞る（オオカミは中央炉 Lv2 から）
       STUDY: { COUNT: [5, 8, 10, 12, 15], GOLD_PER_CORRECT: 5, ANY_SHARE: 0.34 },   // 学習：正解の数。教科を決めない依頼（'any'）の割合
       POTION_CHANCE: 0.3, POTION_COUNT: 1,        // 回復薬がつく割合
-      GOLD_MAX_PER_QUEST: 400
+      GOLD_MAX_PER_QUEST: 400,
+      // 住民の信頼（判断440）：依頼を報告するたびに、その住民との信頼がたまる。段階は LEVELS の数に達すると上がる（顔見知り・仲良し・親友・恩人）。BONUS：その段階の住民の依頼は、ゴールドが増える割合
+      TRUST: { LEVELS: [0, 3, 8, 15], BONUS: [0, 0.05, 0.1, 0.15], GAIN: { deliver: 1, hunt: 1, study: 1, special: 3 }, MAX: 9999, MAX_VISIBLE_SPECIALS: 2, GOLD_MAX_SPECIAL: 1000 },
+      // 特別な依頼（判断440）：町の人6人が、信頼が「仲間」「親友」「恩人」になるたびに、1つずつ出す（全部で18件。1回ずつ。日がかわっても消えない）。i 番目は、信頼の段階が i+1 になると出る
+      SPECIAL: {
+        baker:      [{ kind: 'deliver', target: 'food', need: 20, reward: { gold: 120, res: {}, potions: 1 } }, { kind: 'deliver', target: 'wood', need: 30, reward: { gold: 200, res: {}, potions: 1 } }, { kind: 'study', target: 'any', need: 20, reward: { gold: 300, res: { food: 30 }, potions: 2 } }],
+        woodcutter: [{ kind: 'deliver', target: 'wood', need: 24, reward: { gold: 100, res: {}, potions: 0 } }, { kind: 'hunt', target: 'cub', need: 5, reward: { gold: 200, res: {}, potions: 1 } }, { kind: 'hunt', target: 'wolf', need: 3, reward: { gold: 360, res: { wood: 30 }, potions: 2 } }],
+        hunter:     [{ kind: 'hunt', target: 'cub', need: 4, reward: { gold: 130, res: {}, potions: 0 } }, { kind: 'hunt', target: 'wolf', need: 4, reward: { gold: 400, res: {}, potions: 1 } }, { kind: 'study', target: 'science', need: 15, reward: { gold: 300, res: { food: 20 }, potions: 2 } }],
+        nurse:      [{ kind: 'deliver', target: 'food', need: 18, reward: { gold: 100, res: {}, potions: 2 } }, { kind: 'study', target: 'any', need: 15, reward: { gold: 220, res: {}, potions: 2 } }, { kind: 'deliver', target: 'iron', need: 24, reward: { gold: 300, res: {}, potions: 3 } }],
+        child:      [{ kind: 'study', target: 'math', need: 8, reward: { gold: 80, res: {}, potions: 0 } }, { kind: 'deliver', target: 'stone', need: 14, reward: { gold: 150, res: {}, potions: 1 } }, { kind: 'study', target: 'japanese', need: 12, reward: { gold: 260, res: { stone: 20 }, potions: 1 } }],
+        elder:      [{ kind: 'deliver', target: 'iron', need: 18, reward: { gold: 150, res: {}, potions: 0 } }, { kind: 'study', target: 'social', need: 15, reward: { gold: 260, res: {}, potions: 1 } }, { kind: 'study', target: 'any', need: 25, reward: { gold: 400, res: { wood: 20, iron: 20 }, potions: 2 } }]
+      }
     },
     DAILY_RESOURCE: { RESET_HOUR: 4 },   // その日に獲得できる資材の割り当てが切りかわる時刻（朝4時。判断319）
     INITIAL_UNLOCKED_GRADE: 2,

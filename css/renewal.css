@@ -553,3 +553,26 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 @media (max-width:420px){.qt-girl{grid-template-columns:64px minmax(0,1fr)}.qt-portrait{width:64px;height:64px}}
 .facility-btn{position:relative}
 .facility-badge{position:absolute;top:-2px;right:6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#e5533d;color:#fff;font-size:.8125rem;line-height:20px;text-align:center;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+
+/* 住民の信頼と特別な依頼（判断440） */
+.qt-head{align-items:flex-start}
+.qt-face{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #efc27a;background:#fff3e0;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem}
+.qt-face.big{width:52px;height:52px}
+.qt-headtext{display:grid;gap:2px;min-width:0}
+.qt-headline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.qt-level{font-size:.75rem;font-weight:800;color:#8a6a3a}
+.qt-level.is-on{padding:1px 8px;border-radius:999px;background:#fff0cf;color:#885219}
+.qt-card.is-special{border-color:#e0a042;background:linear-gradient(180deg,#fffaf0,#fff3dc);box-shadow:0 0 0 2px rgba(224,160,66,.25)}
+.qt-card.is-special .qt-kind{background:#f6c76a;color:#6b3f08}
+.qt-story{margin:0;padding:6px 10px;border-left:3px solid #e0a042;background:rgba(255,255,255,.7);font-size:.8125rem;line-height:1.7;color:#5a3a14}
+.qt-bonus{font-size:.75rem;font-weight:800;color:#3d7a30}
+.qt-tabs{display:flex;gap:6px}
+.qt-tab{flex:1;padding:8px 6px;border:1px solid var(--rn-line,#d3e3ee);border-radius:12px;background:#fff;color:#1f4a68;font-weight:800;font-size:.875rem;cursor:pointer}
+.qt-tab.is-on{background:#1f6f9f;border-color:#1f6f9f;color:#fff}
+.qt-trust-intro{margin:0;font-size:.8125rem;line-height:1.6;color:#4a5f70}
+.qt-trust-list{display:grid;gap:8px}
+.qt-trust-row{display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--rn-line,#d3e3ee);border-radius:14px;background:#fff}
+.qt-trust-row[data-level="3"]{border-color:#e0a042;background:#fffaf0}
+.qt-trust-info{display:grid;gap:4px;min-width:0}
+.qt-trust-meta{font-size:.75rem;color:#6b5a3a}
+.qt-portrait.is-emoji{display:flex;align-items:center;justify-content:center;font-size:2.25rem;border-radius:50%;border:2px solid #efa64b;background:#fff3e0;flex:none}

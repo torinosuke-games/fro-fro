@@ -8,7 +8,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
 
   test('依頼：新しいゲームでは依頼は空。今日の分を作ると、3件（納品・納品・学習。冒険を始めていないので、討伐は納品に）', () => {
     const s = fresh();
-    assert.deepStrictEqual(plain(s.quests), { version: 1, day: null, board: [], history: { completed: 0 } });
+    assert.deepStrictEqual(plain(s.quests), { version: 1, day: null, board: [], history: { completed: 0 }, trust: {}, specials: [], specialDone: {} });
     const b = board(s);
     assert.strictEqual(b.length, B.QUESTS.PER_DAY);
     assert.deepStrictEqual(plain(b.map(x => x.kind)), ['deliver', 'deliver', 'study']);
@@ -175,5 +175,131 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(Q.claimable(s), 0);
     assert.strictEqual(Q.claimable(done), 1);
     assert.strictEqual(Q.claimable(Q.claim(done, d.id).state), 0);
+  });
+
+  // ---- 信頼と特別な依頼（判断440） ----
+  const TR = B.QUESTS.TRUST;
+  const withTrust = (s, who, n) => { const t = JSON.parse(JSON.stringify(s)); t.quests.trust = Object.assign({}, t.quests.trust, { [who]: n }); return t; };
+  // 依頼を1つ、受けて達成にして、報告する（住民 who の依頼にする）
+  function finish(s, id, who) {
+    let t = JSON.parse(JSON.stringify(s)); const qu = Q.find(t, id);
+    if (who) qu.who = who; qu.accepted = true; qu.progress = qu.need;
+    return Q.claim(t, id);
+  }
+  test('信頼：はじめは0（顔見知り）。段階は 0・3・8・15 で上がる。段階ごとのボーナスは大きくなる', () => {
+    const s = Q.today(fresh(), T0);
+    assert.strictEqual(Q.trustOf(s, 'baker'), 0);
+    assert.strictEqual(Q.trustLevel(s, 'baker'), 0);
+    for (const [n, lv] of [[2, 0], [3, 1], [7, 1], [8, 2], [14, 2], [15, 3], [999, 3]]) assert.strictEqual(Q.trustLevel(withTrust(s, 'baker', n), 'baker'), lv, 'trust ' + n);
+    assert.deepStrictEqual(plain(Q.trustProgress(withTrust(s, 'baker', 4), 'baker')), { level: 1, have: 4, next: 8 });
+    assert.strictEqual(Q.trustProgress(withTrust(s, 'baker', 20), 'baker').next, null);
+    for (let i = 1; i < TR.BONUS.length; i++) assert.ok(TR.BONUS[i] > TR.BONUS[i - 1]);
+  });
+  test('信頼：依頼を報告すると、その住民との信頼が増える（段階が上がったら、知らせる）。報酬のゴールドは、信頼のボーナスで増える', () => {
+    let s = Q.today(fresh(), T0); const d = s.quests.board[0];
+    const r1 = finish(s, d.id, 'baker');
+    assert.ok(r1.ok);
+    assert.deepStrictEqual(plain(r1.trust), { who: 'baker', gain: TR.GAIN.deliver, from: 0, to: 0, levelUp: false, bonus: 0 });
+    assert.strictEqual(Q.trustOf(r1.state, 'baker'), TR.GAIN.deliver);
+    assert.strictEqual(r1.reward.gold, d.reward.gold);
+    // 信頼が段階1に上がる直前（2）→報告で3になって、段階が上がる
+    const r2 = finish(withTrust(s, 'baker', TR.LEVELS[1] - TR.GAIN.deliver), d.id, 'baker');
+    assert.strictEqual(r2.trust.levelUp, true);
+    assert.strictEqual(r2.trust.to, 1);
+    // 親友（段階2）の住民の依頼は、ゴールドが 10% 増える
+    const r3 = finish(withTrust(s, 'baker', TR.LEVELS[2]), d.id, 'baker');
+    assert.strictEqual(r3.reward.gold, Math.round(d.reward.gold * (1 + TR.BONUS[2])));
+    assert.strictEqual(FF.shop.gold(r3.state) - FF.shop.gold(s), r3.reward.gold);
+    // 信頼には上限がある
+    assert.strictEqual(Q.trustOf(finish(withTrust(s, 'baker', TR.MAX), d.id, 'baker').state, 'baker'), TR.MAX);
+  });
+  test('特別な依頼：信頼が「仲良し」になると、その住民の1つ目が出る。前の依頼を終えてから、次が出る', () => {
+    let s = Q.today(fresh(), T0);
+    assert.deepStrictEqual(plain(Q.specials(s)), []);
+    s = Q.today(withTrust(s, 'baker', TR.LEVELS[1]), T0);
+    const sp = Q.specials(s);
+    assert.strictEqual(sp.length, 1);
+    assert.strictEqual(sp[0].special, 'baker-1');
+    assert.strictEqual(sp[0].who, 'baker');
+    assert.deepStrictEqual([sp[0].kind, sp[0].target, sp[0].need], [B.QUESTS.SPECIAL.baker[0].kind, B.QUESTS.SPECIAL.baker[0].target, B.QUESTS.SPECIAL.baker[0].need]);
+    // 同じ依頼を、二重に出さない
+    assert.strictEqual(Q.refreshSpecials(s), s);
+    // 信頼が親友になっても、1つ目を終えるまでは、2つ目は出ない
+    const t = Q.today(withTrust(s, 'baker', TR.LEVELS[2]), T0);
+    assert.deepStrictEqual(plain(Q.specials(t).map(x => x.special)), ['baker-1']);
+    // 1つ目を終えると（信頼が増える）、2つ目が出る。終えた1つ目は、もう出ない
+    const done1 = finish(t, 'sp:baker-1', null);
+    assert.ok(done1.ok);
+    assert.deepStrictEqual(plain(Q.specials(done1.state).map(x => x.special)), ['baker-2']);
+    assert.deepStrictEqual(plain(done1.unlocked), ['baker-2']);
+    assert.strictEqual(done1.state.quests.specialDone['baker-1'], true);
+  });
+  test('特別な依頼：報告すると、信頼が +3。報酬（ゴールド・資材・回復薬）がもらえる。段階が上がると、次の依頼が出る', () => {
+    let s = Q.today(withTrust(Q.today(fresh(), T0), 'woodcutter', TR.LEVELS[1]), T0);
+    const d = B.QUESTS.SPECIAL.woodcutter[0];
+    const r = finish(s, 'sp:woodcutter-1', null);
+    assert.strictEqual(r.trust.gain, TR.GAIN.special);
+    assert.strictEqual(r.trust.who, 'woodcutter');
+    assert.strictEqual(r.reward.gold, Math.round(d.reward.gold * (1 + TR.BONUS[1])));
+    assert.strictEqual(Q.trustOf(r.state, 'woodcutter'), TR.LEVELS[1] + TR.GAIN.special);
+    assert.strictEqual(Q.claim(r.state, 'sp:woodcutter-1').ok, false);   // 二重にはもらえない
+  });
+  test('特別な依頼：日がかわっても消えず、進みぐあいも続く。学習・討伐・納品で進む', () => {
+    let s = Q.today(withTrust(Q.today(hunter(fresh()), T0), 'hunter', TR.LEVELS[1]), T0);
+    let sp = Q.specials(s)[0];
+    assert.strictEqual(sp.special, 'hunter-1');
+    s = Q.accept(s, sp.id).state;
+    const n = Q.today(s, T0 + DAY);   // 次の日
+    assert.deepStrictEqual(plain(Q.specials(n).map(x => x.special)), ['hunter-1']);
+    assert.ok(Q.find(n, sp.id).accepted);
+    // 次の日、酒場を開く前でも、討伐は進む（ふつうの依頼は、日がちがうと進まない）
+    let m = Q.onVictory(s, sp.target, T0 + DAY);
+    assert.strictEqual(Q.find(m, sp.id).progress, 1);
+    // 学習
+    let t = Q.today(withTrust(Q.today(fresh(), T0), 'child', TR.LEVELS[1]), T0);
+    const c = Q.specials(t)[0]; t = Q.accept(t, c.id).state;
+    t = Q.onCorrect(t, 'japanese', T0); assert.strictEqual(Q.find(t, c.id).progress, 0);   // 算数の依頼（child-1）は、国語では進まない
+    t = Q.onCorrect(t, 'math', T0); assert.strictEqual(Q.find(t, c.id).progress, 1);
+    // 納品（nurse-1：食料）
+    let u = Q.today(withTrust(Q.today(fresh(), T0), 'nurse', TR.LEVELS[1]), T0);
+    const nu = Q.specials(u)[0]; u = Q.accept(u, nu.id).state; u.resources[nu.target] = nu.need;
+    const dv = Q.deliver(u, nu.id); assert.ok(dv.ok); assert.ok(Q.done(Q.find(dv.state, nu.id)));
+    assert.strictEqual(Q.claimable(dv.state), 1);
+    assert.deepStrictEqual(plain(Q.newlyDone(u, dv.state)), [nu.id]);
+  });
+  test('特別な依頼：画面に出すのは最大2件。全部で18件（6人×3）で、前の段階のものから', () => {
+    assert.strictEqual(Object.keys(B.QUESTS.SPECIAL).length, 6);
+    for (const who of Object.keys(B.QUESTS.SPECIAL)) assert.strictEqual(B.QUESTS.SPECIAL[who].length, 3);
+    assert.deepStrictEqual(plain(Object.keys(B.QUESTS.SPECIAL).sort()), plain(B.QUESTS.RESIDENTS.slice().sort()));
+    let s = Q.today(fresh(), T0);
+    for (const who of B.QUESTS.RESIDENTS) s = withTrust(s, who, TR.LEVELS[1]);
+    s = Q.today(s, T0);
+    assert.strictEqual(s.quests.specials.length, 6);
+    assert.strictEqual(Q.specials(s).length, TR.MAX_VISIBLE_SPECIALS);
+    // 達成の目印・報告できる数は、特別な依頼もふくむ
+    assert.strictEqual(Q.claimable(s), 0);
+  });
+  test('信頼・特別な依頼のセーブ：保存して読み込んでも同じ。知らない依頼・書きかえられた報酬は、定義から作り直す', () => {
+    let s = Q.today(withTrust(Q.today(fresh(), T0), 'elder', TR.LEVELS[1]), T0);
+    s = Q.accept(s, 'sp:elder-1').state;
+    s.resources.iron = 99; s = Q.deliver(s, 'sp:elder-1').state;
+    const text = FF.state.serialize(s), back = FF.state.migrate(JSON.parse(text), T0);
+    assert.ok(back.ok);
+    assert.deepStrictEqual(plain(back.state.quests.specials), plain(s.quests.specials));
+    assert.deepStrictEqual(plain(back.state.quests.trust), plain(s.quests.trust));
+    const bad = JSON.parse(text);
+    bad.quests.specials[0].reward.gold = 99999999; bad.quests.specials[0].need = 1; bad.quests.specials[0].progress = 99999;
+    bad.quests.specials.push({ special: 'nobody-1' }, { special: 'elder-9' }, { special: 'elder-1' }, null, 7);
+    bad.quests.trust = { elder: -5, baker: 1e12, ['x'.repeat(40)]: 3, ok: 'zz' };
+    bad.quests.specialDone = { 'baker-1': true, 'nobody-1': true };
+    const f = Q.normalize(bad);
+    assert.strictEqual(f.quests.specials.length, 1);
+    assert.strictEqual(f.quests.specials[0].reward.gold, B.QUESTS.SPECIAL.elder[0].reward.gold);
+    assert.strictEqual(f.quests.specials[0].need, B.QUESTS.SPECIAL.elder[0].need);
+    assert.strictEqual(f.quests.specials[0].progress, B.QUESTS.SPECIAL.elder[0].need);
+    assert.strictEqual(f.quests.trust.elder, 0);
+    assert.strictEqual(f.quests.trust.baker, TR.MAX);
+    assert.strictEqual(f.quests.trust.ok, 0);
+    assert.deepStrictEqual(plain(f.quests.specialDone), { 'baker-1': true });
   });
 };
