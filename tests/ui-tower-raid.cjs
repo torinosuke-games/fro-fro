@@ -22,6 +22,8 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  const t0=await p.evaluate(()=>FF.ui.towerBattle().t);await p.waitForTimeout(400);assert.equal(await p.evaluate(()=>FF.ui.towerBattle().t),t0);
  await p.locator('.tw-quiz-choice').first().click();
  assert.equal(await p.locator('.overlay').count(),0);
+ // 正解の知らせは、戦場（Canvas）にかぶさらない
+ {const t=await p.locator('.toast').first().boundingBox(),c=await p.locator('.tw-canvas').boundingBox();assert.ok(t.y>=c.y+c.height-1,'toast below the field');}
  assert.ok(await p.evaluate((L0)=>FF.ui.towerBattle().light>=L0+5,L0));
  assert.equal(await p.locator('[data-act="quiz"]').isDisabled(),true);
  assert.ok((await p.locator('[data-act="quiz"]').innerText()).includes('あと'));

@@ -60,3 +60,5 @@ body[data-screen="tower"][data-tower="battle"] .tw-info{min-height:40px}
 /* デバッグ版の「DEBUG」の目印が、下に寄せた仲間のカードに重ならないようにする */
 body[data-screen="tower"][data-tower="battle"] .debug-flag{top:2px;bottom:auto;left:auto;right:2px;pointer-events:none;opacity:.6}
 .tw-ghost{position:fixed;z-index:95;width:44px;height:46px;object-fit:cover;object-position:top;border-radius:9px;border:2px solid #ffd45a;background:#e6f0f7;transform:translate(-50%,-190%);pointer-events:none;opacity:.92;box-shadow:0 3px 10px #0004}
+/* 戦っているあいだの知らせ（正解・灯など）は、戦場にかぶさらないように、カードの上に出し、指をじゃましない */
+body[data-screen="tower"][data-tower="battle"] .toast{top:auto;bottom:calc(176px + env(safe-area-inset-bottom,0px));pointer-events:none;font-size:.9375rem;padding:8px 12px}
