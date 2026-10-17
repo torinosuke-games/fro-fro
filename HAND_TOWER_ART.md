@@ -79,3 +79,47 @@ Edit the supplied approved furnace game sprite, changing ONLY fire inside its fi
 #### tower-fx
 
 Create a production game VFX sprite sheet, exact 1024x1024 transparent RGBA, 4 columns by 4 rows, each cell exactly 256x256, NO grid lines, NO labels, NO text, NO background or checkerboard. Sixteen individually separated effects fully within their cell with at least 20px padding. Cozy hand-painted anime fantasy snowy tower defense JRPG, soft painterly detailed but clear at tiny size, warm orange highlights, gently magical not harsh neon. Each ROW is ONE effect and columns are successive animation frames left to right. Row1 y0-255: one wooden arrow with metal tip pointing RIGHT, consistent horizontal position and scale in all four frames, simple pale golden motion streak that subtly changes as it flies, no bow, no character. Row2 y256-511: ice spell impact, four stages small pale blue crystalline seed -> blue icy burst -> larger radiating snow crystals -> fading sparse icy shards. Row3 y512-767: healing light, four stages gentle green and gold motes ascending from low center -> rising spiral with gold sparkle -> higher sparse soft green motes -> fading high golden glints, no hearts or text. Row4 y768-1023: tiny warm orange-yellow impact sparks, four stages compact bright impact -> radial starburst -> scattered shorter amber sparks -> fading tiny embers. Exact regular sprite atlas layout, visual centers x128,384,640,896; row centers y128,384,640,896. Each effect isolated and never crosses cell boundaries. Transparent background all around and between particles.
+
+## 第2弾：氷の精霊・雪の巨人（2026-10-17、確認用）
+
+新しい魔物2体の初回確認用。依頼の順序に従い、まず魔物だけを作成した。**魔物の画風・大きさは確認待ち。追加効果 `tower-fx-2.webp` は、魔物のOK後に制作する。**
+
+### 追加ファイル
+
+- `img/adventure/tower/enemies-2.webp`：1536×1024、透過のlossless WebP。左が氷の精霊、右が雪の巨人。正面・全身。地面・影・文字・枠なし。
+- `img/adventure/tower/enemies-2-preview.webp`：2048×1024、不透明の比較専用画像。ゲームでは使わない。上段は既存3体＋新2体を同じ原画倍率60%で並べ、下段は各魔物を高さ60px（夜色）・40px（白背景）で表示した。
+
+既存の `snow-enemies.webp`・`tower-field.webp`・`tower-fx.webp` を目視し、image_gen の参照画像にも使用した。最初に2体のシートを生成し、巨人の横幅と余白を調整する編集を1回行った。その後、2体を分離して縦横比を保ったままサイズを整え、透明な1536×1024のシートへ配置した。生成時のアルファ8/255以下の微弱な外周の残りを除き、エッジのアンチエイリアスと精霊の透過は残した。生成原画は別途保持している。
+
+### 切り出し・大きさの目安
+
+左右の領域は各768×1024。絵の可視範囲（x, y, 幅, 高さ）は次のとおり。ゲーム側で切り出す場合は、周囲に数pxの余白を足してよい。
+
+| 魔物 | 可視範囲 | 表示高の目安（既存Canvas座標） |
+|---|---|---|
+| 氷の精霊 | `[179, 306, 411, 624]` | オオカミと同じ155 |
+| 雪の巨人 | `[812, 79, 681, 851]` | 大獣と同じ225 |
+
+原画の可視高は既存オオカミが約624px、大獣が約885px。精霊はオオカミ程度、巨人は大獣に近い大きさにそろえた。巨人は二本足・岩のこぶし・氷柱のひげ、精霊は足のない細い渦状の下半身・胸の雪結晶・光の輪で区別する。両者とも正面向きで、左へ進む移動処理はゲーム側に任せる。既存ファイルとゲームコードは変更していない。
+
+### 検証済み
+
+- `enemies-2.webp` の形式・1536×1024・RGBAを確認。
+- 外周32pxと中央の x=640〜799 の帯は完全透明。2体の重なりなし。
+- 白背景・夜色背景で外周を目視確認。比較画像には40px・60pxの実寸縮小も含めた。
+- 画像・引き継ぎ記録のみの変更なので、ゲームコードの自動テストは追加・実行していない。
+
+### 確認してほしい点
+
+1. 既存3体との画風・線の太さ・明るさ。新しい2体の氷の青や雪の白が強すぎないか。
+2. 精霊のやさしさ・少しさびしげな表情・胸の核・透け具合。巨人が「怖い」より「どっしり・おおらか」に見えるか。
+3. 40〜60pxで、細く浮く精霊と、ずんぐりした二足の巨人を区別できるか。
+4. 白いふち・過度なぼやけ・不要な影がないか。
+
+### 使用プロンプト（初稿）
+
+Create a new production character sprite atlas for the Japanese fantasy learning/snow-survival game FROZEN FRONTIER. Exact landscape canvas 1536x1024, truly TRANSPARENT RGBA background. Use reference 1 (snow-enemies.webp) as the strict drawing-style guide: richly detailed hand-painted Japanese anime fantasy JRPG monsters, crisp dark blue contour outlines, finely rendered fur/rock/ice, painterly warm tactile texture, bright readable snow-white and blue tones. Reference 2 is the blue snowy night battlefield color context only. Reference 3 shows compatible magic materials only. NEW characters only, do not copy the three reference beasts. TWO separate FRONT-FACING FULL-BODY creatures, left ice spirit and right snow giant, with transparent negative space between them and around every edge. No ground, no floor, no cast shadows, no contact shadows, no backdrop, no horizon, no text, no labels, no border. Both face the viewer as in reference 1, even though game logic will move them leftwards. Entire silhouettes visible, not cropped. Approximate visible bounding boxes: left spirit x85..625 y265..940 (about 520 wide by 675 tall, same scale as reference wolf); right giant x795..1505 y30..950 (about 710 wide by 920 tall, same scale as reference ice-horn beast). Top-to-bottom height/width of each creature about 1.3, including its magic halo or arms. Keep a common bottom baseline around y940. LEFT: a small androgynous childlike ice spirit, gentle slightly lonely face, pale aqua luminous eyes, small elegant human-like torso and arms, NO legs and NO feet, lower body tapers into a floating ethereal ice wisp. Semi-transparent blue-white icy body with CLEAR outlined silhouette and softly translucent interior, not invisible or washed-out. Bright highly readable snowflake-shaped white/cyan crystalline core in its chest. A few discrete suspended snow fragments and one slender cool luminous elliptical ring around the waist/body, confined close to the sprite, no huge haze cloud. Colors ice blue, white, pale cyan. Mysterious beautiful and a little cute, never scary, suitable for elementary-school children. RIGHT: a heavy, broad, sturdy TWO-LEGGED HUMANOID snow giant made of grey-blue boulders, packed snow and blue ice. Distinct from the four-legged horned beast: upright biped, NO horns, NO beast face, NO fur mane. Broad hunched shoulders with snow piled on shoulder/back ledges, large separate rocklike fists hanging at both sides, two clearly visible stout rock legs and broad feet, a few ice crystal seams. Craggy rock face, sleepy drooping brows and SMALL deep blue eyes, a short beard of hanging icicles. Dignified, slow, solid and generous presence, not angry or frightening. Snow white, grey-blue stone, ice blue, only eyes faintly luminous blue. Strong readable silhouette at 40-60 pixel game height; giant broad and squat, spirit slender and hovering. Match reference's outline weight and detailed illustrated rendering, not 3D, not photorealistic, not flat vector, not pixel art. Absolutely transparent around/under both characters; no white matte fringe.
+
+### 使用プロンプト（横幅・余白の調整）
+
+Refine reference 1, the two-new-monster sprite atlas. Preserve these exact two character designs and beautiful crisp detailed Japanese anime painted rendering, matching reference 2's existing monsters. STRICT ASSET LAYOUT correction, still exact 1536x1024 TRANSPARENT RGBA canvas. Background pixels must have zero alpha, absolutely no broad atmospheric glow cloud, no floor/ground/shadows. LEFT ICE SPIRIT remains gender-neutral, small gentle lonely face, pale glowing aqua eyes, clear translucent blue-white body, bright SNOWFLAKE CHEST CORE, no legs or feet, tapered floating wisp bottom and close slender icy ring, only a few close floating shards. Make its entire visible silhouette including shards about 500px wide and 650px tall, bounding box approximately x125..625,y285..935. Its chest core must stay legible at tiny game size. RIGHT SNOW-ROCK GIANT remains a heavy sleepy kindly craggy humanoid, snow on shoulders and head, small deep-blue eyes, icicle beard, rock fists, clearly two rock legs. NO horns. CORRECT its overly wide pose: bring the massive fists and forearms nearer the sides of its torso, shoulder width slightly narrower, keep upright stance and full feet. Giant's entire visible silhouette should be about 690px wide and 900px tall, bounding box x815..1505,y35..935 (height/width 1.3). Tall enough to match existing boss height, but still broad and stout relative to slim spirit. Do not shrink giant to spirit size. Keep BOTH characters strictly in their own half, a wide completely empty transparent gap x650..800, all edges at least25px from canvas edge. Both FRONT-FACING, FULL BODY. No existing reference beasts in result, only the spirit left and the giant right. NO text, NO grid, NO background, NO ground, NO shadows. Transparency around exterior must be crisp without white matte fringe; keep subtle translucency INSIDE the spirit, avoid an outer blurry aura.
