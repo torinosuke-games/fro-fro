@@ -36,6 +36,12 @@
     return out;
   }
 
+  // 人口による、灯の速さの倍率（はじめの10人なら 1。上限 POP_MAX）
+  function popMult(state, b) {
+    var L = T(b).LIGHT, pop = FF.buildings && FF.buildings.population ? FF.buildings.population(state, b) : null;
+    return pop ? Math.min(L.POP_MAX, 1 + L.POP_BONUS * Math.max(0, pop.total - pop.base)) : 1;
+  }
+
   // ---- 住民の応援（判断456） ----
   // 信頼が「恩人」になった町の人（CHEER に定義のある人だけ）
   function cheers(state, b) {
@@ -67,6 +73,8 @@
       core: { hp: t.CORE_HP, max: t.CORE_HP }, light: t.LIGHT.START, quizLock: 0, units: [], enemies: [], schedule: [], nextId: 1, placed: {},
       defs: {}, kills: 0, wave: 0, result: null };
     roster(state, b).forEach(function (id) { bt.defs[id] = unitStats(state, id, b); });
+    // 町の人口が多いほど、灯が自然にふえる速さが、上がる（判断457）
+    bt.popMult = popMult(state, b); bt.trickle = t.LIGHT.TRICKLE * bt.popMult;
     // 住民の応援：はじめの灯・仲間の HP・炉の熱は、ここで。矢と手当ては、step で、時間ごとに（cheerT）。cheerLog は、画面に知らせるための記録
     bt.cheers = cheers(state, b); bt.cheerT = {}; bt.cheerLog = [];
     var C = t.CHEER;
@@ -153,7 +161,7 @@
     // 灯：ゆっくり増える。学者がいると、もっと
     var sages = 0;
     bt.units.forEach(function (u) { if (bt.defs[u.member].role === 'sage' && u.hp > 0 && !(u.frozen > 0)) sages++; });
-    var rate = t.LIGHT.TRICKLE, sd = t.UNITS.gakusha;
+    var rate = bt.trickle != null ? bt.trickle : t.LIGHT.TRICKLE, sd = t.UNITS.gakusha;
     rate += sd ? Math.min(sages, sd.trickleMax) * sd.trickle : 0;
     bt.light = Math.min(t.LIGHT.MAX, bt.light + rate * dt);
     // 魔物が出る
@@ -292,7 +300,7 @@
     return { state: s, reward: reward };
   }
 
-  FF.tower = { cheers: cheers, roster: roster, unitStats: unitStats, create: create, cost: cost, canPlace: canPlace, place: place, remove: remove, unitAt: unitAt, canQuiz: canQuiz, answer: answer,
+  FF.tower = { popMult: popMult, cheers: cheers, roster: roster, unitStats: unitStats, create: create, cost: cost, canPlace: canPlace, place: place, remove: remove, unitAt: unitAt, canQuiz: canQuiz, answer: answer,
     step: step, run: run, createState: createState, normalize: normalize, today: today, raidsLeft: raidsLeft, raidDifficulty: raidDifficulty, maxCleared: maxCleared,
     practiceMax: practiceMax, rewardFor: rewardFor, finish: finish };
 })(this);

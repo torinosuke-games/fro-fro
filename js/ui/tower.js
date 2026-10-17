@@ -238,6 +238,7 @@
       rw.first && left ? E('p', { class: 'tw-note', rich: TT.raidFirst }) : null,
       button(TT.raidStart, 'primary', function () { begin(rd, 'raid'); U.rerender(); }, ids.length ? { 'data-act': 'raid' } : { 'data-act': 'raid', disabled: 'true' })
     ]);
+    var pop = FF.buildings.population(s), pm = X.popMult(s);
     var cheerIds = X.cheers(s);
     var cheer = E('div', { class: 'tw-cheerbox' }, [E('strong', { rich: TT.cheerTitle })].concat(cheerIds.length ?
       cheerIds.map(function (id) { return E('div', { class: 'tw-cheer-row', attrs: { 'data-who': id } }, [U.residentFace(id, 'qt-face'), E('div', {}, [E('b', { rich: whoName(id) }), E('span', { rich: cheerText(id) })])]); }) :
@@ -246,6 +247,7 @@
       E('h1', { class: 'tw-h1', rich: TT.title }),
       E('p', { class: 'tw-lead', rich: TT.lead }),
       raid,
+      E('p', { class: 'tw-pop', rich: fill(TT.popLine, { n: pop.total, m: (Math.round(pm * 100) / 100).toFixed(2).replace(/0$/, '') }) }),
       cheer,
       E('h2', { class: 'tw-h2', rich: TT.howTitle }),
       E('ul', { class: 'tw-how' }, TT.how.map(function (t) { return E('li', { rich: t }); })),
