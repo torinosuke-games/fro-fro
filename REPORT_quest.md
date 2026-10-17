@@ -21,7 +21,7 @@
 
 ## 2. 変更したファイル
 
-- 新規：`js/quests.js`（純粋関数）、`js/quest-texts.js`（文言）、`js/ui/quest.js`（酒場の画面）、`img/art/npc-tavern.webp`（看板娘）、`SPEC_quest.md`、`REPORT_quest.md`、`tests/cases/quests.js`、`tests/ui-quest.cjs`
+- 新規：`js/quests.js`（純粋関数）、`js/quest-texts.js`（文言）、`js/ui/quest.js`（酒場の画面）、`img/art/npc-tavern-face.webp`（看板娘）、`SPEC_quest.md`、`REPORT_quest.md`、`tests/cases/quests.js`、`tests/ui-quest.cjs`
 - 変更：`js/balance.js`（`QUESTS`）、`js/state.js`（`state.quests`・整合）、`js/daily.js`（乱数の道具の公開）、`js/learning.js`（正解で依頼を進める）、`js/ui/adventure.js`（戦闘の勝利で進める）、`js/main.js`（達成のお知らせ）、`js/ui/renewal.js`（酒場を開く・目印）、`js/debug.js`（酒場の依頼の道具）、`css/renewal.css`、`index.html`、`tests/ui-adventure.cjs`・`tests/ui-facilities.cjs`、`tests/MANUAL.md`
 - セーブの `saveVersion`・`integrity` は変えていない（`state.quests` は、読み込み時に補い、整える）。
 

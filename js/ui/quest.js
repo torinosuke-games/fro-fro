@@ -33,6 +33,19 @@
     return t.join('　');
   }
 
+  // 話し手（顔の絵と吹き出し）。酒場の看板娘・武器屋／防具屋／道具屋の店主で共通（判断439）。絵は img/art/npc-<名前>-face.webp
+  function speaker(face, name, lines, extra) {
+    return E('div', { class: 'qt-girl', attrs: { 'data-speaker': face } }, [
+      U.artImg('npc-' + face + '-face.webp', 'qt-portrait'),
+      E('div', { class: 'qt-bubble' }, [E('strong', { class: 'qt-speaker', rich: name })].concat(lines.map(function (t) { return E('p', { rich: t }); })).concat(extra || []))
+    ]);
+  }
+  // 店主のあいさつ。mood：'greet'｜'bought'｜'poor'
+  function keeperBox(kind, mood) {
+    var k = T.keeper[kind], lines = k[mood] || k.greet;
+    return speaker(kind, k.speaker, lines);
+  }
+
   function card(qu, again) {
     var a = FF.app, s = a.state, done = Q.done(qu), act;
     if (qu.claimed) act = E('span', { class: 'qt-state is-claimed', rich: T.claimed });
@@ -60,10 +73,7 @@
     if (fresh !== a.state) a.commit(fresh);
     var s = a.state, list = s.quests.board, again = function () { open(); };
     var line = Q.remaining(s) ? T.greet : [T.greetDone];
-    var girl = E('div', { class: 'qt-girl' }, [
-      U.artImg('npc-tavern.webp', 'qt-portrait'),
-      E('div', { class: 'qt-bubble' }, [E('strong', { class: 'qt-speaker', rich: T.speaker })].concat(line.map(function (t) { return E('p', { rich: t }); })).concat(Q.remaining(s) ? [E('p', { class: 'qt-intro', rich: T.intro.replace('{n}', list.length) })] : []))
-    ]);
+    var girl = speaker('tavern', T.speaker, line, Q.remaining(s) ? [E('p', { class: 'qt-intro', rich: T.intro.replace('{n}', list.length) })] : []);
     var body = E('div', { class: 'qt-body' }, [
       girl,
       E('p', { class: 'shop-gold' }, [E('span', { rich: T.gold }), E('strong', { text: U.fmt(FF.shop.gold(s)) + ' G' })]),
@@ -74,4 +84,5 @@
   }
 
   FF.ui.openTavern = open;
+  FF.ui.keeperBox = keeperBox;
 })(this);

@@ -522,7 +522,7 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 /* 酒場（住民の依頼クエスト。判断436） */
 .qt-body{display:grid;gap:10px;margin:6px 0 12px;max-height:min(70vh,600px);overflow-y:auto}
 .qt-girl{display:grid;grid-template-columns:84px minmax(0,1fr);gap:10px;align-items:start}
-.qt-portrait{width:84px;height:84px;border-radius:50%;object-fit:cover;object-position:34% 20%;border:2px solid #efa64b;background:#fff3e0}
+.qt-portrait{width:84px;height:84px;border-radius:50%;object-fit:cover;object-position:center;border:2px solid #efa64b;background:#fff3e0}
 .qt-bubble{position:relative;padding:8px 12px;border-radius:14px;background:#fff8ea;border:1px solid #efc27a;color:#5a3a14;font-size:.875rem;line-height:1.6}
 .qt-bubble::before{content:"";position:absolute;left:-7px;top:22px;width:12px;height:12px;background:#fff8ea;border-left:1px solid #efc27a;border-bottom:1px solid #efc27a;transform:rotate(45deg)}
 .qt-bubble p{margin:2px 0}
