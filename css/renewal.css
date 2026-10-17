@@ -518,3 +518,61 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 /* 魔法研究所（判断363） */
 .lab-body .lab-intro{line-height:1.8;margin:6px 0 10px}.lab-locked{line-height:1.8}.lab-progress{font-size:.8125rem;color:#6a8796;line-height:1.7}
 .lab-meter{height:10px;border-radius:6px;background:#dde9ef;overflow:hidden;margin:8px 0 4px}.lab-meter span{display:block;height:100%;background:linear-gradient(90deg,#f2b25a,#e07a3a)}
+
+/* 酒場（住民の依頼クエスト。判断436） */
+.qt-body{display:grid;gap:10px;margin:6px 0 12px;max-height:min(70vh,600px);overflow-y:auto}
+.qt-girl{display:grid;grid-template-columns:84px minmax(0,1fr);gap:10px;align-items:start}
+.qt-portrait{width:84px;height:84px;border-radius:50%;object-fit:cover;object-position:center;border:2px solid #efa64b;background:#fff3e0}
+.qt-bubble{position:relative;padding:8px 12px;border-radius:14px;background:#fff8ea;border:1px solid #efc27a;color:#5a3a14;font-size:.875rem;line-height:1.6}
+.qt-bubble::before{content:"";position:absolute;left:-7px;top:22px;width:12px;height:12px;background:#fff8ea;border-left:1px solid #efc27a;border-bottom:1px solid #efc27a;transform:rotate(45deg)}
+.qt-bubble p{margin:2px 0}
+.qt-speaker{display:block;font-size:.8125rem;color:#885219}
+.qt-intro{font-weight:700}
+.qt-list{display:grid;gap:8px}
+.qt-card{display:grid;gap:6px;padding:10px 12px;border:1px solid var(--rn-line,#d3e3ee);border-radius:14px;background:#fff}
+.qt-card.is-accepted{border-color:#efa64b;background:#fffaf0}
+.qt-card.is-claimed{opacity:.6}
+.qt-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.qt-kind{padding:1px 8px;border-radius:999px;background:#eaf3fb;color:#2c5d86;font-size:.75rem;font-weight:800}
+.qt-card[data-kind="hunt"] .qt-kind{background:#fde9e4;color:#9b3d2a}
+.qt-card[data-kind="study"] .qt-kind{background:#e9f5e6;color:#3d7a30}
+.qt-who{font-size:.9375rem}
+.qt-ask{margin:0;font-size:.875rem;line-height:1.6}
+.qt-reward{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.8125rem}
+.qt-reward-label{font-weight:800;color:#885219}
+.qt-reward-items{display:flex;gap:10px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.qt-gold{font-weight:800;color:#885219}
+.qt-progress{display:flex;align-items:center;gap:8px;font-size:.8125rem}
+.qt-bar{flex:1;height:8px;border-radius:999px;background:#eadfcc;overflow:hidden}
+.qt-bar i{display:block;height:100%;background:#e0a042;border-radius:999px}
+.qt-count{white-space:nowrap;font-variant-numeric:tabular-nums}
+.qt-act{display:flex;justify-content:flex-end}
+.qt-state{font-weight:800;color:#885219;font-size:.875rem}
+.qt-state.is-claimed{color:#3d7a30}
+.qt-btn{min-width:96px}
+@media (max-width:420px){.qt-girl{grid-template-columns:64px minmax(0,1fr)}.qt-portrait{width:64px;height:64px}}
+.facility-btn{position:relative}
+.facility-badge{position:absolute;top:-2px;right:6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#e5533d;color:#fff;font-size:.8125rem;line-height:20px;text-align:center;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+
+/* 住民の信頼と特別な依頼（判断440） */
+.qt-head{align-items:flex-start}
+.qt-face{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #efc27a;background:#fff3e0;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem}
+.qt-face.big{width:52px;height:52px}
+.qt-headtext{display:grid;gap:2px;min-width:0}
+.qt-headline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.qt-level{font-size:.75rem;font-weight:800;color:#8a6a3a}
+.qt-level.is-on{padding:1px 8px;border-radius:999px;background:#fff0cf;color:#885219}
+.qt-card.is-special{border-color:#e0a042;background:linear-gradient(180deg,#fffaf0,#fff3dc);box-shadow:0 0 0 2px rgba(224,160,66,.25)}
+.qt-card.is-special .qt-kind{background:#f6c76a;color:#6b3f08}
+.qt-story{margin:0;padding:6px 10px;border-left:3px solid #e0a042;background:rgba(255,255,255,.7);font-size:.8125rem;line-height:1.7;color:#5a3a14}
+.qt-bonus{font-size:.75rem;font-weight:800;color:#3d7a30}
+.qt-tabs{display:flex;gap:6px}
+.qt-tab{flex:1;padding:8px 6px;border:1px solid var(--rn-line,#d3e3ee);border-radius:12px;background:#fff;color:#1f4a68;font-weight:800;font-size:.875rem;cursor:pointer}
+.qt-tab.is-on{background:#1f6f9f;border-color:#1f6f9f;color:#fff}
+.qt-trust-intro{margin:0;font-size:.8125rem;line-height:1.6;color:#4a5f70}
+.qt-trust-list{display:grid;gap:8px}
+.qt-trust-row{display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--rn-line,#d3e3ee);border-radius:14px;background:#fff}
+.qt-trust-row[data-level="3"]{border-color:#e0a042;background:#fffaf0}
+.qt-trust-info{display:grid;gap:4px;min-width:0}
+.qt-trust-meta{font-size:.75rem;color:#6b5a3a}
+.qt-portrait.is-emoji{display:flex;align-items:center;justify-content:center;font-size:2.25rem;border-radius:50%;border:2px solid #efa64b;background:#fff3e0;flex:none}

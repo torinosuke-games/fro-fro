@@ -17,8 +17,8 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  const cta=await p.locator('.home-start-mobile').boundingBox();assert.ok(boxes[0].y>=cta.y+cta.height-1);
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  // 準備中の施設は、ウィンドウが開く。チケット引換所は、引換所の画面
- await p.locator('.facility-btn[data-facility="tavern"]').click();
- assert.equal(await p.locator('.overlay h2').innerText(),'酒場');assert.ok((await p.locator('.facility-soon').innerText()).includes('準備中'));
+ await p.locator('.facility-btn[data-facility="training"]').click();
+ assert.equal(await p.locator('.overlay h2').innerText(),'訓練所');assert.ok((await p.locator('.facility-soon').innerText()).includes('準備中'));
  await p.locator('.overlay .btn').click();assert.equal(await p.locator('.overlay').count(),0);
  await p.locator('.facility-btn[data-facility="ticket"]').click();
  assert.equal(await p.evaluate(()=>FF.app.screen),'redeem');

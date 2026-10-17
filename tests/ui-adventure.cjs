@@ -141,7 +141,10 @@ fs.mkdirSync(out, { recursive: true });
       throw Error('Battle did not finish');
     }
     await fight(); assert.ok(checkedReload);
-    await goFight(6, 5); await fight();
+    // 酒場の討伐の依頼（判断437）：戦闘に勝った瞬間に、受けた依頼が1つ進む
+    await page.evaluate(() => { const s = FF.util.clone(FF.app.state); s.quests = { version: 1, day: FF.daily.dayKey(FF.app.now()), board: [{ id: 't1', kind: 'hunt', who: 'baker', target: 'cub', need: 2, reward: { gold: 10, res: {}, potions: 0 }, accepted: true, progress: 0, claimed: false }], history: { completed: 0 } }; FF.app.commit(s); });
+    await goFight(6, 5); assert.equal(await page.evaluate(() => FF.app.state.adventure.battle.enemy), 'cub'); await fight();
+    assert.equal(await page.evaluate(() => FF.app.state.quests.board[0].progress), 1);
     await go(6, 3); // 焚き火で回復
     await go(8, 6); await fight();
     await go(11, 2);

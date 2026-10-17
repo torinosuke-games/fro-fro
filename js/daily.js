@@ -92,5 +92,5 @@
   // その日、その教科で獲得できる資材の id（ランダムの教科は null）
   function resourceFor(subject, now, tzOffset) { var e = today(now, tzOffset).bySubject[subject]; return e ? e.resource : null; }
 
-  FF.daily = { dayKey: dayKey, assign: assign, today: today, resourceFor: resourceFor, SUBJECT_IDS: SUBJECT_IDS, _clear: function () { memo = {}; } };
+  FF.daily = { seedOf: seedOf, rng: rng, shuffle: shuffle, dayKey: dayKey, assign: assign, today: today, resourceFor: resourceFor, SUBJECT_IDS: SUBJECT_IDS, _clear: function () { memo = {}; } };
 })(this);

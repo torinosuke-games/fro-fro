@@ -308,16 +308,16 @@
  }
  // 町のほかの施設（判断324）。絵は img/art/fac-*.webp。仲間紹介所は冒険の編成、チケット引換所は引換所を開く。
  var FACILITIES=[
-  {id:'weapon',name:R.facWeapon,open:function(){openWeaponShop();}},{id:'armor',name:R.facArmor,open:function(){openArmorShop();}},{id:'item',name:R.facItem,open:function(){openItemShop();}},{id:'tavern',name:R.facTavern},
+  {id:'weapon',name:R.facWeapon,open:function(){openWeaponShop();}},{id:'armor',name:R.facArmor,open:function(){openArmorShop();}},{id:'item',name:R.facItem,open:function(){openItemShop();}},{id:'tavern',name:R.facTavern,open:function(){FF.ui.openTavern();}},
   {id:'party',name:R.facParty,open:function(){U.show('adventureParty');}},{id:'magic',name:R.facMagic,open:function(){openLab();}},{id:'ticket',name:R.facTicket,open:function(){U.openRedeem();}},{id:'training',name:R.facTraining}
  ];
  // 武器屋・防具屋（判断340・343）：ゴールドで買い、装備する。武器は正解1回のダメージ（冒険では主人公の攻撃力）、防具は受けるダメージを減らす
  var closeShop=null;
- function openGearShop(kind){
+ function openGearShop(kind,mood){
   var a=FF.app,SH=FF.shop,armor=kind==='armor',k=armor?'armor':'weapon';
   if(closeShop){closeShop();closeShop=null;}
   var s=a.state;
-  var again=function(){openGearShop(kind);};
+  var again=function(){openGearShop(kind,'bought');};
   var list=E('div',{class:'shop-list'},(armor?FF.defs.ARMORS:FF.defs.WEAPONS).map(function(w){
    var st=armor?SH.astats(w.id):SH.stats(w.id),n=SH.copies(s,k,w.id),owned=n>0,can=SH.canBuyItem(s,k,w.id).ok,hs=SH.holders(s,k,w.id),h=hs[0];
    var memberName=function(id){return id==='hero'?a.state.player.name:FF.texts.adventure.members[id].name;};
@@ -333,14 +333,15 @@
     action
    ]);
   }));
-  var body=E('div',{class:'shop-body'},[E('p',{class:'shop-gold'},[E('span',{rich:R.shopGold}),E('strong',{text:U.fmt(SH.gold(s))+' G'})]),list,E('p',{class:'shop-note',rich:R.shopNote})]);
+  var cheapest=Math.min.apply(null,(armor?FF.defs.ARMORS:FF.defs.WEAPONS).map(function(w){return (armor?SH.astats(w.id):SH.stats(w.id)).price||0;}).filter(function(n){return n>0;}));
+  var body=E('div',{class:'shop-body'},[FF.ui.keeperBox(k,mood||(SH.gold(s)<cheapest?'poor':'greet')),E('p',{class:'shop-gold'},[E('span',{rich:R.shopGold}),E('strong',{text:U.fmt(SH.gold(s))+' G'})]),list,E('p',{class:'shop-note',rich:R.shopNote})]);
   closeShop=U.modal({title:armor?R.facArmor:R.facWeapon,body:body,buttons:[{label:U.T('back'),class:'ghost'}]});
  }
  // 道具屋（判断384）：回復薬を、ゴールドで買う
- function openItemShop(){
+ function openItemShop(mood){
   var a=FF.app,SH=FF.shop,B=FF.balance.ADVENTURE;
   if(closeShop){closeShop();closeShop=null;}
-  var s=a.state,again=function(){openItemShop();};
+  var s=a.state,again=function(){openItemShop('bought');};
   var buyBtn=function(n){
    var can=SH.canBuyPotion(s,n).ok;
    return E('button',{class:'rn-button primary shop-btn shop-buy shop-buy-'+n,attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuyN.replace('{n}',n),on:{click:function(){var r=SH.buyPotion(a.state,n);if(r.ok){a.commit(r.state);U.toast(R.shopBought);again();}}}});
@@ -351,7 +352,7 @@
     E('span',{class:'shop-price'},[U.fmt(B.POTION_PRICE)+' G',E('span',{class:'shop-owned',text:'　所持：'+SH.potions(s)+'個'})])]),
    E('div',{class:'shop-buys'},[buyBtn(1),buyBtn(5)])
   ]);
-  var body=E('div',{class:'shop-body'},[E('p',{class:'shop-gold'},[E('span',{rich:R.shopGold}),E('strong',{text:U.fmt(SH.gold(s))+' G'})]),E('div',{class:'shop-list'},[row]),E('p',{class:'shop-note',rich:R.itemNote.replace('{max}',B.POTION_MAX)})]);
+  var body=E('div',{class:'shop-body'},[FF.ui.keeperBox('item',mood||(SH.gold(s)<B.POTION_PRICE?'poor':'greet')),E('p',{class:'shop-gold'},[E('span',{rich:R.shopGold}),E('strong',{text:U.fmt(SH.gold(s))+' G'})]),E('div',{class:'shop-list'},[row]),E('p',{class:'shop-note',rich:R.itemNote.replace('{max}',B.POTION_MAX)})]);
   closeShop=U.modal({title:R.facItem,body:body,buttons:[{label:U.T('back'),class:'ghost'}]});
  }
  function openWeaponShop(){openGearShop('weapon');}
@@ -399,7 +400,7 @@
     if(f.open){f.open();return;}
     U.modal({title:f.name,body:E('p',{class:'facility-soon',rich:R.facSoonText}),buttons:[{label:U.T('back'),class:'ghost'}]});
    }}},[
-    U.artImg('fac-'+f.id+'.webp','facility-icon'),E('span',{class:'facility-name',rich:f.name})
+    U.artImg('fac-'+f.id+'.webp','facility-icon'),E('span',{class:'facility-name',rich:f.name}),f.id==='tavern'&&FF.quests&&FF.quests.claimable(FF.app.state)?E('span',{class:'facility-badge',text:'!',attrs:{'aria-label':U.plain(FF.texts.quest.toastDone)}}):null
    ]);
   }));
  }

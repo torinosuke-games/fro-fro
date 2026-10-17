@@ -23,7 +23,9 @@
 
     // 状態を変える操作はすべてここを通す：更新時刻を付けて保存し、ヘッダーを描き直す
     commit: function (s) {
+      var prev = app.state;
       app.state = FF.state.withUpdated(s, app.now());
+      if (prev && FF.quests && FF.quests.newlyDone(prev, app.state).length && FF.texts.quest) U.toast(FF.texts.quest.toastDone);   // 依頼を達成したら、お知らせ（判断437）
       app.save();
       if (app.scheduleSync) app.scheduleSync();
       if (FF.syncApp) FF.syncApp.collect(app.state);   // 新しい回答の履歴を、サーバーへ送る箱に入れる（同期がオンのときだけ）
