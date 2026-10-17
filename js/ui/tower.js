@@ -256,13 +256,14 @@
     var sel = E('select', { class: 'tw-select', attrs: { 'aria-label': U.plain(TT.difficulty) } }, opts);
     sel.value = String(picked);
     var lanesSel = E('select', { class: 'tw-select', attrs: { 'aria-label': U.plain(TT.lanes) } }, bal().LANES_CHOICES.map(function (n) { return E('option', { text: fill(U.plain(TT.lanesN), { n: n }), attrs: { value: String(n) } }); }));
-    lanesSel.value = String(bal().LANES);
+    lanesSel.value = String(X.lanesOf(picked));
+    sel.addEventListener('change', function () { lanesSel.value = String(X.lanesOf(+sel.value)); });   // 難しさを変えたら、その難しさの道の数にそろえる（変えて試すこともできる）
     var a = FF.app, fresh = X.today(s, a.now());
     if (fresh !== s) { a.commit(fresh); s = a.state; }
     var rd = X.raidDifficulty(s), left = X.raidsLeft(s, a.now()), rw = X.rewardFor(s, rd, a.now());
     var raid = E('div', { class: 'tw-raid' }, [
       E('strong', { rich: TT.raid }), E('p', { class: 'tw-note', rich: TT.raidLead }),
-      E('p', { class: 'tw-raid-meta' }, [E('span', { class: 'tw-badge', rich: fill(TT.level, { n: rd }) }), E('span', { rich: left ? fill(TT.raidLeft, { n: left }) : TT.raidNone })]),
+      E('p', { class: 'tw-raid-meta' }, [E('span', { class: 'tw-badge', rich: fill(TT.level, { n: rd }) }), E('span', { class: 'tw-badge is-lanes', rich: fill(TT.lanesN, { n: X.lanesOf(rd) }) }), E('span', { rich: left ? fill(TT.raidLeft, { n: left }) : TT.raidNone })]),
       E('p', { class: 'tw-reward' }, [E('span', { rich: TT.raidReward }), E('b', { text: ' ' + rewardText(rw) })]),
       rw.first && left ? E('p', { class: 'tw-note', rich: TT.raidFirst }) : null,
       button(TT.raidStart, 'primary', function () { begin(rd, 'raid'); U.rerender(); }, ids.length ? { 'data-act': 'raid' } : { 'data-act': 'raid', disabled: 'true' })

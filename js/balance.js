@@ -89,7 +89,7 @@
     HANDWRITING: { REWARD_RATE: 0.5 },   // 手書きの自己採点で「書けた」を選んだときの、資源・勉強量ポイントの割合（判断266）
     // 夜の防衛戦（タワーディフェンス。判断442・443。SPEC_tower.md）
     TOWER: {
-      TICK: 1 / 30, LANES: 5, LANES_CHOICES: [5, 6], LANES_BY_LEVEL: [5, 5, 5, 5, 5], COLS: 9, PLACE_FROM: 1, PLACE_TO: 5,   // 戦場は 5レーン×9マス。左端の列（0）＝中央炉。仲間を置けるのは、1〜5 列目（左から2〜6列目）
+      TICK: 1 / 30, LANES: 5, LANES_CHOICES: [5, 6], LANES_BY_LEVEL: [5, 5, 5, 6, 6], COLS: 9, PLACE_FROM: 1, PLACE_TO: 5,   // 戦場は 5レーン×9マス。左端の列（0）＝中央炉。仲間を置けるのは、1〜5 列目（左から2〜6列目）
       CORE_HP: 100, CORE_X: 0.4,                 // 魔物の中心が、この位置より左へ行くと、中央炉にたどりつく
       // POP_BONUS：町の人口が、はじめ（10人）より1人ふえるごとに、灯が自然にふえる速さ（TRICKLE）が、ふえる割合。POP_MAX：その倍率の上限（判断457）
       LIGHT: { START: 90, TRICKLE: 1.0, PER_CORRECT: { basic: 5, standard: 6, advanced: 8 }, CORRECT_LOCK: 2, WRONG_LOCK: 5, REFUND: 0.5, COST_STEP: 9, MAX: 999, POP_BONUS: 0.01, POP_MAX: 1.6 },   // 灯
