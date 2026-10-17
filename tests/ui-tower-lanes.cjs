@@ -7,7 +7,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.goto(process.env.FF_TEST_URL||pathToFileURL(path.resolve(__dirname,'../index.html')).href,{waitUntil:'domcontentloaded'});
  await p.evaluate(()=>{const s=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),5);s.player.avatar='e1';s.adventure.started=true;FF.app.state=s;FF.ui.show('tower');});
  await p.waitForTimeout(300);
- assert.equal(await p.locator('.tw-pick select').nth(1).evaluate(e=>[...e.options].map(o=>o.value).join()),'5,6');
+ assert.equal(await p.locator('.tw-pick select').nth(1).evaluate(e=>[...e.options].map(o=>o.value).join()),'5,6,7');
  await p.locator('.tw-pick select').nth(1).selectOption('6');await p.locator('[data-act="start"]').click();await p.waitForTimeout(800);
  const box=await p.locator('.tw-canvas').boundingBox();
  assert.ok(Math.abs(box.height/box.width-950/1440)<0.01,'canvas is 1440x950');

@@ -8,7 +8,7 @@ const PLAN = [   // [仲間, レーンの選び方, 列]。レーンは、'all'�
 ];
 function play(FF, state, { difficulty, seed, acc = 0.85, diffKey = 'standard', plan = PLAN, maxSeconds = 400 }) {
   const Tw = FF.tower, T = FF.balance.TOWER, bt = Tw.create(state, { difficulty, seed, mode: 'practice' });
-  if (bt.lanes > 5) plan = plan.reduce((o, e) => { o.push(e); if (e[1] === 4) o.push([e[0], 5, e[2]]); return o; }, []);   // 6本目の道も、5本目と同じ並べ方で守る
+  if (bt.lanes > 5) plan = plan.reduce((o, e) => { o.push(e); if (e[1] === 4) for (let l = 5; l < bt.lanes; l++) o.push([e[0], l, e[2]]); return o; }, []);   // 6本目以降の道も、5本目と同じ並べ方で守る
   let rng = (seed * 7919 + 13) >>> 0;
   const r = () => { rng = (rng + 0x6D2B79F5) >>> 0; let t = rng; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
   let idx = 0, ticks = Math.round(maxSeconds / T.TICK);

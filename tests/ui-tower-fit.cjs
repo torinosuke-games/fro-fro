@@ -3,7 +3,7 @@ const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');
 const assert=require('node:assert/strict'),path=require('node:path'),{pathToFileURL}=require('node:url');
 (async()=>{
  const b=await chromium.launch({headless:true,...(process.env.FF_BROWSER_PATH?{executablePath:process.env.FF_BROWSER_PATH}:{})});
- for(const lanes of [5,6])for(const [w,h] of [[390,844],[375,667],[360,640]]){
+ for(const lanes of [5,6,7])for(const [w,h] of [[390,844],[375,667],[360,640]]){
   const p=await b.newPage({viewport:{width:w,height:h}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
   await p.goto(process.env.FF_TEST_URL||pathToFileURL(path.resolve(__dirname,'../index.html')).href,{waitUntil:'domcontentloaded'});
   await p.evaluate(()=>{const s=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),5);s.player.avatar='e1';s.adventure.started=true;FF.app.state=s;FF.ui.show('tower');});
@@ -20,5 +20,5 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
   await p.evaluate(()=>{FF.ui.show('base')});await p.waitForTimeout(200);assert.equal(await p.evaluate(()=>document.getElementById('nav').hidden),false);
   assert.deepEqual(errors,[]);await p.close();
  }
- await b.close();console.log('PASS: tower battle fits one screen with 5 and 6 lanes on 390x844, 375x667, 360x640 (no scroll, masthead stays, resource strip and nav hidden)');
+ await b.close();console.log('PASS: tower battle fits one screen with 5, 6 and 7 lanes on 390x844, 375x667, 360x640 (no scroll, masthead stays, resource strip and nav hidden)');
 })().catch(e=>{console.error(e);process.exit(1)});
