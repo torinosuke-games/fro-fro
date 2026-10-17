@@ -26,6 +26,7 @@
     if (FF.app.screen === 'base') return 'town';
     var a = FF.app.state && FF.app.state.adventure;
     if (FF.app.screen === 'adventure') return a && a.battle ? (a.battle.phase === 'win' && victoryShown ? null : 'battle') : 'field';   // 勝利の画面が出たら、戦闘の曲を止めて、勝利の音を鳴らす。そのあとは無音（判断417・420）
+    if (FF.app.screen === 'tower') return FF.ui.towerPlaying && FF.ui.towerPlaying() ? 'battle' : null;   // 夜の防衛戦は、戦っているあいだだけ、戦闘の曲
     return null;
   }
   function track(name) {

@@ -16,14 +16,13 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  assert.equal(new Set(boxes.slice(0,4).map(b=>b.y)).size,1);assert.equal(new Set(boxes.slice(4).map(b=>b.y)).size,1);assert.ok(boxes[4].y>boxes[0].y);
  const cta=await p.locator('.home-start-mobile').boundingBox();assert.ok(boxes[0].y>=cta.y+cta.height-1);
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
- // 準備中の施設は、ウィンドウが開く。チケット引換所は、引換所の画面
+ // 訓練所は、夜の防衛戦の画面（判断443）。チケット引換所は、引換所の画面
  await p.locator('.facility-btn[data-facility="training"]').click();
- assert.equal(await p.locator('.overlay h2').innerText(),'訓練所');assert.ok((await p.locator('.facility-soon').innerText()).includes('準備中'));
- await p.locator('.overlay .btn').click();assert.equal(await p.locator('.overlay').count(),0);
+ assert.equal(await p.evaluate(()=>FF.app.screen),'tower');await p.evaluate(()=>FF.ui.show('base'));await p.waitForTimeout(200);
  await p.locator('.facility-btn[data-facility="ticket"]').click();
  assert.equal(await p.evaluate(()=>FF.app.screen),'redeem');
  // 広い画面は横8つ
  await p.evaluate(()=>FF.ui.show('base'));await p.setViewportSize({width:1024,height:800});await p.waitForTimeout(300);
  assert.equal(new Set(await p.locator('.facility-btn').evaluateAll(l=>l.map(e=>Math.round(e.getBoundingClientRect().y)))).size,1);
- assert.deepEqual(errors,[]);await b.close();console.log('PASS: 8 facility icons, 4 per row on phone, soon dialog, ticket office opens redeem');
+ assert.deepEqual(errors,[]);await b.close();console.log('PASS: 8 facility icons, 4 per row on phone, training opens tower, ticket office opens redeem');
 })().catch(e=>{console.error(e);process.exit(1);});
