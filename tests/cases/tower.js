@@ -201,4 +201,40 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.deepStrictEqual(plain(f.tower), { version: 1, day: null, rewards: B.RAIDS_PER_DAY, cleared: { 1: true }, wins: 0, best: { 1: B.WAVES.length } });
     assert.deepStrictEqual(plain(Tw.normalize({ tower: 'x' }).tower), plain(Tw.createState()));
   });
+  test('氷の精霊（判断455）：射程の中の最前列の仲間を凍らせる。凍っているあいだは、攻撃も回復もしない。解けると、また動く', () => {
+    const f = B.ENEMIES.spirit.freeze;
+    let bt = solo('spirit', 2, 3.2); bt.light = 999;
+    Tw.place(bt, 'kenshi', 2, 3); Tw.place(bt, 'gakusha', 2, 2);   // 前の列（3）と、後ろの列（2。攻撃しない仲間）
+    bt.enemies[0].sk = 0; bt.enemies[0].speed = 0; bt.enemies[0].atk = 0;
+    Tw.step(bt, B.TICK);
+    const front = bt.units.find(u => u.col === 3), back = bt.units.find(u => u.col === 2);
+    assert.ok(front.frozen > 0 && !(back.frozen > 0));   // 最前列だけ
+    const e = bt.enemies[0], hp0 = e.hp; front.cd = 0;
+    Tw.run(bt, f.dur - 0.5); assert.strictEqual(e.hp, hp0, '凍っている仲間は、攻撃しない');
+    Tw.run(bt, 1);
+    assert.ok(!(front.frozen > 0));
+    // 凍る間隔（cd）のあいだは、また凍らない。解けたあと、時間がたつと、また凍らせる
+    assert.ok(bt.enemies.length === 0 || bt.enemies[0].hp <= hp0);
+    // 白魔導士・司書・学者も、凍ると、はたらかない
+    let b2 = solo('spirit', 2, 6); b2.light = 999; Tw.place(b2, 'gakusha', 2, 1);
+    const r0 = (() => { const x = b2.light; Tw.step(b2, 1); return b2.light - x; })();
+    b2.units[0].frozen = 5; const r1 = (() => { const x = b2.light; Tw.step(b2, 1); return b2.light - x; })();
+    assert.ok(r0 > r1);
+  });
+  test('雪の巨人（判断455）：壁役の仲間には、倍のダメージ。ほかの仲間には、ふつう', () => {
+    const wallDmg = (member) => {
+      const bt = solo('giant', 2, 3.4); bt.light = 999; Tw.place(bt, member, 2, 3);
+      const u = bt.units[0], g = bt.enemies[0]; g.cd = 0; u.hp = u.max = 10000;
+      Tw.step(bt, B.TICK); return 10000 - u.hp;
+    };
+    assert.ok(wallDmg('juushouhei') > wallDmg('kenshi') * (B.ENEMIES.giant.wall - 0.01));
+  });
+  test('新しい魔物の出かた（判断455）：難しさ1にはいない。精霊は難しさ2から、巨人は難しさ3から。難しさで、数が増える', () => {
+    const count = (d, k) => battle({ difficulty: d }).schedule.filter(x => x.type === k).length;
+    assert.strictEqual(count(1, 'spirit') + count(1, 'giant'), 0);
+    assert.ok(count(2, 'spirit') > 0 && count(2, 'giant') === 0);
+    assert.ok(count(3, 'giant') > 0);
+    assert.ok(count(5, 'spirit') >= count(2, 'spirit'));
+    for (const k of ['spirit', 'giant']) assert.ok(B.ENEMIES[k] && B.ENEMIES[k].core > 0);
+  });
 };

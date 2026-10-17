@@ -5,8 +5,8 @@
   var FF = root.FF, U = FF.ui, E = U.el, X = FF.tower, TT = FF.texts.tower;
   var W = 1440, H = 800, CELL = 160, DIR = 'img/adventure/tower/';
   var LANE_Y = [100, 250, 400, 555, 705];   // 背景の絵の、5本の道の中心（絵に合わせた高さ）
-  var ENEMY_BOX = { cub: [0, 550, 340, 405, 115], wolf: [337, 278, 497, 675, 155], boss: [829, 20, 707, 940, 225] };   // snow-enemies.webp の切り出し（x, y, 幅, 高さ）と、戦場での高さ
-  var FX = { arrow: [0, 120], ice: [1, 210], heal: [2, 150], spark: [3, 130] };   // tower-fx.webp の行と、描く大きさ
+  var ENEMY_BOX = { cub: [0, 550, 340, 405, 115], wolf: [337, 278, 497, 675, 155], boss: [829, 20, 707, 940, 225], spirit: [179, 306, 411, 624, 155, 'e2'], giant: [812, 79, 681, 851, 225, 'e2'] };   // 6つ目：絵のシート（なければ snow-enemies.webp。'e2' は enemies-2.webp＝氷の精霊・雪の巨人。判断455）   // snow-enemies.webp の切り出し（x, y, 幅, 高さ）と、戦場での高さ
+  var FX = { arrow: [0, 120], ice: [1, 210], heal: [2, 150], spark: [3, 130], smash: [1, 190, 'fx2'] };   // tower-fx.webp の行と、描く大きさ（3つ目：tower-fx-2.webp のシートのとき。凍結は 0行目、壁が壊れるのは 1行目）   // tower-fx.webp の行と、描く大きさ
   var imgs = null, cur = null, token = 0, refs = null;
 
   function bal() { return FF.balance.TOWER; }
@@ -14,7 +14,7 @@
   function images() {
     if (imgs) return imgs;
     imgs = { field: loadImg(DIR + 'tower-field.webp'), core1: loadImg(DIR + 'tower-core-1.webp'), core2: loadImg(DIR + 'tower-core-2.webp'), core3: loadImg(DIR + 'tower-core-3.webp'),
-      fx: loadImg(DIR + 'tower-fx.webp'), enemies: loadImg('img/adventure/snow-enemies.webp'), allies: {} };
+      fx: loadImg(DIR + 'tower-fx.webp'), fx2: loadImg(DIR + 'tower-fx-2.webp'), enemies2: loadImg(DIR + 'enemies-2.webp'), enemies: loadImg('img/adventure/snow-enemies.webp'), allies: {} };
     return imgs;
   }
   function allyImg(id) {
@@ -59,7 +59,10 @@
           else addFx('spark', tg.x * CELL, LANE_Y[tg.lane] - 30, { dur: 0.25 });
         }
       }
-      if (hp !== undefined && u.hp < hp - 0.01) addFx('spark', (u.col + 0.5) * CELL, LANE_Y[u.lane] - 20, { dur: 0.25 });
+      if (hp !== undefined && u.hp < hp - 0.01) {
+        var big = bt.enemies.some(function (e) { return e.type === 'giant' && e.lane === u.lane && Math.abs(e.x - (u.col + 0.5)) < 1.3; });   // 雪の巨人に殴られたら、岩と雪が飛び散る
+        addFx(big ? 'smash' : 'spark', (u.col + 0.5) * CELL, LANE_Y[u.lane] - 20, { dur: big ? 0.45 : 0.25 });
+      }
       p.cd[u.id] = u.cd; p.hp[u.id] = u.hp;
     });
     if (bt.kills > p.kills) { snd('kill'); p.kills = bt.kills; }
@@ -168,20 +171,23 @@
     ctx.fillStyle = 'rgba(10,20,40,0.28)'; ctx.beginPath(); ctx.ellipse(cx, base - 2, 50, 13, 0, 0, Math.PI * 2); ctx.fill();
     if (ready(i)) { var w = h * i.naturalWidth / i.naturalHeight; ctx.drawImage(i, cx - w / 2, base - h, w, h); }
     else { ctx.fillStyle = '#6aa4d8'; ctx.fillRect(cx - 28, base - h, 56, h); }
+    if (u.frozen > 0) {   // 凍っている仲間：氷がかたまる→全身が氷→砕ける（tower-fx-2.webp の 0行目）
+      var fz = images().fx2, el = bal().ENEMIES.spirit.freeze.dur - u.frozen, fk = el < 0.15 ? 0 : el < 0.3 ? 1 : u.frozen > 0.35 ? 2 : 3;
+      if (ready(fz)) ctx.drawImage(fz, fk * 256, 0, 256, 256, cx - 95, base - h / 2 - 105, 190, 190);
+    }
     if (u.hp < u.max) bar(ctx, cx, base - h - 14, 90, u.hp / u.max, '#6fd49a');
     if (cur.sel && cur.sel.kind === 'unit' && cur.sel.uid === u.id) { ctx.strokeStyle = '#ffd36b'; ctx.lineWidth = 5; ctx.strokeRect(cx - 70, LANE_Y[u.lane] - 66, 140, 132); }
   }
   function drawEnemy(ctx, e) {
-    var b = ENEMY_BOX[e.type] || ENEMY_BOX.cub, i = images().enemies, cx = e.x * CELL, base = LANE_Y[e.lane] + 60, h = b[4], w = h * b[2] / b[3];
+    var b = ENEMY_BOX[e.type] || ENEMY_BOX.cub, i = b[5] === 'e2' ? images().enemies2 : images().enemies, cx = e.x * CELL, base = LANE_Y[e.lane] + 60, h = b[4], w = h * b[2] / b[3];
     ctx.fillStyle = 'rgba(10,20,40,0.3)'; ctx.beginPath(); ctx.ellipse(cx, base - 3, w * 0.42, 12, 0, 0, Math.PI * 2); ctx.fill();
     if (ready(i)) ctx.drawImage(i, b[0], b[1], b[2], b[3], cx - w / 2, base - h, w, h);
     else { ctx.fillStyle = '#c0504a'; ctx.fillRect(cx - 30, base - h, 60, h); }
     if (e.hp < e.max) bar(ctx, cx, base - h - 12, Math.max(80, w * 0.8), e.hp / e.max, '#ee6a5a');
   }
   function drawFx(ctx) {
-    var i = images().fx;
     cur.fx.forEach(function (f) {
-      var row = FX[f.kind][0], size = FX[f.kind][1], k = Math.min(3, Math.floor(f.t / f.dur * 4)), x = f.x, y = f.y;
+      var row = FX[f.kind][0], size = FX[f.kind][1], k = Math.min(3, Math.floor(f.t / f.dur * 4)), x = f.x, y = f.y, i = FX[f.kind][2] === 'fx2' ? images().fx2 : images().fx;
       if (f.kind === 'arrow') { var q = Math.min(1, f.t / f.dur); x = f.x + (f.toX - f.x) * q; y = f.y + (f.toY - f.y) * q; }
       if (ready(i)) ctx.drawImage(i, k * 256, row * 256, 256, 256, x - size / 2, y - size / 2, size, size);
       else { ctx.fillStyle = 'rgba(255,230,150,0.8)'; ctx.fillRect(x - 6, y - 6, 12, 12); }

@@ -158,3 +158,7 @@ TOP LEFT CELL ONLY (freezing frame1): REMOVE the large connected icy oval and th
 BOTTOM LEFT CELL ONLY (wall impact frame1): simplify to a small pale-gold/white contact glint inside one thin pale icy-white shockwave ring, with only a FEW tiny snow grains. REMOVE all large rocks, remove giant pointed ice blades, no huge burst yet. Its footprint is about half the diameter of bottom frame2's burst.
 BOTTOM RIGHT CELL ONLY (wall impact frame4): REMOVE ALL big rocks, all medium rocks, all thick smoke ribbons and the large cloud. Replace with only 8-12 tiny widely separated white snow motes and one or two extremely faint SHORT fading wisps. This is almost gone, much fainter and sparser than frame3. No rock chunks, no starburst, no large ring, no substantial cloud. Preserve bottom frame2 as the strongest radial snow/rock burst and bottom frame3 as spreading fragments with snow dust, so row progression is ring -> strong debris burst -> scattered debris with snow dust -> almost empty tiny snow particles.
 Each effect must fit its own cell with clear transparent padding; do not cross any cell boundaries. Make the first/last sparse frames actually sparse; do not enlarge tiny particles to fill the cell. Preserve detailed hand-painted Japanese anime JRPG art, faceted blue ice, grey-blue rock, white snow, gentle warm tiny contact flash. This is an effects-only overlay atlas.
+
+## 取り込み（Claude。判断455）
+
+`enemies-2.webp`・`tower-fx-2.webp` を確認して、そのまま使った。魔物の大きさ（高さ）は、精霊＝155（オオカミと同じ）、巨人＝225（大獣と同じ）。切り出しは、上の表の可視範囲。効果は、1コマ 256×256 で、凍結は 0行目（氷がかたまる→全身が氷→砕ける）、壁が壊れるのは 1行目。

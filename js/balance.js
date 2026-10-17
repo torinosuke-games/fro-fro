@@ -109,11 +109,16 @@
       ENEMIES: {
         cub:  { hp: 30,  atk: 5,  interval: 1,   speed: 0.35, core: 8 },
         wolf: { hp: 55,  atk: 8,  interval: 0.9, speed: 0.6,  core: 14 },
-        boss: { hp: 300, atk: 24, interval: 1.4, speed: 0.2,  core: 50 }
+        boss: { hp: 300, atk: 24, interval: 1.4, speed: 0.2,  core: 50 },
+        // 新しい魔物（判断455）：氷の精霊＝仲間を凍らせて、しばらく動けなくする（range マス先の最前列の仲間を、cd 秒ごとに、dur 秒）／雪の巨人＝壁役の仲間に、wall 倍のダメージ
+        spirit: { hp: 40,  atk: 4,  interval: 1,   speed: 0.45, core: 10, freeze: { range: 3, cd: 6, dur: 2 } },
+        giant:  { hp: 220, atk: 14, interval: 1.6, speed: 0.22, core: 35, wall: 3 }
       },
       // 難しさ（1〜5）ごとの増え方（難しさ1が基準）
       LEVEL: { HP: 0.15, ATK: 0.08, SPEED: 0.05, COUNT: 0.2, BOSS_EVERY: 3 },   // COUNT：数が増える割合（難しさ1つにつき +20%）。BOSS_EVERY：ボスが1体増える難しさの間隔
       WAVES: [{ cub: 4 }, { cub: 5, wolf: 1 }, { cub: 5, wolf: 3 }, { cub: 5, wolf: 5 }, { cub: 3, wolf: 3, boss: 1 }],
+      // 新しい魔物の、波ごとの数（難しさが FROM 以上のときだけ出る。数は、難しさで増える。判断455）
+      WAVES_NEW: { spirit: { FROM: 2, PER_WAVE: [0, 0, 1, 1, 1] }, giant: { FROM: 3, PER_WAVE: [0, 0, 0, 0, 1] } },
       WAVE_START: [6, 40, 78, 118, 160], SPAWN_GAP: 1.6,   // 波の始まる時刻（秒）・1体ずつ出す間隔
       MAX_TIME: 400,
       RAIDS_PER_DAY: 3, REWARD: { GOLD_PER_LEVEL: 80, FIRST_CLEAR: 2, RES_PER_LEVEL: 10, RES_KINDS: 2, POTION_FROM_LEVEL: 3 }   // 今夜の襲撃：1日3回まで報酬。はじめて勝った難しさは、ゴールドが2倍

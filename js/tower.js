@@ -41,6 +41,10 @@
     var t = T(b), L = t.LEVEL, list = [];
     t.WAVES.forEach(function (w, i) {
       var items = [];
+      Object.keys(t.WAVES_NEW || {}).forEach(function (k) {   // 新しい魔物（氷の精霊・雪の巨人）
+        var nw = t.WAVES_NEW[k], base = nw.PER_WAVE[i] || 0;
+        if (d >= nw.FROM && base) for (var q = 0, n = Math.round(base * (1 + L.COUNT * (d - nw.FROM))); q < n; q++) items.push(k);
+      });
       Object.keys(w).forEach(function (k) {
         var n = k === 'boss' ? w[k] + Math.floor((d - 1) / L.BOSS_EVERY) : Math.round(w[k] * (1 + L.COUNT * (d - 1)));
         for (var j = 0; j < n; j++) items.push(k);
@@ -111,12 +115,12 @@
   function ux(u) { return u.col + 0.5; }
   function wardReduce(bt, u, b) {
     var r = 1;
-    bt.units.forEach(function (w) { var d = bt.defs[w.member]; if (d.role === 'ward' && w.hp > 0 && Math.abs(w.lane - u.lane) <= 1 && Math.abs(w.col - u.col) <= d.range) r = Math.min(r, d.reduce); });
+    bt.units.forEach(function (w) { var d = bt.defs[w.member]; if (d.role === 'ward' && w.hp > 0 && !(w.frozen > 0) && Math.abs(w.lane - u.lane) <= 1 && Math.abs(w.col - u.col) <= d.range) r = Math.min(r, d.reduce); });
     return r;
   }
   function slowOf(bt, e) {
     var s = 1;
-    bt.units.forEach(function (w) { var d = bt.defs[w.member]; if (d.role === 'ward' && w.hp > 0 && w.lane === e.lane) { var dx = e.x - ux(w); if (dx > 0 && dx <= d.slowRange) s = Math.min(s, d.slow); } });
+    bt.units.forEach(function (w) { var d = bt.defs[w.member]; if (d.role === 'ward' && w.hp > 0 && !(w.frozen > 0) && w.lane === e.lane) { var dx = e.x - ux(w); if (dx > 0 && dx <= d.slowRange) s = Math.min(s, d.slow); } });
     return s;
   }
   function target(bt, u, d) {
@@ -132,7 +136,7 @@
     bt.t += dt; bt.quizLock = Math.max(0, bt.quizLock - dt);
     // 灯：ゆっくり増える。学者がいると、もっと
     var sages = 0;
-    bt.units.forEach(function (u) { if (bt.defs[u.member].role === 'sage' && u.hp > 0) sages++; });
+    bt.units.forEach(function (u) { if (bt.defs[u.member].role === 'sage' && u.hp > 0 && !(u.frozen > 0)) sages++; });
     var rate = t.LIGHT.TRICKLE, sd = t.UNITS.gakusha;
     rate += sd ? Math.min(sages, sd.trickleMax) * sd.trickle : 0;
     bt.light = Math.min(t.LIGHT.MAX, bt.light + rate * dt);
@@ -143,11 +147,12 @@
       s.done = true; bt.wave = Math.max(bt.wave, s.wave);
       var def = t.ENEMIES[s.type], hp = Math.round(def.hp * (1 + L.HP * (d - 1)));
       bt.enemies.push({ id: bt.nextId++, type: s.type, lane: s.lane, x: t.COLS, hp: hp, max: hp, atk: def.atk * (1 + L.ATK * (d - 1)), interval: def.interval,
-        speed: def.speed * (1 + L.SPEED * (d - 1)), cd: def.interval, core: def.core });
+        speed: def.speed * (1 + L.SPEED * (d - 1)), cd: def.interval, core: def.core, sk: def.freeze ? def.freeze.cd * 0.6 : 0 });
     });
     // 仲間の行動
     bt.units.forEach(function (u) {
       if (u.hp <= 0) return;
+      if (u.frozen > 0) { u.frozen = Math.max(0, u.frozen - dt); return; }   // 凍っているあいだは、何もできない
       var def = bt.defs[u.member];
       if (def.role === 'ward' || def.role === 'sage' || def.atk <= 0) return;
       u.cd -= dt;
@@ -169,9 +174,18 @@
       if (e.hp <= 0) return;
       var block = null;
       bt.units.forEach(function (u) { if (u.hp > 0 && u.lane === e.lane) { var dx = e.x - ux(u); if (dx >= -0.2 && dx <= 0.7 && (!block || ux(u) > ux(block))) block = u; } });
+      var ed = t.ENEMIES[e.type] || {};
+      if (ed.freeze) {   // 氷の精霊：射程の中の最前列の仲間を、凍らせる（もう凍っている仲間は、とばす）
+        e.sk -= dt;
+        if (e.sk <= 0) {
+          var tg = null;
+          bt.units.forEach(function (u) { var dx = e.x - ux(u); if (u.lane === e.lane && u.hp > 0 && !(u.frozen > 0) && dx > -0.3 && dx <= ed.freeze.range && (!tg || ux(u) > ux(tg))) tg = u; });
+          if (tg) { tg.frozen = ed.freeze.dur; e.sk = ed.freeze.cd; } else e.sk = 0.4;
+        }
+      }
       if (block) {
         e.cd -= dt;
-        if (e.cd <= 0) { block.hp -= e.atk * wardReduce(bt, block, b); e.cd = e.interval; }
+        if (e.cd <= 0) { block.hp -= e.atk * wardReduce(bt, block, b) * (ed.wall && bt.defs[block.member].role === 'wall' ? ed.wall : 1); e.cd = e.interval; }
         return;
       }
       e.x -= e.speed * slowOf(bt, e) * dt;
