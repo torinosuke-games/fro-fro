@@ -135,12 +135,17 @@
       ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(c * CELL + 12, LANE_Y[l] - 62, CELL - 24, 124, 18); else ctx.rect(c * CELL + 12, LANE_Y[l] - 62, CELL - 24, 124);
       ctx.fill(); ctx.stroke();
     }
-    var h = cur.hover;   // ドラッグ中に、指のあるマス：置けるなら金色、置けないなら赤
+    var h = cur.hover;   // ドラッグ中に、指のあるマス。指で隠れても分かるように、そのマスの行と列を、細長くひからせ、マスには、置く仲間の絵をうすく出す。置けるなら金色、置けないなら赤
     if (h && h.col >= T.PLACE_FROM && h.col <= T.PLACE_TO && h.lane >= 0 && h.lane < T.LANES) {
-      var ok = X.canPlace(bt, cur.sel.id, h.lane, h.col).ok;
-      ctx.fillStyle = ok ? 'rgba(255,214,90,0.5)' : 'rgba(230,80,70,0.35)'; ctx.strokeStyle = ok ? '#ffd45a' : '#e65046'; ctx.lineWidth = 5;
-      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(h.col * CELL + 12, LANE_Y[h.lane] - 62, CELL - 24, 124, 18); else ctx.rect(h.col * CELL + 12, LANE_Y[h.lane] - 62, CELL - 24, 124);
+      var ok = X.canPlace(bt, cur.sel.id, h.lane, h.col).ok, tint = ok ? '255,214,90' : '230,80,70', cx = h.col * CELL + 12, cy = LANE_Y[h.lane] - 62;
+      ctx.fillStyle = 'rgba(' + tint + ',0.16)';
+      ctx.fillRect(CELL * T.PLACE_FROM, cy, CELL * (T.PLACE_TO - T.PLACE_FROM + 1), 124);   // その道（行）
+      ctx.fillRect(cx, 0, CELL - 24, H);                                                      // そのマスの列
+      ctx.fillStyle = 'rgba(' + tint + ',0.45)'; ctx.strokeStyle = 'rgb(' + tint + ')'; ctx.lineWidth = 7;
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(cx, cy, CELL - 24, 124, 18); else ctx.rect(cx, cy, CELL - 24, 124);
       ctx.fill(); ctx.stroke();
+      var im = allyImg(cur.sel.id);
+      if (ready(im)) { var ih = 150, iw = ih * im.naturalWidth / im.naturalHeight; ctx.globalAlpha = ok ? 0.7 : 0.35; ctx.drawImage(im, (h.col + 0.5) * CELL - iw / 2, LANE_Y[h.lane] + 58 - ih, iw, ih); ctx.globalAlpha = 1; }
     }
     ctx.restore();
   }
