@@ -87,6 +87,37 @@
     // ---- 学習 ----
     INPUT_MAX_ATTEMPTS: 3,
     HANDWRITING: { REWARD_RATE: 0.5 },   // 手書きの自己採点で「書けた」を選んだときの、資源・勉強量ポイントの割合（判断266）
+    // 夜の防衛戦（タワーディフェンス。判断442・443。SPEC_tower.md）
+    TOWER: {
+      TICK: 1 / 30, LANES: 5, COLS: 9, PLACE_FROM: 1, PLACE_TO: 5,   // 戦場は 5レーン×9マス。左端の列（0）＝中央炉。仲間を置けるのは、1〜5 列目（左から2〜6列目）
+      CORE_HP: 100, CORE_X: 0.4,                 // 魔物の中心が、この位置より左へ行くと、中央炉にたどりつく
+      LIGHT: { START: 90, TRICKLE: 1.0, PER_CORRECT: { basic: 8, standard: 10, advanced: 14 }, CORRECT_LOCK: 3, WRONG_LOCK: 6, REFUND: 0.5, COST_STEP: 6, MAX: 999 },   // 灯
+      HP_RATE: 1.5, ARMOR_HP: 10, ATK_RATE: 0.8, WEAPON_ATK: 3, LEVEL_RATE: 0.04,   // 冒険の能力 → 戦場の能力。レベル1つにつき +4%
+      // 仲間ごと：role＝役目、cost＝灯の値段、hp＝HP の倍率、interval＝攻撃の間隔（秒。冒険の speed で、速いほど短くなる）、range＝射程（マス）、stat＝攻撃力のもとの能力、atk＝攻撃力の倍率、aoe＝範囲（マス）
+      UNITS: {
+        juushouhei:   { role: 'wall',   cost: 30, hp: 3,   interval: 1.6, range: 1,   stat: 'strength', atk: 0.5 },
+        kenshi:       { role: 'melee',  cost: 30, hp: 1.2, interval: 1.1, range: 1,   stat: 'strength', atk: 1 },
+        senshi:       { role: 'melee',  cost: 45, hp: 1.4, interval: 1.5, range: 1,   stat: 'strength', atk: 1.8 },
+        touzoku:      { role: 'melee',  cost: 30, hp: 0.9, interval: 0.8, range: 1,   stat: 'strength', atk: 0.6 },
+        yumitsukai:   { role: 'ranged', cost: 45, hp: 0.8, interval: 1.3, range: 5.5, stat: 'strength', atk: 1 },
+        kuromadoushi: { role: 'mage',   cost: 60, hp: 0.8, interval: 2.4, range: 4,   stat: 'wisdom',   atk: 1.6, aoe: 1 },
+        shiromadoushi:{ role: 'healer', cost: 45, hp: 0.9, interval: 2.0, range: 2,   stat: 'wisdom',   atk: 0.8 },
+        shisho:       { role: 'ward',   cost: 45, hp: 1,   interval: 1,   range: 2,   stat: 'wisdom',   atk: 0, reduce: 0.7, slow: 0.8, slowRange: 3 },
+        gakusha:      { role: 'sage',   cost: 30, hp: 0.9, interval: 1,   range: 0,   stat: 'wisdom',   atk: 0, trickle: 0.5, trickleMax: 3 }
+      },
+      // 魔物：hp・atk（1回の攻撃）・interval・speed（マス／秒）・core（中央炉にたどりついたときの、熱の減り）
+      ENEMIES: {
+        cub:  { hp: 30,  atk: 5,  interval: 1,   speed: 0.35, core: 8 },
+        wolf: { hp: 55,  atk: 8,  interval: 0.9, speed: 0.6,  core: 14 },
+        boss: { hp: 300, atk: 24, interval: 1.4, speed: 0.2,  core: 50 }
+      },
+      // 難しさ（1〜5）ごとの増え方（難しさ1が基準）
+      LEVEL: { HP: 0.15, ATK: 0.08, SPEED: 0.05, COUNT: 0.2, BOSS_EVERY: 3 },   // COUNT：数が増える割合（難しさ1つにつき +20%）。BOSS_EVERY：ボスが1体増える難しさの間隔
+      WAVES: [{ cub: 4 }, { cub: 5, wolf: 1 }, { cub: 5, wolf: 3 }, { cub: 5, wolf: 5 }, { cub: 3, wolf: 3, boss: 1 }],
+      WAVE_START: [6, 40, 78, 118, 160], SPAWN_GAP: 1.6,   // 波の始まる時刻（秒）・1体ずつ出す間隔
+      MAX_TIME: 400,
+      RAIDS_PER_DAY: 3, REWARD: { GOLD_PER_LEVEL: 80, FIRST_CLEAR: 2, RES_PER_LEVEL: 10, RES_KINDS: 2, POTION_FROM_LEVEL: 3 }   // 今夜の襲撃：1日3回まで報酬。はじめて勝った難しさは、ゴールドが2倍
+    },
     // 住民の依頼クエスト（酒場。判断434・SPEC_quest.md）。配列は、中央炉のレベル（1〜5）ごとの数（Lv1 は先頭）
     QUESTS: {
       PER_DAY: 3,                                 // 1日の依頼の数（納品・討伐・学習が1つずつ。討伐が出せないときは納品を足す）
