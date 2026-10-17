@@ -37,6 +37,8 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  assert.ok((await p.locator('.qt-trust-row[data-who="baker"]').innerText()).includes('親友'));
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  await p.screenshot({path:process.env.FF_SHOT3||'/tmp/trust3.png'});
+ // 町の人6人の顔の絵が読める（判断441）
+ assert.deepEqual(await p.locator('.qt-trust-row img.qt-face').evaluateAll(l=>l.map(i=>i.complete&&i.naturalWidth>0)),[true,true,true,true,true,true]);
  // 日替わりの依頼のカードにも、住民の信頼の段階が出る
  await p.locator('.qt-tab[data-tab="board"]').click();
  assert.ok(await p.locator('.qt-card:not(.is-special) .qt-level').count()>=3);
