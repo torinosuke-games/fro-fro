@@ -121,6 +121,14 @@
       WAVES_NEW: { spirit: { FROM: 2, PER_WAVE: [0, 0, 1, 1, 1] }, giant: { FROM: 3, PER_WAVE: [0, 0, 0, 0, 1] } },
       WAVE_START: [6, 40, 78, 118, 160], SPAWN_GAP: 1.6,   // 波の始まる時刻（秒）・1体ずつ出す間隔
       MAX_TIME: 400,
+      // 住民の応援（判断456）：信頼が LEVEL（恩人＝3）になった町の人が、戦いに加わる。人ごとに、はたらきが1つ
+      CHEER: { LEVEL: 3,
+        baker: { light: 40 },                          // トム：焼きたてのパンの差し入れ。はじめの灯が増える
+        woodcutter: { hp: 0.15 },                      // ガイ：丸太の盾。並べる仲間の HP が増える割合
+        hunter: { every: 12, damage: 25 },             // ロク：猟師の矢。every 秒ごとに、各道のいちばん炉に近い魔物へ、damage
+        nurse: { every: 16, heal: 0.25 },              // マリ：手当て。every 秒ごとに、仲間みんなの HP が、最大の heal 回復
+        child: { light: 2 },                           // リコ：おうえん。正解のたびに、灯が増える
+        elder: { core: 20 } },                         // バルト：長老の知恵。中央炉の熱の最大が増える
       RAIDS_PER_DAY: 3, REWARD: { GOLD_PER_LEVEL: 80, FIRST_CLEAR: 2, RES_PER_LEVEL: 10, RES_KINDS: 2, POTION_FROM_LEVEL: 3 }   // 今夜の襲撃：1日3回まで報酬。はじめて勝った難しさは、ゴールドが2倍
     },
     // 住民の依頼クエスト（酒場。判断434・SPEC_quest.md）。配列は、中央炉のレベル（1〜5）ごとの数（Lv1 は先頭）

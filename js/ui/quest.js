@@ -139,4 +139,5 @@
 
   FF.ui.openTavern = function () { tab = 'board'; open(); };
   FF.ui.keeperBox = keeperBox;
+  FF.ui.residentFace = face;   // 住民の顔（夜の防衛戦の応援でも使う。判断456）
 })(this);

@@ -28,6 +28,13 @@
   function snd(name) { if (FF.towerSound && FF.towerSound[name]) FF.towerSound[name](); }
   function fill(t, vars) { return Object.keys(vars).reduce(function (s, k) { return s.split('{' + k + '}').join(vars[k]); }, t); }
 
+  // ---- 住民の応援（判断456） ----
+  function whoName(id) { return FF.texts.quest.who[id] || id; }
+  function cheerText(id) {
+    var C = bal().CHEER[id], v = { light: C.light, hp: Math.round((C.hp || 0) * 100), every: C.every, damage: C.damage, heal: Math.round((C.heal || 0) * 100), core: C.core };
+    return fill(TT.cheer[id], v);
+  }
+
   // ---- 戦いを始める・進める ----
   function begin(difficulty, mode) {
     var a = FF.app, seed = Math.floor(a.now() / 1000) % 1000003, bt = X.create(a.state, { difficulty: difficulty, seed: seed, mode: mode === 'raid' ? 'raid' : 'practice' }), first = Object.keys(bt.defs)[0];
@@ -65,6 +72,13 @@
       }
       p.cd[u.id] = u.cd; p.hp[u.id] = u.hp;
     });
+    (bt.cheerLog || []).slice(p.cheerSeen || 0).forEach(function (ev) {   // 住民の応援（矢・手当て）：絵と知らせを出す
+      if (ev.who === 'hunter') {
+        for (var ln = 0; ln < bal().LANES; ln++) { var fr = null; bt.enemies.forEach(function (e) { if (e.lane === ln && (!fr || e.x < fr.x)) fr = e; }); if (fr) addFx('arrow', fr.x * CELL - 60, LANE_Y[ln] - 140, { toX: fr.x * CELL, toY: LANE_Y[ln] - 30, dur: 0.3 }); }
+      } else bt.units.forEach(function (u) { addFx('heal', (u.col + 0.5) * CELL, LANE_Y[u.lane] + 30, { dur: 0.6 }); });
+      U.toast(TT.cheerEvent[ev.who]);
+    });
+    p.cheerSeen = (bt.cheerLog || []).length;
     if (bt.kills > p.kills) { snd('kill'); p.kills = bt.kills; }
     if (hit) snd('hit');
     if (bt.core.hp < p.core) { snd('coreHit'); cur.flash = 0.35; }
@@ -224,10 +238,15 @@
       rw.first && left ? E('p', { class: 'tw-note', rich: TT.raidFirst }) : null,
       button(TT.raidStart, 'primary', function () { begin(rd, 'raid'); U.rerender(); }, ids.length ? { 'data-act': 'raid' } : { 'data-act': 'raid', disabled: 'true' })
     ]);
+    var cheerIds = X.cheers(s);
+    var cheer = E('div', { class: 'tw-cheerbox' }, [E('strong', { rich: TT.cheerTitle })].concat(cheerIds.length ?
+      cheerIds.map(function (id) { return E('div', { class: 'tw-cheer-row', attrs: { 'data-who': id } }, [U.residentFace(id, 'qt-face'), E('div', {}, [E('b', { rich: whoName(id) }), E('span', { rich: cheerText(id) })])]); }) :
+      [E('p', { class: 'tw-note', rich: TT.cheerNone })]));
     main.appendChild(E('section', { class: 'tw-start panel' }, [
       E('h1', { class: 'tw-h1', rich: TT.title }),
       E('p', { class: 'tw-lead', rich: TT.lead }),
       raid,
+      cheer,
       E('h2', { class: 'tw-h2', rich: TT.howTitle }),
       E('ul', { class: 'tw-how' }, TT.how.map(function (t) { return E('li', { rich: t }); })),
       E('div', { class: 'tw-pick' }, [E('strong', { rich: TT.practice }), E('label', { class: 'tw-label' }, [E('span', { rich: TT.difficulty }), sel])]),
@@ -309,6 +328,7 @@
         E('div', { class: 'tw-stat tw-core' }, [E('span', { class: 'tw-lbl', rich: TT.core }), E('span', { class: 'tw-meter' }, [coreFill]), coreTxt]),
         E('div', { class: 'tw-stat' }, [E('span', { class: 'tw-lbl', rich: TT.light }), lightTxt])
       ]),
+      bt.cheers && bt.cheers.length ? E('div', { class: 'tw-cheer', attrs: { 'aria-label': U.plain(TT.cheerBar) } }, [E('span', { class: 'tw-lbl', rich: TT.cheerBar })].concat(bt.cheers.map(function (id) { return E('span', { class: 'tw-cheer-face', attrs: { 'data-who': id, title: U.plain(whoName(id)) } }, [U.residentFace(id, 'qt-face')]); }))) : null,
       E('div', { class: 'tw-stage' }, [canvas, overlay]),
       E('div', { class: 'tw-bar' }, tools), info, cardRow
     ]));
