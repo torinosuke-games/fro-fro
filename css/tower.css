@@ -49,10 +49,10 @@ body[data-screen="tower"] #screen{max-width:980px;margin:auto;padding:14px 12px 
 .tw-overlay.is-win .tw-over-card,.tw-overlay.is-lose .tw-over-card{max-width:380px;padding:18px 20px;gap:8px}
 .tw-overlay.is-win .tw-over-card h2,.tw-overlay.is-lose .tw-over-card h2{font-size:1.375rem}
 .tw-overlay.is-win .tw-over-card p,.tw-overlay.is-lose .tw-over-card p{font-size:.9375rem}
-/* 戦っているあいだは、上の資材の帯と下のナビを隠して、スマホの1画面に収める（上下にスクロールしない） */
-body[data-screen="tower"][data-tower="battle"] #hud{display:none}
+/* 戦っているあいだは、上の資材の行と下のナビを隠して、スマホの1画面に収める（上下にスクロールしない） */
+body[data-screen="tower"][data-tower="battle"] #hud .resource-strip{display:none}   /* 上の帯（Frozen Frontier）は残し、資材の行だけ隠す */
 body[data-screen="tower"][data-tower="battle"] main#screen{padding:8px 10px!important}
-body[data-screen="tower"][data-tower="battle"] .tw-screen{gap:6px;min-height:calc(100dvh - 16px)}
+body[data-screen="tower"][data-tower="battle"] .tw-screen{gap:6px;min-height:calc(100dvh - 90px)}
 body[data-screen="tower"][data-tower="battle"] .tw-cards{margin-top:auto}
 body[data-screen="tower"][data-tower="battle"] .tw-stat{min-height:36px}
 body[data-screen="tower"][data-tower="battle"] .tw-small{min-height:40px}

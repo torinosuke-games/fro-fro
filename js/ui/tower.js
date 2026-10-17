@@ -35,6 +35,9 @@
   }
   function playing() { return !!(cur && cur.bt && !cur.bt.result && !cur.paused && !cur.quizOpen); }
   U.towerPlaying = playing;
+  U.towerActive = function () { return !!(cur && cur.bt && !cur.bt.result); };   // 戦いの途中（BGM を流すあいだ）
+  U.towerQuiet = function () { return !!(cur && cur.bt && !cur.bt.result && (cur.quizOpen || cur.paused)); };   // 問題・一時停止のあいだは、BGM を小さくする
+  function bgmSync() { if (FF.bgm) FF.bgm.sync(); }
   U.towerBattle = function () { return cur && cur.bt; };   // 確認用（テストが、戦いを早送りするのに使う）
 
   function addFx(kind, x, y, opt) { cur.fx.push(Object.assign({ kind: kind, x: x, y: y, t: 0, dur: 0.3 }, opt || {})); }
@@ -77,7 +80,7 @@
   }
   function finish() {
     var a = FF.app, bt = cur.bt;
-    cur.finished = true;
+    cur.finished = true; bgmSync();
     snd(bt.result === 'win' ? 'win' : 'lose');
     var r = X.finish(a.state, bt, a.now());
     cur.reward = r.reward;
@@ -99,12 +102,12 @@
     var a = FF.app, adv = a.state.adventure, q = FF.adventure.pick(a.bank, adv, a.state.player.grade || 1, Math.random, a.now());
     if (!q) { U.toast(TT.quizNone); return; }
     var choices = FF.util.shuffle(q.choices || [], Math.random), done = false;
-    cur.quizOpen = true;
+    cur.quizOpen = true; bgmSync();
     function finishQuiz(selected) {
       if (done) return; done = true;
       var correct = selected != null && FF.answer.judge(q, selected).correct, r = X.answer(cur.bt, correct, adv.difficulty);
       var n = FF.util.clone(a.state); n.adventure.recent = (n.adventure.recent || []).concat([q.id]).slice(-FF.balance.ADVENTURE.RECENT); a.commit(n);
-      cur.quizOpen = false; cur.last = null; close();
+      cur.quizOpen = false; cur.last = null; close(); bgmSync();
       if (correct) { snd('light'); U.toast(fill(TT.quizRight, { n: r.gained })); } else U.toast(TT.quizWrong);
     }
     var body = E('div', { class: 'tw-quiz' }, [E('p', { class: 'tw-quiz-note', rich: TT.quizNote }), E('h3', { class: 'tw-quiz-q', rich: q.question })]);
@@ -115,7 +118,7 @@
     })));
     var close = U.modal({ title: TT.quizTitle, body: body, dismissible: false, buttons: [
       { label: TT.quizDontKnow, class: 'ghost', keepOpen: true, onClick: function () { finishQuiz(null); } },
-      { label: TT.quizCancel, class: 'ghost', onClick: function () { done = true; cur.quizOpen = false; cur.last = null; } }] });
+      { label: TT.quizCancel, class: 'ghost', onClick: function () { done = true; cur.quizOpen = false; cur.last = null; bgmSync(); } }] });
   }
 
   // ---- 描く ----
@@ -229,12 +232,12 @@
       cards[id] = { el: b, cost: cost, last: null };
       return b;
     }));
-    var pauseBtn = button(TT.pause, 'tw-small', function () { if (!cur.bt.result) { cur.paused = !cur.paused; showOverlay(); } }, { 'data-act': 'pause' });
+    var pauseBtn = button(TT.pause, 'tw-small', function () { if (!cur.bt.result) { cur.paused = !cur.paused; showOverlay(); bgmSync(); } }, { 'data-act': 'pause' });
     var speedBtn = button('×1', 'tw-small', function () { cur.speed = cur.speed === 1 ? 2 : 1; }, { 'data-act': 'speed' });
     var quizBtn = button(TT.quiz, 'tw-small tw-quiz-btn', function () { openQuiz(); }, { 'data-act': 'quiz' });
     var quitBtn = button(TT.quit, 'tw-small ghost', function () {
       if (cur.bt.result) { cur = null; U.show('base'); return; }
-      cur.paused = true; showOverlay();
+      cur.paused = true; showOverlay(); bgmSync();
       U.modal({ title: TT.title, body: E('p', { rich: TT.quitAsk }), buttons: [{ label: U.plain(TT.quitYes), class: 'primary', onClick: function () { cur = null; U.rerender(); } }, { label: U.plain(TT.quitNo), class: 'ghost' }] });
     }, { 'data-act': 'quit' });
     var tools = [pauseBtn, speedBtn, quizBtn];
@@ -336,7 +339,7 @@
       o.hidden = false; o.className = 'tw-overlay is-paused';
       o.appendChild(E('div', { class: 'tw-over-card' }, [
         E('h2', { rich: TT.pausedTitle }), E('p', { rich: TT.pausedText }),
-        E('div', { class: 'tw-actions' }, [button(TT.resume, 'primary', function () { cur.paused = false; cur.last = null; showOverlay(); }, { 'data-act': 'resume' })])
+        E('div', { class: 'tw-actions' }, [button(TT.resume, 'primary', function () { cur.paused = false; cur.last = null; showOverlay(); bgmSync(); }, { 'data-act': 'resume' })])
       ]));
     } else { o.hidden = true; o.className = 'tw-overlay'; }
   }
