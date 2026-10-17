@@ -38,6 +38,7 @@
   U.towerActive = function () { return !!(cur && cur.bt && !cur.bt.result); };   // 戦いの途中（BGM を流すあいだ）
   U.towerQuiet = function () { return !!(cur && cur.bt && !cur.bt.result && (cur.quizOpen || cur.paused)); };   // 問題・一時停止のあいだは、BGM を小さくする
   function bgmSync() { if (FF.bgm) FF.bgm.sync(); }
+  U.towerFx = function () { return cur ? cur.fx.length : 0; };   // 確認用
   U.towerBattle = function () { return cur && cur.bt; };   // 確認用（テストが、戦いを早送りするのに使う）
 
   function addFx(kind, x, y, opt) { cur.fx.push(Object.assign({ kind: kind, x: x, y: y, t: 0, dur: 0.3 }, opt || {})); }
@@ -46,9 +47,10 @@
     var bt = cur.bt, p = cur.prev, hit = false;
     bt.units.forEach(function (u) {
       var d = bt.defs[u.member], was = p.cd[u.id], hp = p.hp[u.id];
-      if (was !== undefined && u.cd > was + 0.01 && d.atk > 0) {
+      // 本当に攻撃したときだけ（攻撃の間隔ぶん、待ち時間が戻る）。何もすることがなくて、待ち時間が 0.1 や 0.3 に戻っただけのときは、効果を出さない
+      if (was !== undefined && u.cd > was + 0.01 && d.atk > 0 && u.cd >= d.interval - 0.05) {
         var tg = null, bd = 1e9;
-        bt.enemies.forEach(function (e) { var dx = e.x - (u.col + 0.5); if (e.lane === u.lane && dx > -0.3 && dx < bd) { tg = e; bd = dx; } });
+        bt.enemies.forEach(function (e) { var dx = e.x - (u.col + 0.5); if (e.lane === u.lane && dx > -0.3 && dx <= d.range + 0.01 && dx < bd) { tg = e; bd = dx; } });
         if (d.role === 'healer') addFx('heal', (u.col + 0.5) * CELL, LANE_Y[u.lane] + 30, { dur: 0.6 });
         else if (tg) {
           hit = true;

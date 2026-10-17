@@ -44,6 +44,13 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.mouse.move(cb.x+cb.width/2,cb.y+cb.height/2);await p.mouse.down();await p.mouse.move(box.x+cw*7.5,box.y+box.height*250/800,{steps:6});await p.mouse.up();
  assert.equal(await p.evaluate(()=>FF.ui.towerBattle().units.length),1);   // 右の通り道には置けない
  await p.evaluate(()=>{const bt=FF.ui.towerBattle();FF.tower.remove(bt,bt.units[0].id)});
+ // 遠くの魔物には、仲間は何もしない（光る効果も、攻撃の音も、出ない）。射程に入ると、効果が出る
+ await p.evaluate(()=>{const bt=FF.ui.towerBattle();FF.tower.place(bt,'kenshi',0,1);bt.schedule.forEach(s=>{s.done=true});bt.schedule.push({at:1e6,wave:1,type:'cub',lane:0,done:false});
+  bt.enemies.push({id:777,type:'cub',lane:0,x:8,hp:30,max:30,atk:1,interval:9,speed:0,cd:9,core:1})});
+ await p.waitForTimeout(1200);assert.equal(await p.evaluate(()=>FF.ui.towerFx()),0);assert.equal(await p.evaluate(()=>FF.ui.towerBattle().enemies[0].hp),30);
+ await p.evaluate(()=>{FF.ui.towerBattle().enemies[0].x=2.2});await p.waitForTimeout(200);
+ assert.ok(await p.evaluate(()=>FF.ui.towerBattle().enemies[0].hp)<30);
+ await p.evaluate(()=>{const bt=FF.ui.towerBattle();bt.enemies.length=0;FF.tower.remove(bt,bt.units[0].id)});
  // 並べて、早送りして、魔物と戦う様子を見る
  await p.mouse.click(box.x+cw*1.5,box.y+box.height*400/800);
  await p.locator('.tw-card[data-member="kenshi"]').click();await p.mouse.click(box.x+cw*2.5,box.y+box.height*400/800);
