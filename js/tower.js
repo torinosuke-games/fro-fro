@@ -78,7 +78,7 @@
     var lanes = opts && opts.lanes && T(b).LANES_CHOICES.indexOf(opts.lanes) >= 0 && opts.mode !== 'raid' ? opts.lanes : lanesOf(d, b);
     var bt = { version: 1, lanes: lanes, mode: opts && opts.mode === 'raid' ? 'raid' : 'practice', difficulty: d, seed: seed, rng: seed, t: 0,
       core: { hp: t.CORE_HP, max: t.CORE_HP }, light: t.LIGHT.START, quizLock: 0, units: [], enemies: [], schedule: [], nextId: 1, placed: {},
-      defs: {}, kills: 0, wave: 0, result: null };
+      defs: {}, kills: 0, wave: 0, result: null, fxLog: [] };
     roster(state, b).forEach(function (id) { bt.defs[id] = unitStats(state, id, b); });
     // 町の人口が多いほど、灯が自然にふえる速さが、上がる（判断457）
     bt.popMult = popMult(state, b); bt.trickle = t.LIGHT.TRICKLE * bt.popMult;
@@ -159,7 +159,11 @@
     bt.enemies.forEach(function (e) { if (e.lane !== u.lane || e.hp <= 0) return; var dx = e.x - ux(u); if (dx > -0.3 && dx <= d.range && dx < bd) { best = e; bd = dx; } });
     return best;
   }
-  function hit(bt, e, dmg) { e.hp -= dmg; }
+  // 氷の盾兵は、1体を狙う攻撃（範囲の魔法でないもの）を、guard 倍にへらす（判断462）
+  function hit(bt, e, dmg, aoe) {
+    if (e.guard && !aoe) { dmg *= e.guard; if (bt.fxLog) bt.fxLog.push({ kind: 'block', lane: e.lane, x: e.x, t: bt.t }); }
+    e.hp -= dmg;
+  }
 
   function step(bt, dt, b) {
     if (bt.result) return bt;
@@ -178,7 +182,7 @@
       s.done = true; bt.wave = Math.max(bt.wave, s.wave);
       var def = t.ENEMIES[s.type], hp = Math.round(def.hp * grow('HP', d, b));
       bt.enemies.push({ id: bt.nextId++, type: s.type, lane: s.lane, x: t.COLS, hp: hp, max: hp, atk: def.atk * grow('ATK', d, b), interval: def.interval,
-        speed: def.speed * grow('SPEED', d, b), cd: def.interval, core: def.core, sk: def.freeze ? def.freeze.cd * 0.6 : 0 });
+        speed: def.speed * grow('SPEED', d, b), cd: def.interval, core: def.core, sk: def.freeze ? def.freeze.cd * 0.6 : def.breath ? def.breath.cd * 0.7 : 0, guard: def.guard || 0 });
     });
     // 住民の応援：猟師の矢（各道の、いちばん炉に近い魔物）・看護の手当て（仲間みんなの HP）
     var C = t.CHEER;
@@ -214,7 +218,7 @@
       }
       var tg = target(bt, u, def);
       if (!tg) { u.cd = 0.1; return; }
-      if (def.aoe) bt.enemies.forEach(function (e) { if (e.hp > 0 && Math.abs(e.lane - tg.lane) <= 1 && Math.abs(e.x - tg.x) <= def.aoe) hit(bt, e, def.atk); });
+      if (def.aoe) bt.enemies.forEach(function (e) { if (e.hp > 0 && Math.abs(e.lane - tg.lane) <= 1 && Math.abs(e.x - tg.x) <= def.aoe) hit(bt, e, def.atk, true); });
       else hit(bt, tg, def.atk);
       u.cd = def.interval;
     });
@@ -232,9 +236,33 @@
           if (tg) { tg.frozen = ed.freeze.dur; e.sk = ed.freeze.cd; } else e.sk = 0.4;
         }
       }
+      if (ed.fly) {   // 吹雪の鳥：前の仲間の上を飛びこえて、いちばん炉に近い（後ろの）仲間を狙う
+        block = null;
+        var rear = null;
+        bt.units.forEach(function (u) { if (u.hp > 0 && u.lane === e.lane && (!rear || u.col < rear.col)) rear = u; });
+        if (rear) { var rdx = e.x - ux(rear); if (rdx >= -0.2 && rdx <= 0.7) block = rear; }
+      }
+      var shot = false;
+      if (!block && ed.range) {   // 霜の魔女：range マス先の最前列の仲間に、氷の弾をうつ。うっているあいだは、進まない
+        var rt = null;
+        bt.units.forEach(function (u) { var dx = e.x - ux(u); if (u.lane === e.lane && u.hp > 0 && dx > -0.2 && dx <= ed.range && (!rt || ux(u) > ux(rt))) rt = u; });
+        if (rt) { block = rt; shot = true; }
+      }
+      if (ed.breath) {   // 氷竜：cd 秒ごとに、道の中の、range マス先までの仲間みんなに、冷気のブレス
+        e.sk -= dt;
+        if (e.sk <= 0) {
+          var hitAny = false;
+          bt.units.forEach(function (u) { var dx = e.x - ux(u); if (u.lane === e.lane && u.hp > 0 && dx > -0.3 && dx <= ed.breath.range) { u.hp -= e.atk * ed.breath.dmg * wardReduce(bt, u, b); hitAny = true; } });
+          if (hitAny) { bt.fxLog.push({ kind: 'breath', lane: e.lane, x: e.x, t: bt.t }); e.sk = ed.breath.cd; } else e.sk = 0.5;
+        }
+      }
       if (block) {
         e.cd -= dt;
-        if (e.cd <= 0) { block.hp -= e.atk * wardReduce(bt, block, b) * (ed.wall && bt.defs[block.member].role === 'wall' ? ed.wall : 1); e.cd = e.interval; }
+        if (e.cd <= 0) {
+          block.hp -= e.atk * wardReduce(bt, block, b) * (ed.wall && bt.defs[block.member].role === 'wall' ? ed.wall : 1); e.cd = e.interval;
+          if (shot) bt.fxLog.push({ kind: 'bolt', lane: e.lane, x: e.x, tx: ux(block), t: bt.t });
+          else if (ed.fly) bt.fxLog.push({ kind: 'gust', lane: e.lane, x: ux(block), t: bt.t });
+        }
         return;
       }
       e.x -= e.speed * slowOf(bt, e) * dt;
