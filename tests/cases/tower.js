@@ -286,4 +286,15 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     const a0 = a.light, b0 = b.light; Tw.run(a, 20); Tw.run(b, 20);
     assert.ok((b.light - b0) > (a.light - a0) * 1.15);
   });
+  test('レーンの数（試作。判断458）：練習で、5本か6本を選べる。襲撃では、難しさで決まる。6本だと、魔物の数も、レーンに合わせてふえる', () => {
+    const st = fresh(true);
+    const b5 = Tw.create(st, { difficulty: 3, seed: 1 }), b6 = Tw.create(st, { difficulty: 3, seed: 1, lanes: 6 }), b9 = Tw.create(st, { difficulty: 3, seed: 1, lanes: 9 });
+    assert.strictEqual(b5.lanes, 5); assert.strictEqual(b6.lanes, 6); assert.strictEqual(b9.lanes, 5, '選べない数は、ふつうの数');
+    assert.strictEqual(Tw.create(st, { difficulty: 3, seed: 1, lanes: 6, mode: 'raid' }).lanes, 5, '襲撃は、難しさで決まる（いまは5）');
+    assert.ok(b6.schedule.length > b5.schedule.length * 1.1);
+    assert.ok(b6.schedule.some(x => x.lane === 5) && !b5.schedule.some(x => x.lane === 5));
+    b6.light = 999; assert.ok(Tw.place(b6, 'kenshi', 5, 3).ok); assert.strictEqual(Tw.place(b6, 'kenshi', 6, 3).reason, 'cell');
+    b5.light = 999; assert.strictEqual(Tw.place(b5, 'kenshi', 5, 3).reason, 'cell');
+    assert.strictEqual(Tw.lanesOf(1), 5);
+  });
 };
