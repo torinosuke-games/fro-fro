@@ -162,3 +162,57 @@ Each effect must fit its own cell with clear transparent padding; do not cross a
 ## 取り込み（Claude。判断455）
 
 `enemies-2.webp`・`tower-fx-2.webp` を確認して、そのまま使った。魔物の大きさ（高さ）は、精霊＝155（オオカミと同じ）、巨人＝225（大獣と同じ）。切り出しは、上の表の可視範囲。効果は、1コマ 256×256 で、凍結は 0行目（氷がかたまる→全身が氷→砕ける）、壁が壊れるのは 1行目。
+
+## 第3弾：難しさ6〜10の魔物（2026-10-17、3体の確認用）
+
+利用者の依頼順に従い、まず `enemies-3.webp` の3体だけを作成した。**この3体の画風・大きさは確認待ち。OK後に `enemies-4.webp`（氷竜）、続いて `tower-fx-3.webp`（追加効果4種類）を制作する。**
+
+### 追加ファイル・可視範囲
+
+`img/adventure/tower/enemies-3.webp`：1536×1024、RGBA、透過のlossless WebP。左から吹雪の鳥・氷の盾兵・霜の魔女。正面〜わずかに斜めの全身で、地面・影・文字・枠なし。等幅の3コマではなく、次の可視範囲で切り出す。
+
+| 魔物 | 可視範囲（x, y, 幅, 高さ） | 表示高の目安（既存Canvas座標） |
+|---|---|---|
+| 吹雪の鳥 | `[24, 625, 630, 305]` | 155（オオカミ程度） |
+| 氷の盾兵 | `[670, 224, 432, 706]` | 190（オオカミと巨人の中間） |
+| 霜の魔女 | `[1118, 306, 393, 624]` | 155（精霊と同じ） |
+
+鳥は横に広げた翼を優先した横長の形。原画上の高さは305pxなので、表示時は可視範囲を切り出して表示高を設定する。盾兵は大きな雪結晶の盾と兜、魔女はとんがり帽子・杖・濃紺のマント・ブーツで役目と輪郭を分けた。魔女の可視高624pxは既存の精霊と同じ、盾兵706pxは精霊と巨人851pxの間になる。
+
+### 制作方法
+
+最新の `enemies-2.webp` を主な画風基準とし、`snow-enemies.webp`、既存効果、戦場も目視した。主な参照画像は夜色背景へ合成した確認用PNGにして image_gen へ渡し、背景そのものは描かないよう指定した。3体のシートを生成して配置を1回修正した後、鳥だけを別途生成し、翼を横へ広げた飛行姿へ整えた。盾兵と魔女は修正版から分離して使った。
+
+それぞれを縦横比を保って縮小し、1536×1024の透明シートへ配置した。アルファ8/255以下の微弱な外周の残りを整理し、細い縁のアンチエイリアスを残した。生成原画は別途保持している。既存の魔物・効果・ゲームコードは変更していない。
+
+### 検証済み
+
+- WebP・RGBA・1536×1024を確認し、書き出し後の可視範囲を画素から測定。
+- 外周24pxが完全透明。鳥と盾兵の間16px、盾兵と魔女の間16pxも完全透明で、3体の重なりなし。
+- 翼・槍・盾・帽子・杖・マント・足先を含む全身を目視確認。
+- 基準の精霊・巨人と原画倍率60%で並べて比較。各魔物を高さ60px（夜色）・40px（白背景）でも表示し、輪郭と透過の縁を確認した。
+- 画像と引き継ぎ記録のみの変更なので、ゲームコードの自動テストは追加・実行していない。
+
+### 確認してほしい点
+
+1. 最新の精霊・巨人との画風、輪郭線、氷の青や雪の白の明るさ。
+2. 40〜60pxで、横に広い翼／大きな盾／帽子と杖とマントを見分けられるか。
+3. 鳥の翼幅と表示時の大きさ、盾兵の重さ、魔女の大人びた印象が役目に合っているか。
+4. 魔女が氷の精霊と十分に違って見えるか。
+5. 白いふち、過度なぼやけ、不要な影、絵の欠けがないか。
+
+### 使用プロンプト（3体の初稿）
+
+Create a new production MONSTER SPRITE ATLAS for FROZEN FRONTIER, snowy fantasy survival / learning JRPG. Exact landscape canvas 1536x1024, truly TRANSPARENT RGBA background. Three NEW creatures only, LEFT TO RIGHT: blizzard bird, ice shield soldier, frost witch. Reference1 (approved ice spirit + snow giant) is the PRIMARY style standard: detailed hand-painted Japanese anime fantasy, finely textured ice/snow, crisp dark-blue contour outlines, warm tactile painted shading, bright readable blue-white highlights. Reference2 existing beasts is secondary style/scale reference. Reference images have a dark backdrop for visibility ONLY: DO NOT copy any backdrop. No background, no floor, NO GROUND, NO cast shadows/contact shadows, no text, labels, frames, grid or scenery. THREE SEPARATE FRONT-FACING FULL-BODY sprites with all wings/weapons/hats visible and transparent margins, never touching or overlapping. No existing reference creatures. Three reserved cells: x0-511 bird; x512-1023 soldier; x1024-1535 witch. Keep at least24px outer margins and a clear transparent gap between creatures. Bottom of each complete sprite near y930, grounded features have no drawn ground. Approximate character bounds: bird x24..490 y480..930 (about466 wide x450 tall, winged horizontal silhouette, comparable size to reference wolf); soldier x555..980 y170..930 (about425wide x760tall, between wolf and giant); witch x1075..1495 y300..930 (about420wide x630tall, same height as approved spirit). Scale can be refined later but full silhouettes must fit their cells.
+LEFT BLIZZARD BIRD: regal EAGLE/HAWK made of pale cyan/blue crystalline ice, suspended mid-flight facing viewer with a little head turn toward left, large wings spread broadly sideways, CLEAR ONE BIRD silhouette not a butterfly. Long layered faceted ice flight feathers, tips dissolving into a few close swirling snow feathers. Small tucked talons, compact strong chest, proud curved beak, sharp pale aqua eyes, readable central head. One compact swirl of snow close to its wing/body perimeter, no big haze cloud below it, NO ground/landing pose. Wider than tall, fast airborne creature, majestic and strong but not frightening for children.
+CENTER ICE SHIELD SOLDIER: sturdy stocky biped humanoid elemental knight, FULL ice armor with snowy layered pauldrons and chunky boots. Face mostly concealed by an icy enclosed helmet, only narrow calm blue eye slit. One LARGE BOLD HEXAGONAL ICE SHIELD held prominently in front covering much of torso, large high-contrast WHITE SNOWFLAKE EMBLEM on shield face. Shield should instantly read at40px height. A short ice spear or sword held behind and to one side of shield, stay within own cell. Broad squat armored silhouette, patient defensive strength, not a ghost, no human skin, no menacing spikes. Blues and white ice with grey-blue recessed armor. More solid and heavy than witch, smaller than approved snow giant.
+RIGHT FROST WITCH: mysterious adult-looking young woman, visibly more mature than approved childlike ice spirit. Cool reserved calm expression, small face with slender mature proportions, pale silver hair under a LARGE clearly POINTED ICE WITCH HAT with a wide brim and tilted icy tip. Full winter FROST MANTLE/cloak in deep navy-grey blue and frosted silver edges, distinct dark cloth mass, NOT a glowing pale spirit body. Slim two-legged full-body stance, small boots visible below cloak or within a close narrow snow swirl. Hold a long thin ICE STAFF at one side with a luminous blue CRYSTAL tip. Hat + staff + dark flowing cloak must be unmistakable at40-60px. No bare torso, no ice-spirit snowflake chest core, no legless wisp tail. Beautiful and mysterious, slightly cold rather than cruel or scary. Small close snow spiral at feet is magic particles only, NOT a ground plane or shadow.
+All three should feel born from snow, ice and blizzard, strong higher-difficulty monsters but child-friendly. Match latest reference outline weight and brightness. Detailed hand-painted illustration, NOT photorealistic, NOT3D, NOT flat vector, NOT pixel art. Transparent negative space around every silhouette, no white matte halo, no large atmospheric aura. Prioritize three clearly different silhouettes: wide floating wings / big broad shield and squat armor / tall pointed hat plus staff and dark cloak.
+
+### 使用プロンプト（全身・余白の修正）
+
+Edit the supplied three-monster sprite sheet. PRESERVE the exact appealing character designs, faces, materials and rendering: ice eagle left, ice shield knight center, mature navy-cloaked frost witch right. Correct ONLY the overlarge sizes and clipping/spacing. This is an atlas of THREE separate smaller full-body sprites on a 1536x1024 TRANSPARENT canvas, not a full-bleed illustration. IMPORTANT: currently the eagle's LEFT WING and witch's RIGHT CLOAK are cut by canvas edges, and the eagle wing is too close to knight's spear. REDRAW any missing tips and give all three COMPLETE UNCROPPED silhouettes. Generous empty transparent margins. Scale down each independently and reposition, DO NOT crop parts to fit. EXACT STRICT CELLS: bird must fit wholly x40..472, y490..930 (432wide,440tall); knight including its weapon must fit wholly x568..968, y190..930 (400wide,740tall); witch including her hat, staff, raised hand and cloak must fit wholly x1090..1470,y306..930 (380wide,624tall). Thus completely transparent vertical gaps x480..560 and x980..1080. At least40px empty canvas margin left/right. These are upper bounds, much smaller than current characters. Do not fill the canvas with character detail. Full bird spread wings must BOTH be visible: make the horizontal wingspan smaller but retain flying compact body, tucked talons and a small close snow swirl; remove excessive distant floating feathers to fit. Shield knight stays stocky with big snowflake shield, enclosed helmet and short spear behind shield, no huge outward spear blade crossing into bird cell. Witch stays mature and slim, large navy pointed hat, staff, snowy navy mantle, small boots, a narrow magical snow spiral; bring staff and raised hand close to body so width stays within own cell. Keep all previous fine painted detail and dark-blue crisp outlines, snowy bright ice and friendly strong fantasy mood. Reference2 is the approved spirit/giant palette if needed. No other monsters. Truly transparent background and around every part, no ground, NO SHADOWS, no text, no borders, no large atmospheric halos. Highest priority: all parts entirely inside the specified separated bounds with ample negative space, no touching and no clipping. Use same art style, not smaller pixel art; detailed smooth hand-painted anime JRPG rendering.
+
+### 使用プロンプト（鳥の翼を横へ広げる）
+
+Create ONE isolated production monster sprite: the BLIZZARD ICE EAGLE from reference1's LEFT creature, preserving that exact species/design, crisp dark-blue outlines, white icy chest feathers, faceted cyan wing feathers, sharp pale-blue eyes, curved blue beak, small tucked talons and close snow swirls. Do NOT draw reference1's soldier or witch. Reference2 (approved spirit/giant) is style only. Detailed hand-painted Japanese anime fantasy JRPG, tactile fine texture, bright night-readable snow and ice, not3D/notphotorealistic/notpixelart. TRANSPARENT RGBA background. Canvas1536x1024. Entire one bird fully visible with generous clear margin, all wing and tail tips within canvas, no text, no ground, no shadows, no backdrop, no large atmospheric halo. FRONT-FACING hovering/gliding pose, head may turn slightly toward viewer's left. CRUCIAL SILHOUETTE CORRECTION: wings stretch almost HORIZONTALLY out to LEFT and RIGHT like an eagle GLIDING. Wing tips at approximately head/shoulder height, NOT raised high into a V, NOT vertical upward wings, NOT a perched bird. Small compact body hangs below the horizontal wings; small talons tucked, short layered tail pointing down, a small curling snow breeze nearby only. Desired complete silhouette including close snow particles about1100wide x750high (width/height about1.45), centered x768,y512, roughly bounding x210..1320,y140..890. No detached feathers far away. Show a strong elegant flying monster that will read as broad horizontal wings when reduced to40-60px high. Regal, swift and powerful but child-friendly, no terrifying teeth, no other creatures. Prioritize fully intact horizontal spread wings and clean transparent negative space around the sprite.
