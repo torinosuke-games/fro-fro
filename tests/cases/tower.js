@@ -52,7 +52,8 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     Tw.run(bt, 2); assert.ok(Tw.canQuiz(bt));
   });
   test('防衛戦：灯は、問題がなくても、ゆっくり増える。学者がいると、もっと増える（3人まで）', () => {
-    const bt = battle({}, true); bt.light = 0; bt.schedule = [{ at: 1e6, wave: 1, type: 'cub', lane: 0, done: false }];   // まだ出ていない魔物が、いるあいだは、勝ちにならない
+    const bt = battle({}, true); bt.light = 0; bt.trickle = B.LIGHT.TRICKLE;   // 人口の倍率は、別のテスト（判断457）
+     bt.schedule = [{ at: 1e6, wave: 1, type: 'cub', lane: 0, done: false }];   // まだ出ていない魔物が、いるあいだは、勝ちにならない
     Tw.step(bt, 1); const base = bt.light; assert.ok(Math.abs(base - B.LIGHT.TRICKLE) < 1e-9);
     bt.light = 1000; Tw.place(bt, 'gakusha', 0, 1); bt.light = 0; Tw.step(bt, 1);
     assert.ok(Math.abs(bt.light - (B.LIGHT.TRICKLE + B.UNITS.gakusha.trickle)) < 1e-9);
@@ -265,5 +266,24 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     Tw.run(bt, B.CHEER.nurse.every - B.CHEER.hunter.every + 0.3);
     assert.ok(bt.units[0].hp >= bt.units[0].max * 0.4 + bt.units[0].max * B.CHEER.nurse.heal - 1);
     assert.deepStrictEqual(plain(bt.cheerLog.map(x => x.who)), ['hunter', 'nurse']);
+  });
+  test('人口で灯（判断457）：人口がふえると、灯が自然にふえる速さが上がる。はじめの人口なら変わらない。上限がある', () => {
+    const st = fresh(false), L = B.LIGHT;
+    assert.strictEqual(Tw.popMult(st), 1);
+    const bt0 = Tw.create(st, { difficulty: 1, seed: 1 }); assert.strictEqual(bt0.trickle, L.TRICKLE);
+    const big = fresh(true); big.buildings.housing.level = 5; big.adventure.recruited = ALL.slice();   // 住宅 Lv5（+20人）・救出した旅人 6人（+60人）
+    const pop = FF.buildings.population(big);
+    assert.ok(pop.total > 10 + 20);
+    const m = Tw.popMult(big); assert.ok(m > 1 && m <= L.POP_MAX);
+    assert.strictEqual(m, Math.min(L.POP_MAX, 1 + L.POP_BONUS * (pop.total - pop.base)));
+    const mid = fresh(false); mid.buildings.housing.level = 3;   // +10人
+    assert.ok(Math.abs(Tw.popMult(mid) - (1 + L.POP_BONUS * 10)) < 1e-9);
+    // 実際に、灯が速くふえる（学者などの、ほかの増え方がない戦い）
+    const hi = fresh(false); hi.buildings.housing.level = 5;   // +20人
+    const a = Tw.create(fresh(false), { difficulty: 1, seed: 1 }), b = Tw.create(hi, { difficulty: 1, seed: 1 });
+    a.schedule.forEach(x => { x.done = true; }); b.schedule.forEach(x => { x.done = true; });
+    a.schedule.push({ at: 1e6, wave: 5, type: 'cub', lane: 0, done: false }); b.schedule.push({ at: 1e6, wave: 5, type: 'cub', lane: 0, done: false });
+    const a0 = a.light, b0 = b.light; Tw.run(a, 20); Tw.run(b, 20);
+    assert.ok((b.light - b0) > (a.light - a0) * 1.15);
   });
 };

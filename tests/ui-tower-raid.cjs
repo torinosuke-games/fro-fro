@@ -9,6 +9,11 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.waitForTimeout(400);
  // はじまり：今夜の襲撃（Lv1・あと3回・報酬の見本）と練習
  assert.ok((await p.locator('.tw-raid').innerText()).includes('あと3回'));assert.ok((await p.locator('.tw-raid .tw-reward').innerText()).includes('+160 G'));   // はじめて勝つ難しさ＝ゴールド2倍
+ // 町の人口（はじめは10人＝×1）。人口がふえた町では、灯が自然にふえる速さが上がる（判断457）
+ assert.ok((await p.locator('.tw-pop').innerText()).includes('町の人口 10人')&&(await p.locator('.tw-pop').innerText()).includes('×1'));
+ await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.buildings.housing.level=5;FF.app.state=s;FF.ui.show('tower')});await p.waitForTimeout(300);
+ assert.ok((await p.locator('.tw-pop').innerText()).includes('町の人口 30人')&&(await p.locator('.tw-pop').innerText()).includes('×1.2'));
+ await p.evaluate(()=>{const s=FF.util.clone(FF.app.state);s.buildings.housing.level=1;FF.app.state=s;FF.ui.show('tower')});await p.waitForTimeout(300);
  await p.screenshot({path:process.env.FF_SHOT||'/tmp/tower-raid0.png'});
  await p.locator('[data-act="raid"]').click();await p.waitForTimeout(400);
  assert.equal(await p.evaluate(()=>FF.ui.towerBattle().mode),'raid');

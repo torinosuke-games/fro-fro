@@ -69,3 +69,4 @@ body[data-screen="tower"][data-tower="battle"] .toast{top:auto;bottom:calc(176px
 .tw-cheer{display:flex;align-items:center;gap:6px;min-height:30px}
 .tw-cheer .qt-face{width:26px;height:26px}
 body[data-screen="tower"][data-tower="battle"] .tw-cheer{min-height:28px}
+.tw-pop{margin:0;padding:8px 12px;background:#eef6fa;border-radius:10px;font-size:.875rem;color:var(--rn-navy);line-height:1.7}
