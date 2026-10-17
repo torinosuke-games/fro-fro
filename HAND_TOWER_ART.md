@@ -163,9 +163,9 @@ Each effect must fit its own cell with clear transparent padding; do not cross a
 
 `enemies-2.webp`・`tower-fx-2.webp` を確認して、そのまま使った。魔物の大きさ（高さ）は、精霊＝155（オオカミと同じ）、巨人＝225（大獣と同じ）。切り出しは、上の表の可視範囲。効果は、1コマ 256×256 で、凍結は 0行目（氷がかたまる→全身が氷→砕ける）、壁が壊れるのは 1行目。
 
-## 第3弾：難しさ6〜10の魔物（2026-10-17、3体の確認用）
+## 第3弾：難しさ6〜10の魔物（2026-10-17）
 
-利用者の依頼順に従い、まず `enemies-3.webp` の3体だけを作成した。**この3体の画風・大きさは確認待ち。OK後に `enemies-4.webp`（氷竜）、続いて `tower-fx-3.webp`（追加効果4種類）を制作する。**
+利用者の依頼順に従い、まず `enemies-3.webp` の3体を作成し、画風・大きさのOKを受けた。続いて `enemies-4.webp`（氷竜）、`tower-fx-3.webp`（追加効果4種類）を制作した。詳細は下記「第3弾の続き」を参照。
 
 ### 追加ファイル・可視範囲
 
@@ -216,3 +216,74 @@ Edit the supplied three-monster sprite sheet. PRESERVE the exact appealing chara
 ### 使用プロンプト（鳥の翼を横へ広げる）
 
 Create ONE isolated production monster sprite: the BLIZZARD ICE EAGLE from reference1's LEFT creature, preserving that exact species/design, crisp dark-blue outlines, white icy chest feathers, faceted cyan wing feathers, sharp pale-blue eyes, curved blue beak, small tucked talons and close snow swirls. Do NOT draw reference1's soldier or witch. Reference2 (approved spirit/giant) is style only. Detailed hand-painted Japanese anime fantasy JRPG, tactile fine texture, bright night-readable snow and ice, not3D/notphotorealistic/notpixelart. TRANSPARENT RGBA background. Canvas1536x1024. Entire one bird fully visible with generous clear margin, all wing and tail tips within canvas, no text, no ground, no shadows, no backdrop, no large atmospheric halo. FRONT-FACING hovering/gliding pose, head may turn slightly toward viewer's left. CRUCIAL SILHOUETTE CORRECTION: wings stretch almost HORIZONTALLY out to LEFT and RIGHT like an eagle GLIDING. Wing tips at approximately head/shoulder height, NOT raised high into a V, NOT vertical upward wings, NOT a perched bird. Small compact body hangs below the horizontal wings; small talons tucked, short layered tail pointing down, a small curling snow breeze nearby only. Desired complete silhouette including close snow particles about1100wide x750high (width/height about1.45), centered x768,y512, roughly bounding x210..1320,y140..890. No detached feathers far away. Show a strong elegant flying monster that will read as broad horizontal wings when reduced to40-60px high. Regal, swift and powerful but child-friendly, no terrifying teeth, no other creatures. Prioritize fully intact horizontal spread wings and clean transparent negative space around the sprite.
+
+### 第3弾の続き：氷竜・追加効果（2026-10-17）
+
+利用者から `enemies-3.webp` のOKを受け、同じ `codex/tower-art-3` ブランチに氷竜、続いて追加効果を作成した。承認済みの3体は変更していない。
+
+#### 氷竜
+
+`img/adventure/tower/enemies-4.webp`：1536×1024、RGBA、透過のlossless WebP。氷竜1体のみ。左へ少し向いた正面斜めの全身で、四つ足・長い首としっぽ・たたんだ翼・氷の角と鱗が見える。口もとの冷気は小さく、地面・影・文字・枠なし。
+
+| 魔物 | 可視範囲（x, y, 幅, 高さ） | 表示高の目安（既存Canvas座標） |
+|---|---|---|
+| 氷竜 | `[80, 40, 1375, 944]` | 270（雪の巨人225の1.2倍） |
+
+この1.2倍は、可視範囲を切り出してゲーム内で描く高さの比率。シート上の画素高の比率ではない。縦横比を保って描く。最新の精霊・巨人と承認済み3体を画風の参照にして image_gen で生成し、弱い外周の残り（アルファ8/255以下）を整理、全身をトリミングして縦横比を保ち所定キャンバスへ配置した。
+
+- WebP・RGBA・1536×1024、可視範囲を画素から確認。キャンバス外周40pxは完全透明。
+- 角・四つの足・翼・しっぽ先の欠けがないことを目視確認。
+- 既存の大獣・巨人との表示高225:225:270で比較し、40px・60pxでも首・翼・しっぽの輪郭を確認。夜色・白背景の両方で透過の縁を確認した。
+
+#### 追加効果4種類
+
+`img/adventure/tower/tower-fx-3.webp`：1024×1024、RGBA、透過のlossless WebP。4列×4行、1コマ256×256。キャラクター・杖・盾の実物・鳥・竜・口などは描かず、効果のみ。
+
+| 行（0始まり） | 効果 | 左から右への4コマ |
+|---|---|---|
+| 0 | 氷の弾（右から左） | 生まれる小さな核 → 左へ飛ぶ弾と右に引く尾 → 命中してはじける → 小さな破片が散る |
+| 1 | 盾で防ぐ | 衝撃の輪 → 青白い火花 → 氷の粉 → わずかな粒だけに消える |
+| 2 | 突風 | 細い風の筋 → 大きな渦 → 舞う雪粒 → 薄い風と粒が消える |
+| 3 | 冷気のブレス（右が口もと、左へ広がる） | 短い冷気 → 左へ広がる → 最大の横長の吹雪 → 薄い雪粒だけ |
+
+通常の切り出し：`sx = frame * 256`、`sy = row * 256`、幅・高さ256、frameは0〜3。各効果は最大216×216に収まり、各コマの外周20pxは完全透明。
+
+ブレスは共通の中央帯（コマ内 `[20, 80, 216, 96]`）へ収めた。横へ引き伸ばす際、この帯だけを使うなら `sx = frame * 256 + 20`、`sy = 848`、`sw = 216`、`sh = 96`。4コマとも同じ範囲を使い、右端を口もと、帯の中央を道の中央へ合わせる。実際の可視高は最大63pxで、帯の上下に余白がある。
+
+既存効果を参照して image_gen で16コマの原画を生成。ブレスを柔らかい雪の流れへ再編集し、上3行は初稿、最下行は修正版を採用した。各コマの座標系を保って216×216以内へ共通倍率で縮小し、ブレスだけ全4コマ共通で216×96の中央帯へ整えた。コマごとのトリミング・拡大はせず、少ない粒の始点・終点が大きくならないようにした。アルファ8/255以下と原画のコマ境界の微光を整理し、ブレス最終コマ左端に混入した隣コマの光も除いた。生成原画は別途保持している。
+
+- WebP・RGBA・1024×1024、16コマすべてに効果があることを確認。
+- 全コマの外周20pxが完全透明、可視範囲216×216以内、隣のコマへのはみ出しなし。
+- ブレスは全コマ中央の同じ帯に収まり、出始め→拡大→最大→消失の効果量を画素と目視で確認。
+- 氷の弾は先端が左・尾が右。ブレスは右の細い発生位置から左の雪の前面へ広がることを目視確認。
+- 夜色・白背景で縁とコマ順を確認。ブレスの共通帯を960×96へ横長に引き伸ばし、道を覆う表示も確認。
+- 画像と引き継ぎ記録のみの変更。ゲームの読み込み・描画処理は変更していないため、ゲームコードの自動テストは追加・実行していない。
+
+#### 取り込み時に確認してほしい点
+
+1. 最新の精霊・巨人、承認済み3体と合わせた画風・輪郭線・明るさ。
+2. 氷竜を表示高270で描いたときのボスの存在感と、40〜60pxでも長い首・翼・しっぽを見分けられるか。
+3. 効果を実際の再生速度で重ねたときの大きさ、ブレスの道への横方向の伸ばし方。
+4. 透過の縁、氷の弾とブレスの左向き、最終コマの消え方。
+
+#### 使用プロンプト（氷竜）
+
+Create ONE production boss monster sprite for FROZEN FRONTIER snowy fantasy survival/learning JRPG. Exact1536x1024 landscape TRANSPARENT RGBA canvas. ONE ICE DRAGON only, filling most canvas but with at least40px clear transparent margin on every side; full horns, all four feet, folded wings, and entire tail visible, no cropping. Primary style reference1 is approved ice spirit/snow giant; reference2 is approved bird/knight/witch. Match their detailed hand-painted Japanese anime fantasy rendering, crisp dark blue contour outlines, fine tactile icy texture, luminous readable white/cyan highlights, soft painterly shading. Dark reference backdrop is for visibility only: NO background/backdrop in output. No ground, no floor, no cast shadow or contact shadow, no scenery, no frame or text, no other creatures or humans.
+DESIGN: majestic ancient quadruped ICE DRAGON, strong high-difficulty boss, awe and dignity rather than horror, suitable for children. Big elongated low torso standing on FOUR distinct clawed draconic legs; LONG graceful upright S-CURVED NECK, small elegant dragon head held high with calm bright cyan eyes, swept-back crystalline ICE HORNS (not bull crescent horns). Long sinuous tapering TAIL curling sideways to the right so it is unmistakably visible. TWO WINGS FOLDED against back/flanks, structured like folded angular dragon wings with translucent blue icy membranes and clear jointed ribs, NOT spread open and not bird feathers. Layered faceted ice SCALES, white frosted ridges on back and shoulders, pale ivory/icy underbelly plates, deep blue crevices. No fur mane or large beard; silhouette must differ clearly from the horned furry beast and the biped rock giant. Proud regal face, no snarling rage, no gore, a few small teeth at most. Mouth very slightly open, a SMALL WISP of chilly white-cyan breath leaks toward LEFT next to snout, close to mouth only, no large attack plume (the attack is a separate VFX asset).
+POSE: front THREE-QUARTER view, face and long neck oriented slightly toward viewer's LEFT, all four feet readable, body extends horizontally toward right and tail curls out to right. Folded wings clearly visible over back. Complete outline roughly1300wide x880tall, centered in canvas, horizontal and massive. Long neck rises above the low body's shoulder, long tail and folded wings give a distinct dragon shape even at40-60px tall. Heavier boss presence than reference snow giant, the game will draw it at1.2x giant height. Keep transparent negative space between neck, torso, legs and tail; no rectangular haze or glowing background. Snow white, ice blue, pale cyan, dark blue contours; match approved newest monsters in brightness and detail. Detailed painted illustration, NOT3D, NOT photorealistic, NOT pixel art, NOT flat icon.
+
+#### 使用プロンプト（追加効果の初稿）
+
+Create a production EFFECT ANIMATION ATLAS for FROZEN FRONTIER snowy Japanese anime fantasy JRPG. Exact1024x1024 transparent RGBA. FOUR COLUMNS x FOUR ROWS, cell256x256, SIXTEEN different separate cells. Match reference effect sheets' finely painted faceted blue ice, white snow grains, crisp readable outlines and delicate luminous highlights. Reference backdrops are visibility aids ONLY: output background alphaZERO. No text, labels, grid, borders, ground, shadows or rectangular haze. ONLY EFFECTS: NO character, NO witch, wand, physical shield, knight, bird, dragon, mouth or body part. Each complete effect including glow/particles fits within central216x216 of its cell with at least20px fully transparent margin. Never cross cell boundaries. Columns are FOUR DISTINCT left-to-right animation stages, same cell coordinate system/scale: do NOT enlarge sparse start/end frames to fill cells. All magic is cyan/blue/white; shield sparks are BLUE-WHITE, not orange flames.
+ROW1 y0-255: ICE BOLT traveling RIGHT TO LEFT. Cell1: a SMALL newborn blue crystal energy seed near local(x176,y128), with a few fine cyan sparkles, no wand. Cell2: a LEFT-POINTING faceted ice projectile, sharp tip toward localx55-75, solid icy head mainly left of center, a thin pale cyan snowy TRAIL extending RIGHT towardx210. Direction MUST be LEFT (mirror opposite the arrow in reference1). Cell3: centered impact, icy starburst breaking into blue shards and cold white sparkles. Cell4: fewer SMALL scattered fading ice fragments, no big unbroken projectile and no dense burst.
+ROW2 y256-511: DEFLECT / SHIELD BLOCK, effect only no shield object. Cell1: small thin pale blue-white shock ring, center mostly transparent. Cell2: brightest compact BLUE-WHITE deflection sparks / asymmetric starburst at contact, fine crystalline accents, no flames. Cell3: fine ice POWDER and small pale shards scatter outward, less dense. Cell4: almost empty, only 4-8 tiny very faint blue-white specks, no ring or large burst.
+ROW3 y512-767: BLIZZARD BIRD GUST moving generally LEFT. Cell1: two or three thin curling horizontal white-cyan wind STREAKS. Cell2: a larger swirling airy wind vortex/ribbons with a few snow grains, still open/transparent, not an opaque solid tornado. Cell3: wind becomes faint and mostly separate snow GRAINS swirling outward. Cell4: mostly vanished, a couple short faint wind wisps and a few tiny snow specks only. No bird, no feathers as a character silhouette.
+ROW4 y768-1023: DRAGON COLD BREATH, HORIZONTAL LEFTWARD BLIZZARD BAND for later stretching across an entire lane. Mouth/origin is implied at the RIGHT end of every cell, no actual mouth drawing. Narrow origin at localx215,y128, snowy plume extends toward LEFT. Keep the whole breath in a THIN HORIZONTAL CENTRAL BAND centered localy128, maximum heightabout80px (y88..168), maximum width216. This must be much WIDER THAN TALL, not a radial burst, not an upward tornado, no tall billowing cloud. Cell1: short small horizontal chilly wisp near RIGHT origin x160..215. Cell2: plume reaches left tox80 from right originx215, wider toward LEFT, fine longitudinal swirling streaks, light snow grains. Cell3: strongest and longest plume x28..220, wide leading snowy fan on LEFT and narrow tapered source on RIGHT, a layered icy-white blizzard ribbon with tiny blue-white snow grains; no central starburst or large solid crystal chunks. Cell4: band nearly gone, only a few tiny snow flecks and very thin short fading streaks around y112..144. Horizontal texture/flow must remain natural when stretched much wider alongx. ALL FOUR breath frames centered vertically in same thin band; plenty of transparency above/below. LEFT end is advancing cold, RIGHT end is the source.
+Strict regular4x4 atlas. Prioritize different row identities, clear build/impact/fade progressions, correct LEFTWARD ice bolt and breath, genuinely sparse final frames, cool child-friendly painted effects, and transparent padding.
+
+#### 使用プロンプト（ブレスの修正）
+
+Edit ONLY the BOTTOM ROW (four dragon breath frames) of this16-cell4x4 transparent VFX atlas. Preserve the TOP THREE ROWS (ice bolt, blue shield sparks, wind) unchanged. Keep exact square4x4 layout, transparent background, no labels, no characters or body parts, independent cells with transparent margins. Problem to correct: bottom-row first3 cells currently look like sharp RIGHT-pointing crystalline arrows. They must read as a LEFTWARD SNOWY BREATH plume instead of a projectile.
+REPLACE all hard arrow tips, spear-shaped veins and long pointed crystals in bottom row with SOFT HORIZONTAL ICY WHITE BLIZZARD / SNOW MIST and fine tiny snow grains. Direction is RIGHT TO LEFT. At the RIGHT end near localx215,y128 is the IMPLIED SOURCE: a narrow SHORT OPEN-ENDED HORIZONTAL JET, softly cut off with a tiny FLAT/VERTICAL open edge on the right (not a sharp point or arrowhead). From that right source, wind streaks curve/sweep LEFT and snowy fog expands toward LEFT. LEFT end is the broad SOFT FEATHERY BILLowing snow front, no arrowhead there either, with fine snow particles scattered farther to the left. No central impact burst. No large crystals. Do not draw the dragon mouth.
+All four breath frames stay in the SAME THIN CENTRAL HORIZONTAL BAND centered at localy128, maximum occupied heightabout80px, widthatmost216px, lots of transparent empty space above/below. Frame1: small short soft cold wisp just LEFT of right-hand origin, aroundx160..215, no angular point. Frame2: plume extends farther LEFT fromx215 down tox80, widening at its LEFT front; fine horizontal snow spray. Frame3: strongest plume spanningx28..220, widest snowy leading edge on LEFT, narrow open source on RIGHT, layered soft longitudinal white/cyan snow ribbons with SMALL snow grains, suitable for stretching across a whole lane. Frame4: almost entirely faded, only a few tiny snow grains and a couple very faint short wisps in the central band, no dense fog. Keep frame1 small and frame4 faint, never enlarge them independently.
+Retain same finely painted Japanese anime ice magic style and cool blue-white palette. Top three rows exactly same. This is a transparent horizontal area attack, not an arrow projectile, not flame, not an opaque large cloud or a vertical tornado. LEFT flow must be visually obvious through expanding soft snowy front on left and narrow open origin on right.
