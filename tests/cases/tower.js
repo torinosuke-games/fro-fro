@@ -237,4 +237,33 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.ok(count(5, 'spirit') >= count(2, 'spirit'));
     for (const k of ['spirit', 'giant']) assert.ok(B.ENEMIES[k] && B.ENEMIES[k].core > 0);
   });
+  test('住民の応援（判断456）：信頼が「恩人」の町の人だけが、戦いに加わる。はたらきは人ごとに1つ', () => {
+    const withTrust = (t, all) => { const st = fresh(all); st.quests = FF.quests.create(); st.quests.trust = t; return st; };
+    assert.deepStrictEqual(plain(Tw.cheers(fresh(true))), []);
+    assert.deepStrictEqual(plain(Tw.cheers(withTrust({ baker: 14, hunter: 15 }))), ['hunter']);   // 14 は親友まで。15 から恩人
+    const all = withTrust({ baker: 15, woodcutter: 15, hunter: 15, nurse: 15, child: 15, elder: 15 });
+    assert.strictEqual(Tw.cheers(all).length, 6);
+    const base = Tw.create(fresh(true), { difficulty: 1, seed: 1 }), bt = Tw.create(all, { difficulty: 1, seed: 1 });
+    assert.strictEqual(bt.light, base.light + B.CHEER.baker.light);                                     // トム：はじめの灯
+    assert.strictEqual(bt.core.max, base.core.max + B.CHEER.elder.core);                                // バルト：炉の熱
+    assert.strictEqual(bt.core.hp, base.core.hp + B.CHEER.elder.core);
+    assert.strictEqual(bt.defs.kenshi.hp, Math.round(base.defs.kenshi.hp * (1 + B.CHEER.woodcutter.hp))); // ガイ：仲間の HP
+    const g0 = Tw.answer(Tw.create(fresh(true), { difficulty: 1, seed: 1 }), true, 'basic').gained;
+    assert.strictEqual(Tw.answer(bt, true, 'basic').gained, g0 + B.CHEER.child.light);                 // リコ：正解の灯
+    assert.strictEqual(Tw.answer(bt, false, 'basic').gained, 0);
+  });
+  test('住民の応援（判断456）：猟師の矢は、各道のいちばん炉に近い魔物を撃つ。看護の手当ては、仲間みんなの HP を戻す。記録（cheerLog）が残る', () => {
+    const st = fresh(true); st.quests = FF.quests.create(); st.quests.trust = { hunter: 15, nurse: 15 };
+    const bt = Tw.create(st, { difficulty: 1, seed: 1 }); bt.schedule.forEach(s => { s.done = true; }); bt.schedule.push({ at: 1e6, wave: 5, type: 'cub', lane: 0, done: false });
+    const mk = (id, lane, x) => ({ id, type: 'cub', lane, x, hp: 100, max: 100, atk: 0, interval: 9, speed: 0, cd: 9, core: 1 });
+    bt.enemies.push(mk(901, 1, 7), mk(902, 1, 4), mk(903, 3, 5));
+    bt.light = 999; Tw.place(bt, 'juushouhei', 4, 3); bt.units[0].hp = bt.units[0].max * 0.4;
+    Tw.run(bt, B.CHEER.hunter.every + 0.2);
+    assert.strictEqual(bt.enemies.find(e => e.id === 902).hp, 100 - B.CHEER.hunter.damage);   // 前の魔物だけ
+    assert.strictEqual(bt.enemies.find(e => e.id === 901).hp, 100);
+    assert.strictEqual(bt.enemies.find(e => e.id === 903).hp, 100 - B.CHEER.hunter.damage);
+    Tw.run(bt, B.CHEER.nurse.every - B.CHEER.hunter.every + 0.3);
+    assert.ok(bt.units[0].hp >= bt.units[0].max * 0.4 + bt.units[0].max * B.CHEER.nurse.heal - 1);
+    assert.deepStrictEqual(plain(bt.cheerLog.map(x => x.who)), ['hunter', 'nurse']);
+  });
 };

@@ -36,6 +36,13 @@
     return out;
   }
 
+  // ---- 住民の応援（判断456） ----
+  // 信頼が「恩人」になった町の人（CHEER に定義のある人だけ）
+  function cheers(state, b) {
+    var C = T(b).CHEER;
+    return Object.keys(C).filter(function (k) { return k !== 'LEVEL' && state && state.quests && FF.quests && FF.quests.trustLevel(state, k, b) >= C.LEVEL; });
+  }
+
   // ---- 戦いを作る ----
   function waveList(d, b) {
     var t = T(b), L = t.LEVEL, list = [];
@@ -60,6 +67,15 @@
       core: { hp: t.CORE_HP, max: t.CORE_HP }, light: t.LIGHT.START, quizLock: 0, units: [], enemies: [], schedule: [], nextId: 1, placed: {},
       defs: {}, kills: 0, wave: 0, result: null };
     roster(state, b).forEach(function (id) { bt.defs[id] = unitStats(state, id, b); });
+    // 住民の応援：はじめの灯・仲間の HP・炉の熱は、ここで。矢と手当ては、step で、時間ごとに（cheerT）。cheerLog は、画面に知らせるための記録
+    bt.cheers = cheers(state, b); bt.cheerT = {}; bt.cheerLog = [];
+    var C = t.CHEER;
+    bt.cheers.forEach(function (k) {
+      if (k === 'baker') bt.light += C.baker.light;
+      if (k === 'woodcutter') Object.keys(bt.defs).forEach(function (id) { bt.defs[id].hp = Math.round(bt.defs[id].hp * (1 + C.woodcutter.hp)); });
+      if (k === 'elder') { bt.core.hp += C.elder.core; bt.core.max += C.elder.core; }
+      if (k === 'hunter' || k === 'nurse') bt.cheerT[k] = C[k].every;
+    });
     var lists = waveList(d, b);
     lists.forEach(function (items, wi) {
       for (var i = items.length - 1; i > 0; i--) { var j = Math.floor(rand(bt) * (i + 1)), x = items[i]; items[i] = items[j]; items[j] = x; }
@@ -106,7 +122,7 @@
   // diffKey：冒険で決めた難しさ（'basic'｜'standard'｜'advanced'）
   function answer(bt, correct, diffKey, b) {
     var L = T(b).LIGHT;
-    if (correct) { var g = L.PER_CORRECT[diffKey] || L.PER_CORRECT.standard; bt.light = Math.min(L.MAX, bt.light + g); bt.quizLock = L.CORRECT_LOCK; return { gained: g, lock: L.CORRECT_LOCK }; }
+    if (correct) { var g = (L.PER_CORRECT[diffKey] || L.PER_CORRECT.standard) + (bt.cheers && bt.cheers.indexOf('child') >= 0 ? T(b).CHEER.child.light : 0); bt.light = Math.min(L.MAX, bt.light + g); bt.quizLock = L.CORRECT_LOCK; return { gained: g, lock: L.CORRECT_LOCK }; }
     bt.quizLock = L.WRONG_LOCK;
     return { gained: 0, lock: L.WRONG_LOCK };
   }
@@ -149,6 +165,24 @@
       bt.enemies.push({ id: bt.nextId++, type: s.type, lane: s.lane, x: t.COLS, hp: hp, max: hp, atk: def.atk * (1 + L.ATK * (d - 1)), interval: def.interval,
         speed: def.speed * (1 + L.SPEED * (d - 1)), cd: def.interval, core: def.core, sk: def.freeze ? def.freeze.cd * 0.6 : 0 });
     });
+    // 住民の応援：猟師の矢（各道の、いちばん炉に近い魔物）・看護の手当て（仲間みんなの HP）
+    var C = t.CHEER;
+    if (bt.cheerT && bt.cheerT.hunter != null) {
+      bt.cheerT.hunter -= dt;
+      if (bt.cheerT.hunter <= 0) {
+        bt.cheerT.hunter = C.hunter.every;
+        for (var ln = 0; ln < t.LANES; ln++) { var front = null; bt.enemies.forEach(function (e) { if (e.lane === ln && e.hp > 0 && (!front || e.x < front.x)) front = e; }); if (front) hit(bt, front, C.hunter.damage); }
+        bt.cheerLog.push({ who: 'hunter', t: bt.t });
+      }
+    }
+    if (bt.cheerT && bt.cheerT.nurse != null) {
+      bt.cheerT.nurse -= dt;
+      if (bt.cheerT.nurse <= 0) {
+        bt.cheerT.nurse = C.nurse.every;
+        bt.units.forEach(function (u) { if (u.hp > 0) u.hp = Math.min(u.max, u.hp + u.max * C.nurse.heal); });
+        bt.cheerLog.push({ who: 'nurse', t: bt.t });
+      }
+    }
     // 仲間の行動
     bt.units.forEach(function (u) {
       if (u.hp <= 0) return;
@@ -258,7 +292,7 @@
     return { state: s, reward: reward };
   }
 
-  FF.tower = { roster: roster, unitStats: unitStats, create: create, cost: cost, canPlace: canPlace, place: place, remove: remove, unitAt: unitAt, canQuiz: canQuiz, answer: answer,
+  FF.tower = { cheers: cheers, roster: roster, unitStats: unitStats, create: create, cost: cost, canPlace: canPlace, place: place, remove: remove, unitAt: unitAt, canQuiz: canQuiz, answer: answer,
     step: step, run: run, createState: createState, normalize: normalize, today: today, raidsLeft: raidsLeft, raidDifficulty: raidDifficulty, maxCleared: maxCleared,
     practiceMax: practiceMax, rewardFor: rewardFor, finish: finish };
 })(this);

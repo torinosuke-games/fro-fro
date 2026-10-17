@@ -62,3 +62,10 @@ body[data-screen="tower"][data-tower="battle"] .debug-flag{top:2px;bottom:auto;l
 .tw-ghost{position:fixed;z-index:95;width:44px;height:46px;object-fit:cover;object-position:top;border-radius:9px;border:2px solid #ffd45a;background:#e6f0f7;transform:translate(-50%,-190%);pointer-events:none;opacity:.92;box-shadow:0 3px 10px #0004}
 /* 戦っているあいだの知らせ（正解・灯など）は、戦場にかぶさらないように、カードの上に出し、指をじゃましない */
 body[data-screen="tower"][data-tower="battle"] .toast{top:auto;bottom:calc(176px + env(safe-area-inset-bottom,0px));pointer-events:none;font-size:.9375rem;padding:8px 12px}
+/* 住民の応援（判断456） */
+.tw-cheerbox{display:flex;flex-direction:column;gap:8px;padding:12px 14px;background:#f2f9f4;border:1px solid #cfe5d6;border-radius:12px}
+.tw-cheerbox>strong{color:#2f7a52;font-size:1.0625rem}
+.tw-cheer-row{display:flex;align-items:center;gap:10px}.tw-cheer-row>div{display:flex;flex-direction:column;min-width:0;font-size:.875rem;line-height:1.6;color:var(--text)}.tw-cheer-row b{color:var(--rn-navy)}
+.tw-cheer{display:flex;align-items:center;gap:6px;min-height:30px}
+.tw-cheer .qt-face{width:26px;height:26px}
+body[data-screen="tower"][data-tower="battle"] .tw-cheer{min-height:28px}
