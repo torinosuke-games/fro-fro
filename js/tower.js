@@ -49,17 +49,20 @@
     return Object.keys(C).filter(function (k) { return k !== 'LEVEL' && state && state.quests && FF.quests && FF.quests.trustLevel(state, k, b) >= C.LEVEL; });
   }
 
+  // 難しさごとのレーン数（opts.lanes で上書きできるのは、練習）
+  function lanesOf(d, b) { var t = T(b), n = t.LANES_BY_LEVEL && t.LANES_BY_LEVEL[d - 1]; return n || t.LANES; }
+
   // ---- 戦いを作る ----
-  function waveList(d, b) {
-    var t = T(b), L = t.LEVEL, list = [];
+  function waveList(d, b, lanes) {
+    var t = T(b), L = t.LEVEL, list = [], lf = (lanes || t.LANES) / t.LANES;   // レーンがふえると、魔物の数も、レーンの数に合わせてふえる
     t.WAVES.forEach(function (w, i) {
       var items = [];
       Object.keys(t.WAVES_NEW || {}).forEach(function (k) {   // 新しい魔物（氷の精霊・雪の巨人）
         var nw = t.WAVES_NEW[k], base = nw.PER_WAVE[i] || 0;
-        if (d >= nw.FROM && base) for (var q = 0, n = Math.round(base * (1 + L.COUNT * (d - nw.FROM))); q < n; q++) items.push(k);
+        if (d >= nw.FROM && base) for (var q = 0, n = Math.round(base * (1 + L.COUNT * (d - nw.FROM)) * lf); q < n; q++) items.push(k);
       });
       Object.keys(w).forEach(function (k) {
-        var n = k === 'boss' ? w[k] + Math.floor((d - 1) / L.BOSS_EVERY) : Math.round(w[k] * (1 + L.COUNT * (d - 1)));
+        var n = k === 'boss' ? w[k] + Math.floor((d - 1) / L.BOSS_EVERY) : Math.round(w[k] * (1 + L.COUNT * (d - 1)) * lf);
         for (var j = 0; j < n; j++) items.push(k);
       });
       list.push(items);
@@ -69,7 +72,8 @@
   // opts：difficulty（1〜5）、seed（整数）、mode（'raid'｜'practice'）
   function create(state, opts, b) {
     var t = T(b), d = clamp(Math.floor(opts && opts.difficulty) || 1, 1, 5), seed = (opts && opts.seed != null ? opts.seed : 1) >>> 0;
-    var bt = { version: 1, mode: opts && opts.mode === 'raid' ? 'raid' : 'practice', difficulty: d, seed: seed, rng: seed, t: 0,
+    var lanes = opts && opts.lanes && T(b).LANES_CHOICES.indexOf(opts.lanes) >= 0 && opts.mode !== 'raid' ? opts.lanes : lanesOf(d, b);
+    var bt = { version: 1, lanes: lanes, mode: opts && opts.mode === 'raid' ? 'raid' : 'practice', difficulty: d, seed: seed, rng: seed, t: 0,
       core: { hp: t.CORE_HP, max: t.CORE_HP }, light: t.LIGHT.START, quizLock: 0, units: [], enemies: [], schedule: [], nextId: 1, placed: {},
       defs: {}, kills: 0, wave: 0, result: null };
     roster(state, b).forEach(function (id) { bt.defs[id] = unitStats(state, id, b); });
@@ -84,10 +88,10 @@
       if (k === 'elder') { bt.core.hp += C.elder.core; bt.core.max += C.elder.core; }
       if (k === 'hunter' || k === 'nurse') bt.cheerT[k] = C[k].every;
     });
-    var lists = waveList(d, b);
+    var lists = waveList(d, b, lanes);
     lists.forEach(function (items, wi) {
       for (var i = items.length - 1; i > 0; i--) { var j = Math.floor(rand(bt) * (i + 1)), x = items[i]; items[i] = items[j]; items[j] = x; }
-      items.forEach(function (type, k) { bt.schedule.push({ at: t.WAVE_START[wi] + k * t.SPAWN_GAP, wave: wi + 1, type: type, lane: Math.floor(rand(bt) * t.LANES), done: false }); });
+      items.forEach(function (type, k) { bt.schedule.push({ at: t.WAVE_START[wi] + k * t.SPAWN_GAP, wave: wi + 1, type: type, lane: Math.floor(rand(bt) * lanes), done: false }); });
     });
     bt.schedule.sort(function (a, c) { return a.at - c.at; });
     return bt;
@@ -100,7 +104,7 @@
     var t = T(b);
     if (bt.result) return { ok: false, reason: 'over' };
     if (!bt.defs[id]) return { ok: false, reason: 'roster' };
-    if (lane < 0 || lane >= t.LANES || col < t.PLACE_FROM || col > t.PLACE_TO || lane !== Math.floor(lane) || col !== Math.floor(col)) return { ok: false, reason: 'cell' };
+    if (lane < 0 || lane >= (bt.lanes || t.LANES) || col < t.PLACE_FROM || col > t.PLACE_TO || lane !== Math.floor(lane) || col !== Math.floor(col)) return { ok: false, reason: 'cell' };
     if (unitAt(bt, lane, col)) return { ok: false, reason: 'occupied' };
     if (bt.light < cost(bt, id, b)) return { ok: false, reason: 'light' };
     return { ok: true };
@@ -179,7 +183,7 @@
       bt.cheerT.hunter -= dt;
       if (bt.cheerT.hunter <= 0) {
         bt.cheerT.hunter = C.hunter.every;
-        for (var ln = 0; ln < t.LANES; ln++) { var front = null; bt.enemies.forEach(function (e) { if (e.lane === ln && e.hp > 0 && (!front || e.x < front.x)) front = e; }); if (front) hit(bt, front, C.hunter.damage); }
+        for (var ln = 0; ln < (bt.lanes || t.LANES); ln++) { var front = null; bt.enemies.forEach(function (e) { if (e.lane === ln && e.hp > 0 && (!front || e.x < front.x)) front = e; }); if (front) hit(bt, front, C.hunter.damage); }
         bt.cheerLog.push({ who: 'hunter', t: bt.t });
       }
     }
@@ -300,7 +304,7 @@
     return { state: s, reward: reward };
   }
 
-  FF.tower = { popMult: popMult, cheers: cheers, roster: roster, unitStats: unitStats, create: create, cost: cost, canPlace: canPlace, place: place, remove: remove, unitAt: unitAt, canQuiz: canQuiz, answer: answer,
+  FF.tower = { lanesOf: lanesOf, popMult: popMult, cheers: cheers, roster: roster, unitStats: unitStats, create: create, cost: cost, canPlace: canPlace, place: place, remove: remove, unitAt: unitAt, canQuiz: canQuiz, answer: answer,
     step: step, run: run, createState: createState, normalize: normalize, today: today, raidsLeft: raidsLeft, raidDifficulty: raidDifficulty, maxCleared: maxCleared,
     practiceMax: practiceMax, rewardFor: rewardFor, finish: finish };
 })(this);

@@ -4,7 +4,33 @@
   'use strict';
   var FF = root.FF, U = FF.ui, E = U.el, X = FF.tower, TT = FF.texts.tower;
   var W = 1440, H = 800, CELL = 160, DIR = 'img/adventure/tower/';
-  var LANE_Y = [100, 250, 400, 555, 705];   // 背景の絵の、5本の道の中心（絵に合わせた高さ）
+  var LANE_Y = [100, 250, 400, 555, 705], BASE_H = 800, cache = { n: 5, field: null, core: {} };   // 背景の絵の、5本の道の中心（絵に合わせた高さ）。LANE_Y・H は、レーン数に合わせて、useLayout が切りかえる
+  // レーンの数（試作。判断458）：5レーンの絵を、つなぎ足して、6レーン以上の戦場にする。背景は、2本目と3本目の道のあいだの1本ぶん（150px）を、道の中心でつなぎ足す。中央炉は、火口1つぶん（160px）を、足す
+  function useLayout(n) {
+    n = Math.max(5, n | 0); var k = n - 5, y = [100, 250, 400];
+    for (var j = 1; j <= k; j++) y.push(400 + 150 * j);
+    y.push(555 + 150 * k, 705 + 150 * k);
+    LANE_Y = y; H = BASE_H + 150 * k; cache = { n: n, field: null, core: {} };
+  }
+  function composite(src, k, h0, cutA, bandH, bandSrcY, outScale) {   // src を、縦に、k 回つなぎ足した絵（offscreen canvas）
+    var c = root.document.createElement('canvas'), w = src.naturalWidth, sc = src.naturalHeight / h0, g;
+    c.width = w; c.height = Math.round((h0 + bandH * k) * sc); g = c.getContext('2d');
+    g.drawImage(src, 0, 0, w, cutA * sc, 0, 0, w, cutA * sc);
+    for (var j = 0; j < k; j++) g.drawImage(src, 0, bandSrcY * sc, w, bandH * sc, 0, (cutA + bandH * j) * sc, w, bandH * sc);
+    g.drawImage(src, 0, cutA * sc, w, (h0 - cutA) * sc, 0, (cutA + bandH * k) * sc, w, (h0 - cutA) * sc);
+    return c;
+  }
+  function fieldImg() {
+    var im = images().field, k = cache.n - 5;
+    if (!k) return im;
+    if (!ready(im)) return null;
+    return cache.field || (cache.field = composite(im, k, 800, 400, 150, 250));
+  }
+  function coreImg(key) {
+    var im = images()[key], k = cache.n - 5;
+    if (!k || !ready(im)) return im;
+    return cache.core[key] || (cache.core[key] = composite(im, k, 800, 320, 160, 160));
+  }
   var ENEMY_BOX = { cub: [0, 550, 340, 405, 115], wolf: [337, 278, 497, 675, 155], boss: [829, 20, 707, 940, 225], spirit: [179, 306, 411, 624, 155, 'e2'], giant: [812, 79, 681, 851, 225, 'e2'] };   // 6つ目：絵のシート（なければ snow-enemies.webp。'e2' は enemies-2.webp＝氷の精霊・雪の巨人。判断455）   // snow-enemies.webp の切り出し（x, y, 幅, 高さ）と、戦場での高さ
   var FX = { arrow: [0, 120], ice: [1, 210], heal: [2, 150], spark: [3, 130], smash: [1, 190, 'fx2'] };   // tower-fx.webp の行と、描く大きさ（3つ目：tower-fx-2.webp のシートのとき。凍結は 0行目、壁が壊れるのは 1行目）   // tower-fx.webp の行と、描く大きさ
   var imgs = null, cur = null, token = 0, refs = null;
@@ -22,7 +48,7 @@
     if (!im.allies[key]) im.allies[key] = loadImg('img/adventure/allies/' + key + '.webp');
     return im.allies[key];
   }
-  function ready(i) { return i && i.complete && i.naturalWidth > 0; }
+  function ready(i) { return !!i && (i.getContext ? i.width > 0 : i.complete && i.naturalWidth > 0); }   // 絵、または、つなぎ足した offscreen canvas
   function memberName(id) { var m = FF.texts.adventure && FF.texts.adventure.members && FF.texts.adventure.members[id]; return m ? U.plain(m.name) : id; }
   function laneAt(y) { var best = 0; for (var i = 1; i < LANE_Y.length; i++) if (Math.abs(LANE_Y[i] - y) < Math.abs(LANE_Y[best] - y)) best = i; return best; }
   function snd(name) { if (FF.towerSound && FF.towerSound[name]) FF.towerSound[name](); }
@@ -36,8 +62,8 @@
   }
 
   // ---- 戦いを始める・進める ----
-  function begin(difficulty, mode) {
-    var a = FF.app, seed = Math.floor(a.now() / 1000) % 1000003, bt = X.create(a.state, { difficulty: difficulty, seed: seed, mode: mode === 'raid' ? 'raid' : 'practice' }), first = Object.keys(bt.defs)[0];
+  function begin(difficulty, mode, lanes) {
+    var a = FF.app, seed = Math.floor(a.now() / 1000) % 1000003, bt = X.create(a.state, { difficulty: difficulty, seed: seed, mode: mode === 'raid' ? 'raid' : 'practice', lanes: lanes }), first = Object.keys(bt.defs)[0];
     cur = { bt: bt, paused: false, speed: 1, sel: first ? { kind: 'card', id: first } : null, fx: [], prev: { cd: {}, hp: {}, kills: 0, core: bt.core.hp, wave: 0 }, acc: 0, flash: 0, finished: false, last: null, fresh: true, quizOpen: false, reward: null };
   }
   function playing() { return !!(cur && cur.bt && !cur.bt.result && !cur.paused && !cur.quizOpen); }
@@ -74,7 +100,7 @@
     });
     (bt.cheerLog || []).slice(p.cheerSeen || 0).forEach(function (ev) {   // 住民の応援（矢・手当て）：絵と知らせを出す
       if (ev.who === 'hunter') {
-        for (var ln = 0; ln < bal().LANES; ln++) { var fr = null; bt.enemies.forEach(function (e) { if (e.lane === ln && (!fr || e.x < fr.x)) fr = e; }); if (fr) addFx('arrow', fr.x * CELL - 60, LANE_Y[ln] - 140, { toX: fr.x * CELL, toY: LANE_Y[ln] - 30, dur: 0.3 }); }
+        for (var ln = 0; ln < bt.lanes; ln++) { var fr = null; bt.enemies.forEach(function (e) { if (e.lane === ln && (!fr || e.x < fr.x)) fr = e; }); if (fr) addFx('arrow', fr.x * CELL - 60, LANE_Y[ln] - 140, { toX: fr.x * CELL, toY: LANE_Y[ln] - 30, dur: 0.3 }); }
       } else bt.units.forEach(function (u) { addFx('heal', (u.col + 0.5) * CELL, LANE_Y[u.lane] + 30, { dur: 0.6 }); });
       U.toast(TT.cheerEvent[ev.who]);
     });
@@ -148,14 +174,14 @@
     if (!cur.sel || cur.sel.kind !== 'card' || bt.result) return;
     ctx.save();
     ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(255,240,190,0.55)';
-    for (var l = 0; l < T.LANES; l++) for (var c = T.PLACE_FROM; c <= T.PLACE_TO; c++) {
+    for (var l = 0; l < bt.lanes; l++) for (var c = T.PLACE_FROM; c <= T.PLACE_TO; c++) {
       if (X.unitAt(bt, l, c)) continue;
       ctx.fillStyle = X.canPlace(bt, cur.sel.id, l, c).ok ? 'rgba(255,236,170,0.24)' : 'rgba(255,255,255,0.07)';
       ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(c * CELL + 12, LANE_Y[l] - 62, CELL - 24, 124, 18); else ctx.rect(c * CELL + 12, LANE_Y[l] - 62, CELL - 24, 124);
       ctx.fill(); ctx.stroke();
     }
     var h = cur.hover;   // ドラッグ中に、指のあるマス。指で隠れても分かるように、そのマスの行と列を、細長くひからせ、マスには、置く仲間の絵をうすく出す。置けるなら金色、置けないなら赤
-    if (h && h.col >= T.PLACE_FROM && h.col <= T.PLACE_TO && h.lane >= 0 && h.lane < T.LANES) {
+    if (h && h.col >= T.PLACE_FROM && h.col <= T.PLACE_TO && h.lane >= 0 && h.lane < bt.lanes) {
       var ok = X.canPlace(bt, cur.sel.id, h.lane, h.col).ok, tint = ok ? '255,214,90' : '230,80,70', cx = h.col * CELL + 12, cy = LANE_Y[h.lane] - 62;
       ctx.fillStyle = 'rgba(' + tint + ',0.16)';
       ctx.fillRect(CELL * T.PLACE_FROM, cy, CELL * (T.PLACE_TO - T.PLACE_FROM + 1), 124);   // その道（行）
@@ -175,7 +201,7 @@
     ctx.fillStyle = color; ctx.fillRect(x - w / 2 + 2, y + 2, Math.max(0, (w - 4) * ratio), 12);
   }
   function drawCore(ctx) {
-    var im = images(), c = cur.bt.core, r = c.hp / c.max, i = r > 0.6 ? im.core1 : r > 0.3 ? im.core2 : im.core3;
+    var c = cur.bt.core, r = c.hp / c.max, i = coreImg(r > 0.6 ? 'core1' : r > 0.3 ? 'core2' : 'core3');
     if (ready(i)) ctx.drawImage(i, 0, 0, CELL, H);
     else { ctx.fillStyle = '#b8622b'; ctx.fillRect(0, 0, CELL, H); }
     if (cur.flash > 0) { ctx.fillStyle = 'rgba(255,70,50,' + (cur.flash / 0.35 * 0.35) + ')'; ctx.fillRect(0, 0, CELL, H); }
@@ -210,7 +236,8 @@
   function draw() {
     var ctx = cur.canvas.getContext('2d'), im = images(), list = [];
     ctx.clearRect(0, 0, W, H);
-    if (ready(im.field)) ctx.drawImage(im.field, 0, 0, W, H);
+    var fi = fieldImg();
+    if (fi && (fi.complete === undefined || fi.complete)) ctx.drawImage(fi, 0, 0, W, H);
     else { ctx.fillStyle = '#cfe0f0'; ctx.fillRect(0, 0, W, H); }
     drawCore(ctx);
     drawCells(ctx);
@@ -228,12 +255,15 @@
     for (var d = 1; d <= max; d++) opts.push(E('option', { text: fill(U.plain(TT.level), { n: d }), attrs: { value: String(d) } }));
     var sel = E('select', { class: 'tw-select', attrs: { 'aria-label': U.plain(TT.difficulty) } }, opts);
     sel.value = String(picked);
+    var lanesSel = E('select', { class: 'tw-select', attrs: { 'aria-label': U.plain(TT.lanes) } }, bal().LANES_CHOICES.map(function (n) { return E('option', { text: fill(U.plain(TT.lanesN), { n: n }), attrs: { value: String(n) } }); }));
+    lanesSel.value = String(X.lanesOf(picked));
+    sel.addEventListener('change', function () { lanesSel.value = String(X.lanesOf(+sel.value)); });   // 難しさを変えたら、その難しさの道の数にそろえる（変えて試すこともできる）
     var a = FF.app, fresh = X.today(s, a.now());
     if (fresh !== s) { a.commit(fresh); s = a.state; }
     var rd = X.raidDifficulty(s), left = X.raidsLeft(s, a.now()), rw = X.rewardFor(s, rd, a.now());
     var raid = E('div', { class: 'tw-raid' }, [
       E('strong', { rich: TT.raid }), E('p', { class: 'tw-note', rich: TT.raidLead }),
-      E('p', { class: 'tw-raid-meta' }, [E('span', { class: 'tw-badge', rich: fill(TT.level, { n: rd }) }), E('span', { rich: left ? fill(TT.raidLeft, { n: left }) : TT.raidNone })]),
+      E('p', { class: 'tw-raid-meta' }, [E('span', { class: 'tw-badge', rich: fill(TT.level, { n: rd }) }), E('span', { class: 'tw-badge is-lanes', rich: fill(TT.lanesN, { n: X.lanesOf(rd) }) }), E('span', { rich: left ? fill(TT.raidLeft, { n: left }) : TT.raidNone })]),
       E('p', { class: 'tw-reward' }, [E('span', { rich: TT.raidReward }), E('b', { text: ' ' + rewardText(rw) })]),
       rw.first && left ? E('p', { class: 'tw-note', rich: TT.raidFirst }) : null,
       button(TT.raidStart, 'primary', function () { begin(rd, 'raid'); U.rerender(); }, ids.length ? { 'data-act': 'raid' } : { 'data-act': 'raid', disabled: 'true' })
@@ -251,12 +281,12 @@
       cheer,
       E('h2', { class: 'tw-h2', rich: TT.howTitle }),
       E('ul', { class: 'tw-how' }, TT.how.map(function (t) { return E('li', { rich: t }); })),
-      E('div', { class: 'tw-pick' }, [E('strong', { rich: TT.practice }), E('label', { class: 'tw-label' }, [E('span', { rich: TT.difficulty }), sel])]),
+      E('div', { class: 'tw-pick' }, [E('strong', { rich: TT.practice }), E('label', { class: 'tw-label' }, [E('span', { rich: TT.difficulty }), sel]), E('label', { class: 'tw-label' }, [E('span', { rich: TT.lanes }), lanesSel])]),
       E('p', { class: 'tw-note', rich: TT.practiceNote }),
       ids.length ? null : E('p', { class: 'tw-note', rich: TT.noMember }),
       E('p', { class: 'tw-note', rich: fill(TT.record, { n: (s.tower && s.tower.wins) || 0 }) }),
       E('div', { class: 'tw-actions' }, [
-        button(TT.start, '', function () { begin(+sel.value, 'practice'); U.rerender(); }, ids.length ? { 'data-act': 'start' } : { 'data-act': 'start', disabled: 'true' }),
+        button(TT.start, '', function () { begin(+sel.value, 'practice', +lanesSel.value); U.rerender(); }, ids.length ? { 'data-act': 'start' } : { 'data-act': 'start', disabled: 'true' }),
         button(TT.back, '', function () { U.show('base'); }, { 'data-act': 'back' })
       ])
     ]));
@@ -264,7 +294,8 @@
 
   function renderBattle(main) {
     var bt = cur.bt, T = bal(), my = ++token;
-    var canvas = E('canvas', { class: 'tw-canvas', attrs: { width: String(W), height: String(H), role: 'img', 'aria-label': U.plain(TT.title) } });
+    useLayout(bt.lanes);
+    var canvas = E('canvas', { class: 'tw-canvas', style: { aspectRatio: W + ' / ' + H }, attrs: { width: String(W), height: String(H), role: 'img', 'aria-label': U.plain(TT.title) } });
     cur.canvas = canvas;
     var wave = E('span', { class: 'tw-val' }), coreFill = E('i'), coreTxt = E('span', { class: 'tw-val' }), lightTxt = E('strong', { class: 'tw-val' });
     var overlay = E('div', { class: 'tw-overlay', attrs: { hidden: 'true' } }), info = E('div', { class: 'tw-info' }), cards = {};
@@ -412,7 +443,7 @@
         E('p', { class: 'tw-result', rich: fill(TT.result, { wave: Math.max(1, bt.wave), waves: bal().WAVES.length, kills: bt.kills }) }),
         bt.result === 'win' ? rewardBlock(bt) : null,
         E('div', { class: 'tw-actions' }, [
-          button(TT.again, 'primary', function () { begin(bt.difficulty, bt.mode === 'raid' && X.raidsLeft(FF.app.state, FF.app.now()) > 0 ? 'raid' : 'practice'); U.rerender(); }, { 'data-act': 'again' }),
+          button(TT.again, 'primary', function () { begin(bt.difficulty, bt.mode === 'raid' && X.raidsLeft(FF.app.state, FF.app.now()) > 0 ? 'raid' : 'practice', bt.lanes); U.rerender(); }, { 'data-act': 'again' }),
           button(TT.back, '', function () { cur = null; U.show('base'); }, { 'data-act': 'leave' })])
       ]));
     } else if (cur.paused) {
