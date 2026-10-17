@@ -132,9 +132,11 @@
     }
     ctx.restore();
   }
+  // HP のゲージ。いちばん上の道では、頭の上が画面の外になるので、見える範囲（上から 4px）に収める。スマホでは小さく縮むので、太めに描く
   function bar(ctx, x, y, w, ratio, color) {
-    ctx.fillStyle = 'rgba(20,30,50,0.7)'; ctx.fillRect(x - w / 2, y, w, 10);
-    ctx.fillStyle = color; ctx.fillRect(x - w / 2 + 1, y + 1, Math.max(0, (w - 2) * ratio), 8);
+    y = Math.max(4, y);
+    ctx.fillStyle = 'rgba(20,30,50,0.8)'; ctx.fillRect(x - w / 2, y, w, 16);
+    ctx.fillStyle = color; ctx.fillRect(x - w / 2 + 2, y + 2, Math.max(0, (w - 4) * ratio), 12);
   }
   function drawCore(ctx) {
     var im = images(), c = cur.bt.core, r = c.hp / c.max, i = r > 0.6 ? im.core1 : r > 0.3 ? im.core2 : im.core3;
@@ -147,7 +149,7 @@
     ctx.fillStyle = 'rgba(10,20,40,0.28)'; ctx.beginPath(); ctx.ellipse(cx, base - 2, 50, 13, 0, 0, Math.PI * 2); ctx.fill();
     if (ready(i)) { var w = h * i.naturalWidth / i.naturalHeight; ctx.drawImage(i, cx - w / 2, base - h, w, h); }
     else { ctx.fillStyle = '#6aa4d8'; ctx.fillRect(cx - 28, base - h, 56, h); }
-    if (u.hp < u.max) bar(ctx, cx, base - h - 14, 76, u.hp / u.max, '#6fd49a');
+    if (u.hp < u.max) bar(ctx, cx, base - h - 14, 90, u.hp / u.max, '#6fd49a');
     if (cur.sel && cur.sel.kind === 'unit' && cur.sel.uid === u.id) { ctx.strokeStyle = '#ffd36b'; ctx.lineWidth = 5; ctx.strokeRect(cx - 70, LANE_Y[u.lane] - 66, 140, 132); }
   }
   function drawEnemy(ctx, e) {
@@ -155,7 +157,7 @@
     ctx.fillStyle = 'rgba(10,20,40,0.3)'; ctx.beginPath(); ctx.ellipse(cx, base - 3, w * 0.42, 12, 0, 0, Math.PI * 2); ctx.fill();
     if (ready(i)) ctx.drawImage(i, b[0], b[1], b[2], b[3], cx - w / 2, base - h, w, h);
     else { ctx.fillStyle = '#c0504a'; ctx.fillRect(cx - 30, base - h, 60, h); }
-    if (e.hp < e.max) bar(ctx, cx, base - h - 12, Math.max(60, w * 0.7), e.hp / e.max, '#ee6a5a');
+    if (e.hp < e.max) bar(ctx, cx, base - h - 12, Math.max(80, w * 0.8), e.hp / e.max, '#ee6a5a');
   }
   function drawFx(ctx) {
     var i = images().fx;
@@ -340,6 +342,7 @@
   }
 
   function render(main) {
+    root.document.body.setAttribute('data-tower', cur && cur.bt ? 'battle' : 'start');   // 戦っているあいだは、上の資材の帯と下のナビを隠して、1画面に収める（CSS）
     if (cur && cur.bt) {
       if (!cur.bt.result && !cur.fresh) cur.paused = true;   // 画面に戻ってきたら、いったん止める（始めたばかりのときは、止めない）
       cur.fresh = false;

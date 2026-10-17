@@ -467,7 +467,7 @@
   hud.appendChild(strip);
  };
  FF.renewalNav=function(nav){
-  var screen=FF.app.screen,navScreen=screen==='adventureParty'?'party':screen==='adventureInventory'?'inventory':screen;nav.hidden=['title','quiz','lessonFilters','exam','diagnosis','battle','exploreQuiz'].indexOf(screen)>=0;
+  var screen=FF.app.screen,navScreen=screen==='adventureParty'?'party':screen==='adventureInventory'?'inventory':screen;nav.hidden=['title','quiz','lessonFilters','exam','diagnosis','battle','exploreQuiz'].indexOf(screen)>=0||(screen==='tower'&&!!U.towerBattle&&!!U.towerBattle());
   U.clear(nav);
   var options=[['base','img/art/housing.jpg',R.town],['study','img/art/subj-en.jpg',R.start],['explore','img/nav-compass.svg',R.explore],['party','img/nav-party.svg',R.partyNav],['inventory','img/nav-bag.svg',R.invNav],['settings','img/nav-settings.svg',R.settings]];
   nav.appendChild(E('div',{class:'inner'},options.map(function(o){return E('button',{class:navScreen===o[0]?'active':'',attrs:{type:'button','aria-current':navScreen===o[0]?'page':null},on:{click:function(){if(o[0]==='party')U.show('adventureParty');else if(o[0]==='inventory')U.show('adventureInventory');else if(o[0]==='explore'&&!FF.exploration.isExploreOpen(FF.app.state))U.toast(U.T('explore.navLocked'));else U.show(o[0],o[0]==='study'?{tab:'learn'}:{});}}},[E('img',{class:'nav-illustration',attrs:{src:o[1],alt:''}}),E('span',{class:'nav-label',text:o[2]})]);})));
