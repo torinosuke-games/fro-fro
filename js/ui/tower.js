@@ -29,11 +29,11 @@
   function fill(t, vars) { return Object.keys(vars).reduce(function (s, k) { return s.split('{' + k + '}').join(vars[k]); }, t); }
 
   // ---- 戦いを始める・進める ----
-  function begin(difficulty) {
-    var a = FF.app, seed = Math.floor(a.now() / 1000) % 1000003, bt = X.create(a.state, { difficulty: difficulty, seed: seed, mode: 'practice' }), first = Object.keys(bt.defs)[0];
-    cur = { bt: bt, paused: false, speed: 1, sel: first ? { kind: 'card', id: first } : null, fx: [], prev: { cd: {}, hp: {}, kills: 0, core: bt.core.hp, wave: 0 }, acc: 0, flash: 0, finished: false, last: null, fresh: true };
+  function begin(difficulty, mode) {
+    var a = FF.app, seed = Math.floor(a.now() / 1000) % 1000003, bt = X.create(a.state, { difficulty: difficulty, seed: seed, mode: mode === 'raid' ? 'raid' : 'practice' }), first = Object.keys(bt.defs)[0];
+    cur = { bt: bt, paused: false, speed: 1, sel: first ? { kind: 'card', id: first } : null, fx: [], prev: { cd: {}, hp: {}, kills: 0, core: bt.core.hp, wave: 0 }, acc: 0, flash: 0, finished: false, last: null, fresh: true, quizOpen: false, reward: null };
   }
-  function playing() { return !!(cur && cur.bt && !cur.bt.result && !cur.paused); }
+  function playing() { return !!(cur && cur.bt && !cur.bt.result && !cur.paused && !cur.quizOpen); }
   U.towerPlaying = playing;
   U.towerBattle = function () { return cur && cur.bt; };   // 確認用（テストが、戦いを早送りするのに使う）
 
@@ -80,8 +80,42 @@
     cur.finished = true;
     snd(bt.result === 'win' ? 'win' : 'lose');
     var r = X.finish(a.state, bt, a.now());
+    cur.reward = r.reward;
     if (r.state !== a.state) a.commit(r.state);
     showOverlay();
+  }
+
+  // ---- 問題（灯） ----
+  function rewardText(r) {
+    var t = ['+' + U.fmt(r.gold) + ' G'];
+    Object.keys(r.res || {}).forEach(function (k) { t.push(U.resDef(k).icon + ' ' + U.fmt(r.res[k])); });
+    if (r.potions) t.push('🧪×' + r.potions);
+    return t.join('　');
+  }
+  // 冒険の画面で決めた教科・難しさの、選択問題を出す。正解で灯。解いているあいだは、戦場が止まる。学習の記録・熱量には入らない（出題のかぶりを避ける記録だけ残す）
+  function openQuiz() {
+    if (!cur || cur.quizOpen || cur.paused || cur.bt.result) return;
+    if (!X.canQuiz(cur.bt)) return;
+    var a = FF.app, adv = a.state.adventure, q = FF.adventure.pick(a.bank, adv, a.state.player.grade || 1, Math.random, a.now());
+    if (!q) { U.toast(TT.quizNone); return; }
+    var choices = FF.util.shuffle(q.choices || [], Math.random), done = false;
+    cur.quizOpen = true;
+    function finishQuiz(selected) {
+      if (done) return; done = true;
+      var correct = selected != null && FF.answer.judge(q, selected).correct, r = X.answer(cur.bt, correct, adv.difficulty);
+      var n = FF.util.clone(a.state); n.adventure.recent = (n.adventure.recent || []).concat([q.id]).slice(-FF.balance.ADVENTURE.RECENT); a.commit(n);
+      cur.quizOpen = false; cur.last = null; close();
+      if (correct) { snd('light'); U.toast(fill(TT.quizRight, { n: r.gained })); } else U.toast(TT.quizWrong);
+    }
+    var body = E('div', { class: 'tw-quiz' }, [E('p', { class: 'tw-quiz-note', rich: TT.quizNote }), E('h3', { class: 'tw-quiz-q', rich: q.question })]);
+    if (q.diagram && FF.lessonFigure) body.appendChild(FF.lessonFigure.render(q.diagram));
+    body.appendChild(E('div', { class: 'tw-quiz-choices', attrs: { role: 'group' } }, choices.map(function (c, i) {
+      return E('button', { class: 'tw-quiz-choice', attrs: { type: 'button', 'data-choice': String(i) }, on: { click: function () { finishQuiz(c); } } },
+        [E('span', { class: 'tw-quiz-letter', text: ['A', 'B', 'C', 'D'][i] || '', attrs: { 'aria-hidden': 'true' } }), E('span', {}, [U.rich(c)])]);
+    })));
+    var close = U.modal({ title: TT.quizTitle, body: body, dismissible: false, buttons: [
+      { label: TT.quizDontKnow, class: 'ghost', keepOpen: true, onClick: function () { finishQuiz(null); } },
+      { label: TT.quizCancel, class: 'ghost', onClick: function () { done = true; cur.quizOpen = false; cur.last = null; } }] });
   }
 
   // ---- 描く ----
@@ -153,16 +187,28 @@
     for (var d = 1; d <= max; d++) opts.push(E('option', { text: fill(U.plain(TT.level), { n: d }), attrs: { value: String(d) } }));
     var sel = E('select', { class: 'tw-select', attrs: { 'aria-label': U.plain(TT.difficulty) } }, opts);
     sel.value = String(picked);
+    var a = FF.app, fresh = X.today(s, a.now());
+    if (fresh !== s) { a.commit(fresh); s = a.state; }
+    var rd = X.raidDifficulty(s), left = X.raidsLeft(s, a.now()), rw = X.rewardFor(s, rd, a.now());
+    var raid = E('div', { class: 'tw-raid' }, [
+      E('strong', { rich: TT.raid }), E('p', { class: 'tw-note', rich: TT.raidLead }),
+      E('p', { class: 'tw-raid-meta' }, [E('span', { class: 'tw-badge', rich: fill(TT.level, { n: rd }) }), E('span', { rich: left ? fill(TT.raidLeft, { n: left }) : TT.raidNone })]),
+      E('p', { class: 'tw-reward' }, [E('span', { rich: TT.raidReward }), E('b', { text: ' ' + rewardText(rw) })]),
+      rw.first && left ? E('p', { class: 'tw-note', rich: TT.raidFirst }) : null,
+      button(TT.raidStart, 'primary', function () { begin(rd, 'raid'); U.rerender(); }, ids.length ? { 'data-act': 'raid' } : { 'data-act': 'raid', disabled: 'true' })
+    ]);
     main.appendChild(E('section', { class: 'tw-start panel' }, [
       E('h1', { class: 'tw-h1', rich: TT.title }),
       E('p', { class: 'tw-lead', rich: TT.lead }),
+      raid,
       E('h2', { class: 'tw-h2', rich: TT.howTitle }),
       E('ul', { class: 'tw-how' }, TT.how.map(function (t) { return E('li', { rich: t }); })),
       E('div', { class: 'tw-pick' }, [E('strong', { rich: TT.practice }), E('label', { class: 'tw-label' }, [E('span', { rich: TT.difficulty }), sel])]),
       E('p', { class: 'tw-note', rich: TT.practiceNote }),
       ids.length ? null : E('p', { class: 'tw-note', rich: TT.noMember }),
+      E('p', { class: 'tw-note', rich: fill(TT.record, { n: (s.tower && s.tower.wins) || 0 }) }),
       E('div', { class: 'tw-actions' }, [
-        button(TT.start, 'primary', function () { begin(+sel.value); U.rerender(); }, ids.length ? { 'data-act': 'start' } : { 'data-act': 'start', disabled: 'true' }),
+        button(TT.start, '', function () { begin(+sel.value, 'practice'); U.rerender(); }, ids.length ? { 'data-act': 'start' } : { 'data-act': 'start', disabled: 'true' }),
         button(TT.back, '', function () { U.show('base'); }, { 'data-act': 'back' })
       ])
     ]));
@@ -183,7 +229,7 @@
     }));
     var pauseBtn = button(TT.pause, 'tw-small', function () { if (!cur.bt.result) { cur.paused = !cur.paused; showOverlay(); } }, { 'data-act': 'pause' });
     var speedBtn = button('×1', 'tw-small', function () { cur.speed = cur.speed === 1 ? 2 : 1; }, { 'data-act': 'speed' });
-    var quizBtn = button(TT.quizSoon, 'tw-small', function () {}, { 'data-act': 'quiz', disabled: 'true' });
+    var quizBtn = button(TT.quiz, 'tw-small tw-quiz-btn', function () { openQuiz(); }, { 'data-act': 'quiz' });
     var quitBtn = button(TT.quit, 'tw-small ghost', function () {
       if (cur.bt.result) { cur = null; U.show('base'); return; }
       cur.paused = true; showOverlay();
@@ -201,7 +247,7 @@
       E('div', { class: 'tw-stage' }, [canvas, overlay]),
       E('div', { class: 'tw-bar' }, tools), info, cardRow
     ]));
-    refs = { wave: wave, coreFill: coreFill, coreTxt: coreTxt, lightTxt: lightTxt, overlay: overlay, info: info, cards: cards, pause: pauseBtn, speed: speedBtn, last: {} };
+    refs = { wave: wave, coreFill: coreFill, coreTxt: coreTxt, lightTxt: lightTxt, overlay: overlay, info: info, cards: cards, pause: pauseBtn, speed: speedBtn, quiz: quizBtn, last: {} };
 
     canvas.addEventListener('pointerdown', function (ev) {
       if (!cur || my !== token || cur.paused || cur.bt.result) return;
@@ -236,6 +282,9 @@
     if (refs.last.cw !== w) { refs.last.cw = w; refs.coreFill.style.width = w; refs.coreFill.className = ratio > 0.6 ? '' : ratio > 0.3 ? 'is-mid' : 'is-low'; }
     setText('light', refs.lightTxt, String(Math.floor(bt.light)));
     setText('speed', refs.speed, '×' + cur.speed);
+    var wait = Math.ceil(bt.quizLock), qd = wait > 0 || !!bt.result || cur.quizOpen;
+    setText('quiz', refs.quiz, U.plain(wait > 0 && !bt.result ? fill(TT.quizWait, { n: wait }) : TT.quiz));
+    if (refs.quiz.disabled !== qd) refs.quiz.disabled = qd;
     setText('pause', refs.pause, U.plain(cur.paused ? TT.resume : TT.pause));
   }
   function syncCards() {
@@ -263,6 +312,10 @@
     }
     box.appendChild(E('span', { class: 'tw-hint', rich: cur.sel && cur.sel.kind === 'card' ? TT.selectedHint : TT.pick }));
   }
+  function rewardBlock(bt) {
+    if (cur.reward) return E('div', { class: 'tw-gain' }, [E('strong', { rich: TT.rewardGot }), E('b', { text: rewardText(cur.reward) }), cur.reward.first ? E('span', { class: 'tw-note', rich: TT.firstClear }) : null]);
+    return E('p', { class: 'tw-result', rich: bt.mode === 'raid' ? TT.rewardNone : TT.rewardPractice });
+  }
   function showOverlay() {
     var o = refs.overlay, bt = cur.bt;
     U.clear(o);
@@ -272,8 +325,9 @@
       o.appendChild(E('div', { class: 'tw-over-card' }, [
         E('h2', { rich: r.title }), E('p', { rich: r.text }),
         E('p', { class: 'tw-result', rich: fill(TT.result, { wave: Math.max(1, bt.wave), waves: bal().WAVES.length, kills: bt.kills }) }),
+        bt.result === 'win' ? rewardBlock(bt) : null,
         E('div', { class: 'tw-actions' }, [
-          button(TT.again, 'primary', function () { begin(bt.difficulty); U.rerender(); }, { 'data-act': 'again' }),
+          button(TT.again, 'primary', function () { begin(bt.difficulty, bt.mode === 'raid' && X.raidsLeft(FF.app.state, FF.app.now()) > 0 ? 'raid' : 'practice'); U.rerender(); }, { 'data-act': 'again' }),
           button(TT.back, '', function () { cur = null; U.show('base'); }, { 'data-act': 'leave' })])
       ]));
     } else if (cur.paused) {
