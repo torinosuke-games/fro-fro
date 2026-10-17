@@ -135,6 +135,13 @@
       ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(c * CELL + 12, LANE_Y[l] - 62, CELL - 24, 124, 18); else ctx.rect(c * CELL + 12, LANE_Y[l] - 62, CELL - 24, 124);
       ctx.fill(); ctx.stroke();
     }
+    var h = cur.hover;   // ドラッグ中に、指のあるマス：置けるなら金色、置けないなら赤
+    if (h && h.col >= T.PLACE_FROM && h.col <= T.PLACE_TO && h.lane >= 0 && h.lane < T.LANES) {
+      var ok = X.canPlace(bt, cur.sel.id, h.lane, h.col).ok;
+      ctx.fillStyle = ok ? 'rgba(255,214,90,0.5)' : 'rgba(230,80,70,0.35)'; ctx.strokeStyle = ok ? '#ffd45a' : '#e65046'; ctx.lineWidth = 5;
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(h.col * CELL + 12, LANE_Y[h.lane] - 62, CELL - 24, 124, 18); else ctx.rect(h.col * CELL + 12, LANE_Y[h.lane] - 62, CELL - 24, 124);
+      ctx.fill(); ctx.stroke();
+    }
     ctx.restore();
   }
   // HP のゲージ。いちばん上の道では、頭の上が画面の外になるので、見える範囲（上から 4px）に収める。スマホでは小さく縮むので、太めに描く
@@ -227,9 +234,46 @@
     cur.canvas = canvas;
     var wave = E('span', { class: 'tw-val' }), coreFill = E('i'), coreTxt = E('span', { class: 'tw-val' }), lightTxt = E('strong', { class: 'tw-val' });
     var overlay = E('div', { class: 'tw-overlay', attrs: { hidden: 'true' } }), info = E('div', { class: 'tw-info' }), cards = {};
+    function cellAt(ev) {
+      var r = canvas.getBoundingClientRect();
+      if (ev.clientX < r.left || ev.clientX > r.right || ev.clientY < r.top || ev.clientY > r.bottom) return null;
+      return { col: Math.floor((ev.clientX - r.left) / r.width * W / CELL), lane: laneAt((ev.clientY - r.top) / r.height * H) };
+    }
+    function placeAt(id, lane, col) {
+      var res = X.place(cur.bt, id, lane, col);
+      if (res.ok) { snd('place'); addFx('spark', (col + 0.5) * CELL, LANE_Y[lane] - 10, { dur: 0.25 }); }
+      else U.toast(TT.cannot[res.reason] || TT.cannot.cell);
+    }
+    // カードをドラッグして、マスにはなして置く（押して選んで、マスを押す操作も、そのまま使える）。横にさわると、カードの列が動く（ブラウザが取るので、ドラッグは取り消し）
+    function dragCard(ev, id, art) {
+      if (ev.button > 0 || !cur || cur.paused || cur.bt.result) return;
+      var sx = ev.clientX, sy = ev.clientY, moved = false, ghost = null;
+      function end() {
+        ['pointermove', 'pointerup', 'pointercancel'].forEach(function (n, i) { root.document.removeEventListener(n, [move, up, cancel][i]); });
+        if (ghost) ghost.remove();
+        if (cur) cur.hover = null;
+      }
+      function move(e) {
+        if (!moved && Math.hypot(e.clientX - sx, e.clientY - sy) < 10) return;
+        moved = true;
+        if (!ghost) { ghost = E('img', { class: 'tw-ghost', attrs: { src: art.src, alt: '', draggable: 'false' } }); root.document.body.appendChild(ghost); }
+        ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px';
+        cur.sel = { kind: 'card', id: id }; cur.hover = cellAt(e);
+        draw();
+      }
+      function up(e) {
+        var c = moved && cur && !cur.paused && !cur.bt.result ? cellAt(e) : null;
+        end();
+        if (!cur || !moved) return;
+        if (c && c.col >= T.PLACE_FROM && c.col <= T.PLACE_TO) { if (!X.unitAt(cur.bt, c.lane, c.col)) placeAt(id, c.lane, c.col); else U.toast(TT.cannot.occupied); }
+        syncInfo(); syncCards(); draw();
+      }
+      function cancel() { end(); if (cur) draw(); }
+      root.document.addEventListener('pointermove', move); root.document.addEventListener('pointerup', up); root.document.addEventListener('pointercancel', cancel);
+    }
     var cardRow = E('div', { class: 'tw-cards', attrs: { role: 'group' } }, Object.keys(bt.defs).map(function (id) {
       var cost = E('span', { class: 'tw-cost' }), art = E('img', { class: 'tw-card-img', attrs: { src: allyImg(id).src, alt: '', draggable: 'false' } });
-      var b = E('button', { class: 'tw-card', attrs: { type: 'button', 'data-member': id }, on: { click: function () { cur.sel = { kind: 'card', id: id }; syncInfo(); syncCards(); draw(); } } },
+      var b = E('button', { class: 'tw-card', attrs: { type: 'button', 'data-member': id }, on: { click: function () { cur.sel = { kind: 'card', id: id }; syncInfo(); syncCards(); draw(); }, pointerdown: function (ev) { dragCard(ev, id, art); } } },
         [art, E('span', { class: 'tw-card-name', text: memberName(id) }), cost]);
       cards[id] = { el: b, cost: cost, last: null };
       return b;
@@ -262,9 +306,7 @@
       var col = Math.floor(x / CELL), lane = laneAt(y), un = X.unitAt(cur.bt, lane, col);
       if (un) cur.sel = { kind: 'unit', uid: un.id };
       else if (cur.sel && cur.sel.kind === 'card' && col >= T.PLACE_FROM && col <= T.PLACE_TO) {
-        var res = X.place(cur.bt, cur.sel.id, lane, col);
-        if (res.ok) { snd('place'); addFx('spark', (col + 0.5) * CELL, LANE_Y[lane] - 10, { dur: 0.25 }); }
-        else U.toast(TT.cannot[res.reason] || TT.cannot.cell);
+        placeAt(cur.sel.id, lane, col);
       } else cur.sel = null;
       syncInfo(); syncCards(); draw();
     });

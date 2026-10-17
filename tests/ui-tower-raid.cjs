@@ -22,7 +22,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  const t0=await p.evaluate(()=>FF.ui.towerBattle().t);await p.waitForTimeout(400);assert.equal(await p.evaluate(()=>FF.ui.towerBattle().t),t0);
  await p.locator('.tw-quiz-choice').first().click();
  assert.equal(await p.locator('.overlay').count(),0);
- assert.ok(await p.evaluate((L0)=>FF.ui.towerBattle().light>=L0+8,L0));
+ assert.ok(await p.evaluate((L0)=>FF.ui.towerBattle().light>=L0+5,L0));
  assert.equal(await p.locator('[data-act="quiz"]').isDisabled(),true);
  assert.ok((await p.locator('[data-act="quiz"]').innerText()).includes('あと'));
  assert.ok(await p.evaluate(()=>FF.app.state.adventure.recent.length)>=1);
@@ -33,7 +33,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.evaluate(()=>{FF.answer.judge=()=>({correct:false})});
  await p.locator('[data-act="quiz"]').click();await p.locator('.tw-quiz-choice').first().click();
  assert.ok(await p.evaluate((L1)=>FF.ui.towerBattle().light<L1+2,L1));
- assert.ok(await p.evaluate(()=>FF.ui.towerBattle().quizLock>5));
+ assert.ok(await p.evaluate(()=>FF.ui.towerBattle().quizLock>4));
  // 「やめる」：何も起きず、戦場が動く
  await p.evaluate(()=>{FF.ui.towerBattle().quizLock=0});await p.waitForTimeout(300);
  await p.locator('[data-act="quiz"]').click();await p.locator('.overlay .btn:has-text("やめる")').click();

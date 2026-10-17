@@ -34,6 +34,16 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await p.locator('.tw-card[data-member="juushouhei"]').click();
  await p.mouse.click(box.x+cw*7.5,box.y+box.height*250/800);
  assert.equal(await p.evaluate(()=>FF.ui.towerBattle().units.length),0);
+ // カードをドラッグして、マスにはなしても置ける（置けないマスでは、置かれない）
+ await p.locator('.tw-card[data-member="kenshi"]').scrollIntoViewIfNeeded();
+ const cb=await p.locator('.tw-card[data-member="kenshi"]').boundingBox();
+ await p.mouse.move(cb.x+cb.width/2,cb.y+cb.height/2);await p.mouse.down();await p.mouse.move(box.x+cw*3.5,box.y+box.height*550/800,{steps:6});
+ assert.equal(await p.locator('.tw-ghost').count(),1);await p.mouse.up();
+ assert.equal(await p.locator('.tw-ghost').count(),0);
+ assert.deepEqual(await p.evaluate(()=>FF.ui.towerBattle().units.map(u=>[u.member,u.lane,u.col])),[['kenshi',3,3]]);
+ await p.mouse.move(cb.x+cb.width/2,cb.y+cb.height/2);await p.mouse.down();await p.mouse.move(box.x+cw*7.5,box.y+box.height*250/800,{steps:6});await p.mouse.up();
+ assert.equal(await p.evaluate(()=>FF.ui.towerBattle().units.length),1);   // 右の通り道には置けない
+ await p.evaluate(()=>{const bt=FF.ui.towerBattle();FF.tower.remove(bt,bt.units[0].id)});
  // 並べて、早送りして、魔物と戦う様子を見る
  await p.mouse.click(box.x+cw*1.5,box.y+box.height*400/800);
  await p.locator('.tw-card[data-member="kenshi"]').click();await p.mouse.click(box.x+cw*2.5,box.y+box.height*400/800);

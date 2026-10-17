@@ -91,7 +91,7 @@
     TOWER: {
       TICK: 1 / 30, LANES: 5, COLS: 9, PLACE_FROM: 1, PLACE_TO: 5,   // 戦場は 5レーン×9マス。左端の列（0）＝中央炉。仲間を置けるのは、1〜5 列目（左から2〜6列目）
       CORE_HP: 100, CORE_X: 0.4,                 // 魔物の中心が、この位置より左へ行くと、中央炉にたどりつく
-      LIGHT: { START: 90, TRICKLE: 1.0, PER_CORRECT: { basic: 8, standard: 10, advanced: 14 }, CORRECT_LOCK: 3, WRONG_LOCK: 6, REFUND: 0.5, COST_STEP: 6, MAX: 999 },   // 灯
+      LIGHT: { START: 90, TRICKLE: 1.0, PER_CORRECT: { basic: 5, standard: 6, advanced: 8 }, CORRECT_LOCK: 2, WRONG_LOCK: 5, REFUND: 0.5, COST_STEP: 9, MAX: 999 },   // 灯
       HP_RATE: 1.5, ARMOR_HP: 10, ATK_RATE: 0.8, WEAPON_ATK: 3, LEVEL_RATE: 0.04,   // 冒険の能力 → 戦場の能力。レベル1つにつき +4%
       // 仲間ごと：role＝役目、cost＝灯の値段、hp＝HP の倍率、interval＝攻撃の間隔（秒。冒険の speed で、速いほど短くなる）、range＝射程（マス）、stat＝攻撃力のもとの能力、atk＝攻撃力の倍率、aoe＝範囲（マス）
       UNITS: {

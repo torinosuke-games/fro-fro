@@ -26,7 +26,7 @@ body[data-screen="tower"] #screen{max-width:980px;margin:auto;padding:14px 12px 
 .tw-info{display:flex;align-items:center;gap:10px;min-height:46px;padding:4px 10px;background:#fff;border:1px solid var(--rn-line);border-radius:10px;flex-wrap:wrap}
 .tw-info-name{color:var(--rn-navy)}.tw-info-hp{font-size:.8125rem;color:var(--muted);margin-right:auto}.tw-hint{font-size:.875rem;color:var(--muted)}
 .tw-cards{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:thin}
-.tw-card{flex:0 0 84px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border:2px solid var(--rn-line);background:#fff;border-radius:12px;color:var(--rn-navy);cursor:pointer;min-height:112px}
+.tw-card{touch-action:pan-x;user-select:none;-webkit-user-select:none;flex:0 0 84px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border:2px solid var(--rn-line);background:#fff;border-radius:12px;color:var(--rn-navy);cursor:pointer;min-height:112px}
 .tw-card-img{width:60px;height:64px;object-fit:cover;object-position:top;border-radius:8px;background:#e6f0f7}
 .tw-card-name{font-size:.75rem;font-weight:700}.tw-cost{font:800 .8125rem Nunito,var(--font);color:#b57623}
 .tw-card.is-on{border-color:#f0a53a;background:#fff7e5}.tw-card.is-poor{opacity:.5}
@@ -59,3 +59,4 @@ body[data-screen="tower"][data-tower="battle"] .tw-small{min-height:40px}
 body[data-screen="tower"][data-tower="battle"] .tw-info{min-height:40px}
 /* デバッグ版の「DEBUG」の目印が、下に寄せた仲間のカードに重ならないようにする */
 body[data-screen="tower"][data-tower="battle"] .debug-flag{top:2px;bottom:auto;left:auto;right:2px;pointer-events:none;opacity:.6}
+.tw-ghost{position:fixed;z-index:95;width:64px;height:68px;object-fit:cover;object-position:top;border-radius:10px;border:3px solid #ffd45a;background:#e6f0f7;transform:translate(-50%,-85%);pointer-events:none;opacity:.9;box-shadow:0 4px 14px #0004}
