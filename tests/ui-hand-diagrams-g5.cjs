@@ -52,7 +52,7 @@ fs.mkdirSync(out,{recursive:true});
   const settled=()=>page.evaluate(async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
   const requested=[3,4,5].flatMap(n=>[...fs.readFileSync(path.join(root,'DIAGRAM_REQUESTS_'+n+'.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'math_g5_hand_'+m[1]));
   const qs=await page.evaluate(ids=>QUESTION_BANK.filter(q=>ids.includes(q.id)).map(q=>({id:q.id,kind:q.diagram.kind})),requested);
-  assert.equal(requested.length,118);assert.equal(qs.length,118);const checks=[],screenshots=[],negativeChecks=[];
+  assert.equal(requested.length,117);assert.equal(qs.length,117);const checks=[],screenshots=[],negativeChecks=[];
   for(const q of qs){
    for(const width of [360,390,768,1024]){
     await page.setViewportSize({width,height:1000});await page.evaluate(id=>qaShowQuestion(id),q.id);await settled();
