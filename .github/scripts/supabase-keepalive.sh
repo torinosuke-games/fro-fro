@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Supabase の無料プランは、しばらく使われないと一時停止する。定期的にデータベースを1回呼んで、止まらないようにする（判断309）。
-# 呼ぶのは、公開してある関数 ff_pull を、存在しない（でたらめな）鍵で呼ぶだけ：データの読み書きはしない（not_found が返る）。
+# 呼ぶのは、公開してある関数 ff_keepalive：1行だけの表（ff_heartbeat）に、時刻を書きこむ（書き込みが、使われている印になる。判断477。
+# 前は、読むだけの ff_pull を呼んでいたが、それでは一時停止を防げなかった）。ゲームのデータにはさわらない。
 # 接続先と公開用（anon）キーは js/config.js から読む（環境変数 FF_SUPABASE_URL・FF_SUPABASE_ANON_KEY で上書きできる＝テスト用）。
 set -euo pipefail
 cd "$(dirname "$0")/../.."
@@ -12,13 +13,12 @@ if [ -z "$URL" ] || [ -z "$KEY" ]; then echo "接続先か anon キーを js/con
 
 OUT="$(mktemp)"
 trap 'rm -f "$OUT"' EXIT
-DUMMY="$(printf '0%.0s' $(seq 1 64))"   # 形だけ正しい（16進64文字）、存在しない鍵
 for attempt in 1 2 3; do
   code=0
   : > "$OUT"   # 前の回の返事を残さない
-  body="$(curl -sS -m 30 -o "$OUT" -w '%{http_code}' -X POST "${URL%/}/rest/v1/rpc/ff_pull" \
+  body="$(curl -sS -m 30 -o "$OUT" -w '%{http_code}' -X POST "${URL%/}/rest/v1/rpc/ff_keepalive" \
     -H "apikey: $KEY" -H "Authorization: Bearer $KEY" -H 'Content-Type: application/json' \
-    -d "{\"p_key\":\"$DUMMY\"}")" || code=$?
+    -d '{}')" || code=$?
   if [ "$code" = 0 ] && [ "$body" = 200 ] && grep -q '"ok"' "$OUT"; then
     echo "OK：Supabase に届きました（HTTP $body）。$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     exit 0
