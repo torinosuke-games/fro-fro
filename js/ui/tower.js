@@ -468,12 +468,29 @@
         var back = Math.floor(u.paid * bal().LIGHT.REFUND);
         box.appendChild(E('strong', { class: 'tw-info-name', text: memberName(u.member) }));
         box.appendChild(E('span', { class: 'tw-info-hp', text: 'HP ' + Math.ceil(u.hp) + '／' + u.max }));
+        box.appendChild(E('span', { class: 'tw-trait', rich: traitText(u.member) }));
         box.appendChild(button(fill(TT.remove, { n: back }), 'tw-small', function () { X.remove(cur.bt, u.id); cur.sel = null; syncInfo(); syncCards(); draw(); }, { 'data-act': 'remove' }));
         return;
       }
       cur.sel = null;
     }
-    box.appendChild(E('span', { class: 'tw-hint', rich: cur.sel && cur.sel.kind === 'card' ? TT.selectedHint : TT.pick }));
+    if (cur.sel && cur.sel.kind === 'card' && bt.defs[cur.sel.id]) {   // カードを選んだ：仲間の特性（役目・HP・攻撃・間隔・射程）と、置きかたを出す
+      box.appendChild(E('strong', { class: 'tw-info-name', text: memberName(cur.sel.id) }));
+      box.appendChild(E('span', { class: 'tw-trait', rich: traitText(cur.sel.id) }));
+      box.appendChild(E('span', { class: 'tw-hint', rich: TT.selectedHint }));
+      return;
+    }
+    box.appendChild(E('span', { class: 'tw-hint', rich: TT.pick }));
+  }
+  // 仲間の特性の文：役目と、おもな数字（攻撃しない仲間は、攻撃・間隔・射程を出さない）
+  function traitText(id) {
+    var d = cur.bt.defs[id], out = fill(TT.statLine, { hp: Math.round(d.hp) }), t = TT.traits[d.role] || '';
+    if (d.atk > 0) {
+      out += fill(TT.statAtk, { atk: Math.round(d.atk) }) + fill(TT.statInterval, { sec: (Math.round(d.interval * 10) / 10) });
+      if (d.role !== 'ward') out += fill(TT.statRange, { n: d.range });
+    }
+    if (d.role === 'ward') out += fill(TT.statRange, { n: d.range });
+    return t + '　' + out;
   }
   function gearName(kind, id) { return (kind === 'armor' ? FF.defs.ARMORS : FF.defs.WEAPONS).filter(function (x) { return x.id === id; })[0]; }
   function gearBlock() {
