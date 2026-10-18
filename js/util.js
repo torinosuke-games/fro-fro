@@ -96,6 +96,29 @@
     }).join('');
   }
 
+  // ---- 学年に合わせたふりがな（判断482） ----
+  // 漢字の学年：1〜6＝小学校、7＝中学校（常用漢字）、99＝それ以外（表にない漢字）
+  var gradeMap = null;
+  function kanjiGrade(ch) {
+    if (!gradeMap) {
+      gradeMap = {};
+      var g = (FF.KANJI_GRADES) || {};
+      Object.keys(g).forEach(function (k) { for (var i = 0; i < g[k].length; i++) gradeMap[g[k].charAt(i)] = +k; });
+      gradeMap['々'] = 1;
+    }
+    return gradeMap[ch] || 99;
+  }
+  // 学年 grade の人に、この語（漢字）のふりがなが要るか。学年が未設定（0・null）なら、いつも要る。
+  // 語の中に、その学年までに習っていない漢字が1つでもあれば要る。
+  function needsRuby(base, grade) {
+    if (!grade) return true;
+    for (var i = 0; i < base.length; i++) {
+      var ch = base.charAt(i);
+      if (/[一-鿿々]/.test(ch) && kanjiGrade(ch) > grade) return true;
+    }
+    return false;
+  }
+
   // ふりがなのない漢字が残っていないか（テスト用）。残っている漢字の配列を返す。
   function bareKanji(template, vars, dict) {
     var found = [];
@@ -165,6 +188,8 @@
     plainText: plainText,
     autoRubyMarkup: autoRubyMarkup,
     bareKanji: bareKanji,
+    kanjiGrade: kanjiGrade,
+    needsRuby: needsRuby,
     makeRng: makeRng,
     shuffle: shuffle,
     localDayNumber: localDayNumber,

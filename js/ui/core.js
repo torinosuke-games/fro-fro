@@ -49,7 +49,7 @@
     FF.util.parseRichText(src, vars || {}).forEach(function (t) {
       if (t.text !== undefined) {
         frag.appendChild(doc.createTextNode(t.text));
-      } else if (furiganaOn()) {
+      } else if (furiganaOn() && t.rt && FF.util.needsRuby(t.ruby, FF.app.state.player.grade)) {
         var r = doc.createElement('ruby');
         r.appendChild(doc.createTextNode(t.ruby));
         var rt = doc.createElement('rt');

@@ -13,14 +13,27 @@ module.exports = ({ test, FF, assert, plain }) => {
     return [...missing].map(([k, s]) => `「${k}」 ← ${s.slice(0, 40).replace(/\n/g, ' ')}`);
   }
 
+  test('ふりがなは、その学年までに習っていない漢字がある語にだけ付く（判断482）', () => {
+    assert.strictEqual(U.kanjiGrade('日'), 1);
+    assert.strictEqual(U.kanjiGrade('熊'), 4);
+    assert.strictEqual(U.kanjiGrade('憲'), 6);
+    assert.strictEqual(U.kanjiGrade('籠') > 6, true);
+    assert.strictEqual(U.needsRuby('日本近海', 5), false);   // 日・本・近・海は小3までに習う
+    assert.strictEqual(U.needsRuby('日本近海', 1), true);
+    assert.strictEqual(U.needsRuby('憲法', 5), true);
+    assert.strictEqual(U.needsRuby('憲法', 6), false);
+    assert.strictEqual(U.needsRuby('憲法', null), true);   // 学年が未設定ならいつも付ける
+    assert.strictEqual(U.needsRuby('麒', 9), true);
+  });
+
   test('辞書の語は自動でふりがなの記法になる', () => {
     assert.strictEqual(U.autoRubyMarkup('中央炉を強化する'), '{中央炉|ちゅうおうろ}を{強化|きょうか}する');
     assert.strictEqual(U.autoRubyMarkup('日本の特色'), '{日本|にほん}の{特色|とくしょく}');
     assert.strictEqual(U.autoRubyMarkup('石油と飛行機'), '{石油|せきゆ}と{飛行機|ひこうき}');
-    assert.strictEqual(U.autoRubyMarkup('熊本県'), '{熊本|くまもと}県');
-    assert.strictEqual(U.autoRubyMarkup('海へ行く。平行な線を行う。銀行と旅行'), '海へ{行|い}く。{平行|へいこう}な{線|せん}を{行|おこな}う。{銀行|ぎんこう}と{旅行|りょこう}');   // 「行」は文脈で読みが変わる（判断481）
+    assert.strictEqual(U.autoRubyMarkup('熊本県'), '{熊本|くまもと}{県|けん}');
+    assert.strictEqual(U.autoRubyMarkup('海へ行く。平行な線を行う。銀行と旅行'), '{海|うみ}へ{行|い}く。{平行|へいこう}な{線|せん}を{行|おこな}う。{銀行|ぎんこう}と{旅行|りょこう}');   // 「行」は文脈で読みが変わる（判断481）
     assert.strictEqual(U.autoRubyMarkup('東経135度'), '{東経|とうけい}135{度|ど}');
-    assert.strictEqual(U.autoRubyMarkup('新聞の発行部数'), '新聞の{発行|はっこう}{部数|ぶすう}');   // 判断481
+    assert.strictEqual(U.autoRubyMarkup('新聞の発行部数'), '{新聞|しんぶん}の{発行|はっこう}{部数|ぶすう}');   // 判断481
   });
 
   test('長い語を優先する（「生存者住宅」は「生存者」＋「住宅」ではなく1語）', () => {
