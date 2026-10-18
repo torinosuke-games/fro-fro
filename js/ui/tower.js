@@ -75,6 +75,20 @@
   U.towerFx = function () { return cur ? cur.fx.length : 0; };   // 確認用
   U.towerBattle = function () { return cur && cur.bt; };   // 確認用（テストが、戦いを早送りするのに使う）
 
+  // 戦場のお知らせ：下げるボタンなどに、かぶらないように、「選んだ仲間」の欄（refs.info）のなかに、小さく出す。下げるボタンがあるときは、その左がわだけを使う（判断471）
+  function say(message, vars) {
+    U.toast(message, vars);
+    var t = root.document.querySelector('.toast');
+    if (!t || !refs || !refs.info || root.document.body.getAttribute('data-tower') !== 'battle') return;
+    t.className = 'toast tw-say';
+    // 問題の画面を閉じたあとなどに、画面の位置がずれることがあるので、お知らせの出ているあいだ、毎コマ、位置を合わせる
+    (function follow() {
+      if (!t.parentNode || !refs || !refs.info) return;
+      var r = refs.info.getBoundingClientRect(), btn = refs.info.querySelector('[data-act="remove"]'), right = btn ? btn.getBoundingClientRect().left - 8 : r.right - 4;
+      t.style.left = (r.left + 4) + 'px'; t.style.top = (r.top + 3) + 'px'; t.style.width = Math.max(120, right - r.left - 4) + 'px'; t.style.height = (r.height - 6) + 'px';
+      root.requestAnimationFrame(follow);
+    })();
+  }
   function addFx(kind, x, y, opt) { cur.fx.push(Object.assign({ kind: kind, x: x, y: y, t: 0, dur: 0.3 }, opt || {})); }
   // 計算は、効果の合図を出さないので、前の状態との違いから、攻撃・回復・被弾・倒れたことを見つけて、絵と音を出す
   function watch() {
@@ -111,7 +125,7 @@
       if (ev.who === 'hunter') {
         for (var ln = 0; ln < bt.lanes; ln++) { var fr = null; bt.enemies.forEach(function (e) { if (e.lane === ln && (!fr || e.x < fr.x)) fr = e; }); if (fr) addFx('arrow', fr.x * CELL - 60, LANE_Y[ln] - 140, { toX: fr.x * CELL, toY: LANE_Y[ln] - 30, dur: 0.3 }); }
       } else bt.units.forEach(function (u) { addFx('heal', (u.col + 0.5) * CELL, LANE_Y[u.lane] + 30, { dur: 0.6 }); });
-      U.toast(TT.cheerEvent[ev.who]);
+      say(TT.cheerEvent[ev.who]);
     });
     p.cheerSeen = (bt.cheerLog || []).length;
     if (bt.kills > p.kills) { snd('kill'); p.kills = bt.kills; }
@@ -156,7 +170,7 @@
     if (!cur || cur.quizOpen || cur.paused || cur.bt.result) return;
     if (!X.canQuiz(cur.bt)) return;
     var a = FF.app, adv = a.state.adventure, q = FF.adventure.pick(a.bank, adv, a.state.player.grade || 1, Math.random, a.now());
-    if (!q) { U.toast(TT.quizNone); return; }
+    if (!q) { say(TT.quizNone); return; }
     var choices = FF.util.shuffle(q.choices || [], Math.random), done = false;
     cur.quizOpen = true; bgmSync();
     function finishQuiz(selected) {
@@ -164,7 +178,7 @@
       var correct = selected != null && FF.answer.judge(q, selected).correct, r = X.answer(cur.bt, correct, adv.difficulty);
       var n = FF.util.clone(a.state); n.adventure.recent = (n.adventure.recent || []).concat([q.id]).slice(-FF.balance.ADVENTURE.RECENT); a.commit(n);
       cur.quizOpen = false; cur.last = null; close(); bgmSync();
-      if (correct) { snd('light'); U.toast(fill(TT.quizRight, { n: r.gained })); } else U.toast(TT.quizWrong);
+      if (correct) { snd('light'); say(fill(TT.quizRight, { n: r.gained })); } else say(TT.quizWrong);
     }
     var body = E('div', { class: 'tw-quiz' }, [E('p', { class: 'tw-quiz-note', rich: TT.quizNote }), E('h3', { class: 'tw-quiz-q', rich: q.question })]);
     if (q.diagram && FF.lessonFigure) body.appendChild(FF.lessonFigure.render(q.diagram));
@@ -340,7 +354,7 @@
     function placeAt(id, lane, col) {
       var res = X.place(cur.bt, id, lane, col);
       if (res.ok) { snd('place'); addFx('spark', (col + 0.5) * CELL, LANE_Y[lane] - 10, { dur: 0.25 }); }
-      else U.toast(TT.cannot[res.reason] || TT.cannot.cell);
+      else say(TT.cannot[res.reason] || TT.cannot.cell);
     }
     // カードをドラッグして、マスにはなして置く（押して選んで、マスを押す操作も、そのまま使える）。横にさわると、カードの列が動く（ブラウザが取るので、ドラッグは取り消し）
     function dragCard(ev, id, art) {
@@ -364,7 +378,7 @@
         var c = moved && cur && !cur.paused && !cur.bt.result ? cellAt(e) : null;
         end();
         if (!cur || !moved) return;
-        if (c && c.col >= T.PLACE_FROM && c.col <= T.PLACE_TO) { if (!X.unitAt(cur.bt, c.lane, c.col)) placeAt(id, c.lane, c.col); else U.toast(TT.cannot.occupied); }
+        if (c && c.col >= T.PLACE_FROM && c.col <= T.PLACE_TO) { if (!X.unitAt(cur.bt, c.lane, c.col)) placeAt(id, c.lane, c.col); else say(TT.cannot.occupied); }
         syncInfo(); syncCards(); draw();
       }
       function cancel() { end(); if (cur) draw(); }
