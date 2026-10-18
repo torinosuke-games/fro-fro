@@ -598,7 +598,7 @@
     squad: '{今|いま}の{隊|たい}', squadHelp: '{左|ひだり}から{順番|じゅんばん}に、{敵|てき}にねらわれる。◀で{前|まえ}へ、✕で{外|はず}す。{下|した}の{仲間|なかま}の「{参加|さんか}する」で{入|い}れる。', squadEmpty: 'あき',
     partyLocked: '編成を変えるときは、町まで戻ろう。', joined: '編成中', waiting: '町で待つ', join: '参加する', remove: '隊から外す', front: 'ひとつ前へ',
     depart: 'この仲間で旅をする', rest: '町で休む', returnTown: '最後の町へ帰る', potion: '回復薬', usePotion: '回復薬を使う',
-    goldHelp: 'ゴールドは、これから町のお店で使うお金。', learning: '冒険の問題', difficulty: 'むずかしさ',
+    goldHelp: 'ゴールドは、これから町のお店で使うお金。', learning: '冒険の問題', allSubjects: '{問題|もんだい}は、ぜんぶの{教科|きょうか}から。{学年|がくねん}は、{grade}{年生|ねんせい}と、{below}{年生|ねんせい}。', allSubjects1: '{問題|もんだい}は、ぜんぶの{教科|きょうか}から。{学年|がくねん}は、1{年生|ねんせい}。', difficulty: 'むずかしさ',
     battleMenu: '戦闘', command: 'みんなの行動を選ぼう', commandHelp: '1ターンに1問。正解で攻撃が1.5倍、敵の攻撃が半分。魔法は発動時にMPを3使う。',
     fight: 'たたかう', magic: 'まほう', item: 'どうぐ', escape: 'にげる', attackQuiz: 'クイズで、戦いを{有利|ゆうり}に！', defenseQuiz: 'クイズで、みんなを守ろう！',
     attackHelp: 'このターンは1問。正解すると攻撃が1.5倍、敵の攻撃が半分になるよ。', defenseHelp: '正解するとダメージ半分。あせらず考えよう。', returnBattle: '戦闘へ戻る', playerAction: '仲間の攻撃！', enemyDeclare: '{enemy}の攻撃！', enemyAction: '{魔物|まもの}の攻撃！', quizBonus: '正解ボーナス：攻撃1.5倍・敵の攻撃半分', quizNormal: 'このターンは{通常|つうじょう}の{強|つよ}さで行動',
