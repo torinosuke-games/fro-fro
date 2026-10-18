@@ -75,18 +75,22 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(B.upgrade(s, 'lumber', T0).reason, 'furnaceCap');
   });
 
-  test('最大レベル：ふつうの建物は Lv5。中央炉だけ Lv10 まで（Lv6〜10 は町の力。判断464）', () => {
+  test('最大レベル：すべての建物が Lv10 まで。ふつうの建物は、中央炉のレベルまで（判断464・472）', () => {
     let s = rich();
     for (let i = 0; i < 4; i++) s = build(s, 'furnace', T0).state;
     assert.strictEqual(s.buildings.furnace.level, 5);
-    s = build(s, 'furnace', T0).state; assert.strictEqual(s.buildings.furnace.level, 6);
-    for (let i = 0; i < 4; i++) s = build(s, 'furnace', T0).state;
+    for (const id of ['housing', 'lumber', 'mine', 'quarry', 'foodhall']) {
+      while (B.canUpgrade(s, id).ok) s = build(s, id, T0).state;
+      assert.strictEqual(s.buildings[id].level, 5, id);
+      assert.strictEqual(B.canUpgrade(s, id).reason, 'furnaceCap', id);   // 中央炉が Lv5 のあいだは、Lv5 まで
+    }
+    for (let i = 0; i < 5; i++) s = build(s, 'furnace', T0).state;
     assert.strictEqual(s.buildings.furnace.level, 10);
     assert.strictEqual(B.upgrade(s, 'furnace', T0).reason, 'maxLevel');
     for (const id of ['housing', 'lumber', 'mine', 'quarry', 'foodhall']) {
       while (B.canUpgrade(s, id).ok) s = build(s, id, T0).state;
-      assert.strictEqual(s.buildings[id].level, 5, id);
-      assert.strictEqual(B.canUpgrade(s, id).reason, 'maxLevel');
+      assert.strictEqual(s.buildings[id].level, 10, id);
+      assert.strictEqual(B.canUpgrade(s, id).reason, 'maxLevel', id);
     }
   });
 
@@ -259,8 +263,8 @@ module.exports = ({ test, FF, assert, plain }) => {
   });
 
   // ---- 生産 ----
-  test('保管の上限時間：住宅 Lv1 で4時間、1レベルごとに+2時間、最大12時間', () => {
-    assert.deepStrictEqual([1, 2, 3, 4, 5, 6].map(l => B.storageHours(l)), [4, 6, 8, 10, 12, 12]);
+  test('保管の上限時間：住宅 Lv1 で4時間、1レベルごとに+2時間、Lv10 で22時間（判断472）', () => {
+    assert.deepStrictEqual([1, 2, 3, 4, 5, 6, 9, 10, 11].map(l => B.storageHours(l)), [4, 6, 8, 10, 12, 14, 20, 22, 22]);
   });
 
   test('生産量は「施設レベル × 毎時の生産量」', () => {
