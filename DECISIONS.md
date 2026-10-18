@@ -2014,3 +2014,9 @@
 - 問題の項目 `answerAlso`（文字列の配列）を足した。`FF.learning.displayAnswer` が、「that（who・whom も正解）」と、あとにそえる（学習・昇格試験・探索・戦闘のすべての表示に出る）。判定（`answer`・`acceptedAnswers`）は変えない。`validateQuestion` で、`answerAlso` の言い方がすべて正解と判定されることを確かめる。
 - 付けた問題：`english_g9_relative_004`（that／who・whom）・`english_g9_relative_001`（who／that）・`english_g6_word_001`（small／little）・`english_g8_modal_002`（May／Can）。ひらがな・漢字などの書き方のちがいだけの別解には、付けない。
 - 書き方は `QUESTIONS_GUIDE.md`。テスト：`tests/cases/questions.js`。
+
+## 判断468：レビューの新しい指摘（三角州の絵）と、絵の作り直しの依頼
+
+- デバッグ版のレビューを読んだ（484件。判断466で直した14問の記録は消えていて、新しい記録は、`ok` が小5社会の11件（メモなし）と、`fix` が1件）。
+- `fix`：`social_g5_hand_terrain_016`（三角州）の絵。「河口が三角状に広がっているように見えない。川が曲がって合流していて、典型的な三角州とはいえない」。絵は Grok が作った生成画像（`img/diagrams/soc5_terrain_016.webp`）なので、**Grok に作り直しを頼む**ことにした（依頼書：`DIAGRAM_REQUESTS_21.md`。上流から1本の川が来て、河口で数本に枝分かれして海へ放射状に広がる、合流しない、海のほうへふくらむ三角形の平地）。絵が付くまでは、いまの絵のまま。
+- 絵が届いたら、Claude が問題文・答えと並べて確認する。
