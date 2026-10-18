@@ -121,7 +121,7 @@
         dragon: { hp: 600, atk: 30, interval: 1.6, speed: 0.15, core: 80, breath: { cd: 10, range: 9, dmg: 0.6 } }
       },
       // 難しさ（1〜5）ごとの増え方（難しさ1が基準）
-      LEVEL: { HP: 0.15, ATK: 0.08, SPEED: 0.05, COUNT: 0.2, BOSS_EVERY: 3, TAIL: { HP: 0.08, ATK: 0.04, SPEED: 0.02, COUNT: 0.06 }, TAIL2: { HP: 0.25, ATK: 0.12, SPEED: 0.02, COUNT: 0.12 } },   // TAIL2：難しさ11〜20 の、1つにつきの増え方（やり込み用。判断463）   // TAIL：難しさ6〜10 の、1つにつきの増え方（5までより、ゆるやか。判断461）
+      LEVEL: { HP: 0.15, ATK: 0.08, SPEED: 0.05, COUNT: 0.2, BOSS_EVERY: 3, TAIL: { HP: 0.08, ATK: 0.04, SPEED: 0.02, COUNT: 0.06 }, TAIL2: { HP: 0.3, ATK: 0.15, SPEED: 0.02, COUNT: 0.15 } },   // TAIL2：難しさ11〜20 の、1つにつきの増え方（やり込み用。判断463）   // TAIL：難しさ6〜10 の、1つにつきの増え方（5までより、ゆるやか。判断461）
       // 難しさ（ステージ）は10段階。前の難しさに勝つと、次が解放される（中央炉のレベルとは、つながらない）。   // COUNT：数が増える割合（難しさ1つにつき +20%）。BOSS_EVERY：ボスが1体増える難しさの間隔
       WAVES: [{ cub: 4 }, { cub: 5, wolf: 1 }, { cub: 5, wolf: 3 }, { cub: 5, wolf: 5 }, { cub: 3, wolf: 3, boss: 1 }],
       // 新しい魔物の、波ごとの数（難しさが FROM 以上のときだけ出る。数は、難しさで増える。判断455）
@@ -137,6 +137,8 @@
         nurse: { every: 16, heal: 0.25 },              // マリ：手当て。every 秒ごとに、仲間みんなの HP が、最大の heal 回復
         child: { light: 2 },                           // リコ：おうえん。正解のたびに、灯が増える
         elder: { core: 20 } },                         // バルト：長老の知恵。中央炉の熱の最大が増える
+      // 町の力（判断464）：中央炉が Lv(FROM) 以上のとき、FROM−1 を超えた1レベルごとに、中央炉の熱の最大（CORE）・灯が自然にふえる速さ（TRICKLE の割合）・並べる仲間の HP（HP の割合）が増える。Lv5 までは増えない
+      POWER: { FROM: 6, CORE: 40, TRICKLE: 0.12, HP: 0.1 },
       RAIDS_PER_DAY: 3, REWARD: { GOLD_PER_LEVEL: 80, FIRST_CLEAR: 2, RES_PER_LEVEL: 10, RES_KINDS: 2, POTION_FROM_LEVEL: 3 }   // 今夜の襲撃：1日3回まで報酬。はじめて勝った難しさは、ゴールドが2倍
     },
     // 住民の依頼クエスト（酒場。判断434・SPEC_quest.md）。配列は、中央炉のレベル（1〜5）ごとの数（Lv1 は先頭）
@@ -200,12 +202,18 @@
 
     // ---- 建物（SPEC 9.2・9.3） ----
     MAX_LEVEL: 5,
+    FURNACE_MAX_LEVEL: 10,   // 中央炉だけは Lv10 まで（Lv6〜10 は「町の力」。夜の防衛戦で効く。判断464）。ほかの建物は MAX_LEVEL まで
     // 中央炉の強化コスト。キーは強化後のレベル。
     FURNACE_COST: {
       2: { wood: 150, stone: 100 },
       3: { wood: 1500, stone: 1000, iron: 500 },
       4: { wood: 2500, stone: 1800, iron: 1200, food: 800 },
-      5: { wood: 6000, stone: 4500, iron: 3500, food: 2500 }
+      5: { wood: 6000, stone: 4500, iron: 3500, food: 2500 },
+      6: { wood: 8000, stone: 6000, iron: 4800, food: 3400 },
+      7: { wood: 10000, stone: 7500, iron: 6000, food: 4200 },
+      8: { wood: 12500, stone: 9500, iron: 7500, food: 5300 },
+      9: { wood: 15500, stone: 11500, iron: 9000, food: 6500 },
+      10: { wood: 19000, stone: 14000, iron: 11000, food: 8000 }
     },
     // その他の建物：同じ強化段階の中央炉コスト合計 × RATIO を、建物ごとの配分比で割り振る
     BUILDING_COST_RATIO: 0.4,
@@ -222,7 +230,7 @@
     // 低いレベルでは ほぼ待たず、レベルが上がるほど長くなる。中央炉以外の建物は other。
     // Lv2・Lv3 は短くする：中央炉Lv2・Lv3の到達時間（目標 3〜60分）に直接足されるため（tests/simulate.js）。
     BUILD_MINUTES: {
-      furnace: { 2: 10 / 60, 3: 3, 4: 60, 5: 240 },   // Lv2 は10秒
+      furnace: { 2: 10 / 60, 3: 3, 4: 60, 5: 240, 6: 480, 7: 720, 8: 1080, 9: 1440, 10: 2160 },   // Lv2 は10秒。Lv6〜10 は8・12・18・24・36時間
       other:   { 2: 10 / 60, 3: 2, 4: 30, 5: 120 }
     },
 

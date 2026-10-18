@@ -42,6 +42,13 @@
     return pop ? Math.min(L.POP_MAX, 1 + L.POP_BONUS * Math.max(0, pop.total - pop.base)) : 1;
   }
 
+  // ---- 町の力（判断464）：中央炉が Lv6 以上のとき、1レベルごとに、熱の最大・灯の速さ・仲間の HP が増える ----
+  function power(state, b) {
+    var P = T(b).POWER, f = state && state.buildings && state.buildings.furnace, lv = f ? Math.floor(f.level) || 1 : 1;
+    var n = P ? Math.max(0, lv - (P.FROM - 1)) : 0;
+    return { steps: n, core: n * (P ? P.CORE : 0), trickle: 1 + n * (P ? P.TRICKLE : 0), hp: 1 + n * (P ? P.HP : 0) };
+  }
+
   // ---- 住民の応援（判断456） ----
   // 信頼が「恩人」になった町の人（CHEER に定義のある人だけ）
   function cheers(state, b) {
@@ -81,7 +88,10 @@
       defs: {}, kills: 0, wave: 0, result: null, fxLog: [] };
     roster(state, b).forEach(function (id) { bt.defs[id] = unitStats(state, id, b); });
     // 町の人口が多いほど、灯が自然にふえる速さが、上がる（判断457）
-    bt.popMult = popMult(state, b); bt.trickle = t.LIGHT.TRICKLE * bt.popMult;
+    bt.popMult = popMult(state, b); bt.power = power(state, b);
+    bt.trickle = t.LIGHT.TRICKLE * bt.popMult * bt.power.trickle;
+    bt.core.hp += bt.power.core; bt.core.max += bt.power.core;
+    if (bt.power.hp !== 1) Object.keys(bt.defs).forEach(function (id) { bt.defs[id].hp = Math.round(bt.defs[id].hp * bt.power.hp); });
     // 住民の応援：はじめの灯・仲間の HP・炉の熱は、ここで。矢と手当ては、step で、時間ごとに（cheerT）。cheerLog は、画面に知らせるための記録
     bt.cheers = cheers(state, b); bt.cheerT = {}; bt.cheerLog = [];
     var C = t.CHEER;
@@ -338,7 +348,7 @@
     return { state: s, reward: reward };
   }
 
-  FF.tower = { lanesOf: lanesOf, popMult: popMult, cheers: cheers, roster: roster, unitStats: unitStats, create: create, cost: cost, canPlace: canPlace, place: place, remove: remove, unitAt: unitAt, canQuiz: canQuiz, answer: answer,
+  FF.tower = { lanesOf: lanesOf, popMult: popMult, power: power, cheers: cheers, roster: roster, unitStats: unitStats, create: create, cost: cost, canPlace: canPlace, place: place, remove: remove, unitAt: unitAt, canQuiz: canQuiz, answer: answer,
     step: step, run: run, createState: createState, normalize: normalize, today: today, raidsLeft: raidsLeft, raidDifficulty: raidDifficulty, maxCleared: maxCleared, unlockedMax: unlockedMax, isUnlocked: isUnlocked,
     practiceMax: practiceMax, rewardFor: rewardFor, finish: finish };
 })(this);

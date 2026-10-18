@@ -6,7 +6,7 @@ const PLAN = [   // [仲間, レーンの選び方, 列]。レーンは、'all'�
   ['shiromadoushi', 2, 1], ['kuromadoushi', 1, 2], ['kuromadoushi', 3, 2], ['senshi', 2, 5], ['yumitsukai', 1, 2], ['yumitsukai', 3, 2],
   ['shisho', 2, 5], ['touzoku', 0, 2], ['touzoku', 4, 2], ['senshi', 1, 5], ['senshi', 3, 5], ['yumitsukai', 0, 1], ['yumitsukai', 4, 1]
 ];
-function play(FF, state, { difficulty, seed, acc = 0.85, diffKey = 'standard', plan = PLAN, maxSeconds = 400 }) {
+function play(FF, state, { difficulty, seed, acc = 0.85, diffKey = 'standard', plan = PLAN, maxSeconds = 400, fill = false }) {
   const Tw = FF.tower, T = FF.balance.TOWER, bt = Tw.create(state, { difficulty, seed, mode: 'practice' });
   if (bt.lanes > 5) plan = plan.reduce((o, e) => { o.push(e); if (e[1] === 4) for (let l = 5; l < bt.lanes; l++) o.push([e[0], l, e[2]]); return o; }, []);   // 6本目以降の道も、5本目と同じ並べ方で守る
   let rng = (seed * 7919 + 13) >>> 0;
@@ -22,6 +22,10 @@ function play(FF, state, { difficulty, seed, acc = 0.85, diffKey = 'standard', p
       idx++;
     }
     // やられたところを、もう一度並べる
+    if (idx >= plan.length && fill && bt.light > 150) {   // 並べ終わって、灯がたまっているとき：あいている所に、どんどん並べる（やり込む人。判断464）
+      const mix = ['senshi', 'yumitsukai', 'kuromadoushi', 'kenshi', 'juushouhei'];
+      for (let c = 5; c >= 1 && bt.light > 60; c--) for (let l = 0; l < bt.lanes; l++) if (!Tw.unitAt(bt, l, c)) Tw.place(bt, c === 5 ? (l % 2 ? 'kuromadoushi' : 'yumitsukai') : mix[(l + c) % mix.length], l, c);
+    }
     if (idx >= plan.length) idx = 0;
     Tw.step(bt, T.TICK);
   }

@@ -66,6 +66,7 @@
     effectProducer: '生産：1時間に{rate}個　学習ボーナス：+{bonus}%',
     effectHousing: '保管できる時間：{hours}時間　人口：{pop}人',
     effectFurnace: 'ほかの建物の上限：Lv{level}',
+    effectFurnacePower: '{町|まち}の{力|ちから}（{夜|よる}の{防衛戦|ぼうえいせん}）：Lv{steps}{段階|だんかい}。{熱|ねつ}の{最大|さいだい} +{core}、{灯|あかり}の{速|はや}さ +{trickle}%、{仲間|なかま}の HP +{hp}%',
     nextLevel: '次のレベル',
     upgrade: '強化する',
     upgradeDone: '{building}の{工事|こうじ}が {終|お}わり、Lv{level} に なった！',

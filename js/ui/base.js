@@ -9,7 +9,11 @@
 
   function effectText(id, level) {
     if (level <= 0) return null;
-    if (id === 'furnace') return [U.T('effectFurnace'), { level: level }];
+    if (id === 'furnace') {
+      var P = FF.balance.TOWER.POWER, n = Math.max(0, level - (P.FROM - 1));
+      if (n > 0) return [U.T('effectFurnace') + '　' + U.T('effectFurnacePower'), { level: Math.min(level, FF.balance.MAX_LEVEL), steps: n, core: n * P.CORE, trickle: Math.round(n * P.TRICKLE * 100), hp: Math.round(n * P.HP * 100) }];
+      return [U.T('effectFurnace'), { level: level }];
+    }
     if (id === 'housing') return [U.T('effectHousing'), { hours: B.storageHours(level), pop: B.population(FF.app.state).total }];
     return [U.T('effectProducer'), {
       rate: Math.round(B.productionPerHour(level, undefined, B.productionMultiplier(FF.app.state)) * 10) / 10,   // 人口による倍率つき（判断355）
@@ -133,7 +137,7 @@
     body.appendChild(U.R('div', 'small', U.T('buildingInfo.' + id)));
     var cur = effectText(id, bld.level);
     if (cur) body.appendChild(U.el('div', { class: 'badge' }, U.rich(cur[0], cur[1])));
-    if (bld.level > 0 && bld.level < FF.balance.MAX_LEVEL) {
+    if (bld.level > 0 && bld.level < B.maxLevelOf(id)) {
       var nx = effectText(id, bld.level + 1);
       body.appendChild(U.R('div', 'section-title', U.T('nextLevel')));
       if (nx) body.appendChild(U.el('div', { class: 'small muted' }, U.rich(nx[0], nx[1])));
