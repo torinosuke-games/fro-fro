@@ -8,8 +8,8 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   const buyEqA = (s, id) => S.equip(S.buyArmor(s, id).state, 'hero', 'armor', id).state;
 
   test('武器屋：武器は5つ。はじめは何も持たず、ダメージは装備なしの10。木の剣は最弱の+1', () => {
-    assert.deepStrictEqual(plain(FF.defs.WEAPONS.map(w => w.id)), W);
-    assert.deepStrictEqual(plain(Object.keys(B.WEAPONS)), W);
+    assert.deepStrictEqual(plain(FF.defs.WEAPONS.map(w => w.id).filter(id => !B.WEAPONS[id].special)), W);   // 店に並ぶのは5つ（special は防衛戦の特別な装備。判断465）
+    assert.deepStrictEqual(plain(Object.keys(B.WEAPONS).filter(id => !B.WEAPONS[id].special)), W);
     const s = fresh();
     assert.strictEqual(S.gold(s), 0);
     assert.strictEqual(s.gold, undefined);   // ゴールドは、冒険のゴールド（adventure.gold）
@@ -141,8 +141,8 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   });
   test('防具屋：防具は5つ。買うと持ち物に入り、装備すると、武器の装備は変わらない。足りないゴールドでは買えない', () => {
     const AR = ['cloth_clothes', 'fur_coat', 'leather_armor', 'iron_armor', 'steel_armor'];
-    assert.deepStrictEqual(plain(FF.defs.ARMORS.map(a => a.id)), AR);
-    assert.deepStrictEqual(plain(Object.keys(B.ARMORS)), AR);
+    assert.deepStrictEqual(plain(FF.defs.ARMORS.map(a => a.id).filter(id => !B.ARMORS[id].special)), AR);
+    assert.deepStrictEqual(plain(Object.keys(B.ARMORS).filter(id => !B.ARMORS[id].special)), AR);
     for (let i = 1; i < AR.length; i++) {
       assert.ok(B.ARMORS[AR[i]].defense > B.ARMORS[AR[i - 1]].defense, AR[i]);
       assert.ok(B.ARMORS[AR[i]].price > B.ARMORS[AR[i - 1]].price, AR[i]);

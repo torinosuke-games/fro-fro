@@ -129,6 +129,7 @@
   function canBuyItem(state, kind, id, b) {
     var st = kindStats(kind, id, b);
     if (!st) return { ok: false, reason: 'unknown' };
+    if (st.special) return { ok: false, reason: 'special' };   // 防衛戦の特別な装備は、店では買えない（判断465）
     if (copies(state, kind, id, b) >= MAX_COPIES) return { ok: false, reason: 'max' };
     if (gold(state) < st.price) return { ok: false, reason: 'gold' };
     return { ok: true };
@@ -138,6 +139,14 @@
     if (!c.ok) return { ok: false, state: state, reason: c.reason };
     var s = FF.util.clone(state), e = eq(state, b);
     withGold(s, gold(state) - kindStats(kind, id, b).price);
+    if (kind === 'armor') e.ownedArmor = e.ownedArmor.concat([id]); else e.owned = e.owned.concat([id]);
+    s.equipment = e;
+    return { ok: true, state: s };
+  }
+  // 品物を1つ、持ち物に足す（防衛戦の特別な装備。判断465）。持てる上限なら、足さない
+  function grantItem(state, kind, id, b) {
+    if (!kindStats(kind, id, b) || copies(state, kind, id, b) >= MAX_COPIES) return { ok: false, state: state };
+    var s = FF.util.clone(state), e = eq(state, b);
     if (kind === 'armor') e.ownedArmor = e.ownedArmor.concat([id]); else e.owned = e.owned.concat([id]);
     s.equipment = e;
     return { ok: true, state: s };
@@ -184,7 +193,7 @@
     equippedOf: equippedOf, holder: holder, equip: equip, unequip: unequip,
     weaponBonus: weaponBonus, armorDefense: armorDefense, gearMap: gearMap,
     currentWeapon: currentWeapon, currentArmor: currentArmor, damagePerCorrect: damagePerCorrect, damageTaken: damageTaken,
-    copies: copies, holders: holders, freeCopies: freeCopies, MAX_COPIES: MAX_COPIES, canBuyItem: canBuyItem, buyItem: buyItem, canBuy: canBuy, buy: buy, canBuyArmor: canBuyArmor, buyArmor: buyArmor,
+    copies: copies, holders: holders, freeCopies: freeCopies, MAX_COPIES: MAX_COPIES, canBuyItem: canBuyItem, buyItem: buyItem, grantItem: grantItem, canBuy: canBuy, buy: buy, canBuyArmor: canBuyArmor, buyArmor: buyArmor,
     potions: potions, canBuyPotion: canBuyPotion, buyPotion: buyPotion, addGold: addGold, normalizeShop: normalizeShop
   };
 })(this);

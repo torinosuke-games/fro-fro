@@ -150,7 +150,7 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
   const won = (s, d, mode, now = T0) => { const bt = battle({ difficulty: d, mode }); bt.result = 'win'; bt.wave = 5; return Tw.finish(s, bt, now); };
   test('防衛戦の記録：新しいゲームでは空。今日の分を作ると日付が入る。同じ日は同じ state', () => {
     const s = fresh(true);
-    assert.deepStrictEqual(plain(s.tower), { version: 1, day: null, rewards: 0, cleared: {}, wins: 0, best: {} });
+    assert.deepStrictEqual(plain(s.tower), { version: 1, day: null, rewards: 0, cleared: {}, wins: 0, best: {}, gear: {} });
     const t = Tw.today(s, T0); assert.strictEqual(t.tower.day, FF.daily.dayKey(T0)); assert.strictEqual(Tw.today(t, T0 + 1000), t);
     assert.strictEqual(Tw.raidsLeft(s, T0), B.RAIDS_PER_DAY);
     assert.strictEqual(Tw.raidDifficulty(s), 1);
@@ -229,13 +229,29 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     assert.strictEqual(b10.core.max, b5.core.max + p10.core); assert.strictEqual(b10.core.hp, b10.core.max);
     assert.ok(b10.trickle > b5.trickle * 1.5); assert.ok(b10.defs.kenshi.hp > b5.defs.kenshi.hp * 1.4);
   });
+  test('特別な装備（判断465）：10・12・14・16・18・20 にはじめて勝つと1つ。1回だけ。店では買えない。強さは、店のいちばん上より強い', () => {
+    const G = B.GEAR, lv = Object.keys(G).map(Number);
+    assert.deepStrictEqual(lv, [10, 12, 14, 16, 18, 20]);
+    let top = { weapon: Math.max(...Object.values(FF.balance.WEAPONS).filter(w => !w.special).map(w => w.damage)), armor: Math.max(...Object.values(FF.balance.ARMORS).filter(a => !a.special).map(a => a.defense)) };
+    for (const d of lv) { const st = G[d].kind === 'armor' ? FF.balance.ARMORS[G[d].id] : FF.balance.WEAPONS[G[d].id]; assert.ok(st.special && st.price === 0); assert.ok((st.damage || st.defense) > top[G[d].kind]); assert.strictEqual(FF.shop.canBuyItem(fresh(true), G[d].kind, G[d].id).reason, 'special'); }
+    let s = fresh(true); s.tower.cleared = {}; for (let d = 1; d <= 9; d++) s.tower.cleared[d] = true;
+    let r = won(s, 10, 'practice');   // 練習でも、もらえる
+    assert.ok(r.gear && r.gear.id === 'ice_crystal_sword'); assert.strictEqual(FF.shop.copies(r.state, 'weapon', 'ice_crystal_sword'), 1);
+    r = won(r.state, 10, 'raid'); assert.strictEqual(r.gear, null); assert.strictEqual(FF.shop.copies(r.state, 'weapon', 'ice_crystal_sword'), 1);   // 2回目は、もらえない
+    r = won(r.state, 11, 'practice'); assert.strictEqual(r.gear, null);
+    r = won(r.state, 12, 'practice'); assert.ok(r.gear && r.gear.kind === 'armor'); assert.strictEqual(FF.shop.copies(r.state, 'armor', 'ice_crystal_armor'), 1);
+    // 前の版で10に勝っていても、次に勝てば、もらえる（記録に gear がないため）
+    let o = fresh(true); o.tower.cleared = { 10: true }; assert.ok(won(o, 10, 'practice').gear);
+    // 回復薬は、難しさが高いほど多い
+    assert.ok(Tw.rewardFor(fresh(true), 11, T0).potions > Tw.rewardFor(fresh(true), 10, T0).potions && Tw.rewardFor(fresh(true), 16, T0).potions > Tw.rewardFor(fresh(true), 11, T0).potions);
+  });
   test('防衛戦のセーブ：保存して読み込んでも同じ。形のおかしい記録は直す', () => {
     let s = won(fresh(true), 3, 'raid').state;
     const text = FF.state.serialize(s), back = FF.state.migrate(JSON.parse(text), T0);
     assert.ok(back.ok); assert.deepStrictEqual(plain(back.state.tower), plain(s.tower));
     const bad = JSON.parse(text); bad.tower = { day: 'x', rewards: 999, cleared: { 1: true, 9: true, 21: true, x: true }, wins: -5, best: { 1: 99, 2: 'a' } };
     const f = Tw.normalize(bad);
-    assert.deepStrictEqual(plain(f.tower), { version: 1, day: null, rewards: B.RAIDS_PER_DAY, cleared: { 1: true, 9: true }, wins: 0, best: { 1: B.WAVES.length } });
+    assert.deepStrictEqual(plain(f.tower), { version: 1, day: null, rewards: B.RAIDS_PER_DAY, cleared: { 1: true, 9: true }, wins: 0, best: { 1: B.WAVES.length }, gear: {} });
     assert.deepStrictEqual(plain(Tw.normalize({ tower: 'x' }).tower), plain(Tw.createState()));
   });
   test('氷の精霊（判断455）：射程の中の最前列の仲間を凍らせる。凍っているあいだは、攻撃も回復もしない。解けると、また動く', () => {

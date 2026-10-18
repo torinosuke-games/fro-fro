@@ -139,7 +139,9 @@
         elder: { core: 20 } },                         // バルト：長老の知恵。中央炉の熱の最大が増える
       // 町の力（判断464）：中央炉が Lv(FROM) 以上のとき、FROM−1 を超えた1レベルごとに、中央炉の熱の最大（CORE）・灯が自然にふえる速さ（TRICKLE の割合）・並べる仲間の HP（HP の割合）が増える。Lv5 までは増えない
       POWER: { FROM: 6, CORE: 40, TRICKLE: 0.12, HP: 0.1 },
-      RAIDS_PER_DAY: 3, REWARD: { GOLD_PER_LEVEL: 80, FIRST_CLEAR: 2, RES_PER_LEVEL: 10, RES_KINDS: 2, POTION_FROM_LEVEL: 3 }   // 今夜の襲撃：1日3回まで報酬。はじめて勝った難しさは、ゴールドが2倍
+      RAIDS_PER_DAY: 3, REWARD: { GOLD_PER_LEVEL: 80, FIRST_CLEAR: 2, RES_PER_LEVEL: 10, RES_KINDS: 2, POTION_FROM_LEVEL: 3, POTION_BONUS: { 11: 1, 16: 1 } },
+      // 特別な装備（判断465）：その難しさに、はじめて勝つと、1つ手に入る（襲撃でも練習でも。1回だけ）。店にはない、いちばん強い装備
+      GEAR: { 10: { kind: 'weapon', id: 'ice_crystal_sword' }, 12: { kind: 'armor', id: 'ice_crystal_armor' }, 14: { kind: 'weapon', id: 'blizzard_blade' }, 16: { kind: 'armor', id: 'snow_guard_armor' }, 18: { kind: 'weapon', id: 'dragon_fang_sword' }, 20: { kind: 'armor', id: 'dragon_scale_armor' } }   // 今夜の襲撃：1日3回まで報酬。はじめて勝った難しさは、ゴールドが2倍
     },
     // 住民の依頼クエスト（酒場。判断434・SPEC_quest.md）。配列は、中央炉のレベル（1〜5）ごとの数（Lv1 は先頭）
     QUESTS: {
@@ -306,7 +308,11 @@
       stone_sword: { damage: 12, price: 60 },
       iron_sword: { damage: 15, price: 200 },
       steel_sword: { damage: 18, price: 500 },
-      flame_sword: { damage: 22, price: 1200 }
+      flame_sword: { damage: 22, price: 1200 },
+      // 夜の防衛戦の特別な装備（判断465。店にはない。special：防衛戦のはじめての勝ちでだけ手に入る）
+      ice_crystal_sword: { damage: 26, price: 0, special: true },
+      blizzard_blade: { damage: 30, price: 0, special: true },
+      dragon_fang_sword: { damage: 35, price: 0, special: true }
     },
     // 防具（防具屋。判断343）：defense ＝ 防御力。冒険では、主人公の防御力に足す。探索では、まちがえたときに受けるダメージを (defense × BATTLE.ARMOR_RATE) だけ減らす（最低1）
     ARMORS: {
@@ -314,7 +320,10 @@
       fur_coat: { defense: 3, price: 60 },
       leather_armor: { defense: 6, price: 180 },
       iron_armor: { defense: 10, price: 450 },
-      steel_armor: { defense: 15, price: 1100 }
+      steel_armor: { defense: 15, price: 1100 },
+      ice_crystal_armor: { defense: 19, price: 0, special: true },
+      snow_guard_armor: { defense: 24, price: 0, special: true },
+      dragon_scale_armor: { defense: 30, price: 0, special: true }
     },
 
     BATTLE: {

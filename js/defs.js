@@ -117,7 +117,10 @@
       { id: 'stone_sword', icon: '🗡️', name: '{石|いし}の{剣|けん}' },
       { id: 'iron_sword', icon: '⚔️', name: '{鉄|てつ}の{剣|けん}' },
       { id: 'steel_sword', icon: '⚔️', name: 'はがねの{剣|けん}' },
-      { id: 'flame_sword', icon: '🔥', name: 'ほのおの{剣|けん}' }
+      { id: 'flame_sword', icon: '🔥', name: 'ほのおの{剣|けん}' },
+      { id: 'ice_crystal_sword', icon: '❄️', name: '{氷晶|ひょうしょう}の{剣|けん}' },
+      { id: 'blizzard_blade', icon: '🌨️', name: '{吹雪|ふぶき}の{大剣|たいけん}' },
+      { id: 'dragon_fang_sword', icon: '🐉', name: '{氷竜|ひょうりゅう}の{牙|きば}の{剣|けん}' }
     ],
 
     // 防具（防具屋。判断343）。強さ・値段は balance.ARMORS
@@ -126,7 +129,10 @@
       { id: 'fur_coat', icon: '🧥', name: '{毛皮|けがわ}のコート' },
       { id: 'leather_armor', icon: '🦺', name: '{革|かわ}のよろい' },
       { id: 'iron_armor', icon: '🛡️', name: '{鉄|てつ}のよろい' },
-      { id: 'steel_armor', icon: '🛡️', name: 'はがねのよろい' }
+      { id: 'steel_armor', icon: '🛡️', name: 'はがねのよろい' },
+      { id: 'ice_crystal_armor', icon: '❄️', name: '{氷晶|ひょうしょう}のよろい' },
+      { id: 'snow_guard_armor', icon: '🏔️', name: '{雪原|せつげん}の{守|まも}りのよろい' },
+      { id: 'dragon_scale_armor', icon: '🐲', name: '{氷竜|ひょうりゅう}のうろこのよろい' }
     ],
 
     RESOURCES: [
