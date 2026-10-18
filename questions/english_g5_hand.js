@@ -98,7 +98,7 @@
   od('basic','5th','fifth',['five','fourth','sixth'],'「フィフス」と 読むよ。','five の e が とれて、「fifth」に なるよ。');
   od('basic','10th','tenth',['ten','nineth','eleventh'],'「テンス」と 読むよ。','ten に th が ついた 形だよ。');
   od('standard','11th','eleventh',['eleven','tenth','twelfth'],'「イレブンス」と 読むよ。','eleven に th が ついた 形だよ。');
-  od('standard','12th','twelfth',['twelve','eleventh','thirteenth'],'「トゥエルフス」と 読むよ。','twelve の ve が lf に かわるよ。');
+  od('standard','9th','ninth',['nine','eighth','tenth'],'「ナインス」と 読むよ。','nine の e が とれて、「ninth」に なるよ。');
   od('standard','20th','twentieth',['twenty','nineteenth','twenty-first'],'「トゥエンティエス」と 読むよ。','twenty の y が ie に かわるよ。');
   qa('month','standard','「My birthday is May 5th.」は いつの たんじょう日かな。','5月5日',['5月15日','4月5日','5月3日'],'「May」は「5月」だよ。','「5th」は「5番目＝5日」だよ。','「May 5th」は「5月5日」です。',{q:'「My birthday is May 5th.」は 何月何日かな。（例：3月10日）',mode:'kana-insensitive',acc:['5月5日','５月５日','五月五日']});
   qa('month','standard','「When is your birthday?」と 聞かれました。「10月10日です」と 答えるのは どれかな。','My birthday is October 10th.',['My birthday is October 1st.','My birthday is November 10th.','My birthday is 10th October is.'],'「October」は「10月」だよ。','「10日」は「10th」だよ。','「My birthday is October 10th.」は「わたしのたんじょう日は10月10日です。」です。');
@@ -119,7 +119,7 @@
   e2j('can','basic','dance','おどる',['うたう','およぐ','走る'],'「ダンス」と 読むよ。','音楽に 合わせて 体を 動かすよ。',['踊る','ダンスする']);
   e2j('can','basic','jump','とぶ',['走る','およぐ','よむ'],'「ジャンプ」と 読むよ。','日本語でも「ジャンプ」と 言うよ。',['跳ぶ','ジャンプする','とびあがる']);
   e2j('can','basic','cook','料理する',['おどる','およぐ','かく'],'「クック」と 読むよ。','台所で ごはんを 作るよ。',['りょうりする','りょうりをする','料理をする','つくる']);
-  e2j('can','basic','ride a bike','自転車に 乗る',['車を うんてんする','およぐ','走る'],'「ライド ア バイク」と 読むよ。','「bike」は「自転車」だよ。',['自転車にのる','じてんしゃにのる','自転車に乗る']);
+  e2j('can','basic','ride a bike','自転車に 乗る',['車を うんてんする','およぐ','走る'],'「ライド ア バイク」と 読むよ。','英語の「bike」は「自転車」だよ。日本語の「バイク」は、エンジンで 走る「オートバイ」の ことだよ。',['自転車にのる','じてんしゃにのる','自転車に乗る']);
   e2j('can','basic','play the piano','ピアノを ひく',['ピアノを 買う','ピアノを 見る','ピアノを 作る'],'「プレイ ザ ピアノ」と 読むよ。','音楽の 時間に よく するよ。',['ピアノをひく','ピアノを弾く','ピアノをひく']);
   sn('can','standard','I can\'t ride a unicycle.','わたしは 一輪車に 乗れません',['わたしは 一輪車に 乗れます','わたしは 一輪車を もっています','わたしは 一輪車が 好きです'],'「can\'t」は「～できない」だよ。','「unicycle」は「一輪車」だよ。');
   qa('can','standard','「Can you swim?」と 聞かれました。「いいえ、およげません」と 答えるのは どれかな。','No, I can\'t.',['No, I don\'t.','No, I\'m not.','Yes, I can.'],'「Can you ～?」には「can」で 答えるよ。','「いいえ」は「No」だよ。','「Can you ～?」に「いいえ」と 答えるときは、「No, I can\'t.」と 言います。');
