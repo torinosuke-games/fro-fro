@@ -1414,7 +1414,7 @@ window.QUESTION_BANK.push(
     id: 'english_g6_word_001', subject: 'english', gradeLevel: 6, unit: 'word',
     difficulty: 'advanced', answerType: 'input',
     question: '「big（{大|おお}きい）」の {反対|はんたい}の {意味|いみ}の {英語|えいご}を {書|か}こう。',
-    answer: 'small', acceptedAnswers: ['little'], validationMode: 'exact',
+    answer: 'small', acceptedAnswers: ['little'], answerAlso: ['little'], validationMode: 'exact',
     hints: ['「{小|ちい}さい」という {意味|いみ}の ことばだよ。', '「スモール」と {読|よ}むよ。'],
     explanation: '「big」の {反対|はんたい}は「small（{小|ちい}さい）」です。「little」も {小|ちい}さいという {意味|いみ}で {使|つか}えます。',
     reviewed: true
@@ -2001,7 +2001,7 @@ window.QUESTION_BANK.push(
     id: 'english_g8_modal_002', subject: 'english', gradeLevel: 8, unit: 'modal',
     difficulty: 'basic', answerType: 'input',
     question: '「(　) I open the window? — Sure.（{窓|まど}を {開|あ}けても いいですか。— もちろん）」の（　）に {入|はい}る {助動詞|じょどうし}を 1{語|ご} {書|か}きなさい。',
-    answer: 'May', acceptedAnswers: ['Can'], validationMode: 'exact',
+    answer: 'May', acceptedAnswers: ['Can'], answerAlso: ['Can'], validationMode: 'exact',
     hints: ['「〜しても よいですか」と {許可|きょか}を もとめる {言|い}い{方|かた}。', 'ていねいな {言|い}い{方|かた}では M で {始|はじ}まる {助動詞|じょどうし}を {使|つか}う。'],
     explanation: '「May I 〜?」は「〜しても よいですか」と {許可|きょか}を もとめる ていねいな {言|い}い{方|かた}です。{友|とも}だちどうしでは「Can I 〜?」も {使|つか}います。',
     reviewed: true
@@ -2178,7 +2178,7 @@ window.QUESTION_BANK.push(
     id: 'english_g9_relative_001', subject: 'english', gradeLevel: 9, unit: 'relative',
     difficulty: 'standard', answerType: 'input',
     question: '「This is the boy (　) plays soccer well.（こちらは サッカーが {上手|じょうず}な {少年|しょうねん}です）」の（　）に {入|はい}る {関係代名詞|かんけいだいめいし}を 1{語|ご} {書|か}きなさい。',
-    answer: 'who', acceptedAnswers: ['that'], validationMode: 'exact',
+    answer: 'who', acceptedAnswers: ['that'], answerAlso: ['that'], validationMode: 'exact',
     hints: ['{先行詞|せんこうし}の the boy は「{人|ひと}」。', '（　）の {後|あと}ろに {動詞|どうし}（plays）が {続|つづ}くので {主格|しゅかく}。'],
     explanation: '{先行詞|せんこうし}が {人|ひと}で、{主格|しゅかく}の {関係代名詞|かんけいだいめいし}なので who を {使|つか}います（that も {使|つか}えます）。',
     reviewed: true
@@ -2377,7 +2377,7 @@ window.QUESTION_BANK.push(
     id: 'english_g9_relative_004', subject: 'english', gradeLevel: 9, unit: 'relative',
     difficulty: 'advanced', answerType: 'input',
     question: '「The man (　) I met yesterday was very kind.（わたしが きのう {会|あ}った {男性|だんせい}は とても {親切|しんせつ}だった）」の（　）に {入|はい}る {関係代名詞|かんけいだいめいし}を 1{語|ご} {書|か}きなさい。',
-    answer: 'that', acceptedAnswers: ['who', 'whom'], validationMode: 'exact',
+    answer: 'that', acceptedAnswers: ['who', 'whom'], answerAlso: ['who', 'whom'], validationMode: 'exact',
     hints: ['{先行詞|せんこうし}の the man は「{人|ひと}」。', '（　）の {後|うし}ろの「I met」には {目的語|もくてきご}が ない（{目的格|もくてきかく}）。'],
     explanation: '{先行詞|せんこうし}が {人|ひと}で {目的格|もくてきかく}の {関係代名詞|かんけいだいめいし}なので、that（または who / whom）を {使|つか}います。{目的格|もくてきかく}の {関係代名詞|かんけいだいめいし}は {省略|しょうりゃく}する ことも できます。',
     reviewed: true

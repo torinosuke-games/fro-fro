@@ -96,6 +96,16 @@ module.exports = ({ test, FF, ctx, assert }) => {
     assert.ok(FF.learning.validateQuestion(bad).some(e => /answerDisplay/.test(e)));
   });
 
+  test('answerAlso（正解になる、ほかの言い方）：答えの表示にそえる。判定は変わらず、判定されない言い方は検証で弾く（判断467）', () => {
+    const q = bank.find(x => x.id === 'english_g9_relative_004');
+    assert.deepStrictEqual(Array.from(q.answerAlso), ['who', 'whom']);
+    assert.strictEqual(FF.learning.displayAnswer(q), 'that（who・whom も正解）');
+    for (const input of ['that', 'who', 'whom']) assert.ok(FF.answer.judgeInput(q, input).correct, input);
+    assert.strictEqual(FF.learning.displayAnswer(bank.find(x => x.id === 'english_g9_verb_003')), 'forgotten');
+    assert.ok(FF.learning.validateQuestion(Object.assign({}, q, { answerAlso: ['which'] })).some(e => /answerAlso/.test(e)));
+    assert.ok(FF.learning.validateQuestion(Object.assign({}, q, { answerAlso: [] })).some(e => /answerAlso/.test(e)));
+  });
+
   test('「正しい答え」の表示には answerDisplay を使い、判定は answer・acceptedAnswers のまま', () => {
     const q = bank.find(x => x.id === 'social_g5_industry_001');
     assert.strictEqual(FF.learning.displayAnswer(q), '{中京工業地帯|ちゅうきょうこうぎょうちたい}');
