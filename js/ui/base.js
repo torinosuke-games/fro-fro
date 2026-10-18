@@ -25,10 +25,20 @@
   // {time} を、ふりがなの記法入りの残り時間に置き換える（変数で入れた文字には ふりがなが付かないため）
   function withTime(template, ms) { return template.replace('{time}', FF.util.formatDurationMarkup(ms)); }
   // 「Lv◯まで あと ◯分」。1秒ごとに updateTimers で書き換える
+  // 町の絵の下の「工事中」の札用の、みじかい残り時間（判断473）：1分未満＝◯秒／1時間未満＝◯分／1日未満＝時:分（3:40）／それ以上＝◯日◯時間
+  function chipTime(ms) {
+    var sec = Math.max(0, Math.ceil(ms / 1000));
+    if (sec < 60) return sec + '{秒|びょう}';
+    var min = Math.ceil(sec / 60), h = Math.floor(min / 60), m = min % 60;
+    if (h === 0) return m + '{分|' + FF.util.minuteReading(m) + '}';
+    if (h < 24) return h + ':' + (m < 10 ? '0' : '') + m;
+    return Math.floor(h / 24) + '{日|にち}' + (h % 24) + '{時間|じかん}';
+  }
+  function remainingText(key, ms) { return key === 'constructChip' ? chipTime(ms) : null; }
   function remainingView(id, state, now, key) {
     var c = B.constructionOf(state, id);
     return U.el('span', { class: 'ct-left', attrs: { 'data-id': id, 'data-key': key || 'constructUntil' } },
-      U.rich(withTime(U.T(key || 'constructUntil'), B.constructionRemainingMs(state, id, now)), { level: c.toLevel }));
+      U.rich(remainingText(key, B.constructionRemainingMs(state, id, now)) || withTime(U.T(key || 'constructUntil'), B.constructionRemainingMs(state, id, now)), { level: c.toLevel }));
   }
   function updateTimers() {
     var app = FF.app, now = app.now();
@@ -36,7 +46,8 @@
       var id = node.getAttribute('data-id'), c = B.constructionOf(app.state, id);
       if (!c) return;
       U.clear(node);
-      node.appendChild(U.rich(withTime(U.T(node.getAttribute('data-key') || 'constructUntil'), B.constructionRemainingMs(app.state, id, now)), { level: c.toLevel }));
+      var key = node.getAttribute('data-key') || 'constructUntil', ms = B.constructionRemainingMs(app.state, id, now);
+      node.appendChild(U.rich(remainingText(key, ms) || withTime(U.T(key), ms), { level: c.toLevel }));
     });
   }
 
@@ -422,7 +433,7 @@
     return U.el('div', { class: 'panel construction-list', attrs: { role: 'list' } }, [
       U.el('span', { class: 'cl-title' }, ['🔨 ', U.rich(U.T('constructing'))])
     ].concat(rows.map(function (id) {
-      return U.el('button', { class: 'cl-row', attrs: { type: 'button', role: 'listitem', 'data-id': id }, on: { click: function () { openBuilding(id); } } }, [
+      return U.el('button', { class: 'cl-row', attrs: { type: 'button', role: 'listitem', 'data-id': id, title: FF.util.plainText(U.buildingName(id)) + ' Lv' + s.buildings[id].level + '→Lv' + B.constructionOf(s, id).toLevel }, on: { click: function () { openBuilding(id); } } }, [
         U.el('span', { class: 'cl-name' }, [U.rich(U.buildingName(id))]),
         remainingView(id, s, now, 'constructChip')
       ]);

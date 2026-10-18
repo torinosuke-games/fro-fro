@@ -196,11 +196,11 @@ body[data-screen="base"] .head-with-avatar .greeting{position:relative;flex:1;ma
 .art-basket .badge-n{font-size:clamp(10px,1.7cqw,16px)}
 .art-bld.is-building .map-construction{display:flex;flex-direction:column;gap:2px;margin-top:4px;padding:.3em .65em;border:1px solid #e9bf65;border-radius:8px;background:#fff6df;color:#885219;font-size:clamp(10px,1.4cqw,15px);line-height:1.5;white-space:nowrap;box-shadow:0 2px 5px #71491922}
 .map-construction .construction-label{font-weight:800}
-.construction-list{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 8px;background:#fff6df;border:1px solid #e9bf65;border-radius:12px;color:#885219}
-.cl-title{font-weight:800;font-size:.9375rem;margin-right:2px}
-.cl-row{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:3px 10px;border:1px solid #efd6a0;border-radius:999px;background:#fffdf5;color:inherit;font:inherit;font-size:.8125rem;cursor:pointer}
+.construction-list{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:5px 7px;background:#fff6df;border:1px solid #e9bf65;border-radius:12px;color:#885219}
+.cl-title{font-weight:800;font-size:.875rem;margin-right:1px;white-space:nowrap}
+.cl-row{display:inline-flex;align-items:center;gap:5px;min-height:32px;padding:2px 8px;border:1px solid #efd6a0;border-radius:999px;background:#fffdf5;color:inherit;font:inherit;font-size:.8125rem;cursor:pointer;white-space:nowrap}
 .cl-name{font-weight:800}
-.cl-row .ct-left{white-space:nowrap}
+.cl-row .ct-left{font-variant-numeric:tabular-nums}
 .cl-row rt{font-size:.5em}
 .map-construction rt{font-size:.5em}
 @media(max-width:760px){.quiz-resource-button{margin-left:auto;min-height:36px;padding:3px 5px}.quiz-resource-button .ico{width:25px;height:25px}.lesson-heading .filter-open{margin-left:0}}

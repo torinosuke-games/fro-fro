@@ -79,7 +79,6 @@
     upgradeStarted: '{building}の{工事|こうじ}を {始|はじ}めた。Lv{level}まで あと {time}',
     constructing: '{工事中|こうじちゅう}',
     constructUntil: 'Lv{level}まで あと {time}',
-    constructChip: '→Lv{level}　{time}',   // 町の絵の下の「工事中」の一覧（せまい表示。判断473）
     buildTime: '{工事|こうじ}に かかる {時間|じかん}：{time}',
     cost: '必要な資源',
     shortTapHint: '足りない資源を {押|お}すと、その資源を集める学習へ行ける。',

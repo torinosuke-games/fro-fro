@@ -13,6 +13,7 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
   FF.app.state=s;FF.ui.show('base');},n).then(async()=>{await p.waitForTimeout(500);for(let i=0;i<4&&await p.locator('.modal').count();i++){await p.locator('.modal button').first().click();await p.waitForTimeout(150);}});
  await open(0);assert.equal(await p.locator('.construction-list').count(),0);
  await open(3);
+ assert.ok((await p.locator('.cl-row').first().innerText()).match(/\d+:\d\d|分|秒/),'みじかい時間');
  assert.equal(await p.locator('.construction-list .cl-row').count(),3);
  assert.equal(await p.locator('.scene .map-construction').count(),0,'絵の中に工事中の箱を出さない');
  assert.deepEqual(await p.locator('.cl-row .cl-name').allInnerTexts(),['食料庫','住宅','中央炉'],'終わる順');
