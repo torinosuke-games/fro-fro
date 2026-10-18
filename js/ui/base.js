@@ -25,10 +25,10 @@
   // {time} を、ふりがなの記法入りの残り時間に置き換える（変数で入れた文字には ふりがなが付かないため）
   function withTime(template, ms) { return template.replace('{time}', FF.util.formatDurationMarkup(ms)); }
   // 「Lv◯まで あと ◯分」。1秒ごとに updateTimers で書き換える
-  function remainingView(id, state, now) {
+  function remainingView(id, state, now, key) {
     var c = B.constructionOf(state, id);
-    return U.el('span', { class: 'ct-left', attrs: { 'data-id': id } },
-      U.rich(withTime(U.T('constructUntil'), B.constructionRemainingMs(state, id, now)), { level: c.toLevel }));
+    return U.el('span', { class: 'ct-left', attrs: { 'data-id': id, 'data-key': key || 'constructUntil' } },
+      U.rich(withTime(U.T(key || 'constructUntil'), B.constructionRemainingMs(state, id, now)), { level: c.toLevel }));
   }
   function updateTimers() {
     var app = FF.app, now = app.now();
@@ -36,7 +36,7 @@
       var id = node.getAttribute('data-id'), c = B.constructionOf(app.state, id);
       if (!c) return;
       U.clear(node);
-      node.appendChild(U.rich(withTime(U.T('constructUntil'), B.constructionRemainingMs(app.state, id, now)), { level: c.toLevel }));
+      node.appendChild(U.rich(withTime(U.T(node.getAttribute('data-key') || 'constructUntil'), B.constructionRemainingMs(app.state, id, now)), { level: c.toLevel }));
     });
   }
 
@@ -420,11 +420,11 @@
     });
     if (!rows.length) return null;
     return U.el('div', { class: 'panel construction-list', attrs: { role: 'list' } }, [
-      U.el('div', { class: 'cl-title' }, ['🔨 ', U.rich(U.T('constructing'))])
+      U.el('span', { class: 'cl-title' }, ['🔨 ', U.rich(U.T('constructing'))])
     ].concat(rows.map(function (id) {
       return U.el('button', { class: 'cl-row', attrs: { type: 'button', role: 'listitem', 'data-id': id }, on: { click: function () { openBuilding(id); } } }, [
-        U.el('span', { class: 'cl-name' }, [U.rich(U.buildingName(id)), U.el('span', { class: 'lv', text: ' Lv' + s.buildings[id].level })]),
-        remainingView(id, s, now)
+        U.el('span', { class: 'cl-name' }, [U.rich(U.buildingName(id))]),
+        remainingView(id, s, now, 'constructChip')
       ]);
     })));
   }

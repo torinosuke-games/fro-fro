@@ -15,7 +15,8 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  await open(3);
  assert.equal(await p.locator('.construction-list .cl-row').count(),3);
  assert.equal(await p.locator('.scene .map-construction').count(),0,'絵の中に工事中の箱を出さない');
- assert.deepEqual(await p.locator('.cl-row .cl-name').allInnerTexts(),['食料庫 Lv5','住宅 Lv5','中央炉 Lv5'],'終わる順');
+ assert.deepEqual(await p.locator('.cl-row .cl-name').allInnerTexts(),['食料庫','住宅','中央炉'],'終わる順');
+ assert.ok((await p.locator('.construction-list').boundingBox()).height<110,'せまい（3件で110px 未満）');
  // 一覧は、絵のすぐ下、「学習する」は、その下
  const r=await p.evaluate(()=>{const l=document.querySelector('.construction-list').getBoundingClientRect(),s=document.querySelector('.scene').getBoundingClientRect(),c=document.querySelector('.home-start-mobile').getBoundingClientRect();return {sb:s.bottom,lt:l.top,lb:l.bottom,ct:c.top}});
  assert.ok(r.lt>=r.sb-1&&r.lt<r.sb+40&&r.ct>=r.lb-1,JSON.stringify(r));
