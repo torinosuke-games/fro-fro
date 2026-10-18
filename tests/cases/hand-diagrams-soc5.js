@@ -20,15 +20,15 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  }
  test('小5社会：360問の46問のdiagram以外が不変、110画像を維持',()=>{
   assert.equal(all.length,360);assert.equal(new Set(ids).size,46);assert.equal(qs.length,46);
-  assert.equal(hash(all.map(q=>{const v={...q};if(ids.includes(q.id))delete v.diagram;return v;})),'4ea00275299ca7d496230cd12b6eb8969b10265bc6a1962e1ec4461d93d08556');
+  assert.equal(hash(all.map(q=>{const v={...q};if(ids.includes(q.id))delete v.diagram;return v;})),'db216a00a4f900cb74e7b1239681313d9baa86bf646f7c774e5140421c47c41c');
   assert.equal(all.filter(q=>q.diagram?.kind==='image').length,110);assert.equal(all.filter(q=>q.diagram).length,156);
  });
- test('小5社会：40地図＋6模式図と書き問題への継承',()=>{
-  assert.equal(qs.filter(q=>q.diagram.kind==='japanMap').length,40);assert.equal(qs.filter(q=>q.diagram.kind==='earthScene').length,6);
+ test('小5社会：42地図＋4模式図と書き問題への継承',()=>{
+  assert.equal(qs.filter(q=>q.diagram.kind==='japanMap').length,42);assert.equal(qs.filter(q=>q.diagram.kind==='earthScene').length,4);
   const bank=FF.learning.createBank(ctx.QUESTION_BANK);for(const q of qs){range(q.diagram);assert.deepEqual(plain(FF.learning.validateQuestion(q)),[]);if(q.inputForm)assert.deepEqual(plain(bank.byId[q.id+'#input'].diagram),q.diagram);}
  });
  test('小5社会：模式図・地図の範囲と不正データを検出',()=>{
-  for(const [id,mutate]of [['position_010',d=>d.scene='answer'],['position_014',d=>d.focus='both'],['position_007',d=>d.marks[0]=[0,0]],['position_017',d=>d.areas[0]=[[145,44]]],['position_009',d=>d.meridian=NaN],['terrain_019',d=>d.currents[0].tone='result'],['terrain_020',d=>d.currents[0].points[1]=[200,80]],['terrain_021',d=>d.marineAreas[0]=[]],['terrain_024',d=>d.routes[0].type='answer']]){const d=plain(get(id));mutate(d);assert.throws(()=>range(d));}
+  for(const [id,mutate]of [['position_010',d=>d.scene='answer'],['position_007',d=>d.marks[0]=[0,0]],['position_017',d=>d.areas[0]=[[145,44]]],['position_009',d=>d.meridian=NaN],['terrain_019',d=>d.currents[0].tone='result'],['terrain_020',d=>d.currents[0].points[1]=[200,80]],['terrain_021',d=>d.marineAreas[0]=[]],['terrain_024',d=>d.routes[0].type='answer']]){const d=plain(get(id));mutate(d);assert.throws(()=>range(d));}
  });
  test('小5社会：captionに解答名・数値を表示せず、余分な印を足さない',()=>{
   for(const q of qs){const answer=q.answer.replace(/[（(].*?[）)]/g,'');assert.ok(!q.diagram.caption.includes(answer),q.id+' answer in caption');

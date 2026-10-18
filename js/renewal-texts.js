@@ -5,7 +5,8 @@
  T.renewal={
   wantResource:'欲しい資材',noResource:'指定なし',resourceAutoHelp:'指定なしの場合は、不足している資材を自動で選びます。',
   rewardSpecified:'今回の資材：{resource}。選んだ資材を獲得します。',
-  totalQuestions:'全{n}問',correctQuestions:'正解 {n}問',reviewQuestions:'要復習 {n}問',generatedNote:'登録問題の進み具合。計算問題は自動生成でも出題します。',
+  totalQuestions:'全{n}問',totalProgress:'{total}問中 {correct}問 せいかい',unitTally:'{correct}/{total}問 せいかい',
+  unitScoreLabel:'{total}問中 {correct}問 せいかい',correctQuestions:'正解 {n}問',reviewQuestions:'要復習 {n}問',generatedNote:'登録問題の進み具合。計算問題は自動生成でも出題します。',
   todayResource:'きょうの資材',dailyRandomShort:'ランダム',dailyNote:'{手|て}に{入|はい}る資材は教科ごとに毎日{変|か}わります（☆はランダムです）',dailyRandomHelp:'ランダム（4つの資材のどれかがもらえる）',facilities:'ほかの施設',gold:'ゴールド',goldHelp:'{冒険|ぼうけん}で{手|て}に{入|い}れたお{金|かね}。{武器屋|ぶきや}・{防具屋|ぼうぐや}で{使|つか}えます。',joinTitle:'{仲間|なかま}が、{力|ちから}を{貸|か}してくれる！',joinText:'{name}が{仲間|なかま}になった。{編成|へんせい}の{画面|がめん}で、パーティに{入|い}れよう。',
   labTitle:'{魔法研究所|まほうけんきゅうじょ}',labLocked:'{学習|がくしゅう}を{進|すす}めていると、いずれ{司書|ししょ}が{仲間|なかま}になります。{司書|ししょ}が{持|も}っていた{魔法|まほう}の{書物|しょもつ}を、ここで{開発|かいはつ}できるようになります。',
   labIntro:'{司書|ししょ}の{魔法|まほう}の{書物|しょもつ}を、ゴールドを{使|つか}って{開発|かいはつ}します。{開発|かいはつ}すると、{冒険|ぼうけん}の{魔法|まほう}が{強|つよ}くなります。',labDevelop:'{開発|かいはつ}する',labMax:'{開発|かいはつ}ずみ',labLevel:'レベル {lv} / {max}',labDone:'{開発|かいはつ}した！',
@@ -26,7 +27,7 @@ partyNav:'仲間',invNav:'持ち物',popLabel:'{人口|じんこう}',popUnit:'{
   hint:'ヒント',hintIntro:'少しずつ、考え方の手がかりを。',openHint:'ヒントを見る',hintReward:'ヒントを使うと獲得量は少し減ります。困ったら使ってみよう。',
   explanation:'答えと解説',answer:'正しい答え',answerAfter:'答え合わせをすると、ここに解説が出ます。',
   encourage:'あせらなくて大丈夫。図を見ながら考えてみよう。',encourageDone:'考えたことが、次の一歩になるよ。',
-  selectAnswer:'答えを選ぶか、入力してください。',hwHelpEn:'ゆびやペンで、せんの上に、えいごのつづりを かきましょう。',hwTip:'ペンや ゆびで かく「てがき入力」が つかえる たんまつ（iPad・Android など）なら、「キーボードで入力する」に して てがきすると、じどうで まる・ばつが つきます。',hwTipKey:'「てがき入力」が つかえる たんまつでは、文字を いれる ところに ペンや ゆびで かくと、文字に なおしてくれます。つかえないときは、「てがきでかく」を おして、じぶんで まる・ばつを つけよう。',speakListen:'きく',speakAgain:'もういちど きく',speakAnswer:'英語を きく',speakNote:'ボタンを おすと、えいごが きこえます。なんどでも きけます。',speakNoSound:'この たんまつでは おとが でないので、えいごを もじで みせます。',hwHelp:'ゆびやペンで、わくの中にかきましょう。',hwUndo:'1つもどす',hwClear:'ぜんぶけす',hwReveal:'お手本を見る',hwWriteFirst:'まず、かいてみましょう。',hwModel:'お手本',hwCompare:'じぶんのじとくらべて、ぴったりあっていたら「かけた」をおしましょう。',hwOk:'かけた',hwNg:'まちがえた',hwHalf:'手書きの自己採点は、ポイントが半分になります。',hwUseKeyboard:'キーボードで入力する',hwUsePen:'てがきでかく',inputPlaceholder:'答えを入力',yourAnswer:'あなたの答え',checkAnswer:'答え合わせ',
+  selectAnswer:'答えを選ぶか、入力してください。',hwAlso:'ほかに、{also} も せいかい です。',hwHelpEn:'ゆびやペンで、せんの上に、えいごのつづりを かきましょう。',hwTip:'ペンや ゆびで かく「てがき入力」が つかえる たんまつ（iPad・Android など）なら、「キーボードで入力する」に して てがきすると、じどうで まる・ばつが つきます。',hwTipKey:'「てがき入力」が つかえる たんまつでは、文字を いれる ところに ペンや ゆびで かくと、文字に なおしてくれます。つかえないときは、「てがきでかく」を おして、じぶんで まる・ばつを つけよう。',speakListen:'きく',speakAgain:'もういちど きく',speakAnswer:'英語を きく',speakNote:'ボタンを おすと、えいごが きこえます。なんどでも きけます。',speakNoSound:'この たんまつでは おとが でないので、えいごを もじで みせます。',hwHelp:'ゆびやペンで、わくの中にかきましょう。',hwUndo:'1つもどす',hwClear:'ぜんぶけす',hwReveal:'お手本を見る',hwWriteFirst:'まず、かいてみましょう。',hwModel:'お手本',hwCompare:'じぶんのじとくらべて、ぴったりあっていたら「かけた」をおしましょう。',hwOk:'かけた',hwNg:'まちがえた',hwHalf:'手書きの自己採点は、ポイントが半分になります。',hwUseKeyboard:'キーボードで入力する',hwUsePen:'てがきでかく',inputPlaceholder:'答えを入力',yourAnswer:'あなたの答え',checkAnswer:'答え合わせ',
   tryAgain:'もう一度考えてみよう。あと{n}回チャレンジできます。',correct:'正解！ 町に熱が届いたよ',review:'解説を見て、わかるようになろう',reviewNote:'間違いは、次の「わかった」への手がかり。',
   noTickets:'選択問題チケットが回復するまで、書き問題に挑戦できます。',switchInput:'書き問題に切り替える',
   rewardNote:'今回の資材：{resource}。不足している資材を自動で選びます。',

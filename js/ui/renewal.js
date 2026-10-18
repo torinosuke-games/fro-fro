@@ -138,7 +138,7 @@
    box.appendChild(E('p',{class:'hw-tip',text:R.hwTip}));
   }
   if(it.revealed||done){
-   box.appendChild(E('div',{class:'hw-model'},[E('span',{class:'eyebrow',text:R.hwModel}),E('strong',{class:'hw-answer'+(en?' en':''),text:q.answer}),E('p',{text:R.hwCompare})].concat(en&&FF.speech&&FF.speech.supported()&&FF.speech.enabled()?[speakButton(q.answer,R.speakAnswer,'small')]:[])));
+   box.appendChild(E('div',{class:'hw-model'},[E('span',{class:'eyebrow',text:R.hwModel}),E('strong',{class:'hw-answer'+(en?' en':''),text:q.answer}),q.answerAlso&&q.answerAlso.length?E('p',{class:'hw-also',text:R.hwAlso.replace('{also}',q.answerAlso.join('・'))}):null,E('p',{text:R.hwCompare})].concat(en&&FF.speech&&FF.speech.supported()&&FF.speech.enabled()?[speakButton(q.answer,R.speakAnswer,'small')]:[])));
    if(!done)box.appendChild(E('div',{class:'hw-actions hw-judge'},[
     button('○ '+R.hwOk,function(){selfCheck(true);},'rn-button primary hw-ok'),
     button('× '+R.hwNg,function(){selfCheck(false);},'rn-button hw-ng')
@@ -150,13 +150,16 @@
  function showFilters(){FF.app.filterDraft=Object.assign({},FF.app.session.sel);U.show('lessonFilters');}
  function changeFilter(k,v){var s=FF.app.session;s.sel[k]=v;chooseQuestion();U.rerender();root.scrollTo(0,0);}
  function selectField(label,value,options,onchange){return E('label',{class:'rn-field'},[E('span',{text:label}),E('select',{value:value,attrs:{'aria-label':label},on:{change:function(e){onchange(e.target.value);}}},options.map(function(o){return E('option',{value:o[0],attrs:{selected:o[0]===value?true:null},text:o[1]});}))]);}
+ // 単元の「正解した問題の数／問題の数」と、細い進みぐあいの線。ぜんぶ正解したら、★（判断479）
+ function unitScore(p){p=p||{total:0,correct:0};return E('small',{class:'unit-score'+(p.total&&p.correct>=p.total?' complete':''),text:(p.total&&p.correct>=p.total?'★ ':'')+p.correct+'/'+p.total,attrs:{'aria-label':R.unitScoreLabel.replace('{total}',p.total).replace('{correct}',p.correct)}});}
+ function unitBar(p){p=p||{total:0,correct:0};var bar=E('span',{class:'unit-bar',attrs:{'aria-hidden':'true'}},[E('i')]);bar.firstChild.style.width=(p.total?Math.round(100*p.correct/p.total):0)+'%';return bar;}
  function unitsView(){
-  var a=FF.app,s=a.session,p=E('aside',{class:'lesson-sidebar'}),units=C.units(s.sel.subject,s.sel.grade),counts=C.unitCounts(a.bank,s.sel.subject,s.sel.grade);
-  p.appendChild(E('div',{class:'side-title'},[E('h2',{text:R.units}),E('span',{class:'small muted',text:units.length?R.totalQuestions.replace('{n}',C.progress(a.bank,a.state,s.sel.subject,s.sel.grade).total):school(s.sel.grade)})]));
+  var a=FF.app,s=a.session,p=E('aside',{class:'lesson-sidebar'}),units=C.units(s.sel.subject,s.sel.grade),ups=C.unitProgress(a.bank,a.state,s.sel.subject,s.sel.grade),all=C.progress(a.bank,a.state,s.sel.subject,s.sel.grade);
+  p.appendChild(E('div',{class:'side-title'},[E('h2',{text:R.units}),E('span',{class:'small muted',text:units.length?R.totalProgress.replace('{total}',all.total).replace('{correct}',all.correct):school(s.sel.grade)})]));
   p.appendChild(button('⤨ '+R.allUnits,function(){changeFilter('unit','all');},'unit-row all'+(s.sel.unit==='all'?' active':''),false,{'aria-pressed':s.sel.unit==='all'}));
   if(units.length)p.appendChild(E('div',{class:'unit-list'},units.map(function(u){
    return E('button',{class:'unit-row'+(s.sel.unit===u.id?' active':''),attrs:{type:'button','aria-pressed':s.sel.unit===u.id?'true':'false'},on:{click:function(){changeFilter('unit',u.id);}}},[
-    E('span',{class:'unit-icon',style:{background:u.color},text:u.icon}),E('span',{class:'unit-name',text:u.name}),E('small',{text:counts[u.id]||0}),E('span',{class:'unit-chevron',text:'›'})
+    E('span',{class:'unit-icon',style:{background:u.color},text:u.icon}),E('span',{class:'unit-name',text:u.name}),unitScore(ups[u.id]),E('span',{class:'unit-chevron',text:'›'}),unitBar(ups[u.id])
    ]);
   })));
   p.appendChild(E('div',{class:'side-settings'},[
@@ -206,6 +209,8 @@
   return E('div',{class:'speak-row'},[speakButton(text,R.speakListen,'small',R.speakAgain)]);
  }
  FF.lessonHelp=helpView;
+ // 単元ごとの「正解した問題数／問題数」（判断479）。スマホは単元の一覧が出ないので、問題のカードと条件の画面にも出す
+ function unitTally(q){var up=C.unitProgress(FF.app.bank,FF.app.state,q.subject,q.gradeLevel)[q.unit];if(!up)return null;return E('span',{class:'unit-tally'+(up.correct>=up.total?' complete':''),text:R.unitTally.replace('{correct}',up.correct).replace('{total}',up.total)});}
  function renderQuiz(main){
   var a=FF.app,s=a.session;if(!s||!s.renewal){U.show('study',{tab:'learn'});return;}
   var it=current();var top=E('div',{class:'lesson-heading'},[
@@ -222,6 +227,7 @@
   card.appendChild(E('div',{class:'question-meta'},[
    E('span',{class:'question-badge',text:q.generated?R.drill:R.question+' '+(no?no+' / '+C.totalOf(a.bank,q.subject,q.gradeLevel):s.cursor+1)}),
    E('span',{class:'question-unit',text:unit?unit.name:U.plain(L.subjectName(q.subject,q.gradeLevel))}),
+   unitTally(q),
    E('span',{class:'difficulty-badge '+q.difficulty,text:'★ '+difficulty(q.difficulty)})
   ]));
   card.appendChild(U.R('div','lesson-question',q.question));
@@ -275,7 +281,7 @@
   var draft=a.filterDraft||Object.assign({},a.session.sel);
   main.appendChild(button('‹ '+R.returnQuestion,function(){U.show('quiz');},'text-button'));
   var pane=E('section',{class:'filter-page panel'},[title(R.learning,R.conditions,R.filterIntro)]);
-  if(C.units(draft.subject,draft.grade).length)pane.appendChild(selectField(R.units,draft.unit,[['all',R.allUnits]].concat(C.units(draft.subject,draft.grade).map(function(u){return [u.id,u.name];})),function(v){draft.unit=v;}));
+  if(C.units(draft.subject,draft.grade).length)pane.appendChild(selectField(R.units,draft.unit,[['all',R.allUnits]].concat(C.units(draft.subject,draft.grade).map(function(u){var up=C.unitProgress(a.bank,a.state,draft.subject,draft.grade)[u.id];return [u.id,u.name+(up?'（'+up.correct+'/'+up.total+'）':'')];})),function(v){draft.unit=v;}));
   pane.appendChild(selectField(R.level,draft.difficulty,[['random',R.random],['basic',R.basic],['standard',R.standard],['advanced',R.advanced]],function(v){draft.difficulty=v;}));
   pane.appendChild(selectField(R.format,draft.answerType,[['choice',R.choice],['input',R.input]],function(v){draft.answerType=v;}));
   pane.appendChild(button(R.applyFilters,function(){a.session.sel=Object.assign({},draft);chooseQuestion();U.show('quiz');},'rn-button primary block'));
