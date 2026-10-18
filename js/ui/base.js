@@ -26,19 +26,23 @@
   function withTime(template, ms) { return template.replace('{time}', FF.util.formatDurationMarkup(ms)); }
   // 「Lv◯まで あと ◯分」。1秒ごとに updateTimers で書き換える
   // 町の絵の下の「工事中」の札用の、みじかい残り時間（判断473）：1分未満＝◯秒／1時間未満＝◯分／1日未満＝時:分（3:40）／それ以上＝◯日◯時間
-  function chipTime(ms) {
+  // 画面がせまい（スマホ）ときは「3:40」、ひろい（タブレット・パソコン）ときは「3時間40分」（CSS で切りかえる。判断473）
+  function chipTime(ms, wide) {
     var sec = Math.max(0, Math.ceil(ms / 1000));
     if (sec < 60) return sec + '{秒|びょう}';
     var min = Math.ceil(sec / 60), h = Math.floor(min / 60), m = min % 60;
     if (h === 0) return m + '{分|' + FF.util.minuteReading(m) + '}';
-    if (h < 24) return h + ':' + (m < 10 ? '0' : '') + m;
+    if (h < 24) return wide ? h + '{時間|じかん}' + (m > 0 ? m + '{分|' + FF.util.minuteReading(m) + '}' : '') : h + ':' + (m < 10 ? '0' : '') + m;
     return Math.floor(h / 24) + '{日|にち}' + (h % 24) + '{時間|じかん}';
   }
-  function remainingText(key, ms) { return key === 'constructChip' ? chipTime(ms) : null; }
+  function chipNodes(ms) {
+    return [U.el('span', { class: 't-short' }, U.rich(chipTime(ms, false))), U.el('span', { class: 't-long' }, U.rich(chipTime(ms, true)))];
+  }
   function remainingView(id, state, now, key) {
     var c = B.constructionOf(state, id);
+    var ms = B.constructionRemainingMs(state, id, now);
     return U.el('span', { class: 'ct-left', attrs: { 'data-id': id, 'data-key': key || 'constructUntil' } },
-      U.rich(remainingText(key, B.constructionRemainingMs(state, id, now)) || withTime(U.T(key || 'constructUntil'), B.constructionRemainingMs(state, id, now)), { level: c.toLevel }));
+      key === 'constructChip' ? chipNodes(ms) : U.rich(withTime(U.T(key || 'constructUntil'), ms), { level: c.toLevel }));
   }
   function updateTimers() {
     var app = FF.app, now = app.now();
@@ -47,7 +51,8 @@
       if (!c) return;
       U.clear(node);
       var key = node.getAttribute('data-key') || 'constructUntil', ms = B.constructionRemainingMs(app.state, id, now);
-      node.appendChild(U.rich(remainingText(key, ms) || withTime(U.T(key), ms), { level: c.toLevel }));
+      if (key === 'constructChip') chipNodes(ms).forEach(function (n) { node.appendChild(n); });
+      else node.appendChild(U.rich(withTime(U.T(key), ms), { level: c.toLevel }));
     });
   }
 

@@ -188,18 +188,30 @@
     return { all: b.enemy === 'boss' && b.turn % 2 === 0, heavy: b.enemy === 'wolf' && b.turn % 2 === 0,
       target: alive(p)[(b.turn - 1) % Math.max(1, alive(p).length)] };
   }
-  function availableQuestions(bank, p, grade) {
+  // 冒険・防衛戦の問題（判断475）：教科は、すべての教科から（5教科を、同じ割合で）。学年は、選んだ学年と、その1つ下（1年生は1年生だけ）。難しさは、選んだもの。
+  function availableQuestions(bank, subject, grade, difficulty) {
     return Object.keys(bank.byId).map(function (id) { return bank.byId[id]; }).filter(function (q) {
-      return q.subject === p.subject && q.gradeLevel === grade && q.difficulty === p.difficulty && !q.listen && q.answerType === 'choice';
+      return q.subject === subject && q.gradeLevel === grade && q.difficulty === difficulty && !q.listen && q.answerType === 'choice';
     });
   }
+  var ALL_SUBJECTS = ['math', 'japanese', 'science', 'social', 'english'];
+  function shuffled(list, rng) { return FF.util.shuffle(list.slice(), rng); }
   function pick(bank, p, grade, rng, now) {
-    var list = availableQuestions(bank, p, grade);
-    var fresh = list.filter(function (q) { return p.recent.indexOf(q.id) < 0; });
-    if (list.length) { list = fresh.length ? fresh : list; return list[Math.floor(rng() * list.length)]; }
-    // 同じ学年・難易度の算数は自動生成も利用できる。出題条件を黙って変えない。
-    if (p.subject !== 'math') return null;
-    return FF.curriculum.pick(bank, { subject: p.subject, grade: grade, difficulty: p.difficulty, answerType: 'choice', unit: 'all' }, { rng: rng, now: now, correctLog: {}, recentIds: p.recent });
+    var grades = grade > 1 ? [grade, grade - 1] : [grade], subjects = shuffled(ALL_SUBJECTS, rng);
+    for (var i = 0; i < subjects.length; i++) {
+      var subject = subjects[i], gs = shuffled(grades, rng);
+      for (var j = 0; j < gs.length; j++) {
+        var list = availableQuestions(bank, subject, gs[j], p.difficulty);
+        var fresh = list.filter(function (q) { return p.recent.indexOf(q.id) < 0; });
+        if (list.length) { list = fresh.length ? fresh : list; return list[Math.floor(rng() * list.length)]; }
+        // 算数は、自動生成も使える（その学年・難易度に、用意した問題がないとき）
+        if (subject === 'math') {
+          var g = FF.curriculum.pick(bank, { subject: subject, grade: gs[j], difficulty: p.difficulty, answerType: 'choice', unit: 'all' }, { rng: rng, now: now, correctLog: {}, recentIds: p.recent });
+          if (g) return g;
+        }
+      }
+    }
+    return null;
   }
   function setQuestion(n, bank, grade, rng, now) {
     var q = pick(bank, n, grade, rng, now);

@@ -135,11 +135,17 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     for (const pos of A.path(p, A.PLACES.town)) p = A.move(p, pos.x, pos.y);
     assert.equal(p.arrived, true); assert.equal(p.lastTown, 'town'); assert.equal(p.notice, 'arrival'); assert.deepEqual(plain(p.cleared), ['boss']);
   });
-  test('冒険：同じ学年・教科・難易度で出題し、直近の重複を避ける', () => {
-    const p = A.create(); p.subject = 'science'; p.difficulty = 'standard';
-    const q = A.pick(bank, p, 4, rng, now); assert.equal(q.gradeLevel, 4); assert.equal(q.subject, 'science'); assert.equal(q.difficulty, 'standard');
-    p.recent.push(q.id); assert.notEqual(A.pick(bank, p, 4, rng, now).id, q.id);
-    p.subject = 'unknown'; assert.equal(A.pick(bank, p, 4, rng, now), null);
+  test('冒険：問題は、ぜんぶの教科から。学年は、選んだ学年とその1つ下。難しさは、選んだもの。直近の重複を避ける（判断475）', () => {
+    const p = A.create(); p.difficulty = 'standard';
+    const subjects = new Set(), grades = new Set();
+    let seed = 1; const r = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    for (let i = 0; i < 400; i++) { const q = A.pick(bank, p, 4, r, now); assert.ok(q); subjects.add(q.subject); grades.add(q.gradeLevel); assert.equal(q.difficulty, 'standard'); assert.ok(!q.listen && q.answerType === 'choice'); }
+    assert.deepStrictEqual([...subjects].sort(), ['english', 'japanese', 'math', 'science', 'social']);   // 5教科すべて
+    assert.deepStrictEqual([...grades].sort(), [3, 4]);   // 4年生と、3年生だけ
+    const only1 = new Set(); seed = 7; for (let i = 0; i < 100; i++) only1.add(A.pick(bank, p, 1, r, now).gradeLevel);
+    assert.deepStrictEqual([...only1], [1]);   // 1年生は、1年生だけ
+    const q = A.pick(bank, p, 4, r, now); p.recent.push(q.id); assert.notEqual(A.pick(bank, p, 4, () => 0.5, now).id === q.id, true);
+    p.subject = 'unknown'; assert.ok(A.pick(bank, p, 4, rng, now));   // 教科の選びは、もう関係ない
   });
   test('冒険：敵を倒した後の仲間は攻撃・魔法・道具を使わない', () => {
     let p=atEnemy('cub');p.battle.hp=1;p.roster.juushouhei.hp=1;

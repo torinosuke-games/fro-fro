@@ -21,6 +21,12 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  // 一覧は、絵のすぐ下、「学習する」は、その下
  const r=await p.evaluate(()=>{const l=document.querySelector('.construction-list').getBoundingClientRect(),s=document.querySelector('.scene').getBoundingClientRect(),c=document.querySelector('.home-start-mobile').getBoundingClientRect();return {sb:s.bottom,lt:l.top,lb:l.bottom,ct:c.top}});
  assert.ok(r.lt>=r.sb-1&&r.lt<r.sb+40&&r.ct>=r.lb-1,JSON.stringify(r));
+ // ひろい画面（タブレット・パソコン）では、「3時間」「分」の文字つき。せまい画面（スマホ）では、3:40
+ assert.ok(await p.locator('.cl-row').first().locator('.t-short').isVisible()&&!(await p.locator('.cl-row').first().locator('.t-long').isVisible()));
+ await p.setViewportSize({width:820,height:900});await p.waitForTimeout(200);
+ assert.ok(await p.locator('.cl-row').first().locator('.t-long').isVisible()&&!(await p.locator('.cl-row').first().locator('.t-short').isVisible()));
+ assert.ok(/時間/.test(await p.locator('.cl-row').first().innerText()),'ひろい画面では「時間」');
+ await p.setViewportSize({width:360,height:740});await p.waitForTimeout(200);
  await p.locator('.cl-row').nth(1).click();await p.waitForTimeout(250);
  assert.ok((await p.locator('.modal').innerText()).includes('住宅'));
  assert.deepEqual(errors,[]);await b.close();console.log('PASS: construction list under the town art — 3 rows by finish time, none in the art, tap opens the building, start button below');
