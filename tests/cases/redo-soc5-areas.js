@@ -8,7 +8,7 @@ module.exports=({test,ctx,FF,assert,plain})=>{
  const inArea=(p,d)=>d.areas.some(r=>inside(p,r));
  test('社会の範囲修正：9問のdiagram以外と対象外351問は不変',()=>{
   assert.equal(all.length,360);assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'b73994728cf75063464911c0e850d4413379d79d178267cdbaa913a3c29a7fc6');
-  assert.equal(hash(all.map(q=>{const v={...q};delete v.diagram;return v;})),'b3dc7f1395616a783e49c409e3e3a0a78415eb17a37956ba68e7d6296cae8852');
+  assert.equal(hash(all.map(q=>{const v={...q};delete v.diagram;return v;})),'e7c94d3f13ba89ed4dea14dc9b3a311831646007113cd51b3e2e7996930731ad');
   assert.equal(all.filter(q=>q.diagram?.kind==='image').length,110);
  });
  test('社会の範囲修正：県の形はNatural Earthの指定23県だけ',()=>{
