@@ -18,6 +18,7 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(U.autoRubyMarkup('日本の特色'), '{日本|にほん}の{特色|とくしょく}');
     assert.strictEqual(U.autoRubyMarkup('石油と飛行機'), '{石油|せきゆ}と{飛行機|ひこうき}');
     assert.strictEqual(U.autoRubyMarkup('熊本県'), '{熊本|くまもと}県');
+    assert.strictEqual(U.autoRubyMarkup('海へ行く。平行な線を行う。銀行と旅行'), '海へ{行|い}く。{平行|へいこう}な線を{行|おこな}う。{銀行|ぎんこう}と{旅行|りょこう}');   // 「行」は文脈で読みが変わる（判断481）
     assert.strictEqual(U.autoRubyMarkup('東経135度'), '{東経|とうけい}135{度|ど}');
     assert.strictEqual(U.autoRubyMarkup('新聞の発行部数'), '新聞の{発行|はっこう}部{数|かず}');   // 判断481
   });
