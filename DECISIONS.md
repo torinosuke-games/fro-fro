@@ -1996,3 +1996,10 @@
 - 画面：開始画面に「特別な装備」の一覧（もらったものは「もらった」）。勝ったときの画面に、もらった装備を出す。
 - セーブ：`state.tower.gear`（難しさ → true）を足した（読み込み時に整える。saveVersion は変えない）。
 - テスト：`tests/cases/tower.js`（特別な装備）、`tests/cases/shop.js`（店は5つ）、`tests/ui-tower-gear.cjs`。
+
+## 判断467：正解になるほかの言い方を、答えの表示にそえる（`answerAlso`）
+
+- レビューで、`english_g9_relative_004`（関係代名詞）の書き問題について、「答えに that しか入っていなかった」との指摘（判断466で「直さなかった」とした問題）。判定は who・whom も正解にしていたが、まちがえたときの「正しい答え」の表示が「that」だけで、ほかの言い方も正解なことが分からなかった。
+- 問題の項目 `answerAlso`（文字列の配列）を足した。`FF.learning.displayAnswer` が、「that（who・whom も正解）」と、あとにそえる（学習・昇格試験・探索・戦闘のすべての表示に出る）。判定（`answer`・`acceptedAnswers`）は変えない。`validateQuestion` で、`answerAlso` の言い方がすべて正解と判定されることを確かめる。
+- 付けた問題：`english_g9_relative_004`（that／who・whom）・`english_g9_relative_001`（who／that）・`english_g6_word_001`（small／little）・`english_g8_modal_002`（May／Can）。ひらがな・漢字などの書き方のちがいだけの別解には、付けない。
+- 書き方は `QUESTIONS_GUIDE.md`。テスト：`tests/cases/questions.js`。

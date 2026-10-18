@@ -26,6 +26,7 @@
     if (!str(q.explanation)) e.push('explanation がない');
     if (typeof q.reviewed !== 'boolean') e.push('reviewed が true/false でない');
     if (!Array.isArray(q.hints) || q.hints.length < 1 || q.hints.length > 3 || !q.hints.every(str)) e.push('hints は1〜3個の文字列');
+    if (q.answerAlso !== undefined && (!Array.isArray(q.answerAlso) || !q.answerAlso.length || !q.answerAlso.every(str))) e.push('answerAlso は、空でない文字列の配列');
     if (q.answerDisplay !== undefined && (!str(q.answerDisplay) || FF.util.plainText(q.answerDisplay) !== q.answer)) e.push('answerDisplay のふりがなを外した文字が answer と一致しない');
     if (q.acceptedAnswers !== undefined && (!Array.isArray(q.acceptedAnswers) || !q.acceptedAnswers.every(str))) e.push('acceptedAnswers は文字列の配列');
     if (q.answerType === 'choice') {
@@ -57,6 +58,7 @@
       if (q.validationMode === 'any-of' && !(q.acceptedAnswers && q.acceptedAnswers.length)) e.push('any-of なのに acceptedAnswers が空');
       if (q.validationMode === 'number' && isNaN(FF.answer.parseNumber(q.answer))) e.push('number なのに answer が数値でない');
       if (str(q.answer) && !FF.answer.judgeInput(q, q.answer).correct) e.push('answer 自身が正解と判定されない');
+      if (Array.isArray(q.answerAlso)) q.answerAlso.forEach(function (a) { if (str(a) && !FF.answer.judgeInput(q, a).correct) e.push('answerAlso の「' + a + '」が正解と判定されない'); });
     }
     return e;
   }
@@ -87,8 +89,10 @@
 
   // 「正しい答え」として表示する文字列。自由入力の answer には {漢字|よみ} を書けない（入力と比べるため）ので、
   // 辞書の自動ふりがなが誤る答えだけ answerDisplay（ふりがなの記法入り）を持たせる。
+  // answerAlso（正解になる、ほかの言い方。判断467）があれば、「（who・whom も正解）」と、あとにそえる
   function displayAnswer(q) {
-    return q.answerDisplay || q.answer;
+    var base = q.answerDisplay || q.answer;
+    return q.answerAlso && q.answerAlso.length ? base + '（' + q.answerAlso.join('・') + ' も正解）' : base;
   }
 
   // ---- 索引 ----
