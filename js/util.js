@@ -110,8 +110,10 @@
   }
   // 学年 grade の人に、この語（漢字）のふりがなが要るか。学年が未設定（0・null）なら、いつも要る。
   // 語の中に、その学年までに習っていない漢字が1つでもあれば要る。
+  // 地名・人名（千曲川など。FF.FURIGANA_ALWAYS）は、読みが漢字から分からないので、学年に関係なくいつも要る。
   function needsRuby(base, grade) {
     if (!grade) return true;
+    if (FF.FURIGANA_ALWAYS && FF.FURIGANA_ALWAYS[base]) return true;
     for (var i = 0; i < base.length; i++) {
       var ch = base.charAt(i);
       if (/[一-鿿々]/.test(ch) && kanjiGrade(ch) > grade) return true;

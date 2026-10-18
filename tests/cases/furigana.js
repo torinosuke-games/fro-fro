@@ -24,6 +24,8 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(U.needsRuby('憲法', 6), false);
     assert.strictEqual(U.needsRuby('憲法', null), true);   // 学年が未設定ならいつも付ける
     assert.strictEqual(U.needsRuby('麒', 9), true);
+    assert.strictEqual(U.needsRuby('千曲川', 9), true);   // 地名は学年に関係なく付ける
+    assert.strictEqual(U.needsRuby('日本', 5), false);
   });
 
   test('辞書の語は自動でふりがなの記法になる', () => {
