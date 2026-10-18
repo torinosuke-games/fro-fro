@@ -5,7 +5,8 @@
  T.renewal={
   wantResource:'欲しい資材',noResource:'指定なし',resourceAutoHelp:'指定なしの場合は、不足している資材を自動で選びます。',
   rewardSpecified:'今回の資材：{resource}。選んだ資材を獲得します。',
-  totalQuestions:'全{n}問',correctQuestions:'正解 {n}問',reviewQuestions:'要復習 {n}問',generatedNote:'登録問題の進み具合。計算問題は自動生成でも出題します。',
+  totalQuestions:'全{n}問',totalProgress:'{total}問中 {correct}問 せいかい',unitTally:'{correct}/{total}問 せいかい',
+  unitScoreLabel:'{total}問中 {correct}問 せいかい',correctQuestions:'正解 {n}問',reviewQuestions:'要復習 {n}問',generatedNote:'登録問題の進み具合。計算問題は自動生成でも出題します。',
   todayResource:'きょうの資材',dailyRandomShort:'ランダム',dailyNote:'{手|て}に{入|はい}る資材は教科ごとに毎日{変|か}わります（☆はランダムです）',dailyRandomHelp:'ランダム（4つの資材のどれかがもらえる）',facilities:'ほかの施設',gold:'ゴールド',goldHelp:'{冒険|ぼうけん}で{手|て}に{入|い}れたお{金|かね}。{武器屋|ぶきや}・{防具屋|ぼうぐや}で{使|つか}えます。',joinTitle:'{仲間|なかま}が、{力|ちから}を{貸|か}してくれる！',joinText:'{name}が{仲間|なかま}になった。{編成|へんせい}の{画面|がめん}で、パーティに{入|い}れよう。',
   labTitle:'{魔法研究所|まほうけんきゅうじょ}',labLocked:'{学習|がくしゅう}を{進|すす}めていると、いずれ{司書|ししょ}が{仲間|なかま}になります。{司書|ししょ}が{持|も}っていた{魔法|まほう}の{書物|しょもつ}を、ここで{開発|かいはつ}できるようになります。',
   labIntro:'{司書|ししょ}の{魔法|まほう}の{書物|しょもつ}を、ゴールドを{使|つか}って{開発|かいはつ}します。{開発|かいはつ}すると、{冒険|ぼうけん}の{魔法|まほう}が{強|つよ}くなります。',labDevelop:'{開発|かいはつ}する',labMax:'{開発|かいはつ}ずみ',labLevel:'レベル {lv} / {max}',labDone:'{開発|かいはつ}した！',

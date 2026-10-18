@@ -107,6 +107,15 @@
       FF.defs.DIFFICULTIES.some(function (d) { return FF.generators.supports(subject, grade, d.id); }));
     return out;
   }
+  // 単元ごとの、問題数と、正解した問題の数（いま正解になっている問題。書き問題の形は、元の問題とひとつに数える。判断479）
+  function unitProgress(bank, state, subject, grade) {
+    var results = state.learning.questionResults || {}, out = {};
+    questions(bank, subject, grade).forEach(function (q) {
+      var u = out[q.unit] = out[q.unit] || { total: 0, correct: 0 };
+      u.total++; if (results[baseId(q)] === true) u.correct++;
+    });
+    return out;
+  }
   // 単元ごとの問題数（書き問題の形は数えない）
   function unitCounts(bank, subject, grade) {
     var c = {};
@@ -117,7 +126,7 @@
     return questions(bank, subject, grade).filter(function (q) { return !!q.diagram; }).length;
   }
   FF.curriculum = {
-    pool: pool, pick: pick, genCombos: genCombos, numberOf: numberOf, totalOf: totalOf, scarcest: scarcest, progress: progress, unitCounts: unitCounts, diagramCount: diagramCount,
+    pool: pool, pick: pick, genCombos: genCombos, numberOf: numberOf, totalOf: totalOf, scarcest: scarcest, progress: progress, unitProgress: unitProgress, unitCounts: unitCounts, diagramCount: diagramCount,
     units: function (subject, grade) { return FF.units.list(subject, grade); },
     unit: function (subject, grade, id) { return FF.units.get(subject, grade, id); }
   };

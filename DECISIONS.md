@@ -2091,3 +2091,8 @@
 - 確認の画面（Artifact の確認ページ）では、そもそも外部への通信が遮断されるので、同期は使えない。本番のページ（GitHub Pages）で試す。
 - 手順：①ダッシュボードで Resume project ②`supabase/5_keepalive.sql` を SQL Editor で Run ③この変更を main に入れる ④Actions で supabase-keepalive を Run workflow（緑になれば成功）。
 - これでも止まるときは、Pro プラン（月額）にするのが確実（ダッシュボードの案内）。
+
+## 判断479：学習で、単元ごとの「正解した問題数／問題数」を見せる
+- 学習の意欲につなげるため、各単元で何問正解したかを出す。数え方は教科カードの「正解 N問」と同じ（`state.learning.questionResults` の最新の結果が正解のもの。`#input` は同じ問題として数える）。`FF.curriculum.unitProgress(bank,state,subject,grade)` が、単元ごとの `{total, correct}` を返す。
+- 出す場所：①広い画面の左の単元一覧（各行に「12/12」。全部正解の単元は「★」と緑。行の下に細い進みのバー。見出しに「578問中 57問 せいかい」）②問題のカード（単元名の横に「3/12問 せいかい」。スマホでも見える）③「条件」の画面の単元の選択（「単元名（3/12）」）。
+- 教科カードの数や、データの形（saveVersion）は変えていない。見た目は昼だけ。テスト：`tests/ui-unit-progress.cjs`。
