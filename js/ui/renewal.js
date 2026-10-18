@@ -138,7 +138,7 @@
    box.appendChild(E('p',{class:'hw-tip',text:R.hwTip}));
   }
   if(it.revealed||done){
-   box.appendChild(E('div',{class:'hw-model'},[E('span',{class:'eyebrow',text:R.hwModel}),E('strong',{class:'hw-answer'+(en?' en':''),text:q.answer}),E('p',{text:R.hwCompare})].concat(en&&FF.speech&&FF.speech.supported()&&FF.speech.enabled()?[speakButton(q.answer,R.speakAnswer,'small')]:[])));
+   box.appendChild(E('div',{class:'hw-model'},[E('span',{class:'eyebrow',text:R.hwModel}),E('strong',{class:'hw-answer'+(en?' en':''),text:q.answer}),q.answerAlso&&q.answerAlso.length?E('p',{class:'hw-also',text:R.hwAlso.replace('{also}',q.answerAlso.join('・'))}):null,E('p',{text:R.hwCompare})].concat(en&&FF.speech&&FF.speech.supported()&&FF.speech.enabled()?[speakButton(q.answer,R.speakAnswer,'small')]:[])));
    if(!done)box.appendChild(E('div',{class:'hw-actions hw-judge'},[
     button('○ '+R.hwOk,function(){selfCheck(true);},'rn-button primary hw-ok'),
     button('× '+R.hwNg,function(){selfCheck(false);},'rn-button hw-ng')
