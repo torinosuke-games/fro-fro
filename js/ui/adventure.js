@@ -59,7 +59,7 @@
   }
   function settings() {
     return E('div', { class: 'adv-settings' }, [
-      setting(T.learning + '（' + (FF.defs.GRADES.find(function (g) { return g.level === grade(); }) || {}).school + '）', FF.defs.SUBJECTS.map(function (s) { return { id: s.id, name: U.plain((s.nameByGrade || []).find(function (v) { return grade() >= v.from && grade() <= v.to; })?.name || s.name) }; }), p().subject, function (v) { var n = FF.util.clone(p()); n.subject = v; save(n); }),
+      text('p', 'adv-subjects-note', grade() > 1 ? T.allSubjects.replace('{grade}', grade()).replace('{below}', grade() - 1) : T.allSubjects1),
       setting(T.difficulty, [{ id: 'basic', name: '基礎' }, { id: 'standard', name: '標準' }, { id: 'advanced', name: '発展' }], p().difficulty, function (v) { var n = FF.util.clone(p()); n.difficulty = v; save(n); })
     ]);
   }
