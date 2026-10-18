@@ -25,13 +25,13 @@
   // {time} を、ふりがなの記法入りの残り時間に置き換える（変数で入れた文字には ふりがなが付かないため）
   function withTime(template, ms) { return template.replace('{time}', FF.util.formatDurationMarkup(ms)); }
   // 「Lv◯まで あと ◯分」。1秒ごとに updateTimers で書き換える
-  // 町の絵の下の「工事中」の札用の、みじかい残り時間（判断473）：1分未満＝◯秒／1時間未満＝◯分／1日未満＝時:分（3:40）／それ以上＝◯日◯時間
+  // 町の絵の下の「工事中」の札用の、みじかい残り時間（判断473）：1分未満＝◯秒／1時間未満＝◯分／1日未満＝◯時間◯分／それ以上＝◯日◯時間
   function chipTime(ms) {
     var sec = Math.max(0, Math.ceil(ms / 1000));
     if (sec < 60) return sec + '{秒|びょう}';
     var min = Math.ceil(sec / 60), h = Math.floor(min / 60), m = min % 60;
     if (h === 0) return m + '{分|' + FF.util.minuteReading(m) + '}';
-    if (h < 24) return h + ':' + (m < 10 ? '0' : '') + m;
+    if (h < 24) return h + '{時間|じかん}' + (m > 0 ? m + '{分|' + FF.util.minuteReading(m) + '}' : '');
     return Math.floor(h / 24) + '{日|にち}' + (h % 24) + '{時間|じかん}';
   }
   function remainingText(key, ms) { return key === 'constructChip' ? chipTime(ms) : null; }
