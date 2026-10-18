@@ -15,6 +15,8 @@ module.exports = ({ test, FF, assert, plain }) => {
 
   test('辞書の語は自動でふりがなの記法になる', () => {
     assert.strictEqual(U.autoRubyMarkup('中央炉を強化する'), '{中央炉|ちゅうおうろ}を{強化|きょうか}する');
+    assert.strictEqual(U.autoRubyMarkup('日本の特色'), '{日本|にほん}の{特色|とくしょく}');
+    assert.strictEqual(U.autoRubyMarkup('新聞の発行部数'), '新聞の{発行|はっこう}部{数|かず}');   // 判断481
   });
 
   test('長い語を優先する（「生存者住宅」は「生存者」＋「住宅」ではなく1語）', () => {
