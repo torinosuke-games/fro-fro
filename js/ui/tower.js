@@ -137,7 +137,7 @@
     cur.finished = true; bgmSync();
     snd(bt.result === 'win' ? 'win' : 'lose');
     var r = X.finish(a.state, bt, a.now());
-    cur.reward = r.reward;
+    cur.reward = r.reward; cur.gear = r.gear;
     var next = r.state;
     if (bt.mode === 'raid' && bt.result === 'win' && FF.quests) next = FF.quests.onRaidWin(next, a.now());   // 住民の依頼「防衛」（判断449）
     if (next !== a.state) a.commit(next);
@@ -293,6 +293,12 @@
       E('strong', { rich: TT.raid }), E('p', { class: 'tw-note', rich: TT.raidLead }),
       E('label', { class: 'tw-label' }, [E('span', { rich: TT.stage }), raidSel]), raidInfo
     ]);
+    var gearRows = Object.keys(bal().GEAR || {}).map(Number).sort(function (x, y) { return x - y; }).map(function (lv) {
+      var g = bal().GEAR[lv], def = gearName(g.kind, g.id), st = g.kind === 'armor' ? FF.balance.ARMORS[g.id] : FF.balance.WEAPONS[g.id], got = !!(s.tower && s.tower.gear && s.tower.gear[lv]);
+      var power = fill(g.kind === 'armor' ? TT.gearPowerA : TT.gearPowerW, { n: g.kind === 'armor' ? st.defense : st.damage - FF.shop.baseDamage() });
+      return E('div', { class: 'tw-gear-row' + (got ? ' is-got' : ''), attrs: { 'data-lv': String(lv) } }, [E('span', { rich: def.icon + ' ' + fill(TT.gearRow, { n: lv, name: def.name, power: power }) }), got ? E('b', { class: 'tw-gear-done', rich: TT.gearDone }) : null]);
+    });
+    var gearBox = E('div', { class: 'tw-gearbox' }, [E('strong', { rich: TT.gearTitle })].concat(gearRows));
     var pop = FF.buildings.population(s), pm = X.popMult(s);
     var cheerIds = X.cheers(s);
     var cheer = E('div', { class: 'tw-cheerbox' }, [E('strong', { rich: TT.cheerTitle })].concat(cheerIds.length ?
@@ -305,6 +311,7 @@
       X.power(s).steps > 0 ? E('p', { class: 'tw-pop tw-power', rich: fill(TT.powerLine, { lv: s.buildings.furnace.level, core: X.power(s).core, trickle: Math.round((X.power(s).trickle - 1) * 100), hp: Math.round((X.power(s).hp - 1) * 100) }) }) : null,
       E('p', { class: 'tw-pop', rich: fill(TT.popLine, { n: pop.total, m: (Math.round(pm * 100) / 100).toFixed(2).replace(/0$/, '') }) }),
       cheer,
+      gearBox,
       E('h2', { class: 'tw-h2', rich: TT.howTitle }),
       E('ul', { class: 'tw-how' }, TT.how.map(function (t) { return E('li', { rich: t }); })),
       E('div', { class: 'tw-pick' }, [E('strong', { rich: TT.practice }), E('label', { class: 'tw-label' }, [E('span', { rich: TT.difficulty }), sel]), E('label', { class: 'tw-label' }, [E('span', { rich: TT.lanes }), lanesSel])]),
@@ -454,6 +461,12 @@
     }
     box.appendChild(E('span', { class: 'tw-hint', rich: cur.sel && cur.sel.kind === 'card' ? TT.selectedHint : TT.pick }));
   }
+  function gearName(kind, id) { return (kind === 'armor' ? FF.defs.ARMORS : FF.defs.WEAPONS).filter(function (x) { return x.id === id; })[0]; }
+  function gearBlock() {
+    if (!cur.gear) return null;
+    var g = gearName(cur.gear.kind, cur.gear.id);
+    return E('div', { class: 'tw-gain tw-gear-got' }, [E('strong', { rich: TT.gearGot }), E('b', { rich: g.icon + ' ' + g.name })]);
+  }
   function rewardBlock(bt) {
     if (cur.reward) return E('div', { class: 'tw-gain' }, [E('strong', { rich: TT.rewardGot }), E('b', { text: rewardText(cur.reward) }), cur.reward.first ? E('span', { class: 'tw-note', rich: TT.firstClear }) : null]);
     return E('p', { class: 'tw-result', rich: bt.mode === 'raid' ? TT.rewardNone : TT.rewardPractice });
@@ -468,6 +481,7 @@
         E('h2', { rich: r.title }), E('p', { rich: r.text }),
         E('p', { class: 'tw-result', rich: fill(TT.result, { wave: Math.max(1, bt.wave), waves: bal().WAVES.length, kills: bt.kills }) }),
         bt.result === 'win' ? rewardBlock(bt) : null,
+        bt.result === 'win' ? gearBlock() : null,
         E('div', { class: 'tw-actions' }, [
           button(TT.again, 'primary', function () { begin(bt.difficulty, bt.mode === 'raid' && X.raidsLeft(FF.app.state, FF.app.now()) > 0 ? 'raid' : 'practice', bt.lanes); U.rerender(); }, { 'data-act': 'again' }),
           button(TT.back, '', function () { cur = null; U.show('base'); }, { 'data-act': 'leave' })])

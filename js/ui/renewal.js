@@ -318,7 +318,7 @@
   if(closeShop){closeShop();closeShop=null;}
   var s=a.state;
   var again=function(){openGearShop(kind,'bought');};
-  var list=E('div',{class:'shop-list'},(armor?FF.defs.ARMORS:FF.defs.WEAPONS).map(function(w){
+  var list=E('div',{class:'shop-list'},(armor?FF.defs.ARMORS:FF.defs.WEAPONS).filter(function(w){return !(armor?SH.astats(w.id):SH.stats(w.id)).special;}).map(function(w){
    var st=armor?SH.astats(w.id):SH.stats(w.id),n=SH.copies(s,k,w.id),owned=n>0,can=SH.canBuyItem(s,k,w.id).ok,hs=SH.holders(s,k,w.id),h=hs[0];
    var memberName=function(id){return id==='hero'?a.state.player.name:FF.texts.adventure.members[id].name;};
    var buy=E('button',{class:'rn-button primary shop-btn shop-buy',attrs:{type:'button',disabled:can?null:'true'},rich:R.shopBuy,on:{click:function(){var r=SH.buyItem(a.state,k,w.id);if(r.ok){a.commit(r.state);U.toast(R.shopBought);again();}}}});

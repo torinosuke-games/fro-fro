@@ -297,13 +297,13 @@
   }
 
   // ---- 記録（state.tower）と報酬 ----
-  function createState() { return { version: 1, day: null, rewards: 0, cleared: {}, wins: 0, best: {} }; }
+  function createState() { return { version: 1, day: null, rewards: 0, cleared: {}, wins: 0, best: {}, gear: {} }; }   // gear：特別な装備をもらった難しさ（判断465）
   function normalize(state, b) {
     var s = clone(state), r = s.tower;
     if (!r || typeof r !== 'object') { s.tower = createState(); return s; }
-    var cl = {}, best = {};
-    for (var d = 1; d <= T(b).MAX_LEVEL; d++) { if (r.cleared && r.cleared[d]) cl[d] = true; var v = r.best && r.best[d]; if (typeof v === 'number') best[d] = int(v, 0, T(b).WAVES.length); }
-    s.tower = { version: 1, day: typeof r.day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.day) ? r.day : null, rewards: int(r.rewards, 0, T(b).RAIDS_PER_DAY), cleared: cl, wins: int(r.wins, 0, 1e7), best: best };
+    var cl = {}, best = {}, gear = {};
+    for (var d = 1; d <= T(b).MAX_LEVEL; d++) { if (r.cleared && r.cleared[d]) cl[d] = true; var v = r.best && r.best[d]; if (typeof v === 'number') best[d] = int(v, 0, T(b).WAVES.length); if (r.gear && r.gear[d] && T(b).GEAR && T(b).GEAR[d]) gear[d] = true; }
+    s.tower = { version: 1, day: typeof r.day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.day) ? r.day : null, rewards: int(r.rewards, 0, T(b).RAIDS_PER_DAY), cleared: cl, wins: int(r.wins, 0, 1e7), best: best, gear: gear };
     return s;
   }
   // 日がかわったら、今日の報酬の回数を 0 に戻す（変わらなければ、同じ state を返す）
@@ -322,16 +322,22 @@
   // 練習・襲撃で、はじめに選ばれている難しさ（いちばん先）
   function raidDifficulty(state, b) { return unlockedMax(state, b); }
   function practiceMax(state, b) { return unlockedMax(state, b); }
+  // 回復薬：難しさ POTION_FROM_LEVEL から1個。POTION_BONUS の難しさから、1個ずつ増える（判断465）
+  function potionsFor(d, R) {
+    if (d < R.POTION_FROM_LEVEL) return 0;
+    var n = 1; Object.keys(R.POTION_BONUS || {}).forEach(function (k) { if (d >= +k) n += R.POTION_BONUS[k]; });
+    return n;
+  }
   function rewardFor(state, d, now, b) {
     var R = T(b).REWARD, first = !(state.tower && state.tower.cleared && state.tower.cleared[d]);
     var ids = FF.defs.RESOURCES.map(function (x) { return x.id; }), rand2 = FF.daily.rng(FF.daily.seedOf('tower:' + FF.daily.dayKey(now) + ':' + d)), pool = ids.slice(), res = {};
     for (var k = 0; k < R.RES_KINDS && pool.length; k++) res[pool.splice(Math.floor(rand2() * pool.length), 1)[0]] = d * R.RES_PER_LEVEL;
-    return { gold: d * R.GOLD_PER_LEVEL * (first ? R.FIRST_CLEAR : 1), res: res, potions: d >= R.POTION_FROM_LEVEL ? 1 : 0, first: first };
+    return { gold: d * R.GOLD_PER_LEVEL * (first ? R.FIRST_CLEAR : 1), res: res, potions: potionsFor(d, R), first: first };
   }
   // 戦いが終わったら、記録して、報酬を渡す。返すもの：{ state, reward（もらえたときだけ。なければ null） }
   function finish(state, bt, now, b) {
-    var s = today(state, now), d = bt.difficulty, reward = null;
-    if (bt.result !== 'win' && bt.result !== 'lose') return { state: state, reward: null };
+    var s = today(state, now), d = bt.difficulty, reward = null, gear = null;
+    if (bt.result !== 'win' && bt.result !== 'lose') return { state: state, reward: null, gear: null };
     s = clone(s);
     var tw = s.tower;
     tw.best[d] = Math.max(tw.best[d] || 0, bt.result === 'win' ? T(b).WAVES.length : Math.max(0, bt.wave - 1));
@@ -344,8 +350,14 @@
         s.tower.rewards = (s.tower.rewards || 0) + 1;
       }
       s.tower.cleared[d] = true; s.tower.wins = (s.tower.wins || 0) + 1;
+      var g = T(b).GEAR && T(b).GEAR[d];   // 特別な装備：その難しさに、はじめて勝つと、1つ（襲撃でも練習でも）
+      if (g && !(s.tower.gear && s.tower.gear[d])) {
+        var gr = FF.shop.grantItem(s, g.kind, g.id, b);
+        if (gr.ok) { s = gr.state; gear = { kind: g.kind, id: g.id, level: d }; }
+        s.tower.gear = Object.assign({}, s.tower.gear, {}); s.tower.gear[d] = true;
+      }
     }
-    return { state: s, reward: reward };
+    return { state: s, reward: reward, gear: gear };
   }
 
   FF.tower = { lanesOf: lanesOf, popMult: popMult, power: power, cheers: cheers, roster: roster, unitStats: unitStats, create: create, cost: cost, canPlace: canPlace, place: place, remove: remove, unitAt: unitAt, canQuiz: canQuiz, answer: answer,
