@@ -2091,3 +2091,6 @@
 - 確認の画面（Artifact の確認ページ）では、そもそも外部への通信が遮断されるので、同期は使えない。本番のページ（GitHub Pages）で試す。
 - 手順：①ダッシュボードで Resume project ②`supabase/5_keepalive.sql` を SQL Editor で Run ③この変更を main に入れる ④Actions で supabase-keepalive を Run workflow（緑になれば成功）。
 - これでも止まるときは、Pro プラン（月額）にするのが確実（ダッシュボードの案内）。
+
+## 判断480：青い背景のボタンのふりがなを白くする
+- 青い背景の主ボタン（`.rn-button.primary`。例：防衛戦の「襲撃にそなえる」）では、ふりがなが背景の青と同じような色（`--rt`）になって読めなかった。町の名前の札（`.town-name`。町の「建物の一覧」を開く）も同じ。この中のふりがなだけ、白（92%）にした（`css/renewal.css`）。
