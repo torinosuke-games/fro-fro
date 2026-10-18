@@ -413,11 +413,12 @@
   originalBase(main);
   var cta=main.querySelector('.base-cta');if(cta)cta.remove();
   // スマホでは、上の見出しと説明を出さず、「学習する」を、風景（フィールドマップ）の下に置く（判断315。PC では、上のボタンだけを出す）
-  var scene=main.querySelector('.scene');
-  if(scene&&scene.parentNode)scene.parentNode.insertBefore(button(R.start+' →',function(){U.show('study',{tab:'learn'});},'rn-button primary home-start-mobile'),scene.nextSibling);
+  var scene=main.querySelector('.scene'),anchor=main.querySelector('.construction-list')||scene;   // 工事中の一覧（判断473）があれば、その下に「学習する」を置く
+  var startBtn=button(R.start+' →',function(){U.show('study',{tab:'learn'});},'rn-button primary home-start-mobile');
+  if(anchor&&anchor.parentNode)anchor.parentNode.insertBefore(startBtn,anchor.nextSibling);
   // 学習するボタンの下に、ほかの施設のアイコン（スマホでは横4つ。判断324）。仲間紹介所とチケット引換所が使える
   var facilities=facilityGrid();
-  if(scene&&scene.parentNode)scene.parentNode.insertBefore(facilities,(scene.nextSibling&&scene.nextSibling.nextSibling)||null);
+  if(anchor&&anchor.parentNode)anchor.parentNode.insertBefore(facilities,startBtn.nextSibling||null);
   // 「学んで、熱を生む」などの3つの手順の表示は、なくした（判断338）
   if(U.adventureEntry)main.insertBefore(U.adventureEntry(),facilities);
  };
