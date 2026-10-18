@@ -343,10 +343,7 @@
         U.el('span', { class: 'nm' }, [
           U.rich(name), level ? U.el('span', { class: 'lv', text: ' Lv' + level }) : null, locked ? ' 🔒' : null,
           building ? U.el('span', { class: 'mark', text: ' 🔨' }) : ready ? U.el('span', { class: 'mark up', text: ' ▲' }) : null
-        ]),
-        building ? U.el('span', { class: 'map-construction' }, [
-          U.R('span', 'construction-label', U.T('constructing')), remainingView(id, s, FF.app.now())
-        ]) : null
+        ])   // 工事の残り時間は、絵の中ではなく、絵の下の「工事中」の一覧に出す（判断473）
       ]);
       // 名札と、その右上に小さく重ねる収穫のアイコン（生産施設だけ。判断196・197）
       labels.push(U.el('span', { class: 'art-tag', style: { left: p.x + '%', top: p.y + '%' } }, [lab, ART_BUBBLES[id] ? bubbleView(id) : null]));
@@ -416,6 +413,22 @@
     }
   }
 
+  // 絵の下の「工事中」の一覧（判断473）：工事中の建物だけ、終わる順に。押すと、その建物の画面が開く。残り時間は、1秒ごとに updateTimers が書き換える
+  function constructionList(s, now) {
+    var rows = ORDER.filter(function (id) { return s.buildings[id] && B.constructionOf(s, id); }).sort(function (a, b) {
+      return B.constructionOf(s, a).endsAt - B.constructionOf(s, b).endsAt;
+    });
+    if (!rows.length) return null;
+    return U.el('div', { class: 'panel construction-list', attrs: { role: 'list' } }, [
+      U.el('div', { class: 'cl-title' }, ['🔨 ', U.rich(U.T('constructing'))])
+    ].concat(rows.map(function (id) {
+      return U.el('button', { class: 'cl-row', attrs: { type: 'button', role: 'listitem', 'data-id': id }, on: { click: function () { openBuilding(id); } } }, [
+        U.el('span', { class: 'cl-name' }, [U.rich(U.buildingName(id)), U.el('span', { class: 'lv', text: ' Lv' + s.buildings[id].level })]),
+        remainingView(id, s, now)
+      ]);
+    })));
+  }
+
   function render(main) {
     var app = FF.app, s = app.state, now = app.now();
 
@@ -442,6 +455,8 @@
       on: { click: openTown }
     }, [U.rich(FF.texts.renewal.townName), U.el('span', { class: 'town-caret', text: '▾' }), anyReady ? U.el('span', { class: 'town-ready', text: '▲', attrs: { title: FF.util.plainText(U.T('upgrade')) } }) : null]));
     main.appendChild(sceneBox);
+    var building = constructionList(s, now);
+    if (U.artOn() && building) main.appendChild(building);
 
     // 絵の見た目では「生産物」の行を出さず、絵の上の吹き出しとかごで受け取る（判断196）
     if (U.artOn()) { collectBar = null; updateBubbles(); }
