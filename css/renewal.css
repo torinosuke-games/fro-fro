@@ -584,3 +584,4 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .qt-trust-info{display:grid;gap:4px;min-width:0}
 .qt-trust-meta{font-size:.75rem;color:#6b5a3a}
 .qt-portrait.is-emoji{display:flex;align-items:center;justify-content:center;font-size:2.25rem;border-radius:50%;border:2px solid #efa64b;background:#fff3e0;flex:none}
+.hw-also{margin:4px 0 0;font-size:.875rem;color:var(--rn-navy);font-weight:700}

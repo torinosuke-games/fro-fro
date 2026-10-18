@@ -2091,3 +2091,10 @@
 - 確認の画面（Artifact の確認ページ）では、そもそも外部への通信が遮断されるので、同期は使えない。本番のページ（GitHub Pages）で試す。
 - 手順：①ダッシュボードで Resume project ②`supabase/5_keepalive.sql` を SQL Editor で Run ③この変更を main に入れる ④Actions で supabase-keepalive を Run workflow（緑になれば成功）。
 - これでも止まるときは、Pro プラン（月額）にするのが確実（ダッシュボードの案内）。
+
+## 判断478：手書きの「お手本」にも、ほかの正解を出す
+
+- 実機（手書きの欄）の指摘：`english_g9_relative_004` の手書きのお手本が「that」だけで、who・whom も正解だと分からない（判断467で、答えの表示には `answerAlso` を出すようにしたが、手書きの「お手本」の欄は、別の表示で、対象になっていなかった）。
+- 手書きの欄で、お手本（`q.answer`）の下に、`answerAlso` があれば、「ほかに、who・whom も せいかい です。」と出す（`js/ui/renewal.js` の `handwriteView`・`hwAlso`）。自分で「書けた」を選ぶ形なので、who・whom と書いた人は、「書けた」を選べばよい。
+- ほかに、答えを出す場所（学習・昇格試験・探索・戦闘の「正しい答え」）は、判断467で対応ずみ。
+- テスト：`tests/ui-handwriting-also.cjs`。
