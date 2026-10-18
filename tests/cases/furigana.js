@@ -28,6 +28,14 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(U.needsRuby('日本', 5), false);
   });
 
+  test('文脈で読みを直した文字列は、表の読みを使う（判断484）', () => {
+    const ctx = FF.FURIGANA_CONTEXT, keys = Object.keys(ctx);
+    assert.ok(keys.length > 100);
+    const hit = keys.find(k => /体の温度/.test(k));
+    assert.ok(hit && ctx[hit].includes('{体|からだ}'), '体の温度');
+    assert.strictEqual(U.autoRubyMarkup(hit), ctx[hit]);
+  });
+
   test('辞書の語は自動でふりがなの記法になる', () => {
     assert.strictEqual(U.autoRubyMarkup('中央炉を強化する'), '{中央炉|ちゅうおうろ}を{強化|きょうか}する');
     assert.strictEqual(U.autoRubyMarkup('日本の特色'), '{日本|にほん}の{特色|とくしょく}');

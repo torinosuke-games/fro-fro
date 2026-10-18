@@ -71,6 +71,8 @@
     return byFirst;
   }
   function autoRubyMarkup(template, dict) {
+    // 文脈で読みを直した文字列の表（判断484）。辞書を指定したとき（テスト）は使わない
+    if (!dict && FF.FURIGANA_CONTEXT && Object.prototype.hasOwnProperty.call(FF.FURIGANA_CONTEXT, template)) return FF.FURIGANA_CONTEXT[template];
     dict = dict || FF.FURIGANA || {};
     var byFirst = indexDict(dict);
     return String(template).split(/(\{[^{}]*\})/).map(function (seg, idx) {
