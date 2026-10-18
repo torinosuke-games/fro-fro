@@ -48,7 +48,7 @@ fs.mkdirSync(out,{recursive:true});
   const requested=[19].flatMap(n=>[...fs.readFileSync(path.join(root,'DIAGRAM_REQUESTS_'+n+'.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'social_g5_hand_'+m[1]));
   const inputIds=await page.evaluate(ids=>ids.filter(id=>FF.app.bank.byId[id+'#input']).map(id=>id+'#input'),requested);
   const forms=requested.concat(inputIds);const qs=await page.evaluate(ids=>ids.map(id=>({id,kind:FF.app.bank.byId[id].diagram.kind})),forms);
-  assert.equal(requested.length,48);const checks=[],screenshots=[],negativeChecks=[];
+  assert.equal(requested.length,46);const checks=[],screenshots=[],negativeChecks=[];
   for(const q of qs){
    for(const width of [360,390,768,1024]){
     await page.setViewportSize({width,height:1000});await page.evaluate(id=>qaShowQuestion(id),q.id);await settled();

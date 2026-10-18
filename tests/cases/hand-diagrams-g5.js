@@ -1,4 +1,4 @@
-// 小5・第3〜5弾：118問。問題データの不変性と共通図の入力を保護する。
+// 小5・第3〜5弾：117問（判断466で fracrel_001 の図を外した）。問題データの不変性と共通図の入力を保護する。
 module.exports=({test,FF,ctx,assert,plain})=>{
  const fs=require('fs'),path=require('path'),crypto=require('crypto');
  const waves=[3,4,5].map(n=>[...fs.readFileSync(path.join(__dirname,'../../DIAGRAM_REQUESTS_'+n+'.md'),'utf8').matchAll(/\| (\w+_\d+) \|/g)].map(m=>'math_g5_hand_'+m[1]));
@@ -33,11 +33,11 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   else assert.fail(d.kind);
  }
  test('小5の図：470問の図以外と対象外352問は元データから不変',()=>{
-  assert.equal(all.length,470);assert.equal(hash(all.map(q=>{const v=plain(q);if(ids.includes(q.id))delete v.diagram;return v;})),'8fe0794c1dd369cb94e27090f94c94c5431f48df68d04c981d5887a3d91fc99e');
-  assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'f00cec927660127f94500c0ad3ebbd633be92376eced1077a0baf6a90419a198');
+  assert.equal(all.length,470);assert.equal(hash(all.map(q=>{const v=plain(q);if(ids.includes(q.id))delete v.diagram;return v;})),'f82b19dce3e1beabdd6b0e3dda06565b9708a0c6376a6a40d23808f1162bad56');
+  assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'a3db12502b250759b6ad6e6eb70e5fcf7d8924b63f351c4f52fb9ad139f6b387');
  });
- test('小5の図：44＋25＋49＝118問の網羅と書き問題の継承',()=>{
-  assert.deepEqual(waves.map(a=>a.length),[44,25,49]);assert.equal(new Set(ids).size,118);assert.equal(qs.length,118);const bank=FF.learning.createBank(ctx.QUESTION_BANK);
+ test('小5の図：44＋25＋48＝117問の網羅と書き問題の継承',()=>{
+  assert.deepEqual(waves.map(a=>a.length),[44,25,48]);assert.equal(new Set(ids).size,117);assert.equal(qs.length,117);const bank=FF.learning.createBank(ctx.QUESTION_BANK);
   for(const q of qs){assert.equal(q.reviewed,false);assert.deepEqual(plain(FF.learning.validateQuestion(q)),[]);range(q.diagram);if(q.inputForm)assert.deepEqual(plain(bank.byId[q.id+'#input'].diagram),plain(q.diagram));}
  });
  test('小5の図：不正な座標・添字・寸法・割合・分母を検出する',()=>{

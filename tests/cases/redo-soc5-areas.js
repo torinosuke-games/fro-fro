@@ -7,8 +7,8 @@ module.exports=({test,ctx,FF,assert,plain})=>{
  const hash=a=>crypto.createHash('sha256').update(JSON.stringify(a)).digest('hex');
  const inArea=(p,d)=>d.areas.some(r=>inside(p,r));
  test('社会の範囲修正：9問のdiagram以外と対象外351問は不変',()=>{
-  assert.equal(all.length,360);assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'98446cf2c5a2df6c9ef3dcc5bc441b75a6940b2400e4b67435b85b64f28e740a');
-  assert.equal(hash(all.map(q=>{const v={...q};delete v.diagram;return v;})),'5b2a31ef42e27265d110cd1b81ee27e1ba480c0f8de146ca087d9718b8bce661');
+  assert.equal(all.length,360);assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'e47d95dcee84af6ae13e6f2b4dd85b6def147224dbd36c67c220e6ff57b27b0b');
+  assert.equal(hash(all.map(q=>{const v={...q};delete v.diagram;return v;})),'b3dc7f1395616a783e49c409e3e3a0a78415eb17a37956ba68e7d6296cae8852');
   assert.equal(all.filter(q=>q.diagram?.kind==='image').length,110);
  });
  test('社会の範囲修正：県の形はNatural Earthの指定23県だけ',()=>{
