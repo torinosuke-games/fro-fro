@@ -202,6 +202,8 @@ body[data-screen="base"] .head-with-avatar .greeting{position:relative;flex:1;ma
 .cl-name{font-weight:800}
 .cl-row .ct-left{font-variant-numeric:tabular-nums}
 .cl-row rt{font-size:.5em}
+.cl-row .t-long{display:none}
+@media(min-width:600px){.cl-row .t-short{display:none}.cl-row .t-long{display:inline}.cl-row{font-size:.9375rem;padding:3px 12px}.cl-title{font-size:1rem}}
 .map-construction rt{font-size:.5em}
 @media(max-width:760px){.quiz-resource-button{margin-left:auto;min-height:36px;padding:3px 5px}.quiz-resource-button .ico{width:25px;height:25px}.lesson-heading .filter-open{margin-left:0}}
 
