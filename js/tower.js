@@ -54,7 +54,7 @@
 
   // ---- 戦いを作る ----
   // 難しさ d のときの、増え方の倍率（難しさ1が 1）。5まで：1つにつき key の割合。6以降：TAIL の割合
-  function grow(key, d, b) { var L = T(b).LEVEL; return 1 + L[key] * (Math.min(d, 5) - 1) + L.TAIL[key] * Math.max(0, d - 5); }
+  function grow(key, d, b) { var L = T(b).LEVEL; return 1 + L[key] * (Math.min(d, 5) - 1) + L.TAIL[key] * (Math.min(d, 10) - 5 > 0 ? Math.min(d, 10) - 5 : 0) + (L.TAIL2 ? L.TAIL2[key] * Math.max(0, d - 10) : 0); }
 
   function waveList(d, b, lanes) {
     var t = T(b), L = t.LEVEL, list = [], lf = (lanes || t.LANES) / t.LANES;   // レーンがふえると、魔物の数も、レーンの数に合わせてふえる

@@ -89,7 +89,7 @@
     HANDWRITING: { REWARD_RATE: 0.5 },   // 手書きの自己採点で「書けた」を選んだときの、資源・勉強量ポイントの割合（判断266）
     // 夜の防衛戦（タワーディフェンス。判断442・443。SPEC_tower.md）
     TOWER: {
-      TICK: 1 / 30, LANES: 5, MAX_LEVEL: 10, LANES_CHOICES: [5, 6, 7], LANES_BY_LEVEL: [5, 5, 5, 6, 6, 6, 6, 7, 7, 7], COLS: 9, PLACE_FROM: 1, PLACE_TO: 5,   // 戦場は 5レーン×9マス。左端の列（0）＝中央炉。仲間を置けるのは、1〜5 列目（左から2〜6列目）
+      TICK: 1 / 30, LANES: 5, MAX_LEVEL: 20, LANES_CHOICES: [5, 6, 7], LANES_BY_LEVEL: [5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7], COLS: 9, PLACE_FROM: 1, PLACE_TO: 5,   // 戦場は 5レーン×9マス。左端の列（0）＝中央炉。仲間を置けるのは、1〜5 列目（左から2〜6列目）
       CORE_HP: 100, CORE_X: 0.4,                 // 魔物の中心が、この位置より左へ行くと、中央炉にたどりつく
       // POP_BONUS：町の人口が、はじめ（10人）より1人ふえるごとに、灯が自然にふえる速さ（TRICKLE）が、ふえる割合。POP_MAX：その倍率の上限（判断457）
       LIGHT: { START: 90, TRICKLE: 1.0, PER_CORRECT: { basic: 5, standard: 6, advanced: 8 }, CORRECT_LOCK: 2, WRONG_LOCK: 5, REFUND: 0.5, COST_STEP: 9, MAX: 999, POP_BONUS: 0.01, POP_MAX: 1.6 },   // 灯
@@ -121,7 +121,7 @@
         dragon: { hp: 600, atk: 30, interval: 1.6, speed: 0.15, core: 80, breath: { cd: 10, range: 9, dmg: 0.6 } }
       },
       // 難しさ（1〜5）ごとの増え方（難しさ1が基準）
-      LEVEL: { HP: 0.15, ATK: 0.08, SPEED: 0.05, COUNT: 0.2, BOSS_EVERY: 3, TAIL: { HP: 0.08, ATK: 0.04, SPEED: 0.02, COUNT: 0.06 } },   // TAIL：難しさ6〜10 の、1つにつきの増え方（5までより、ゆるやか。判断461）
+      LEVEL: { HP: 0.15, ATK: 0.08, SPEED: 0.05, COUNT: 0.2, BOSS_EVERY: 3, TAIL: { HP: 0.08, ATK: 0.04, SPEED: 0.02, COUNT: 0.06 }, TAIL2: { HP: 0.25, ATK: 0.12, SPEED: 0.02, COUNT: 0.12 } },   // TAIL2：難しさ11〜20 の、1つにつきの増え方（やり込み用。判断463）   // TAIL：難しさ6〜10 の、1つにつきの増え方（5までより、ゆるやか。判断461）
       // 難しさ（ステージ）は10段階。前の難しさに勝つと、次が解放される（中央炉のレベルとは、つながらない）。   // COUNT：数が増える割合（難しさ1つにつき +20%）。BOSS_EVERY：ボスが1体増える難しさの間隔
       WAVES: [{ cub: 4 }, { cub: 5, wolf: 1 }, { cub: 5, wolf: 3 }, { cub: 5, wolf: 5 }, { cub: 3, wolf: 3, boss: 1 }],
       // 新しい魔物の、波ごとの数（難しさが FROM 以上のときだけ出る。数は、難しさで増える。判断455）

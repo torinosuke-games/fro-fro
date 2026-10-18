@@ -1,4 +1,4 @@
-// 夜の防衛戦：10段階の難しさ（判断461）。勝って解放。襲撃も練習も、解放ずみの難しさから選ぶ。どの難しさでも、報酬が数えられる
+// 夜の防衛戦：20段階の難しさ（判断461）。勝って解放。襲撃も練習も、解放ずみの難しさから選ぶ。どの難しさでも、報酬が数えられる
 const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');
 const assert=require('node:assert/strict'),path=require('node:path'),{pathToFileURL}=require('node:url');
 (async()=>{
@@ -29,10 +29,10 @@ const assert=require('node:assert/strict'),path=require('node:path'),{pathToFile
  assert.deepEqual(await p.evaluate(()=>{const bt=FF.ui.towerBattle();return [bt.difficulty,bt.lanes]}),[4,6]);
  await p.evaluate(()=>{const bt=FF.ui.towerBattle();bt.schedule.forEach(s=>{s.done=true});bt.enemies.length=0;bt.schedule.push({at:1e6,wave:5,type:'cub',lane:0,done:true})});await p.waitForTimeout(800);
  assert.equal(await p.evaluate(()=>FF.tower.unlockedMax(FF.app.state)),5);assert.equal(await p.evaluate(()=>FF.app.state.tower.rewards),2);
- // 全部解放：10まで。道の数は、7本
- await p.locator('[data-act="leave"]').click();await open(10);await p.waitForTimeout(300);
- assert.equal(await opts('[data-act="raid-stage"]'),'1,2,3,4,5,6,7,8,9,10');assert.ok((await p.locator('.tw-raid').innerText()).includes('全部の難しさに、挑める'));
- await p.locator('[data-act="raid-stage"]').selectOption('10');assert.ok((await p.locator('.tw-raid-meta').innerText()).includes('7本'));
+ // 全部解放：20まで。道の数は、7本
+ await p.locator('[data-act="leave"]').click();await open(20);await p.waitForTimeout(300);
+ assert.equal(await opts('[data-act="raid-stage"]'),[...Array(20)].map((_,i)=>i+1).join());assert.ok((await p.locator('.tw-raid').innerText()).includes('全部の難しさに、挑める'));
+ await p.locator('[data-act="raid-stage"]').selectOption('20');assert.ok((await p.locator('.tw-raid-meta').innerText()).includes('7本'));
  await p.screenshot({path:'/tmp/stages2.png'});
- assert.deepEqual(errors,[]);await b.close();console.log('PASS: tower stages — unlock by clearing, 10 levels, raid/practice select, rewards at any level');
+ assert.deepEqual(errors,[]);await b.close();console.log('PASS: tower stages — unlock by clearing, 20 levels, raid/practice select, rewards at any level');
 })().catch(e=>{console.error(e);process.exit(1)});
