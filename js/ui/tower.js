@@ -302,6 +302,7 @@
       E('h1', { class: 'tw-h1', rich: TT.title }),
       E('p', { class: 'tw-lead', rich: TT.lead }),
       raid,
+      X.power(s).steps > 0 ? E('p', { class: 'tw-pop tw-power', rich: fill(TT.powerLine, { lv: s.buildings.furnace.level, core: X.power(s).core, trickle: Math.round((X.power(s).trickle - 1) * 100), hp: Math.round((X.power(s).hp - 1) * 100) }) }) : null,
       E('p', { class: 'tw-pop', rich: fill(TT.popLine, { n: pop.total, m: (Math.round(pm * 100) / 100).toFixed(2).replace(/0$/, '') }) }),
       cheer,
       E('h2', { class: 'tw-h2', rich: TT.howTitle }),

@@ -219,6 +219,16 @@ module.exports = ({ test, FF, ctx, assert, plain }) => {
     let s = fresh(true); s.tower.cleared = {}; for (let d = 1; d <= 19; d++) s.tower.cleared[d] = true;
     const r = won(s, 20, 'raid'); assert.ok(r.reward && r.reward.gold === 20 * B.REWARD.GOLD_PER_LEVEL * B.REWARD.FIRST_CLEAR);
   });
+  test('町の力（判断464）：中央炉が Lv6 以上で、熱の最大・灯の速さ・仲間の HP が増える。Lv5 までは増えない', () => {
+    const at = (lv) => { const st = fresh(true); st.buildings.furnace.level = lv; return st; };
+    assert.deepStrictEqual(plain(Tw.power(at(5))), { steps: 0, core: 0, trickle: 1, hp: 1 });
+    const p10 = Tw.power(at(10)), P = B.POWER;
+    assert.strictEqual(p10.steps, 5); assert.strictEqual(p10.core, 5 * P.CORE);
+    assert.ok(Math.abs(p10.trickle - (1 + 5 * P.TRICKLE)) < 1e-9 && Math.abs(p10.hp - (1 + 5 * P.HP)) < 1e-9);
+    const b5 = Tw.create(at(5), { difficulty: 1, seed: 1 }), b10 = Tw.create(at(10), { difficulty: 1, seed: 1 });
+    assert.strictEqual(b10.core.max, b5.core.max + p10.core); assert.strictEqual(b10.core.hp, b10.core.max);
+    assert.ok(b10.trickle > b5.trickle * 1.5); assert.ok(b10.defs.kenshi.hp > b5.defs.kenshi.hp * 1.4);
+  });
   test('防衛戦のセーブ：保存して読み込んでも同じ。形のおかしい記録は直す', () => {
     let s = won(fresh(true), 3, 'raid').state;
     const text = FF.state.serialize(s), back = FF.state.migrate(JSON.parse(text), T0);

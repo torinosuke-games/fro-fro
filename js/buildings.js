@@ -143,6 +143,8 @@
 
   // ---- 強化 ----
 
+  // 建物ごとの最大レベル（中央炉だけ FURNACE_MAX_LEVEL。判断464）
+  function maxLevelOf(buildingId, b) { b = bal(b); return buildingId === 'furnace' ? (b.FURNACE_MAX_LEVEL || b.MAX_LEVEL) : b.MAX_LEVEL; }
   // { ok, reason: 'unknown' | 'locked' | 'building' | 'maxLevel' | 'furnaceCap' | 'resources', cost, missing }
   function canUpgrade(state, buildingId, b) {
     b = bal(b);
@@ -150,7 +152,7 @@
     if (!bld || !defOf(buildingId)) return { ok: false, reason: 'unknown' };
     if (!isUnlocked(state, buildingId, b) || bld.level === 0) return { ok: false, reason: 'locked', unlockAt: unlockLevel(buildingId, b) };
     if (bld.construction) return { ok: false, reason: 'building' };
-    if (bld.level >= b.MAX_LEVEL) return { ok: false, reason: 'maxLevel' };
+    if (bld.level >= maxLevelOf(buildingId, b)) return { ok: false, reason: 'maxLevel' };
     // 中央炉以外は、中央炉のレベルを超えて強化できない
     // 中央炉が工事中なら、その完成を待つように知らせる（SPEC_v0.3 3章）
     if (buildingId !== 'furnace' && bld.level >= state.buildings.furnace.level) {
@@ -278,12 +280,12 @@
     b = bal(b);
     var s = FF.util.clone(state);
     var f = s.buildings.furnace;
-    f.level = Math.max(1, Math.min(b.MAX_LEVEL, Math.floor(f.level) || 1));
+    f.level = Math.max(1, Math.min(b.FURNACE_MAX_LEVEL || b.MAX_LEVEL, Math.floor(f.level) || 1));
     FF.defs.BUILDINGS.forEach(function (d) {
       if (d.id === 'furnace') return;
       var bld = s.buildings[d.id];
       var min = isUnlocked(s, d.id, b) ? 1 : 0;
-      bld.level = Math.max(min, Math.min(f.level, Math.floor(bld.level) || 0));
+      bld.level = Math.max(min, Math.min(f.level, b.MAX_LEVEL, Math.floor(bld.level) || 0));
       if (d.produces) {
         if (bld.level > 0 && typeof bld.lastCollectedAt !== 'number') bld.lastCollectedAt = now;
         if (bld.level === 0) bld.lastCollectedAt = null;
@@ -294,7 +296,7 @@
       var bld = s.buildings[d.id], c = bld.construction;
       var valid = FF.util.isPlainObject(c) &&
         typeof c.startedAt === 'number' && typeof c.endsAt === 'number' && isFinite(c.startedAt) && isFinite(c.endsAt) &&
-        c.endsAt >= c.startedAt && c.toLevel === bld.level + 1 && bld.level >= 1 && c.toLevel <= b.MAX_LEVEL &&
+        c.endsAt >= c.startedAt && c.toLevel === bld.level + 1 && bld.level >= 1 && c.toLevel <= maxLevelOf(d.id, b) &&
         (d.id === 'furnace' || c.toLevel <= f.level);
       if (valid) bld.construction = { toLevel: c.toLevel, startedAt: c.startedAt, endsAt: c.endsAt };
       else delete bld.construction;
@@ -312,7 +314,7 @@
     productionMultiplier: productionMultiplier,
     unlockLevel: unlockLevel,
     isUnlocked: isUnlocked,
-    canUpgrade: canUpgrade,
+    canUpgrade: canUpgrade, maxLevelOf: maxLevelOf,
     upgrade: upgrade,
     buildDurationMs: buildDurationMs,
     constructionOf: constructionOf,

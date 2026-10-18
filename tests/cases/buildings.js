@@ -12,7 +12,8 @@ module.exports = ({ test, FF, assert, plain }) => {
   test('中央炉の強化コストは balance.js の表どおり', () => {
     assert.deepStrictEqual(plain(B.upgradeCost('furnace', 1)), { wood: 150, stone: 100 });
     assert.deepStrictEqual(plain(B.upgradeCost('furnace', 4)), { wood: 6000, stone: 4500, iron: 3500, food: 2500 });
-    assert.strictEqual(B.upgradeCost('furnace', 5), null);
+    assert.deepStrictEqual(plain(B.upgradeCost('furnace', 5)), { wood: 8000, stone: 6000, iron: 4800, food: 3400 });   // Lv6〜10 は町の力（判断464）
+    assert.strictEqual(B.upgradeCost('furnace', 10), null);
   });
 
   test('その他の建物は同じ段階の中央炉コストの約0.4倍で、資源の組み合わせが建物ごとに違う', () => {
@@ -74,10 +75,13 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(B.upgrade(s, 'lumber', T0).reason, 'furnaceCap');
   });
 
-  test('最大レベル（Lv5）より上には強化できない', () => {
+  test('最大レベル：ふつうの建物は Lv5。中央炉だけ Lv10 まで（Lv6〜10 は町の力。判断464）', () => {
     let s = rich();
     for (let i = 0; i < 4; i++) s = build(s, 'furnace', T0).state;
     assert.strictEqual(s.buildings.furnace.level, 5);
+    s = build(s, 'furnace', T0).state; assert.strictEqual(s.buildings.furnace.level, 6);
+    for (let i = 0; i < 4; i++) s = build(s, 'furnace', T0).state;
+    assert.strictEqual(s.buildings.furnace.level, 10);
     assert.strictEqual(B.upgrade(s, 'furnace', T0).reason, 'maxLevel');
     for (const id of ['housing', 'lumber', 'mine', 'quarry', 'foodhall']) {
       while (B.canUpgrade(s, id).ok) s = build(s, id, T0).state;
