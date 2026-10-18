@@ -73,7 +73,7 @@
 
   function buildPlan(b) {
     var plan = [];
-    for (var L = 1; L < b.MAX_LEVEL; L++) {
+    for (var L = 1; L < Math.min(b.MAX_LEVEL, 5); L++) {   // 検証の基準（all5）は、全施設 Lv5 まで。Lv6〜10（判断472）は、基準にふくめない
       plan.push({ id: 'furnace', to: L + 1 });
       for (var i = 0; i < OTHERS_ORDER.length; i++) plan.push({ id: OTHERS_ORDER[i], to: L + 1 });
     }
