@@ -224,14 +224,15 @@
  function renderQuiz(main){
   var a=FF.app,s=a.session;if(!s||!s.renewal){U.show('study',{tab:'learn'});return;}
   var it=current();var top=E('div',{class:'lesson-heading'},[
-   button('‹ '+R.subjects,function(){U.show('study',{tab:'learn'});},'text-button'),
+   E('button',{class:'text-button',attrs:{type:'button','aria-label':R.subjects},on:{click:function(){U.show('study',{tab:'learn'});}}},['‹ ',E('span',{class:'lh-long',text:R.subjects}),E('span',{class:'lh-short',text:R.subjectsShort})]),   // スマホは「‹ 教科」に縮める（文字の大きさは変えない）
    E('span',{text:school(s.sel.grade)+' '+U.plain(L.subjectName(s.sel.subject,s.sel.grade))}),
    E('span',{class:'lesson-session-count',text:doneCount(s)+' '+R.completed}),
+   it?FF.scratchpad.button(it.attempt.question,'head'):null,   // 算数の計算用メモ（鉛筆のアイコンだけ。問題を下げない位置）
    quizResourceButton(),button('☷ '+R.conditions,showFilters,'rn-button filter-open')
   ]);main.appendChild(top);
   var layout=E('div',{class:'workbench'}),left=E('div',{class:'lesson-left'},[unitsView(),questionIndex()]);layout.appendChild(left);
   var card=E('section',{class:'question-card'});layout.appendChild(card);
-  if(!it){card.appendChild(title(R.learning,R.empty,R.emptyHelp));card.appendChild(button(R.resetFilters,function(){s.sel.unit='all';s.sel.difficulty='random';s.sel.answerType=FF.tickets.recoverTickets(a.state.tickets,a.now()).count?'choice':'input';chooseQuestion();U.rerender();},'rn-button primary'));main.appendChild(layout);return;}
+  if(!it){FF.scratchpad.sync(null);card.appendChild(title(R.learning,R.empty,R.emptyHelp));card.appendChild(button(R.resetFilters,function(){s.sel.unit='all';s.sel.difficulty='random';s.sel.answerType=FF.tickets.recoverTickets(a.state.tickets,a.now()).count?'choice':'input';chooseQuestion();U.rerender();},'rn-button primary'));main.appendChild(layout);return;}
   var q=it.attempt.question,done=it.attempt.done,unit=C.unit(q.subject,q.gradeLevel,q.unit),no=C.numberOf(a.bank,q);
   if(done)card.classList.add('is-done');
   card.appendChild(E('div',{class:'question-meta'},[
@@ -240,6 +241,8 @@
    unitTally(q),
    E('span',{class:'difficulty-badge '+q.difficulty,text:'★ '+difficulty(q.difficulty)})
   ]));
+  var spCorner=FF.scratchpad.button(q,'corner');if(spCorner)card.appendChild(spCorner);   // 算数の計算用メモ（判断490）：広い画面は、問題の枠の右上の外
+  FF.scratchpad.sync(q);
   card.appendChild(U.R('div','lesson-question',q.question));
   var speakRow=speakView(q,done);if(speakRow)card.appendChild(speakRow);
   if(q.diagram)card.appendChild(FF.lessonFigure.render(q.diagram));
@@ -272,7 +275,7 @@
      E('div',{class:'reward-gain reward-heat'},[E('img',{attrs:{src:'img/heat.svg',alt:''}}),E('strong',{text:'+'+it.outcome.points}),E('span',{text:R.heat})])
     ]):E('span',{text:R.reviewNote})
    ]);
-   if(good&&it.outcome.noTicket&&it.outcome.streak>=2)fb.appendChild(E('div',{class:'streak-note',text:R.noTicketStreakNow.replace('{n}',it.outcome.streak).replace('{mult}',String(Math.round(it.outcome.streakMult*100)))}));
+   if(good&&it.outcome.streak>=2)fb.appendChild(E('div',{class:'streak-note',text:(it.outcome.noTicket?R.noTicketStreakNow.replace('{mult}',String(Math.round(it.outcome.streakMult*100))):R.ticketStreakNow).replace('{n}',it.outcome.streak)}));
    card.appendChild(fb);
    var det=E('details',{class:'reward-details'},[E('summary',{text:R.rewardDetails})]);
    if(good){var bd=it.outcome.breakdown;det.appendChild(E('p',{text:R.rewardFormula.replace('{accuracy}',String(Math.round(bd.accuracy*100))).replace('{repeat}',String(Math.round(bd.repeat*100))).replace('{hint}',String(Math.round(bd.hint*100)))}));}

@@ -290,7 +290,8 @@
     cell.hintsUsed += att.hintsShown;
     var keep = Math.max(b.ACCURACY.WINDOW, b.RECOMMEND.WINDOW);
     cell.recent = cell.recent.concat([correct ? 1 : 0]).slice(-keep);
-    if (q.answerType === 'choice') L.freeStreak = free && ctx.random && correct ? streakBefore + 1 : 0;   // 書き問題は、数えもリセットもしない
+    // 連続正解は、チケットを使った問題も数える（ボーナスが付くのは、チケットなしの問題だけ）。まちがい・ランダム出題でないときはリセット。書き問題は、数えもリセットもしない（判断489）
+    if (q.answerType === 'choice') L.freeStreak = ctx.random && correct ? streakBefore + 1 : 0;
     L.streak.current = correct ? L.streak.current + 1 : 0;
     L.streak.best = Math.max(L.streak.best, L.streak.current);
     L.history = L.history.concat([{
@@ -315,7 +316,7 @@
         explanation: q.explanation,
         method: ctx.rewardRate == null ? 'typed' : 'self',
         rate: ctx.rewardRate == null ? 1 : ctx.rewardRate,
-        noTicket: free, freeRate: free ? nt.RATE : null, streak: free ? (L.freeStreak || 0) : 0, streakMult: free ? streakMult : 1, tooFast: free && tooFast
+        noTicket: free, freeRate: free ? nt.RATE : null, streak: q.answerType === 'choice' ? (L.freeStreak || 0) : 0, streakMult: free ? streakMult : 1, tooFast: free && tooFast
       }
     };
   }
