@@ -13,6 +13,10 @@ const { chromium } = require(process.env.FF_PLAYWRIGHT_MODULE || 'playwright');
     FF.ui.review.set(FF.app.bank.byId[id], 'fix', 'テスト');
     FF.ui.show('debug');
   }, id);
+  // 設定のページにもどるボタン（判断491）
+  await page.getByRole('button', { name: '‹ 設定にもどる' }).click();
+  assert.equal(await page.evaluate(() => document.body.dataset.screen), 'settings');
+  await page.evaluate(() => FF.ui.show('debug'));
   await page.getByRole('link', { name: id }).click();
   await page.waitForSelector('.question-card');
   const shown = await page.evaluate(() => FF.app.session.currentId);
