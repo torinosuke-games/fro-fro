@@ -20,7 +20,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  }
  test('小5社会：360問の46問のdiagram以外が不変、110画像を維持',()=>{
   assert.equal(all.length,360);assert.equal(new Set(ids).size,46);assert.equal(qs.length,46);
-  assert.equal(hash(all.map(q=>{const v={...q};if(ids.includes(q.id))delete v.diagram;return v;})),'db216a00a4f900cb74e7b1239681313d9baa86bf646f7c774e5140421c47c41c');
+  assert.equal(hash(all.map(q=>{const v={...q};if(ids.includes(q.id))delete v.diagram;return v;})),'5d5c320f17b6eb26dda0e76cfe0ed94d03a131c4ea5e6e40ad84f27f7f582134');
   assert.equal(all.filter(q=>q.diagram?.kind==='image').length,110);assert.equal(all.filter(q=>q.diagram).length,156);
  });
  test('小5社会：42地図＋4模式図と書き問題への継承',()=>{

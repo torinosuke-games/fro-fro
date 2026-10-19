@@ -106,7 +106,13 @@
     }else if(d.kind==='earthScene'){
      // 緯線・経線・海域・海底は同じ名前のない模式図として共有する。
      if(d.scene==='equator'||d.scene==='latitude'||d.scene==='longitude'){
-      add(circle(260,200,150,'#fff'));
+      // 地球とわかるように、海の色と大陸（ざっくりした形）を描く（判断487）
+      var earthId='social-earth-'+(++socialMapSerial);
+      add(circle(260,200,150,'#dcecf7'));
+      add(S('defs',{},S('clipPath',{id:earthId},circle(260,200,150,'#fff'))));
+      var lands=['M255,170 C275,168 300,175 308,195 C312,215 300,240 290,262 C282,285 270,300 258,292 C246,280 244,255 240,235 C232,215 232,195 240,182 Z','M238,140 C250,128 275,126 290,135 C292,148 280,158 262,160 C248,160 236,152 238,140 Z','M300,128 C325,112 355,118 372,140 C385,160 380,185 362,198 C345,208 330,200 320,185 C312,170 296,160 298,145 Z','M150,120 C170,105 200,108 215,125 C220,142 208,160 195,170 C182,178 168,168 160,155 C150,145 146,130 150,120 Z','M192,205 C210,198 225,208 228,228 C230,250 220,275 208,290 C198,285 190,262 188,240 C186,222 186,212 192,205 Z','M345,250 C362,244 380,252 378,266 C372,280 352,282 342,270 C336,262 338,254 345,250 Z'];
+      lands.forEach(function(ld){var land=path(ld,'#cfe6c4','#8dbb85');land.setAttribute('stroke-width','1.5');land.setAttribute('clip-path','url(#'+earthId+')');land.setAttribute('data-part','continent');add(land);});
+      add(circle(260,200,150,'none'));
       if(d.scene==='equator'){var equator=line(110,200,410,200,orange);equator.setAttribute('stroke-width','7');add(equator);}
       if(d.scene==='latitude'){var globeId='social-globe-'+(++socialMapSerial);add(S('defs',{},S('clipPath',{id:globeId},circle(260,200,150,'#fff'))));[-100,-50,0,50,100].forEach(function(y){var rr=Math.sqrt(150*150-y*y);add(S('ellipse',{cx:260,cy:200+y,rx:rr,ry:12,fill:'none',stroke:blue,'stroke-width':3,'clip-path':'url(#'+globeId+')'}));});}
       if(d.scene==='longitude'){[45,90,125].forEach(function(rx){add(S('ellipse',{cx:260,cy:200,rx:rx,ry:150,fill:'none',stroke:blue,'stroke-width':3}));});add(line(260,50,260,350));}
@@ -664,8 +670,13 @@
     var n=d.values.length,cw=Math.min(235,450/n),x=(520-n*cw)/2;
     d.values.forEach(function(v,i){var cx=x+(i+.5)*cw;add(box(x+i*cw+5,42,cw-10,112),text(cx,76,d.labels[i],d.balls?24:14));if(d.balls){for(var j=0;j<v;j++)add(S('circle',{cx:cx+(j-(v-1)/2)*55,cy:119,r:21,fill:i===0?'#e36b61':'#fff',stroke:ink,'stroke-width':2}));}else add(text(cx,124,v,n===1?30:n>2?22:27));});
    }else if(d.kind==='bars'){
-    h=Math.max(190,55+d.values.length*60);var max=Math.max.apply(null,d.values);
-    d.values.forEach(function(v,i){var y=24+i*60;add(text(20,y+22,d.labels[i],d.study?24:16,'start'),box(195,y,Math.max(3,v/max*225),35,i%2? '#f6dba9':pale),text(440,y+24,v,d.study?24:18,'start'));});
+    // 目盛りと軸を付け、文字を大きくした（判断487）
+    h=Math.max(190,55+d.values.length*60)+34;var max=Math.max.apply(null,d.values),nBars=d.values.length;
+    var longest=Math.max.apply(null,d.labels.map(function(l){return String(l).length;})),fs=longest<=6?24:longest<=8?20:16;
+    var mag=Math.pow(10,Math.floor(Math.log(max/4)/Math.LN10)),nn=max/4/mag,step=(nn<1.5?1:nn<3.5?2:nn<7.5?5:10)*mag,gridBottom=24+nBars*60-12;
+    for(var tk=0;tk<=max+1e-9;tk+=step){var gx=195+tk/max*225,gl=line(gx,12,gx,gridBottom,'#d4e1e9');gl.setAttribute('stroke-width','1.5');add(gl,text(gx,gridBottom+24,step<1?tk.toFixed(1):Math.round(tk),20));}
+    var axis=line(195,12,195,gridBottom,'#7f9fb3');axis.setAttribute('stroke-width','2');add(axis);
+    d.values.forEach(function(v,i){var y=24+i*60;add(text(20,y+24,d.labels[i],fs,'start'),box(195,y,Math.max(3,v/max*225),35,i%2? '#f6dba9':pale),text(440,y+25,v,24,'start'));});
    }else if(d.kind==='rect'||d.kind==='cutout'){
     var w=Number(d.w)||8,hh=Number(d.h)||(d.area?8:6),sc=Math.min(310/w,135/hh),rw=w*sc,rh=hh*sc,x0=(520-rw)/2,y0=47;
     if(d.kind==='rect') add(S('rect',{x:x0,y:y0,width:rw,height:rh,fill:pale,stroke:blue,'stroke-width':3}));
