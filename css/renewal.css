@@ -598,3 +598,5 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .unit-tally.complete::before{content:'★ '}
 .rn-button.primary rt,.town-name rt{color:rgba(255,255,255,.92)}
 .hw-also{margin:4px 0 0;font-size:.875rem;color:var(--rn-navy);font-weight:700}
+.no-ticket-box .no-ticket-streak{font-size:.9em;color:#3a7bd5;margin:.2em 0 .6em}
+.streak-note{margin-top:.4em;font-weight:700;color:#d9822b}

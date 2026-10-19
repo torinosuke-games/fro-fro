@@ -218,10 +218,10 @@
     if (result.empty) return { state: state, attempt: att, outcome: { status: 'error', error: 'empty' } };
 
     if (q.answerType === 'choice') {
+      // チケットが足りなくても解ける。そのときは、報酬を絞る（判断486）
       var c = FF.tickets.consumeTicket(s.tickets, now, b);
       s.tickets = c.tickets;
-      if (!c.ok) return { state: s, attempt: att, outcome: { status: 'error', error: 'noTicket' } };
-      return finish(s, att, result.correct, 1, ctx, b);
+      return finish(s, att, result.correct, 1, c.ok ? ctx : Object.assign({}, ctx, { noTicket: true }), b);
     }
 
     if (result.correct) return finish(s, att, true, att.wrong + 1, ctx, b);
@@ -248,11 +248,20 @@
     var q = att.question, now = ctx.now, L = s.learning;
     var cell = statsCell(s, q.subject, q.gradeLevel);
     var reward = 0, breakdown = null, points = 0, pointsBreakdown = null;
+    // チケットなしの選択問題（判断486）：本人の学年で頭打ち・報酬を絞る・ランダム出題の連続正解で上がる・速すぎる回答は報酬なし
+    var free = !!ctx.noTicket && q.answerType === 'choice', nt = b.NO_TICKET;
+    var streakBefore = L.freeStreak || 0, streakMult = 1, tooFast = false, rate = null;
+    if (free) {
+      if (ctx.random) streakMult = Math.min(nt.STREAK_MAX_MULT, 1 + nt.STREAK_STEP * streakBefore);
+      rate = nt.RATE * streakMult;
+      tooFast = ctx.elapsedMs != null && ctx.elapsedMs < nt.MIN_ANSWER_MS;
+    }
 
     if (correct) {
       var producer = FF.defs.BUILDINGS.filter(function (d) { return d.produces === ctx.resource; })[0];
+      var ownGrade = s.player && s.player.grade;
       var params = {
-        grade: q.gradeLevel, difficulty: q.difficulty, answerType: q.answerType,
+        grade: free && ownGrade ? Math.min(q.gradeLevel, ownGrade) : q.gradeLevel, difficulty: q.difficulty, answerType: q.answerType,
         hintsUsed: att.hintsShown, attempt: attemptNo,
         repeatCount: FF.rewards.countRecentCorrect(L.correctLog, q.id, now, b),
         facilityLevel: producer ? s.buildings[producer.id].level : 0,
@@ -260,12 +269,12 @@
         recent: cell.recent            // 今回の回答を記録する前の直近
       };
       breakdown = FF.rewards.rewardBreakdown(params, b);
-      reward = scaleReward(breakdown.total, ctx.rewardRate);
+      reward = free ? scaleFree(breakdown.total, rate, tooFast) : scaleReward(breakdown.total, ctx.rewardRate);
       s.resources[ctx.resource] = (s.resources[ctx.resource] || 0) + reward;
       L.totalEarned[ctx.resource] = (L.totalEarned[ctx.resource] || 0) + reward;
       // 勉強量ポイント（SPEC 8.4）：同じ反復回数・直近の正答で計算する（施設・重点教科・形式はかからない）
       pointsBreakdown = FF.points.pointsBreakdown(params, b);
-      points = scaleReward(pointsBreakdown.total, ctx.rewardRate);
+      points = free ? scaleFree(pointsBreakdown.total, rate, tooFast) : scaleReward(pointsBreakdown.total, ctx.rewardRate);
       FF.points.addPoints(s, points);
       L.correctLog = FF.rewards.recordCorrect(L.correctLog, q.id, now, b);
     } else {
@@ -281,6 +290,7 @@
     cell.hintsUsed += att.hintsShown;
     var keep = Math.max(b.ACCURACY.WINDOW, b.RECOMMEND.WINDOW);
     cell.recent = cell.recent.concat([correct ? 1 : 0]).slice(-keep);
+    if (q.answerType === 'choice') L.freeStreak = free && ctx.random && correct ? streakBefore + 1 : 0;   // 書き問題は、数えもリセットもしない
     L.streak.current = correct ? L.streak.current + 1 : 0;
     L.streak.best = Math.max(L.streak.best, L.streak.current);
     L.history = L.history.concat([{
@@ -304,7 +314,8 @@
         correctAnswer: displayAnswer(q),
         explanation: q.explanation,
         method: ctx.rewardRate == null ? 'typed' : 'self',
-        rate: ctx.rewardRate == null ? 1 : ctx.rewardRate
+        rate: ctx.rewardRate == null ? 1 : ctx.rewardRate,
+        noTicket: free, freeRate: free ? nt.RATE : null, streak: free ? (L.freeStreak || 0) : 0, streakMult: free ? streakMult : 1, tooFast: free && tooFast
       }
     };
   }
@@ -322,6 +333,11 @@
   }
   function canHandwrite(q) { return handwriteKind(q) !== null; }
   // 資源・勉強量ポイントを割合 rate にする（rate が省略か 1 以上なら、そのまま。0 より大きい分は、最低1）
+  // チケットなしの報酬：rate 倍（1未満にも1より大きくもなる）。最低1。速すぎる回答は0
+  function scaleFree(v, rate, tooFast) {
+    if (tooFast) return 0;
+    return Math.max(1, Math.round(v * rate));
+  }
   function scaleReward(v, rate) {
     if (rate == null || rate >= 1 || v <= 0) return v;
     return Math.max(1, Math.round(v * rate));

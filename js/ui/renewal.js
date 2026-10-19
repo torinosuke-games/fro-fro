@@ -45,7 +45,7 @@
  }
  function makeSession(subject){
   var a=FF.app,s=a.state,g=s.player.grade||2;
-  var sel={subject:subject,grade:g,unit:'all',difficulty:'random',answerType:FF.tickets.recoverTickets(s.tickets,a.now()).count?'choice':'input',resource:null};
+  var sel={subject:subject,grade:g,unit:'all',difficulty:'random',answerType:'choice',resource:null};
   if(!C.pool(a.bank,sel).length&&subject!=='math')sel.answerType='input';
   a.session={renewal:true,sel:sel,recentIds:[],items:{},currentId:null,order:[],cursor:-1};
   chooseQuestion();U.show('quiz');
@@ -80,7 +80,7 @@
   var q=id?(a.bank.byId[id]||(s.items[id]&&s.items[id].attempt.question)):(peeked||C.pick(reviewBank(a.bank),s.sel,ctxPick)||(reviewFallback()?C.pick(a.bank,s.sel,ctxPick):null));
   if(!q){s.currentId=null;return;}
   // Visiting a question starts a fresh attempt. Persistent results live in the save.
-  s.items[q.id]={attempt:L.startAttempt(q),outcome:null,picked:null,selected:null,typed:'',resource:rollResource(s.sel.subject)};
+  s.items[q.id]={attempt:L.startAttempt(q),outcome:null,picked:null,selected:null,typed:'',resource:rollResource(s.sel.subject),shownAt:a.now()};
   s.currentId=q.id;s.recentIds=s.recentIds.concat([q.id]).slice(-20);
   if(s.order[s.cursor]!==q.id){s.order=s.order.slice(0,s.cursor+1);s.order.push(q.id);s.cursor=s.order.length-1;}
  }
@@ -98,7 +98,7 @@
   var a=FF.app,it=current();if(!it||it.attempt.done)return;
   var value=it.attempt.question.answerType==='choice'?it.selected:it.typed;
   if(value==null||!String(value).trim()){it.error=R.selectAnswer;U.rerender();return;}
-  var result=L.submitAnswer(a.state,it.attempt,value,{now:a.now(),resource:it.resource});
+  var ss=a.session.sel,result=L.submitAnswer(a.state,it.attempt,value,{now:a.now(),resource:it.resource,random:ss.unit==='all'&&ss.difficulty==='random',elapsedMs:it.shownAt==null?null:a.now()-it.shownAt});
   if(result.outcome.status==='error') {it.error=result.outcome.error==='noTicket'?R.noTickets:R.selectAnswer;if(result.state!==a.state)a.commit(result.state);U.rerender();return;}
   applyResult(it,result,value);
  }
@@ -263,7 +263,7 @@
   if(!done){
    if(L.canHandwrite(q)&&it.mode!=='key'){if(!it.revealed)card.appendChild(button(R.hwReveal,revealHandwriting,'rn-button primary check-answer'));}
    else if(q.answerType!=='choice')card.appendChild(button(R.checkAnswer,submit,'rn-button primary check-answer'));
-   if(q.answerType==='choice'&&FF.tickets.recoverTickets(a.state.tickets,a.now()).count<1)card.appendChild(E('div',{class:'no-ticket-box'},[E('p',{text:R.noTickets}),button(R.switchInput,function(){changeFilter('answerType','input');},'rn-button')]));
+   if(q.answerType==='choice'&&FF.tickets.recoverTickets(a.state.tickets,a.now()).count<1){var rnd=s.sel.unit==='all'&&s.sel.difficulty==='random';card.appendChild(E('div',{class:'no-ticket-box'},[E('p',{text:R.noTickets}),E('p',{class:'no-ticket-streak',text:rnd?R.noTicketStreak:R.noTicketNeedRandom}),button(R.switchInput,function(){changeFilter('answerType','input');},'rn-button')]));}
   }else if(it.outcome){
    var good=it.outcome.status==='correct',fb=E('div',{class:'answer-feedback '+(good?'good':'review'),attrs:{role:'status',tabindex:'-1'}},[
     E('strong',{text:good?'✓ '+R.correct:R.review}),
@@ -271,10 +271,13 @@
      E('div',{class:'reward-gain reward-resource'},[U.resIcon(U.resDef(it.resource)),E('strong',{text:'+'+it.outcome.reward}),E('span',{text:U.plain(U.resDef(it.resource).name)})]),
      E('div',{class:'reward-gain reward-heat'},[E('img',{attrs:{src:'img/heat.svg',alt:''}}),E('strong',{text:'+'+it.outcome.points}),E('span',{text:R.heat})])
     ]):E('span',{text:R.reviewNote})
-   ]);card.appendChild(fb);
+   ]);
+   if(good&&it.outcome.noTicket&&it.outcome.streak>=2)fb.appendChild(E('div',{class:'streak-note',text:R.noTicketStreakNow.replace('{n}',it.outcome.streak).replace('{mult}',String(Math.round(it.outcome.streakMult*100)))}));
+   card.appendChild(fb);
    var det=E('details',{class:'reward-details'},[E('summary',{text:R.rewardDetails})]);
    if(good){var bd=it.outcome.breakdown;det.appendChild(E('p',{text:R.rewardFormula.replace('{accuracy}',String(Math.round(bd.accuracy*100))).replace('{repeat}',String(Math.round(bd.repeat*100))).replace('{hint}',String(Math.round(bd.hint*100)))}));}
    else det.appendChild(E('p',{text:R.noReward}));
+   if(good&&it.outcome.noTicket)det.appendChild(E('p',{text:it.outcome.tooFast?R.noTicketTooFast:R.noTicketRate.replace('{rate}',String(Math.round(it.outcome.freeRate*100))).replace('{mult}',String(Math.round(it.outcome.streakMult*100)))}));
    if(it.outcome.method==='self'&&good)det.appendChild(E('p',{text:R.hwHalf}));
    card.appendChild(det);
   }
