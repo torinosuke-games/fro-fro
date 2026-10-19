@@ -1565,14 +1565,16 @@
     var step = 1;
     if (!isNaN(n) && q.answer.indexOf('.') >= 0) step = pow10(-(q.answer.split('.')[1].length));
     // 正解から遠すぎる誤答（見た目で外れとわかる数）は選ばない（判断351）。
-    // 近さ：正解との差が、正解の6割と、最小の位の12個ぶんの大きいほう以内。位どりのまちがい（10倍・10分の1）だけは、1つまで入れてよい
+    // 近さ：正解との差が、正解の6割と、最小の位の4〜12個ぶん（答えが小さいほど少ない）の大きいほう以内。位どりのまちがい（10倍・10分の1）だけは、1つまで入れてよい
     var shifted = 0;
     function plausible(s) {
       if (isFrac || isNaN(n) || Math.abs(n) >= 1e7) return true;   // 千万以上は、桁の読み書きが問題の中心なので、そのまま
       var v = FF.answer.parseNumber(s);
       if (isNaN(v)) return true;
-      if (Math.abs(v - n) <= Math.max(Math.abs(n) * 0.6, 12 * step)) return true;
-      if (n !== 0 && v !== 0 && shifted < 1 && (Math.abs(v / n - 10) < 1e-9 || Math.abs(v / n - 0.1) < 1e-9)) { shifted++; return true; }
+      if (n >= 0 && v < 0) return false;   // 答えが0以上なのに、負の数の選択肢は、ありえないので出さない（判断493）
+      var slack = Math.abs(n) < 10 ? 4 * step : (Math.abs(n) < 100 ? 6 * step : 12 * step);   // 小さい答えほど、近い数だけを出す
+      if (Math.abs(v - n) <= Math.max(Math.abs(n) * 0.6, slack)) return true;
+      if (n !== 0 && v !== 0 && shifted < 1 && (Math.abs(n) >= 10 || n % 1 !== 0) && (Math.abs(v / n - 10) < 1e-9 || Math.abs(v / n - 0.1) < 1e-9)) { shifted++; return true; }
       return false;
     }
     function add(s) {
