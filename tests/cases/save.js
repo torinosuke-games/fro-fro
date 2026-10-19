@@ -284,4 +284,14 @@ module.exports = ({ test, FF, assert, plain }) => {
     FF.storage.clear(ls);assert.equal(FF.storage.load(T0,ls).status,'new');assert.equal(FF.storage.loadRecovery(T0,ls).length,0);
     FF.storage.saveSyncBackup(S.serialize(sampleState()),ls);assert.equal(FF.storage.load(T0,ls).status,'new');assert.equal(FF.storage.loadRecovery(T0,ls).length,1);
   });
+  test('保存：開始直後（何も進んでいない）の保存は控えに残さない。いまの保存と同じものは控えに出さない（判断494）', () => {
+    const ls=fakeStorage();let st=S.createDefaultState(T0);
+    st.player.name='ぱぱさん';FF.storage.save(st,ls);st.player.grade=4;FF.storage.save(st,ls);st.flags.introSeen=true;FF.storage.save(st,ls);
+    assert.equal(ls.getItem(FF.config.SAVE_KEY+'.history'),null);
+    assert.equal(FF.storage.loadRecovery(T0,ls,S.serialize(st)).length,0);
+    st.resources.wood=5;FF.storage.save(st,ls);st.resources.wood=9;FF.storage.save(st,ls);
+    assert.equal(JSON.parse(ls.getItem(FF.config.SAVE_KEY+'.history')).length,1);
+    const cur=ls.getItem(FF.config.SAVE_KEY),choices=FF.storage.loadRecovery(T0,ls,cur);
+    assert.equal(choices.length,1);assert.equal(choices[0].state.resources.wood,5);
+  });
 };

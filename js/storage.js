@@ -21,12 +21,29 @@
     try {var data=JSON.parse(text);delete data.updatedAt;delete data.integrity;if(data.tickets)delete data.tickets.lastRecoveredAt;return FF.integrity.sign(data);}
     catch(e) {return null;}
   }
-  function loadRecovery(now, ls) {
-    var store=getLs(ls), seen={}, out=[];
-    [read(store,goodKey())].concat(history(store),[read(store,backupKey()),read(store,FF.config.SAVE_KEY+'.broken')]).forEach(function(text){
+  // 学習も採集もまだ何もしていない状態か（名前や学年を決めただけの開始直後は、控えに残さない。判断494）
+  function isBlank(state) {
+    var r=state.resources||{}, earned=(state.learning&&state.learning.totalEarned)||{};
+    return !(r.wood||r.iron||r.stone||r.food||state.studyPoints||state.studyPointsEarnedTotal||Object.keys(earned).some(function(k){return earned[k];}));
+  }
+  // 設定の「この端末の保存の控え」の候補。いまの保存と同じもの・何も進んでいないもの・同じ内容に見えるもの（名前・資材・熱量が同じ）は出さない。
+  // currentText を渡すと、それと同じ保存は出さない（控えは、いまのデータを失ったときのためのもの）
+  function loadRecovery(now, ls, currentText) {
+    var store=getLs(ls), seen={}, shown={}, out=[], cur=currentText?fingerprint(currentText):null;
+    var local=[read(store,goodKey())].concat(history(store));
+    local.concat([read(store,backupKey()),read(store,FF.config.SAVE_KEY+'.broken')]).forEach(function(text,i){
       if (!text) return;
       var parsed=FF.state.parseSave(text,now), id=fingerprint(text);
-      if (parsed.ok && id && !seen[id]) {seen[id]=true;out.push({text:parsed.saveText,state:parsed.state});}
+      if (!parsed.ok || !id || seen[id]) return;
+      seen[id]=true;
+      if (id===cur) return;
+      if (i<local.length) {
+        if (isBlank(parsed.state)) return;
+        var r=parsed.state.resources, face=[parsed.state.player.name,r.wood,r.iron,r.stone,r.food,parsed.state.studyPoints].join('/');
+        if (shown[face]) return;
+        shown[face]=true;
+      }
+      out.push({text:parsed.saveText,state:parsed.state});
     });
     return out;
   }
@@ -72,7 +89,8 @@
     try { store.setItem(FF.config.SAVE_KEY,text); } catch(e) { return false; }
     // A checkpoint failure must not turn a successful primary save into a failure.
     try {
-      if (previous && fingerprint(previous)!==fingerprint(text) && FF.state.parseSave(previous,state.updatedAt).ok) {
+      var prevParsed=previous ? FF.state.parseSave(previous,state.updatedAt) : null;
+      if (prevParsed && prevParsed.ok && !isBlank(prevParsed.state) && fingerprint(previous)!==fingerprint(text)) {
         list=[previous].concat(list.filter(function(t){return fingerprint(t)!==fingerprint(previous);})).slice(0,8);
         store.setItem(historyKey(),JSON.stringify(list));
       }
