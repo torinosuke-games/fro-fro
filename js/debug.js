@@ -29,7 +29,7 @@
     if (!FF.debugMode) { U.show('settings'); return; }
     main.classList.add('debug');
     // 設定のページにもどるボタン（判断491）
-    main.appendChild(U.el('button', { class: 'btn ghost small debug-back', text: '‹ 設定にもどる', on: { click: function () { U.show('settings'); } } }));
+    main.appendChild(U.el('button', { class: 'text-button debug-back', text: '‹ 設定にもどる', on: { click: function () { U.show('settings'); } } }));
 
     // ---- 問題のレビュー（判断202）----
     (function () {

@@ -65,7 +65,7 @@
 
     // もとのページにもどるボタン（判断492）。どこから来たか分からないときは、町の画面へ
     var from = app.settingsFrom && U.screens[app.settingsFrom.screen] ? app.settingsFrom : { screen: 'base', params: {} };
-    main.appendChild(U.el('button', { class: 'btn ghost small settings-back', text: '‹ もどる', attrs: { 'aria-label': 'もとのページにもどる' }, on: { click: function () { U.show(from.screen, from.params); } } }));
+    main.appendChild(U.el('button', { class: 'text-button settings-back', text: '‹ もどる', attrs: { 'aria-label': 'もとのページにもどる' }, on: { click: function () { U.show(from.screen, from.params); } } }));
 
     // 名前
     var ni = U.nameInput(s.player.name, changeName);
