@@ -623,6 +623,5 @@ body.scratch-open[data-screen="quiz"] #screen{padding-bottom:calc(33.4dvh + 30px
 .scratch-toggle.corner{display:none}
 .question-card{position:relative}
 @media (min-width:900px){.scratch-toggle.head{display:none}.scratch-toggle.corner{display:inline-flex;position:absolute;top:-50px;right:0;z-index:3}}
-@media (max-width:600px){.lesson-heading{gap:8px}.scratch-toggle.head{width:34px;height:34px}.lesson-heading .text-button{white-space:nowrap}.lesson-heading>span:nth-of-type(1){white-space:nowrap}}
-@media (max-width:600px){.lesson-heading{font-size:.8rem;gap:6px}.lesson-heading .text-button{font-size:.8rem;padding-inline:0}.lesson-heading .filter-open{padding:6px 8px;font-size:.74rem}.lesson-heading .quiz-resource-button{transform:scale(.9);margin-inline:-3px}}
-@media (max-width:370px){.lesson-heading .text-button{font-size:0}.lesson-heading .text-button::before{content:'‹ 教科';font-size:.8rem}}
+@media (max-width:600px){.lesson-heading .lh-long{display:none}.lesson-heading .scratch-toggle.head{width:34px;height:34px}.lesson-heading>span:nth-of-type(1){white-space:nowrap}}
+@media (min-width:601px){.lesson-heading .lh-short{display:none}}

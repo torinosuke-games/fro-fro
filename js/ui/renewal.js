@@ -224,7 +224,7 @@
  function renderQuiz(main){
   var a=FF.app,s=a.session;if(!s||!s.renewal){U.show('study',{tab:'learn'});return;}
   var it=current();var top=E('div',{class:'lesson-heading'},[
-   button('‹ '+R.subjects,function(){U.show('study',{tab:'learn'});},'text-button'),
+   E('button',{class:'text-button',attrs:{type:'button','aria-label':R.subjects},on:{click:function(){U.show('study',{tab:'learn'});}}},['‹ ',E('span',{class:'lh-long',text:R.subjects}),E('span',{class:'lh-short',text:R.subjectsShort})]),   // スマホは「‹ 教科」に縮める（文字の大きさは変えない）
    E('span',{text:school(s.sel.grade)+' '+U.plain(L.subjectName(s.sel.subject,s.sel.grade))}),
    E('span',{class:'lesson-session-count',text:doneCount(s)+' '+R.completed}),
    it?FF.scratchpad.button(it.attempt.question,'head'):null,   // 算数の計算用メモ（鉛筆のアイコンだけ。問題を下げない位置）
