@@ -193,7 +193,7 @@
     // データの保存（サーバー同期。判断299）：設定で有効にしたときと、デバッグモードのときだけ
     if (U.syncAvailable && U.syncAvailable()) main.appendChild(U.syncPanel());
 
-    var checkpoints=FF.storage.loadRecovery(app.now());
+    var checkpoints=FF.storage.loadRecovery(app.now(),undefined,FF.state.serialize(app.state));
     if (checkpoints.length) main.appendChild(U.el('section',{class:'panel stack save-recovery'},[
       U.R('h3','',U.T('recoveryTitle')),U.R('p','small',U.T('recoveryHelp')),
       U.el('div',{class:'stack'},checkpoints.map(function(item){
