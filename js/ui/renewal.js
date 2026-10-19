@@ -50,6 +50,16 @@
   a.session={renewal:true,sel:sel,recentIds:[],items:{},currentId:null,order:[],cursor:-1};
   chooseQuestion();U.show('quiz');
  }
+ // 問題の ID を指定して、その問題の画面を開く（デバッグ版の「要改善の問題」のリンク。判断488）。ID が問題データにないときは false
+ function openQuestionById(id){
+  var a=FF.app,q=a.bank.byId[id];
+  if(!q)return false;
+  var sel={subject:q.subject,grade:q.gradeLevel,unit:'all',difficulty:'random',answerType:q.answerType,resource:null};
+  a.session={renewal:true,sel:sel,recentIds:[],items:{},currentId:null,order:[],cursor:-1};
+  chooseQuestion(id,true);U.show('quiz');
+  return true;
+ }
+ FF.openQuestionById=openQuestionById;
 // デバッグモードのレビュー（判断202・203）：「確認前だけ」「レビュー済みを出さない」の設定を、出題に反映する
  function reviewBank(bank){
   if(!(FF.debugMode&&U.review))return bank;
