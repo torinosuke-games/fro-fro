@@ -95,6 +95,16 @@
     Array.prototype.forEach.call(doc.querySelectorAll('.scratch-toggle'), function (b) { b.setAttribute('aria-pressed', st.open ? 'true' : 'false'); b.classList.toggle('active', st.open); });
   }
 
+  // 鉛筆のアイコン（SVG。絵文字だとボタンの中で位置がずれるため。判断490）
+  function pencilIcon() {
+    var NS = 'http://www.w3.org/2000/svg', svg = root.document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('class', 'sp-ico'); svg.setAttribute('aria-hidden', 'true');
+    var g = root.document.createElementNS(NS, 'path');
+    g.setAttribute('d', 'M4 20l1.2-4.6L16.6 4a2 2 0 0 1 2.8 0l1.2 1.2a2 2 0 0 1 0 2.8L9.2 19.4 4 20zM15 5.6l3.4 3.4');
+    g.setAttribute('fill', 'none'); g.setAttribute('stroke', 'currentColor'); g.setAttribute('stroke-width', '2'); g.setAttribute('stroke-linejoin', 'round'); g.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(g);
+    return svg;
+  }
   // 問題のそばに置くボタン。パッドを使えない教科では null。
   // variant 'head'：「教科を選ぶ」の帯に置く、鉛筆のアイコンだけのボタン（スマホ・タブレットの縦。問題の位置を下げない）
   // variant 'corner'：問題の枠の右上の外に置く、「けいさんメモ」のボタン（広い画面）
@@ -102,7 +112,7 @@
     if (!usable(q)) return null;
     variant = variant || 'head';
     return E('button', { class: 'scratch-toggle ' + variant + (st.open ? ' active' : ''), attrs: { type: 'button', 'aria-label': R().scratchOpen, 'aria-pressed': st.open ? 'true' : 'false', title: R().scratchOpen },
-      on: { click: function () { setOpen(!st.open); } } }, [E('span', { class: 'sp-ico', attrs: { 'aria-hidden': 'true' }, text: '✏' })].concat(variant === 'corner' ? [E('span', { class: 'sp-label', text: R().scratchOpen })] : []));
+      on: { click: function () { setOpen(!st.open); } } }, [pencilIcon()].concat(variant === 'corner' ? [E('span', { class: 'sp-label', text: R().scratchOpen })] : []));
   }
   FF.scratchpad = { button: toggleButton, sync: sync, setOpen: setOpen, state: st };
 })(this);

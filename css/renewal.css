@@ -625,3 +625,5 @@ body.scratch-open[data-screen="quiz"] #screen{padding-bottom:calc(33.4dvh + 30px
 @media (min-width:900px){.scratch-toggle.head{display:none}.scratch-toggle.corner{display:inline-flex;position:absolute;top:-50px;right:0;z-index:3}}
 @media (max-width:600px){.lesson-heading .lh-long{display:none}.lesson-heading .scratch-toggle.head{width:34px;height:34px}.lesson-heading>span:nth-of-type(1){white-space:nowrap}}
 @media (min-width:601px){.lesson-heading .lh-short{display:none}}
+.scratch-toggle .sp-ico{display:block;width:1.35em;height:1.35em;flex:none}
+.scratch-toggle.head .sp-ico{width:20px;height:20px}
