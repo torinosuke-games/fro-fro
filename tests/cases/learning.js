@@ -116,12 +116,55 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(r.state.tickets.count, 19);
   });
 
-  test('チケットが0枚なら4択に回答できない', () => {
-    const s = newState();
-    s.tickets = { count: 0, lastRecoveredAt: T0 };
-    const r = L.submitAnswer(s, L.startAttempt(choiceQ, rng()), 'みず', ctx());
-    assert.strictEqual(r.outcome.error, 'noTicket');
-    assert.strictEqual(r.state.resources.wood, 0);
+  // ---- チケットなしの選択問題（判断486） ----
+  const noTk = (grade) => { const s = FF.state.setPlayerGrade(newState(), grade); s.learning.unlocked.science = 6; s.tickets = { count: 0, lastRecoveredAt: T0 }; return s; };
+  const bq = (g, id) => mk({ answerType: 'choice', answer: 'みず', id, gradeLevel: g, subject: 'science' });
+  test('チケットが0枚でも4択に回答できる。報酬は少なめ（本人の学年で頭打ち・0.65倍）', () => {
+    const q = bq(5, 'nt1'), r = L.submitAnswer(noTk(2), L.startAttempt(q, rng()), 'みず', ctx({ elapsedMs: 5000 }));
+    assert.strictEqual(r.outcome.status, 'correct');
+    assert.strictEqual(r.outcome.noTicket, true);
+    assert.strictEqual(r.state.tickets.count, 0);
+    const base = FF.points.pointsBreakdown({ grade: 2, difficulty: 'standard', answerType: 'choice', hintsUsed: 0, repeatCount: 0, recent: [] }).total;
+    assert.strictEqual(r.outcome.points, Math.max(1, Math.round(base * 0.65)));
+    // 本人の学年より上の問題でも、上の学年の報酬にならない
+    const upper = FF.points.pointsBreakdown({ grade: 5, difficulty: 'standard', answerType: 'choice', hintsUsed: 0, repeatCount: 0, recent: [] }).total;
+    assert.ok(r.outcome.points < Math.round(upper * 0.65));
+  });
+  test('チケットがあるときの報酬は、これまでどおり（問題の学年のまま）', () => {
+    const s = FF.state.setPlayerGrade(newState(), 2); s.learning.unlocked.science = 6;
+    const r = L.submitAnswer(s, L.startAttempt(bq(5, 'nt2'), rng()), 'みず', ctx({ elapsedMs: 5000 }));
+    assert.strictEqual(r.outcome.noTicket, false);
+    assert.strictEqual(r.outcome.points, FF.points.pointsBreakdown({ grade: 5, difficulty: 'standard', answerType: 'choice', hintsUsed: 0, repeatCount: 0, recent: [] }).total);
+  });
+  test('チケットなし：ランダム出題で連続正解すると倍率が上がり、まちがえると戻る', () => {
+    let s = noTk(2), mult = [];
+    for (let i = 0; i < 4; i++) {
+      const r = L.submitAnswer(s, L.startAttempt(bq(2, 'nts' + i), rng()), 'みず', ctx({ elapsedMs: 5000, random: true }));
+      mult.push(r.outcome.streakMult); s = r.state;
+    }
+    assert.deepStrictEqual(mult.map(x => Math.round(x * 10) / 10), [1, 1.1, 1.2, 1.3]);
+    assert.strictEqual(s.learning.freeStreak, 4);
+    const w = L.submitAnswer(s, L.startAttempt(bq(2, 'ntw'), rng()), 'いし', ctx({ elapsedMs: 5000, random: true }));
+    assert.strictEqual(w.state.learning.freeStreak, 0);
+    // ランダムでない（単元などを選んでいる）ときは、ボーナスなし・連続も数えない
+    const n = L.submitAnswer(noTk(2), L.startAttempt(bq(2, 'ntn'), rng()), 'みず', ctx({ elapsedMs: 5000, random: false }));
+    assert.strictEqual(n.outcome.streakMult, 1);
+    assert.strictEqual(n.state.learning.freeStreak, 0);
+  });
+  test('チケットなし：倍率は最大2倍。速すぎる回答（2秒未満）は正解でも報酬なし', () => {
+    const s = noTk(2); s.learning.freeStreak = 50;
+    const r = L.submitAnswer(s, L.startAttempt(bq(2, 'ntm'), rng()), 'みず', ctx({ elapsedMs: 5000, random: true }));
+    assert.strictEqual(r.outcome.streakMult, 2);
+    const f = L.submitAnswer(noTk(2), L.startAttempt(bq(2, 'ntf'), rng()), 'みず', ctx({ elapsedMs: 800, random: true }));
+    assert.strictEqual(f.outcome.status, 'correct');
+    assert.strictEqual(f.outcome.points, 0);
+    assert.strictEqual(f.outcome.reward, 0);
+    assert.strictEqual(f.outcome.tooFast, true);
+  });
+  test('書き問題は、連続正解を数えもリセットもしない', () => {
+    const s = noTk(2); s.learning.freeStreak = 3;
+    const r = L.submitAnswer(s, L.startAttempt(inputQ, rng()), 'みず', ctx());
+    assert.strictEqual(r.state.learning.freeStreak, 3);
   });
 
   test('自由入力はチケットを使わない', () => {
