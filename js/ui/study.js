@@ -28,7 +28,7 @@
       subject: focus,
       grade: gradeFor(s, focus),
       difficulty: L.RANDOM_DIFFICULTY,
-      answerType: FF.tickets.recoverTickets(s.tickets, app.now()).count > 0 ? 'choice' : 'input'
+      answerType: 'choice'
     };
   }
   function defaultSel() {
@@ -39,7 +39,7 @@
       subject: focus,
       grade: gradeFor(s, focus),
       difficulty: L.RANDOM_DIFFICULTY,   // 初期値はランダム。指定したいときだけ折りたたみを開いて選ぶ
-      answerType: FF.tickets.recoverTickets(s.tickets, app.now()).count > 0 ? 'choice' : 'input'
+      answerType: 'choice'
     };
   }
 

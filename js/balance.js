@@ -83,6 +83,10 @@
     // ---- チケット（SPEC 7.2） ----
     TICKET_MAX: 20,
     TICKET_RECOVER_MS: 5 * MIN,
+    // チケットが0のときの選択問題（判断486）：解けるが、報酬は少なめ。問題が本人の学年より上でも、本人の学年の報酬で頭打ち。
+    // ランダム出題（単元も難易度も「ランダム」）で正解がつづくと、1問ごとに STREAK_STEP ずつ倍率が上がる（最大 STREAK_MAX_MULT）。
+    // MIN_ANSWER_MS より速い回答は、正解でも報酬なし（連打のあて推量をふせぐ）
+    NO_TICKET: { RATE: 0.65, STREAK_STEP: 0.1, STREAK_MAX_MULT: 2.0, MIN_ANSWER_MS: 2000 },
 
     // ---- 学習 ----
     INPUT_MAX_ATTEMPTS: 3,

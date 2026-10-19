@@ -1100,3 +1100,4 @@ a.btn { text-decoration: none; }
 .review-item code { font-size: 0.875rem; }
 .review-toggle, .debug label.review-toggle { display: flex; flex-direction: row; align-items: center; gap: 8px; font-size: 1rem; color: var(--text); }
 .review-toggle input { width: 20px; height: 20px; flex: none; }
+.review-link{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;color:#2a6ebb;text-decoration:underline;cursor:pointer}

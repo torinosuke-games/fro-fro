@@ -55,7 +55,9 @@
           box.appendChild(U.el('div', { class: 'section-title', text: '要改善の問題' }));
           box.appendChild(U.el('div', { class: 'stack' }, fix.map(function (id) {
             return U.el('div', { class: 'small review-item' }, [
-              U.el('code', { text: id }), ' ', U.el('span', { text: r[id].note || '（メモなし）' }), ' ',
+              app.bank.byId[id]
+                ? U.el('a', { class: 'review-link', attrs: { href: '#', title: '直したあとの問題を開く' }, text: id, on: { click: function (e) { e.preventDefault(); FF.openQuestionById(id); } } })
+                : U.el('code', { text: id }), ' ', U.el('span', { text: r[id].note || '（メモなし）' }), ' ',
               U.el('button', { class: 'btn small ghost', text: '取り消す', on: { click: function () { review.remove(id); draw(); } } })
             ]);
           })));
