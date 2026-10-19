@@ -36,6 +36,24 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(U.autoRubyMarkup(hit), ctx[hit]);
   });
 
+  test('数字のあとの数え方は、数字ごと正しく読む（判断485）', () => {
+    const r = s => U.autoRubyMarkup(s, {});
+    assert.strictEqual(r('8日で'), '{8日|ようか}で');
+    assert.strictEqual(r('15分で'), '{15分|じゅうごふん}で');
+    assert.strictEqual(r('3分の1'), '{3分|さんぶん}の1');
+    assert.strictEqual(r('29本'), '{29本|にじゅうきゅうほん}');
+    assert.strictEqual(r('4人と2人'), '{4人|よにん}と{2人|ふたり}');
+    assert.strictEqual(r('１日あたり'), '{１日|いちにち}あたり');
+    assert.strictEqual(r('5日間'), '{5日間|いつかかん}');
+    assert.strictEqual(r('3時間30分'), '{3時間|さんじかん}{30分|さんじゅっぷん}');
+    assert.strictEqual(r('4月7日'), '{4月|しがつ}{7日|なのか}');
+    assert.strictEqual(r('6匹と10本と100回'), '{6匹|ろっぴき}と{10本|じゅっぽん}と{100回|ひゃっかい}');
+    assert.strictEqual(r('3人分'), '{3人分|さんにんぶん}');
+    assert.strictEqual(r('二十日'), '{二十日|はつか}');
+    assert.strictEqual(r('2.5倍と1,000人'), '2.5倍と1,000人');   // 小数・カンマの途中の数は対象にしない
+    assert.strictEqual(U.autoRubyMarkup('三日月と一日中'), '{三日月|みかづき}と{一日中|いちにちじゅう}');   // 辞書の長い語が先
+  });
+
   test('辞書の語は自動でふりがなの記法になる', () => {
     assert.strictEqual(U.autoRubyMarkup('中央炉を強化する'), '{中央炉|ちゅうおうろ}を{強化|きょうか}する');
     assert.strictEqual(U.autoRubyMarkup('日本の特色'), '{日本|にほん}の{特色|とくしょく}');

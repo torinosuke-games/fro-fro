@@ -70,6 +70,77 @@
     dictCache = { dict: dict, byFirst: byFirst };
     return byFirst;
   }
+  // ---- 数字のあとの数え方の読み（判断485） ----
+  // 「8日」「15分」「3本」「4人」などを、数字ごと {15分|じゅうごふん} のように読む。
+  // 数字は、半角・全角の数字か、漢字の数字（一〜九十九・百）。小数・カンマ・分数の途中の数は対象にしない。
+  var D1 = ['', 'いち', 'に', 'さん', 'よん', 'ご', 'ろく', 'なな', 'はち', 'きゅう'];
+  function numberReading(n) {   // 1〜9999
+    var out = '', th = Math.floor(n / 1000), h = Math.floor(n / 100) % 10, t = Math.floor(n / 10) % 10, o = n % 10;
+    if (th) out += th === 1 ? 'せん' : th === 3 ? 'さんぜん' : th === 8 ? 'はっせん' : D1[th] + 'せん';
+    if (h) out += h === 1 ? 'ひゃく' : h === 3 ? 'さんびゃく' : h === 6 ? 'ろっぴゃく' : h === 8 ? 'はっぴゃく' : D1[h] + 'ひゃく';
+    if (t) out += t === 1 ? 'じゅう' : D1[t] + 'じゅう';
+    if (o) out += D1[o];
+    return out;
+  }
+  // 数の終わり：1〜9＝その数字、10の位が終わり＝'ten'、100の位＝'hundred'、1000の位＝'thousand'
+  function endOf(n) { return n % 10 ? n % 10 : n % 100 ? 'ten' : n % 1000 ? 'hundred' : 'thousand'; }
+  function gem(r) { return r.replace(/いち$/, 'いっ').replace(/ろく$/, 'ろっ').replace(/はち$/, 'はっ').replace(/じゅう$/, 'じゅっ').replace(/ひゃく$/, 'ひゃっ'); }
+  var DAYS = { 2: 'ふつか', 3: 'みっか', 4: 'よっか', 5: 'いつか', 6: 'むいか', 7: 'なのか', 8: 'ようか', 9: 'ここのか', 10: 'とおか', 14: 'じゅうよっか', 20: 'はつか', 24: 'にじゅうよっか' };
+  function counterReading(n, ch) {
+    var e = endOf(n), r = numberReading(n), g = (e === 1 || e === 6 || e === 8 || e === 'ten' || e === 'hundred');
+    var four = n % 10 === 4 ? r.replace(/よん$/, 'よ') : r;
+    switch (ch) {
+      case '日': return DAYS[n] ? DAYS[n] : r + 'にち';
+      case '月': return n >= 1 && n <= 12 ? (n === 4 ? 'し' : n === 7 ? 'しち' : n === 9 ? 'く' : r) + 'がつ' : null;
+      case '時': return (n % 10 === 4 ? four : n % 10 === 7 ? r.replace(/なな$/, 'しち') : n % 10 === 9 ? r.replace(/きゅう$/, 'く') : r) + 'じ';
+      case '年': return four + 'ねん';
+      case '円': return four + 'えん';
+      case '人': return n === 1 ? 'ひとり' : n === 2 ? 'ふたり' : four + 'にん';
+      case '本': return (g ? gem(r) : r) + (g ? 'ぽん' : e === 3 ? 'ぼん' : 'ほん');
+      case '匹': return (g ? gem(r) : r) + (g ? 'ぴき' : e === 3 ? 'びき' : 'ひき');
+      case '杯': return (g ? gem(r) : r) + (g ? 'ぱい' : e === 3 ? 'ばい' : 'はい');
+      case '分': return (g || e === 3 || e === 4 ? gem(r) : r) + (g || e === 3 || e === 4 ? 'ぷん' : 'ふん');
+      case '冊': return ((e === 1 || e === 8 || e === 'ten') ? gem(r) : r) + 'さつ';
+      case '回': case '個': return (g ? gem(r) : r) + (ch === '回' ? 'かい' : 'こ');
+      case '階': return (g ? gem(r) : r) + (e === 3 ? 'がい' : 'かい');
+      case '羽': return (e === 6 || e === 'ten' || e === 'hundred' ? gem(r) : r) + (e === 6 || e === 'ten' || e === 'hundred' ? 'ぱ' : e === 3 ? 'ば' : 'わ');
+      case '週': return ((e === 1 || e === 8 || e === 'ten') ? gem(r) : r) + 'しゅう';
+      case '才': case '歳': return n === 20 ? 'はたち' : ((e === 1 || e === 8 || e === 'ten') ? gem(r) : r) + 'さい';
+      case '点': return ((e === 1 || e === 8 || e === 'ten') ? gem(r) : r) + 'てん';
+      case '位': return r + 'い';
+    }
+    return null;
+  }
+  var KNUM = { '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9 };
+  function parseKanjiNumber(str) {   // 一〜九百九十九
+    var n = 0, cur = 0, ok = str.length > 0;
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charAt(i);
+      if (KNUM[c]) cur = KNUM[c];
+      else if (c === '十') { n += (cur || 1) * 10; cur = 0; }
+      else if (c === '百') { n += (cur || 1) * 100; cur = 0; }
+      else ok = false;
+    }
+    return ok ? n + cur : 0;
+  }
+  // seg の i 番目から「数字＋数え方」が始まっていれば、{len, markup} を返す
+  function countedRuby(seg, i) {
+    var prev = i > 0 ? seg.charAt(i - 1) : '';
+    if (/[0-9０-９.．,，/／:：一二三四五六七八九十百]/.test(prev)) return null;   // 数の途中（小数・カンマ・分数・時刻・長い漢数字）は対象にしない
+    var m = /^([0-9０-９]{1,4}|[一二三四五六七八九十百]{1,5})(日|月|時|年|円|人|本|匹|杯|分|冊|回|個|階|羽|週|才|歳|点|位)/.exec(seg.slice(i, i + 7));
+    if (!m) return null;
+    var numStr = m[1], n = /^[0-9０-９]/.test(numStr) ? parseInt(numStr.replace(/[０-９]/g, function (d) { return String(d.charCodeAt(0) - 0xFF10); }), 10) : parseKanjiNumber(numStr);
+    if (!n || n > 9999) return null;
+    var after = seg.charAt(i + numStr.length + 1);
+    var r = counterReading(n, m[2]);
+    if (!r) return null;
+    var len = numStr.length + 1;
+    if (after === '間' && /[日週時年分]/.test(m[2])) { r += 'かん'; len++; }
+    else if (after === '分' && /[日人個本枚杯冊匹回台]/.test(m[2])) { r += 'ぶん'; len++; }
+    else if (m[2] === '分' && after === 'の') r = r.replace(/ぷん$/, 'ぶん').replace(/ふん$/, 'ぶん');
+    return { len: len, markup: '{' + seg.substr(i, len) + '|' + r + '}' };
+  }
+
   function autoRubyMarkup(template, dict) {
     // 文脈で読みを直した文字列の表（判断484）。辞書を指定したとき（テスト）は使わない
     if (!dict && FF.FURIGANA_CONTEXT && Object.prototype.hasOwnProperty.call(FF.FURIGANA_CONTEXT, template)) return FF.FURIGANA_CONTEXT[template];
@@ -85,7 +156,11 @@
             if (seg.substr(i, cands[c].length) === cands[c]) { hit = cands[c]; break; }
           }
         }
-        if (hit) {
+        var cnt = countedRuby(seg, i);
+        if (cnt && (!hit || cnt.len >= hit.length)) {
+          out += cnt.markup;
+          i += cnt.len;
+        } else if (hit) {
           var v = dict[hit];
           out += v.indexOf('{') >= 0 ? v : '{' + hit + '|' + v + '}';
           i += hit.length;
