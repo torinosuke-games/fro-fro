@@ -234,6 +234,10 @@
     if (FF.app.leaveGuard && !FF.app.leaveGuard(name)) return;
     if (FF.renewalBeforeShow) FF.renewalBeforeShow(name, params || {});
     FF.app.leaveGuard = null;
+    // 設定のページに移るとき、どこから来たかを覚えておく（設定の「もどる」ボタン用。判断492）。設定から開くページ（デバッグ・保護者の記録）からの戻りでは、覚えなおさない
+    if (name === 'settings' && FF.app.screen && FF.app.screen !== 'settings' && FF.app.screen !== 'debug' && FF.app.screen !== 'parent') {
+      FF.app.settingsFrom = { screen: FF.app.screen, params: FF.app.params || {} };
+    }
     FF.app.screen = name;
     FF.app.params = params || {};
     rerender();
