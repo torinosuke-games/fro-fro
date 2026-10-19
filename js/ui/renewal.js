@@ -227,6 +227,7 @@
    button('‹ '+R.subjects,function(){U.show('study',{tab:'learn'});},'text-button'),
    E('span',{text:school(s.sel.grade)+' '+U.plain(L.subjectName(s.sel.subject,s.sel.grade))}),
    E('span',{class:'lesson-session-count',text:doneCount(s)+' '+R.completed}),
+   it?FF.scratchpad.button(it.attempt.question,'head'):null,   // 算数の計算用メモ（鉛筆のアイコンだけ。問題を下げない位置）
    quizResourceButton(),button('☷ '+R.conditions,showFilters,'rn-button filter-open')
   ]);main.appendChild(top);
   var layout=E('div',{class:'workbench'}),left=E('div',{class:'lesson-left'},[unitsView(),questionIndex()]);layout.appendChild(left);
@@ -238,9 +239,9 @@
    E('span',{class:'question-badge',text:q.generated?R.drill:R.question+' '+(no?no+' / '+C.totalOf(a.bank,q.subject,q.gradeLevel):s.cursor+1)}),
    E('span',{class:'question-unit',text:unit?unit.name:U.plain(L.subjectName(q.subject,q.gradeLevel))}),
    unitTally(q),
-   E('span',{class:'difficulty-badge '+q.difficulty,text:'★ '+difficulty(q.difficulty)}),
-   FF.scratchpad.button(q)   // 算数の計算用メモ（判断490）
+   E('span',{class:'difficulty-badge '+q.difficulty,text:'★ '+difficulty(q.difficulty)})
   ]));
+  var spCorner=FF.scratchpad.button(q,'corner');if(spCorner)card.appendChild(spCorner);   // 算数の計算用メモ（判断490）：広い画面は、問題の枠の右上の外
   FF.scratchpad.sync(q);
   card.appendChild(U.R('div','lesson-question',q.question));
   var speakRow=speakView(q,done);if(speakRow)card.appendChild(speakRow);

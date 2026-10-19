@@ -95,11 +95,14 @@
     Array.prototype.forEach.call(doc.querySelectorAll('.scratch-toggle'), function (b) { b.setAttribute('aria-pressed', st.open ? 'true' : 'false'); b.classList.toggle('active', st.open); });
   }
 
-  // 問題のそばに置くアイコン。パッドを使えない教科では null
-  function toggleButton(q) {
+  // 問題のそばに置くボタン。パッドを使えない教科では null。
+  // variant 'head'：「教科を選ぶ」の帯に置く、鉛筆のアイコンだけのボタン（スマホ・タブレットの縦。問題の位置を下げない）
+  // variant 'corner'：問題の枠の右上の外に置く、「けいさんメモ」のボタン（広い画面）
+  function toggleButton(q, variant) {
     if (!usable(q)) return null;
-    return E('button', { class: 'scratch-toggle' + (st.open ? ' active' : ''), attrs: { type: 'button', 'aria-label': R().scratchOpen, 'aria-pressed': st.open ? 'true' : 'false', title: R().scratchOpen },
-      on: { click: function () { setOpen(!st.open); } } }, [E('span', { class: 'sp-ico', attrs: { 'aria-hidden': 'true' }, text: '✏' }), E('span', { class: 'sp-label', text: R().scratchOpen })]);
+    variant = variant || 'head';
+    return E('button', { class: 'scratch-toggle ' + variant + (st.open ? ' active' : ''), attrs: { type: 'button', 'aria-label': R().scratchOpen, 'aria-pressed': st.open ? 'true' : 'false', title: R().scratchOpen },
+      on: { click: function () { setOpen(!st.open); } } }, [E('span', { class: 'sp-ico', attrs: { 'aria-hidden': 'true' }, text: '✏' })].concat(variant === 'corner' ? [E('span', { class: 'sp-label', text: R().scratchOpen })] : []));
   }
   FF.scratchpad = { button: toggleButton, sync: sync, setOpen: setOpen, state: st };
 })(this);

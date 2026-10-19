@@ -601,7 +601,7 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .no-ticket-box .no-ticket-streak{font-size:.9em;color:#3a7bd5;margin:.2em 0 .6em}
 .streak-note{margin-top:.4em;font-weight:700;color:#d9822b}
 /* 算数の計算用メモ（判断490）：問題のそばのアイコンと、画面の下3分の1ほどのパッド */
-.scratch-toggle{display:inline-flex;align-items:center;gap:5px;margin-left:auto;padding:5px 11px;border:1.5px solid #8fb4c9;border-radius:999px;background:#fff;color:#2b5f7e;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;touch-action:manipulation}
+.scratch-toggle{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid #8fb4c9;border-radius:999px;background:#fff;color:#2b5f7e;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;touch-action:manipulation}
 .scratch-toggle .sp-ico{font-size:1.1em}
 .scratch-toggle.active{background:#2b7fb0;border-color:#2b7fb0;color:#fff}
 .scratch-sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;height:33.4dvh;min-height:230px;max-height:55dvh;flex-direction:column;background:#f6fafc;border-top:3px solid #8fb4c9;box-shadow:0 -6px 18px rgba(30,70,100,.18);padding-bottom:env(safe-area-inset-bottom,0)}
@@ -617,3 +617,12 @@ body.scratch-open[data-screen="quiz"] #screen{padding-bottom:calc(33.4dvh + 30px
 @media (min-width:900px){.scratch-sheet{left:50%;right:auto;width:min(860px,96vw);transform:translateX(-50%);border-radius:14px 14px 0 0;border:3px solid #8fb4c9;border-bottom:0}}
 @media (max-width:600px){.scratch-sheet .sp-title{display:none}.scratch-sheet .sp-bar{flex-wrap:nowrap;gap:4px;padding:6px 6px;justify-content:space-between}.scratch-sheet .sp-btn{padding:7px 6px;font-size:.78rem;white-space:nowrap}}
 .no-ticket-box{margin-top:9px}
+/* ボタンの置き場所：狭い画面は「教科を選ぶ」の帯の鉛筆だけ、広い画面は問題の枠の右上の外（問題を下げない） */
+.scratch-toggle.head{width:38px;height:38px;padding:0;justify-content:center;flex:0 0 auto}
+.scratch-toggle.head .sp-ico{font-size:1.25em}
+.scratch-toggle.corner{display:none}
+.question-card{position:relative}
+@media (min-width:900px){.scratch-toggle.head{display:none}.scratch-toggle.corner{display:inline-flex;position:absolute;top:-50px;right:0;z-index:3}}
+@media (max-width:600px){.lesson-heading{gap:8px}.scratch-toggle.head{width:34px;height:34px}.lesson-heading .text-button{white-space:nowrap}.lesson-heading>span:nth-of-type(1){white-space:nowrap}}
+@media (max-width:600px){.lesson-heading{font-size:.8rem;gap:6px}.lesson-heading .text-button{font-size:.8rem;padding-inline:0}.lesson-heading .filter-open{padding:6px 8px;font-size:.74rem}.lesson-heading .quiz-resource-button{transform:scale(.9);margin-inline:-3px}}
+@media (max-width:370px){.lesson-heading .text-button{font-size:0}.lesson-heading .text-button::before{content:'‹ 教科';font-size:.8rem}}
