@@ -37,12 +37,12 @@
   }
 
   // ---- 単語のつづり（書く）：基礎6・標準9・発展7。正しい つづりを えらぶ／書く ----
-  function sp(diff,ja,en,wrong,h1,h2){
-    add('spell',diff,'「'+ja+'」を 英語で 書くと、正しい つづりは どれかな。',en,wrong,[h1,h2],'「'+ja+'」は「'+en+'」と 書きます。',{q:'「'+ja+'」を 英語で 書こう。',mode:'exact'});
+  function sp(diff,ja,en,wrong,h1,h2,more){
+    add('spell',diff,'「'+ja+'」を 英語で 書くと、正しい つづりは どれかな。',en,wrong,[h1,h2],'「'+ja+'」は「'+en+'」と 書きます。'+(more||''),{q:'「'+ja+'」を 英語で 書こう。',mode:'exact'});
   }
   sp('basic','たいよう','sun',['san','son','sum'],'「サン」と 読むよ。','3文字だよ。s から はじまるよ。');
   sp('basic','かばん','bag',['bug','beg','bog'],'「バッグ」と 読むよ。','3文字だよ。b から はじまるよ。');
-  sp('basic','コップ','cup',['cap','cop','kup'],'「カップ」と 読むよ。','3文字だよ。c から はじまるよ。');
+  sp('basic','コップ','cup',['cap','cop','kup'],'「カップ」と 読むよ。','3文字だよ。c から はじまるよ。','ほかの つづりは、「cap」は「ぼうし」、「cop」は「けいさつかん」、「kup」は 英語に ない つづりです。');
   sp('basic','ぼうし','hat',['hit','hut','het'],'「ハット」と 読むよ。','3文字だよ。h から はじまるよ。');
   sp('basic','ぶた','pig',['peg','pug','big'],'「ピッグ」と 読むよ。','3文字だよ。p から はじまるよ。');
   sp('basic','はこ','box',['bax','boks','bocks'],'「ボックス」と 読むよ。','3文字だよ。x で おわるよ。');
@@ -71,7 +71,7 @@
   sn('self','basic','I\'m from Japan.','わたしは 日本から 来ました',['わたしは 日本が 好きです','わたしは 日本に 行きます','わたしは 日本語を 話せます'],'「from」は「～から」の いみだよ。','「Japan」は「日本」だよ。');
   sn('self','basic','I\'m ten years old.','わたしは 10才です',['わたしは 10人 います','わたしは 10時に 起きます','わたしは 10月 生まれです'],'「years old」は「～才」だよ。','「ten」は「10」だよ。');
   qa('self','standard','「What\'s your favorite color?」と 聞かれました。「一番 好きな 色は 青です」と 答えるのは どれかな。','My favorite color is blue.',['My favorite is color blue.','My color favorite is blue.','I\'m favorite blue.'],'「favorite」は「一番 好きな」だよ。','「My favorite ～ is ….」で 答えるよ。','「My favorite color is blue.」は「わたしの一番好きな色は青です。」です。');
-  e2j('self','standard','favorite','一番 好きな',['きらいな','大きな','新しい'],'「ベイヴァリット」と 読むよ。','「My favorite food」の ように 使うよ。',['いちばんすきな','お気に入り','おきにいり','好きな','すきな']);
+  e2j('self','standard','favorite','一番 好きな（お気に入りの）',['きらいな','大きな','新しい'],'「ベイヴァリット」と 読むよ。','「My favorite food」の ように 使うよ。',['いちばんすきな','いちばんすきなおきにいりの','お気に入り','お気に入りの','おきにいり','おきにいりの','好きな','すきな']);
   qa('self','standard','「Do you like soccer?」と 聞かれました。「はい、好きです」と 答えるのは どれかな。','Yes, I do.',['Yes, I am.','Yes, I can.','I like.'],'「Do you ～?」には「do」で 答えるよ。','「はい」は「Yes」だよ。','「Do you like ～?」には、「Yes, I do.」か「No, I don\'t.」で 答えます。');
   sn('self','standard','I like cats, but I don\'t like dogs.','わたしは ねこは 好きですが、いぬは 好きではありません',['わたしは ねこも いぬも 好きです','わたしは ねこは きらいですが、いぬは 好きです','わたしは ねこと いぬを かっています'],'「but」は「でも」の いみだよ。','前と あとで、反対の ことを 言っているよ。');
   sn('self','standard','Please call me Ken.','わたしを ケンと よんでください',['ケンに 電話してください','ケンに 会ってください','ケンを よんでください'],'「call me」は「わたしを よぶ」だよ。','自分の よび名を つたえる 言い方だよ。');
