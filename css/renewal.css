@@ -600,3 +600,19 @@ body[data-screen="exploreQuiz"] main#screen{max-width:1280px;padding-top:15px}
 .hw-also{margin:4px 0 0;font-size:.875rem;color:var(--rn-navy);font-weight:700}
 .no-ticket-box .no-ticket-streak{font-size:.9em;color:#3a7bd5;margin:.2em 0 .6em}
 .streak-note{margin-top:.4em;font-weight:700;color:#d9822b}
+/* 算数の計算用メモ（判断490）：問題のそばのアイコンと、画面の下3分の1ほどのパッド */
+.scratch-toggle{display:inline-flex;align-items:center;gap:5px;margin-left:auto;padding:5px 11px;border:1.5px solid #8fb4c9;border-radius:999px;background:#fff;color:#2b5f7e;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;touch-action:manipulation}
+.scratch-toggle .sp-ico{font-size:1.1em}
+.scratch-toggle.active{background:#2b7fb0;border-color:#2b7fb0;color:#fff}
+.scratch-sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;height:33.4dvh;min-height:230px;max-height:55dvh;flex-direction:column;background:#f6fafc;border-top:3px solid #8fb4c9;box-shadow:0 -6px 18px rgba(30,70,100,.18);padding-bottom:env(safe-area-inset-bottom,0)}
+.scratch-sheet.is-open{display:flex}
+.scratch-sheet .sp-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 10px;background:#e4f0f7}
+.scratch-sheet .sp-title{margin-right:auto;color:#21465c;font-size:.9rem}
+.scratch-sheet .sp-btn{padding:6px 10px;border:1.5px solid #8fb4c9;border-radius:9px;background:#fff;color:#21465c;font:inherit;font-size:.82rem;font-weight:700;cursor:pointer;touch-action:manipulation}
+.scratch-sheet .sp-btn.active{background:#2b7fb0;border-color:#2b7fb0;color:#fff}
+.scratch-sheet .sp-close{background:#fdeceb;border-color:#e0a3a0;color:#8c2f2a}
+.scratch-sheet .sp-canvas{flex:1;min-height:0;width:100%;background:#fff;touch-action:none;cursor:crosshair}
+body.scratch-open:not([data-screen="quiz"]) .scratch-sheet{display:none}
+body.scratch-open[data-screen="quiz"] #screen{padding-bottom:calc(33.4dvh + 30px)}
+@media (min-width:900px){.scratch-sheet{left:50%;right:auto;width:min(860px,96vw);transform:translateX(-50%);border-radius:14px 14px 0 0;border:3px solid #8fb4c9;border-bottom:0}}
+@media (max-width:600px){.scratch-sheet .sp-title{display:none}.scratch-sheet .sp-bar{flex-wrap:nowrap;gap:4px;padding:6px 6px;justify-content:space-between}.scratch-sheet .sp-btn{padding:7px 6px;font-size:.78rem;white-space:nowrap}}

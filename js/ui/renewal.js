@@ -231,15 +231,17 @@
   ]);main.appendChild(top);
   var layout=E('div',{class:'workbench'}),left=E('div',{class:'lesson-left'},[unitsView(),questionIndex()]);layout.appendChild(left);
   var card=E('section',{class:'question-card'});layout.appendChild(card);
-  if(!it){card.appendChild(title(R.learning,R.empty,R.emptyHelp));card.appendChild(button(R.resetFilters,function(){s.sel.unit='all';s.sel.difficulty='random';s.sel.answerType=FF.tickets.recoverTickets(a.state.tickets,a.now()).count?'choice':'input';chooseQuestion();U.rerender();},'rn-button primary'));main.appendChild(layout);return;}
+  if(!it){FF.scratchpad.sync(null);card.appendChild(title(R.learning,R.empty,R.emptyHelp));card.appendChild(button(R.resetFilters,function(){s.sel.unit='all';s.sel.difficulty='random';s.sel.answerType=FF.tickets.recoverTickets(a.state.tickets,a.now()).count?'choice':'input';chooseQuestion();U.rerender();},'rn-button primary'));main.appendChild(layout);return;}
   var q=it.attempt.question,done=it.attempt.done,unit=C.unit(q.subject,q.gradeLevel,q.unit),no=C.numberOf(a.bank,q);
   if(done)card.classList.add('is-done');
   card.appendChild(E('div',{class:'question-meta'},[
    E('span',{class:'question-badge',text:q.generated?R.drill:R.question+' '+(no?no+' / '+C.totalOf(a.bank,q.subject,q.gradeLevel):s.cursor+1)}),
    E('span',{class:'question-unit',text:unit?unit.name:U.plain(L.subjectName(q.subject,q.gradeLevel))}),
    unitTally(q),
-   E('span',{class:'difficulty-badge '+q.difficulty,text:'★ '+difficulty(q.difficulty)})
+   E('span',{class:'difficulty-badge '+q.difficulty,text:'★ '+difficulty(q.difficulty)}),
+   FF.scratchpad.button(q)   // 算数の計算用メモ（判断490）
   ]));
+  FF.scratchpad.sync(q);
   card.appendChild(U.R('div','lesson-question',q.question));
   var speakRow=speakView(q,done);if(speakRow)card.appendChild(speakRow);
   if(q.diagram)card.appendChild(FF.lessonFigure.render(q.diagram));
