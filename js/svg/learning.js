@@ -745,7 +745,7 @@
     cells.forEach(function(c){add(box(130+c[0]*65,14+c[1]*65,65,65,c[2]==='Ａ'?'#f5dbaf':pale),text(162+c[0]*65,54+c[1]*65,c[2],22));});
    }else if(d.kind==='grid'){
     h=272;for(var g=0;g<=5;g++){add(line(120+g*43,27,120+g*43,242,'#c0d7e4'),line(120,242-g*43,335,242-g*43,'#c0d7e4'),text(120+g*43,264,g,16),text(100,248-g*43,g,16));}
-    add(S('circle',{cx:120+d.x*43,cy:242-d.y*43,r:7,fill:orange}),text(135+d.x*43,228-d.y*43,'Ｐ',20),text(365,243,'右',17),text(75,40,'上',17));
+    add(S('circle',{cx:120+d.x*43,cy:242-d.y*43,r:7,fill:orange}),text(135+d.x*43,228-d.y*43,d.label||'Ｐ',20),text(365,243,'右',17),text(75,40,'上',17));
    }else if(d.kind==='axes'){
     add(line(165,187,423,187),line(165,187,165,30),line(165,187,305,58),text(446,195,'右',17),text(165,22,'高さ',17),text(330,57,'奥',17));
     add(text(305,218,'右 '+d.values[0],18),text(88,90,'高さ '+d.values[2],18),text(325,105,'奥 '+d.values[1],18));
@@ -761,7 +761,7 @@
     // けたの数に合わせて、わくと柱の位置を決める（3けた以上でも、一の位まで、わくの中に入る。判断311）
     h=270;var cols=d.digits.length,colW=Math.min(110,440/cols),x0=(520-colW*cols)/2+colW/2;
     add(box(x0-colW/2-15,15,colW*cols+30,223,'#f8eedc'),line(x0-colW/2-5,97,x0+colW*(cols-0.5)+5,97,'#8e6742'));
-    d.digits.forEach(function(n,i){var x=x0+i*colW;add(line(x,25,x,225,'#aa8764'),text(x,260,d.labels[i],17));
+    d.digits.forEach(function(n,i){var x=x0+i*colW;add(line(x,25,x,225,'#aa8764'),text(x,260,/^[一十百千万]$/.test(d.labels[i])?d.labels[i]+'の位':d.labels[i],17));
      function bead(y,on){add(S('polygon',{points:[[x-24,y],[x-14,y-9],[x+14,y-9],[x+24,y],[x+14,y+9],[x-14,y+9]].map(function(p){return p.join(',');}).join(' '),fill:on?orange:'#e3d6c3',stroke:on?'#b67a26':'#b8a084','stroke-width':1.5}));}
      bead(n>=5?79:39,n>=5);var count=n%5;
      for(var j=0;j<4;j++)bead(j<count?114+j*20:219-(3-j)*20,j<count);
