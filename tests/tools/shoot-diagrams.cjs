@@ -14,7 +14,8 @@ const root=path.resolve(__dirname,'..','..'),out=process.argv[2];fs.mkdirSync(ou
    FF.app.session.items[q.id]={attempt:FF.learning.startAttempt(q),outcome:null,picked:null,selected:null,typed:'',resource:'wood'};
    FF.ui.show('quiz');scrollTo(0,0);};
  });
- const list=await page.evaluate(()=>Object.values(FF.app.bank.byId).filter(q=>q.diagram&&q.diagram.kind!=='image').map(q=>({id:q.id,subject:q.subject,grade:q.gradeLevel,unit:q.unit,kind:q.diagram.kind,question:q.question,answer:q.answer,choices:q.choices||null,caption:q.diagram.caption,explanation:q.explanation})));
+ const only=process.env.IDS?process.env.IDS.split(','):null;
+ const list=await page.evaluate(only=>Object.values(FF.app.bank.byId).filter(q=>only?only.includes(q.id):(q.diagram&&q.diagram.kind!=='image')).map(q=>({id:q.id,subject:q.subject,grade:q.gradeLevel,unit:q.unit,kind:q.diagram?q.diagram.kind:null,question:q.question,answer:q.answer,choices:q.choices||null,caption:q.diagram?q.diagram.caption:null,explanation:q.explanation})),only);
  for(const m of list){await page.evaluate(id=>qaShow(id),m.id);await page.waitForTimeout(40);
   await page.locator('.question-card').screenshot({path:path.join(out,m.id+'.png'),style:'#hud, #nav { visibility:hidden !important; }'});}
  fs.writeFileSync(path.join(out,'manifest.json'),JSON.stringify(list,null,1));console.log(list.length);await browser.close();

@@ -11,7 +11,10 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const UI_PATTERN = /^js\/(ui|svg)\/|^js\/(debug|main)\.js$/;
 
 const ALL_SCRIPTS = [...fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').matchAll(/<script\s+src="([^"]+)"/g)].map(m => m[1]);
-const LOGIC_FILES = ALL_SCRIPTS.filter(f => !UI_PATTERN.test(f));
+// 図の見直しで外した図の上書き（questions/diagram-fixes.js。判断495）は、ふつうのテストでは読み込まない（もとの図の依頼どおりの数を確かめるテストのため）。
+// 外したあとの問題を調べるテストは、LOGIC_FILES_WITH_FIXES で読み込む
+const LOGIC_FILES_WITH_FIXES = ALL_SCRIPTS.filter(f => !UI_PATTERN.test(f));
+const LOGIC_FILES = LOGIC_FILES_WITH_FIXES.filter(f => f !== 'questions/diagram-fixes.js');
 const UI_FILES = ALL_SCRIPTS.filter(f => UI_PATTERN.test(f));
 const QUESTION_FILES = LOGIC_FILES.filter(f => f.startsWith('questions/'));
 
@@ -27,4 +30,4 @@ function load(files) {
   return context;
 }
 
-module.exports = { load, ROOT, ALL_SCRIPTS, LOGIC_FILES, UI_FILES, QUESTION_FILES };
+module.exports = { load, ROOT, ALL_SCRIPTS, LOGIC_FILES, LOGIC_FILES_WITH_FIXES, UI_FILES, QUESTION_FILES };
