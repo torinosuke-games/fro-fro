@@ -151,6 +151,23 @@ module.exports = ({ test, FF, assert, plain }) => {
     assert.strictEqual(n.outcome.streakMult, 1);
     assert.strictEqual(n.state.learning.freeStreak, 0);
   });
+  test('連続正解は、チケットを使った問題も数える。ボーナスが付くのはチケットなしの問題だけ', () => {
+    let s = noTk(2);
+    for (let i = 0; i < 5; i++) s = L.submitAnswer(s, L.startAttempt(bq(2, 'tk' + i), rng()), 'みず', ctx({ elapsedMs: 5000, random: true })).state;
+    assert.strictEqual(s.learning.freeStreak, 5);
+    s.tickets = { count: 1, lastRecoveredAt: T0 };   // チケットが1枚回復
+    const withTk = L.submitAnswer(s, L.startAttempt(bq(2, 'tk5'), rng()), 'みず', ctx({ elapsedMs: 5000, random: true }));
+    assert.strictEqual(withTk.outcome.noTicket, false);
+    assert.strictEqual(withTk.outcome.streak, 6);
+    assert.strictEqual(withTk.state.tickets.count, 0);
+    const again = L.submitAnswer(withTk.state, L.startAttempt(bq(2, 'tk6'), rng()), 'みず', ctx({ elapsedMs: 5000, random: true }));
+    assert.strictEqual(again.outcome.noTicket, true);
+    assert.strictEqual(Math.round(again.outcome.streakMult * 10) / 10, 1.6);   // 6問連続のあと
+    // チケットを使った問題をまちがえると、連続は戻る
+    s.tickets = { count: 1, lastRecoveredAt: T0 };
+    const miss = L.submitAnswer(s, L.startAttempt(bq(2, 'tkw'), rng()), 'いし', ctx({ elapsedMs: 5000, random: true }));
+    assert.strictEqual(miss.state.learning.freeStreak, 0);
+  });
   test('チケットなし：倍率は最大2倍。速すぎる回答（2秒未満）は正解でも報酬なし', () => {
     const s = noTk(2); s.learning.freeStreak = 50;
     const r = L.submitAnswer(s, L.startAttempt(bq(2, 'ntm'), rng()), 'みず', ctx({ elapsedMs: 5000, random: true }));

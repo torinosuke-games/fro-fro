@@ -274,7 +274,7 @@
      E('div',{class:'reward-gain reward-heat'},[E('img',{attrs:{src:'img/heat.svg',alt:''}}),E('strong',{text:'+'+it.outcome.points}),E('span',{text:R.heat})])
     ]):E('span',{text:R.reviewNote})
    ]);
-   if(good&&it.outcome.noTicket&&it.outcome.streak>=2)fb.appendChild(E('div',{class:'streak-note',text:R.noTicketStreakNow.replace('{n}',it.outcome.streak).replace('{mult}',String(Math.round(it.outcome.streakMult*100)))}));
+   if(good&&it.outcome.streak>=2)fb.appendChild(E('div',{class:'streak-note',text:(it.outcome.noTicket?R.noTicketStreakNow.replace('{mult}',String(Math.round(it.outcome.streakMult*100))):R.ticketStreakNow).replace('{n}',it.outcome.streak)}));
    card.appendChild(fb);
    var det=E('details',{class:'reward-details'},[E('summary',{text:R.rewardDetails})]);
    if(good){var bd=it.outcome.breakdown;det.appendChild(E('p',{text:R.rewardFormula.replace('{accuracy}',String(Math.round(bd.accuracy*100))).replace('{repeat}',String(Math.round(bd.repeat*100))).replace('{hint}',String(Math.round(bd.hint*100)))}));}

@@ -616,3 +616,4 @@ body.scratch-open:not([data-screen="quiz"]) .scratch-sheet{display:none}
 body.scratch-open[data-screen="quiz"] #screen{padding-bottom:calc(33.4dvh + 30px)}
 @media (min-width:900px){.scratch-sheet{left:50%;right:auto;width:min(860px,96vw);transform:translateX(-50%);border-radius:14px 14px 0 0;border:3px solid #8fb4c9;border-bottom:0}}
 @media (max-width:600px){.scratch-sheet .sp-title{display:none}.scratch-sheet .sp-bar{flex-wrap:nowrap;gap:4px;padding:6px 6px;justify-content:space-between}.scratch-sheet .sp-btn{padding:7px 6px;font-size:.78rem;white-space:nowrap}}
+.no-ticket-box{margin-top:9px}
