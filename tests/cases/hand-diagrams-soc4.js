@@ -17,7 +17,7 @@ module.exports=({test,ctx,FF,assert,plain})=>{
  test('社会図：mainの297問はdiagram以外の全項目を保持',()=>{
   const original=all.map(q=>{const copy={...q};if(ids.includes(q.id))delete copy.diagram;return copy;});
   assert.equal(original.length,297);
-  assert.equal(crypto.createHash('sha256').update(JSON.stringify(original)).digest('hex'),'ca40e5b1247f6446217b4b362c74be93502c6f88f1ace947b4bce419d64cf8ac');
+  assert.equal(crypto.createHash('sha256').update(JSON.stringify(original)).digest('hex'),'11e4a911cb430c7ab9a2ce48923263cffcfedaeceb5b561f25b9d37847296219');
  });
  test('社会図：地図の座標・範囲・印・線の入力を検証',()=>{
   const maps=qs.filter(q=>q.diagram.kind==='japanMap');assert.equal(maps.length,17); // pioneer_010 は第15弾で絵に変更

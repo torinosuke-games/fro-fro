@@ -8,8 +8,8 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  const hash=v=>crypto.createHash('sha256').update(JSON.stringify(v)).digest('hex');
  test('第13弾：3問のdiagramだけを変更・ほかの294問と全問題本文を固定',()=>{
   assert.equal(all.length,297);assert.equal(all.filter(q=>!ids.includes(q.id)).length,294);
-  assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'625e441084743719fec0ae819bbc302f03a59a30b4c3b2787c5e384da8207e66');
-  assert.equal(hash(all.map(q=>{const r={...q};delete r.diagram;return r;})),'ca40e5b1247f6446217b4b362c74be93502c6f88f1ace947b4bce419d64cf8ac');
+  assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'92e9dd9f5c439e2ad2cccd06198af0cfacb9fd06c5f7f7c7f54536d035affca2');
+  assert.equal(hash(all.map(q=>{const r={...q};delete r.diagram;return r;})),'11e4a911cb430c7ab9a2ce48923263cffcfedaeceb5b561f25b9d37847296219');
   assert.equal(hash(plain(FF.japanMapData.coasts)),'ad3a5d69a5a2899f1ead5e424dcaaf2b2c8e40aae180436674f95ddc3797da07');
   const bank=FF.learning.createBank(ctx.QUESTION_BANK);
   for(const id of ids){const q=all.find(q=>q.id===id);assert.ok(q.diagram.caption);assert.ok(!q.diagram.caption.includes(q.answer));if(bank.byId[id+'#input'])assert.deepEqual(plain(bank.byId[id+'#input'].diagram),q.diagram);}

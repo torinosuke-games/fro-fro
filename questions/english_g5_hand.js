@@ -45,7 +45,7 @@
   sp('basic','コップ','cup',['cap','cop','kup'],'「カップ」と 読むよ。','3文字だよ。c から はじまるよ。');
   sp('basic','ぼうし','hat',['hit','hut','het'],'「ハット」と 読むよ。','3文字だよ。h から はじまるよ。');
   sp('basic','ぶた','pig',['peg','pug','big'],'「ピッグ」と 読むよ。','3文字だよ。p から はじまるよ。');
-  sp('basic','はこ','box',['bax','bog','bax'.replace('bax','bocks')],'「ボックス」と 読むよ。','3文字だよ。x で おわるよ。');
+  sp('basic','はこ','box',['bax','boks','bocks'],'「ボックス」と 読むよ。','3文字だよ。x で おわるよ。');
   sp('standard','りんご','apple',['appel','aple','appul'],'「アップル」と 読むよ。','p が 2つ ならぶよ。');
   sp('standard','緑','green',['grean','gren','greeen'],'「グリーン」と 読むよ。','e が 2つ ならぶよ。');
   sp('standard','黒','black',['blak','blck','blach'],'「ブラック」と 読むよ。','「ck」で おわるよ。');
@@ -66,11 +66,11 @@
   // ---- じこしょうかい・好きなこと：基礎6・標準9・発展7 ----
   sn('self','basic','I like dogs.','わたしは いぬが 好きです',['わたしは いぬが きらいです','わたしは いぬを かっています','わたしは いぬに なりたいです'],'「like」は 好きという 気もちだよ。','「dogs」は「いぬ」だよ。');
   sn('self','basic','I don\'t like fish.','わたしは さかなが 好きではありません',['わたしは さかなが 好きです','わたしは さかなを 食べました','わたしは さかなを つりました'],'「don\'t」は「～ない」の いみだよ。','「fish」は「さかな」だよ。');
-  qa('self','basic','「What do you like?」と 聞かれました。「パンが 好きです」と 答えるのは どれかな。','I like bread.',['I\'m bread.','My name is bread.','Yes, I do.'],'「What do you like?」は「何が 好きですか」だよ。','「I like ～.」で 好きな ものを 言うよ。','「I like bread.」は「わたしはパンが好きです。」です。');
+  qa('self','basic','「What do you like?」と 聞かれました。「パンが 好きです」と 答えるのは どれかな。','I like bread.',['I\'m like bread.','Yes, I do.','I have a bread.'],'「What do you like?」は「何が 好きですか」だよ。','「I like ～.」で 好きな ものを 言うよ。','「I like bread.」は「わたしはパンが好きです。」です。');
   sn('self','basic','My name is Mika.','わたしの 名前は ミカです',['わたしは ミカが 好きです','わたしは ミカに 会いました','わたしの 友だちは ミカです'],'「name」は「名前」だよ。','「My name is ～.」は じこしょうかいの 言い方だよ。');
   sn('self','basic','I\'m from Japan.','わたしは 日本から 来ました',['わたしは 日本が 好きです','わたしは 日本に 行きます','わたしは 日本語を 話せます'],'「from」は「～から」の いみだよ。','「Japan」は「日本」だよ。');
   sn('self','basic','I\'m ten years old.','わたしは 10才です',['わたしは 10人 います','わたしは 10時に 起きます','わたしは 10月 生まれです'],'「years old」は「～才」だよ。','「ten」は「10」だよ。');
-  qa('self','standard','「What\'s your favorite color?」と 聞かれました。「一番 好きな 色は 青です」と 答えるのは どれかな。','My favorite color is blue.',['I like blue color is.','My name is blue.','I\'m blue.'],'「favorite」は「一番 好きな」だよ。','「My favorite ～ is ….」で 答えるよ。','「My favorite color is blue.」は「わたしの一番好きな色は青です。」です。');
+  qa('self','standard','「What\'s your favorite color?」と 聞かれました。「一番 好きな 色は 青です」と 答えるのは どれかな。','My favorite color is blue.',['My favorite is color blue.','My color favorite is blue.','I\'m favorite blue.'],'「favorite」は「一番 好きな」だよ。','「My favorite ～ is ….」で 答えるよ。','「My favorite color is blue.」は「わたしの一番好きな色は青です。」です。');
   e2j('self','standard','favorite','一番 好きな',['きらいな','大きな','新しい'],'「ベイヴァリット」と 読むよ。','「My favorite food」の ように 使うよ。',['いちばんすきな','お気に入り','おきにいり','好きな','すきな']);
   qa('self','standard','「Do you like soccer?」と 聞かれました。「はい、好きです」と 答えるのは どれかな。','Yes, I do.',['Yes, I am.','Yes, I can.','I like.'],'「Do you ～?」には「do」で 答えるよ。','「はい」は「Yes」だよ。','「Do you like ～?」には、「Yes, I do.」か「No, I don\'t.」で 答えます。');
   sn('self','standard','I like cats, but I don\'t like dogs.','わたしは ねこは 好きですが、いぬは 好きではありません',['わたしは ねこも いぬも 好きです','わたしは ねこは きらいですが、いぬは 好きです','わたしは ねこと いぬを かっています'],'「but」は「でも」の いみだよ。','前と あとで、反対の ことを 言っているよ。');
@@ -81,8 +81,8 @@
   sn('self','standard','He likes music.','かれは 音楽が 好きです',['かのじょは 音楽が 好きです','わたしは 音楽が 好きです','かれは 音楽を ききました'],'「He」は「かれ」だよ。','「music」は「音楽」だよ。');
   qa('self','advanced','「Who is this?」「This is my mother.」この 答えは どういう 意味かな。','こちらは わたしの お母さんです',['こちらは わたしの 先生です','これは わたしの かばんです','お母さんは どこですか'],'「mother」は「お母さん」だよ。','「Who is this?」は「こちらは だれですか」だよ。','「This is my mother.」は「こちらはわたしのお母さんです。」です。');
   sn('self','advanced','He is my brother.','かれは わたしの 兄（弟）です',['かれは わたしの お父さんです','かれは わたしの 友だちです','かれは わたしの 先生です'],'「brother」は「兄・弟」だよ。','「He」は「かれ」だよ。');
-  qa('self','advanced','「What sport do you like?」と 聞かれました。「テニスが 好きです」と 答えるのは どれかな。','I like tennis.',['I\'m tennis.','Yes, I do.','I can tennis.'],'「sport」は「スポーツ」だよ。','「I like ～.」で 答えるよ。','「What sport do you like?」は「どんなスポーツが好きですか。」です。');
-  qa('self','advanced','「What\'s your favorite subject?」と 聞かれました。「算数が 一番 好きです」と 答えるのは どれかな。','My favorite subject is math.',['I like math is.','My subject is favorite.','I\'m math.'],'「subject」は「教科」だよ。','「My favorite subject is ～.」で 答えるよ。','「What\'s your favorite subject?」は「一番好きな教科は何ですか。」です。');
+  qa('self','advanced','「What sport do you like?」と 聞かれました。「テニスが 好きです」と 答えるのは どれかな。','I like tennis.',['I\'m like tennis.','Yes, I do.','I like to tennis.'],'「sport」は「スポーツ」だよ。','「I like ～.」で 答えるよ。','「What sport do you like?」は「どんなスポーツが好きですか。」です。');
+  qa('self','advanced','「What\'s your favorite subject?」と 聞かれました。「算数が 一番 好きです」と 答えるのは どれかな。','My favorite subject is math.',['My favorite is subject math.','My subject favorite is math.','I\'m favorite math.'],'「subject」は「教科」だよ。','「My favorite subject is ～.」で 答えるよ。','「What\'s your favorite subject?」は「一番好きな教科は何ですか。」です。');
   sn('self','advanced','I like swimming.','わたしは およぐことが 好きです',['わたしは およげます','わたしは およぎました','わたしは およぎたいです'],'「swimming」は「およぐこと」の いみだよ。','「like ～ing」で「～することが 好き」だよ。');
   qa('self','advanced','「My favorite animal is the panda.」の「animal」は 日本語で 何かな。','動物',['食べもの','スポーツ','教科'],'「panda」は「パンダ」だよ。','「animal」は「アニマル」と 読むよ。','「animal」は「動物」です。「My favorite animal is the panda.」は「わたしの一番好きな動物はパンダです。」です。',{q:'「animal」は 日本語で 何かな。',mode:'kana-insensitive',acc:['どうぶつ']});
   sn('self','advanced','I don\'t like spiders.','わたしは クモが 好きではありません',['わたしは クモが 好きです','わたしは クモを つかまえました','わたしは クモを 見ました'],'「don\'t like」は「好きではない」だよ。','「spiders」は「クモ」だよ。');
@@ -101,13 +101,13 @@
   od('standard','9th','ninth',['nine','eighth','tenth'],'「ナインス」と 読むよ。','nine の e が とれて、「ninth」に なるよ。');
   od('standard','20th','twentieth',['twenty','nineteenth','twenty-first'],'「トゥエンティエス」と 読むよ。','twenty の y が ie に かわるよ。');
   qa('month','standard','「My birthday is May 5th.」は いつの たんじょう日かな。','5月5日',['5月15日','4月5日','5月3日'],'「May」は「5月」だよ。','「5th」は「5番目＝5日」だよ。','「May 5th」は「5月5日」です。',{q:'「My birthday is May 5th.」は 何月何日かな。（例：3月10日）',mode:'kana-insensitive',acc:['5月5日','５月５日','五月五日']});
-  qa('month','standard','「When is your birthday?」と 聞かれました。「10月10日です」と 答えるのは どれかな。','My birthday is October 10th.',['My birthday is October 1st.','My birthday is November 10th.','My birthday is 10th October is.'],'「October」は「10月」だよ。','「10日」は「10th」だよ。','「My birthday is October 10th.」は「わたしのたんじょう日は10月10日です。」です。');
+  qa('month','standard','「When is your birthday?」と 聞かれました。「10月10日です」と 答えるのは どれかな。','My birthday is October 10th.',['My birthday is October 1st.','My birthday is November 10th.','I\'m October 10th.'],'「October」は「10月」だよ。','「10日」は「10th」だよ。','「My birthday is October 10th.」は「わたしのたんじょう日は10月10日です。」です。');
   qa('month','standard','「When is your birthday?」は どういう 意味かな。','あなたの たんじょう日は いつですか',['あなたの たんじょう日は 何才ですか','あなたの たんじょう日は どこですか','あなたは だれですか'],'「When」は「いつ」だよ。','「birthday」は「たんじょう日」だよ。','「When is your birthday?」は「あなたのたんじょう日はいつですか。」です。');
   od('standard','21st','twenty-first',['twenty-one','twentieth','twenty-second'],'「トゥエンティファースト」と 読むよ。','twenty と first を ハイフンで つなぐよ。');
   od('standard','22nd','twenty-second',['twenty-two','twenty-first','twenty-third'],'「トゥエンティセカンド」と 読むよ。','twenty と second を ハイフンで つなぐよ。');
   od('standard','30th','thirtieth',['thirty','twenty-ninth','thirty-first'],'「サーティエス」と 読むよ。','thirty の y が ie に かわるよ。');
   qa('month','advanced','「July 7th」は 何月何日かな。','7月7日',['7月17日','6月7日','7月3日'],'「July」は「7月」だよ。','七夕の 日だよ。','「July 7th」は「7月7日（七夕）」です。',{q:'「July 7th」は 何月何日かな。（例：3月10日）',mode:'kana-insensitive',acc:['7月7日','７月７日','七月七日']});
-  qa('month','advanced','「December 25th」は 何の 日かな。','クリスマス',['お正月','たんじょう日','こどもの日'],'「December」は「12月」だよ。','12月の 25日の 行事だよ。','「December 25th」は「12月25日」で、クリスマスです。',{q:'「December 25th」は 何の 日かな。',mode:'kana-insensitive',acc:['クリスマス','くりすます','Christmas','christmas']});
+  qa('month','advanced','「December 25th」は 何の 日かな。','クリスマス',['お正月','こどもの日','七夕'],'「December」は「12月」だよ。','12月の 25日の 行事だよ。','「December 25th」は「12月25日」で、クリスマスです。',{q:'「December 25th」は 何の 日かな。',mode:'kana-insensitive',acc:['クリスマス','くりすます','Christmas','christmas']});
   qa('month','advanced','「What\'s the date today?」「It\'s March 3rd.」は どういう 意味かな。','今日は 3月3日です',['今日は 3月3日ではありません','明日は 3月3日です','きのうは 3月3日でした'],'「date」は「日付」だよ。','「It\'s ～.」で 日付を 答えるよ。','「What\'s the date today?」は「今日は何月何日ですか。」です。「It\'s March 3rd.」は「3月3日です。」です。');
   qa('month','advanced','「Children\'s Day is May 5th.」は どういう 意味かな。','こどもの日は 5月5日です',['こどもの日は 5月15日です','こどもの日は 4月5日です','こどもの日は 5月5日では ありません'],'「Children\'s Day」は「こどもの日」だよ。','「May」は「5月」だよ。','「Children\'s Day is May 5th.」は「こどもの日は5月5日です。」です。');
   qa('month','advanced','「New Year\'s Day is January 1st.」は どういう 意味かな。','お正月は 1月1日です',['お正月は 12月31日です','お正月は 1月11日です','お正月は 2月1日です'],'「New Year\'s Day」は「お正月」だよ。','「January」は「1月」だよ。','「New Year\'s Day is January 1st.」は「お正月は1月1日です。」です。');
@@ -135,7 +135,7 @@
   qa('can','advanced','「Can he swim?」と 聞かれました。「はい、かれは およげます」と 答えるのは どれかな。','Yes, he can.',['Yes, I can.','Yes, he does.','Yes, he is.'],'「Can he ～?」の 「he」は「かれ」だよ。','答えにも「he」を 使うよ。','「Can he swim?」には、「Yes, he can.」か「No, he can\'t.」で 答えます。');
   qa('can','advanced','「Can you jump rope?」の「jump rope」は 日本語で 何かな。','なわとび',['つなひき','おいかけっこ','かくれんぼ'],'「jump」は「とぶ」、「rope」は「ロープ」だよ。','体育で よく する 運動だよ。','「jump rope」は「なわとび」です。',{q:'「jump rope」は 日本語で 何かな。',mode:'kana-insensitive',acc:['縄跳び','なわとび']});
   qa('can','advanced','「I can play the piano, but I can\'t play the violin.」の 意味は どれかな。','ピアノは ひけるけれど、バイオリンは ひけません',['ピアノも バイオリンも ひけます','ピアノは ひけないけれど、バイオリンは ひけます','ピアノも バイオリンも ひけません'],'「but」は「でも」の いみだよ。','前と あとで、反対の ことを 言っているよ。','「but」の 前は「ひける」、あとは「ひけない」と 反対の ことを 言っています。');
-  qa('can','advanced','「I can\'t swim, but I can run fast.」で、およげない ことを 言っているのは どちらかな。','前の 文（I can\'t swim）',['あとの 文（I can run fast）','どちらでも ない','どちらも およげる'],'「can\'t」は「～できない」だよ。','「but」の 前と あとを くらべよう。','「I can\'t swim」は「およげません」、「I can run fast」は「速く 走れます」です。');
+  qa('can','advanced','「I can\'t swim, but I can run fast.」で、およげない ことを 言っているのは どちらかな。','前の 文（I can\'t swim）',['あとの 文（I can run fast）','どちらも およげないと 言っている','どちらも およげると 言っている'],'「can\'t」は「～できない」だよ。','「but」の 前と あとを くらべよう。','「I can\'t swim」は「およげません」、「I can run fast」は「速く 走れます」です。');
 
   sn('can','advanced','She can dance very well.','かのじょは とても じょうずに おどれます',['かのじょは とても おどりが きらいです','かのじょは とても じょうずに うたえます','かのじょは おどれません'],'「very well」は「とても じょうずに」だよ。','「dance」は「おどる」だよ。');
 
@@ -159,7 +159,7 @@
   e2j('daily','advanced','in the afternoon','午後に',['朝に','夜に','夕方に'],'「イン ジ アフタヌーン」と 読むよ。','「afternoon」は「午後」だよ。',['ごごに']);
   e2j('daily','advanced','at night','夜に',['朝に','午後に','夕方に'],'「アット ナイト」と 読むよ。','「night」は「夜」だよ。',['よるに']);
   e2j('daily','advanced','every day','毎日',['毎週','毎月','毎年'],'「エブリ デイ」と 読むよ。','「day」は「日」だよ。',['まいにち']);
-  qa('daily','advanced','「I study English on Mondays.」の「on Mondays」は どういう 意味かな。','毎週 月曜日に',['毎日','月曜日だけ きのう','月曜日に ならないと'],'「Monday」は「月曜日」だよ。','「Mondays」と 複数形に なっているよ。','「on Mondays」は「毎週月曜日に」です。');
+  qa('daily','advanced','「I study English on Mondays.」の「on Mondays」は どういう 意味かな。','毎週 月曜日に',['毎週 日曜日に','今度の 月曜日に','毎月 月曜日に'],'「Monday」は「月曜日」だよ。','「Mondays」と 複数形に なっているよ。','「on Mondays」は「毎週月曜日に」です。');
   qa('daily','advanced','「What do you do on Sundays?」と 聞かれました。「サッカーを します」と 答えるのは どれかな。','I play soccer.',['I am soccer.','I like soccer is.','I soccer play.'],'「play」は「（スポーツを）する」だよ。','「What do you do ～?」は「何を しますか」だよ。','「What do you do on Sundays?」は「日曜日には何をしますか。」です。「I play soccer.」は「サッカーをします。」です。');
   sn('daily','advanced','I always eat breakfast.','わたしは いつも 朝ごはんを 食べます',['わたしは ときどき 朝ごはんを 食べます','わたしは 朝ごはんを 食べません','わたしは 朝ごはんを 作ります'],'「always」は「いつも」だよ。','毎日 かならず する ことを 言う ときに 使うよ。');
 
@@ -174,11 +174,11 @@
   e2j('direction','standard','post office','ゆうびんきょく',['病院','銀行','駅'],'「ポスト オフィス」と 読むよ。','手紙や はがきを 出す ところだよ。',['郵便局','ゆうびんきょく']);
   e2j('direction','standard','station','駅',['公園','学校','図書館'],'「ステーション」と 読むよ。','電車に 乗る ところだよ。',['えき']);
   e2j('direction','standard','hospital','病院',['学校','駅','公園'],'「ホスピタル」と 読むよ。','病気や けがを みてもらう ところだよ。',['びょういん']);
-  e2j('direction','standard','supermarket','スーパーマーケット',['図書館','病院','公園'],'「スーパーマーケット」と 読むよ。','食べものや 日用品を 買う ところだよ。',['スーパー','すーぱー']);
+  e2j('direction','standard','supermarket','スーパーマーケット',['デパート','レストラン','パン屋さん'],'「スーパーマーケット」と 読むよ。','食べものや 日用品を 買う ところだよ。',['スーパー','すーぱー']);
   e2j('direction','standard','bank','銀行',['病院','駅','学校'],'「バンク」と 読むよ。','お金を あずける ところだよ。',['ぎんこう']);
-  qa('direction','standard','「Excuse me. Where is the station?」と 聞かれました。「まっすぐ 行って、右に 曲がって ください」と 答えるのは どれかな。','Go straight and turn right.',['Turn left and stop.','It\'s a station.','I like trains.'],'「Where is ～?」は「～は どこですか」だよ。','「Go straight」は「まっすぐ」、「turn right」は「右に 曲がる」だよ。','「Go straight and turn right.」は「まっすぐ行って、右に曲がってください。」です。');
+  qa('direction','standard','「Excuse me. Where is the station?」と 聞かれました。「まっすぐ 行って、右に 曲がって ください」と 答えるのは どれかな。','Go straight and turn right.',['Turn left and go straight.','Go straight and turn left.','It\'s next to the station.'],'「Where is ～?」は「～は どこですか」だよ。','「Go straight」は「まっすぐ」、「turn right」は「右に 曲がる」だよ。','「Go straight and turn right.」は「まっすぐ行って、右に曲がってください。」です。');
   sn('direction','standard','It\'s on your left.','それは あなたの 左がわに あります',['それは あなたの 右がわに あります','それは あなたの 前に あります','それは あなたの うしろに あります'],'「left」は「左」だよ。','「on your ～」は「あなたの ～がわに」だよ。');
-  sn('direction','standard','It\'s next to the library.','それは 図書館の となりに あります',['それは 図書館の 前に あります','それは 図書館の 中に あります','それは 図書館の 近くには ありません'],'「next to」は「～の となり」だよ。','「library」は「図書館」だよ。');
+  sn('direction','standard','It\'s next to the library.','それは 図書館の となりに あります',['それは 図書館の 前に あります','それは 図書館の 中に あります','それは 図書館の うしろに あります'],'「next to」は「～の となり」だよ。','「library」は「図書館」だよ。');
   qa('direction','advanced','「It\'s between the bank and the post office.」は どういう 意味かな。','それは 銀行と ゆうびんきょくの 間に あります',['それは 銀行の となりに あります','それは ゆうびんきょくの 前に あります','それは 銀行の 中に あります'],'「between A and B」は「AとBの 間」だよ。','「bank」は「銀行」、「post office」は「ゆうびんきょく」だよ。','「between A and B」は「AとBの間」です。');
   sn('direction','advanced','Go straight for two blocks.','2ブロック まっすぐ 行ってください',['2回 曲がってください','2ブロック もどってください','2分 待ってください'],'「block」は「ブロック（道の 区切り）」だよ。','「two blocks」は「2ブロック」だよ。');
   sn('direction','advanced','Turn left at the corner.','かどで 左に 曲がってください',['かどで 右に 曲がってください','かどで 止まってください','かどに 立ってください'],'「corner」は「かど」だよ。','「turn left」は「左に 曲がる」だよ。');
@@ -193,21 +193,21 @@
   e2j('want','basic','How much?','いくら',['いつ','どこ','だれ'],'「ハウ マッチ」と 読むよ。','ねだんを たずねる 言葉だよ。',['いくらですか','いくら？']);
   e2j('want','basic','yen','円',['ドル','ユーロ','元'],'「イェン」と 読むよ。','日本の お金の たんいだよ。',['えん']);
   e2j('want','basic','Here you are.','どうぞ',['ありがとう','すみません','さようなら'],'ものを わたすときに 言うよ。','「Thank you.」と 返されることが 多いよ。',['はい、どうぞ','どうぞ']);
-  e2j('want','basic','one hundred','100',['10','1000','11'],'「ワン ハンドレッド」と 読むよ。','hundred は「百」だよ。',['百','ひゃく','100']);
-  qa('want','standard','「How much is this?」と 聞かれました。「300円です」と 答えるのは どれかな。','It\'s three hundred yen.',['It\'s thirty yen.','I\'m three hundred.','Yes, it is.'],'「How much ～?」は ねだんを たずねるよ。','「three hundred」は「300」だよ。','「How much is this?」は「これは いくらですか。」です。「It\'s three hundred yen.」は「300円です。」です。');
+  e2j('want','basic','one hundred','100',['10','1000','110'],'「ワン ハンドレッド」と 読むよ。','hundred は「百」だよ。',['百','ひゃく','100']);
+  qa('want','standard','「How much is this?」と 聞かれました。「300円です」と 答えるのは どれかな。','It\'s three hundred yen.',['It\'s thirty yen.','It\'s three thousand yen.','It\'s two hundred yen.'],'「How much ～?」は ねだんを たずねるよ。','「three hundred」は「300」だよ。','「How much is this?」は「これは いくらですか。」です。「It\'s three hundred yen.」は「300円です。」です。');
   sn('want','standard','I want a new bike.','わたしは 新しい 自転車が ほしいです',['わたしは 新しい 自転車を もっています','わたしは 新しい 自転車を 買いました','わたしは 新しい 自転車に 乗れます'],'「new」は「新しい」だよ。','「bike」は「自転車」だよ。');
   sn('want','standard','I\'d like a hamburger.','ハンバーガーを ください',['ハンバーガーが きらいです','ハンバーガーを 作りました','ハンバーガーは どこですか'],'「I\'d like ～.」は「～を ください」と ていねいに たのむ 言い方だよ。','お店で よく 使うよ。');
   qa('want','standard','「What do you want?」と 聞かれました。「ペンが ほしいです」と 答えるのは どれかな。','I want a pen.',['I like a pen.','I\'m a pen.','Yes, I do.'],'「What do you want?」は「何が ほしいですか」だよ。','「I want ～.」で 答えるよ。','「What do you want?」は「何がほしいですか。」です。「I want a pen.」は「ペンがほしいです。」です。');
-  e2j('want','standard','two hundred','200',['20','2000','22'],'「トゥー ハンドレッド」と 読むよ。','hundred は「百」だよ。',['二百','にひゃく','200']);
-  e2j('want','standard','five hundred','500',['50','5000','15'],'「ファイブ ハンドレッド」と 読むよ。','hundred は「百」だよ。',['五百','ごひゃく','500']);
+  e2j('want','standard','two hundred','200',['20','2000','220'],'「トゥー ハンドレッド」と 読むよ。','hundred は「百」だよ。',['二百','にひゃく','200']);
+  e2j('want','standard','five hundred','500',['50','5000','505'],'「ファイブ ハンドレッド」と 読むよ。','hundred は「百」だよ。',['五百','ごひゃく','500']);
   sn('want','standard','Can I have an ice cream?','アイスクリームを ください',['アイスクリームを 作りましたか','アイスクリームが すきですか','アイスクリームは どこですか'],'「Can I have ～?」は「～を ください」と たのむ 言い方だよ。','「ice cream」は「アイスクリーム」だよ。');
   sn('want','standard','Anything else?','ほかには ありますか',['ほかに どこへ 行きますか','ほかの 人は だれですか','ほかに 何時ですか'],'お店の人が よく 言うよ。','「else」は「ほかに」だよ。');
   sn('want','standard','That\'s all, thank you.','それで ぜんぶです、ありがとう',['それは いくらですか','それは ほしくありません','それを ください'],'「all」は「ぜんぶ」だよ。','買い物の おわりに 言うよ。');
   e2j('want','advanced','one thousand','1000',['100','10000','1001'],'「ワン サウザンド」と 読むよ。','thousand は「千」だよ。',['千','せん','1000']);
-  qa('want','advanced','「It\'s one thousand yen.」は いくらかな。','1000円',['100円','10000円','1001円'],'「thousand」は「千」だよ。','「yen」は「円」だよ。','「It\'s one thousand yen.」は「1000円です。」です。',{q:'「It\'s one thousand yen.」は いくらかな。（数字で）',ans:'1000',mode:'number',acc:['1000円','千円']});
+  qa('want','advanced','「It\'s one thousand yen.」は いくらかな。','1000円',['100円','1500円','1001円'],'「thousand」は「千」だよ。','「yen」は「円」だよ。','「It\'s one thousand yen.」は「1000円です。」です。',{q:'「It\'s one thousand yen.」は いくらかな。（数字で）',ans:'1000',mode:'number',acc:['1000円','千円']});
   sn('want','advanced','How much are these?','これらは いくらですか',['これらは いくつですか','これらは だれの ものですか','これらは どこに ありますか'],'「these」は「これら（いくつかの もの）」だよ。','ねだんを たずねる 言い方だよ。');
   sn('want','advanced','I don\'t want a bag.','わたしは かばんは いりません',['わたしは かばんが ほしいです','わたしは かばんを 買いました','わたしは かばんが きらいです'],'「don\'t want」は「ほしくない」だよ。','「bag」は「かばん」だよ。');
-  e2j('want','advanced','two thousand','2000',['200','20000','2001'],'「トゥー サウザンド」と 読むよ。','thousand は「千」だよ。',['二千','にせん','2000']);
+  e2j('want','advanced','two thousand','2000',['200','20000','2200'],'「トゥー サウザンド」と 読むよ。','thousand は「千」だよ。',['二千','にせん','2000']);
   sn('want','advanced','I want to buy a cake.','わたしは ケーキを 買いたいです',['わたしは ケーキを 作りたいです','わたしは ケーキが ほしくありません','わたしは ケーキを 買いました'],'「want to ～」は「～したい」だよ。','「buy」は「買う」だよ。');
   qa('want','advanced','「Do you want a pen?」と 聞かれました。「はい、おねがいします」と 答えるのは どれかな。','Yes, please.',['Yes, I can.','Yes, I am.','Thank you, no.'],'「please」は「おねがいします」だよ。','ものを すすめられたときに 使うよ。','「Do you want ～?」と すすめられて「はい、おねがいします」は「Yes, please.」です。');
 
@@ -248,7 +248,7 @@
   e2j('country','standard','Egypt','エジプト',['インド','ギリシャ','トルコ'],'「イージプト」と 読むよ。','ピラミッドが ある 国だよ。',['えじぷと']);
   e2j('country','standard','Canada','カナダ',['アメリカ','オーストラリア','イギリス'],'「キャナダ」と 読むよ。','かえでの 葉が 国旗に あるよ。',['かなだ']);
   qa('country','standard','「Where do you want to go?」は どういう 意味かな。','あなたは どこへ 行きたいですか',['あなたは どこから 来ましたか','あなたは どこに いますか','あなたは いつ 行きますか'],'「Where」は「どこ」だよ。','「want to go」は「行きたい」だよ。','「Where do you want to go?」は「あなたはどこへ行きたいですか。」です。');
-  qa('country','standard','「Where do you want to go?」と 聞かれました。「イタリアへ 行きたいです」と 答えるのは どれかな。','I want to go to Italy.',['I\'m from Italy.','I like Italy is.','I want Italy go.'],'「want to go to ～」は「～へ 行きたい」だよ。','「Italy」は「イタリア」だよ。','「I want to go to Italy.」は「わたしはイタリアへ行きたいです。」です。');
+  qa('country','standard','「Where do you want to go?」と 聞かれました。「イタリアへ 行きたいです」と 答えるのは どれかな。','I want to go to Italy.',['I\'m from Italy.','I want to go from Italy.','I\'m going to Italy.'],'「want to go to ～」は「～へ 行きたい」だよ。','「Italy」は「イタリア」だよ。','「I want to go to Italy.」は「わたしはイタリアへ行きたいです。」です。');
   sn('country','standard','I want to go to Italy. I want to eat pizza.','わたしは イタリアへ 行きたいです。ピザを 食べたいです',['わたしは イタリアから 来ました。ピザが すきです','わたしは イタリアに います。ピザを 作りました','わたしは イタリアへ 行きました。ピザを 食べました'],'「want to ～」は「～したい」だよ。','「eat」は「食べる」だよ。');
   sn('country','standard','Let\'s go to Canada.','カナダへ 行こう',['カナダから 来ました','カナダは どこですか','カナダが すきです'],'「Let\'s ～.」は「～しよう」だよ。','「go to」は「～へ 行く」だよ。');
   e2j('country','advanced','Germany','ドイツ',['フランス','イタリア','スペイン'],'「ジャーマニー」と 読むよ。','ヨーロッパの 国で、ビールや ソーセージで 有名だよ。',['どいつ']);
@@ -271,7 +271,7 @@
   qa('school','standard','「What do you have on Tuesday?」と 聞かれました。「英語と 音楽が あります」と 答えるのは どれかな。','I have English and music.',['I like English and music.','I\'m English and music.','I want English and music.'],'「What do you have ～?」は「何が ありますか」だよ。','「have」で 答えるよ。','「What do you have on Tuesday?」は「火曜日には何がありますか。」です。');
   sn('school','standard','We have P.E. today.','今日は 体育が あります',['今日は 体育が すきです','今日は 体育を 見ました','今日は 体育が ありません'],'「P.E.」は「体育」だよ。','「today」は「今日」だよ。');
   sn('school','standard','I like P.E.','わたしは 体育が すきです',['わたしは 体育が きらいです','わたしは 体育が あります','わたしは 体育を 見ました'],'「like」は「すき」だよ。','「P.E.」は「体育」だよ。');
-  e2j('school','standard','school trip','修学旅行',['遠足','運動会','学芸会'],'「スクール トリップ」と 読むよ。','小学校の 6年生で 行く 旅行だよ。',['しゅうがくりょこう','遠足','えんそく']);
+  e2j('school','standard','school trip','修学旅行',['卒業式','運動会','学芸会'],'「スクール トリップ」と 読むよ。','小学校の 6年生で 行く 旅行だよ。',['しゅうがくりょこう','遠足','えんそく']);
   e2j('school','standard','sports day','運動会',['遠足','学芸会','入学式'],'「スポーツ デイ」と 読むよ。','かけっこや 玉入れを する 日だよ。',['うんどうかい']);
   e2j('school','standard','school festival','文化祭',['運動会','遠足','入学式'],'「スクール フェスティバル」と 読むよ。','学校で 出し物や 発表を する おまつりだよ。',['ぶんかさい','学園祭','がくえんさい','学芸会','がくげいかい']);
   qa('school','standard','「Do you like English?」と 聞かれました。「はい、好きです」と 答えるのは どれかな。','Yes, I do.',['Yes, I am.','Yes, I can.','I have English.'],'「Do you ～?」には「do」で 答えるよ。','「はい」は「Yes」だよ。','「Do you like ～?」には、「Yes, I do.」か「No, I don\'t.」で 答えます。');
@@ -299,7 +299,7 @@
   rd('standard',R2,'この 人は 学校の あとに 何を するかな。','しゅくだいを する',['テレビを 見る','ごはんを 食べる','ねる'],'「after school」は「学校の あと」だよ。','「homework」は「しゅくだい」だよ。','「I do my homework after school.」は「学校のあとにしゅくだいをします。」です。');
   rd('advanced',R2,'この 人が ねる 時間は 何時かな。','9時',['8時','10時','11時'],'「go to bed」は「ねる」だよ。','文章の おわりの 文だよ。','「I go to bed at nine.」は「9時にねます。」です。');
   var R3='Today is my birthday. It is May fifth. I am eleven. I have a party. I want a new bike.';
-  rd('basic',R3,'今日は 何の 日かな。','この 人の たんじょう日',['クリスマス','お正月','運動会'],'「birthday」は「たんじょう日」だよ。','文章の はじめの 文だよ。','「Today is my birthday.」は「今日はわたしのたんじょう日です。」です。');
+  rd('basic',R3,'今日は 何の 日かな。','この 人の たんじょう日',['この 人の 友だちの たんじょう日','この 人の 家族の たんじょう日','学校の 運動会の 日'],'「birthday」は「たんじょう日」だよ。','文章の はじめの 文だよ。','「Today is my birthday.」は「今日はわたしのたんじょう日です。」です。');
   rd('standard',R3,'たんじょう日は 何月何日かな。','5月5日',['5月15日','4月5日','5月3日'],'「May」は「5月」だよ。','「fifth」は「5日」だよ。','「It is May fifth.」は「5月5日です。」です。');
   rd('standard',R3,'この 人は 今 何才かな。','11才',['10才','12才','5才'],'「I am ～.」に 注目しよう。','「eleven」は「11」だよ。','「I am eleven.」は「わたしは11才です。」です。');
   rd('advanced',R3,'この 人が ほしい ものは 何かな。','新しい 自転車',['新しい かばん','新しい ゲーム','新しい 本'],'「I want ～.」に 注目しよう。','「bike」は「自転車」だよ。','「I want a new bike.」は「わたしは新しい自転車がほしいです。」です。');
@@ -309,7 +309,7 @@
   rd('standard',R4,'駅は どちらがわに あるかな。','左がわ',['右がわ','前','うしろ'],'「station」は「駅」だよ。','「on the left」は「左がわに」だよ。','「The station is on the left.」は「駅は左がわにあります。」です。');
   rd('advanced',R4,'この 人は いつ 図書館へ 行くかな。','毎週 土曜日',['毎日','毎週 日曜日','毎週 金曜日'],'「on Saturdays」に 注目しよう。','「Saturdays」と 複数形に なっているよ。','「I go to the library on Saturdays.」は「毎週土曜日に図書館へ行きます。」です。');
   var R5='A: Hello. How much is this cap? B: It is five hundred yen. A: I want it. Here you are. B: Thank you.';
-  rd('standard',R5,'ぼうしは いくらかな。','500円',['50円','5000円','100円'],'「How much」は ねだんを たずねる 言葉だよ。','「five hundred」は「500」だよ。','「It is five hundred yen.」は「500円です。」です。');
+  rd('standard',R5,'ぼうしは いくらかな。','500円',['50円','550円','5000円'],'「How much」は ねだんを たずねる 言葉だよ。','「five hundred」は「500」だよ。','「It is five hundred yen.」は「500円です。」です。');
   rd('advanced',R5,'Aは この あと どうするかな。','ぼうしを 買う',['ぼうしを やめる','ぼうしを うる','ぼうしを かりる'],'「I want it.」は「それが ほしい」だよ。','「Here you are.」は お金を わたす ときの 言葉だよ。','Aは「I want it.（それがほしい）」と言って、お金をわたしたので、ぼうしを買います。');
   rd('advanced',R5,'この 会話が 行われているのは どこかな。','お店',['学校','病院','駅'],'「How much」「Here you are」の 言葉に 注目しよう。','ものを 買う ところだよ。','ねだんを たずねたり、お金をわたしたりしているので、場所は「お店」です。');
   var R6='I like animals. I have a dog and two cats. My dog is big. My cats are small. I want to be a vet.';
@@ -326,7 +326,7 @@
   ls('basic','banana','バナナ',['りんご','みかん','ぶどう'],'黄色い くだものだよ。');
   ls('basic','Tuesday','火曜日',['月曜日','水曜日','木曜日'],'曜日の 名前だよ。月曜日の 次の 日だよ。');
   ls('basic','green','緑',['赤','青','黄色'],'色の 名前だよ。草の 色だよ。');
-  ls('basic','twenty','20',['2','12','200'],'数の 名前だよ。10の 2つ分だよ。');
+  ls('basic','twenty','20',['2','12','30'],'数の 名前だよ。10の 2つ分だよ。');
   ls('basic','Good night.','おやすみなさい',['おはよう','こんにちは','ありがとう'],'ねる 前の あいさつだよ。');
   ls('basic','park','公園',['学校','駅','図書館'],'遊べる ところだよ。');
   ls('standard','I like cats.','わたしは ねこが 好きです',['わたしは ねこが きらいです','わたしは ねこを かっています','わたしは ねこに なりたいです'],'「like」は どんな 気もちを 表す 言葉かな。');
@@ -334,7 +334,7 @@
   ls('standard','Turn right.','右に 曲がってください',['左に 曲がってください','まっすぐ 行ってください','止まってください'],'道案内の 言葉だよ。');
   ls('standard','My birthday is May fifth.','わたしの たんじょう日は 5月5日です',['わたしの たんじょう日は 5月15日です','わたしの たんじょう日は 4月5日です','わたしの たんじょう日は 5月3日です'],'「May」は何月かな。「fifth」は何日かな。');
   ls('standard','I get up at six.','わたしは 6時に 起きます',['わたしは 6時に ねます','わたしは 7時に 起きます','わたしは 6時に 朝ごはんを 食べます'],'「get up」は 朝 一番に する ことだよ。');
-  ls('standard','It\'s three hundred yen.','300円です',['30円です','3000円です','100円です'],'お店で ねだんを 言っているよ。');
+  ls('standard','It\'s three hundred yen.','300円です',['30円です','100円です','200円です'],'お店で ねだんを 言っているよ。');
   ls('standard','I want to be a doctor.','わたしは 医者に なりたいです',['わたしは 医者です','わたしは 医者が すきです','わたしは 医者に 会いました'],'「want to be」は「～に なりたい」だよ。');
   ls('standard','I want to go to Italy.','わたしは イタリアへ 行きたいです',['わたしは イタリアから 来ました','わたしは イタリアに います','わたしは イタリアが きらいです'],'「want to go」は「行きたい」だよ。');
   ls('standard','Go straight.','まっすぐ 行ってください',['右に 曲がってください','左に 曲がってください','止まってください'],'道案内の 言葉だよ。');

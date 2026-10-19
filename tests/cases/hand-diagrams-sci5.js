@@ -43,7 +43,7 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  }
  test('小5理科：324問のdiagram以外が不変、対象57問のみ追加',()=>{
   assert.equal(all.length,324);assert.equal(new Set(ids).size,57);assert.equal(qs.length,57);
-  assert.equal(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'227c500586e5e6db67e84ce212ab60b10f3c61d0c522e32ee6e68879bf0dc59a');
+  assert.equal(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'ec8bc371672d9d974aebb25ab4ce8c9aa0784a7fc067553ce26df3e3ccd4a7f6');
   // 第17弾の16画像（electromagnet_022 は直し済み）と、図を外した3問（plant_012・river_005・river_007）を含め、対象外267問のdiagram。river_026 は判断313で絵を付けたので、この印だけ変わる。
   assert.equal(hash(all.filter(q=>!ids.includes(q.id)).map(q=>[q.id,q.diagram?plain(q.diagram):null])),'d0644dfb6e412ee38ac7a7df63bb1fa233312f443345701a1b5ff28b95f404cc');
  });
