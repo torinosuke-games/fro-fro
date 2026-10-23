@@ -2,7 +2,8 @@
 module.exports = ({ test, ctx, assert }) => {
   const strip = s => String(s).replace(/\{([^|}]*)\|[^}]*\}/g, '$1');
   const PART = /[がをにはでともへのやか]、|から、|まで、|より、/g;
-  const hand = ctx.QUESTION_BANK.filter(q => q.collection && q.collection.startsWith('hand_'));
+  const LD = require('../lib/loader.js');   // 図の見直し・解説の充実の上書きも含めた、最終の問題で調べる
+  const hand = LD.load(LD.LOGIC_FILES_WITH_FIXES).QUESTION_BANK.filter(q => q.collection && q.collection.startsWith('hand_'));
   function fields(q) { return [q.question, q.explanation].concat(q.hints || [], q.choices || []); }
   test('手作りの問題の1文に、助詞のあとの読点が4つ以上ない', () => {
     const bad = [];

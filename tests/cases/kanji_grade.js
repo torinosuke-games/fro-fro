@@ -5,7 +5,9 @@ const K = require('../lib/kanji.js');
 
 module.exports = ({ test, FF, ctx, assert }) => {
   const U = FF.util;
-  const bank = ctx.QUESTION_BANK || [];
+  // 図の見直し・解説の充実の上書き（questions/diagram-fixes.js・explanations.js）も含めた、最終の問題で調べる
+  const LD = require('../lib/loader.js');
+  const bank = LD.load(LD.LOGIC_FILES_WITH_FIXES).QUESTION_BANK || [];
   const fmt = list => list.map(x => `${x.ch}(${K.gradeLabel(x.grade)})`).join(' ');
 
   // 選択肢そのものが漢字の使い分けを問う単元
