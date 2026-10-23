@@ -14,7 +14,7 @@ const ALL_SCRIPTS = [...fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').m
 // 図の見直しで外した図の上書き（questions/diagram-fixes.js。判断495）は、ふつうのテストでは読み込まない（もとの図の依頼どおりの数を確かめるテストのため）。
 // 外したあとの問題を調べるテストは、LOGIC_FILES_WITH_FIXES で読み込む
 const LOGIC_FILES_WITH_FIXES = ALL_SCRIPTS.filter(f => !UI_PATTERN.test(f));
-const LOGIC_FILES = LOGIC_FILES_WITH_FIXES.filter(f => f !== 'questions/diagram-fixes.js' && f !== 'questions/explanations.js');
+const LOGIC_FILES = LOGIC_FILES_WITH_FIXES.filter(f => f !== 'questions/diagram-fixes.js' && !/^questions\/explanations(-\d+)?\.js$/.test(f));
 const UI_FILES = ALL_SCRIPTS.filter(f => UI_PATTERN.test(f));
 const QUESTION_FILES = LOGIC_FILES.filter(f => f.startsWith('questions/'));
 
