@@ -2,7 +2,7 @@
 // 解説の充実（判断497）：questions/explanations.js で、全問題（算数の自動生成を除く）の解説を、正解の理由と「ほかの選択肢」の説明つきに書きなおした
 const L=require('../lib/loader');
 module.exports=({test,assert})=>{
- const fixed=L.load(L.LOGIC_FILES_WITH_FIXES),orig=L.load(L.LOGIC_FILES_WITH_FIXES.filter(f=>f!=='questions/explanations.js')),U=fixed.FF.util;   // 比べる相手は、図の見直しまで入れた問題
+ const fixed=L.load(L.LOGIC_FILES_WITH_FIXES),orig=L.load(L.LOGIC_FILES_WITH_FIXES.filter(f=>!/^questions\/explanations(-\d+)?\.js$/.test(f))),U=fixed.FF.util;   // 比べる相手は、図の見直しまで入れた問題
  const bank=fixed.QUESTION_BANK.filter(q=>!q.id.startsWith('gen_')),O={};orig.QUESTION_BANK.forEach(q=>O[q.id]=q);
  const plain=s=>U.plainText(String(s)).replace(/\s+/g,'');
  test('解説：算数の自動生成以外の全問（4915問）に、新しい解説がある',()=>{

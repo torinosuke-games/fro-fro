@@ -2220,3 +2220,6 @@
 - 漢字：解説は、その学年で習わない漢字をひらがなに開くか `{漢字|よみ}` と明示した（`kanji_grade` のテストで確かめる。読みでひらがなに開く自動処理も使った）。
 - 書き手が見つけた、問題・もとの解説の不備（答えは変えていない）：math/social/science などの小さな不正確（もとの解説の「福岡県は九州地方」と選択肢「福島県」のずれ＝social_g4_hand_prefecture_003、japanese_g4_hand_okurigana_021 の誤答の読み、science_g4_hand_rain_032 の誤字 など）は、新しい解説で直した。要確認：japanese_g6_kanji_write_001（「専」に点があるか。解説では点にふれていない）、science_g4_hand_star_001（0等星・マイナス等級。小学校の扱いに合わせた）、social_g4_hand_tradition_013・016 の選択肢の言い方。
 - 算数の自動生成（小1〜中3の計算問題）は、解説がすでに式と答えを順に示すので、今回は変えていない（誤答の値が毎回変わるため、「ほかの選択肢」の説明は付けていない）。
+
+## 判断498：解説のファイルを8つに分ける
+- デバッグ用の確認ページ（Artifact）が表示されなくなった（この環境の Chromium では、?debug=1 も確認ページ用のデバッグ版も問題なく開いた）。直前の変更は、約3MBの `questions/explanations.js` の追加だったので、1ファイルが大きすぎて確認ページで読み込めない可能性を考え、約400KBずつの8ファイル（`questions/explanations-1.js`〜`-8.js`）に分けた（`tests/tools/build-explanations.cjs`）。内容は同じ。`tests/lib/loader.js`・テストも新しい名前に対応。
