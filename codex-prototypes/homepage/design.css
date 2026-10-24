@@ -66,3 +66,50 @@ nav.tabs button{min-width:0;min-height:64px}
  .replica-facilities .facility-name{font-size:.6875rem}
 }
 @media(prefers-reduced-motion:reduce){.replica-mission,.replica-title .title-card{animation:none}}
+
+/* 枠の幅は固定し、2地区分の地図だけを枠内で横に移動する。 */
+.village-map{margin:0 0 18px;min-width:0;border:1px solid #d4e3ed;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 8px 24px #173d5812}
+.village-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;background:#f7fbfd}
+.village-toolbar>div{display:grid;gap:4px;min-width:0}
+.village-eyebrow{font-size:.6875rem;color:#627e90;letter-spacing:.07em}
+.village-current{font-size:1rem;color:#244e67;line-height:1.7}
+.village-home{font:inherit;font-size:.8125rem;white-space:nowrap;padding:9px 12px;min-height:44px;border:1px solid #bfd5e1;border-radius:10px;background:#fff;color:#285e7a;cursor:pointer}
+.village-home:disabled{opacity:.45;cursor:default}
+.village-viewport{width:100%;aspect-ratio:1168/784;overflow-x:auto;overflow-y:hidden;position:relative;overscroll-behavior-x:contain;touch-action:pan-y pinch-zoom;scrollbar-width:none;cursor:grab;user-select:none;-webkit-user-select:none;background:#e6f0f6}
+.village-viewport .scene-art-bg{pointer-events:none}
+.village-viewport::-webkit-scrollbar{display:none}
+.village-viewport.is-dragging,.village-viewport.is-dragging *{cursor:grabbing!important}
+.village-viewport:focus-visible{outline:3px solid #d58726;outline-offset:-4px}
+.village-world{display:flex;width:calc(var(--district-count,2)*100%);height:100%;position:relative}
+.village-district{flex:0 0 calc(100%/var(--district-count,2));height:100%;min-width:0;position:relative;overflow:hidden;container-type:inline-size}
+body[data-screen="base"] .village-center>.scene{width:100%;height:100%;margin:0;border:0;border-radius:0;box-shadow:none}
+.village-east{background:#e3edf3}
+.village-east-bg{width:100%;height:100%;position:absolute;inset:0;object-fit:fill;pointer-events:none}
+.village-east-name{position:absolute;top:12px;left:14px;padding:6px 15px;background:#235571db;border:1px solid #ffffff85;border-radius:99px;color:white;font-weight:700;font-size:clamp(12px,2cqw,20px)}
+.village-plot{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;flex-direction:column;gap:6px;padding:0;border:0;background:none;color:#234e67;font:inherit;cursor:pointer;min-width:44px;min-height:44px}
+.village-plot img{width:clamp(42px,10cqw,105px);height:auto;filter:drop-shadow(0 5px 5px #173d5833);pointer-events:none}
+.village-plot-label{padding:5px 10px;background:#fffffff0;border:1px solid #b7cedb;border-radius:999px;box-shadow:0 2px 5px #224e681a;white-space:nowrap;font-size:clamp(11px,1.7cqw,17px);font-weight:700;line-height:1.5}
+.village-lot-symbol{display:grid;place-items:center;width:clamp(40px,8cqw,80px);height:clamp(28px,5cqw,52px);border:2px dashed #668c9f;border-radius:50%;background:#f6fbfdbd;color:#47738b;font-size:clamp(20px,4cqw,35px)}
+.village-plot:hover .village-plot-label{background:#fff5db;border-color:#d4a452}
+.village-plot:focus-visible{outline:3px solid #cc7b23;outline-offset:6px;border-radius:12px}
+.village-navigation{display:flex;align-items:center;gap:10px;padding:12px 16px 8px}
+.village-arrow{flex:0 0 44px;min-height:44px;border:1px solid #c8dce6;border-radius:10px;color:#28627f;background:#f6fafc;font:700 1.5rem/1 Nunito,sans-serif;cursor:pointer}
+.village-arrow:disabled{opacity:.35;cursor:default}
+.village-minimap{display:flex;flex:1;gap:6px;min-width:0;background:#eaf2f7;padding:5px;border-radius:12px}
+.village-mini{flex:1;min-width:0;min-height:44px;padding:8px;border:1px solid transparent;border-radius:9px;background:none;color:#55758a;font:700 .8125rem/1.6 var(--font);cursor:pointer}
+.village-mini[aria-current="location"]{background:#fff;color:#1c648e;border-color:#c0d8e7;box-shadow:0 2px 4px #234d6410}
+.village-help{margin:0!important;padding:0 10px 12px;text-align:center;font-size:.75rem;line-height:1.9;color:#617e90}
+.village-touch-help{display:none}
+@media(pointer:coarse){.village-touch-help{display:inline}.village-mouse-help{display:none}}
+@media(max-width:560px){
+ .village-map{margin-inline:-15px;border-radius:0;border-inline:0}
+ .village-toolbar{padding:11px 13px}
+ .village-current{font-size:.875rem}
+ .village-home{padding:8px 10px;font-size:.75rem}
+ .village-navigation{gap:6px;padding:10px 10px 6px}
+ .village-mini{font-size:.75rem;padding:6px 3px}
+ .village-plot{gap:4px}
+ .village-plot-label{padding:4px 7px}
+ .village-east-name{top:10px;left:12px;padding:4px 12px}
+ .village-help{font-size:.6875rem}
+}

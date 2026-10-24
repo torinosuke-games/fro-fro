@@ -84,5 +84,6 @@
       grid.parentNode.insertBefore(details, grid);
       details.appendChild(grid);
     }
+    FF.prototypeVillageMap.mount(main);
   };
 })(this);

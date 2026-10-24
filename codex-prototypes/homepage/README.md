@@ -28,6 +28,7 @@ python3 -m http.server 8772 --bind 127.0.0.1
 3. 初回の町画面に「問題を解く → 資材を集める → 町を育てる」を表示。学習ボタンを上部にまとめ、指揮官の言葉も次の行動につなげます。
 4. タイトルに「問題を解いて資材を集め、雪の町を育てる学習ゲーム」という説明を追加します。
 5. 8つの施設を開閉式の「町の施設」にまとめます。中央炉がLv2以上になると、初回向けの3ステップは外し、施設を開いて表示します。
+6. 村の表示枠はそのままに、横へ移動できる地図を追加。「中央の村」と「東の開拓地」をスワイプ／マウスのドラッグで見渡せます。矢印、地区のミニマップ、「中央炉へ戻る」でも移動できます。
 
 `design.js` は既存の描画処理を呼び出し、作成された要素を配置し直します。施設のボタンを作り直さず移動するため、既存の操作を引き継ぎます。新しい文言も本体のふりがな処理を通します。
 
@@ -39,6 +40,7 @@ python3 -m http.server 8772 --bind 127.0.0.1
 node codex-prototypes/homepage/build-entry.cjs
 node tests/run.js
 FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node tests/ui-homepage-replica.cjs
+FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node tests/ui-village-map.cjs
 ```
 
 Playwright と Chromium が必要です。環境に応じて `FF_PLAYWRIGHT_MODULE`・`FF_BROWSER_PATH`・`FF_QA_OUTPUT` を指定できます。
@@ -48,3 +50,25 @@ Playwright と Chromium が必要です。環境に応じて `FF_PLAYWRIGHT_MODU
 この段階は比較用です。本体へ採用する場合は、良かった変更を本体の各描画処理に移します。
 
 検証結果：`node tests/run.js` は886件すべて成功。比較用入口のブラウザー検証も4幅で成功し、JavaScriptエラーなし、本体セーブの比較値は維持され、試作セーブだけが作成されることを確認済みです。
+
+## 横移動する村の地図
+
+左が中央地区、右が東の開拓地。同じ枠の中で横へ移動します。
+
+![横に広がる村の地図](screenshots/village-pan.webp)
+
+マップの検証も360・390・768・1440pxで成功。マウスで施設からドラッグしても詳細が開かないこと、タッチで横移動できること、上下のスワイプでページをスクロールできることをChromiumで確認しました。通常の施設操作・中央へ戻る操作・矢印キー・再描画・リサイズも検証し、地図の移動や予定地の確認ではゲームの状態が変わらないことを確認済みです。
+
+`village-map.js` が、既存の村の絵と操作ボタンを中央地区へ移し、右に東の開拓地を配置します。表示枠は従来の村と同じ縦横比（1168:784）のまま、地図の中だけを横にスクロールします。上下のスワイプではページをスクロールでき、横方向のドラッグ中は施設を誤って開きません。地図をキーボードで操作するときは、枠にフォーカスして左右矢印・Home・Endを使えます。地区の選択ボタンでも移動できます。
+
+東側には、既存の魔法研究所・訓練所を開けるマーカーと、2つの建設予定地を置きました。予定地は説明だけを表示し、建設や資材の消費は行いません。背景と施設を分けているため、マーカーは各地区内の割合の座標（x, y）で追加・移設できます。地区を増やす場合は `districts` に名前・背景・plotsを追加します。地区ボタン、横幅、移動範囲は地区数に従います。
+
+中央地区には現在の村の絵を使っています。既存の建物をすべて独立した絵に分解する作業や、自由な施設配置・建設を保存する仕組みは、この横移動の試作には含めていません。表示位置は画面を行き来する間とリサイズ時に維持し、ページを読み直すと中央地区から始まります。
+
+### 拡張地区の背景
+
+`east-clearing.webp`（1168×784、WebP）。既存の `img/art/field_lv1.jpg` を画風・視点の参照として image_gen で生成し、所定サイズへ縮小・圧縮しました。施設の絵や文字は原画へ描かず、画面上で別に重ねています。中央と東は別の背景なので境界は仮のつなぎで、本番用の完全に連続した地形画ではありません。
+
+使用プロンプト：
+
+> Create ONE background environment tile for the RIGHTWARD expansion of the supplied snowy village game image. The supplied image is STYLE/CAMERA/COLOR reference, do NOT redraw its central village or buildings. New scene is the quiet EASTERN OUTSKIRTS, continuing its bright daytime blue sky and distant snow-covered jagged mountains, dark snowy pine tree line, warm anime-fantasy painted JRPG/game illustration with tactile detailed snow, matching elevated slightly downward camera. Landscape aspect 1168:784. Upper third distant mountains/sky, middle sparse pines, lower two thirds a broad OPEN FLAT snow-covered clearing for future buildings. A compacted pale brown snow path enters at LEFT center around55% height and forks gently toward upper-right and lower-right across clearing. Keep four generous unobstructed empty snow areas centered roughly(30%,48%),(68%,48%),(32%,78%),(70%,78%) for building markers to be overlaid by the game. Some low snow-covered stones and logs near far edges only. NO buildings, NO tents, NO cave or mine entrance, NO campfire, NO tower, NO people, NO characters, NO markers or symbols, NO text or labels, NO UI, NO border. No foreground tree hiding plots. Sparse trees at LEFT and RIGHT edges can visually join to adjacent snowy village scene. Clear welcoming expansion space, not a finished settlement. Natural soft warm daylight and readable bright white snow against blue shadows. Entire canvas opaque.
