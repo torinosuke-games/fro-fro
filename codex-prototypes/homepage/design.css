@@ -283,3 +283,9 @@ body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center to
 .masthead-link{display:inline-flex;align-items:center;justify-content:center;gap:5px}
 .masthead-icon{display:block;width:24px;height:24px;object-fit:contain;flex:none}
 @media(max-width:760px){.masthead-label{display:none}.masthead-link{gap:0}}
+
+/* フィールドを全幅で表示し、旅のしおりは必要時だけ開く。 */
+.journey-layout{grid-template-columns:minmax(0,1fr)}
+.journey-guide[hidden]{display:none}
+.journey-heading{margin:6px 0 10px}
+.journey-heading .replica-eyebrow{margin:0}

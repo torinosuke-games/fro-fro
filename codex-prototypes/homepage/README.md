@@ -206,3 +206,5 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 上部の資材・熱量をタブレット以上で19→17pxへ縮小。小学5年の最大公約数・最小公倍数を数から直接求める固定問題（言い換えや3数の最小公倍数を含む）とドリルを基礎へ移動。文章から使い方を考える応用は区別。ID・答え・履歴キーは維持。multiple単元の標準ドリルはなくなり、標準は固定問題から出題。tests/cases/gcd-difficulty.jsで固定・生成の分類を検証。
 
 上部ナビの文字記号を手描き画像へ変更。nav-home.webp（雪の家）、nav-records.webp（チェック付き学習帳）、nav-settings.webp（歯車）を透過128pxで保存し24px表示。生成指示：three separate hand-painted anime RPG menu icons, snowy house / study journal with checkmarks / blue silver gear, transparent, no text. ボタン・既存の遷移イベントは維持し、スマホは絵のみ・広い画面は絵と文字、aria-labelを付与。
+
+探索画面更新：プレゼントの絵文字をtreasure-chest.webp（透過128pxの木と金具の宝箱）へ変更。生成指示：closed arched wooden fantasy treasure chest with iron bands and gold keyhole, hand-painted anime RPG, transparent, no gift ribbon. 洞窟到着時は確認なしで洞窟へ遷移。「雪原の旅」の見出しを削除。フィールドは全画面幅で、旅のしおりを初期閉じのボタン開閉に変更。目的地選択時はしおりを閉じ地図を表示。円形パッド・8方向歩行・端の地面整合を維持し検証。

@@ -12,6 +12,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
   await p.waitForFunction(expected=>document.querySelector('canvas').dataset.walkSheet===expected,dx&&dy?'diagonal':'cardinal');let a=await p.locator('canvas').evaluate(c=>({...c.dataset}));frames.add(a.walkFrame);assert.equal(a.walkSheet,dx&&dy?'diagonal':'cardinal');
   await p.waitForTimeout(210);frames.add(await p.locator('canvas').getAttribute('data-walk-frame'));
   await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await p.waitForTimeout(500);
+  await p.waitForFunction(({start,dx,dy})=>{const s=FF.snowJourney.read();return Math.sign(s.x-start.x)===dx&&Math.sign(s.y-start.y)===dy;},{start,dx,dy});
   const end=await p.evaluate(()=>FF.snowJourney.read());assert.equal(Math.sign(end.x-start.x),dx);assert.equal(Math.sign(end.y-start.y),dy);
   await p.waitForTimeout(350);assert.deepEqual(await p.evaluate(()=>FF.snowJourney.read()),end,'release stops');
  }

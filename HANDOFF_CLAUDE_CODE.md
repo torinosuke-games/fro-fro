@@ -110,7 +110,7 @@ node tests/ui-snow-journey-edges.cjs
 
 ## キャッシュと公開の注意
 
-ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261025-nav-icons` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
+ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261025-journey` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
 
 公開はGitHub PagesではなくSitesの別プロジェクト。GitHubへpushするだけではレプリカは更新されません。
 
@@ -153,3 +153,7 @@ node tests/ui-snow-journey-edges.cjs
 固定問題の直接計算を基礎に変更（12と18／24と36の最大公約数、4と6の公倍数の最小値、15と20／4・6・9の最小公倍数）。生成器のgcd_ask/lcm_askも基礎のみ。multiple標準の生成リストは空で、標準は固定問題から出題する。問題ID・答え・履歴キーは変更なし。応用文章題は別分類のまま。tests/cases/gcd-difficulty.jsと生成テストに分類を反映。資材・熱量の数字は761px以上で17px。
 
 上部ホーム・学習記録・設定はnav-home/records/settings.webpを24px表示。FF.renewalHudをラップしボタン内容の記号を画像へ置き換える。全ページ・スマホへ共通適用。既存イベントと高さ34pxを維持し、アイコンのみの画面でもaria-labelで名前を提供する。
+
+## 追記：探索の全幅表示としおり
+
+フィールドは横いっぱいの1列。旅のしおりはボタンで開閉し、目的地選択時に閉じる。洞窟は到着時に確認なしで即入場（出口の戻る確認は従来どおり）。雪原の旅h1は削除し、地域表示・村へは維持。宝箱は生成画像treasure-chest.webp（128px）をCanvas描画。8方向パッド・スプライト・省負荷処理・四辺の地面座標は維持。tests/ui-snow-journey.cjsの期待を更新し、歩行テストは固定時間の代わりに移動完了の条件を待つ。
