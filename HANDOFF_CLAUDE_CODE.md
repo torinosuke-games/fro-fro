@@ -110,7 +110,7 @@ node tests/ui-snow-journey-edges.cjs
 
 ## キャッシュと公開の注意
 
-ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261024-sidebar-height` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
+ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261024-difficulty` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
 
 公開はGitHub PagesではなくSitesの別プロジェクト。GitHubへpushするだけではレプリカは更新されません。
 
@@ -137,3 +137,5 @@ node tests/ui-snow-journey-edges.cjs
 ## 追記：左枠の高さを表示領域へ追従
 
 761px以上の左枠を画面下端16px手前まで伸ばし、増分を単元一覧に割り当てる。問題マップは最大100pxのまま。design.jsのfitSidebarで上端を測定、CSSの100dvhと組み合わせる。観測対象はHUDと帯のみ（自己観測ループを避ける）。機種情報不要。非常に短い画面では高さ360pxを下限とするためページスクロールが必要な場合あり。テスト：tests/ui-lesson-sidebar.cjs。
+
+難易度バッジの最新指定：基礎＝青（#327ac1）、標準＝緑（#55a669）、発展＝紫（#8656b5）。761px以上はquestion-meta内で右寄せ。

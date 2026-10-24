@@ -265,3 +265,9 @@ body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center to
  .replica-lesson .unit-list{flex:1;min-height:0;max-height:none;overflow-y:auto}
  .replica-lesson .question-index{flex-shrink:0}
 }
+
+/* 難易度は色でも区別。タブレット以上は情報欄の右端へ配置。 */
+.replica-lesson .difficulty-badge.basic{background:#327ac1;color:#fff}
+.replica-lesson .difficulty-badge.standard{background:#55a669;color:#fff}
+.replica-lesson .difficulty-badge.advanced{background:#8656b5;color:#fff}
+@media(min-width:761px){.replica-lesson .difficulty-badge{margin-left:auto;flex-shrink:0}}
