@@ -116,16 +116,7 @@
       if(!part){var b=crops[name],f=img.width/2048;part=document.createElement('canvas');part.width=pw;part.height=ph;part.getContext('2d').drawImage(img,b[0]*f,b[1]*f,b[2]*f,b[3]*f,0,0,pw,ph);spriteCache.set(key,part);}
       ctx.drawImage(part,x-w/2,y-h,w,h);
     }
-    // Cache contour geometry once; the camera only projects these short paths.
-    var edges=new Map(),lakeContours=[],trailSegments=[];
-    M.grid.forEach(function(row,y){row.forEach(function(t,x){if(t!=='~'&&t!=='=')return;
-      var corners=[[x-.5,y-.5],[x+.5,y-.5],[x+.5,y+.5],[x-.5,y+.5]];
-      corners.forEach(function(a,i){var b=corners[(i+1)%4],k=a.join(',')+'>'+b.join(','),reverse=b.join(',')+'>'+a.join(',');if(edges.has(reverse))edges.delete(reverse);else edges.set(k,[a,b]);});
-    });});
-    var starts=new Map();edges.forEach(function(e){starts.set(e[0].join(','),e);});
-    while(starts.size){var edge=starts.values().next().value,points=[],first=edge[0].join(',');
-      while(edge){points.push(edge[0]);starts.delete(edge[0].join(','));if(edge[1].join(',')===first)break;edge=starts.get(edge[1].join(','));}lakeContours.push(points);
-    }
+    var trailSegments=[];
     M.trail.slice(1).forEach(function(b,i){var a=M.trail[i],dx=Math.sign(b[0]-a[0]),dy=Math.sign(b[1]-a[1]),n=Math.max(Math.abs(b[0]-a[0]),Math.abs(b[1]-a[1]));for(var j=0;j<n;j++)trailSegments.push([[a[0]+dx*j,a[1]+dy*j],[a[0]+dx*(j+1),a[1]+dy*(j+1)]]);});
     function draw(){if(dead||!width)return;transform();var g=M.map(state.region),cave=state.region==='cave';
       ctx.clearRect(0,0,width,height);ctx.lineWidth=1;ctx.fillStyle=cave?'#213b51':'#dfedf0';ctx.fillRect(0,0,width,height);
@@ -143,32 +134,22 @@
       if(cave){
         for(y=ymin;y<ymax;y++)for(x=xmin;x<xmax;x++){var p=project(x,y);ctx.fillStyle=g[y][x]==='#'?'#152c40':'#8babbe';ctx.fillRect(p.x-scale/2,p.y-scale*.33,scale+1,scale*.66+1);}
       }else{
-        // One continuous ice painting, clipped to the walkability map. Only outer
-        // corners curve; adjacent water cells never acquire visible tile seams.
         function water(x,y){return !!g[y]&&(g[y][x]==='~'||g[y][x]==='=');}
-        ctx.save();ctx.beginPath();
-        lakeContours.forEach(function(points){
-          var last=project(points[points.length-1][0],points[points.length-1][1]),first=project(points[0][0],points[0][1]);
-          ctx.moveTo((last.x+first.x)/2,(last.y+first.y)/2);
-          points.forEach(function(v,i){var a=project(v[0],v[1]),n=points[(i+1)%points.length],b=project(n[0],n[1]);ctx.quadraticCurveTo(a.x,a.y,(a.x+b.x)/2,(a.y+b.y)/2);});ctx.closePath();
-        });
-        ctx.strokeStyle='#f3faf9';ctx.lineWidth=scale*.14;ctx.stroke();
-        ctx.clip();var lake=project(18.5,10.5);
-        if(images.ice)ctx.drawImage(images.ice,lake.x,lake.y,scale*13,scale*.66*9);
-        else{ctx.fillStyle='#8cbbc9';ctx.fillRect(0,0,width,height);}ctx.restore();
+        // The illustration includes its own shoreline and locally formed ice.
+        // No rectangular texture clipping or uniform white border.
+        var lake=project(18,9.8);
+        if(images.ice)ctx.drawImage(images.ice,lake.x,lake.y,scale*14,scale*.66*10.4);
         // Small transparent painted trail pieces follow the existing safe routes.
         trailSegments.forEach(function(pair){
           var from=pair[0],to=pair[1];if(from[0]<xmin-1||from[0]>xmax||from[1]<ymin-1||from[1]>ymax)return;
           if(water(from[0],from[1])&&water(to[0],to[1]))return;
           var a=project(from[0],from[1]),b=project(to[0],to[1]),length=Math.hypot(b.x-a.x,b.y-a.y);
           ctx.save();ctx.translate((a.x+b.x)/2,(a.y+b.y)/2);ctx.rotate(Math.atan2(b.y-a.y,b.x-a.x));
-          if(images.trail){ctx.globalAlpha=.62;ctx.drawImage(images.trail,-length*.62,-scale*.30,length*1.24,scale*.60);}ctx.restore();
+          if(images.trail){ctx.globalAlpha=.9;ctx.drawImage(images.trail,-length*.62,-scale*.30,length*1.24,scale*.60);}ctx.restore();
         });
         for(y=ymin;y<ymax;y++)for(x=xmin;x<xmax;x++)if(g[y][x]==='='){
           var p=project(x,y);ctx.save();ctx.translate(p.x,p.y);
-          var vertical=g[y-1]&&g[y-1][x]==='='||g[y+1]&&g[y+1][x]==='=';
-          if(!vertical)ctx.rotate(Math.PI/2);
-          if(images.bridge)ctx.drawImage(images.bridge,-scale*.31,-scale*(vertical?.36:.55),scale*.62,scale*(vertical?.72:1.10));ctx.restore();
+          if(images.bridge)ctx.drawImage(images.bridge,-scale*.31,-scale*.36,scale*.62,scale*.72);ctx.restore();
         }
       }
       if(route.length){ctx.strokeStyle='#c29343';ctx.lineWidth=overview?1:2;ctx.setLineDash([4,6]);ctx.beginPath();var start=project(hero.x,hero.y);ctx.moveTo(start.x,start.y);route.forEach(function(q){var p=project(q.x,q.y);ctx.lineTo(p.x,p.y);});ctx.stroke();ctx.setLineDash([]);}
@@ -253,7 +234,7 @@
     var observer=new ResizeObserver(resize);observer.observe(viewport);
     var leaveObserver=new MutationObserver(function(){if(!shell.isConnected)dispose();});leaveObserver.observe(main,{childList:true});
     dispose=function(){if(dead)return;dead=true;root.removeEventListener('resize',fitScreen);if(root.visualViewport)root.visualViewport.removeEventListener('resize',fitScreen);root.clearTimeout(pendingSave);stopInput();document.removeEventListener('keydown',onKey,true);document.removeEventListener('keyup',onKey,true);root.removeEventListener('blur',blur);root.cancelAnimationFrame(raf);observer.disconnect();leaveObserver.disconnect();save();};
-    [['trail','codex-prototypes/homepage/trail-snow.webp'],['bridge','codex-prototypes/homepage/bridge-old.webp'],['ice','codex-prototypes/homepage/lake-ice.webp'],['chest','codex-prototypes/homepage/treasure-chest.webp'],['atlas','img/adventure/canvas/alpine-atlas.webp'],['snow','img/adventure/canvas/plain.webp'],['hero',FF.adventureScene.traveler(FF.app.state.player.avatar)],['heroDiag',FF.adventureScene.travelerDiag(FF.app.state.player.avatar)],['walk',FF.adventureScene.travelerWalk(FF.app.state.player.avatar)],['walkDiag',FF.adventureScene.travelerWalkDiag(FF.app.state.player.avatar)]].forEach(function(a){if(!a[1])return;var im=new Image();im.onload=function(){var asset=im;if(['hero','heroDiag','walk','walkDiag'].includes(a[0])){var cells=a[0].indexOf('walk')===0?4:2;asset=document.createElement('canvas');asset.width=asset.height=cells*96;asset.getContext('2d').drawImage(im,0,0,asset.width,asset.height);}images[a[0]]=asset;canvas.dataset.walkReady=String(!!(images.walk&&images.walkDiag));draw();};im.src=a[1];});
+    [['trail','codex-prototypes/homepage/trail-stone.webp'],['bridge','codex-prototypes/homepage/bridge-old.webp'],['ice','codex-prototypes/homepage/lake-shore.webp'],['chest','codex-prototypes/homepage/treasure-chest.webp'],['atlas','img/adventure/canvas/alpine-atlas.webp'],['snow','img/adventure/canvas/plain.webp'],['hero',FF.adventureScene.traveler(FF.app.state.player.avatar)],['heroDiag',FF.adventureScene.travelerDiag(FF.app.state.player.avatar)],['walk',FF.adventureScene.travelerWalk(FF.app.state.player.avatar)],['walkDiag',FF.adventureScene.travelerWalkDiag(FF.app.state.player.avatar)]].forEach(function(a){if(!a[1])return;var im=new Image();im.onload=function(){var asset=im;if(['hero','heroDiag','walk','walkDiag'].includes(a[0])){var cells=a[0].indexOf('walk')===0?4:2;asset=document.createElement('canvas');asset.width=asset.height=cells*96;asset.getContext('2d').drawImage(im,0,0,asset.width,asset.height);}images[a[0]]=asset;canvas.dataset.walkReady=String(!!(images.walk&&images.walkDiag));draw();};im.src=a[1];});
     discover();refresh();resize();raf=root.requestAnimationFrame(tick);
   };
 })(this);
