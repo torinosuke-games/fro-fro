@@ -1347,7 +1347,7 @@
     var base = pick(rng, [200, 400, 500, 600, 800, 1000, 1200, 2000]), pc = pick(rng, [5, 10, 20, 25, 30, 40, 50]), off = base * pc / 100, ans = base - off;
     return mk5('pct_off', [base, pc], '定価 ' + base + '円 の 品物が ' + pc + '% 引きで 売られて います。ねだんは 何円 ですか。', ans,
       ['引かれる 金額は ' + base + ' の ' + pc + '%', base + ' × ' + dec(pc, 2) + ' ＝ ' + off, base + ' から 引こう'],
-      base + ' × ' + dec(pc, 2) + ' = ' + off + '。' + base + ' − ' + off + ' = ' + ans + '。' + ans + '円 です。', [off, base + off, ans + off, base * (100 - pc) / 10], { base: base, pc: pc }, [ans + '円']);
+      base + ' × ' + dec(pc, 2) + ' = ' + off + '。' + base + ' − ' + off + ' = ' + ans + '。' + ans + '円 です。', [off].concat([5, 10, 20, 25, 30, 40, 50, 60, 75, 80, 90].map(function (rate) { return base * (100 - rate) / 100; })), { base: base, pc: pc }, [ans + '円']);
   };
   OPS.pct_base = function (rng, P) {
     var base = pick(rng, BASES), pc = pick(rng, [10, 20, 25, 40, 50, 60, 75, 80]), v = base * pc / 100;
@@ -1522,9 +1522,9 @@
         advanced: [{ op: 'rhombus_area', p: {} }, { op: 'tri_height', p: {} }]
       },
       percent: {
-        basic: [{ op: 'pct_rate', p: { pcts: [10, 20, 25, 50] } }],
-        standard: [{ op: 'pct_value', p: {} }, { op: 'pct_off', p: {} }, { op: 'pct_rate', p: {} }],
-        advanced: [{ op: 'pct_base', p: {} }, { op: 'pct_off', p: {} }]
+        basic: [{ op: 'pct_rate', p: { pcts: [10, 20, 25, 50] } }, { op: 'pct_off', p: {} }],
+        standard: [{ op: 'pct_value', p: {} }, { op: 'pct_rate', p: {} }],
+        advanced: [{ op: 'pct_base', p: {} }]
       },
       circle: {
         basic: [{ op: 'circ_len', p: { d: [2, 15] } }],
@@ -1582,6 +1582,11 @@
       var key = FF.answer.normalize(s);
       if (seen[key] || s === '' || s === 'NaN') return;
       if (FF.answer.judgeInput(q, s).correct) return;
+      // 値引き後の価格は必ず0円より大きく定価未満。補充候補にも同じ制約を適用する。
+      if (q.meta && q.meta.op === 'pct_off') {
+        var price = FF.answer.parseNumber(s);
+        if (!isFinite(price) || price <= 0 || price >= q.meta.base) return;
+      }
       if (!plausible(s)) { far.push(s); return; }
       seen[key] = true;
       pool.push(s);

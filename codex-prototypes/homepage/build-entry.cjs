@@ -15,4 +15,5 @@ for (const [before, after] of changes) {
   if (html.split(before).length !== 2) throw new Error('本体の入口が変わっています。差し込み位置を確認してください: ' + before);
   html = html.replace(before, after);
 }
+html = html.replace('src="js/generators.js"', 'src="js/generators.js?v=20261024-discount"');
 fs.writeFileSync(path.join(__dirname, 'index.html'), html);

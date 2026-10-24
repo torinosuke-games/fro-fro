@@ -22,7 +22,7 @@ python3 -m http.server 8775 --bind 127.0.0.1
 
 ## 適用範囲と保存
 
-現状は比較用入口だけに適用する試作。本体の入口・JS・CSS・問題データは変更していません。mainへのマージは未実施です。過去の絵の依頼（tower-art系やDIAGRAM_REQUESTS）はこのPRの作業範囲ではありません。
+画面変更は比較用入口だけに適用する試作。追加依頼により、本体のjs/generators.jsには値引きドリルの品質修正を加えています（末尾参照）。本体の入口・CSS・固定問題データは変更していません。mainへのマージは未実施です。過去の絵の依頼（tower-art系やDIAGRAM_REQUESTS）はこのPRの作業範囲ではありません。
 
 - 通常学習／町の保存：`frozenFrontier.prototype.homepage.v1`
 - 広い雪原の保存：`frozenFrontier.prototype.snowJourney.v1`
@@ -143,3 +143,7 @@ node tests/ui-snow-journey-edges.cjs
 けいさんメモのアイコンは生成したmemo-pencil.webp（透過128px）を24px表示。quizレンダラー後にscratch-toggleのsp-icoだけを置換し、ボタンと開閉イベントを維持。
 
 単元看板の進捗は「全○○問中 ○○問 せいかい」。見出しとの間隔を詰め、文字を木枠の縁から内側へ配置。
+
+## 追記：値引きドリルの品質と難易度
+
+ユーザー指摘を受け、本体js/generators.jsを修正（ここからは見た目だけのPRではない）。小学5年percent単元のpct_offを基礎のみへ移動し、標準・発展から除去。価格候補は0円より大きく定価未満、候補補充時にも条件を強制する。異なる割引率の価格等から誤答を生成。価格8×率7の全56組で一意な4択・正解1つ・全候補の範囲を検証。ロジック887件成功。単純値引きが発展に戻らないよう注意。固定問題全件や他の演算型の全面監査はしていない。prototypeのgenerator読込にも更新番号を追加し、公開dist/js/generators.jsも更新済み。
