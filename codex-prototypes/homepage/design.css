@@ -241,3 +241,7 @@ body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center to
 .daily-badge.is-random{background:#d2e9f4;border-color:#d3e3ee}
 .daily-random-label{background:#d2e9f4 url('resource-dice.webp') center/cover no-repeat;border:0;overflow:hidden}
 .daily-random-label .daily-star-svg{display:none}
+
+/* 狭い幅でも上部ナビの高さを34pxに統一。 */
+.masthead-link{box-sizing:border-box;height:34px;min-height:34px;line-height:1;padding:5px 12px}
+@media(max-width:760px){.masthead-link{width:34px;min-width:34px;padding:0}.masthead-link:first-letter{font-size:18px;line-height:1}}
