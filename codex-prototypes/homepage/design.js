@@ -99,6 +99,8 @@
    layout.classList.add('replica-lesson');
    var encourage=layout.querySelector('.encourage');
    if(encourage)encourage.remove();
+   var hintIntro=layout.querySelector('.hint-card > p.small.muted');
+   if(hintIntro)hintIntro.remove();
    var lockMark=layout.querySelector('.locked-explanation .lock-mark');
    if(lockMark)lockMark.remove();
    var mapNote=layout.querySelector('.question-index > p');

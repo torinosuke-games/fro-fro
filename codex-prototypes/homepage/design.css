@@ -245,3 +245,6 @@ body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center to
 /* 狭い幅でも上部ナビの高さを34pxに統一。 */
 .masthead-link{box-sizing:border-box;height:34px;min-height:34px;line-height:1;padding:5px 12px}
 @media(max-width:760px){.masthead-link{width:34px;min-width:34px;padding:0}.masthead-link:first-letter{font-size:18px;line-height:1}}
+
+/* タブレット以上の資材数を少し控えめにする。 */
+@media(min-width:761px){.resource-strip .resource-value{font-size:1.1875rem}}
