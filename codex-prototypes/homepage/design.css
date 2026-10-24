@@ -271,3 +271,6 @@ body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center to
 .replica-lesson .difficulty-badge.standard{background:#55a669;color:#fff}
 .replica-lesson .difficulty-badge.advanced{background:#8656b5;color:#fff}
 @media(min-width:761px){.replica-lesson .difficulty-badge{margin-left:auto;flex-shrink:0}}
+
+.scratch-toggle .sp-ico.replica-pencil{width:24px;height:24px;object-fit:contain}
+.scratch-toggle.head .sp-ico.replica-pencil{width:24px;height:24px}

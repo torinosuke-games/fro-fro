@@ -111,6 +111,9 @@
 
  U.screens.quiz.render=function(main){
   render(main);
+  main.querySelectorAll('.scratch-toggle .sp-ico').forEach(function(icon){
+   icon.replaceWith(U.el('img',{class:'sp-ico replica-pencil',attrs:{src:'codex-prototypes/homepage/memo-pencil.webp',alt:'',width:'24',height:'24'}}));
+  });
   var layout=main.querySelector('.workbench');
   if(layout){
    layout.classList.add('replica-lesson');

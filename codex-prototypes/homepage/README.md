@@ -196,3 +196,5 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 タブレット／PCの左枠は画面下端16px手前まで拡張。表示領域の高さとヘッダー・帯の実寸から残りを算出し、問題マップの高さを変えず単元一覧へ割り当てる。ResizeObserverとresize時のみ更新し毎フレーム処理はしない。短い画面では360pxを下限とし、操作部を保つ。`node tests/ui-lesson-sidebar.cjs` で表示領域変更・単元スクロール／選択・スマホ非表示を確認。
 
 難易度マーク：基礎は青、標準は既存の緑、発展は紫。761px以上は情報欄の右端へ配置。3難易度×390/768/1183pxで色と右寄せ・横はみ出しを確認。
+
+けいさんメモの線画を生成した透過鉛筆アイコンmemo-pencil.webpへ変更。黄色の軸・赤い消しゴム・左下向きの芯。生成指示：single chunky golden yellow school pencil with coral eraser, hand-painted anime RPG, transparent, no text/shadow. 128px画像を24px表示し、スマホのアイコンと広い画面のラベル付きボタンに共用。3幅で読込・寸法・開閉を確認。
