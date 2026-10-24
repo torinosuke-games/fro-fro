@@ -118,6 +118,12 @@
     }
     var trailSegments=[];
     M.trail.slice(1).forEach(function(b,i){var a=M.trail[i],dx=Math.sign(b[0]-a[0]),dy=Math.sign(b[1]-a[1]),n=Math.max(Math.abs(b[0]-a[0]),Math.abs(b[1]-a[1]));for(var j=0;j<n;j++)trailSegments.push([[a[0]+dx*j,a[1]+dy*j],[a[0]+dx*(j+1),a[1]+dy*(j+1)]]);});
+    function landmark(name,point,w,h){
+      var asset=images[name];if(!asset)return;
+      // Small, pre-sized transparent assets; anchor their ground at the map tile.
+      var fit=Math.min(scale*w/asset.width,scale*h/asset.height),dw=asset.width*fit,dh=asset.height*fit;
+      ctx.drawImage(asset,point.x-dw/2,point.y-dh+scale*.12,dw,dh);
+    }
     function draw(){if(dead||!width)return;transform();var g=M.map(state.region),cave=state.region==='cave';
       ctx.clearRect(0,0,width,height);ctx.lineWidth=1;ctx.fillStyle=cave?'#213b51':'#dfedf0';ctx.fillRect(0,0,width,height);
       if(!cave&&images.snow){
@@ -158,10 +164,12 @@
         places().filter(function(p){return p.y===y;}).forEach(function(p){var s=project(p.x,p.y);if(s.x < -200 || s.x > width+200 || s.y < -200 || s.y > height+200)return;
           if(overview){ctx.fillStyle=p.kind==='boss'?'#9a6583':'#bd8f46';ctx.beginPath();ctx.arc(s.x,s.y,5,0,7);ctx.fill();}
           else if(p.kind==='town'){sprite('cabin',s.x-scale*.45,s.y,scale*1.35,scale*1.1);sprite('cabin',s.x+scale*.6,s.y-scale*.2,scale*1.1,scale*.95);sprite('lantern',s.x,s.y+8,scale*.3,scale*.7);}
-          else if(p.kind==='boss'){sprite('rock',s.x,s.y,scale*2.1,scale*1.6);ctx.fillStyle='#465c7b';ctx.fillRect(s.x-scale*.5,s.y-scale,scale,scale);ctx.fillStyle='#91e4ec';ctx.fillRect(s.x-scale*.12,s.y-scale*.65,scale*.24,scale*.65);}
-          else if(p.kind==='cave'||p.kind==='exit'){sprite('rock',s.x,s.y,scale*1.6,scale*1.2);ctx.fillStyle='#203647';ctx.beginPath();ctx.ellipse(s.x,s.y-scale*.3,scale*.3,scale*.35,0,0,7);ctx.fill();}
+          else if(p.kind==='boss'){landmark('library',s,2.35,2.35);}
+          else if(p.kind==='cave'||p.kind==='exit'){landmark('caveEntrance',s,1.9,1.55);}
           else if(p.kind==='chest'){if(images.chest)ctx.drawImage(images.chest,s.x-scale*.36,s.y-scale*.65,scale*.72,scale*.72);}
-          else {ctx.font=scale*.48+'px serif';ctx.textAlign='center';ctx.fillText(p.kind==='camp'?'🔥':p.kind==='sign'?'⚑':'❄',s.x,s.y);}
+          else if(p.kind==='camp'){landmark('campfire',s,.95,.95);}
+          else if(p.kind==='sign'){landmark('signpost',s,.95,1.1);}
+          else {ctx.font=scale*.48+'px serif';ctx.textAlign='center';ctx.fillText('❄',s.x,s.y);}
           label(p.name,s.x,s.y+(overview?20:27),p.kind==='boss'?'#654566ee':null);
         });
         if(Math.round(hero.y)===y){var h=project(hero.x,hero.y);ctx.fillStyle='#47647644';ctx.beginPath();ctx.ellipse(h.x,h.y+5,scale*.2,scale*.09,0,0,7);ctx.fill();
@@ -234,7 +242,7 @@
     var observer=new ResizeObserver(resize);observer.observe(viewport);
     var leaveObserver=new MutationObserver(function(){if(!shell.isConnected)dispose();});leaveObserver.observe(main,{childList:true});
     dispose=function(){if(dead)return;dead=true;root.removeEventListener('resize',fitScreen);if(root.visualViewport)root.visualViewport.removeEventListener('resize',fitScreen);root.clearTimeout(pendingSave);stopInput();document.removeEventListener('keydown',onKey,true);document.removeEventListener('keyup',onKey,true);root.removeEventListener('blur',blur);root.cancelAnimationFrame(raf);observer.disconnect();leaveObserver.disconnect();save();};
-    [['trail','codex-prototypes/homepage/trail-stone.webp'],['bridge','codex-prototypes/homepage/bridge-old.webp'],['ice','codex-prototypes/homepage/lake-shore.webp'],['chest','codex-prototypes/homepage/treasure-chest.webp'],['atlas','img/adventure/canvas/alpine-atlas.webp'],['snow','img/adventure/canvas/plain.webp'],['hero',FF.adventureScene.traveler(FF.app.state.player.avatar)],['heroDiag',FF.adventureScene.travelerDiag(FF.app.state.player.avatar)],['walk',FF.adventureScene.travelerWalk(FF.app.state.player.avatar)],['walkDiag',FF.adventureScene.travelerWalkDiag(FF.app.state.player.avatar)]].forEach(function(a){if(!a[1])return;var im=new Image();im.onload=function(){var asset=im;if(['hero','heroDiag','walk','walkDiag'].includes(a[0])){var cells=a[0].indexOf('walk')===0?4:2;asset=document.createElement('canvas');asset.width=asset.height=cells*96;asset.getContext('2d').drawImage(im,0,0,asset.width,asset.height);}images[a[0]]=asset;canvas.dataset.walkReady=String(!!(images.walk&&images.walkDiag));draw();};im.src=a[1];});
+    [['signpost','codex-prototypes/homepage/landmark-signpost.webp'],['campfire','codex-prototypes/homepage/landmark-campfire.webp'],['caveEntrance','codex-prototypes/homepage/landmark-cave.webp'],['library','codex-prototypes/homepage/landmark-library.webp'],['trail','codex-prototypes/homepage/trail-stone.webp'],['bridge','codex-prototypes/homepage/bridge-old.webp'],['ice','codex-prototypes/homepage/lake-shore.webp'],['chest','codex-prototypes/homepage/treasure-chest.webp'],['atlas','img/adventure/canvas/alpine-atlas.webp'],['snow','img/adventure/canvas/plain.webp'],['hero',FF.adventureScene.traveler(FF.app.state.player.avatar)],['heroDiag',FF.adventureScene.travelerDiag(FF.app.state.player.avatar)],['walk',FF.adventureScene.travelerWalk(FF.app.state.player.avatar)],['walkDiag',FF.adventureScene.travelerWalkDiag(FF.app.state.player.avatar)]].forEach(function(a){if(!a[1])return;var im=new Image();im.onload=function(){var asset=im;if(['hero','heroDiag','walk','walkDiag'].includes(a[0])){var cells=a[0].indexOf('walk')===0?4:2;asset=document.createElement('canvas');asset.width=asset.height=cells*96;asset.getContext('2d').drawImage(im,0,0,asset.width,asset.height);}images[a[0]]=asset;canvas.dataset.walkReady=String(!!(images.walk&&images.walkDiag));draw();};im.src=a[1];});
     discover();refresh();resize();raf=root.requestAnimationFrame(tick);
   };
 })(this);
