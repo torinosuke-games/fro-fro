@@ -99,6 +99,16 @@
    layout.classList.add('replica-lesson');
    var encourage=layout.querySelector('.encourage');
    if(encourage)encourage.remove();
+   var heading=main.querySelector('.lesson-heading');
+   var memo=layout.querySelector('.scratch-toggle.corner');
+   if(heading){
+    var leading=document.createElement('div'),trailing=document.createElement('div');
+    leading.className='replica-lesson-leading';trailing.className='replica-lesson-trailing';
+    Array.from(heading.children).forEach(function(el,i){(i<2?leading:trailing).appendChild(el);});
+    heading.appendChild(leading);
+    if(memo)heading.appendChild(memo);
+    heading.appendChild(trailing);
+   }
   }
  };
 })(this);

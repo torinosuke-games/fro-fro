@@ -208,8 +208,16 @@ body[data-screen="quiz"] .masthead{background:linear-gradient(90deg,#123f70df,#2
 .replica-lesson .lesson-help{gap:28px}
 @media(max-width:760px){body[data-screen="quiz"]{background-attachment:scroll}.replica-lesson .lesson-help{gap:25px;margin-top:12px}.replica-lesson .hint-card:before{height:27px;top:-14px}}
 
-/* 元の「問題枠の右上外側」のメモ位置に専用の余白を確保する。 */
-@media(min-width:900px){
- .replica-lesson:has(.scratch-toggle.corner){padding-top:34px}
- .replica-lesson .scratch-toggle.corner{top:-42px;right:0}
+/* 上部の帯と問題カードで同じ列幅を使い、メモの右端を揃える。 */
+.replica-lesson-leading,.replica-lesson-trailing{display:contents}
+@media(min-width:1000px){
+ body[data-screen="quiz"] .lesson-heading{display:grid;grid-template-columns:calc(clamp(200px,20vw,280px) - 15px) minmax(0,1fr) calc(clamp(240px,23vw,330px) - 15px);gap:18px}
+ .replica-lesson-leading,.replica-lesson-trailing{display:flex;align-items:center;gap:12px;min-width:0}
+ .replica-lesson-leading{grid-column:1;grid-row:1;flex-wrap:wrap;gap:4px 12px}
+ .replica-lesson-trailing{grid-column:3;grid-row:1;justify-content:flex-end}
+ body[data-screen="quiz"] .lesson-heading .scratch-toggle.corner{display:inline-flex;position:static;grid-column:2;grid-row:1;justify-self:end;white-space:nowrap}
+}
+@media(max-width:999px){
+ body[data-screen="quiz"] .lesson-heading .scratch-toggle.corner{display:none}
+ body[data-screen="quiz"] .lesson-heading .scratch-toggle.head{display:inline-flex}
 }
