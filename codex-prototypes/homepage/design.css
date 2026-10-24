@@ -1,0 +1,68 @@
+/* このスタイルは比較用入口だけで読み込む。青・雪・炎の既存の配色を使う。 */
+.replica-eyebrow{margin:0;color:#a45c20;font-size:.8125rem;font-weight:800;letter-spacing:.08em}
+.replica-title .title-card{padding:26px 28px}
+.replica-title-intro{text-align:center;padding-bottom:18px;margin-bottom:4px;border-bottom:1px solid #e0eaf0}
+.replica-title-description{font-size:1.1875rem;font-weight:700;line-height:1.95;margin:10px 0 0;color:#234b63}
+.replica-title .opening{font-size:1rem;line-height:1.9}
+.replica-title .btn.primary{color:#fff;text-shadow:0 1px 2px #69320c}
+.replica-title .btn.primary rt{color:#fff}
+.replica-title .title-hero{box-shadow:0 12px 32px #234b631a}
+
+body[data-screen="base"] .replica-mission{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px 28px;align-items:center;padding:25px 28px 18px;margin:0 0 20px;border:1px solid #dbe7ef;border-radius:20px;background:linear-gradient(115deg,#fff,#f6fbfe);box-shadow:0 6px 20px #244b6410}
+.replica-mission h1{font-size:1.65rem;line-height:1.7;margin:7px 0 5px;color:#1e4c69;text-wrap:balance}
+.replica-mission .replica-mission-lead{margin:0;font-size:.9375rem;line-height:1.9;color:#56748a}
+.replica-mission .replica-start{margin:0;min-width:224px;min-height:60px;padding:16px 24px;font-size:1.0625rem;white-space:nowrap;border-radius:13px;box-shadow:0 4px 0 #17658d}
+.replica-steps{display:flex;flex-wrap:wrap;gap:12px 28px;grid-column:1/-1;list-style:none;margin:0;padding:15px 0 0;border-top:1px solid #deebf2}
+.replica-steps li{display:flex;align-items:center;gap:8px;font-size:.875rem;color:#5b7487}
+.replica-steps li>span{display:inline-grid;place-items:center;width:25px;height:25px;flex-shrink:0;border-radius:50%;background:#eaf1f5;color:#526d80;font-weight:800;font-family:Nunito,sans-serif}
+.replica-steps .is-current{color:#195e88;font-weight:700}
+.replica-steps .is-current>span{background:#227dac;color:#fff}
+body[data-screen="base"] .head-with-avatar{margin-bottom:14px}
+body[data-screen="base"] .scene{box-shadow:0 8px 24px #173d581a}
+body[data-screen="base"] .adv-entry{margin:22px 0;padding:22px 26px;display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:18px;align-items:center}
+.adv-entry .adv-entry-symbol{font-size:40px}
+body[data-screen="base"] .adv-entry>div:nth-child(2){min-width:0}
+body[data-screen="base"] .adv-entry .adv-button{min-width:150px;min-height:50px;white-space:nowrap;word-break:keep-all;flex:none}
+.replica-facilities{margin:22px 0 30px;border:1px solid #d6e4ec;border-radius:16px;background:#fff;overflow:hidden}
+.replica-facilities summary{display:flex;align-items:center;justify-content:space-between;gap:16px;list-style:none;padding:21px 24px;cursor:pointer;color:#244e69;min-height:76px}
+.replica-facilities summary::-webkit-details-marker{display:none}
+.replica-facilities summary>span:first-child{display:grid;gap:5px}
+.replica-facilities summary strong{font-size:1.0625rem}
+.replica-facility-note{font-size:.8125rem;color:#5c788b;line-height:1.8}
+.replica-facility-toggle{display:flex;align-items:center;gap:12px;white-space:nowrap;font-size:.8125rem;color:#315f7b}
+.replica-facility-toggle::after{content:'＋';font-size:1.25rem}
+.replica-facilities[open] .replica-facility-toggle::after{content:'−'}
+.replica-facilities[open] summary{border-bottom:1px solid #e2ecf2}
+.replica-facilities .facility-grid{padding:20px 16px 18px;margin:0;gap:12px}
+.replica-facilities .facility-icon{max-width:82px}
+nav.tabs .inner{grid-template-columns:repeat(5,minmax(0,1fr))}
+nav.tabs button{min-width:0;min-height:64px}
+.replica-facilities summary:focus-visible{outline:3px solid #247eac;outline-offset:-5px;border-radius:16px}
+
+@media(max-width:760px){
+ .replica-title .title-card{padding:22px 18px}
+ .replica-title-description{font-size:1.0625rem;line-height:2}
+ .replica-title-intro{padding-bottom:14px}
+ body[data-screen="base"] .replica-mission{grid-template-columns:minmax(0,1fr);padding:19px 18px 16px;gap:14px;margin:0 12px 16px;border-radius:17px}
+ .replica-mission h1{font-size:1.25rem;line-height:1.85;margin:5px 0;text-wrap:balance}
+ .replica-mission .replica-mission-lead{font-size:.8125rem;line-height:1.9}
+ .replica-eyebrow{font-size:.75rem}
+ .replica-mission .replica-start{width:100%;min-width:0;min-height:52px;font-size:1.0625rem;padding:12px 16px}
+ .replica-steps{gap:6px;justify-content:space-between;padding-top:14px}
+ .replica-steps li{gap:5px;font-size:.6875rem;line-height:1.8}
+ .replica-steps li>span{width:20px;height:20px}
+ body[data-screen="base"] .head-with-avatar{margin-bottom:12px}
+ body[data-screen="base"] .adv-entry{grid-template-columns:30px minmax(0,1fr);gap:8px 12px;margin:18px 12px;padding:20px}
+ .adv-entry .adv-entry-symbol{font-size:30px}
+ body[data-screen="base"] .adv-entry .adv-button{grid-column:1/-1;width:100%;margin-top:9px;min-width:0;min-height:48px;font-size:.9375rem}
+ body[data-screen="base"] .adv-entry p{font-size:.8125rem;line-height:1.8}
+ body[data-screen="base"] .adv-entry h2{font-size:1.25rem;line-height:1.8}
+ .replica-facilities{margin:18px 12px 30px}
+ .replica-facilities summary{padding:17px 16px;gap:10px;align-items:flex-start}
+ .replica-facilities summary strong{font-size:1rem}
+ .replica-facility-note{font-size:.75rem}
+ .replica-facility-toggle{font-size:.6875rem;gap:5px;padding-top:3px}
+ .replica-facilities .facility-grid{gap:14px 8px;padding:20px 12px}
+ .replica-facilities .facility-name{font-size:.6875rem}
+}
+@media(prefers-reduced-motion:reduce){.replica-mission,.replica-title .title-card{animation:none}}
