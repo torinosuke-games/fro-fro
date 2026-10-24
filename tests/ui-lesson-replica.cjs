@@ -7,7 +7,7 @@ const out='/workspace/lesson-replica-qa';fs.mkdirSync(out,{recursive:true});
  await p.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(img=>img.decode().catch(()=>{})));});
  for(const width of [390,768,1024,1536,1920]){
   await p.setViewportSize({width,height:1080});await p.waitForTimeout(100);assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,'no overflow '+width);
-  assert.equal(await p.locator('.replica-question-info').count(),1);assert.equal(await p.locator('.explanation-text').count(),0);
+  assert.equal(await p.locator('.replica-question-info').count(),0);assert.equal(await p.locator('.replica-index-topic').count(),0);if(width>760){assert.equal(await p.locator('.index-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length),5,'calendar map keeps five columns');}assert.equal(await p.locator('.explanation-text').count(),0);
   assert.ok((await p.locator('.brand').innerText()).includes('Frozen Frontier'));assert.ok((await p.locator('.brand').innerText()).includes('君の学びの熱量で'));
   const card=await p.locator('.question-card').boundingBox(),help=await p.locator('.lesson-help').boundingBox();
   if(width>=1000){const left=await p.locator('.lesson-left').boundingBox();assert.ok(left.x+left.width<card.x+1);assert.ok(card.x+card.width<help.x+1);}

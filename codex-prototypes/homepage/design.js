@@ -88,29 +88,13 @@
   };
 })(this);
 
-// 学習ページの比較用レイアウト。既存の回答・ヒント・一覧ボタンをそのまま使う。
+// 学習ページの装飾だけを追加。問題マップは本体のカレンダー調をそのまま使う。
 (function(root){
  'use strict';
- var FF=root.FF,U=FF.ui,E=U.el,render=U.screens.quiz.render;
+ var U=root.FF.ui,render=U.screens.quiz.render;
  U.screens.quiz.render=function(main){
   render(main);
-  var layout=main.querySelector('.workbench'),card=main.querySelector('.question-card');
-  if(!layout||!card)return;
-  layout.classList.add('replica-lesson');
-  var ses=FF.app.session,it=ses&&ses.items&&ses.items[ses.currentId],q=it&&it.attempt.question;
-  if(!q)return;
-  // 元の一覧ボタンのイベントと状態を保ち、単元名を添えて探しやすくする。
-  var pool=FF.curriculum.pool(FF.app.bank,ses.sel),buttons=main.querySelectorAll('.index-item');
-  Array.prototype.forEach.call(buttons,function(b,i){var item=pool[i];if(!item)return;
-   var unit=FF.curriculum.unit(item.subject,item.gradeLevel,item.unit);
-   b.appendChild(E('span',{class:'replica-index-topic',text:unit?unit.name:U.plain(FF.learning.subjectName(item.subject,item.gradeLevel))}));
-   b.title=U.plain(item.question);
-  });
-  var help=main.querySelector('.lesson-help');if(!help)return;
-  var unit=FF.curriculum.unit(q.subject,q.gradeLevel,q.unit);
-  var info=E('section',{class:'replica-question-info'},[E('h2',{text:'✎ 問題情報'})]);
-  var dl=E('dl');
-  [['単元',unit?unit.name:U.plain(FF.learning.subjectName(q.subject,q.gradeLevel))],['難易度',U.plain(U.nameOf(FF.defs.DIFFICULTIES,q.difficulty))],['出題形式',q.answerType==='choice'?'選択問題':'記述問題']].forEach(function(row){dl.appendChild(E('dt',{text:row[0]}));dl.appendChild(E('dd',{text:row[1]}));});
-  info.appendChild(dl);help.insertBefore(info,help.querySelector('.encourage'));
+  var layout=main.querySelector('.workbench');
+  if(layout)layout.classList.add('replica-lesson');
  };
 })(this);
