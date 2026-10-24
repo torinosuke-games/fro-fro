@@ -128,7 +128,7 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 
 学習ページを、雪景色のヘッダー・木枠の左サイドバー・中央の問題カード・暖色のヒント／解説カードという構成に整えました。1000px以上は3列、761〜999pxは2列、スマホは縦並びです。選択肢は広い画面では2列でA〜Dを色分けし、図は元の内容を保持して表示します。問題マップは元のカレンダー調（番号の5列グリッド）を維持し、「問題情報」の追加カードは置きません。
 
-ブランド名・キャッチコピー、出題・採点・ヒント・解説の解放条件・報酬・チケット・単元選択・問題移動・記述／手書き・計算メモの既存処理は共有したままです。選択問題は従来どおり選択時に採点し、参考画像にある別の「答え合わせ」ボタンは追加していません。ヘッダーには既存の `field_lv1.jpg` を使い、木枠には生成した `lesson-wood.webp` の木目を使います。
+ブランド名・キャッチコピー、出題・採点・ヒント・解説の解放条件・報酬・チケット・単元選択・問題移動・記述／手書き・計算メモの既存処理は共有したままです。選択問題は従来どおり選択時に採点し、参考画像にある別の「答え合わせ」ボタンは追加していません。雪景色には生成した `lesson-village.webp`、見出しには積雪と鋲付きの `lesson-sign.webp`、カード上縁には `lesson-snow-cap.webp` を使います。
 
 `node tests/ui-lesson-replica.cjs` で390・768・1024・1536・1920pxの配置・横はみ出し・図の表示・タイトル維持、ヒント表示・正答／チケット処理・解説の解放・次の問題・問題一覧・条件変更・記述欄を確認。既存の比較用入口のテストも成功しています。
 
@@ -141,3 +141,15 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 
 生成プロンプト：
 > Create a single square seamless wood texture for the borders and title strip of a Japanese hand-painted anime fantasy learning game UI in a snowy frontier village. Material only, no composed scene. Front-facing orthographic warm medium walnut / weathered honey brown pine wooden planks, refined hand-painted grain, subtle shallow grooves and knots, tactile brushwork, cozy winter cabin craftsmanship, restrained contrast so small white Japanese labels will be readable over it. Plank grain predominantly horizontal. Soft diffuse daylight, gentle organic highlights, sophisticated illustrated JRPG menu material. Fill the entire canvas edge to edge with wood. Seamless tileable texture on all four edges. NO text, NO lettering, NO symbols, NO icons, NO nails or metal studs, NO objects, NO border, NO frame opening, NO empty central space, NO snow, NO scenery, NO vignette. Flat and usable as a repeating CSS texture, no perspective or cast shadows. 1024 by 1024 square.
+
+
+### 木製看板・背景・積雪の描き直し
+
+「単元を選ぶ」は、平らな木目から、厚い縁・四隅の鋲・積雪を描いた看板に変更。背景は雪の村を新規生成し、ヒント／解説の上縁に透過の雪を重ねました。すべて静止WebP（合計約390KB）で、装飾はクリックを遮りません。見出し・進捗はHTMLテキストのままです。
+
+生成プロンプトの要点（image_gen、新規生成）：
+- `lesson-sign.webp`: Front-facing wide horizontal wooden title sign, hand-painted Japanese anime fantasy winter village. Thick carved walnut plank, beveled wooden rim, four iron bolts, soft lumpy snow on top, calm blank center. Transparent background, no lettering or scenery.
+- `lesson-village.webp`: Wide hand-painted Japanese anime fantasy snowy frontier village. Blue mountains and warm timber cabins near upper horizon, snowy firs at edges, broad pale quiet clearing behind UI. Bright winter daylight, no characters, lettering or UI.
+- `lesson-snow-cap.webp`: Isolated wide thin continuous snow cap on transparent background. Puffy white snow, thinner center, thicker ends, little downward overhangs, pale blue shadows. Front-facing painted game UI decoration, snow only, no supporting ledge or text.
+
+確認：見出しの木枠・雪が文字を隠さないこと、ヒントと解説の雪の厚み、背景と本文の読みやすさ。390〜1920pxの既存UI操作テストを実行。

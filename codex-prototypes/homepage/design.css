@@ -191,3 +191,19 @@ body[data-screen="quiz"] main#screen{max-width:1680px;padding:12px 20px 40px}
 /* 手描きの木目素材。番号マップの形と操作は本体を維持する。 */
 .replica-lesson .lesson-left{background:#aa8060 url('lesson-wood.webp') center/280px auto;border-color:#a17a5d;box-shadow:inset 1px 0 #e7c9a4,0 5px 16px #294e7026}
 .replica-lesson .side-title{background:linear-gradient(#5d371526,#4d2e1c44),url('lesson-wood.webp') center 20%/280px auto;border-bottom:1px solid #664c3955}
+
+/* 厚い木製看板と雪景色。文字と操作部品はHTMLのまま重ねる。 */
+body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center top/cover no-repeat fixed}
+body[data-screen="quiz"] .masthead{background:linear-gradient(90deg,#123f70df,#204d7966 60%,#15365a22),url('lesson-village.webp') center 19%/cover}
+.replica-lesson .lesson-left{padding:0 8px 10px;border-width:7px;border-radius:10px;box-shadow:inset 1px 0 #e7c9a4,0 7px 16px #294e7040}
+.replica-lesson .lesson-left:before{display:none}
+.replica-lesson .lesson-sidebar{overflow:visible;padding-top:0}
+.replica-lesson .side-title{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;min-height:84px;box-sizing:border-box;margin:-12px -27px 12px;padding:22px 26px 16px;border:0;border-radius:0;background:none}
+.replica-lesson .side-title:before{content:"";position:absolute;inset:0;z-index:-1;background:url('lesson-sign.webp') center/100% 100% no-repeat;pointer-events:none}
+.replica-lesson .side-title h2{margin:0;font-size:1.05rem;line-height:1.5;color:#fffaf0;text-shadow:0 2px 2px #32180f}
+.replica-lesson .side-title .muted{font-size:.65rem;line-height:1.4;color:#fff0da}
+.replica-lesson .hint-card,.replica-lesson .explanation-card{overflow:visible;border:3px solid #faffff;box-shadow:inset 0 0 0 1px #d8e7ef,0 4px 14px #38698b20,0 0 0 5px #ffffff70;padding-top:26px}
+.replica-lesson .hint-card:before,.replica-lesson .explanation-card:before{content:"";position:absolute;left:-7px;right:-7px;top:-16px;height:30px;background:url('lesson-snow-cap.webp') center/100% 100% no-repeat;pointer-events:none;z-index:1}
+.replica-lesson .explanation-card:before{transform:scaleX(-1);height:25px;top:-13px}
+.replica-lesson .lesson-help{gap:28px}
+@media(max-width:760px){body[data-screen="quiz"]{background-attachment:scroll}.replica-lesson .lesson-help{gap:25px;margin-top:12px}.replica-lesson .hint-card:before{height:27px;top:-14px}}
