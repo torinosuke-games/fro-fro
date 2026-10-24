@@ -170,3 +170,5 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 ランダム資材の☆を生成した淡い青背景のサイコロ画像 resource-dice.webp（128px）に変更。他の資材と同じ円形で教科カード／問題ページに共用し、説明文もサイコロ表記へ変更。生成指示：hand-painted ivory dice with dark blue recessed pips, three-quarter view, pale icy blue background, cozy anime fantasy resource icon, no text。画像読込・星の非表示・説明文をブラウザー確認。
 
 サイコロの左面を赤い点1個（1の目）に画像編集。背景・構図・質感・他の面を維持。編集指示：replace left face pips with one centered vermilion red recessed pip; preserve composition, ivory die, blue background and hand-painted texture.
+
+サイコロの目を修正：見える左面1（赤）、上面2、右面3。対面をそれぞれ6・5・4とする標準配置。生成指示は各面の目の数を厳密指定し、出力と縮小画像を目視確認。
