@@ -88,7 +88,7 @@
   };
 })(this);
 
-// 学習ページの装飾だけを追加。問題マップは本体のカレンダー調をそのまま使う。
+// 学習ページの配置と答えの閲覧。問題マップ・採点は本体を共有する。
 (function(root){
  'use strict';
  var U=root.FF.ui,render=U.screens.quiz.render;
@@ -97,6 +97,23 @@
   var layout=main.querySelector('.workbench');
   if(layout){
    layout.classList.add('replica-lesson');
+   var session=root.FF.app.session;
+   var item=session&&session.items[session.currentId];
+   var actions=layout.querySelector('.lesson-actions');
+   if(item&&actions){
+    if(!item.attempt.done){
+     var reveal=U.el('button',{class:'rn-button replica-reveal-answer',attrs:{type:'button'},rich:'{答|こた}えを見る'});
+     reveal.addEventListener('click',function(){
+      if(item.attempt.done)return;
+      // 閲覧は採点APIを呼ばず、永続の正解記録・報酬・チケットを変更しない。
+      item.answerViewed=true;item.attempt=Object.assign({},item.attempt,{done:true});
+      item.error=null;item.outcome=null;U.rerender();
+     });
+     actions.insertBefore(reveal,actions.lastElementChild);
+    }else if(item.answerViewed){
+     actions.parentNode.insertBefore(U.el('p',{class:'replica-answer-viewed',attrs:{role:'status'},rich:'{答|こた}えを見ました。この{問題|もんだい}の{報酬|ほうしゅう}はありません。'}),actions);
+    }
+   }
    var encourage=layout.querySelector('.encourage');
    if(encourage)encourage.remove();
    if(layout.querySelector('.question-card.is-done')){

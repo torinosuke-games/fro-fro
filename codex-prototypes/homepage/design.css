@@ -251,3 +251,8 @@ body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center to
 
 /* ヒント冒頭の不要な案内は表示領域も残さない。 */
 .replica-lesson .hint-card > h2 + p.small.muted{display:none}
+
+.replica-lesson .replica-reveal-answer{background:#fff8e9;border-color:#dec491;color:#80551e}
+.replica-answer-viewed{padding:12px;background:#fff8e9;border-radius:8px;color:#80551e;font-size:.875rem;line-height:1.7}
+.replica-lesson .lesson-actions{flex-wrap:wrap}
+@media(max-width:760px){.replica-lesson .lesson-actions .replica-reveal-answer{order:3;width:100%}}
