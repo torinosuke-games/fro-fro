@@ -174,3 +174,5 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 サイコロの目を修正：見える左面1（赤）、上面2、右面3。対面をそれぞれ6・5・4とする標準配置。生成指示は各面の目の数を厳密指定し、出力と縮小画像を目視確認。
 
 上面2の目を、面の奥と手前の対角頂点を結ぶ線上へ修正。上面の辺に平行だった配置を解消。赤1・右面3は維持。編集指示：top pips near rear and front opposite corners, approximately (625,225)/(625,455), not parallel to an edge.
+
+依頼により、上面2の目を逆側（左と右の対角頂点を結ぶ線）へ変更。編集指示：move two top pips to left/right opposite corners of top diamond; preserve red one and blue three.
