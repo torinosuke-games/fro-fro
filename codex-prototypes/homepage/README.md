@@ -204,3 +204,5 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 値引きドリルの品質修正：js/generators.jsのpct_offは基礎だけに出題。定価以上／0円以下の候補を排除し、候補補充時も同じ条件を維持。誤答候補は別の割引率で求めた額等を使用。tests/cases/discount-choices.jsで価格8通り×割引率7通りの56組を確認。全ロジックテスト887件成功。500円20%引きのブラウザー表示も基礎・4択すべて500円未満と確認。固定問題や他の型すべてを監査した変更ではありません。
 
 上部の資材・熱量をタブレット以上で19→17pxへ縮小。小学5年の最大公約数・最小公倍数を数から直接求める固定問題（言い換えや3数の最小公倍数を含む）とドリルを基礎へ移動。文章から使い方を考える応用は区別。ID・答え・履歴キーは維持。multiple単元の標準ドリルはなくなり、標準は固定問題から出題。tests/cases/gcd-difficulty.jsで固定・生成の分類を検証。
+
+上部ナビの文字記号を手描き画像へ変更。nav-home.webp（雪の家）、nav-records.webp（チェック付き学習帳）、nav-settings.webp（歯車）を透過128pxで保存し24px表示。生成指示：three separate hand-painted anime RPG menu icons, snowy house / study journal with checkmarks / blue silver gear, transparent, no text. ボタン・既存の遷移イベントは維持し、スマホは絵のみ・広い画面は絵と文字、aria-labelを付与。

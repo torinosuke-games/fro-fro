@@ -165,3 +165,19 @@
 })(this);
 
 FF.texts.renewal.dailyNote=FF.texts.renewal.dailyNote.replace('☆はランダムです','サイコロはランダムです');
+
+// 共通ヘッダーの文字記号を、生成したアイコンへ置き換える。
+(function(root){
+ var FF=root.FF,U=FF.ui,render=FF.renewalHud;
+ FF.renewalHud=function(hud){
+  render(hud);
+  var names=['home','records','settings'];
+  hud.querySelectorAll('.masthead-link').forEach(function(button,i){
+   if(!names[i])return;
+   var label=button.textContent.replace(/^[⌂▥⚙]\s*/,'').trim();
+   U.clear(button);button.setAttribute('aria-label',label);button.setAttribute('title',label);
+   button.appendChild(U.el('img',{class:'masthead-icon',attrs:{src:'codex-prototypes/homepage/nav-'+names[i]+'.webp',alt:'',width:'24',height:'24'}}));
+   button.appendChild(U.el('span',{class:'masthead-label',text:label}));
+  });
+ };
+})(this);

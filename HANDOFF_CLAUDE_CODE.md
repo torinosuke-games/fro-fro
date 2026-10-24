@@ -110,7 +110,7 @@ node tests/ui-snow-journey-edges.cjs
 
 ## キャッシュと公開の注意
 
-ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261024-gcd` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
+ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261025-nav-icons` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
 
 公開はGitHub PagesではなくSitesの別プロジェクト。GitHubへpushするだけではレプリカは更新されません。
 
@@ -151,3 +151,5 @@ node tests/ui-snow-journey-edges.cjs
 ## 追記：単純な最大公約数・最小公倍数は基礎
 
 固定問題の直接計算を基礎に変更（12と18／24と36の最大公約数、4と6の公倍数の最小値、15と20／4・6・9の最小公倍数）。生成器のgcd_ask/lcm_askも基礎のみ。multiple標準の生成リストは空で、標準は固定問題から出題する。問題ID・答え・履歴キーは変更なし。応用文章題は別分類のまま。tests/cases/gcd-difficulty.jsと生成テストに分類を反映。資材・熱量の数字は761px以上で17px。
+
+上部ホーム・学習記録・設定はnav-home/records/settings.webpを24px表示。FF.renewalHudをラップしボタン内容の記号を画像へ置き換える。全ページ・スマホへ共通適用。既存イベントと高さ34pxを維持し、アイコンのみの画面でもaria-labelで名前を提供する。
