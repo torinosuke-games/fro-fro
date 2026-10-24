@@ -248,3 +248,6 @@ body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center to
 
 /* タブレット以上の資材数を少し控えめにする。 */
 @media(min-width:761px){.resource-strip .resource-value{font-size:1.1875rem}}
+
+/* ヒント冒頭の不要な案内は表示領域も残さない。 */
+.replica-lesson .hint-card > h2 + p.small.muted{display:none}
