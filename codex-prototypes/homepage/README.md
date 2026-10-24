@@ -72,3 +72,28 @@ Playwright と Chromium が必要です。環境に応じて `FF_PLAYWRIGHT_MODU
 使用プロンプト：
 
 > Create ONE background environment tile for the RIGHTWARD expansion of the supplied snowy village game image. The supplied image is STYLE/CAMERA/COLOR reference, do NOT redraw its central village or buildings. New scene is the quiet EASTERN OUTSKIRTS, continuing its bright daytime blue sky and distant snow-covered jagged mountains, dark snowy pine tree line, warm anime-fantasy painted JRPG/game illustration with tactile detailed snow, matching elevated slightly downward camera. Landscape aspect 1168:784. Upper third distant mountains/sky, middle sparse pines, lower two thirds a broad OPEN FLAT snow-covered clearing for future buildings. A compacted pale brown snow path enters at LEFT center around55% height and forks gently toward upper-right and lower-right across clearing. Keep four generous unobstructed empty snow areas centered roughly(30%,48%),(68%,48%),(32%,78%),(70%,78%) for building markers to be overlaid by the game. Some low snow-covered stones and logs near far edges only. NO buildings, NO tents, NO cave or mine entrance, NO campfire, NO tower, NO people, NO characters, NO markers or symbols, NO text or labels, NO UI, NO border. No foreground tree hiding plots. Sparse trees at LEFT and RIGHT edges can visually join to adjacent snowy village scene. Clear welcoming expansion space, not a finished settlement. Natural soft warm daylight and readable bright white snow against blue shadows. Entire canvas opaque.
+
+## 広い雪原の探索プレビュー
+
+この入口の「冒険に出る」で、白樺地方の探索プレビューを開きます。40×30マス（元の20×14マスの約4.3倍）。灯火の村から街道・湖の橋を通って白樺の宿場町へ進めます。脇道には、宝箱のある小さな洞窟と、国語の大ボス拠点「封印図書館」の入口があります。
+
+- 地面や目的地をタップすると歩いて移動。主人公を追うカメラ、矢印キー・方向ボタン、移動停止、全体マップに対応。
+- 目的地への経路は街道を優先。水面・木・岩は通れず、湖は橋で渡ります。
+- 訪れた街への帰還、洞窟への出入り、宝箱の発見、探索済みの範囲を保存します。
+- 目標・地域名を地図の上に表示。全体マップは未探索範囲を暗く表示します。目的地名は最初から見える案内方式です。
+- 街道は安全、森は今後のエンカウント地域として案内します。この試作には戦闘・出題・HP消費・実報酬は含めず、ボスは拠点の紹介までです。
+- 他の4教科の拠点と地域は「この先に広がる世界」の構想のみです。実際に歩けるのは白樺地方と洞窟です。
+
+既存の雪原・旅人・樹木・家・岩の画像を利用しています。湖・道・拠点の仮マーカーはCanvasで描きます。洞窟と図書館の専用アートは未制作です。画面内のマスだけを描画し、巨大な背景画像の生成は不要です。画面を離れた際に描画ループ・ResizeObserver・入力イベントを破棄します。
+
+`snow-journey.js` が地形・場所・通行判定・街道優先の経路探索・保存の検証、`snow-journey-ui.js` が描画・移動・探索UIです。保存キーは `frozenFrontier.prototype.snowJourney.v1`。既存 adventure の位置・戦闘・報酬や本体のセーブには書き込みません。地域の切り替えは `region` で管理しています。本体への導入時には、地域定義の追加、既存セーブの移行、各教科の戦闘・進行条件との接続を別途行います。
+
+検証コマンド（HTTPサーバーとChromiumが必要）：
+
+```sh
+FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node tests/ui-snow-journey.cjs
+```
+
+360・390・768・1440px、街道による宿場町への到達、全目的地への経路、水面・壁の通行制限、矢印キー・実タッチ入力、洞窟・宝箱・出口・図書館・帰還・移動停止、再描画・画面遷移・壊れた保存値、元ゲームの状態と本体セーブの不変性を検証します。
+
+![広い雪原の全体マップ](screenshots/snow-journey.webp)

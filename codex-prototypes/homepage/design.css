@@ -113,3 +113,22 @@ body[data-screen="base"] .village-center>.scene{width:100%;height:100%;margin:0;
  .village-east-name{top:10px;left:12px;padding:4px 12px}
  .village-help{font-size:.6875rem}
 }
+
+/* 白樺地方：歩く主人公に追従する探索プレビュー */
+.journey-shell{max-width:1280px;margin:auto;color:#264557}
+.journey-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:14px 0}
+.journey-heading h1{font-size:clamp(24px,4vw,34px);margin:0;letter-spacing:.1em}
+.journey-heading .replica-eyebrow{margin:0 0 4px}
+.journey-mission{background:#fffdf5;border:1px solid #dfd6bd;border-radius:12px;padding:12px 18px;display:flex;align-items:center;gap:18px}
+.journey-area{font-weight:800;color:#8c6a30;white-space:nowrap}.journey-objective{margin:0;font-size:14px}
+.journey-tools{display:flex;gap:8px;margin:12px 0}.journey-tools .btn{font-size:12px;min-height:40px}
+.journey-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:18px}
+.journey-viewport{position:relative;height:clamp(430px,65vh,680px);overflow:hidden;border-radius:16px;background:#dcebf0;border:1px solid #bacdd4;box-shadow:0 10px 30px #294c601a}
+.journey-viewport canvas{display:block;touch-action:pan-y;cursor:crosshair}.journey-viewport canvas:focus-visible{outline:3px solid #bf8c37;outline-offset:-4px}
+.journey-guide{padding:18px;background:#f9fcfc;border:1px solid #d2e0e4;border-radius:16px;font-size:13px;line-height:1.8}.journey-guide h2{font-size:19px;line-height:1.6;margin:6px 0}.journey-guide p{margin:8px 0}
+.journey-destinations{display:grid;gap:8px;margin:16px 0}.journey-destination{text-align:left!important;font-size:13px!important;background:#fff!important;border-color:#cadce3!important}
+.journey-legend,.journey-future p{white-space:pre-line}.journey-legend{font-size:11px;color:#54717e}.journey-future{border-top:1px solid #d5e2e7;margin-top:16px;padding-top:12px}.journey-future summary{cursor:pointer;font-weight:bold}
+.journey-preview-note{display:block;color:#627981;margin-top:16px;line-height:1.7;font-size:11px}
+.journey-pad{position:absolute;bottom:16px;left:16px;display:grid;grid-template-columns:repeat(3,44px);gap:5px}.journey-pad .btn{height:44px;min-width:44px;padding:0;background:#fffffff0;box-shadow:0 2px 8px #294c6022;font-size:22px;touch-action:manipulation}.journey-pad .btn:first-child{grid-column:2}.journey-pad .btn:nth-child(2){grid-column:1;grid-row:2}.journey-pad .btn:nth-child(3){grid-column:2;grid-row:2}.journey-pad .btn:nth-child(4){grid-column:3;grid-row:2}
+.journey-status{font-size:13px;min-height:24px;margin:12px 0 4px}.journey-help{font-size:11px;color:#627b86;margin:4px 0 20px}
+@media(max-width:760px){.journey-layout{display:flex;flex-direction:column;gap:12px}.journey-viewport{height:52svh;min-height:330px;max-height:520px}.journey-guide{padding:14px}.journey-guide>p:not(.journey-legend),.journey-guide>h2{display:none}.journey-destinations{grid-template-columns:1fr 1fr;margin:0 0 12px}.journey-mission{display:block;padding:10px 12px}.journey-area{font-size:12px}.journey-objective{font-size:12px;margin-top:3px}.journey-heading{margin-top:8px}.journey-tools{gap:5px}.journey-tools .btn{padding:8px 10px}.journey-pad{left:12px;bottom:12px}}
