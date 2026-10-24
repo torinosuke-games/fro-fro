@@ -153,3 +153,6 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 - `lesson-snow-cap.webp`: Isolated wide thin continuous snow cap on transparent background. Puffy white snow, thinner center, thicker ends, little downward overhangs, pale blue shadows. Front-facing painted game UI decoration, snow only, no supporting ledge or text.
 
 確認：見出しの木枠・雪が文字を隠さないこと、ヒントと解説の雪の厚み、背景と本文の読みやすさ。390〜1920pxの既存UI操作テストを実行。
+
+
+ブラウザー指摘対応：教科・進捗欄を不透明白に変更し、右下の応援コメントを削除。けいさんメモは元の問題枠の右上外側に専用余白を設け、見出しとの重なりを解消。1112pxで位置・開閉を確認し、5画面幅の学習操作テストも成功。

@@ -143,7 +143,7 @@ body[data-screen="quiz"] .masthead:after{display:none}
 body[data-screen="quiz"] .brand{font-size:clamp(1.4rem,2.2vw,2rem);text-shadow:0 2px 4px #153d65}
 body[data-screen="quiz"] .brand-caption{color:#fff;font-size:.875rem}
 body[data-screen="quiz"] .masthead-link{background:#ffffffeb;color:#173f6d;border:1px solid #fff;box-shadow:0 2px 8px #12335233}
-body[data-screen="quiz"] .lesson-heading{background:#ffffffcf;border:1px solid #d1e2ef;border-radius:10px;padding:8px 14px;margin:4px 0 16px}
+body[data-screen="quiz"] .lesson-heading{background:#fff;border:1px solid #d1e2ef;border-radius:10px;padding:8px 14px;margin:4px 0 16px}
 body[data-screen="quiz"] main#screen{max-width:1680px;padding:12px 20px 40px}
 .replica-lesson{gap:18px;align-items:start}
 .replica-lesson .question-card,.replica-lesson .hint-card,.replica-lesson .explanation-card{border:2px solid #e0edf5;border-radius:16px;box-shadow:0 4px 15px #295c7e12,0 0 0 5px #ffffff70}
@@ -207,3 +207,9 @@ body[data-screen="quiz"] .masthead{background:linear-gradient(90deg,#123f70df,#2
 .replica-lesson .explanation-card:before{transform:scaleX(-1);height:25px;top:-13px}
 .replica-lesson .lesson-help{gap:28px}
 @media(max-width:760px){body[data-screen="quiz"]{background-attachment:scroll}.replica-lesson .lesson-help{gap:25px;margin-top:12px}.replica-lesson .hint-card:before{height:27px;top:-14px}}
+
+/* 元の「問題枠の右上外側」のメモ位置に専用の余白を確保する。 */
+@media(min-width:900px){
+ .replica-lesson:has(.scratch-toggle.corner){padding-top:34px}
+ .replica-lesson .scratch-toggle.corner{top:-42px;right:0}
+}

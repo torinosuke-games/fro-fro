@@ -95,6 +95,10 @@
  U.screens.quiz.render=function(main){
   render(main);
   var layout=main.querySelector('.workbench');
-  if(layout)layout.classList.add('replica-lesson');
+  if(layout){
+   layout.classList.add('replica-lesson');
+   var encourage=layout.querySelector('.encourage');
+   if(encourage)encourage.remove();
+  }
  };
 })(this);
