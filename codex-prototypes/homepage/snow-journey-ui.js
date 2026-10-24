@@ -110,7 +110,7 @@
     function draw(){if(dead||!width)return;transform();var g=M.map(state.region),cave=state.region==='cave';
       ctx.clearRect(0,0,width,height);ctx.lineWidth=1;ctx.fillStyle=cave?'#213b51':'#dfedf0';ctx.fillRect(0,0,width,height);
       if(!cave&&images.snow){
-        var snow=images.snow,sx=(hero.x*scale%snow.width+snow.width)%snow.width,sy=(hero.y*scale*.66%snow.height+snow.height)%snow.height;
+        var snow=images.snow,sx=((camera.x*scale-width/2)%snow.width+snow.width)%snow.width,sy=((camera.y*scale*.66-height/2)%snow.height+snow.height)%snow.height;
         ctx.save();ctx.globalAlpha=.38;ctx.translate(-sx,-sy);
         // 実際の画像の幅で繰り返すため継ぎ目は飛ばない。CanvasPatternの毎フレームのラスタライズを避ける。
         for(var yy=0;yy<height+sy;yy+=snow.height)for(var xx=0;xx<width+sx;xx+=snow.width)ctx.drawImage(snow,xx,yy);
