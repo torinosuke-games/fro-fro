@@ -4,7 +4,7 @@
   function button(label,fn,cls){return E('button',{class:'btn '+(cls||''),text:label,on:{click:fn}});}
   U.screens.adventure.render=function(main){
     if(dispose) dispose();
-    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,snowPattern=null;
+    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,spriteCache=new Map();
     main.classList.remove('adv-field-screen','adv-battle-screen'); main.classList.add('journey-screen');
     var shell=E('section',{class:'journey-shell'}), heading=E('h1',{text:'雪原の旅'}), area=E('span',{class:'journey-area'}), objective=E('p',{class:'journey-objective'}), status=E('p',{class:'journey-status',attrs:{role:'status'}});
     var canvas=E('canvas',{attrs:{tabindex:'0','aria-label':'雪原の探索。地面をタップして移動。矢印キーでも移動できます。'}}),ctx=canvas.getContext('2d');
@@ -101,10 +101,21 @@
     function project(x,y){return{x:width/2+(x-camera.x)*scale,y:height/2+(y-camera.y)*scale*.66};}
     function label(t,x,y,color){ctx.font=(overview?'10':'12')+'px sans-serif';var w=ctx.measureText(t).width+16;ctx.fillStyle=color||'#183c50e8';ctx.beginPath();ctx.roundRect(x-w/2,y-16,w,24,6);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(t,x,y);}
     var crops={tree:[0,0,485,684],cabin:[514,142,620,495],rock:[1170,244,490,427],lantern:[1744,170,280,503]};
-    function sprite(name,x,y,w,h){var img=images.atlas;if(!img)return;var b=crops[name],f=img.width/2048;ctx.drawImage(img,b[0]*f,b[1]*f,b[2]*f,b[3]*f,x-w/2,y-h,w,h);}
+    function sprite(name,x,y,w,h){var img=images.atlas;if(!img)return;
+      // 元画像の切り出し・縮小を繰り返さず、表示サイズの小さな絵を再利用する。
+      var pw=Math.ceil(w*1.5),ph=Math.ceil(h*1.5),key=name+':'+pw+':'+ph,part=spriteCache.get(key);
+      if(!part){var b=crops[name],f=img.width/2048;part=document.createElement('canvas');part.width=pw;part.height=ph;part.getContext('2d').drawImage(img,b[0]*f,b[1]*f,b[2]*f,b[3]*f,0,0,pw,ph);spriteCache.set(key,part);}
+      ctx.drawImage(part,x-w/2,y-h,w,h);
+    }
     function draw(){if(dead||!width)return;transform();var g=M.map(state.region),cave=state.region==='cave';
       ctx.clearRect(0,0,width,height);ctx.lineWidth=1;ctx.fillStyle=cave?'#213b51':'#dfedf0';ctx.fillRect(0,0,width,height);
-      if(!cave&&images.snow){ctx.globalAlpha=.38;if(!snowPattern)snowPattern=ctx.createPattern(images.snow,'repeat');var sx=hero.x*scale,sy=hero.y*scale*.66;ctx.save();ctx.translate(-sx,-sy);ctx.fillStyle=snowPattern;ctx.fillRect(sx,sy,width,height);ctx.restore();ctx.globalAlpha=1;}
+      if(!cave&&images.snow){
+        var snow=images.snow,sx=(hero.x*scale%snow.width+snow.width)%snow.width,sy=(hero.y*scale*.66%snow.height+snow.height)%snow.height;
+        ctx.save();ctx.globalAlpha=.38;ctx.translate(-sx,-sy);
+        // 実際の画像の幅で繰り返すため継ぎ目は飛ばない。CanvasPatternの毎フレームのラスタライズを避ける。
+        for(var yy=0;yy<height+sy;yy+=snow.height)for(var xx=0;xx<width+sx;xx+=snow.width)ctx.drawImage(snow,xx,yy);
+        ctx.restore();
+      }
       // 描画範囲だけを走査。地図全体を巨大なオフスクリーン画像にしない。
       var xmin=overview?0:Math.max(0,Math.floor(camera.x-width/scale/2)-2),xmax=overview?g[0].length:Math.min(g[0].length,Math.ceil(camera.x+width/scale/2)+2);
       var ymin=overview?0:Math.max(0,Math.floor(camera.y-height/(scale*.66)/2)-3),ymax=overview?g.length:Math.min(g.length,Math.ceil(camera.y+height/(scale*.66)/2)+4);
@@ -182,7 +193,7 @@
       }
       raf=root.requestAnimationFrame(tick);
     }
-    function resize(){width=viewport.clientWidth;height=viewport.clientHeight;var d=Math.min(root.devicePixelRatio||1,2);canvas.width=Math.round(width*d);canvas.height=Math.round(height*d);canvas.style.width=width+'px';canvas.style.height=height+'px';ctx.setTransform(d,0,0,d,0,0);draw();}
+    function resize(){width=viewport.clientWidth;height=viewport.clientHeight;var d=Math.min(root.devicePixelRatio||1,width<600?1.5:2);canvas.width=Math.round(width*d);canvas.height=Math.round(height*d);canvas.style.width=width+'px';canvas.style.height=height+'px';ctx.setTransform(d,0,0,d,0,0);draw();}
     canvas.addEventListener('click',function(e){if(moving)return;var b=canvas.getBoundingClientRect(),x=e.clientX-b.left,y=e.clientY-b.top;var p={x:Math.round(camera.x+(x-width/2)/scale),y:Math.round(camera.y+(y-height/2)/(scale*.66))};var near=places().find(function(q){var s=project(q.x,q.y);return Math.abs(s.x-x)<(overview?14:scale*.65)&&Math.abs(s.y-y)<(overview?25:scale*.6);});go(near||p);});
     // 本体の adventure は document の矢印キーを監視する。比較用画面ではここで受け、二重移動を防ぐ。
     function onKey(e){if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)||dead||!shell.isConnected)return;e.stopPropagation();
@@ -196,7 +207,7 @@
     var observer=new ResizeObserver(resize);observer.observe(viewport);
     var leaveObserver=new MutationObserver(function(){if(!shell.isConnected)dispose();});leaveObserver.observe(main,{childList:true});
     dispose=function(){if(dead)return;dead=true;root.clearTimeout(pendingSave);stopInput();document.removeEventListener('keydown',onKey,true);document.removeEventListener('keyup',onKey,true);root.removeEventListener('blur',blur);root.cancelAnimationFrame(raf);observer.disconnect();leaveObserver.disconnect();save();};
-    [['atlas','img/adventure/canvas/alpine-atlas.webp'],['snow','img/adventure/canvas/plain.webp'],['hero',FF.adventureScene.traveler(FF.app.state.player.avatar)],['heroDiag',FF.adventureScene.travelerDiag(FF.app.state.player.avatar)],['walk',FF.adventureScene.travelerWalk(FF.app.state.player.avatar)],['walkDiag',FF.adventureScene.travelerWalkDiag(FF.app.state.player.avatar)]].forEach(function(a){if(!a[1])return;var im=new Image();im.onload=function(){images[a[0]]=im;canvas.dataset.walkReady=String(!!(images.walk&&images.walkDiag));draw();};im.src=a[1];});
+    [['atlas','img/adventure/canvas/alpine-atlas.webp'],['snow','img/adventure/canvas/plain.webp'],['hero',FF.adventureScene.traveler(FF.app.state.player.avatar)],['heroDiag',FF.adventureScene.travelerDiag(FF.app.state.player.avatar)],['walk',FF.adventureScene.travelerWalk(FF.app.state.player.avatar)],['walkDiag',FF.adventureScene.travelerWalkDiag(FF.app.state.player.avatar)]].forEach(function(a){if(!a[1])return;var im=new Image();im.onload=function(){var asset=im;if(['hero','heroDiag','walk','walkDiag'].includes(a[0])){var cells=a[0].indexOf('walk')===0?4:2;asset=document.createElement('canvas');asset.width=asset.height=cells*96;asset.getContext('2d').drawImage(im,0,0,asset.width,asset.height);}images[a[0]]=asset;canvas.dataset.walkReady=String(!!(images.walk&&images.walkDiag));draw();};im.src=a[1];});
     discover();refresh();resize();raf=root.requestAnimationFrame(tick);
   };
 })(this);
