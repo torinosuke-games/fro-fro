@@ -172,3 +172,5 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 サイコロの左面を赤い点1個（1の目）に画像編集。背景・構図・質感・他の面を維持。編集指示：replace left face pips with one centered vermilion red recessed pip; preserve composition, ivory die, blue background and hand-painted texture.
 
 サイコロの目を修正：見える左面1（赤）、上面2、右面3。対面をそれぞれ6・5・4とする標準配置。生成指示は各面の目の数を厳密指定し、出力と縮小画像を目視確認。
+
+上面2の目を、面の奥と手前の対角頂点を結ぶ線上へ修正。上面の辺に平行だった配置を解消。赤1・右面3は維持。編集指示：top pips near rear and front opposite corners, approximately (625,225)/(625,455), not parallel to an edge.
