@@ -4,7 +4,7 @@
   function button(label,fn,cls){return E('button',{class:'btn '+(cls||''),text:label,on:{click:fn}});}
   U.screens.adventure.render=function(main){
     if(dispose) dispose();
-    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set();
+    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,snowPattern=null;
     main.classList.remove('adv-field-screen','adv-battle-screen'); main.classList.add('journey-screen');
     var shell=E('section',{class:'journey-shell'}), heading=E('h1',{text:'雪原の旅'}), area=E('span',{class:'journey-area'}), objective=E('p',{class:'journey-objective'}), status=E('p',{class:'journey-status',attrs:{role:'status'}});
     var canvas=E('canvas',{attrs:{tabindex:'0','aria-label':'雪原の探索。地面をタップして移動。矢印キーでも移動できます。'}}),ctx=canvas.getContext('2d');
@@ -68,10 +68,12 @@
     pad.addEventListener('lostpointercapture',function(e){if(e.target===pad)stop();});
     return pad;
   }
+    function scheduleSave(){if(!pendingSave)pendingSave=root.setTimeout(function(){pendingSave=0;if(!dead)save();},0);}
     function save(){state.seen=Array.from(seen);try{root.localStorage.setItem(M.key,JSON.stringify(state));}catch(e){status.textContent='この端末では保存できません。画面を開いている間は探索できます。';}}
     function discover(){if(state.region==='field')for(var y=-4;y<=4;y++)for(var x=-4;x<=4;x++)if(x*x+y*y<=20&&state.x+x>=0&&state.x+x<40&&state.y+y>=0&&state.y+y<30)seen.add((state.x+x)+','+(state.y+y));}
     function places(){return state.region==='cave'?M.cavePlaces:M.places;}
     function refresh(){
+      var key=[state.region,state.x>24,state.y<16,M.map(state.region)[state.y][state.x],state.chest,state.visited.join() ].join('|');if(key===lastRefresh)return;lastRefresh=key;
       area.textContent=state.region==='cave'?'こだまの洞窟':state.x>24?'白樺の東の森':state.y<16?'氷湖のほとり':'灯火の街道';
       objective.textContent=state.visited.includes('town')?'次の目標：東の森の「封印図書館」を見つけよう':'次の目標：街道をたどり、白樺の宿場町へ';
       if(state.visited.includes('library')&&state.visited.includes('town'))objective.textContent='宿場町と封印図書館を発見！ 洞窟や湖のほとりも探してみよう';
@@ -102,7 +104,7 @@
     function sprite(name,x,y,w,h){var img=images.atlas;if(!img)return;var b=crops[name],f=img.width/2048;ctx.drawImage(img,b[0]*f,b[1]*f,b[2]*f,b[3]*f,x-w/2,y-h,w,h);}
     function draw(){if(dead||!width)return;transform();var g=M.map(state.region),cave=state.region==='cave';
       ctx.clearRect(0,0,width,height);ctx.lineWidth=1;ctx.fillStyle=cave?'#213b51':'#dfedf0';ctx.fillRect(0,0,width,height);
-      if(!cave&&images.snow){ctx.globalAlpha=.38;var pattern=ctx.createPattern(images.snow,'repeat');ctx.save();ctx.translate(-hero.x*scale%256,-hero.y*scale*.66%256);ctx.fillStyle=pattern;ctx.fillRect(-256,-256,width+512,height+512);ctx.restore();ctx.globalAlpha=1;}
+      if(!cave&&images.snow){ctx.globalAlpha=.38;if(!snowPattern)snowPattern=ctx.createPattern(images.snow,'repeat');var sx=hero.x*scale,sy=hero.y*scale*.66;ctx.save();ctx.translate(-sx,-sy);ctx.fillStyle=snowPattern;ctx.fillRect(sx,sy,width,height);ctx.restore();ctx.globalAlpha=1;}
       // 描画範囲だけを走査。地図全体を巨大なオフスクリーン画像にしない。
       var xmin=overview?0:Math.max(0,Math.floor(camera.x-width/scale/2)-2),xmax=overview?g[0].length:Math.min(g[0].length,Math.ceil(camera.x+width/scale/2)+2);
       var ymin=overview?0:Math.max(0,Math.floor(camera.y-height/(scale*.66)/2)-3),ymax=overview?g.length:Math.min(g.length,Math.ceil(camera.y+height/(scale*.66)/2)+4);
@@ -150,14 +152,33 @@
       if(overview&&!cave){for(y=0;y<g.length;y++)for(x=0;x<g[0].length;x++)if(!seen.has(x+','+y)){var f=project(x,y);ctx.fillStyle='#17394d55';ctx.fillRect(Math.floor(f.x-scale/2),Math.floor(f.y-scale*.33),Math.floor(f.x+scale/2)-Math.floor(f.x-scale/2),Math.floor(f.y+scale*.33)-Math.floor(f.y-scale*.33));}}
       if(!overview){var shade=ctx.createLinearGradient(0,0,0,height);shade.addColorStop(0,'#46677c25');shade.addColorStop(.35,'#ffffff00');shade.addColorStop(1,'#a9c4d533');ctx.fillStyle=shade;ctx.fillRect(0,0,width,height);}
     }
+    function startStep(){
+      if(modal||overview)return false;
+      if(held&&!route.length){var nextHeld=M.nextStep(state.region,state,held[0],held[1]);if(nextHeld)route=[nextHeld];}
+      if(!route.length)return false;
+      var next=route.shift(),dx=next.x-state.x,dy=next.y-state.y;
+      moving={from:{x:state.x,y:state.y},to:next,elapsed:0,duration:root.matchMedia('(prefers-reduced-motion: reduce)').matches?45:(held?280:360)*Math.hypot(dx,dy)};
+      diag=!!(dx&&dy);face=diag?(dy<0?2:0)+(dx>0?1:0):dx>0?3:dx<0?2:dy<0?1:0;return true;
+    }
     function tick(time){if(dead)return;if(!shell.isConnected){dispose();return;}
+      // 本体と同じく、復帰時などの長いフレームを34msに抑えて急な位置飛びを防ぐ。
+      var budget=lastFrame===null?0:Math.min(34,Math.max(0,time-lastFrame));lastFrame=time;
       if(!document.querySelector('.overlay'))modal=false;
       if(!modal&&!overview){
-        if(!moving&&held&&!route.length){var nextHeld=M.nextStep(state.region,state,held[0],held[1]);if(nextHeld)route=[nextHeld];}
-        if(!moving&&route.length){var next=route.shift();moving={from:{x:state.x,y:state.y},to:next,start:time,duration:root.matchMedia('(prefers-reduced-motion: reduce)').matches?45:(held?280:360)*Math.hypot(next.x-state.x,next.y-state.y)};var dx=next.x-state.x,dy=next.y-state.y;diag=!!(dx&&dy);face=diag?(dy<0?2:0)+(dx>0?1:0):dx>0?3:dx<0?2:dy<0?1:0;}
-        if(moving){var t=Math.min(1,(time-moving.start)/moving.duration);var oldX=hero.x,oldY=hero.y;hero.x=moving.from.x+(moving.to.x-moving.from.x)*t;hero.y=moving.from.y+(moving.to.y-moving.from.y)*t;
-          dist+=Math.hypot(hero.x-oldX,hero.y-oldY);
-          if(t===1){state.x=moving.to.x;state.y=moving.to.y;moving=null;discover();save();refresh();var place=places().find(function(p){return p.x===state.x&&p.y===state.y;});if(place){if(state.region==='field'&&!state.visited.includes(place.id)){state.visited.push(place.id);save();refresh();}if(!route.length)showPlace(place);}}draw();}
+        var changed=false;if(!moving)startStep();
+        while(moving&&budget>0&&!modal){
+          var used=Math.min(budget,moving.duration-moving.elapsed);moving.elapsed+=used;budget-=used;
+          var t=moving.elapsed/moving.duration,oldX=hero.x,oldY=hero.y;
+          hero.x=moving.from.x+(moving.to.x-moving.from.x)*t;hero.y=moving.from.y+(moving.to.y-moving.from.y)*t;
+          dist+=Math.hypot(hero.x-oldX,hero.y-oldY);changed=true;
+          if(t<1)break;
+          state.x=moving.to.x;state.y=moving.to.y;moving=null;discover();scheduleSave();refresh();
+          var place=places().find(function(p){return p.x===state.x&&p.y===state.y;});
+          if(place){if(state.region==='field'&&!state.visited.includes(place.id)){state.visited.push(place.id);scheduleSave();refresh();}if(!route.length)showPlace(place);}
+          // 余った時間は次のマスへ。境界に停止フレームを挟まず、1フレーム1回だけ描画。
+          if(!startStep())break;
+        }
+        if(changed)draw();
       }
       raf=root.requestAnimationFrame(tick);
     }
@@ -174,7 +195,7 @@
     document.addEventListener('keydown',onKey,true);document.addEventListener('keyup',onKey,true);root.addEventListener('blur',blur);
     var observer=new ResizeObserver(resize);observer.observe(viewport);
     var leaveObserver=new MutationObserver(function(){if(!shell.isConnected)dispose();});leaveObserver.observe(main,{childList:true});
-    dispose=function(){if(dead)return;dead=true;stopInput();document.removeEventListener('keydown',onKey,true);document.removeEventListener('keyup',onKey,true);root.removeEventListener('blur',blur);root.cancelAnimationFrame(raf);observer.disconnect();leaveObserver.disconnect();save();};
+    dispose=function(){if(dead)return;dead=true;root.clearTimeout(pendingSave);stopInput();document.removeEventListener('keydown',onKey,true);document.removeEventListener('keyup',onKey,true);root.removeEventListener('blur',blur);root.cancelAnimationFrame(raf);observer.disconnect();leaveObserver.disconnect();save();};
     [['atlas','img/adventure/canvas/alpine-atlas.webp'],['snow','img/adventure/canvas/plain.webp'],['hero',FF.adventureScene.traveler(FF.app.state.player.avatar)],['heroDiag',FF.adventureScene.travelerDiag(FF.app.state.player.avatar)],['walk',FF.adventureScene.travelerWalk(FF.app.state.player.avatar)],['walkDiag',FF.adventureScene.travelerWalkDiag(FF.app.state.player.avatar)]].forEach(function(a){if(!a[1])return;var im=new Image();im.onload=function(){images[a[0]]=im;canvas.dataset.walkReady=String(!!(images.walk&&images.walkDiag));draw();};im.src=a[1];});
     discover();refresh();resize();raf=root.requestAnimationFrame(tick);
   };
