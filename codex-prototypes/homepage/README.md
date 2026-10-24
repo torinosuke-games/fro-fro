@@ -208,3 +208,9 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 上部ナビの文字記号を手描き画像へ変更。nav-home.webp（雪の家）、nav-records.webp（チェック付き学習帳）、nav-settings.webp（歯車）を透過128pxで保存し24px表示。生成指示：three separate hand-painted anime RPG menu icons, snowy house / study journal with checkmarks / blue silver gear, transparent, no text. ボタン・既存の遷移イベントは維持し、スマホは絵のみ・広い画面は絵と文字、aria-labelを付与。
 
 探索画面更新：プレゼントの絵文字をtreasure-chest.webp（透過128pxの木と金具の宝箱）へ変更。生成指示：closed arched wooden fantasy treasure chest with iron bands and gold keyhole, hand-painted anime RPG, transparent, no gift ribbon. 洞窟到着時は確認なしで洞窟へ遷移。「雪原の旅」の見出しを削除。フィールドは全画面幅で、旅のしおりを初期閉じのボタン開閉に変更。目的地選択時はしおりを閉じ地図を表示。円形パッド・8方向歩行・端の地面整合を維持し検証。
+
+### 2026-10-25：探索の重ね表示・地形画
+
+フィールドを画面下まで拡張。左上に操作ボタン、右端に開閉式の旅のしおりを重ねる。フィールド下の説明文は削除。画面サイズ変更時のみ上端を再測定する。
+
+生成素材：trail-snow.webp（雪の踏み跡）、bridge-old.webp（古い粗い木橋）、lake-ice.webp（霜とひびの氷湖）。生成元 exec-9757e23e-55b3-4fd1-bbec-ba273059ec5b.png。プロンプトは「手描きの冬RPG、未整備の雪の踏み跡／縦向きの古い丸太と板の橋／青い氷湖のテクスチャ、上面視点、透明な3分割アトラス、文字なし」。切り出し・縮小してWebP化。既存の安全な道・水面判定は維持し、描画だけ変更。

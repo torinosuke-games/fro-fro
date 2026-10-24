@@ -26,6 +26,11 @@ const out=process.env.FF_QA_OUTPUT||'/workspace/snow-journey-qa';fs.mkdirSync(ou
   for(const width of [360,390,768,1440]){await page.setViewportSize({width,height:width<760?844:1000});await page.waitForTimeout(150);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     const frame=await page.locator('.journey-viewport').boundingBox(),layout=await page.locator('.journey-layout').boundingBox();assert.ok(frame.height>=330);assert.ok(Math.abs(frame.width-layout.width)<2);assert.equal(await page.locator('.journey-guide').isVisible(),false);assert.equal(await page.locator('.journey-heading h1').count(),0);
+    assert.ok(Math.abs(frame.y+frame.height-(width<760?844:1000))<2,'field reaches viewport bottom');
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollHeight>innerHeight+2),false,'no footer overflow');
+    await page.getByRole('button',{name:'旅のしおり',exact:true}).click();
+    const guide=await page.locator('.journey-guide').boundingBox(),after=await page.locator('.journey-viewport').boundingBox();assert.deepEqual(after,frame);assert.ok(guide.x>=frame.x&&guide.x+guide.width<=frame.x+frame.width&&guide.y>=frame.y&&guide.y+guide.height<=frame.y+frame.height);
+    await page.getByRole('button',{name:'閉じる',exact:true}).click();
     await page.locator('.journey-shell').screenshot({path:path.join(out,'field-'+width+'.png'),animations:'disabled'});
   }
   await page.getByRole('button',{name:'全体マップ',exact:true}).click();await page.locator('.journey-shell').screenshot({path:path.join(out,'world-map.png')});
@@ -50,10 +55,12 @@ const out=process.env.FF_QA_OUTPUT||'/workspace/snow-journey-qa';fs.mkdirSync(ou
   // 壊れた位置を安全な開始地点に戻す。
   await page.evaluate(()=>FF.ui.show('base'));await page.waitForTimeout(100);await page.evaluate(()=>{localStorage.setItem(FF.snowJourney.key,JSON.stringify({region:'field',x:-1,y:200}));FF.ui.show('adventure');});assert.equal((await state(page)).x,4);
   const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});await boot(mobile);
-  await mobile.getByRole('button',{name:'東へ',exact:true}).tap();await mobile.waitForFunction(()=>FF.snowJourney.read().x===5);
+  await mobile.evaluate(()=>FF.ui.show('base'));
+  await mobile.evaluate(()=>{localStorage.setItem(FF.snowJourney.key,JSON.stringify({region:'field',x:14,y:19,visited:['home'],seen:[]}));FF.ui.show('adventure');});
+  await mobile.getByRole('button',{name:'東へ',exact:true}).tap();await mobile.waitForFunction(()=>FF.snowJourney.read().x===15);
   await mobile.getByRole('button',{name:'全体マップ',exact:true}).tap();await mobile.getByRole('button',{name:'冒険に戻る',exact:true}).tap();
   // 地面を実際にタップして移動（現在地の右隣）。
-  const box=await mobile.locator('canvas').boundingBox();await mobile.touchscreen.tap(box.x+box.width/2+67,box.y+box.height/2+.8*67*.66);await mobile.waitForFunction(()=>FF.snowJourney.read().x===6);
+  const box=await mobile.locator('canvas').boundingBox();await mobile.touchscreen.tap(box.x+box.width/2+67,box.y+box.height/2+.8*67*.66);await mobile.waitForFunction(()=>FF.snowJourney.read().x===16);
   await mobile.locator('.journey-shell').screenshot({path:path.join(out,'mobile-touch.png'),animations:'disabled'});
   assert.deepEqual(errors,[]);console.log('PASS: 40×30 connectivity, safe road, 4 widths, keyboard/touch, town/cave/chest/boss, recall, stop, rerender, malformed save, isolated state');
  }finally{await browser.close();}

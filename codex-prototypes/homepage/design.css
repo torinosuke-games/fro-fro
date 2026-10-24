@@ -289,3 +289,25 @@ body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center to
 .journey-guide[hidden]{display:none}
 .journey-heading{margin:6px 0 10px}
 .journey-heading .replica-eyebrow{margin:0}
+
+/* Exploration uses the remaining viewport; controls float above the field. */
+body[data-screen="adventure"] #screen.journey-screen{max-width:none;padding:8px 12px 0}
+.journey-shell{max-width:none;height:calc(100dvh - var(--journey-top,8px));display:flex;flex-direction:column;min-height:360px}
+.journey-heading,.journey-mission{flex-shrink:0}
+.journey-mission{margin-bottom:8px}
+.journey-layout{position:relative;display:block;flex:1;min-height:220px}
+.journey-viewport{height:100%;min-height:0;max-height:none;border-bottom-left-radius:0;border-bottom-right-radius:0}
+.journey-tools{position:absolute;left:12px;top:12px;z-index:4;margin:0;flex-wrap:wrap;max-width:calc(100% - 24px)}
+.journey-tools .btn{background:#f8fcfff2;box-shadow:0 2px 7px #18384d26}
+.journey-guide{position:absolute;z-index:5;top:64px;right:12px;bottom:12px;width:260px;max-width:calc(100% - 24px);overflow:auto;overscroll-behavior:contain;box-sizing:border-box;background:#f9fcfcf7;box-shadow:0 8px 28px #18384d40}
+.journey-guide-close{float:right;font-size:12px!important;min-height:32px!important;padding:4px 10px!important}
+.journey-sr-status{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);margin:0;min-height:0}
+@media(max-width:760px){
+ body[data-screen="adventure"] #screen.journey-screen{padding:4px 6px 0}
+ .journey-heading{margin:0 0 6px}.journey-mission{padding:6px 10px}
+ .journey-tools{left:8px;top:8px;gap:4px;max-width:calc(100% - 16px)}
+ .journey-tools .btn{font-size:11px;padding:7px 8px;min-height:36px}
+ .journey-guide{top:92px;right:8px;bottom:156px;width:280px;padding:12px}
+ .journey-destinations{grid-template-columns:1fr;clear:both;padding-top:8px}
+}
+body[data-screen="adventure"] main#screen.journey-screen{padding-bottom:0}

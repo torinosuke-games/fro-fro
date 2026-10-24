@@ -13,7 +13,7 @@
     toggle.setAttribute('aria-pressed','false');
     shell.appendChild(E('header',{class:'journey-heading'},[E('div',{},[E('p',{class:'replica-eyebrow',text:'CHAPTER 01 · 白樺地方'})]),button('村へ',function(){dispose();U.show('base');})]));
     shell.appendChild(E('div',{class:'journey-mission'},[area,objective]));
-    shell.appendChild(E('div',{class:'journey-tools'},[toggle,button('帰還',recall),button('移動を止める',function(){stopInput();route=[];status.textContent='立ち止まりました。';})]));
+    viewport.appendChild(E('div',{class:'journey-tools'},[toggle,button('帰還',recall),button('移動を止める',function(){stopInput();route=[];status.textContent='立ち止まりました。';})]));
     var layout=E('div',{class:'journey-layout'},[viewport]); shell.appendChild(layout);
     var side=E('aside',{class:'journey-guide'},[E('p',{class:'replica-eyebrow',text:'旅のしおり'}),E('h2',{text:'次の灯りを、見つけよう。'}),E('p',{text:'街道をたどれば、白樺の宿場町へ。気になる脇道には、まだ知らない景色が待っています。'})]);
     var destinations=E('div',{class:'journey-destinations'});side.appendChild(destinations);
@@ -24,16 +24,17 @@
     var guideToggle=button('旅のしおり',function(){
       stopInput();route=[];side.hidden=!side.hidden;
       guideToggle.setAttribute('aria-expanded',String(!side.hidden));
-      if(!side.hidden)side.scrollIntoView({block:'nearest',behavior:'auto'});
+      if(!side.hidden)side.querySelector('.journey-guide-close').focus({preventScroll:true});
     },'journey-guide-toggle');
     guideToggle.setAttribute('aria-expanded','false');guideToggle.setAttribute('aria-controls',side.id);
-    shell.querySelector('.journey-tools').appendChild(guideToggle);
+    viewport.querySelector('.journey-tools').appendChild(guideToggle);
+    side.prepend(button('閉じる',function(){side.hidden=true;guideToggle.setAttribute('aria-expanded','false');guideToggle.focus({preventScroll:true});},'journey-guide-close'));
     layout.appendChild(side);
   var PAD_DIRS = [[0, -1, '↑', '北へ'], [-1, 0, '←', '西へ'], [0, 1, '↓', '南へ'], [1, 0, '→', '東へ']];
   var PAD_DIAG = [[-1, -1, -45], [1, -1, 45], [-1, 1, -135], [1, 1, 135]];   // 上下左右と同じ「↑」を回して、太さと大きさをそろえる
     var pad=directions();
     viewport.appendChild(pad);
-    shell.appendChild(status);shell.appendChild(E('p',{class:'journey-help',text:'地面・目的地をタップして歩く ／ 円形パッド・矢印キーで8方向に移動'}));
+    status.classList.add('journey-sr-status');shell.appendChild(status);
     main.appendChild(shell);
   function dirFromVector(vx, vy, r) {
     if (Math.hypot(vx, vy) < r * .26) return null;
@@ -115,6 +116,17 @@
       if(!part){var b=crops[name],f=img.width/2048;part=document.createElement('canvas');part.width=pw;part.height=ph;part.getContext('2d').drawImage(img,b[0]*f,b[1]*f,b[2]*f,b[3]*f,0,0,pw,ph);spriteCache.set(key,part);}
       ctx.drawImage(part,x-w/2,y-h,w,h);
     }
+    // Cache contour geometry once; the camera only projects these short paths.
+    var edges=new Map(),lakeContours=[],trailSegments=[];
+    M.grid.forEach(function(row,y){row.forEach(function(t,x){if(t!=='~'&&t!=='=')return;
+      var corners=[[x-.5,y-.5],[x+.5,y-.5],[x+.5,y+.5],[x-.5,y+.5]];
+      corners.forEach(function(a,i){var b=corners[(i+1)%4],k=a.join(',')+'>'+b.join(','),reverse=b.join(',')+'>'+a.join(',');if(edges.has(reverse))edges.delete(reverse);else edges.set(k,[a,b]);});
+    });});
+    var starts=new Map();edges.forEach(function(e){starts.set(e[0].join(','),e);});
+    while(starts.size){var edge=starts.values().next().value,points=[],first=edge[0].join(',');
+      while(edge){points.push(edge[0]);starts.delete(edge[0].join(','));if(edge[1].join(',')===first)break;edge=starts.get(edge[1].join(','));}lakeContours.push(points);
+    }
+    M.trail.slice(1).forEach(function(b,i){var a=M.trail[i],dx=Math.sign(b[0]-a[0]),dy=Math.sign(b[1]-a[1]),n=Math.max(Math.abs(b[0]-a[0]),Math.abs(b[1]-a[1]));for(var j=0;j<n;j++)trailSegments.push([[a[0]+dx*j,a[1]+dy*j],[a[0]+dx*(j+1),a[1]+dy*(j+1)]]);});
     function draw(){if(dead||!width)return;transform();var g=M.map(state.region),cave=state.region==='cave';
       ctx.clearRect(0,0,width,height);ctx.lineWidth=1;ctx.fillStyle=cave?'#213b51':'#dfedf0';ctx.fillRect(0,0,width,height);
       if(!cave&&images.snow){
@@ -127,15 +139,38 @@
       // 描画範囲だけを走査。地図全体を巨大なオフスクリーン画像にしない。
       var xmin=overview?0:Math.max(0,Math.floor(camera.x-width/scale/2)-2),xmax=overview?g[0].length:Math.min(g[0].length,Math.ceil(camera.x+width/scale/2)+2);
       var ymin=overview?0:Math.max(0,Math.floor(camera.y-height/(scale*.66)/2)-3),ymax=overview?g.length:Math.min(g.length,Math.ceil(camera.y+height/(scale*.66)/2)+4);
-      for(var y=ymin;y<ymax;y++)for(var x=xmin;x<xmax;x++){var p=project(x,y),t=g[y][x];
-        if(cave){ctx.fillStyle=t==='#'?'#152c40':'#8babbe';ctx.fillRect(p.x-scale/2,p.y-scale*.33,scale+1,scale*.66+1);}
-        else if(t==='~'||t==='='){ctx.fillStyle='#88b9cc';ctx.fillRect(p.x-scale*.51,p.y-scale*.34,scale*1.02,scale*.68);ctx.strokeStyle='#b8e3e9';ctx.beginPath();ctx.moveTo(p.x-scale*.4,p.y);ctx.lineTo(p.x+scale*.35,p.y-scale*.15);ctx.stroke();}
-        if(t==='='){ctx.fillStyle='#977b58';ctx.fillRect(p.x-scale*.3,p.y-scale*.36,scale*.6,scale*.72);ctx.strokeStyle='#ead4a6';for(var n=0;n<4;n++){ctx.beginPath();ctx.moveTo(p.x-scale*.3,p.y-scale*.3+n*scale*.18);ctx.lineTo(p.x+scale*.3,p.y-scale*.3+n*scale*.18);ctx.stroke();}}
+      var y,x;
+      if(cave){
+        for(y=ymin;y<ymax;y++)for(x=xmin;x<xmax;x++){var p=project(x,y);ctx.fillStyle=g[y][x]==='#'?'#152c40':'#8babbe';ctx.fillRect(p.x-scale/2,p.y-scale*.33,scale+1,scale*.66+1);}
+      }else{
+        // One continuous ice painting, clipped to the walkability map. Only outer
+        // corners curve; adjacent water cells never acquire visible tile seams.
+        function water(x,y){return !!g[y]&&(g[y][x]==='~'||g[y][x]==='=');}
+        ctx.save();ctx.beginPath();
+        lakeContours.forEach(function(points){
+          var last=project(points[points.length-1][0],points[points.length-1][1]),first=project(points[0][0],points[0][1]);
+          ctx.moveTo((last.x+first.x)/2,(last.y+first.y)/2);
+          points.forEach(function(v,i){var a=project(v[0],v[1]),n=points[(i+1)%points.length],b=project(n[0],n[1]);ctx.quadraticCurveTo(a.x,a.y,(a.x+b.x)/2,(a.y+b.y)/2);});ctx.closePath();
+        });
+        ctx.strokeStyle='#f3faf9';ctx.lineWidth=scale*.14;ctx.stroke();
+        ctx.clip();var lake=project(18.5,10.5);
+        if(images.ice)ctx.drawImage(images.ice,lake.x,lake.y,scale*13,scale*.66*9);
+        else{ctx.fillStyle='#8cbbc9';ctx.fillRect(0,0,width,height);}ctx.restore();
+        // Small transparent painted trail pieces follow the existing safe routes.
+        trailSegments.forEach(function(pair){
+          var from=pair[0],to=pair[1];if(from[0]<xmin-1||from[0]>xmax||from[1]<ymin-1||from[1]>ymax)return;
+          if(water(from[0],from[1])&&water(to[0],to[1]))return;
+          var a=project(from[0],from[1]),b=project(to[0],to[1]),length=Math.hypot(b.x-a.x,b.y-a.y);
+          ctx.save();ctx.translate((a.x+b.x)/2,(a.y+b.y)/2);ctx.rotate(Math.atan2(b.y-a.y,b.x-a.x));
+          if(images.trail){ctx.globalAlpha=.62;ctx.drawImage(images.trail,-length*.62,-scale*.30,length*1.24,scale*.60);}ctx.restore();
+        });
+        for(y=ymin;y<ymax;y++)for(x=xmin;x<xmax;x++)if(g[y][x]==='='){
+          var p=project(x,y);ctx.save();ctx.translate(p.x,p.y);
+          var vertical=g[y-1]&&g[y-1][x]==='='||g[y+1]&&g[y+1][x]==='=';
+          if(!vertical)ctx.rotate(Math.PI/2);
+          if(images.bridge)ctx.drawImage(images.bridge,-scale*.31,-scale*(vertical?.36:.55),scale*.62,scale*(vertical?.72:1.10));ctx.restore();
+        }
       }
-      if(!cave){ctx.strokeStyle='#c8bd9c99';ctx.lineWidth=scale*.48;ctx.lineCap='round';ctx.beginPath();
-        for(y=ymin;y<ymax;y++)for(x=xmin;x<xmax;x++)if(g[y][x]==='r'){
-          var a=project(x,y);[[1,0],[0,1]].forEach(function(d){var yy=y+d[1],xx=x+d[0];if(g[yy]&&(g[yy][xx]==='r'||g[yy][xx]==='=')){var b=project(xx,yy);ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);}});
-        }ctx.stroke();ctx.lineCap='butt';}
       if(route.length){ctx.strokeStyle='#c29343';ctx.lineWidth=overview?1:2;ctx.setLineDash([4,6]);ctx.beginPath();var start=project(hero.x,hero.y);ctx.moveTo(start.x,start.y);route.forEach(function(q){var p=project(q.x,q.y);ctx.lineTo(p.x,p.y);});ctx.stroke();ctx.setLineDash([]);}
       for(y=ymin;y<ymax;y++){
         for(x=xmin;x<xmax;x++){var pt=project(x,y);if(g[y][x]==='#'){if(overview){ctx.fillStyle=cave?'#1c3446':'#70978c';ctx.fillRect(pt.x-scale*.4,pt.y-scale*.4,scale*.8,scale*.7);}else {var variation=((x*71+y*43)%13)/13;sprite(cave?'rock':'tree',pt.x+(variation-.5)*scale*.35,pt.y+scale*(.2+variation*.15),scale*(cave?1.2:.85+variation*.25),scale*(cave?.85:1.25+variation*.4));}}}
@@ -202,6 +237,7 @@
       }
       raf=root.requestAnimationFrame(tick);
     }
+    function fitScreen(){shell.style.setProperty('--journey-top',Math.max(0,main.getBoundingClientRect().top+parseFloat(getComputedStyle(main).paddingTop))+'px');}
     function resize(){width=viewport.clientWidth;height=viewport.clientHeight;var d=Math.min(root.devicePixelRatio||1,width<600?1.5:2);canvas.width=Math.round(width*d);canvas.height=Math.round(height*d);canvas.style.width=width+'px';canvas.style.height=height+'px';ctx.setTransform(d,0,0,d,0,0);draw();}
     canvas.addEventListener('click',function(e){if(moving)return;var b=canvas.getBoundingClientRect(),x=e.clientX-b.left,y=e.clientY-b.top;var p={x:Math.round(camera.x+(x-width/2)/scale),y:Math.round(camera.y+(y-height/2)/(scale*.66))};var near=places().find(function(q){var s=project(q.x,q.y);return Math.abs(s.x-x)<(overview?14:scale*.65)&&Math.abs(s.y-y)<(overview?25:scale*.6);});go(near||p);});
     // 本体の adventure は document の矢印キーを監視する。比較用画面ではここで受け、二重移動を防ぐ。
@@ -213,10 +249,11 @@
     }
     function blur(){stopInput();route=[];}
     document.addEventListener('keydown',onKey,true);document.addEventListener('keyup',onKey,true);root.addEventListener('blur',blur);
+    fitScreen();root.addEventListener('resize',fitScreen);if(root.visualViewport)root.visualViewport.addEventListener('resize',fitScreen);
     var observer=new ResizeObserver(resize);observer.observe(viewport);
     var leaveObserver=new MutationObserver(function(){if(!shell.isConnected)dispose();});leaveObserver.observe(main,{childList:true});
-    dispose=function(){if(dead)return;dead=true;root.clearTimeout(pendingSave);stopInput();document.removeEventListener('keydown',onKey,true);document.removeEventListener('keyup',onKey,true);root.removeEventListener('blur',blur);root.cancelAnimationFrame(raf);observer.disconnect();leaveObserver.disconnect();save();};
-    [['chest','codex-prototypes/homepage/treasure-chest.webp'],['atlas','img/adventure/canvas/alpine-atlas.webp'],['snow','img/adventure/canvas/plain.webp'],['hero',FF.adventureScene.traveler(FF.app.state.player.avatar)],['heroDiag',FF.adventureScene.travelerDiag(FF.app.state.player.avatar)],['walk',FF.adventureScene.travelerWalk(FF.app.state.player.avatar)],['walkDiag',FF.adventureScene.travelerWalkDiag(FF.app.state.player.avatar)]].forEach(function(a){if(!a[1])return;var im=new Image();im.onload=function(){var asset=im;if(['hero','heroDiag','walk','walkDiag'].includes(a[0])){var cells=a[0].indexOf('walk')===0?4:2;asset=document.createElement('canvas');asset.width=asset.height=cells*96;asset.getContext('2d').drawImage(im,0,0,asset.width,asset.height);}images[a[0]]=asset;canvas.dataset.walkReady=String(!!(images.walk&&images.walkDiag));draw();};im.src=a[1];});
+    dispose=function(){if(dead)return;dead=true;root.removeEventListener('resize',fitScreen);if(root.visualViewport)root.visualViewport.removeEventListener('resize',fitScreen);root.clearTimeout(pendingSave);stopInput();document.removeEventListener('keydown',onKey,true);document.removeEventListener('keyup',onKey,true);root.removeEventListener('blur',blur);root.cancelAnimationFrame(raf);observer.disconnect();leaveObserver.disconnect();save();};
+    [['trail','codex-prototypes/homepage/trail-snow.webp'],['bridge','codex-prototypes/homepage/bridge-old.webp'],['ice','codex-prototypes/homepage/lake-ice.webp'],['chest','codex-prototypes/homepage/treasure-chest.webp'],['atlas','img/adventure/canvas/alpine-atlas.webp'],['snow','img/adventure/canvas/plain.webp'],['hero',FF.adventureScene.traveler(FF.app.state.player.avatar)],['heroDiag',FF.adventureScene.travelerDiag(FF.app.state.player.avatar)],['walk',FF.adventureScene.travelerWalk(FF.app.state.player.avatar)],['walkDiag',FF.adventureScene.travelerWalkDiag(FF.app.state.player.avatar)]].forEach(function(a){if(!a[1])return;var im=new Image();im.onload=function(){var asset=im;if(['hero','heroDiag','walk','walkDiag'].includes(a[0])){var cells=a[0].indexOf('walk')===0?4:2;asset=document.createElement('canvas');asset.width=asset.height=cells*96;asset.getContext('2d').drawImage(im,0,0,asset.width,asset.height);}images[a[0]]=asset;canvas.dataset.walkReady=String(!!(images.walk&&images.walkDiag));draw();};im.src=a[1];});
     discover();refresh();resize();raf=root.requestAnimationFrame(tick);
   };
 })(this);
