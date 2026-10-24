@@ -230,3 +230,9 @@ body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center to
 .replica-lesson .unit-list{max-height:290px}
 .replica-lesson .index-grid{max-height:100px;grid-template-columns:repeat(5,minmax(0,1fr))}
 .replica-lesson .index-item{min-width:0}
+
+/* 看板の透過部分には雪景色を見せ、雪の上端をヒント枠に揃える。 */
+.replica-lesson .lesson-left{background:transparent;border-color:transparent;box-shadow:none;isolation:isolate}
+.replica-lesson .lesson-left:after{content:"";position:absolute;top:58px;bottom:-7px;left:-7px;right:-7px;z-index:-1;pointer-events:none;border:7px solid #a17a5d;border-top:0;border-radius:0 0 10px 10px;background:#aa8060 url('lesson-wood.webp') center/280px auto;box-shadow:0 7px 16px #294e7040}
+.replica-lesson .lesson-sidebar{background:linear-gradient(to bottom,transparent 64px,#fffdfb 64px)}
+.replica-lesson .side-title{margin-top:-20px}
