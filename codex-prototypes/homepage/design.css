@@ -247,7 +247,7 @@ body[data-screen="quiz"]{background:#dcebf6 url('lesson-village.webp') center to
 @media(max-width:760px){.masthead-link{width:34px;min-width:34px;padding:0}.masthead-link:first-letter{font-size:18px;line-height:1}}
 
 /* タブレット以上の資材数を少し控えめにする。 */
-@media(min-width:761px){.resource-strip .resource-value{font-size:1.1875rem}}
+@media(min-width:761px){.resource-strip .resource-value{font-size:1.0625rem}}
 
 /* ヒント冒頭の不要な案内は表示領域も残さない。 */
 .replica-lesson .hint-card > h2 + p.small.muted{display:none}

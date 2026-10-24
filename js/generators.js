@@ -1487,9 +1487,9 @@
         advanced: [{ op: 'poly_reg', p: { ns: [5, 6, 8, 9, 10, 12] } }, { op: 'poly_sum', p: { n: [7, 10] } }, { op: 'quad_missing', p: {} }]
       },
       multiple: {
-        basic: [{ op: 'mult_kth', p: {} }],
-        standard: [{ op: 'gcd_ask', p: {} }, { op: 'lcm_ask', p: { min: 2, max: 9 } }],
-        advanced: [{ op: 'div_count', p: {} }, { op: 'lcm_ask', p: { min: 6, max: 15 } }]
+        basic: [{ op: 'mult_kth', p: {} }, { op: 'gcd_ask', p: {} }, { op: 'lcm_ask', p: { min: 2, max: 15 } }],
+        standard: [],
+        advanced: [{ op: 'div_count', p: {} }]
       },
       fracrel: {
         basic: [{ op: 'frac_to_dec', p: {} }],

@@ -22,7 +22,7 @@ python3 -m http.server 8775 --bind 127.0.0.1
 
 ## 適用範囲と保存
 
-画面変更は比較用入口だけに適用する試作。追加依頼により、本体のjs/generators.jsには値引きドリルの品質修正を加えています（末尾参照）。本体の入口・CSS・固定問題データは変更していません。mainへのマージは未実施です。過去の絵の依頼（tower-art系やDIAGRAM_REQUESTS）はこのPRの作業範囲ではありません。
+画面変更は比較用入口だけに適用する試作。追加依頼により、本体のjs/generators.jsには値引きドリルの品質修正を加えています（末尾参照）。本体の入口・CSSは変更していません。固定問題はquestions/math_g5_hand.jsの直接的な公約数・公倍数問題の難易度のみ変更しています。mainへのマージは未実施です。過去の絵の依頼（tower-art系やDIAGRAM_REQUESTS）はこのPRの作業範囲ではありません。
 
 - 通常学習／町の保存：`frozenFrontier.prototype.homepage.v1`
 - 広い雪原の保存：`frozenFrontier.prototype.snowJourney.v1`
@@ -110,7 +110,7 @@ node tests/ui-snow-journey-edges.cjs
 
 ## キャッシュと公開の注意
 
-ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261024-sign-text` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
+ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261024-gcd` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
 
 公開はGitHub PagesではなくSitesの別プロジェクト。GitHubへpushするだけではレプリカは更新されません。
 
@@ -147,3 +147,7 @@ node tests/ui-snow-journey-edges.cjs
 ## 追記：値引きドリルの品質と難易度
 
 ユーザー指摘を受け、本体js/generators.jsを修正（ここからは見た目だけのPRではない）。小学5年percent単元のpct_offを基礎のみへ移動し、標準・発展から除去。価格候補は0円より大きく定価未満、候補補充時にも条件を強制する。異なる割引率の価格等から誤答を生成。価格8×率7の全56組で一意な4択・正解1つ・全候補の範囲を検証。ロジック887件成功。単純値引きが発展に戻らないよう注意。固定問題全件や他の演算型の全面監査はしていない。prototypeのgenerator読込にも更新番号を追加し、公開dist/js/generators.jsも更新済み。
+
+## 追記：単純な最大公約数・最小公倍数は基礎
+
+固定問題の直接計算を基礎に変更（12と18／24と36の最大公約数、4と6の公倍数の最小値、15と20／4・6・9の最小公倍数）。生成器のgcd_ask/lcm_askも基礎のみ。multiple標準の生成リストは空で、標準は固定問題から出題する。問題ID・答え・履歴キーは変更なし。応用文章題は別分類のまま。tests/cases/gcd-difficulty.jsと生成テストに分類を反映。資材・熱量の数字は761px以上で17px。
