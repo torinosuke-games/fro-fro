@@ -99,6 +99,10 @@
    layout.classList.add('replica-lesson');
    var encourage=layout.querySelector('.encourage');
    if(encourage)encourage.remove();
+   if(layout.querySelector('.question-card.is-done')){
+    var answeredHint=layout.querySelector('.hint-card');
+    if(answeredHint)answeredHint.remove();
+   }
    var hintIntro=layout.querySelector('.hint-card > p.small.muted');
    if(hintIntro)hintIntro.remove();
    var lockMark=layout.querySelector('.locked-explanation .lock-mark');
