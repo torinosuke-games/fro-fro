@@ -99,6 +99,10 @@
    layout.classList.add('replica-lesson');
    var encourage=layout.querySelector('.encourage');
    if(encourage)encourage.remove();
+   var lockMark=layout.querySelector('.locked-explanation .lock-mark');
+   if(lockMark)lockMark.remove();
+   var mapNote=layout.querySelector('.question-index > p');
+   if(mapNote)mapNote.textContent=mapNote.textContent.replace('記録は保存されます。','').trim();
    var heading=main.querySelector('.lesson-heading');
    var memo=layout.querySelector('.scratch-toggle.corner');
    if(heading){
