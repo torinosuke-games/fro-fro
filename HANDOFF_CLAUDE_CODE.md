@@ -110,7 +110,7 @@ node tests/ui-snow-journey-edges.cjs
 
 ## キャッシュと公開の注意
 
-ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261024-reveal-answer` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
+ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261024-sidebar-height` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
 
 公開はGitHub PagesではなくSitesの別プロジェクト。GitHubへpushするだけではレプリカは更新されません。
 
@@ -133,3 +133,7 @@ node tests/ui-snow-journey-edges.cjs
 ## 追記：答えを見る（引き継ぎ後の追加依頼）
 
 未解答の操作欄に「答えを見る」を追加。design.jsでセッションのanswerViewedとattempt.doneを設定し、通常の解説表示を使用。採点APIは呼ばず永続の正解記録・資材・熱量・チケットを変更しない。閲覧後は回答不可、ヒント枠削除、報酬なしを表示。次問は通常へ復帰。スマホはボタンを次の行へ配置。検証は `node tests/ui-lesson-reveal.cjs`。本体への統合時にも閲覧と正解を区別すること。
+
+## 追記：左枠の高さを表示領域へ追従
+
+761px以上の左枠を画面下端16px手前まで伸ばし、増分を単元一覧に割り当てる。問題マップは最大100pxのまま。design.jsのfitSidebarで上端を測定、CSSの100dvhと組み合わせる。観測対象はHUDと帯のみ（自己観測ループを避ける）。機種情報不要。非常に短い画面では高さ360pxを下限とするためページスクロールが必要な場合あり。テスト：tests/ui-lesson-sidebar.cjs。

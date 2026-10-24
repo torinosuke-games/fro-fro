@@ -91,7 +91,24 @@
 // 学習ページの配置と答えの閲覧。問題マップ・採点は本体を共有する。
 (function(root){
  'use strict';
- var U=root.FF.ui,render=U.screens.quiz.render;
+ var U=root.FF.ui,render=U.screens.quiz.render,fitCleanup=null;
+ function fitSidebar(layout,heading){
+  if(fitCleanup)fitCleanup();
+  var frame=0;
+  function measure(){
+   frame=0;if(!layout.isConnected)return;
+   var top=layout.getBoundingClientRect().top+root.scrollY;
+   layout.style.setProperty('--lesson-top',Math.ceil(top)+'px');
+  }
+  function schedule(){if(!frame)frame=root.requestAnimationFrame(measure);}
+  var observer=root.ResizeObserver?new ResizeObserver(schedule):null;
+  if(observer){var hud=document.getElementById('hud');if(hud)observer.observe(hud);if(heading)observer.observe(heading);}
+  root.addEventListener('resize',schedule);
+  if(root.visualViewport)root.visualViewport.addEventListener('resize',schedule);
+  schedule();
+  fitCleanup=function(){if(observer)observer.disconnect();root.removeEventListener('resize',schedule);if(root.visualViewport)root.visualViewport.removeEventListener('resize',schedule);root.cancelAnimationFrame(frame);};
+ }
+
  U.screens.quiz.render=function(main){
   render(main);
   var layout=main.querySelector('.workbench');
@@ -136,6 +153,7 @@
     if(memo)heading.appendChild(memo);
     heading.appendChild(trailing);
    }
+   fitSidebar(layout,heading);
   }
  };
 })(this);
