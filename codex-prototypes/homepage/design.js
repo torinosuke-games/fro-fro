@@ -116,3 +116,5 @@
   }
  };
 })(this);
+
+FF.texts.renewal.dailyNote=FF.texts.renewal.dailyNote.replace('☆はランダムです','サイコロはランダムです');

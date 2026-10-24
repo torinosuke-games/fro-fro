@@ -165,3 +165,6 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 
 
 木製看板の背後にあった白い下地を透過し、木枠本体は看板の下から描画。看板を8px上げ、ヒント枠の雪の上端に揃えました。5画面幅の配置と学習操作を確認。
+
+
+ランダム資材の☆を生成した淡い青背景のサイコロ画像 resource-dice.webp（128px）に変更。他の資材と同じ円形で教科カード／問題ページに共用し、説明文もサイコロ表記へ変更。生成指示：hand-painted ivory dice with dark blue recessed pips, three-quarter view, pale icy blue background, cozy anime fantasy resource icon, no text。画像読込・星の非表示・説明文をブラウザー確認。
