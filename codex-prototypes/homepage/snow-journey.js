@@ -48,11 +48,20 @@
     var out=[], at=to;
     while(at && (at.x!==from.x || at.y!==from.y)){out.unshift(at);at=seen.get(at.x+','+at.y);} return out;
   }
+  // 元の移動パッドと同じ壁沿い移動。斜めでは両隣も確認して角抜けを防ぐ。
+  function nextStep(region,from,dx,dy){
+    function ok(x,y){return walkable(region,x,y);}
+    var x=from.x,y=from.y;
+    if(dx&&dy&&!(ok(x+dx,y+dy)&&ok(x+dx,y)&&ok(x,y+dy))){
+      if(ok(x+dx,y))dy=0;else if(ok(x,y+dy))dx=0;else return null;
+    }
+    return (dx||dy)&&ok(x+dx,y+dy)?{x:x+dx,y:y+dy}:null;
+  }
   var KEY='frozenFrontier.prototype.snowJourney.v1';
   function fresh(){return {region:'field',x:4,y:24,visited:['home'],chest:false,seen:[]};}
   function read(){try{var p=JSON.parse(root.localStorage.getItem(KEY));
     if(!p || !['field','cave'].includes(p.region) || !Number.isInteger(p.x) || !Number.isInteger(p.y) || !walkable(p.region,p.x,p.y)) return fresh();
-    return {region:p.region,x:p.x,y:p.y,visited:Array.isArray(p.visited)?['home'].concat(p.visited).filter(function(id){return places.some(function(p){return p.id===id;});}):['home'],chest:p.chest===true,seen:Array.isArray(p.seen)?p.seen.filter(function(k){return typeof k==='string'&&/^\d+,\d+$/.test(k);}).slice(-1200):[]};
+    return {region:p.region,x:p.x,y:p.y,visited:Array.isArray(p.visited)?Array.from(new Set(['home'].concat(p.visited).filter(function(id){return places.some(function(p){return p.id===id;});}))):['home'],chest:p.chest===true,seen:Array.isArray(p.seen)?p.seen.filter(function(k){return typeof k==='string'&&/^\d+,\d+$/.test(k);}).slice(-1200):[]};
   }catch(e){return fresh();}}
-  FF.snowJourney={width:W,height:H,grid:grid,cave:cave,places:places,cavePlaces:cavePlaces,map:map,path:path,walkable:walkable,read:read,key:KEY};
+  FF.snowJourney={width:W,height:H,grid:grid,cave:cave,places:places,cavePlaces:cavePlaces,map:map,path:path,nextStep:nextStep,walkable:walkable,read:read,key:KEY};
 })(this);
