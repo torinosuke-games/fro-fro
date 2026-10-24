@@ -7,9 +7,9 @@ let html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const changes = [
   ['<meta charset="utf-8">', '<meta charset="utf-8">\n  <base href="../../">'],
   ['<title>FROZEN FRONTIER</title>', '<title>FROZEN FRONTIER · ChatGPT デザイン案</title>'],
-  ['<link rel="stylesheet" href="css/tower.css">', '<link rel="stylesheet" href="css/tower.css">\n  <link rel="stylesheet" href="codex-prototypes/homepage/design.css?v=20261024-pencil">'],
+  ['<link rel="stylesheet" href="css/tower.css">', '<link rel="stylesheet" href="css/tower.css">\n  <link rel="stylesheet" href="codex-prototypes/homepage/design.css?v=20261024-sign-text">'],
   ['<script src="js/config.js"></script>', '<script src="js/config.js"></script>\n  <script src="codex-prototypes/homepage/config.js"></script>'],
-  ['<script src="js/main.js"></script>', '<script src="codex-prototypes/homepage/village-map.js"></script>\n  <script src="codex-prototypes/homepage/design.js?v=20261024-pencil"></script>\n  <script src="codex-prototypes/homepage/snow-journey.js"></script>\n  <script src="codex-prototypes/homepage/snow-journey-ui.js"></script>\n  <script src="js/main.js"></script>']
+  ['<script src="js/main.js"></script>', '<script src="codex-prototypes/homepage/village-map.js"></script>\n  <script src="codex-prototypes/homepage/design.js?v=20261024-sign-text"></script>\n  <script src="codex-prototypes/homepage/snow-journey.js"></script>\n  <script src="codex-prototypes/homepage/snow-journey-ui.js"></script>\n  <script src="js/main.js"></script>']
 ];
 for (const [before, after] of changes) {
   if (html.split(before).length !== 2) throw new Error('本体の入口が変わっています。差し込み位置を確認してください: ' + before);

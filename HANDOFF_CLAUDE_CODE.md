@@ -110,7 +110,7 @@ node tests/ui-snow-journey-edges.cjs
 
 ## キャッシュと公開の注意
 
-ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261024-pencil` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
+ブラウザー上で以前の装飾・文言が残ったため、index.htmlのdesign.js/cssには `?v=20261024-sign-text` を付けています。今後変更時は更新番号も更新すること。build-entry.cjsも同じ参照を出力します。
 
 公開はGitHub PagesではなくSitesの別プロジェクト。GitHubへpushするだけではレプリカは更新されません。
 
@@ -141,3 +141,5 @@ node tests/ui-snow-journey-edges.cjs
 難易度バッジの最新指定：基礎＝青（#327ac1）、標準＝緑（#55a669）、発展＝紫（#8656b5）。761px以上はquestion-meta内で右寄せ。
 
 けいさんメモのアイコンは生成したmemo-pencil.webp（透過128px）を24px表示。quizレンダラー後にscratch-toggleのsp-icoだけを置換し、ボタンと開閉イベントを維持。
+
+単元看板の進捗は「全○○問中 ○○問 せいかい」。見出しとの間隔を詰め、文字を木枠の縁から内側へ配置。

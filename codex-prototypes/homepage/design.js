@@ -117,6 +117,9 @@
   var layout=main.querySelector('.workbench');
   if(layout){
    layout.classList.add('replica-lesson');
+   var progress=layout.querySelector('.side-title .muted');
+   if(progress&&/^\d+問中/.test(progress.textContent))progress.textContent='全'+progress.textContent;
+
    var session=root.FF.app.session;
    var item=session&&session.items[session.currentId];
    var actions=layout.querySelector('.lesson-actions');

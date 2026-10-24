@@ -198,3 +198,5 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 難易度マーク：基礎は青、標準は既存の緑、発展は紫。761px以上は情報欄の右端へ配置。3難易度×390/768/1183pxで色と右寄せ・横はみ出しを確認。
 
 けいさんメモの線画を生成した透過鉛筆アイコンmemo-pencil.webpへ変更。黄色の軸・赤い消しゴム・左下向きの芯。生成指示：single chunky golden yellow school pencil with coral eraser, hand-painted anime RPG, transparent, no text/shadow. 128px画像を24px表示し、スマホのアイコンと広い画面のラベル付きボタンに共用。3幅で読込・寸法・開閉を確認。
+
+看板の進捗を「全○○問中 ○○問 せいかい」へ変更。見出しとの行間を詰め、左右の内側余白を32pxに調整。768/1070/1536pxで文字と配置を確認。
