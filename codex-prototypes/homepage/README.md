@@ -178,3 +178,5 @@ FF_TEST_ORIGIN=http://127.0.0.1:8772 FF_BROWSER_PATH=/usr/bin/chromium node test
 依頼により、上面2の目を逆側（左と右の対角頂点を結ぶ線）へ変更。編集指示：move two top pips to left/right opposite corners of top diamond; preserve red one and blue three.
 
 上面2の対角方向を維持し、点を中央へ寄せて間隔を縮小。編集指示：bring top two pips closer to face center, reduce spacing, preserve other faces and artwork.
+
+上面2の間隔を、広い案と狭い案の中間に調整。編集指示：moderately spread top pips, midway between previous wide and tight versions; preserve diagonal direction and other faces.
