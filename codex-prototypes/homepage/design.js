@@ -181,3 +181,31 @@ FF.texts.renewal.dailyNote=FF.texts.renewal.dailyNote.replace('☆はランダ�
   });
  };
 })(this);
+
+// 小6算数の表示だけを教科書式の分数へ。元の問題データと採点値は維持する。
+(function(root){
+ var FF=root.FF,U=FF.ui,render=U.screens.quiz.render;
+ function fractions(container){
+  var walker=document.createTreeWalker(container,NodeFilter.SHOW_TEXT),nodes=[],node;
+  while((node=walker.nextNode())){
+   if(node.parentElement.closest('rt,rp,svg,input,textarea,.g6-fraction'))continue;
+   if(/\d\/[1-9]\d*/.test(node.nodeValue))nodes.push(node);
+  }
+  nodes.forEach(function(node){
+   var value=node.nodeValue,re=/(?<![\d./])([−－-]?\d+)\/([1-9]\d*)(?![\d/])/g,m,last=0,fragment=document.createDocumentFragment();
+   while((m=re.exec(value))){
+    fragment.appendChild(document.createTextNode(value.slice(last,m.index)));
+    var fraction=document.createElement('span');fraction.className='g6-fraction';fraction.setAttribute('role','math');fraction.setAttribute('aria-label',m[2]+'分の'+m[1]);fraction.dataset.value=m[0];
+    [['g6-numerator',m[1]],['g6-fraction-slash','/'],['g6-denominator',m[2]]].forEach(function(part){var span=document.createElement('span');span.className=part[0];span.textContent=part[1];span.setAttribute('aria-hidden','true');fraction.appendChild(span);});
+    fragment.appendChild(fraction);last=re.lastIndex;
+   }
+   if(last){fragment.appendChild(document.createTextNode(value.slice(last)));node.replaceWith(fragment);}
+  });
+ }
+ U.screens.quiz.render=function(main){
+  render(main);
+  var s=FF.app.session,item=s&&s.items&&s.items[s.currentId],q=item&&item.attempt.question;
+  if(!q||q.subject!=='math'||q.gradeLevel!==6)return;
+  main.querySelectorAll('.lesson-question,.option-text,.hint-step p,.answer-value,.explanation-text,.lesson-figure figcaption').forEach(fractions);
+ };
+})(this);
