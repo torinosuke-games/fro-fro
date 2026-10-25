@@ -8,7 +8,7 @@
     { id: 'camp', x: 18, y: 15, name: '旅人の焚き火', kind: 'camp', note: '湖を渡れば、次の街。東の森には、言葉を封じる魔物の古い図書館があるらしい。' },
     { id: 'town', x: 29, y: 8, name: '白樺の宿場町', kind: 'town', note: '山へ向かう旅人が集まる、二つ目の街。訪れた街には「帰還」からすぐに戻れます。' },
     { id: 'cave', x: 8, y: 9, name: 'こだまの洞窟', kind: 'cave', note: '氷の奥から、かすかな光が見える。小さな洞窟を探索しよう。' },
-    { id: 'library', x: 33, y: 22, name: '封印図書館', kind: 'boss', note: '国語を司る大ボスの拠点。言葉を取り戻す戦いを、ここに追加する予定です。今回は入口まで探索できます。' },
+    { id: 'library', x: 33, y: 22, name: '封印図書館', kind: 'boss', note: '国語を司る大ボスの拠点。入口は大きな影にふさがれている。言葉を取り戻す本当の戦いは、これから追加される予定です。' },
     { id: 'pass', x: 34, y: 4, name: '氷嶺への峠', kind: 'gate', note: '次の地方への道。氷山の観測塔（理科）へ続く地域を、ここから追加できます。今は雪で閉ざされています。' }
   ];
   var items=[{id:'glint-north',x:6,y:5},{id:'glint-east',x:35,y:17},{id:'glint-south',x:12,y:26}].map(function(p){p.kind='item';p.name='雪の中のきらめき';return p;});

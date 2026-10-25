@@ -348,3 +348,16 @@ body[data-screen="adventure"] main#screen.journey-screen{padding-bottom:0}
 .grade-selection-modal .grade-chip .title{font-size:1rem;white-space:nowrap}
 .grade-selection-modal .grade-chip.selected{border-color:#247fb9;background:#e6f4ff;box-shadow:0 0 0 1px #247fb9}
 .journey-heading-buttons{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}.journey-switch{margin:0 0 8px}
+/* 広い雪原：仲間の状態・回復薬・難易度（判断501） */
+.journey-party{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin:0 0 10px;padding:8px 10px;border:1px solid #cbdfe9;border-radius:12px;background:#fff}
+.journey-members{display:flex;flex-wrap:wrap;gap:8px}
+.journey-member{display:grid;grid-template-columns:auto auto;gap:0 6px;align-items:center;min-width:108px;padding:4px 8px;border-radius:8px;background:#f3f9fc;font-size:.8125rem}
+.journey-member strong{font-size:.875rem}
+.journey-member.is-down{opacity:.55}
+.journey-member .hp,.journey-member .mp{grid-column:1/-1;font-size:.75rem;color:#4b6b80}
+.journey-member .jm-meter{grid-column:1/-1;height:5px;border-radius:3px;background:#dbe8ef;overflow:hidden}
+.journey-member .jm-meter i{display:block;height:100%;background:#4ba67c}
+.journey-party-tools{display:flex;align-items:center;gap:8px}
+.journey-party-tools .gold{font-weight:700;color:#8d6a1c}
+.journey-party-tools select{min-height:38px;border:1px solid #cbdfea;border-radius:8px;background:#fafdff;padding:4px 8px}
+.journey-party-tools .journey-potion{min-height:38px}

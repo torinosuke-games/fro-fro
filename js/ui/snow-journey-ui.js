@@ -2,18 +2,19 @@
   'use strict';
   var FF=root.FF,U=FF.ui,E=U.el,M=FF.snowJourney,dispose=null;
   function button(label,fn,cls){return E('button',{class:'btn '+(cls||''),text:label,on:{click:fn}});}
-  // 従来の冒険（町から町へ・戦闘・経験値）は、そのまま残す。「従来の冒険」ボタン（または ?legacy=1）で、こちらを開く（判断500）
-  var legacyRender=U.screens.adventure.render;
-  function useLegacy(){return (FF.app&&FF.app.legacyAdventure===true)||/[?&]legacy=1/.test((root.location&&root.location.search)||'');}
+  // 戦闘は、従来の冒険の画面（js/ui/adventure.js・adventure-battle.js）をそのまま使う（判断501）：
+  //   戦闘中（adventure.battle あり）は従来の画面、それ以外は、この広い雪原。?legacy=1 を付けると、いつも従来の冒険（画面テスト用）
+  var legacyRender=U.screens.adventure.render, A=FF.adventure, TX=FF.texts.adventure;
+  function legacyOnly(){return /[?&]legacy=1/.test((root.location&&root.location.search)||'');}
+  function advState(){return A.normalize(FF.app.state.adventure);}
+  function commitAdv(next){var cur=FF.app.state;FF.app.commit(Object.assign({},cur,{adventure:next}));}
+  function memberName(id){return id==='hero'?FF.app.state.player.name:(TX.members[id]&&TX.members[id].name)||id;}
   U.screens.adventure.render=function(main){
-    if(useLegacy()){
+    var a=advState();
+    if(legacyOnly()||a.battle){
       if(dispose) dispose();
       main.classList.remove('journey-screen');
-      legacyRender.apply(this,arguments);
-      if(!/[?&]legacy=1/.test((root.location&&root.location.search)||'')&&!main.classList.contains('adv-battle-screen')&&!main.querySelector('.journey-switch')){
-        main.insertBefore(E('div',{class:'journey-switch'},[button('‹ 新しい雪原へ',function(){FF.app.legacyAdventure=false;U.show('adventure');},'text-button')]),main.firstChild);
-      }
-      return;
+      return legacyRender.apply(this,arguments);
     }
     if(dispose) dispose();
     var state=M.read(),dead=false,overview=false,fieldView=null,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,zoom=1,zoomSuppressUntil=0,touches=new Map(),pinchDistance=0,pinchZoom=1,pan=null,manualCamera=null,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,lastSpark=0,spriteCache=new Map();
@@ -23,15 +24,29 @@
     var viewport=E('div',{class:'journey-viewport adv-map-shell is-cv'},[canvas]);
     var toggle=button('全体マップ',function(){stopInput();route=[];setOverview(!overview);draw();});
     toggle.setAttribute('aria-pressed','false');
-    shell.appendChild(E('header',{class:'journey-heading'},[E('div',{},[E('p',{class:'replica-eyebrow',text:'CHAPTER 01 · 白樺地方'})]),E('div',{class:'journey-heading-buttons'},[button('従来の冒険（戦闘あり）',function(){stopInput();FF.app.legacyAdventure=true;dispose();U.show('adventure');},'text-button'),button('村へ',function(){returnVillage(M.places.find(function(p){return p.id==='home';}));})])]));
+    shell.appendChild(E('header',{class:'journey-heading'},[E('div',{},[E('p',{class:'replica-eyebrow',text:'CHAPTER 01 · 白樺地方'})]),button('村へ',function(){returnVillage(M.places.find(function(p){return p.id==='home';}));})]));
     shell.appendChild(E('div',{class:'journey-mission'},[area,objective]));
+    // 仲間のHP・MP、回復薬、戦闘の難易度（判断501）
+    var partyBar=E('div',{class:'journey-party'});shell.appendChild(partyBar);
+    function paintParty(){
+      var a=FF.app.state.adventure,items=a.party.map(function(id){var r=a.roster[id],st=A.stats(id,r.xp);
+        return E('div',{class:'journey-member'+(r.hp?'':' is-down'),attrs:{'data-member':id}},[E('strong',{text:memberName(id)}),E('span',{class:'lv',text:'Lv.'+st.level}),
+          E('span',{class:'hp',text:'HP '+r.hp+'/'+st.hp}),E('span',{class:'jm-meter'},E('i',{style:{width:Math.round(100*r.hp/st.hp)+'%'}})),E('span',{class:'mp',text:'MP '+r.mp+'/'+st.mp})]);});
+      var diff=E('select',{attrs:{'aria-label':'戦闘の問題の難しさ'},on:{change:function(){var n=FF.util.clone(FF.app.state.adventure);n.difficulty=diff.value;commitAdv(n);}}},[['basic','基礎'],['standard','標準'],['advanced','発展']].map(function(d){return E('option',{value:d[0],text:'問題：'+d[1]});}));diff.value=a.difficulty;
+      var potion=button('回復薬 ×'+a.potions,function(){healModal();},'journey-potion');potion.disabled=!a.potions;
+      U.clear(partyBar);partyBar.appendChild(E('div',{class:'journey-members'},items));partyBar.appendChild(E('div',{class:'journey-party-tools'},[E('span',{class:'gold',text:a.gold+' G'}),potion,diff]));
+    }
+    function healModal(){
+      if(document.querySelector('.overlay'))return;stopInput();route=[];modal=true;var a=FF.app.state.adventure;
+      U.modal({title:'回復薬を使う',body:'だれに使いますか？（HPが'+FF.balance.ADVENTURE.POTION_HEAL+'回復します）',buttons:a.party.map(function(id){var r=a.roster[id],st=A.stats(id,r.xp);return {label:memberName(id)+'　HP '+r.hp+'/'+st.hp,class:r.hp<st.hp?'primary':'',onClick:function(){var n=A.potion(FF.app.state.adventure,id);if(n!==FF.app.state.adventure){commitAdv(n);paintParty();}modal=false;}};}).concat([{label:'やめる',onClick:function(){modal=false;}}])});
+    }
     viewport.appendChild(E('div',{class:'journey-tools'},[toggle,button('帰還',recall),button('移動を止める',function(){stopInput();route=[];status.textContent='立ち止まりました。';})]));
     var layout=E('div',{class:'journey-layout'},[viewport]); shell.appendChild(layout);
     var side=E('aside',{class:'journey-guide'},[E('p',{class:'replica-eyebrow',text:'旅のしおり'}),E('h2',{text:'次の灯りを、見つけよう。'}),E('p',{text:'街道をたどれば、白樺の宿場町へ。気になる脇道には、まだ知らない景色が待っています。'})]);
     var destinations=E('div',{class:'journey-destinations'});side.appendChild(destinations);
     side.appendChild(E('p',{class:'journey-legend',text:'━━ 街道：安全　 ··· 森：危険地帯\n青：湖（橋を渡ろう）　暗い場所：未探索'}));
     side.appendChild(E('details',{class:'journey-future'},[E('summary',{text:'この先に広がる世界'}),E('p',{text:'白樺の森 → 封印図書館［国語］\n凍った湖 → からくり城［算数］\n氷の山脈 → 観測塔［理科］\n雪の旧街道 → 王都［社会］\n霧の海岸 → 灯台［英語］'}),E('small',{text:'白樺地方以外は、今後つなぐ地域の構想です。'})]));
-    side.appendChild(E('small',{class:'journey-preview-note',text:'探索プレビュー：戦闘は準備中。見つけたアイテムは持ち物に入ります。歩いた場所と発見は、このプレビュー専用に保存されます。'}));
+    side.appendChild(E('small',{class:'journey-preview-note',text:'森では魔物に出会うことがあります（街道・橋・街・焚き火では出会いません）。HP・MPは、街や焚き火で全回復します。見つけたアイテムは持ち物に入り、歩いた場所と発見は、この端末に保存されます。'}));
     side.id='journey-guide';side.hidden=true;
     var guideToggle=button('旅のしおり',function(){
       stopInput();route=[];side.hidden=!side.hidden;
@@ -103,17 +118,32 @@
       U.clear(destinations);places().filter(function(p){return p.kind!=='item'&&p.kind!=='sign'&&p.kind!=='camp'&&p.kind!=='gate';}).forEach(function(p){
         var b=button((state.visited.includes(p.id)||(p.id==='chest'&&state.chest)?'✓ ':'◇ ')+p.name,function(){go(p);},'journey-destination');b.dataset.destination=p.id;destinations.appendChild(b);
       });
-      status.textContent=state.region==='cave'?'氷の洞窟。道をたどって、奥へ。':(M.grid[state.y][state.x]==='r'||M.grid[state.y][state.x]==='='?'街道を歩いています。ここは安全です。':'森の中です。戦闘を追加すると、魔物に出会う地域になります。');
+      status.textContent=state.region==='cave'?'氷の洞窟。道をたどって、奥へ。':(M.grid[state.y][state.x]==='r'||M.grid[state.y][state.x]==='='?'街道を歩いています。ここは安全です。':'森の中です。魔物に出会うことがあります。');
     }
     function showPlace(p){
       stopInput();route=[];modal=true;
-      if(p.kind==='item'){U.modal({title:'雪の中のきらめき',body:'雪の奥で、小さな光がまたたいています。',buttons:[{label:'調べる',class:'primary',onClick:function(){var found=M.collect(p.id);draw();U.modal({title:found?'回復薬を手に入れた！':'ここは調べました',body:found?'回復薬を1個、持ち物に入れました。':'もうアイテムはありません。',buttons:[{label:'旅を続ける',onClick:function(){modal=false;canvas.focus({preventScroll:true});}}]});}},{label:'あとで調べる',onClick:function(){modal=false;}}]});return;}
+      if(p.kind==='item'){U.modal({title:'雪の中のきらめき',body:'雪の奥で、小さな光がまたたいています。',buttons:[{label:'調べる',class:'primary',onClick:function(){var found=M.collect(p.id);paintParty();draw();U.modal({title:found?'回復薬を手に入れた！':'ここは調べました',body:found?'回復薬を1個、持ち物に入れました。':'もうアイテムはありません。',buttons:[{label:'旅を続ける',onClick:function(){modal=false;canvas.focus({preventScroll:true});}}]});}},{label:'あとで調べる',onClick:function(){modal=false;}}]});return;}
       if(!state.visited.includes(p.id)&&state.region==='field')state.visited.push(p.id);save();refresh();
-      var buttons=[{label:'旅を続ける',onClick:function(){modal=false;canvas.focus({preventScroll:true});}}];
+      var buttons=[{label:'旅を続ける',onClick:function(){modal=false;canvas.focus({preventScroll:true});}}],note=p.note,adv=FF.app.state.adventure;
+      // 街（灯火の村・白樺の宿場町）：HP・MPが全回復し、回復薬が補われる
+      if(p.kind==='town'){var before=adv;commitAdv(A.arriveAt(adv,p.id==='town'?'town':'home'));paintParty();note+='\n\n'+TX.notices.rested;}
+      // 旅人の焚き火：旅ごとに1回、HP・MPが全回復
+      if(p.kind==='camp'){if(!adv.campUsed){commitAdv(A.rest(adv,'camp'));paintParty();note+='\n\n'+TX.notices.camp;}else note+='\n\n'+TX.notices.campUsed.replace(/\{([^{}|]*)\|[^{}]*\}/g,'$1');}
+      // 洞窟の宝箱：ゴールドと回復薬（1回だけ）
+      if(p.kind==='chest'&&!adv.chest){var n0=FF.util.clone(adv);n0.chest=true;n0.gold+=FF.balance.ADVENTURE.CHEST_GOLD;n0.potions+=FF.balance.ADVENTURE.CHEST_POTIONS;commitAdv(n0);paintParty();note+='\n\n'+FF.balance.ADVENTURE.CHEST_GOLD+'ゴールドと、回復薬を'+FF.balance.ADVENTURE.CHEST_POTIONS+'個、手に入れた！';}
+      // 封印図書館の入口：大ボス（峠の大獣）が立ちふさがる
+      if(p.kind==='boss'){
+        if(adv.cleared.indexOf('boss')<0){
+          U.modal({title:p.name,body:'封印図書館の入口を、大きな影がふさいでいる。倒さなければ、先へは進めない。\n\n仲間のHPが少ないときは、街や焚き火で回復してから挑もう。',buttons:[
+            {label:'戦う',class:'primary',onClick:function(){var n=A.bossBattle(FF.app.state.adventure);if(n!==FF.app.state.adventure){stopInput();route=[];save();commitAdv(n);dispose();U.show('adventure');}else modal=false;}},
+            {label:'今は引き返す',onClick:function(){modal=false;}}]});return;
+        }
+        note='入口をふさいでいた大獣は、もういない。図書館の扉は、まだ固く閉ざされている。国語の大ボスとの戦いは、これから追加される予定です。';
+      }
       if(p.kind==='cave'){changeRegion('cave',2,8);canvas.focus({preventScroll:true});return;}
       if(p.kind==='exit')buttons.unshift({label:'雪原へ戻る',class:'primary',onClick:function(){changeRegion('field',8,9);}});
       if(p.kind==='chest'){state.chest=true;save();refresh();}
-      U.modal({title:p.name,body:p.note,buttons:buttons});
+      U.modal({title:p.name,body:note,buttons:buttons});
       // Escape / 背景で閉じた場合にも入力を再開する。
     }
     function setOverview(next){
@@ -123,7 +153,7 @@
       overview=next;spriteCache.clear();pad.hidden=overview;toggle.textContent=overview?'冒険に戻る':'全体マップ';toggle.setAttribute('aria-pressed',String(overview));
     }
     function changeRegion(region,x,y){setOverview(false);manualCamera=null;stopInput();state.region=region;state.x=x;state.y=y;hero={x:x,y:y};camera={x:x,y:y};route=[];moving=null;modal=false;overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');discover();save();refresh();draw();}
-    function returnVillage(place){changeRegion('field',place.x,place.y);dispose();U.show('base');}
+    function returnVillage(place){changeRegion('field',place.x,place.y);commitAdv(A.arriveAt(FF.app.state.adventure,place.id==='town'?'town':'home'));dispose();U.show('base');}
     function recall(){stopInput();route=[];modal=true;U.modal({title:'訪れた街へ帰還',body:'道を歩いて見つけた街へ、すぐに戻れます。',buttons:M.places.filter(function(p){return p.kind==='town'&&state.visited.includes(p.id);}).map(function(p){return {label:p.name,onClick:function(){returnVillage(p);}};}).concat([{label:'閉じる',onClick:function(){modal=false;}}])});}
     function go(p){if(moving||document.querySelector('.overlay'))return;setOverview(false);manualCamera=null;side.hidden=true;guideToggle.setAttribute('aria-expanded','false');viewport.scrollIntoView({block:'nearest',behavior:'auto'});overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');stopInput();route=M.path(state.region,state,p);if(!route.length&&state.x===p.x&&state.y===p.y)showPlace(p);else if(!route.length)status.textContent='ここへは直接進めません。道を探そう。';canvas.focus({preventScroll:true});draw();}
     function step(dx,dy){manualCamera=null;if(moving||document.querySelector('.overlay'))return;var next=M.nextStep(state.region,state,dx,dy);if(next)route=[next];}
@@ -224,6 +254,16 @@
       if(overview&&!cave){for(y=0;y<g.length;y++)for(x=0;x<g[0].length;x++)if(!seen.has(x+','+y)){var f=project(x,y);ctx.fillStyle='#17394d55';ctx.fillRect(Math.floor(f.x-scale/2),Math.floor(f.y-scale*.33),Math.floor(f.x+scale/2)-Math.floor(f.x-scale/2),Math.floor(f.y+scale*.33)-Math.floor(f.y-scale*.33));}}
       if(!overview){var shade=ctx.createLinearGradient(0,0,0,height);shade.addColorStop(0,'#46677c25');shade.addColorStop(.35,'#ffffff00');shade.addColorStop(1,'#a9c4d533');ctx.fillStyle=shade;ctx.fillRect(0,0,width,height);}
     }
+    // 1マス歩くたびの判定：森（街道・橋・場所でない所）では、魔物に出会うことがある（判断501。従来の冒険と同じ確率）
+    function onArrive(place){
+      var a=FF.app.state.adventure,tile=M.map(state.region)[state.y][state.x];
+      if(!place&&A.atTown(a)){commitAdv(A.leaveTown(a));a=FF.app.state.adventure;}
+      if(place||tile!=='.'||root.FF_NO_ENCOUNTER||/[?&]noenc=1/.test((root.location&&root.location.search)||''))return false;
+      var next=A.wildStep(a,(FF.adventureRng||Math.random),{wolf:state.region==='field'&&state.x>=24});
+      if(next.battle){stopInput();route=[];moving=null;save();commitAdv(next);dispose();U.show('adventure');return true;}
+      if(next.steps!==a.steps){a.steps=next.steps;}   // 歩数だけは、毎歩は保存しない（次の保存のときに、いっしょに残る）
+      return false;
+    }
     function startStep(){
       if(modal||overview)return false;
       if(held&&!route.length){var nextHeld=M.nextStep(state.region,state,held[0],held[1]);if(nextHeld)route=[nextHeld];}
@@ -246,6 +286,7 @@
           if(t<1)break;
           state.x=moving.to.x;state.y=moving.to.y;moving=null;discover();scheduleSave();refresh();
           var place=places().find(function(p){return p.x===state.x&&p.y===state.y;});
+          if(onArrive(place))break;
           if(place){if(state.region==='field'&&!state.visited.includes(place.id)){state.visited.push(place.id);scheduleSave();refresh();}if(!route.length)showPlace(place);}
           // 余った時間は次のマスへ。境界に停止フレームを挟まず、1フレーム1回だけ描画。
           if(!startStep())break;
@@ -302,6 +343,17 @@
     var leaveObserver=new MutationObserver(function(){if(!shell.isConnected)dispose();});leaveObserver.observe(main,{childList:true});
     dispose=function(){if(dead)return;dead=true;root.removeEventListener('resize',fitScreen);if(root.visualViewport)root.visualViewport.removeEventListener('resize',fitScreen);root.clearTimeout(pendingSave);stopInput();document.removeEventListener('keydown',onKey,true);document.removeEventListener('keyup',onKey,true);root.removeEventListener('blur',blur);root.cancelAnimationFrame(raf);observer.disconnect();leaveObserver.disconnect();save();};
     [['signpost','img/homepage/landmark-signpost.webp'],['campfire','img/homepage/landmark-campfire.webp'],['caveEntrance','img/homepage/landmark-cave.webp'],['library','img/homepage/landmark-library.webp'],['trail','img/homepage/trail-stone.webp'],['bridge','img/homepage/bridge-old.webp'],['ice','img/homepage/lake-shore.webp'],['chest','img/homepage/treasure-chest.webp'],['atlas','img/adventure/canvas/alpine-atlas.webp'],['snow','img/adventure/canvas/plain.webp'],['hero',FF.adventureScene.traveler(FF.app.state.player.avatar)],['heroDiag',FF.adventureScene.travelerDiag(FF.app.state.player.avatar)],['walk',FF.adventureScene.travelerWalk(FF.app.state.player.avatar)],['walkDiag',FF.adventureScene.travelerWalkDiag(FF.app.state.player.avatar)]].forEach(function(a){if(!a[1])return;var im=new Image();im.onload=function(){var asset=im;if(['hero','heroDiag','walk','walkDiag'].includes(a[0])){var cells=a[0].indexOf('walk')===0?4:2;asset=document.createElement('canvas');asset.width=asset.height=cells*96;asset.getContext('2d').drawImage(im,0,0,asset.width,asset.height);}images[a[0]]=asset;canvas.dataset.walkReady=String(!!(images.walk&&images.walkDiag));draw();};im.src=a[1];});
+    // 負けて街で目を覚ましたあと（従来の冒険と同じ：持ち物・経験値は、なくさない）
+    var adv0=FF.app.state.adventure;
+    if(!adv0.started){var s0=FF.util.clone(adv0);s0.started=true;commitAdv(s0);adv0=FF.app.state.adventure;}
+    if(adv0.notice==='rescued'||adv0.notice==='retreated'||adv0.notice==='victory'||adv0.notice==='passOpen'){
+      var msg=adv0.notice,place0=M.places.find(function(p){return p.id===(adv0.lastTown==='town'?'town':'home');}),n1=FF.util.clone(adv0);n1.notice='';
+      if(msg==='rescued'){state.region='field';state.x=place0.x;state.y=place0.y;hero={x:state.x,y:state.y};camera={x:state.x,y:state.y};save();}
+      commitAdv(n1);
+      var text={rescued:TX.notices.rescued,retreated:TX.notices.retreated,victory:'戦いに勝った！ 道が少し、安全になった。',passOpen:'大獣を倒した！ 封印図書館の入口が、ひらいた。'}[msg];
+      root.setTimeout(function(){if(!dead&&text){modal=true;U.modal({title:msg==='rescued'?'街で目を覚ました':'報告',body:text,buttons:[{label:'旅を続ける',class:'primary',onClick:function(){modal=false;}}]});}},200);
+    }
+    paintParty();
     discover();refresh();resize();raf=root.requestAnimationFrame(tick);
   };
 })(this);

@@ -148,6 +148,35 @@
     if (rng() >= chance) return n;
     return encounter(n, n.pos.x >= E.WOLF_FROM_X && rng() < E.WOLF_SHARE ? 'wolf' : 'cub');
   }
+  // 広い雪原（js/ui/snow-journey-ui.js。判断501）から使う。歩数（steps）は、呼ぶ側の保存の値を p.steps に入れて渡す。
+  // 戦闘になれば battle 入りの新しい状態を返し、ならなければ steps だけ進めた新しい状態を返す。opts.wolf ＝ 霜牙のオオカミも出る地域
+  function wildStep(p, rng, opts) {
+    var E = B.ENCOUNTER, n = clone(p);
+    if (n.battle || typeof rng !== 'function' || !alive(n).length) return n;
+    n.steps = (n.steps || 0) + 1;
+    if (n.steps <= E.SAFE_STEPS) return n;
+    var chance = Math.min(E.MAX, E.BASE + (n.steps - E.SAFE_STEPS - 1) * E.GROWTH);
+    if (rng() >= chance) return n;
+    var id = opts && opts.wolf && rng() < E.WOLF_SHARE ? 'wolf' : 'cub';
+    n.steps = 0;
+    n.battle = { flowVersion: 2, enemy: id, hp: B.ENEMIES[id].hp, phase: 'commands', turn: 1, orders: {}, log: [], question: null, choices: [], guarded: false, ward: false };
+    return n;
+  }
+  // 封印図書館の入口をふさぐ大ボス（峠の大獣。まだ倒していないとき）
+  function bossBattle(p) {
+    if (p.battle || !alive(p).length || p.cleared.indexOf('boss') >= 0 || !B.ENEMIES.boss) return p;
+    var n = clone(p); n.steps = 0; n.pos = clone(ENEMIES.boss);
+    n.battle = { flowVersion: 2, enemy: 'boss', hp: B.ENEMIES.boss.hp, phase: 'commands', turn: 1, orders: {}, log: [], question: null, choices: [], guarded: false, ward: false };
+    return n;
+  }
+  // 広い雪原の街（灯火の村・白樺の宿場町）に着く：HP・MPが全回復し、回復薬が補われ、編成ができるようになる（rest が位置を町にする）
+  function arriveAt(p, where) {
+    if (where !== 'home' && where !== 'town') return p;
+    var n = clone(p); n.battle = null; if (where === 'town') n.arrived = true;
+    return rest(n, where);
+  }
+  // 町を出て雪原を歩く：編成できる場所（町）の位置から、町でない位置へ
+  function leaveTown(p) { if (!atTown(p)) return p; var n = clone(p); n.pos = { x: 2, y: 2 }; return n; }
   function move(p, x, y, rng) {
     if (p.battle || !walkable({ x: x, y: y }) || Math.abs(p.pos.x - x) + Math.abs(p.pos.y - y) !== 1) return p;
     // 峠の大獣を倒すまでは、東側へ抜けられない。
@@ -366,5 +395,6 @@
   FF.adventure = { IDS: IDS, ALLIES: ALLIES, magicKind: magicKind, recruit: recruit, MAP: MAP, PLACES: PLACES, ENEMIES: ENEMIES, create: create, normalize: normalize,
     stats: stats, level: level, same: same, alive: alive, atTown: atTown, rest: rest, depart: depart, setParty: setParty,
     autoOrders: autoOrders, setAuto: setAuto, walkable: walkable, path: path, enemyAt: enemyAt, move: move, encounter: encounter, intent: intent,
+    wildStep: wildStep, bossBattle: bossBattle, arriveAt: arriveAt, leaveTown: leaveTown,
     command: command, answer: answer, advance: advance, retreat: retreat, potion: potion, pick: pick };
 })(this);

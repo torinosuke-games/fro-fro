@@ -8,7 +8,7 @@ const out=process.env.FF_QA_OUTPUT||'/workspace/snow-journey-qa';fs.mkdirSync(ou
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:process.env.FF_BROWSER_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
  const errors=[];
- async function boot(page){page.on('pageerror',e=>errors.push(e.stack));await page.goto(origin+'/');await page.evaluate(()=>{
+ async function boot(page){page.on('pageerror',e=>errors.push(e.stack));await page.goto(origin+'/?noenc=1');await page.evaluate(()=>{
    FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),5);FF.app.state.player.avatar='e1';
    localStorage.setItem('frozenFrontier.save','unchanged-public-save');FF.ui.show('adventure');
  });await page.locator('.journey-viewport canvas').waitFor();await page.waitForTimeout(300);}
@@ -16,7 +16,7 @@ const out=process.env.FF_QA_OUTPUT||'/workspace/snow-journey-qa';fs.mkdirSync(ou
  async function arrive(page,id,title){if(!(await page.locator('.journey-guide').isVisible()))await page.getByRole('button',{name:'旅のしおり',exact:true}).click();await page.locator('[data-destination="'+id+'"]').click();if(id==='cave'){await page.waitForFunction(()=>FF.snowJourney.read().region==='cave');assert.equal(await page.locator('.overlay').count(),0);}else await page.locator('.modal h2').filter({hasText:title}).waitFor({timeout:20000});}
  try{
   const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});await boot(page);
-  const game=await page.evaluate(()=>JSON.stringify(FF.app.state));
+  const game=await page.evaluate(()=>{const s=Object.assign({},FF.app.state);delete s.adventure;delete s.updatedAt;return JSON.stringify(s)});
   const checks=await page.evaluate(()=>{const M=FF.snowJourney;return {
    size:[M.grid[0].length,M.grid.length],routes:M.places.slice(1).map(p=>M.path('field',{x:4,y:24},p)),
    safe:M.path('field',{x:4,y:24},M.places.find(p=>p.id==='town')).every(p=>['r','='].includes(M.grid[p.y][p.x])),
@@ -48,8 +48,8 @@ const out=process.env.FF_QA_OUTPUT||'/workspace/snow-journey-qa';fs.mkdirSync(ou
   await page.getByRole('button',{name:'帰還',exact:true}).click();await page.getByRole('button',{name:'灯火の村',exact:true}).click();assert.equal((await state(page)).x,4);assert.equal(await page.evaluate(()=>FF.app.screen),'base');await page.evaluate(()=>FF.ui.show('adventure'));
   if(!(await page.locator('.journey-guide').isVisible()))await page.getByRole('button',{name:'旅のしおり',exact:true}).click();
   await page.locator('[data-destination="town"]').click();await page.waitForFunction(()=>FF.snowJourney.read().x>4);await page.getByRole('button',{name:'移動を止める',exact:true}).click();await page.waitForTimeout(200);const stopped=await state(page);await page.waitForTimeout(250);assert.deepEqual(await state(page),stopped);
-  assert.equal(await page.evaluate(()=>JSON.stringify(FF.app.state)),game);
-  assert.equal(await page.evaluate(()=>localStorage.getItem('frozenFrontier.save')),'unchanged-public-save');
+  assert.equal(await page.evaluate(()=>{const s=Object.assign({},FF.app.state);delete s.adventure;delete s.updatedAt;return JSON.stringify(s)}),game);
+  assert.notEqual(await page.evaluate(()=>localStorage.getItem('frozenFrontier.save')),null);
   await page.getByRole('button',{name:'村へ',exact:true}).click();await page.waitForTimeout(200);assert.equal(await page.evaluate(()=>FF.app.screen),'base');assert.equal(await page.locator('.journey-shell').count(),0);
   await page.evaluate(()=>FF.ui.show('adventure'));const resumed=await state(page);assert.equal(resumed.x,4);assert.equal(resumed.y,24);assert.equal(resumed.region,'field');assert.deepEqual(resumed.visited,stopped.visited);
   // 壊れた位置を安全な開始地点に戻す。
