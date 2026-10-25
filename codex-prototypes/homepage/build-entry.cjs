@@ -7,15 +7,15 @@ let html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const changes = [
   ['<meta charset="utf-8">', '<meta charset="utf-8">\n  <base href="../../">'],
   ['<title>FROZEN FRONTIER</title>', '<title>FROZEN FRONTIER · ChatGPT デザイン案</title>'],
-  ['<link rel="stylesheet" href="css/tower.css">', '<link rel="stylesheet" href="css/tower.css">\n  <link rel="stylesheet" href="codex-prototypes/homepage/design.css?v=20261025-lessoncontrols">'],
+  ['<link rel="stylesheet" href="css/tower.css">', '<link rel="stylesheet" href="css/tower.css">\n  <link rel="stylesheet" href="codex-prototypes/homepage/design.css?v=20261025-allfractions">'],
   ['<script src="js/config.js"></script>', '<script src="js/config.js"></script>\n  <script src="codex-prototypes/homepage/config.js"></script>'],
-  ['<script src="js/main.js"></script>', '<script src="codex-prototypes/homepage/math-g6-course.js?v=20261025-lessoncontrols"></script>\n  <script src="codex-prototypes/homepage/village-map.js"></script>\n  <script src="codex-prototypes/homepage/design.js?v=20261025-lessoncontrols"></script>\n  <script src="codex-prototypes/homepage/snow-journey.js?v=20261025-lessoncontrols"></script>\n  <script src="codex-prototypes/homepage/snow-journey-ui.js?v=20261025-lessoncontrols"></script>\n  <script src="js/main.js"></script>']
+  ['<script src="js/main.js"></script>', '<script src="codex-prototypes/homepage/math-g6-course.js?v=20261025-allfractions"></script>\n  <script src="codex-prototypes/homepage/village-map.js"></script>\n  <script src="codex-prototypes/homepage/design.js?v=20261025-allfractions"></script>\n  <script src="codex-prototypes/homepage/snow-journey.js?v=20261025-allfractions"></script>\n  <script src="codex-prototypes/homepage/snow-journey-ui.js?v=20261025-allfractions"></script>\n  <script src="js/main.js"></script>']
 ];
 for (const [before, after] of changes) {
   if (html.split(before).length !== 2) throw new Error('本体の入口が変わっています。差し込み位置を確認してください: ' + before);
   html = html.replace(before, after);
 }
-html = html.replace('src="js/generators.js"', 'src="js/generators.js?v=20261025-lessoncontrols"');
-html = html.replace('src="questions/math_g5_hand.js"', 'src="questions/math_g5_hand.js?v=20261025-lessoncontrols"');
-html = html.replace('src="codex-prototypes/homepage/snow-journey-ui.js?v=20261025-lessoncontrols"', 'src="codex-prototypes/homepage/snow-journey-ui.js?v=20261025-lessoncontrols"');
+html = html.replace('src="js/generators.js"', 'src="js/generators.js?v=20261025-allfractions"');
+html = html.replace('src="questions/math_g5_hand.js"', 'src="questions/math_g5_hand.js?v=20261025-allfractions"');
+html = html.replace('src="codex-prototypes/homepage/snow-journey-ui.js?v=20261025-allfractions"', 'src="codex-prototypes/homepage/snow-journey-ui.js?v=20261025-allfractions"');
 fs.writeFileSync(path.join(__dirname, 'index.html'), html);
