@@ -4,7 +4,7 @@
   function button(label,fn,cls){return E('button',{class:'btn '+(cls||''),text:label,on:{click:fn}});}
   U.screens.adventure.render=function(main){
     if(dispose) dispose();
-    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,zoom=1,zoomSuppressUntil=0,touches=new Map(),pinchDistance=0,pinchZoom=1,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,spriteCache=new Map();
+    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,zoom=1,zoomSuppressUntil=0,touches=new Map(),pinchDistance=0,pinchZoom=1,pan=null,manualCamera=null,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,spriteCache=new Map();
     main.classList.remove('adv-field-screen','adv-battle-screen'); main.classList.add('journey-screen');
     var shell=E('section',{class:'journey-shell'}), area=E('span',{class:'journey-area'}), objective=E('p',{class:'journey-objective'}), status=E('p',{class:'journey-status',attrs:{role:'status'}});
     var canvas=E('canvas',{attrs:{tabindex:'0','aria-label':'雪原の探索。地面をタップして移動。矢印キーでも移動できます。'}}),ctx=canvas.getContext('2d');
@@ -28,6 +28,7 @@
     },'journey-guide-toggle');
     guideToggle.setAttribute('aria-expanded','false');guideToggle.setAttribute('aria-controls',side.id);
     viewport.querySelector('.journey-tools').appendChild(guideToggle);
+    viewport.querySelector('.journey-tools').appendChild(button('主人公へ',function(){manualCamera=null;draw();}));
     side.prepend(button('閉じる',function(){side.hidden=true;guideToggle.setAttribute('aria-expanded','false');guideToggle.focus({preventScroll:true});},'journey-guide-close'));
     layout.appendChild(side);
   var PAD_DIRS = [[0, -1, '↑', '北へ'], [-1, 0, '←', '西へ'], [0, 1, '↓', '南へ'], [1, 0, '→', '東へ']];
@@ -101,12 +102,12 @@
       U.modal({title:p.name,body:p.note,buttons:buttons});
       // Escape / 背景で閉じた場合にも入力を再開する。
     }
-    function changeRegion(region,x,y){stopInput();state.region=region;state.x=x;state.y=y;hero={x:x,y:y};camera={x:x,y:y};route=[];moving=null;modal=false;overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');discover();save();refresh();draw();}
+    function changeRegion(region,x,y){manualCamera=null;stopInput();state.region=region;state.x=x;state.y=y;hero={x:x,y:y};camera={x:x,y:y};route=[];moving=null;modal=false;overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');discover();save();refresh();draw();}
     function recall(){stopInput();route=[];modal=true;U.modal({title:'訪れた街へ帰還',body:'道を歩いて見つけた街へ、すぐに戻れます。',buttons:M.places.filter(function(p){return p.kind==='town'&&state.visited.includes(p.id);}).map(function(p){return {label:p.name,onClick:function(){changeRegion('field',p.x,p.y);}};}).concat([{label:'閉じる',onClick:function(){modal=false;}}])});}
-    function go(p){if(moving||document.querySelector('.overlay'))return;side.hidden=true;guideToggle.setAttribute('aria-expanded','false');viewport.scrollIntoView({block:'nearest',behavior:'auto'});overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');stopInput();route=M.path(state.region,state,p);if(!route.length&&state.x===p.x&&state.y===p.y)showPlace(p);else if(!route.length)status.textContent='ここへは直接進めません。道を探そう。';canvas.focus({preventScroll:true});draw();}
-    function step(dx,dy){if(moving||document.querySelector('.overlay'))return;var next=M.nextStep(state.region,state,dx,dy);if(next)route=[next];}
+    function go(p){manualCamera=null;if(moving||document.querySelector('.overlay'))return;side.hidden=true;guideToggle.setAttribute('aria-expanded','false');viewport.scrollIntoView({block:'nearest',behavior:'auto'});overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');stopInput();route=M.path(state.region,state,p);if(!route.length&&state.x===p.x&&state.y===p.y)showPlace(p);else if(!route.length)status.textContent='ここへは直接進めません。道を探そう。';canvas.focus({preventScroll:true});draw();}
+    function step(dx,dy){manualCamera=null;if(moving||document.querySelector('.overlay'))return;var next=M.nextStep(state.region,state,dx,dy);if(next)route=[next];}
     function stopInput(){held=null;keys.clear();if(pad){pad.querySelector('.adv-knob').style.transform='';pad.querySelectorAll('.on').forEach(function(el){el.classList.remove('on');});}}
-    function transform(){var g=M.map(state.region);scale=overview?Math.min((width-32)/g[0].length,(height-60)/(g.length*.66)):(width<600?67:86);scale*=zoom;canvas.dataset.zoom=String(zoom);camera.x=overview?(g[0].length-1)/2:hero.x;camera.y=overview?(g.length-1)/2:hero.y-.8;if(!overview){var hx=width/scale/2-.5,hy=height/(scale*.66)/2-.5;camera.x=g[0].length<=hx*2+1?(g[0].length-1)/2:Math.max(hx,Math.min(g[0].length-1-hx,camera.x));camera.y=g.length<=hy*2+1?(g.length-1)/2:Math.max(hy,Math.min(g.length-1-hy,camera.y));}}
+    function transform(){var g=M.map(state.region);scale=overview?Math.min((width-32)/g[0].length,(height-60)/(g.length*.66)):(width<600?67:86);scale*=zoom;canvas.dataset.zoom=String(zoom);camera.x=overview?(g[0].length-1)/2:hero.x;camera.y=overview?(g.length-1)/2:hero.y-.8;if(manualCamera){camera.x=manualCamera.x;camera.y=manualCamera.y;}if(!overview||manualCamera){var hx=width/scale/2-.5,hy=height/(scale*.66)/2-.5;camera.x=g[0].length<=hx*2+1?(g[0].length-1)/2:Math.max(hx,Math.min(g[0].length-1-hx,camera.x));camera.y=g.length<=hy*2+1?(g.length-1)/2:Math.max(hy,Math.min(g.length-1-hy,camera.y));}}
     function project(x,y){return{x:width/2+(x-camera.x)*scale,y:height/2+(y-camera.y)*scale*.66};}
     function label(t,x,y,color){ctx.font=(overview?'10':'12')+'px sans-serif';var w=ctx.measureText(t).width+16;ctx.fillStyle=color||'#183c50e8';ctx.beginPath();ctx.roundRect(x-w/2,y-16,w,24,6);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(t,x,y);}
     var crops={tree:[0,0,485,684],cabin:[514,142,620,495],rock:[1170,244,490,427],lantern:[1744,170,280,503]};
@@ -124,7 +125,7 @@
       var fit=Math.min(scale*w/asset.width,scale*h/asset.height),dw=asset.width*fit,dh=asset.height*fit;
       ctx.drawImage(asset,point.x-dw/2,point.y-dh+scale*.12,dw,dh);
     }
-    function draw(){if(dead||!width)return;transform();var g=M.map(state.region),cave=state.region==='cave';
+    function draw(){if(dead||!width)return;transform();canvas.dataset.cameraX=String(camera.x);canvas.dataset.cameraY=String(camera.y);var g=M.map(state.region),cave=state.region==='cave';
       ctx.clearRect(0,0,width,height);ctx.lineWidth=1;ctx.fillStyle=cave?'#213b51':'#dfedf0';ctx.fillRect(0,0,width,height);
       if(!cave&&images.snow){
         // Snow occupies fixed world units, like trees and roads. Its repeat
@@ -241,15 +242,22 @@
     },{passive:false});
     function separation(){var p=Array.from(touches.values());return Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);}
     canvas.addEventListener('pointerdown',function(e){
-      if(e.pointerType!=='touch')return;
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      if(e.pointerType!=='touch'){pan={id:e.pointerId,x:e.clientX,y:e.clientY,cx:camera.x,cy:camera.y,dragged:false};canvas.setPointerCapture(e.pointerId);return;}
       touches.set(e.pointerId,{x:e.clientX,y:e.clientY});canvas.setPointerCapture(e.pointerId);
-      if(touches.size===2){pinchDistance=separation();pinchZoom=zoom;stopInput();route=[];zoomSuppressUntil=Infinity;}
+      if(touches.size===1)pan={id:e.pointerId,x:e.clientX,y:e.clientY,cx:camera.x,cy:camera.y,dragged:false};
+      if(touches.size===2){pan=null;pinchDistance=separation();pinchZoom=zoom;stopInput();route=[];zoomSuppressUntil=Infinity;}
     });
     canvas.addEventListener('pointermove',function(e){
+      if(pan&&pan.id===e.pointerId&&touches.size<2){
+        var dx=e.clientX-pan.x,dy=e.clientY-pan.y;
+        if(pan.dragged||Math.hypot(dx,dy)>8){pan.dragged=true;zoomSuppressUntil=Infinity;stopInput();route=[];moving=null;hero={x:state.x,y:state.y};manualCamera={x:pan.cx-dx/scale,y:pan.cy-dy/(scale*.66)};canvas.style.cursor='grabbing';draw();}
+      }
       if(!touches.has(e.pointerId))return;touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
       if(touches.size>=2&&pinchDistance>0)setZoom(pinchZoom*separation()/pinchDistance);
     });
     function endTouch(e){
+      if(pan&&pan.id===e.pointerId){if(pan.dragged)zoomSuppressUntil=root.performance.now()+450;pan=null;canvas.style.cursor='';}
       if(!touches.has(e.pointerId))return;touches.delete(e.pointerId);
       if(pinchDistance){zoomSuppressUntil=touches.size?Infinity:root.performance.now()+450;if(!touches.size)pinchDistance=0;}
     }
@@ -262,7 +270,7 @@
       var dx=Number(keys.has('ArrowRight'))-Number(keys.has('ArrowLeft')),dy=Number(keys.has('ArrowDown'))-Number(keys.has('ArrowUp'));
       held=dx||dy?[dx,dy]:null;if(held&&!moving){route=[];step(dx,dy);}
     }
-    function blur(){stopInput();route=[];touches.clear();pinchDistance=0;zoomSuppressUntil=0;}
+    function blur(){stopInput();route=[];touches.clear();pan=null;canvas.style.cursor='';pinchDistance=0;zoomSuppressUntil=0;}
     document.addEventListener('keydown',onKey,true);document.addEventListener('keyup',onKey,true);root.addEventListener('blur',blur);
     fitScreen();root.addEventListener('resize',fitScreen);if(root.visualViewport)root.visualViewport.addEventListener('resize',fitScreen);
     var observer=new ResizeObserver(resize);observer.observe(viewport);
