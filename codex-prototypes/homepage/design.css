@@ -342,3 +342,8 @@ body[data-screen="adventure"] main#screen.journey-screen{padding-bottom:0}
 .lesson-filter-popover select{min-height:42px}
 .lesson-filter-modal .actions{display:flex;gap:10px;margin-top:20px}
 .lesson-filter-modal .actions .btn{flex:1;min-height:42px}
+.grade-selection-modal .grade-bands{display:grid;gap:14px;width:100%;margin:0}
+.grade-selection-modal .grade-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
+.grade-selection-modal .grade-chip{min-width:0;width:100%;min-height:48px;margin:0;padding:8px 4px}
+.grade-selection-modal .grade-chip .title{font-size:1rem;white-space:nowrap}
+.grade-selection-modal .grade-chip.selected{border-color:#247fb9;background:#e6f4ff;box-shadow:0 0 0 1px #247fb9}

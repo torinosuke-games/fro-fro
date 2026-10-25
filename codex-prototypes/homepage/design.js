@@ -232,3 +232,23 @@ FF.texts.renewal.dailyNote=FF.texts.renewal.dailyNote.replace('☆はランダ�
   main.querySelectorAll('.lesson-question,.option-text,.hint-step p,.answer-value,.explanation-text,.lesson-figure figcaption').forEach(fractions);
  };
 })(this);
+
+// 教科選択画面の学年変更は、その場のポップアップで完結させる。
+(function(root){
+ var FF=root.FF,U=FF.ui,render=U.screens.study.render;
+ U.screens.study.render=function(main,params){
+  render(main,params||{});
+  var original=main.querySelector('.subject-top-actions > button');if(!original)return;
+  var trigger=original.cloneNode(true);original.replaceWith(trigger);trigger.setAttribute('aria-haspopup','dialog');
+  trigger.addEventListener('click',function(){
+   var close,picker=U.gradePicker(FF.app.state.player.grade,function(grade){
+    close();FF.app.commit(FF.state.setPlayerGrade(FF.app.state,grade));FF.app.studySel=null;U.rerender();
+   });
+   close=U.modal({title:'学年を選ぶ',body:picker,buttons:[{label:'キャンセル'}]});
+   var overlay=picker.closest('.overlay');overlay.setAttribute('aria-label','学年を選ぶ');picker.closest('.modal').classList.add('lesson-filter-modal','grade-selection-modal');
+   overlay.addEventListener('keydown',function(e){if(e.key!=='Tab')return;var buttons=Array.from(overlay.querySelectorAll('button')),first=buttons[0],last=buttons[buttons.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
+   var observer=new MutationObserver(function(){if(!overlay.isConnected){observer.disconnect();var button=main.querySelector('.subject-top-actions > button');if(button)button.focus({preventScroll:true});}});observer.observe(document.body,{childList:true});
+   var selected=picker.querySelector('[aria-pressed="true"]');if(selected)selected.focus({preventScroll:true});
+  });
+ };
+})(this);

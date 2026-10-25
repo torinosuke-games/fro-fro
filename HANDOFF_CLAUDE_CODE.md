@@ -237,3 +237,7 @@ gradeLevel6の限定を外し、subject=mathの全学年へ適用。整数分数
 ## 追記：単元・難易度をポップアップへ
 
 filter-openボタンを描画後にイベントを持たない複製へ置換し、ページ遷移のshowFiltersを呼ばずU.modalで表示。既存lessonFilters.renderを切り離したDOMへ描画し、rn-fieldとそのchangeイベントを再利用。適用ボタンの既存処理も再利用するため、出題条件の選択・再出題・チケット処理は変更なし。選択中はfilterDraftのコピーだけが変わり、キャンセル/Esc/背景クリックではsession.selや現在問題を維持する。閉じた後のフォーカス復帰とTab循環も追加。元の全画面フィルターは他の呼出箇所のため残す。取り組み数のラベルは「とりくみました」→「取り組みました」。tests/ui-lesson-filter-popup.cjsとui-lesson-controls.cjs参照。
+
+## 追記：教科選択画面の学年ポップアップ
+
+subject-top-actionsの学年ボタンは設定画面へ移動せず、既存U.gradePickerをU.modalに表示。小学1年〜中学3年の9学年をボタンで選ぶと、その場でsetPlayerGrade→commit→study再描画し、カードの教科名・問題数等が更新される。キャンセル/Esc/背景クリックは学年とプレイ状態を変更しない。現在学年の選択状態、Tab循環、閉じた後のフォーカス復帰に対応。tests/ui-grade-popup.cjsで3サイズの学年変更・キャンセル・画面維持を確認。
