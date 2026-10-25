@@ -118,7 +118,7 @@
     function stopInput(){held=null;keys.clear();if(pad){pad.querySelector('.adv-knob').style.transform='';pad.querySelectorAll('.on').forEach(function(el){el.classList.remove('on');});}}
     function transform(){var g=M.map(state.region);scale=overview?Math.min((width-32)/g[0].length,(height-60)/(g.length*.66)):(width<600?67:86);scale*=zoom;canvas.dataset.zoom=String(zoom);camera.x=overview?(g[0].length-1)/2:hero.x;camera.y=overview?(g.length-1)/2:hero.y-.8;if(manualCamera){camera.x=manualCamera.x;camera.y=manualCamera.y;}if(!overview||manualCamera){var hx=width/scale/2-.5,hy=height/(scale*.66)/2-.5;camera.x=g[0].length<=hx*2+1?(g[0].length-1)/2:Math.max(hx,Math.min(g[0].length-1-hx,camera.x));camera.y=g.length<=hy*2+1?(g.length-1)/2:Math.max(hy,Math.min(g.length-1-hy,camera.y));}}
     function project(x,y){return{x:width/2+(x-camera.x)*scale,y:height/2+(y-camera.y)*scale*.66};}
-    function label(t,x,y,color){ctx.font=(overview?'10':'12')+'px sans-serif';var w=ctx.measureText(t).width+16;ctx.fillStyle=color||'#183c50e8';ctx.beginPath();ctx.roundRect(x-w/2,y-16,w,24,6);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(t,x,y);}
+    function label(t,x,y,color,fontSize){ctx.font=(fontSize||(overview?'10':'12'))+'px sans-serif';var w=ctx.measureText(t).width+16;ctx.fillStyle=color||'#183c50e8';ctx.beginPath();ctx.roundRect(x-w/2,y-16,w,24,6);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(t,x,y);}
     var crops={tree:[0,0,485,684],cabin:[514,142,620,495],rock:[1170,244,490,427],lantern:[1744,170,280,503]};
     function sprite(name,x,y,w,h){var img=images.atlas;if(!img)return;
       // 元画像の切り出し・縮小を繰り返さず、表示サイズの小さな絵を再利用する。
@@ -189,7 +189,7 @@
           label(p.name,s.x,s.y+(overview?20:27),p.kind==='boss'?'#654566ee':null);
         });
         if(Math.round(hero.y)===y){var h=project(hero.x,hero.y);ctx.fillStyle='#47647644';ctx.beginPath();ctx.ellipse(h.x,h.y+5,scale*.2,scale*.09,0,0,7);ctx.fill();
-          if(overview){ctx.fillStyle='#ed703b';ctx.beginPath();ctx.arc(h.x,h.y,5,0,7);ctx.fill();}
+          if(overview){ctx.fillStyle='#ed703b';ctx.beginPath();ctx.arc(h.x,h.y,6,0,7);ctx.fill();label('現在地',h.x,h.y-15,'#ad3d28',14);}
           else if(images.hero){
             var reduced=root.matchMedia('(prefers-reduced-motion: reduce)').matches;
             var wd=diag&&images.walkDiag,walk=(moving||held||route.length)&&!reduced&&(wd||images.walk);
