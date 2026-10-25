@@ -2236,3 +2236,5 @@
 - 小6の新作の図：SVG は、確認ページ（Artifact）のファイル数の上限（511）のため、ファイルにせず、問題の `diagram.src` に data URI で入れた。理科の絵4枚は `img/homepage/s6/`。
 - テスト：`tests/lib/loader.js` は、ふつうのテストでは小6の新作（`*_g6_course.js`）を読み込まない（もとの問題の数・内容を確かめるテストを保つため）。新作は `tests/cases/course-g6.js`（`LOGIC_FILES_WITH_FIXES`）で調べる。ChatGPT の画面テスト（`tests/ui-*.cjs`）は、入口を本体の `index.html` に直して、本体で通る（保存の分離を確かめる部分は外した）。
 - 要確認（実機）：スマホで、雪原の動きの滑らかさ（試作の文書にも「実機で一定FPSを保証する測定は未実施」とある）。
+- 探索の画面：ChatGPT の広い雪原は、従来の冒険（町から町へ・戦闘・経験値・ゴールド。`js/ui/adventure.js`）の画面を置きかえる形だった（`U.screens.adventure.render` の差しかえ）。従来の冒険は戦闘などの本編なので、残した：「探索」は新しい雪原が開き、画面の「従来の冒険（戦闘あり）」ボタンで従来の冒険へ、従来の冒険の上の「‹ 新しい雪原へ」で戻る（`FF.app.legacyAdventure`）。URL に `?legacy=1` を付けると、いつも従来の冒険（画面テスト用）。
+- 画面テスト（`tests/ui-*.cjs`）：本体にもとからあった63本のうち、統合の前から失敗している・環境（ブラウザのパス・URL）が足りないものが多い。統合で新しく失敗したのは、町の画面の配置が変わったことに依存するもの（`.home-start-mobile`・施設が開閉式・「学習する →」のボタンの文言 など：ui-facilities・ui-quest・ui-keepers・ui-quiz-sticky・ui-weapon-shop・ui-trust・ui-tower・ui-joystick・ui-item-shop など）と、探索の画面に依存するもの（?legacy=1 を付けると通る：ui-adventure・ui-battle・ui-bgm・ui-camp-message・ui-hd2d）。町の施設・探索・設定などの画面が開くことは、手でも確かめた（施設8つ：酒場・武器屋・防具屋・道具屋はモーダル、仲間・チケット・訓練所は各画面）。画面テストを新しい配置に合わせて直すのは、次の作業。
