@@ -75,7 +75,7 @@
 - 自動テスト：`node tests/run.js`（`tests/cases/*.js` をすべて実行。失敗があれば終了コード1）
 - バランス計算：`node tests/simulate.js`（目標外があれば終了コード1）
 - 画面の確認：`index.html` を開く。テスト操作は `index.html?debug=1` のデバッグ画面。手順は `tests/MANUAL.md`
-- スマホの確認ページ（Artifact）：ふつう https://claude.ai/artifact/XLuEepmTkNsku4cPPTfqCF 、デバッグ用 https://claude.ai/artifact/4V4WJ32ByTk6YAk7GzfuuW （index.html に `window.FF_DEBUG = true` を足したもの。判断188。`db` の機能付きで、問題のレビューの記録が `reviews` コレクションに入る＝判断202。`ArtifactData` の list で読む。再公開では capabilities を省いて機能を保つ）。変えたファイルを両方に送る
+- スマホの確認ページ（Artifact）：ふつう https://claude.ai/artifact/XLuEepmTkNsku4cPPTfqCF 、デバッグ用 https://claude.ai/artifact/4V4WJ32ByTk6YAk7GzfuuW （index.html に `window.FF_DEBUG = true` を足したもの。判断188。`db` の機能付きで、問題のレビューの記録が `reviews` コレクションに入る＝判断202。`ArtifactData` の list で読む。再公開では capabilities を省いて機能を保つ）。変えたファイルを両方に送る。**確認ページは、ファイル数の上限（511）のため、JS・問題データを `node tests/tools/build-artifact-stage.cjs <出力フォルダ> [--debug]` で12個ほどのかたまり（bundle-N.js）にして送る**（判断500。個別の js/・questions/ のファイルは null で消してある。画像・css は、いままでどおり個別）
 - 問題データの確認済みの数（`tests/cases/questions.js`）は 1072
 
 ## ファイル構成の要約
