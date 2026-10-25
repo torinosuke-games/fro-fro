@@ -4,7 +4,7 @@
   function button(label,fn,cls){return E('button',{class:'btn '+(cls||''),text:label,on:{click:fn}});}
   U.screens.adventure.render=function(main){
     if(dispose) dispose();
-    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,zoom=1,zoomSuppressUntil=0,touches=new Map(),pinchDistance=0,pinchZoom=1,pan=null,manualCamera=null,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,spriteCache=new Map();
+    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,zoom=1,zoomSuppressUntil=0,touches=new Map(),pinchDistance=0,pinchZoom=1,pan=null,manualCamera=null,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,lastSpark=0,spriteCache=new Map();
     main.classList.remove('adv-field-screen','adv-battle-screen'); main.classList.add('journey-screen');
     var shell=E('section',{class:'journey-shell'}), area=E('span',{class:'journey-area'}), objective=E('p',{class:'journey-objective'}), status=E('p',{class:'journey-status',attrs:{role:'status'}});
     var canvas=E('canvas',{attrs:{tabindex:'0','aria-label':'雪原の探索。地面をタップして移動。矢印キーでも移動できます。'}}),ctx=canvas.getContext('2d');
@@ -19,7 +19,7 @@
     var destinations=E('div',{class:'journey-destinations'});side.appendChild(destinations);
     side.appendChild(E('p',{class:'journey-legend',text:'━━ 街道：安全　 ··· 森：危険地帯\n青：湖（橋を渡ろう）　暗い場所：未探索'}));
     side.appendChild(E('details',{class:'journey-future'},[E('summary',{text:'この先に広がる世界'}),E('p',{text:'白樺の森 → 封印図書館［国語］\n凍った湖 → からくり城［算数］\n氷の山脈 → 観測塔［理科］\n雪の旧街道 → 王都［社会］\n霧の海岸 → 灯台［英語］'}),E('small',{text:'白樺地方以外は、今後つなぐ地域の構想です。'})]));
-    side.appendChild(E('small',{class:'journey-preview-note',text:'探索プレビュー：戦闘・報酬は準備中。歩いた場所と発見は、このプレビュー専用に保存されます。'}));
+    side.appendChild(E('small',{class:'journey-preview-note',text:'探索プレビュー：戦闘は準備中。見つけたアイテムは持ち物に入ります。歩いた場所と発見は、このプレビュー専用に保存されます。'}));
     side.id='journey-guide';side.hidden=true;
     var guideToggle=button('旅のしおり',function(){
       stopInput();route=[];side.hidden=!side.hidden;
@@ -81,20 +81,22 @@
     function scheduleSave(){if(!pendingSave)pendingSave=root.setTimeout(function(){pendingSave=0;if(!dead)save();},0);}
     function save(){state.seen=Array.from(seen);try{root.localStorage.setItem(M.key,JSON.stringify(state));}catch(e){status.textContent='この端末では保存できません。画面を開いている間は探索できます。';}}
     function discover(){if(state.region==='field')for(var y=-4;y<=4;y++)for(var x=-4;x<=4;x++)if(x*x+y*y<=20&&state.x+x>=0&&state.x+x<40&&state.y+y>=0&&state.y+y<30)seen.add((state.x+x)+','+(state.y+y));}
-    function places(){return state.region==='cave'?M.cavePlaces:M.places;}
+    function places(){return state.region==='cave'?M.cavePlaces:M.places.concat(M.items.filter(function(p){return !M.collected(p.id);}));}
     function refresh(){
       var key=[state.region,state.x>24,state.y<16,M.map(state.region)[state.y][state.x],state.chest,state.visited.join() ].join('|');if(key===lastRefresh)return;lastRefresh=key;
       area.textContent=state.region==='cave'?'こだまの洞窟':state.x>24?'白樺の東の森':state.y<16?'氷湖のほとり':'灯火の街道';
       objective.textContent=state.visited.includes('town')?'次の目標：東の森の「封印図書館」を見つけよう':'次の目標：街道をたどり、白樺の宿場町へ';
       if(state.visited.includes('library')&&state.visited.includes('town'))objective.textContent='宿場町と封印図書館を発見！ 洞窟や湖のほとりも探してみよう';
       if(state.region==='cave')objective.textContent=state.chest?'古い地図を手に入れた。入口から雪原へ戻ろう':'洞窟の奥にある宝箱を探そう';
-      U.clear(destinations);places().filter(function(p){return p.kind!=='sign'&&p.kind!=='camp'&&p.kind!=='gate';}).forEach(function(p){
+      U.clear(destinations);places().filter(function(p){return p.kind!=='item'&&p.kind!=='sign'&&p.kind!=='camp'&&p.kind!=='gate';}).forEach(function(p){
         var b=button((state.visited.includes(p.id)||(p.id==='chest'&&state.chest)?'✓ ':'◇ ')+p.name,function(){go(p);},'journey-destination');b.dataset.destination=p.id;destinations.appendChild(b);
       });
       status.textContent=state.region==='cave'?'氷の洞窟。道をたどって、奥へ。':(M.grid[state.y][state.x]==='r'||M.grid[state.y][state.x]==='='?'街道を歩いています。ここは安全です。':'森の中です。戦闘を追加すると、魔物に出会う地域になります。');
     }
     function showPlace(p){
-      stopInput();route=[];modal=true;if(!state.visited.includes(p.id)&&state.region==='field')state.visited.push(p.id);save();refresh();
+      stopInput();route=[];modal=true;
+      if(p.kind==='item'){U.modal({title:'雪の中のきらめき',body:'雪の奥で、小さな光がまたたいています。',buttons:[{label:'調べる',class:'primary',onClick:function(){var found=M.collect(p.id);draw();U.modal({title:found?'回復薬を手に入れた！':'ここは調べました',body:found?'回復薬を1個、持ち物に入れました。':'もうアイテムはありません。',buttons:[{label:'旅を続ける',onClick:function(){modal=false;canvas.focus({preventScroll:true});}}]});}},{label:'あとで調べる',onClick:function(){modal=false;}}]});return;}
+      if(!state.visited.includes(p.id)&&state.region==='field')state.visited.push(p.id);save();refresh();
       var buttons=[{label:'旅を続ける',onClick:function(){modal=false;canvas.focus({preventScroll:true});}}];
       if(p.kind==='cave'){changeRegion('cave',2,8);canvas.focus({preventScroll:true});return;}
       if(p.kind==='exit')buttons.unshift({label:'雪原へ戻る',class:'primary',onClick:function(){changeRegion('field',8,9);}});
@@ -165,6 +167,10 @@
       for(y=ymin;y<ymax;y++){
         for(x=xmin;x<xmax;x++){var pt=project(x,y);if(g[y][x]==='#'){if(overview){ctx.fillStyle=cave?'#1c3446':'#70978c';ctx.fillRect(pt.x-scale*.4,pt.y-scale*.4,scale*.8,scale*.7);}else {var variation=((x*71+y*43)%13)/13;sprite(cave?'rock':'tree',pt.x+(variation-.5)*scale*.35,pt.y+scale*(.2+variation*.15),scale*(cave?1.2:.85+variation*.25),scale*(cave?.85:1.25+variation*.4));}}}
         places().filter(function(p){return p.y===y;}).forEach(function(p){var s=project(p.x,p.y);if(s.x < -200 || s.x > width+200 || s.y < -200 || s.y > height+200)return;
+          if(p.kind==='item'){
+            var time=root.matchMedia('(prefers-reduced-motion: reduce)').matches?1:root.performance.now()/1000;
+            for(var k=0;k<3;k++){var pulse=Math.pow(Math.max(0,Math.sin(time*(1.7+k*.63)+p.x*.71+k*2.3)*Math.cos(time*.71+k)),3);var radius=(.025+.07*pulse)*scale;ctx.save();ctx.translate(s.x+Math.sin(k*2.4)*scale*.2,s.y-scale*(.12+k*.09));ctx.globalAlpha=.25+.75*pulse;ctx.fillStyle=k===1?'#fff3ae':'#ffffff';ctx.beginPath();ctx.moveTo(0,-radius);ctx.lineTo(radius*.3,-radius*.3);ctx.lineTo(radius,0);ctx.lineTo(radius*.3,radius*.3);ctx.lineTo(0,radius);ctx.lineTo(-radius*.3,radius*.3);ctx.lineTo(-radius,0);ctx.lineTo(-radius*.3,-radius*.3);ctx.closePath();ctx.fill();ctx.restore();}return;
+          }
           if(overview){ctx.fillStyle=p.kind==='boss'?'#9a6583':'#bd8f46';ctx.beginPath();ctx.arc(s.x,s.y,5,0,7);ctx.fill();}
           else if(p.kind==='town'){sprite('cabin',s.x-scale*.45,s.y,scale*1.35,scale*1.1);sprite('cabin',s.x+scale*.6,s.y-scale*.2,scale*1.1,scale*.95);sprite('lantern',s.x,s.y+8,scale*.3,scale*.7);}
           else if(p.kind==='boss'){landmark('library',s,2.35,2.35);}
@@ -225,7 +231,7 @@
           // 余った時間は次のマスへ。境界に停止フレームを挟まず、1フレーム1回だけ描画。
           if(!startStep())break;
         }
-        if(changed)draw();
+        if(changed||time-lastSpark>90){lastSpark=time;draw();}
       }
       raf=root.requestAnimationFrame(tick);
     }

@@ -11,6 +11,7 @@
     { id: 'library', x: 33, y: 22, name: '封印図書館', kind: 'boss', note: '国語を司る大ボスの拠点。言葉を取り戻す戦いを、ここに追加する予定です。今回は入口まで探索できます。' },
     { id: 'pass', x: 34, y: 4, name: '氷嶺への峠', kind: 'gate', note: '次の地方への道。氷山の観測塔（理科）へ続く地域を、ここから追加できます。今は雪で閉ざされています。' }
   ];
+  var items=[{id:'glint-north',x:6,y:5},{id:'glint-east',x:35,y:17},{id:'glint-south',x:12,y:26}].map(function(p){p.kind='item';p.name='雪の中のきらめき';return p;});
   var grid = Array.from({ length: H }, function (_, y) { return Array.from({ length: W }, function (_, x) {
     if (x < 2 || y < 2 || x >= W - 2 || y >= H - 2) return '#';
     if (Math.pow((x - 25) / 6, 2) + Math.pow((y - 15) / 4, 2) < 1) return '~';
@@ -30,6 +31,7 @@
   road([[14,19],[8,19],[8,9]], '.');
   road([[14,19],[18,19],[18,22],[33,22]], '.');
   places.forEach(function (p) { for (var dy=-1;dy<=1;dy++) for(var dx=-1;dx<=1;dx++) {var tile=grid[p.y+dy][p.x+dx];grid[p.y+dy][p.x+dx] = ['town','camp','sign'].includes(p.kind) ? 'r' : (tile==='r'||tile==='='?tile:'.');} });
+  [[[8,9],[6,9],[6,5]],[[33,22],[35,22],[35,17]],[[10,24],[12,24],[12,26]]].forEach(function(points){road(points,'.');});
   var cave = ['#############','######...####','##.......####','##.###...####','##.#####.####','##.......####','####.########','##.......####','##.##########','#############'].map(function (s) {return s.split('');});
   var cavePlaces = [ { id:'exit', x:2,y:8,name:'雪原へ',kind:'exit',note:'洞窟の外へ戻ります。' }, { id:'chest',x:8,y:2,name:'旅人の宝箱',kind:'chest',note:'古い地図を見つけた！ 東の森に「封印図書館」の印がある。' } ];
   function map(region) { return region === 'cave' ? cave : grid; }
@@ -74,5 +76,13 @@
     if(!walkable(p.region,p.x,p.y)){p.x=4;p.y=24;p.region='field';}
     return {region:p.region,x:p.x,y:p.y,visited:Array.isArray(p.visited)?Array.from(new Set(['home'].concat(p.visited).filter(function(id){return places.some(function(p){return p.id===id;});}))):['home'],chest:p.chest===true,seen:Array.isArray(p.seen)?p.seen.filter(function(k){return typeof k==='string'&&/^\d+,\d+$/.test(k);}).slice(-1200):[]};
   }catch(e){return fresh();}}
-  FF.snowJourney={width:W,height:H,trail:trail,grid:grid,cave:cave,places:places,cavePlaces:cavePlaces,map:map,path:path,nextStep:nextStep,walkable:walkable,canMove:canMove,read:read,key:KEY};
+  function collected(id){return !!(FF.app.state.adventure&&FF.app.state.adventure.journeyItems||[]).includes(id);}
+  var normalize=FF.adventure&&FF.adventure.normalize;
+  if(normalize)FF.adventure.normalize=function(raw){var next=normalize(raw);next.journeyItems=items.filter(function(p){return raw&&Array.isArray(raw.journeyItems)&&raw.journeyItems.includes(p.id);}).map(function(p){return p.id;});return next;};
+  function collect(id){
+    if(!items.some(function(p){return p.id===id;})||collected(id))return false;
+    var cur=FF.app.state,adv=FF.adventure.normalize(cur.adventure);
+    adv.potions+=1;adv.journeyItems.push(id);FF.app.commit(Object.assign({},cur,{adventure:adv}));return true;
+  }
+  FF.snowJourney={items:items,collected:collected,collect:collect,width:W,height:H,trail:trail,grid:grid,cave:cave,places:places,cavePlaces:cavePlaces,map:map,path:path,nextStep:nextStep,walkable:walkable,canMove:canMove,read:read,key:KEY};
 })(this);
