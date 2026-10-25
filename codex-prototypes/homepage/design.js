@@ -120,7 +120,8 @@
    var badge=layout.querySelector('.question-badge');
    if(badge)badge.textContent=badge.textContent.replace(/^問題(?=\s*\d)/,'問');
    var progress=layout.querySelector('.side-title .muted');
-   if(progress&&/^\d+問中/.test(progress.textContent))progress.textContent='全'+progress.textContent;
+   if(progress){if(/^\d+問中/.test(progress.textContent))progress.textContent='全'+progress.textContent;progress.textContent=progress.textContent.replace(/せいかい/g,'正解');}
+   layout.querySelectorAll('.unit-tally').forEach(function(el){el.textContent=el.textContent.replace(/せいかい/g,'正解');});
 
    var session=root.FF.app.session;
    var item=session&&session.items[session.currentId];
@@ -157,6 +158,11 @@
     var leading=document.createElement('div'),trailing=document.createElement('div');
     leading.className='replica-lesson-leading';trailing.className='replica-lesson-trailing';
     Array.from(heading.children).forEach(function(el,i){(i<2?leading:trailing).appendChild(el);});
+    var controls=document.createElement('span');controls.className='lesson-inline-controls';
+    ['.quiz-resource-button','.filter-open'].forEach(function(selector){var el=trailing.querySelector(selector);if(el)controls.appendChild(el);});
+    var subjectGroup=document.createElement('div');subjectGroup.className='lesson-subject-group';
+    var subject=leading.children[1];if(subject)subjectGroup.appendChild(subject);
+    subjectGroup.appendChild(controls);leading.appendChild(subjectGroup);
     heading.appendChild(leading);
     if(memo)heading.appendChild(memo);
     heading.appendChild(trailing);
