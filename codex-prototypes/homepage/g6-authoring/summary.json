@@ -1,0 +1,11 @@
+{
+  "count": 500,
+  "added": 400,
+  "difficulties": {
+    "basic": 168,
+    "standard": 200,
+    "advanced": 132
+  },
+  "diagrams": 97,
+  "graph_count": 27
+}

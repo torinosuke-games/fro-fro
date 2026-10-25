@@ -10,11 +10,11 @@ const ROOT = path.resolve(__dirname, '..', '..');
 // 画面（DOM）を使うファイル。テストでは読み込まない。
 const UI_PATTERN = /^js\/(ui|svg)\/|^js\/(debug|main)\.js$/;
 
-const ALL_SCRIPTS = [...fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').matchAll(/<script\s+src="([^"]+)"/g)].map(m => m[1]);
+const ALL_SCRIPTS = [...fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').matchAll(/<script\s+src="([^"]+)"/g)].map(m => m[1].replace(/\?.*$/, ''));
 // 図の見直しで外した図の上書き（questions/diagram-fixes.js。判断495）は、ふつうのテストでは読み込まない（もとの図の依頼どおりの数を確かめるテストのため）。
 // 外したあとの問題を調べるテストは、LOGIC_FILES_WITH_FIXES で読み込む
 const LOGIC_FILES_WITH_FIXES = ALL_SCRIPTS.filter(f => !UI_PATTERN.test(f));
-const LOGIC_FILES = LOGIC_FILES_WITH_FIXES.filter(f => f !== 'questions/diagram-fixes.js' && !/^questions\/explanations(-\d+)?\.js$/.test(f));
+const LOGIC_FILES = LOGIC_FILES_WITH_FIXES.filter(f => f !== 'questions/diagram-fixes.js' && !/^questions\/explanations(-\d+)?\.js$/.test(f) && !/^questions\/[a-z]+_g6_course\.js$/.test(f));
 const UI_FILES = ALL_SCRIPTS.filter(f => UI_PATTERN.test(f));
 const QUESTION_FILES = LOGIC_FILES.filter(f => f.startsWith('questions/'));
 

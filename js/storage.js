@@ -102,7 +102,7 @@
   function clear(ls) {
     var store = getLs(ls);
     if (!store) return;
-    [FF.config.SAVE_KEY,goodKey(),historyKey(),FF.config.SAVE_KEY+'.broken'].concat(FF.config.SAVE_FALLBACK_KEYS || []).forEach(function (key) {
+    [FF.config.SAVE_KEY,goodKey(),historyKey(),FF.config.SAVE_KEY+'.broken',FF.config.SAVE_KEY+'.snowJourney'].concat(FF.config.SAVE_FALLBACK_KEYS || []).forEach(function (key) {
       try { store.removeItem(key); } catch (e) { /* 何もしない */ }
     });
   }

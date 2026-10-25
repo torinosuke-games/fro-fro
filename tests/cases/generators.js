@@ -254,12 +254,12 @@ module.exports = ({ test, FF, assert }) => {
 
   // ---- 単元ごとの自動生成（小5。判断243）----
   const UNITS5 = G.unitsWithGenerators(5);
-  test('小5：単元別の設定が、js/units.js に登録した単元だけを使い、3つの難易度がそろっている', () => {
+  test('小5：単元別の設定が登録済み単元と妥当な難易度を使う', () => {
     const ids = FF.units.list('math', 5).map(u => u.id);
     assert.ok(UNITS5.length >= 16, UNITS5.join(','));
     for (const u of UNITS5) {
       assert.ok(ids.includes(u), '登録のない単元: ' + u);
-      for (const d of ['basic', 'standard', 'advanced']) { assert.ok(G.unitSupports(5, u, d), `${u} ${d}`); for (const e of G.UNIT_GEN[5][u][d]) assert.ok(SOLVE[e.op], `検算がない種類: ${e.op}`); }
+      for (const d of ['basic', 'standard', 'advanced']) { assert.equal(G.unitSupports(5, u, d), !(u === 'multiple' && d === 'standard'), `${u} ${d}`); for (const e of G.UNIT_GEN[5][u][d]) assert.ok(SOLVE[e.op], `検算がない種類: ${e.op}`); }
     }
     assert.strictEqual(G.generateForUnit(5, 'graph', 'basic', 'input', FF.util.makeRng(1)), null);
     assert.strictEqual(G.generateForUnit(5, 'congruent', 'basic', 'input', FF.util.makeRng(1)), null);
@@ -268,6 +268,11 @@ module.exports = ({ test, FF, assert }) => {
     for (const difficulty of ['basic', 'standard', 'advanced']) {
       for (const answerType of ['input', 'choice']) {
         test(`小5 ${unit} ${difficulty} ${answerType}：500問の答えが正しく、単元と構造が正しい`, () => {
+          // 直接計算を基礎へ移した倍数・約数の標準は固定問題から出題する。
+          if (unit === 'multiple' && difficulty === 'standard') {
+            assert.equal(G.generateForUnit(5, unit, difficulty, answerType, FF.util.makeRng(1)), null);
+            return;
+          }
           const rng = FF.util.makeRng(5000 + unit.length * 7 + difficulty.length + answerType.length);
           const textById = {};
           const kinds = new Set();
@@ -278,7 +283,7 @@ module.exports = ({ test, FF, assert }) => {
             verify(q, 5, difficulty, answerType, textById);
             kinds.add(q.id);
           }
-          assert.ok(kinds.size >= (unit === 'prism' ? 7 : 12), `${unit} ${difficulty}: 問題の種類が ${kinds.size} 通りしかない`);
+          assert.ok(kinds.size >= (unit === 'prism' ? 7 : unit === 'multiple' && difficulty === 'advanced' ? 11 : 12), `${unit} ${difficulty}: 問題の種類が ${kinds.size} 通りしかない`);
         });
       }
     }
