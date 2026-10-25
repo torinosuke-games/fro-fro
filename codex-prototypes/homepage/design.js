@@ -167,6 +167,21 @@
     if(memo)heading.appendChild(memo);
     heading.appendChild(trailing);
    }
+   if(heading){
+    var completed=heading.querySelector('.lesson-session-count');if(completed)completed.textContent=completed.textContent.replace(/とりくみました/g,'取り組みました');
+    var filter=heading.querySelector('.filter-open');
+    if(filter){var popupButton=filter.cloneNode(true);filter.replaceWith(popupButton);popupButton.setAttribute('aria-haspopup','dialog');popupButton.addEventListener('click',function(){
+     var app=root.FF.app;app.filterDraft=Object.assign({},app.session.sel);
+     var temporary=document.createElement('div');U.screens.lessonFilters.render(temporary);
+     var pane=temporary.querySelector('.filter-page'),apply=pane&&pane.querySelector('.primary');if(!pane||!apply)return;
+     var body=document.createElement('div');body.className='lesson-filter-popover';pane.querySelectorAll('.rn-field').forEach(function(field){body.appendChild(field);});
+     U.modal({title:'単元・難易度',body:body,buttons:[{label:'キャンセル',onClick:function(){app.filterDraft=null;}},{label:'適用する',class:'primary',onClick:function(){apply.click();app.filterDraft=null;}}]});
+     var overlay=body.closest('.overlay');overlay.setAttribute('aria-label','単元・難易度');body.closest('.modal').classList.add('lesson-filter-modal');
+     overlay.addEventListener('keydown',function(e){if(e.key!=='Tab')return;var focusable=Array.from(overlay.querySelectorAll('select,button')).filter(function(el){return !el.disabled;}),first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
+     var observer=new MutationObserver(function(){if(!overlay.isConnected){observer.disconnect();var target=main.querySelector('.filter-open');if(target)target.focus({preventScroll:true});}});observer.observe(document.body,{childList:true});
+     var first=body.querySelector('select');if(first)first.focus({preventScroll:true});
+    });}
+   }
    fitSidebar(layout,heading);
   }
  };

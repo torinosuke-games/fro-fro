@@ -233,3 +233,7 @@ prototypeのquizレンダラー後、math・gradeLevel6の問題文、選択肢�
 ## 更新：分数表示を全学年の算数・数学へ
 
 gradeLevel6の限定を外し、subject=mathの全学年へ適用。整数分数に加えx/60、2/(3×4)などの文字式・括弧付き分母も表示対象。3/5kgのkgを分母へ巻き込まず、単位は分数の外へ残す。小数の途中・日付の連続スラッシュなどを誤変換しない境界判定を維持。入力欄・SVG/画像の中・他教科は対象外。tests/ui-math-fractions.cjsで1〜9年の数字/文字/括弧/帯分数/単位、非算数への非適用を検証。既存tests/ui-g6-fractions.cjsの小5を未適用とする期待は変更。
+
+## 追記：単元・難易度をポップアップへ
+
+filter-openボタンを描画後にイベントを持たない複製へ置換し、ページ遷移のshowFiltersを呼ばずU.modalで表示。既存lessonFilters.renderを切り離したDOMへ描画し、rn-fieldとそのchangeイベントを再利用。適用ボタンの既存処理も再利用するため、出題条件の選択・再出題・チケット処理は変更なし。選択中はfilterDraftのコピーだけが変わり、キャンセル/Esc/背景クリックではsession.selや現在問題を維持する。閉じた後のフォーカス復帰とTab循環も追加。元の全画面フィルターは他の呼出箇所のため残す。取り組み数のラベルは「とりくみました」→「取り組みました」。tests/ui-lesson-filter-popup.cjsとui-lesson-controls.cjs参照。

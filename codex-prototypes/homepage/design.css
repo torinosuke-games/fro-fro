@@ -335,3 +335,10 @@ body[data-screen="adventure"] main#screen.journey-screen{padding-bottom:0}
 .lesson-subject-group{display:inline-flex;align-items:center;gap:8px;flex:none;white-space:nowrap}
 .lesson-subject-group>span:not(.lesson-inline-controls){font-size:.875rem}
 @media(max-width:760px){.lesson-subject-group{gap:5px}.lesson-heading .lesson-inline-controls .filter-open{font-size:.75rem;padding:4px 8px}}
+.lesson-filter-modal{width:min(440px,calc(100vw - 32px));max-height:calc(100dvh - 40px);overflow:auto;box-sizing:border-box;padding:22px}
+.lesson-filter-modal h2{margin:0 0 18px;font-size:1.2rem}
+.lesson-filter-popover{display:grid;gap:14px}
+.lesson-filter-popover .rn-field{margin:0}
+.lesson-filter-popover select{min-height:42px}
+.lesson-filter-modal .actions{display:flex;gap:10px;margin-top:20px}
+.lesson-filter-modal .actions .btn{flex:1;min-height:42px}
