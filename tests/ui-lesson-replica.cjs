@@ -2,7 +2,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
 const out='/workspace/lesson-replica-qa';fs.mkdirSync(out,{recursive:true});
 (async()=>{const b=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});try{
  const p=await b.newPage({viewport:{width:1536,height:1080}}),errors=[];p.on('pageerror',e=>errors.push(e.stack));
- await p.goto('http://127.0.0.1:8775/codex-prototypes/homepage/');await p.evaluate(()=>{FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),4);FF.app.state.player.avatar='e1';FF.ui.show('study',{tab:'learn'});});await p.locator('.subject-math').click();
+ await p.goto('http://127.0.0.1:8775/');await p.evaluate(()=>{FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),4);FF.app.state.player.avatar='e1';FF.ui.show('study',{tab:'learn'});});await p.locator('.subject-math').click();
  const pick=async()=>{const i=await p.evaluate(()=>{const pool=FF.curriculum.pool(FF.app.bank,FF.app.session.sel);let i=pool.findIndex(q=>q.collection==='frontier100'&&q.diagram);return i<0?pool.findIndex(q=>q.diagram):i;});assert.ok(i>=0);await p.locator('.index-item').nth(i).click();};await pick();
  await p.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(img=>img.decode().catch(()=>{})));});
  for(const width of [390,768,1024,1536,1920]){

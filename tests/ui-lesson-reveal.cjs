@@ -1,7 +1,7 @@
 // 答えの閲覧で採点・報酬・チケット消費を起こさず、次問は通常出題へ戻る。
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 (async()=>{const b=await chromium.launch({executablePath:process.env.FF_BROWSER_PATH||'/usr/bin/chromium',args:['--no-sandbox']});try{
- const p=await b.newPage();await p.goto((process.env.FF_TEST_ORIGIN||'http://127.0.0.1:8775')+'/codex-prototypes/homepage/');
+ const p=await b.newPage();await p.goto((process.env.FF_TEST_ORIGIN||'http://127.0.0.1:8775')+'/');
  for(const width of [390,768,1202]){
   await p.setViewportSize({width,height:884});
   await p.evaluate(()=>{FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),5);FF.ui.show('study',{tab:'learn'});});await p.locator('.subject-math').click();

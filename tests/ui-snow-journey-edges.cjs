@@ -2,7 +2,7 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 (async()=>{const b=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});try{
  const p=await b.newPage({viewport:{width:390,height:844}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
- await p.goto('http://127.0.0.1:8775/codex-prototypes/homepage/');await p.evaluate(()=>{FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),5);FF.app.state.player.avatar='e1';FF.ui.show('base');});await p.waitForTimeout(100);
+ await p.goto('http://127.0.0.1:8775/');await p.evaluate(()=>{FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),5);FF.app.state.player.avatar='e1';FF.ui.show('base');});await p.waitForTimeout(100);
  await p.evaluate(()=>{let id=0,queue=new Map();requestAnimationFrame=cb=>{queue.set(++id,cb);return id;};cancelAnimationFrame=id=>queue.delete(id);window.advance=t=>{const list=[...queue.values()];queue.clear();list.forEach(cb=>cb(t));};});
  for(const width of [390,1440]){await p.setViewportSize({width,height:width===390?844:1000});
   for(const edge of ['left','right','top','bottom']){

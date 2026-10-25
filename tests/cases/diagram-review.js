@@ -2,7 +2,8 @@
 // SVG の図の見直し（判断495）：questions/diagram-fixes.js で図を外した問題・直した問題を確かめる
 const L=require('../lib/loader');
 module.exports=({test,assert,plain})=>{
- const fixed=L.load(L.LOGIC_FILES_WITH_FIXES.filter(f=>!/^questions\/explanations(-\d+)?\.js$/.test(f))),orig=L.load();   // 解説の充実（explanations.js）は、ここでは読み込まない
+const NOCOURSE=L.LOGIC_FILES_WITH_FIXES.filter(f=>!/_g6_course\.js$/.test(f));
+ const fixed=L.load(NOCOURSE.filter(f=>!/^questions\/explanations(-\d+)?\.js$/.test(f))),orig=L.load();   // 解説の充実（explanations.js）は、ここでは読み込まない
  const text=require('node:fs').readFileSync(require('node:path').join(L.ROOT,'questions/diagram-fixes.js'),'utf8');
  const removed=[...text.matchAll(/^\s+'([a-z0-9_]+)',?$/gm)].map(m=>m[1]);
  const byId=c=>{const m={};c.QUESTION_BANK.forEach(q=>m[q.id]=q);return m;};

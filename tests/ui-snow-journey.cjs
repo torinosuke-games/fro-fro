@@ -8,7 +8,7 @@ const out=process.env.FF_QA_OUTPUT||'/workspace/snow-journey-qa';fs.mkdirSync(ou
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:process.env.FF_BROWSER_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
  const errors=[];
- async function boot(page){page.on('pageerror',e=>errors.push(e.stack));await page.goto(origin+'/codex-prototypes/homepage/');await page.evaluate(()=>{
+ async function boot(page){page.on('pageerror',e=>errors.push(e.stack));await page.goto(origin+'/');await page.evaluate(()=>{
    FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),5);FF.app.state.player.avatar='e1';
    localStorage.setItem('frozenFrontier.save','unchanged-public-save');FF.ui.show('adventure');
  });await page.locator('.journey-viewport canvas').waitFor();await page.waitForTimeout(300);}

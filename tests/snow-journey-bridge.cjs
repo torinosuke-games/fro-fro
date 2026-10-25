@@ -1,5 +1,5 @@
 const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
-const context={FF:{},localStorage:{getItem:()=>null}};vm.createContext(context);vm.runInContext(fs.readFileSync('codex-prototypes/homepage/snow-journey.js','utf8'),context);const M=context.FF.snowJourney;
+const context={FF:{},localStorage:{getItem:()=>null}};vm.createContext(context);vm.runInContext(fs.readFileSync('js/ui/snow-journey.js','utf8'),context);const M=context.FF.snowJourney;
 let bridge=[];M.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t==='=')bridge.push({x,y})}));assert.ok(bridge.length>3);assert.ok(bridge.every(p=>p.x===25),'one straight bridge');
 for(const b of bridge){for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
  if(!dx)continue;const shore={x:b.x+dx,y:b.y+dy};if(!M.walkable('field',shore.x,shore.y))continue;

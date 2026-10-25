@@ -11,7 +11,7 @@ fs.mkdirSync(out, { recursive: true });
   const errors = [], report = [];
   async function boot(page) {
     page.on('pageerror', e => errors.push(e.message));
-    await page.goto(origin + '/codex-prototypes/homepage/', { waitUntil: 'domcontentloaded' });
+    await page.goto(origin + '/', { waitUntil: 'domcontentloaded' });
     await page.evaluate(async () => {
       FF.app.state = FF.state.createDefaultState(FF.app.now());
       FF.app.state = FF.state.setPlayerGrade(FF.app.state, 5);

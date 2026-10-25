@@ -13,16 +13,9 @@ fs.mkdirSync(out, { recursive: true });
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
-    // ゲームを起動しない同一オリジンのページで、本体セーブの比較値を用意する。
-    await page.goto(base + '/codex-prototypes/homepage/README.md', { waitUntil: 'domcontentloaded' });
-    await page.evaluate(() => {
-      localStorage.setItem('frozenFrontier.save', 'public-save-sentinel');
-      localStorage.setItem('frozenFrontier.renewal.save', 'legacy-save-sentinel');
-    });
-    await page.goto(base + '/codex-prototypes/homepage/', { waitUntil: 'domcontentloaded' });
+    await page.goto(base + '/', { waitUntil: 'domcontentloaded' });
     await page.locator('.replica-title-description').waitFor();
-    assert.equal(await page.evaluate(() => FF.config.SYNC), null);
-    assert.equal(await page.evaluate(() => FF.config.SAVE_KEY), 'frozenFrontier.prototype.homepage.v1');
+    assert.equal(await page.evaluate(() => FF.config.SAVE_KEY), 'frozenFrontier.save');
     const settle = () => page.evaluate(async () => {
       await document.fonts.ready;
       for (const img of document.images) { try { await img.decode(); } catch {} }
@@ -98,14 +91,13 @@ fs.mkdirSync(out, { recursive: true });
     await page.reload({ waitUntil: 'domcontentloaded' });
     await page.locator('.replica-mission').waitFor();
     assert.equal(await page.evaluate(() => FF.app.state.player.name), 'ゆき');
-    const storage = await page.evaluate(() => ({ public: localStorage.getItem('frozenFrontier.save'), legacy: localStorage.getItem('frozenFrontier.renewal.save'), prototype: !!localStorage.getItem(FF.config.SAVE_KEY) }));
-    assert.deepEqual(storage, { public: 'public-save-sentinel', legacy: 'legacy-save-sentinel', prototype: true });
+    assert.ok(await page.evaluate(() => !!localStorage.getItem(FF.config.SAVE_KEY)));   // 本体のセーブに保存される（判断500）
     // 町が育った後は、初回向けの説明を外し、施設を最初から開く。
     await page.evaluate(() => { FF.app.state.buildings.furnace.level = 2; FF.ui.show('base'); });
     assert.equal(await page.locator('.replica-steps').count(), 0);
     assert.equal(await page.locator('.replica-facilities').evaluate(d => d.open), true);
     assert.deepEqual(errors, []);
-    fs.writeFileSync(path.join(out, 'results.json'), JSON.stringify({ layout, storage, errors }, null, 2));
-    console.log(JSON.stringify({ status: 'PASS', layout, storage, errors }, null, 2));
+    fs.writeFileSync(path.join(out, 'results.json'), JSON.stringify({ layout, errors }, null, 2));
+    console.log(JSON.stringify({ status: "PASS", layout, errors }, null, 2));
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

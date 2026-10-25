@@ -1,6 +1,6 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 (async()=>{const b=await chromium.launch({executablePath:process.env.FF_BROWSER_PATH||'/usr/bin/chromium',args:['--no-sandbox']});try{
- const p=await b.newPage();await p.goto((process.env.FF_TEST_ORIGIN||'http://127.0.0.1:8775')+'/codex-prototypes/homepage/');await p.evaluate(()=>{FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),5);FF.ui.show('study',{tab:'learn'});});await p.locator('.subject-math').click();
+ const p=await b.newPage();await p.goto((process.env.FF_TEST_ORIGIN||'http://127.0.0.1:8775')+'/');await p.evaluate(()=>{FF.app.state=FF.state.setPlayerGrade(FF.state.createDefaultState(FF.app.now()),5);FF.ui.show('study',{tab:'learn'});});await p.locator('.subject-math').click();
  for(const [width,height] of [[1202,884],[1202,1100],[768,1024],[1024,700],[1202,884]]){
   await p.setViewportSize({width,height});await p.waitForTimeout(150);
   const left=await p.locator('.lesson-left').boundingBox(),units=await p.locator('.unit-list').boundingBox(),map=await p.locator('.question-index').boundingBox();
