@@ -4,12 +4,12 @@
   function button(label,fn,cls){return E('button',{class:'btn '+(cls||''),text:label,on:{click:fn}});}
   U.screens.adventure.render=function(main){
     if(dispose) dispose();
-    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,zoom=1,zoomSuppressUntil=0,touches=new Map(),pinchDistance=0,pinchZoom=1,pan=null,manualCamera=null,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,lastSpark=0,spriteCache=new Map();
+    var state=M.read(),dead=false,overview=false,fieldView=null,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,zoom=1,zoomSuppressUntil=0,touches=new Map(),pinchDistance=0,pinchZoom=1,pan=null,manualCamera=null,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,lastSpark=0,spriteCache=new Map();
     main.classList.remove('adv-field-screen','adv-battle-screen'); main.classList.add('journey-screen');
     var shell=E('section',{class:'journey-shell'}), area=E('span',{class:'journey-area'}), objective=E('p',{class:'journey-objective'}), status=E('p',{class:'journey-status',attrs:{role:'status'}});
     var canvas=E('canvas',{attrs:{tabindex:'0','aria-label':'雪原の探索。地面をタップして移動。矢印キーでも移動できます。'}}),ctx=canvas.getContext('2d');
     var viewport=E('div',{class:'journey-viewport adv-map-shell is-cv'},[canvas]);
-    var toggle=button('全体マップ',function(){stopInput();route=[];overview=!overview;pad.hidden=overview;toggle.textContent=overview?'冒険に戻る':'全体マップ';toggle.setAttribute('aria-pressed',String(overview));draw();});
+    var toggle=button('全体マップ',function(){stopInput();route=[];setOverview(!overview);draw();});
     toggle.setAttribute('aria-pressed','false');
     shell.appendChild(E('header',{class:'journey-heading'},[E('div',{},[E('p',{class:'replica-eyebrow',text:'CHAPTER 01 · 白樺地方'})]),button('村へ',function(){returnVillage(M.places.find(function(p){return p.id==='home';}));})]));
     shell.appendChild(E('div',{class:'journey-mission'},[area,objective]));
@@ -104,10 +104,16 @@
       U.modal({title:p.name,body:p.note,buttons:buttons});
       // Escape / 背景で閉じた場合にも入力を再開する。
     }
-    function changeRegion(region,x,y){manualCamera=null;stopInput();state.region=region;state.x=x;state.y=y;hero={x:x,y:y};camera={x:x,y:y};route=[];moving=null;modal=false;overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');discover();save();refresh();draw();}
+    function setOverview(next){
+      if(next===overview)return;
+      if(next){fieldView={zoom:zoom,manualCamera:manualCamera};zoom=1;manualCamera=null;}
+      else if(fieldView){zoom=fieldView.zoom;manualCamera=fieldView.manualCamera;fieldView=null;}
+      overview=next;spriteCache.clear();pad.hidden=overview;toggle.textContent=overview?'冒険に戻る':'全体マップ';toggle.setAttribute('aria-pressed',String(overview));
+    }
+    function changeRegion(region,x,y){setOverview(false);manualCamera=null;stopInput();state.region=region;state.x=x;state.y=y;hero={x:x,y:y};camera={x:x,y:y};route=[];moving=null;modal=false;overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');discover();save();refresh();draw();}
     function returnVillage(place){changeRegion('field',place.x,place.y);dispose();U.show('base');}
     function recall(){stopInput();route=[];modal=true;U.modal({title:'訪れた街へ帰還',body:'道を歩いて見つけた街へ、すぐに戻れます。',buttons:M.places.filter(function(p){return p.kind==='town'&&state.visited.includes(p.id);}).map(function(p){return {label:p.name,onClick:function(){returnVillage(p);}};}).concat([{label:'閉じる',onClick:function(){modal=false;}}])});}
-    function go(p){manualCamera=null;if(moving||document.querySelector('.overlay'))return;side.hidden=true;guideToggle.setAttribute('aria-expanded','false');viewport.scrollIntoView({block:'nearest',behavior:'auto'});overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');stopInput();route=M.path(state.region,state,p);if(!route.length&&state.x===p.x&&state.y===p.y)showPlace(p);else if(!route.length)status.textContent='ここへは直接進めません。道を探そう。';canvas.focus({preventScroll:true});draw();}
+    function go(p){if(moving||document.querySelector('.overlay'))return;setOverview(false);manualCamera=null;side.hidden=true;guideToggle.setAttribute('aria-expanded','false');viewport.scrollIntoView({block:'nearest',behavior:'auto'});overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');stopInput();route=M.path(state.region,state,p);if(!route.length&&state.x===p.x&&state.y===p.y)showPlace(p);else if(!route.length)status.textContent='ここへは直接進めません。道を探そう。';canvas.focus({preventScroll:true});draw();}
     function step(dx,dy){manualCamera=null;if(moving||document.querySelector('.overlay'))return;var next=M.nextStep(state.region,state,dx,dy);if(next)route=[next];}
     function stopInput(){held=null;keys.clear();if(pad){pad.querySelector('.adv-knob').style.transform='';pad.querySelectorAll('.on').forEach(function(el){el.classList.remove('on');});}}
     function transform(){var g=M.map(state.region);scale=overview?Math.min((width-32)/g[0].length,(height-60)/(g.length*.66)):(width<600?67:86);scale*=zoom;canvas.dataset.zoom=String(zoom);camera.x=overview?(g[0].length-1)/2:hero.x;camera.y=overview?(g.length-1)/2:hero.y-.8;if(manualCamera){camera.x=manualCamera.x;camera.y=manualCamera.y;}if(!overview||manualCamera){var hx=width/scale/2-.5,hy=height/(scale*.66)/2-.5;camera.x=g[0].length<=hx*2+1?(g[0].length-1)/2:Math.max(hx,Math.min(g[0].length-1-hx,camera.x));camera.y=g.length<=hy*2+1?(g.length-1)/2:Math.max(hy,Math.min(g.length-1-hy,camera.y));}}
@@ -166,7 +172,7 @@
       }
       if(route.length){ctx.strokeStyle='#c29343';ctx.lineWidth=overview?1:2;ctx.setLineDash([4,6]);ctx.beginPath();var start=project(hero.x,hero.y);ctx.moveTo(start.x,start.y);route.forEach(function(q){var p=project(q.x,q.y);ctx.lineTo(p.x,p.y);});ctx.stroke();ctx.setLineDash([]);}
       for(y=ymin;y<ymax;y++){
-        for(x=xmin;x<xmax;x++){var pt=project(x,y);if(g[y][x]==='#'){if(overview){ctx.fillStyle=cave?'#1c3446':'#70978c';ctx.fillRect(pt.x-scale*.4,pt.y-scale*.4,scale*.8,scale*.7);}else {var variation=((x*71+y*43)%13)/13;sprite(cave?'rock':'tree',pt.x+(variation-.5)*scale*.35,pt.y+scale*(.2+variation*.15),scale*(cave?1.2:.85+variation*.25),scale*(cave?.85:1.25+variation*.4));}}}
+        for(x=xmin;x<xmax;x++){var pt=project(x,y);if(g[y][x]==='#'){if(overview&&cave){ctx.fillStyle='#1c3446';ctx.fillRect(pt.x-scale*.4,pt.y-scale*.4,scale*.8,scale*.7);}else {var variation=((x*71+y*43)%13)/13;sprite(cave?'rock':'tree',pt.x+(variation-.5)*scale*.35,pt.y+scale*(.2+variation*.15),scale*(cave?1.2:.85+variation*.25),scale*(cave?.85:1.25+variation*.4));}}}
         places().filter(function(p){return p.y===y;}).forEach(function(p){var s=project(p.x,p.y);if(s.x < -200 || s.x > width+200 || s.y < -200 || s.y > height+200)return;
           if(p.kind==='item'){
             var time=root.matchMedia('(prefers-reduced-motion: reduce)').matches?1:root.performance.now()/1000;
