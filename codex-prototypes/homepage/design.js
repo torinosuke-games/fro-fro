@@ -117,6 +117,8 @@
   var layout=main.querySelector('.workbench');
   if(layout){
    layout.classList.add('replica-lesson');
+   var badge=layout.querySelector('.question-badge');
+   if(badge)badge.textContent=badge.textContent.replace(/^問題(?=\s*\d)/,'問');
    var progress=layout.querySelector('.side-title .muted');
    if(progress&&/^\d+問中/.test(progress.textContent))progress.textContent='全'+progress.textContent;
 
