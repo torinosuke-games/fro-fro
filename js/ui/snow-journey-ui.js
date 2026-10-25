@@ -2,7 +2,19 @@
   'use strict';
   var FF=root.FF,U=FF.ui,E=U.el,M=FF.snowJourney,dispose=null;
   function button(label,fn,cls){return E('button',{class:'btn '+(cls||''),text:label,on:{click:fn}});}
+  // 従来の冒険（町から町へ・戦闘・経験値）は、そのまま残す。「従来の冒険」ボタン（または ?legacy=1）で、こちらを開く（判断500）
+  var legacyRender=U.screens.adventure.render;
+  function useLegacy(){return (FF.app&&FF.app.legacyAdventure===true)||/[?&]legacy=1/.test((root.location&&root.location.search)||'');}
   U.screens.adventure.render=function(main){
+    if(useLegacy()){
+      if(dispose) dispose();
+      main.classList.remove('journey-screen');
+      legacyRender.apply(this,arguments);
+      if(!/[?&]legacy=1/.test((root.location&&root.location.search)||'')&&!main.classList.contains('adv-battle-screen')&&!main.querySelector('.journey-switch')){
+        main.insertBefore(E('div',{class:'journey-switch'},[button('‹ 新しい雪原へ',function(){FF.app.legacyAdventure=false;U.show('adventure');},'text-button')]),main.firstChild);
+      }
+      return;
+    }
     if(dispose) dispose();
     var state=M.read(),dead=false,overview=false,fieldView=null,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,zoom=1,zoomSuppressUntil=0,touches=new Map(),pinchDistance=0,pinchZoom=1,pan=null,manualCamera=null,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,lastSpark=0,spriteCache=new Map();
     main.classList.remove('adv-field-screen','adv-battle-screen'); main.classList.add('journey-screen');
@@ -11,7 +23,7 @@
     var viewport=E('div',{class:'journey-viewport adv-map-shell is-cv'},[canvas]);
     var toggle=button('全体マップ',function(){stopInput();route=[];setOverview(!overview);draw();});
     toggle.setAttribute('aria-pressed','false');
-    shell.appendChild(E('header',{class:'journey-heading'},[E('div',{},[E('p',{class:'replica-eyebrow',text:'CHAPTER 01 · 白樺地方'})]),button('村へ',function(){returnVillage(M.places.find(function(p){return p.id==='home';}));})]));
+    shell.appendChild(E('header',{class:'journey-heading'},[E('div',{},[E('p',{class:'replica-eyebrow',text:'CHAPTER 01 · 白樺地方'})]),E('div',{class:'journey-heading-buttons'},[button('従来の冒険（戦闘あり）',function(){stopInput();FF.app.legacyAdventure=true;dispose();U.show('adventure');},'text-button'),button('村へ',function(){returnVillage(M.places.find(function(p){return p.id==='home';}));})])]));
     shell.appendChild(E('div',{class:'journey-mission'},[area,objective]));
     viewport.appendChild(E('div',{class:'journey-tools'},[toggle,button('帰還',recall),button('移動を止める',function(){stopInput();route=[];status.textContent='立ち止まりました。';})]));
     var layout=E('div',{class:'journey-layout'},[viewport]); shell.appendChild(layout);

@@ -347,3 +347,4 @@ body[data-screen="adventure"] main#screen.journey-screen{padding-bottom:0}
 .grade-selection-modal .grade-chip{min-width:0;width:100%;min-height:48px;margin:0;padding:8px 4px}
 .grade-selection-modal .grade-chip .title{font-size:1rem;white-space:nowrap}
 .grade-selection-modal .grade-chip.selected{border-color:#247fb9;background:#e6f4ff;box-shadow:0 0 0 1px #247fb9}
+.journey-heading-buttons{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}.journey-switch{margin:0 0 8px}
