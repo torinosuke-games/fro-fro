@@ -311,3 +311,5 @@ body[data-screen="adventure"] #screen.journey-screen{max-width:none;padding:8px 
  .journey-destinations{grid-template-columns:1fr;clear:both;padding-top:8px}
 }
 body[data-screen="adventure"] main#screen.journey-screen{padding-bottom:0}
+/* Canvas owns two-finger zoom; page zoom and scrolling remain available outside it. */
+.journey-viewport canvas{touch-action:none}

@@ -4,7 +4,7 @@
   function button(label,fn,cls){return E('button',{class:'btn '+(cls||''),text:label,on:{click:fn}});}
   U.screens.adventure.render=function(main){
     if(dispose) dispose();
-    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,spriteCache=new Map();
+    var state=M.read(),dead=false,overview=false,raf=0,route=[],face=0,modal=false,seen=new Set(state.seen),images={},width=0,height=0,scale=1,zoom=1,zoomSuppressUntil=0,touches=new Map(),pinchDistance=0,pinchZoom=1,camera={x:state.x,y:state.y},hero={x:state.x,y:state.y},moving=null,held=null,padStamp=0,diag=false,dist=0,keys=new Set(),lastFrame=null,pendingSave=0,lastRefresh=null,spriteCache=new Map();
     main.classList.remove('adv-field-screen','adv-battle-screen'); main.classList.add('journey-screen');
     var shell=E('section',{class:'journey-shell'}), area=E('span',{class:'journey-area'}), objective=E('p',{class:'journey-objective'}), status=E('p',{class:'journey-status',attrs:{role:'status'}});
     var canvas=E('canvas',{attrs:{tabindex:'0','aria-label':'雪原の探索。地面をタップして移動。矢印キーでも移動できます。'}}),ctx=canvas.getContext('2d');
@@ -106,7 +106,7 @@
     function go(p){if(moving||document.querySelector('.overlay'))return;side.hidden=true;guideToggle.setAttribute('aria-expanded','false');viewport.scrollIntoView({block:'nearest',behavior:'auto'});overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');stopInput();route=M.path(state.region,state,p);if(!route.length&&state.x===p.x&&state.y===p.y)showPlace(p);else if(!route.length)status.textContent='ここへは直接進めません。道を探そう。';canvas.focus({preventScroll:true});draw();}
     function step(dx,dy){if(moving||document.querySelector('.overlay'))return;var next=M.nextStep(state.region,state,dx,dy);if(next)route=[next];}
     function stopInput(){held=null;keys.clear();if(pad){pad.querySelector('.adv-knob').style.transform='';pad.querySelectorAll('.on').forEach(function(el){el.classList.remove('on');});}}
-    function transform(){var g=M.map(state.region);scale=overview?Math.min((width-32)/g[0].length,(height-60)/(g.length*.66)):width<600?67:86;camera.x=overview?(g[0].length-1)/2:hero.x;camera.y=overview?(g.length-1)/2:hero.y-.8;if(!overview){var hx=width/scale/2-.5,hy=height/(scale*.66)/2-.5;camera.x=g[0].length<=hx*2+1?(g[0].length-1)/2:Math.max(hx,Math.min(g[0].length-1-hx,camera.x));camera.y=g.length<=hy*2+1?(g.length-1)/2:Math.max(hy,Math.min(g.length-1-hy,camera.y));}}
+    function transform(){var g=M.map(state.region);scale=overview?Math.min((width-32)/g[0].length,(height-60)/(g.length*.66)):(width<600?67:86);scale*=zoom;canvas.dataset.zoom=String(zoom);camera.x=overview?(g[0].length-1)/2:hero.x;camera.y=overview?(g.length-1)/2:hero.y-.8;if(!overview){var hx=width/scale/2-.5,hy=height/(scale*.66)/2-.5;camera.x=g[0].length<=hx*2+1?(g[0].length-1)/2:Math.max(hx,Math.min(g[0].length-1-hx,camera.x));camera.y=g.length<=hy*2+1?(g.length-1)/2:Math.max(hy,Math.min(g.length-1-hy,camera.y));}}
     function project(x,y){return{x:width/2+(x-camera.x)*scale,y:height/2+(y-camera.y)*scale*.66};}
     function label(t,x,y,color){ctx.font=(overview?'10':'12')+'px sans-serif';var w=ctx.measureText(t).width+16;ctx.fillStyle=color||'#183c50e8';ctx.beginPath();ctx.roundRect(x-w/2,y-16,w,24,6);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(t,x,y);}
     var crops={tree:[0,0,485,684],cabin:[514,142,620,495],rock:[1170,244,490,427],lantern:[1744,170,280,503]};
@@ -228,7 +228,31 @@
     }
     function fitScreen(){shell.style.setProperty('--journey-top',Math.max(0,main.getBoundingClientRect().top+parseFloat(getComputedStyle(main).paddingTop))+'px');}
     function resize(){width=viewport.clientWidth;height=viewport.clientHeight;var d=Math.min(root.devicePixelRatio||1,width<600?1.5:2);canvas.width=Math.round(width*d);canvas.height=Math.round(height*d);canvas.style.width=width+'px';canvas.style.height=height+'px';ctx.setTransform(d,0,0,d,0,0);draw();}
-    canvas.addEventListener('click',function(e){if(moving)return;var b=canvas.getBoundingClientRect(),x=e.clientX-b.left,y=e.clientY-b.top;var p={x:Math.round(camera.x+(x-width/2)/scale),y:Math.round(camera.y+(y-height/2)/(scale*.66))};var near=places().find(function(q){var s=project(q.x,q.y);return Math.abs(s.x-x)<(overview?14:scale*.65)&&Math.abs(s.y-y)<(overview?25:scale*.6);});go(near||p);});
+    function setZoom(value){
+      var next=Math.max(.55,Math.min(1.8,Math.round(value*1000)/1000));
+      if(next===zoom)return;zoom=next;stopInput();route=[];spriteCache.clear();draw();
+    }
+    canvas.addEventListener('wheel',function(e){
+      e.preventDefault();zoomSuppressUntil=root.performance.now()+300;
+      var delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?height:1);
+      setZoom(zoom*Math.exp(-Math.max(-180,Math.min(180,delta))*.002));
+    },{passive:false});
+    function separation(){var p=Array.from(touches.values());return Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);}
+    canvas.addEventListener('pointerdown',function(e){
+      if(e.pointerType!=='touch')return;
+      touches.set(e.pointerId,{x:e.clientX,y:e.clientY});canvas.setPointerCapture(e.pointerId);
+      if(touches.size===2){pinchDistance=separation();pinchZoom=zoom;stopInput();route=[];zoomSuppressUntil=Infinity;}
+    });
+    canvas.addEventListener('pointermove',function(e){
+      if(!touches.has(e.pointerId))return;touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(touches.size>=2&&pinchDistance>0)setZoom(pinchZoom*separation()/pinchDistance);
+    });
+    function endTouch(e){
+      if(!touches.has(e.pointerId))return;touches.delete(e.pointerId);
+      if(pinchDistance){zoomSuppressUntil=touches.size?Infinity:root.performance.now()+450;if(!touches.size)pinchDistance=0;}
+    }
+    ['pointerup','pointercancel','lostpointercapture'].forEach(function(type){canvas.addEventListener(type,endTouch);});
+    canvas.addEventListener('click',function(e){if(moving||root.performance.now()<zoomSuppressUntil)return;var b=canvas.getBoundingClientRect(),x=e.clientX-b.left,y=e.clientY-b.top;var p={x:Math.round(camera.x+(x-width/2)/scale),y:Math.round(camera.y+(y-height/2)/(scale*.66))};var near=places().find(function(q){var s=project(q.x,q.y);return Math.abs(s.x-x)<(overview?14:scale*.65)&&Math.abs(s.y-y)<(overview?25:scale*.6);});go(near||p);});
     // 本体の adventure は document の矢印キーを監視する。比較用画面ではここで受け、二重移動を防ぐ。
     function onKey(e){if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)||dead||!shell.isConnected)return;e.stopPropagation();
       if(document.querySelector('.overlay')||/INPUT|SELECT|TEXTAREA|BUTTON/.test(e.target.tagName))return;e.preventDefault();
@@ -236,7 +260,7 @@
       var dx=Number(keys.has('ArrowRight'))-Number(keys.has('ArrowLeft')),dy=Number(keys.has('ArrowDown'))-Number(keys.has('ArrowUp'));
       held=dx||dy?[dx,dy]:null;if(held&&!moving){route=[];step(dx,dy);}
     }
-    function blur(){stopInput();route=[];}
+    function blur(){stopInput();route=[];touches.clear();pinchDistance=0;zoomSuppressUntil=0;}
     document.addEventListener('keydown',onKey,true);document.addEventListener('keyup',onKey,true);root.addEventListener('blur',blur);
     fitScreen();root.addEventListener('resize',fitScreen);if(root.visualViewport)root.visualViewport.addEventListener('resize',fitScreen);
     var observer=new ResizeObserver(resize);observer.observe(viewport);
