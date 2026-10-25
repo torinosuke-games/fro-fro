@@ -11,7 +11,7 @@
     var viewport=E('div',{class:'journey-viewport adv-map-shell is-cv'},[canvas]);
     var toggle=button('全体マップ',function(){stopInput();route=[];overview=!overview;pad.hidden=overview;toggle.textContent=overview?'冒険に戻る':'全体マップ';toggle.setAttribute('aria-pressed',String(overview));draw();});
     toggle.setAttribute('aria-pressed','false');
-    shell.appendChild(E('header',{class:'journey-heading'},[E('div',{},[E('p',{class:'replica-eyebrow',text:'CHAPTER 01 · 白樺地方'})]),button('村へ',function(){dispose();U.show('base');})]));
+    shell.appendChild(E('header',{class:'journey-heading'},[E('div',{},[E('p',{class:'replica-eyebrow',text:'CHAPTER 01 · 白樺地方'})]),button('村へ',function(){returnVillage(M.places.find(function(p){return p.id==='home';}));})]));
     shell.appendChild(E('div',{class:'journey-mission'},[area,objective]));
     viewport.appendChild(E('div',{class:'journey-tools'},[toggle,button('帰還',recall),button('移動を止める',function(){stopInput();route=[];status.textContent='立ち止まりました。';})]));
     var layout=E('div',{class:'journey-layout'},[viewport]); shell.appendChild(layout);
@@ -105,7 +105,8 @@
       // Escape / 背景で閉じた場合にも入力を再開する。
     }
     function changeRegion(region,x,y){manualCamera=null;stopInput();state.region=region;state.x=x;state.y=y;hero={x:x,y:y};camera={x:x,y:y};route=[];moving=null;modal=false;overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');discover();save();refresh();draw();}
-    function recall(){stopInput();route=[];modal=true;U.modal({title:'訪れた街へ帰還',body:'道を歩いて見つけた街へ、すぐに戻れます。',buttons:M.places.filter(function(p){return p.kind==='town'&&state.visited.includes(p.id);}).map(function(p){return {label:p.name,onClick:function(){changeRegion('field',p.x,p.y);}};}).concat([{label:'閉じる',onClick:function(){modal=false;}}])});}
+    function returnVillage(place){changeRegion('field',place.x,place.y);dispose();U.show('base');}
+    function recall(){stopInput();route=[];modal=true;U.modal({title:'訪れた街へ帰還',body:'道を歩いて見つけた街へ、すぐに戻れます。',buttons:M.places.filter(function(p){return p.kind==='town'&&state.visited.includes(p.id);}).map(function(p){return {label:p.name,onClick:function(){returnVillage(p);}};}).concat([{label:'閉じる',onClick:function(){modal=false;}}])});}
     function go(p){manualCamera=null;if(moving||document.querySelector('.overlay'))return;side.hidden=true;guideToggle.setAttribute('aria-expanded','false');viewport.scrollIntoView({block:'nearest',behavior:'auto'});overview=false;pad.hidden=false;toggle.textContent='全体マップ';toggle.setAttribute('aria-pressed','false');stopInput();route=M.path(state.region,state,p);if(!route.length&&state.x===p.x&&state.y===p.y)showPlace(p);else if(!route.length)status.textContent='ここへは直接進めません。道を探そう。';canvas.focus({preventScroll:true});draw();}
     function step(dx,dy){manualCamera=null;if(moving||document.querySelector('.overlay'))return;var next=M.nextStep(state.region,state,dx,dy);if(next)route=[next];}
     function stopInput(){held=null;keys.clear();if(pad){pad.querySelector('.adv-knob').style.transform='';pad.querySelectorAll('.on').forEach(function(el){el.classList.remove('on');});}}

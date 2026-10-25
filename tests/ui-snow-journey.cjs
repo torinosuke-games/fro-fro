@@ -45,13 +45,13 @@ const out=process.env.FF_QA_OUTPUT||'/workspace/snow-journey-qa';fs.mkdirSync(ou
   await page.locator('.journey-shell').screenshot({path:path.join(out,'cave.png')});
   await arrive(page,'exit','雪原へ');await page.getByRole('button',{name:'雪原へ戻る',exact:true}).click();assert.equal((await state(page)).region,'field');
   await arrive(page,'library','封印図書館');await page.keyboard.press('Escape');
-  await page.getByRole('button',{name:'帰還',exact:true}).click();await page.getByRole('button',{name:'灯火の村',exact:true}).click();assert.equal((await state(page)).x,4);
+  await page.getByRole('button',{name:'帰還',exact:true}).click();await page.getByRole('button',{name:'灯火の村',exact:true}).click();assert.equal((await state(page)).x,4);assert.equal(await page.evaluate(()=>FF.app.screen),'base');await page.evaluate(()=>FF.ui.show('adventure'));
   if(!(await page.locator('.journey-guide').isVisible()))await page.getByRole('button',{name:'旅のしおり',exact:true}).click();
   await page.locator('[data-destination="town"]').click();await page.waitForFunction(()=>FF.snowJourney.read().x>4);await page.getByRole('button',{name:'移動を止める',exact:true}).click();await page.waitForTimeout(200);const stopped=await state(page);await page.waitForTimeout(250);assert.deepEqual(await state(page),stopped);
   assert.equal(await page.evaluate(()=>JSON.stringify(FF.app.state)),game);
   assert.equal(await page.evaluate(()=>localStorage.getItem('frozenFrontier.save')),'unchanged-public-save');
   await page.getByRole('button',{name:'村へ',exact:true}).click();await page.waitForTimeout(200);assert.equal(await page.evaluate(()=>FF.app.screen),'base');assert.equal(await page.locator('.journey-shell').count(),0);
-  await page.evaluate(()=>FF.ui.show('adventure'));assert.deepEqual(await state(page),stopped);
+  await page.evaluate(()=>FF.ui.show('adventure'));const resumed=await state(page);assert.equal(resumed.x,4);assert.equal(resumed.y,24);assert.equal(resumed.region,'field');assert.deepEqual(resumed.visited,stopped.visited);
   // 壊れた位置を安全な開始地点に戻す。
   await page.evaluate(()=>FF.ui.show('base'));await page.waitForTimeout(100);await page.evaluate(()=>{localStorage.setItem(FF.snowJourney.key,JSON.stringify({region:'field',x:-1,y:200}));FF.ui.show('adventure');});assert.equal((await state(page)).x,4);
   const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});await boot(mobile);

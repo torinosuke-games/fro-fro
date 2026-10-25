@@ -195,3 +195,7 @@ Canvas上の1本指またはマウス左ドラッグでmanualCameraを動かす�
 itemsは(6,5)、(35,17)、(12,26)。脇道から到達できるよう通路を確保し、宝箱やラベルではなく3つの小さな光が不規則に明滅するCanvas描画。到着時は調査の選択画面だけ開き、「調べる」で回復薬+1、「あとで調べる」なら残る。取得後は光も当たり判定も消える。しおりの目的地一覧には載せず、探索で見つける。reduced-motionでは光を静止。通常の待機時の光描画は約11fps、移動は従来の描画のまま。
 
 回復薬と取得済IDを同じFF.app.commitへ含め、二重取りを防止。prototypeのsnow-journey.jsでadventure.normalizeをラップしjourneyItemsの既知3IDを保持する。本体js/adventure.jsは未変更。探索モデル専用保存ではなくprototype本体セーブの冒険持ち物へ加算するため、持ち物画面にも反映される。元アプリのセーブキーには影響しない。統合時はnormalizeへの取得済フィールド追加を忘れない。tests/ui-snow-journey-items.cjsで到達・キャンセル・取得・再取得禁止・正規化を検証。
+
+## 修正：村へ帰った後の再出発位置
+
+「村へ」はreturnVillage(home)、「帰還」はreturnVillage(選択した町)へ統一。地域をfield、座標を帰還先へ更新して歩行・経路・カメラをリセットし、保存してからdispose→baseへ移動。再開時はその村の座標で開始する。洞窟や歩行途中でも元の座標がdispose時に再保存されないよう、座標更新を先に行う。宝箱・発見・取得済アイテムは保持。tests/ui-snow-journey-return.cjsで雪原・洞窟・村／宿場町への帰還と再開を検証。
