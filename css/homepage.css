@@ -152,7 +152,7 @@ body[data-screen="quiz"] main#screen{max-width:1680px;padding:12px 20px 40px}
 .replica-lesson .question-badge{background:transparent;color:#1e3552;padding:3px 0;font-size:1rem}
 .replica-lesson .question-unit{background:#cf844e;color:#fff;padding:5px 10px;border-radius:7px;margin-left:0;line-height:1.5}
 .replica-lesson .difficulty-badge{background:#55a669;color:#fff;padding:5px 12px;border-radius:7px}
-.replica-lesson .lesson-question{color:#172c3d;font-size:clamp(1.15rem,1.6vw,1.5rem);line-height:1.95;margin:14px 0 18px}
+.replica-lesson .lesson-question{color:#172c3d;font-size:1.15rem;line-height:1.95;margin:14px 0 18px}
 .replica-lesson .lesson-question ruby rt{color:#394956}
 .replica-lesson .lesson-figure{border:1px solid #dce9f1;border-radius:14px;background:#f5f9fc;overflow:hidden;margin:12px 0 22px}
 .replica-lesson .lesson-figure svg{max-height:420px;height:auto}
