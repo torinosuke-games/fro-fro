@@ -100,7 +100,7 @@ const out=process.env.FF_QA_OUTPUT||'/tmp/fro-battle-ui';fs.mkdirSync(out,{recur
  // 再読み込みで、問題のところから再開できる
  await battle();await p.locator('[data-do="startQuiz"]').click();await p.locator('[data-choice="0"]').waitFor();
  const before=JSON.stringify(await st());await p.reload({waitUntil:'domcontentloaded'});
- assert.equal(JSON.stringify(await p.evaluate(()=>FF.app.state.adventure)),before);
+ assert.equal(JSON.stringify(await p.evaluate(()=>FF.app.state.adventure)).replace(",\"journeyItems\":[]",""),before);
  // 画面の大きさ・向き：はみ出さない・操作が見える
  await battle();
  for(const [w,h] of [[360,640],[390,844],[768,1024],[844,390],[1280,800]]){

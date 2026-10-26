@@ -2238,3 +2238,10 @@
 - 要確認（実機）：スマホで、雪原の動きの滑らかさ（試作の文書にも「実機で一定FPSを保証する測定は未実施」とある）。
 - 探索の画面：ChatGPT の広い雪原は、従来の冒険（町から町へ・戦闘・経験値・ゴールド。`js/ui/adventure.js`）の画面を置きかえる形だった（`U.screens.adventure.render` の差しかえ）。従来の冒険は戦闘などの本編なので、残した：「探索」は新しい雪原が開き、画面の「従来の冒険（戦闘あり）」ボタンで従来の冒険へ、従来の冒険の上の「‹ 新しい雪原へ」で戻る（`FF.app.legacyAdventure`）。URL に `?legacy=1` を付けると、いつも従来の冒険（画面テスト用）。
 - 画面テスト（`tests/ui-*.cjs`）：本体にもとからあった63本のうち、統合の前から失敗している・環境（ブラウザのパス・URL）が足りないものが多い。統合で新しく失敗したのは、町の画面の配置が変わったことに依存するもの（`.home-start-mobile`・施設が開閉式・「学習する →」のボタンの文言 など：ui-facilities・ui-quest・ui-keepers・ui-quiz-sticky・ui-weapon-shop・ui-trust・ui-tower・ui-joystick・ui-item-shop など）と、探索の画面に依存するもの（?legacy=1 を付けると通る：ui-adventure・ui-battle・ui-bgm・ui-camp-message・ui-hd2d）。町の施設・探索・設定などの画面が開くことは、手でも確かめた（施設8つ：酒場・武器屋・防具屋・道具屋はモーダル、仲間・チケット・訓練所は各画面）。画面テストを新しい配置に合わせて直すのは、次の作業。
+
+## 判断501：広い雪原を既定にして、以前の戦闘システムを入れた
+- 探索（「探索」ボタン）は、広い雪原（`snow-journey`）が既定。以前の冒険の画面は、URL に `?legacy=1` を付けたときだけ出る（テスト用）。戦闘中（`adventure.battle` あり）は、これまでの戦闘の画面（`adventure-battle.js`）が出て、終わると雪原に戻る。
+- 遭遇：森（`.`）のマスを歩くと、4歩は安全、そのあと確率が上がり（`balance.ADVENTURE.ENCOUNTER`）、子ぐま・オオカミ（`A.wildStep`）と戦う。テストでは `?noenc=1`（`window.FF_NO_ENCOUNTER`）で止める。
+- 街（灯火の村・白樺の宿場町）に着くと全回復して編成ができる（`A.arriveAt`）。野営地で一度だけ休める。旅人の宝箱でゴールド・回復薬。封印図書館の大ボスは「戦う」で従来のボス戦（`A.bossBattle`。位置はボスのマスに置く）。
+- 全滅すると、最後の街で目を覚ます（従来どおり）。雪原の上に、パーティーの帯（HP・MP・回復薬・難易度・編成）を出した。
+- テスト：`tests/ui-journey-battle.cjs`。雪原のテストは `?noenc=1`。旧画面のテストは `?legacy=1`（`FF_TEST_URL`）。保存の比較は `journeyItems` を除く。
