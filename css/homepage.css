@@ -152,7 +152,7 @@ body[data-screen="quiz"] main#screen{max-width:1680px;padding:12px 20px 40px}
 .replica-lesson .question-badge{background:transparent;color:#1e3552;padding:3px 0;font-size:1rem}
 .replica-lesson .question-unit{background:#cf844e;color:#fff;padding:5px 10px;border-radius:7px;margin-left:0;line-height:1.5}
 .replica-lesson .difficulty-badge{background:#55a669;color:#fff;padding:5px 12px;border-radius:7px}
-.replica-lesson .lesson-question{color:#172c3d;font-size:clamp(1.15rem,1.6vw,1.5rem);line-height:1.95;margin:14px 0 18px}
+.replica-lesson .lesson-question{color:#172c3d;font-size:1.15rem;line-height:1.95;margin:14px 0 18px}
 .replica-lesson .lesson-question ruby rt{color:#394956}
 .replica-lesson .lesson-figure{border:1px solid #dce9f1;border-radius:14px;background:#f5f9fc;overflow:hidden;margin:12px 0 22px}
 .replica-lesson .lesson-figure svg{max-height:420px;height:auto}
@@ -361,3 +361,19 @@ body[data-screen="adventure"] main#screen.journey-screen{padding-bottom:0}
 .journey-party-tools .gold{font-weight:700;color:#8d6a1c}
 .journey-party-tools select{min-height:38px;border:1px solid #cbdfea;border-radius:8px;background:#fafdff;padding:4px 8px}
 .journey-party-tools .journey-potion{min-height:38px}
+
+/* パーティーの帯は、マップの右下に小さく重ねる（判断502） */
+.journey-viewport{position:relative}
+.journey-viewport .journey-party{position:absolute;right:8px;top:56px;z-index:3;display:flex;flex-direction:column;align-items:stretch;gap:4px;margin:0;padding:5px 6px;width:178px;border-radius:10px;background:#f8fcffe0;border:1px solid #cbdfea;pointer-events:none;box-sizing:border-box}
+.journey-viewport .journey-members{display:flex;flex-direction:column;gap:2px;flex-wrap:nowrap}
+.journey-viewport .journey-member{display:grid;grid-template-columns:54px 1fr 24px 22px;gap:0 4px;align-items:center;min-width:0;padding:0;background:none;font-size:11px;line-height:1.2}
+.journey-viewport .journey-member strong{font-size:11px;overflow:hidden;white-space:nowrap;text-overflow:clip}
+.journey-viewport .journey-member .jm-meter{grid-column:auto;height:5px}
+.journey-viewport .journey-member .hp,.journey-viewport .journey-member .mp{grid-column:auto;font-size:10px;text-align:right}
+.journey-viewport .journey-member .mp{color:#3b78a8}
+.journey-viewport .journey-party-tools{display:flex;flex-wrap:wrap;justify-content:space-between;gap:3px;pointer-events:auto}
+.journey-viewport .journey-party-tools .gold{font-size:11px;flex-basis:100%}
+.journey-viewport .journey-party-tools .journey-potion{min-height:28px;padding:2px 6px;font-size:11px}
+.journey-viewport .journey-party-tools select{min-height:28px;padding:2px 4px;font-size:11px;max-width:84px}
+/* 問題の画面は、上の帯（masthead）の内側の幅に左右をそろえ、それ以上は広げない（判断503） */
+@media(min-width:961px){body[data-screen="quiz"] main#screen{max-width:none;padding-inline:max(28px,calc((100vw - 1384px)/2))}}

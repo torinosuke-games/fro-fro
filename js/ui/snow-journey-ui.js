@@ -27,11 +27,10 @@
     shell.appendChild(E('header',{class:'journey-heading'},[E('div',{},[E('p',{class:'replica-eyebrow',text:'CHAPTER 01 · 白樺地方'})]),button('村へ',function(){returnVillage(M.places.find(function(p){return p.id==='home';}));})]));
     shell.appendChild(E('div',{class:'journey-mission'},[area,objective]));
     // 仲間のHP・MP、回復薬、戦闘の難易度（判断501）
-    var partyBar=E('div',{class:'journey-party'});shell.appendChild(partyBar);
+    var partyBar=E('div',{class:'journey-party'});viewport.appendChild(partyBar);
     function paintParty(){
       var a=FF.app.state.adventure,items=a.party.map(function(id){var r=a.roster[id],st=A.stats(id,r.xp);
-        return E('div',{class:'journey-member'+(r.hp?'':' is-down'),attrs:{'data-member':id}},[E('strong',{text:memberName(id)}),E('span',{class:'lv',text:'Lv.'+st.level}),
-          E('span',{class:'hp',text:'HP '+r.hp+'/'+st.hp}),E('span',{class:'jm-meter'},E('i',{style:{width:Math.round(100*r.hp/st.hp)+'%'}})),E('span',{class:'mp',text:'MP '+r.mp+'/'+st.mp})]);});
+        return E('div',{class:'journey-member'+(r.hp?'':' is-down'),attrs:{'data-member':id,title:'Lv.'+st.level+'　HP '+r.hp+'/'+st.hp+'　MP '+r.mp+'/'+st.mp}},[E('strong',{text:memberName(id)}),E('span',{class:'jm-meter'},E('i',{style:{width:Math.round(100*r.hp/st.hp)+'%'}})),E('span',{class:'hp',text:r.hp}),E('span',{class:'mp',text:r.mp})]);});
       var diff=E('select',{attrs:{'aria-label':'戦闘の問題の難しさ'},on:{change:function(){var n=FF.util.clone(FF.app.state.adventure);n.difficulty=diff.value;commitAdv(n);}}},[['basic','基礎'],['standard','標準'],['advanced','発展']].map(function(d){return E('option',{value:d[0],text:'問題：'+d[1]});}));diff.value=a.difficulty;
       var potion=button('回復薬 ×'+a.potions,function(){healModal();},'journey-potion');potion.disabled=!a.potions;
       U.clear(partyBar);partyBar.appendChild(E('div',{class:'journey-members'},items));partyBar.appendChild(E('div',{class:'journey-party-tools'},[E('span',{class:'gold',text:a.gold+' G'}),potion,diff]));
