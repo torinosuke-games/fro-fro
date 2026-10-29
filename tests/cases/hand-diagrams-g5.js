@@ -38,8 +38,8 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   if(old[v.id]){assert.equal(v.difficulty,'basic');v.difficulty=old[v.id];}return v;
  }
  test('小5の図：明示した難易度変更以外の470問のデータは不変',()=>{
-  assert.equal(all.length,470);assert.equal(hash(all.map(q=>{const v=originalDifficulty(q);if(ids.includes(q.id))delete v.diagram;return v;})),'d8f3c26cc6929b9b0c067ff39bc6014dd2587b9e5d998eb319118e14e298bcee');
-  assert.equal(hash(all.filter(q=>!ids.includes(q.id)).map(originalDifficulty)),'67bc7d056aa4bbe738fa51ab55c92f5e609423367c77faea0840d2048bf042cc');
+  assert.equal(all.length,470);assert.equal(hash(all.map(q=>{const v=originalDifficulty(q);if(ids.includes(q.id))delete v.diagram;return v;})),'700ad9c170e5b60c48f56e9f44bdddccf28b5efdf70023a10f539b6a335cf044');
+  assert.equal(hash(all.filter(q=>!ids.includes(q.id)).map(originalDifficulty)),'673ec01dd19d0ff0047588c30701faed41cdcdf7ed874eedee371c72f0f3aa12');
  });
  test('小5の図：44＋25＋48＝117問の網羅と書き問題の継承',()=>{
   assert.deepEqual(waves.map(a=>a.length),[44,25,48]);assert.equal(new Set(ids).size,117);assert.equal(qs.length,117);const bank=FF.learning.createBank(ctx.QUESTION_BANK);

@@ -18,10 +18,10 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   if(d.meridian!==undefined)assert.ok(Number.isFinite(d.meridian)&&d.meridian>=w&&d.meridian<=e);
   assert.ok(Array.isArray(d.lakes));d.lakes.forEach(polygon);
  }
- test('小5社会：360問の46問のdiagram以外が不変、110画像を維持',()=>{
+ test('小5社会：360問の46問のdiagram以外が不変、109画像を維持（判断506で rice_018 の絵を外した）',()=>{
   assert.equal(all.length,360);assert.equal(new Set(ids).size,46);assert.equal(qs.length,46);
-  assert.equal(hash(all.map(q=>{const v={...q};if(ids.includes(q.id))delete v.diagram;return v;})),'e8e9a0e037d924f99feeeaa439329b0a17958a6ede7d200e3f1547f44d1eb763');
-  assert.equal(all.filter(q=>q.diagram?.kind==='image').length,110);assert.equal(all.filter(q=>q.diagram).length,156);
+  assert.equal(hash(all.map(q=>{const v={...q};if(ids.includes(q.id))delete v.diagram;return v;})),'4c055fc1f86a3ec2b32b1d1b2872289877e660612c5306fa6e632ff8c4db3876');
+  assert.equal(all.filter(q=>q.diagram?.kind==='image').length,109);assert.equal(all.filter(q=>q.diagram).length,155);
  });
  test('小5社会：42地図＋4模式図と書き問題への継承',()=>{
   assert.equal(qs.filter(q=>q.diagram.kind==='japanMap').length,42);assert.equal(qs.filter(q=>q.diagram.kind==='earthScene').length,4);

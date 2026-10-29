@@ -125,7 +125,7 @@
   e2j('color','standard','orange','オレンジ色',['黄色','赤','茶色'],'くだものの 名前でも あるよ。','みかんの 色だよ。',['オレンジ','橙色']);
   e2j('color','standard','purple','むらさき',['ピンク','茶色','灰色'],'ぶどうの 色だよ。','青と 赤を まぜた 色だよ。',['紫']);
   e2j('color','standard','brown','茶色',['むらさき','灰色','赤'],'チョコレートや 土の 色だよ。','「ブラウン」と 読むよ。',['ちゃいろ']);
-  add('color','standard','「Banana is ( ).」の ( )に 入る 色は どれかな。','yellow',['blue','white','black'],['バナナは 何色かな。','「イエロー」だよ。'],'バナナは「yellow（黄色）」です。',{q:'「Banana is ( ).」の ( )に 入る 色を 英語で 書こう。',mode:'exact'});
+  add('color','standard','「Bananas are ( ).」の ( )に 入る 色は どれかな。','yellow',['blue','white','black'],['バナナは 何色かな。','「イエロー」だよ。'],'バナナは「yellow（黄色）」です。',{q:'「Bananas are ( ).」の ( )に 入る 色を 英語で 書こう。',mode:'exact'});
   add('color','standard','「The sky is ( ).」の ( )に 入る 色は どれかな。','blue',['green','red','black'],['晴れた 日の 空は 何色かな。','「ブルー」だよ。'],'晴れた日の空は「blue（青）」です。',{q:'「The sky is ( ).」の ( )に 入る 色を 英語で 書こう。',mode:'exact'});
   add('color','standard','「Snow is ( ).」の ( )に 入る 色は どれかな。','white',['black','red','yellow'],['雪は 何色かな。','「ホワイト」だよ。'],'雪は「white（白）」です。',{q:'「Snow is ( ).」の ( )に 入る 色を 英語で 書こう。',mode:'exact'});
   e2j('color','standard','circle','円（まる）',['さんかく','しかく','ほし'],'「サークル」と 読むよ。','太陽の 形だよ。',['まる','円','丸']);

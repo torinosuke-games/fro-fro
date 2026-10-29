@@ -9,7 +9,7 @@
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
 - 仕様：`SPEC_tower.md`（夜の防衛戦＝タワーディフェンス。判断442・443。T-1 仕様書・T-2 ロジック〔`js/tower.js`・`tests/cases/tower.js`・`tests/tools/tower-sim.js`〕は完了。絵と効果音〔ChatGPT。`img/adventure/tower/`・`js/ui/tower-sound.js`。判断444〕は取り込み済み。T-3〔戦場の画面 `js/ui/tower.js`・判断445〕・T-4〔問題で灯・今夜の襲撃と報酬・判断446〕・T-5〔依頼「防衛」・手動確認 18l・判断449〕は完了。完成報告は `REPORT_tower.md`（ブランチ `claude/tower-art`、実機で確認待ち）。依頼書：`TOWER_ART_REQUESTS_1.md`）、`SPEC_quest_trust.md`（住民の信頼と特別な依頼。判断440）、`SPEC_quest.md`（住民の依頼クエスト＝酒場。判断434〜438。Q-1〜Q-4 すべて完了（ロジック `js/quests.js`・酒場の画面 `js/ui/quest.js`・`js/quest-texts.js`・学習と戦闘とのつながり・手動確認 `tests/MANUAL.md` 18j）。完成報告は `REPORT_quest.md`。ブランチ `claude/quests`、実機で確認待ち）、`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 506。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 507。206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
 - リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`。算数の文章題55問への図（判断223）：`MATH_WORD_DIAGRAMS.md`（図の種類・使った問題）、依頼の記録は `DIAGRAM_REQUESTS.md`（完了）
 - 完成報告：`REPORT_quest.md`（住民の依頼クエスト）、`REPORT.md`（v0.1）、`REPORT_v0.2.md`、`REPORT_v0.3.md`、`REPORT_v0.4.md`、`REPORT_sync.md`（データの保存）
