@@ -354,6 +354,7 @@
     var bar = E('header', { class: 'bt-bar' }, [
       E('nav', { class: 'bt-flow', attrs: { 'aria-label': 'このターンの進み方' } }, [E('span', { class: 'bt-turn' }), E('ol', {}, BT.flow.map(function (f) { return E('li', { rich: f }); }))]),
       E('div', { class: 'bt-tools' }, [
+        E('button', { class: 'bt-stage-toggle', attrs: { type: 'button', 'aria-pressed': 'false' }, text: '戦場を見る', on: { click: function (ev) { var on = app.classList.toggle('peek'); ev.currentTarget.setAttribute('aria-pressed', on ? 'true' : 'false'); } } }),
         U.display ? U.display.button('bt-fs') : null,
         E('button', { class: 'bt-log', attrs: { type: 'button', 'aria-label': U.plain(BT.logTitle) }, rich: BT.log, on: { click: openLog } }),
         E('button', { class: 'bt-help', attrs: { type: 'button', 'aria-label': U.plain(BT.helpTitle) }, text: BT.help, on: { click: openHelp } }),
