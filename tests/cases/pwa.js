@@ -3,7 +3,7 @@
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const ROOT = path.resolve(__dirname, '..', '..');
 module.exports = ({ test, assert }) => {
-  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifest.webmanifest'), 'utf8'));
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifest.json'), 'utf8'));
   const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
   test('PWA：manifest は standalone で、アイコン（192・512・maskable）の実ファイルがある', () => {
     assert.equal(manifest.display, 'standalone');
@@ -14,7 +14,7 @@ module.exports = ({ test, assert }) => {
     manifest.icons.forEach(i => assert.ok(fs.existsSync(path.join(ROOT, i.src)), i.src));
   });
   test('PWA：index.html が manifest・アイコン・display.js を読み、Service Worker は http(s) のときだけ登録する', () => {
-    assert.ok(html.includes('rel="manifest" href="manifest.webmanifest"'));
+    assert.ok(html.includes('rel="manifest" href="manifest.json"'));
     assert.ok(html.includes('apple-touch-icon'));
     assert.ok(html.indexOf('js/ui/core.js') < html.indexOf('js/ui/display.js'));
     assert.ok(/\^https\?:\$\/\.test\(location\.protocol\)/.test(html));

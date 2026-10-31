@@ -4,7 +4,7 @@
 //  ・絵・音：保存があればそれを使う（重いので、毎回読みなおさない）
 var VERSION = 'ff-v1';
 var CORE = 'ff-core-' + VERSION, MEDIA = 'ff-media-' + VERSION;
-var SHELL = ['./', 'index.html', 'manifest.webmanifest', 'img/pwa/icon-192.png', 'img/pwa/icon-512.png'];
+var SHELL = ['./', 'index.html', 'manifest.json', 'img/pwa/icon-192.png', 'img/pwa/icon-512.png'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CORE).then(function (c) { return c.addAll(SHELL); }).then(function () { return self.skipWaiting(); }));
