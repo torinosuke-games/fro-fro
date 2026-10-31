@@ -290,10 +290,11 @@
         if (!ok()) return;
         if (line.key === 'hit') swordSound(line);
         if (line.key === 'hit' && !reduced()) fig.classList.add('is-hit');
+        // ダメージの数字とHPゲージは、敵がゆれ始めるのと同時に出す（判断511）
+        if (line.key === 'hit') { seq.hp = Math.max(0, seq.hp - line.amount); hpSet(); floatText(app, 'enemy', '−' + line.amount); }
         later(line.key === 'hit' ? 460 : 150, function () {
           if (!ok()) return;
-          if (line.key === 'hit') { seq.hp = Math.max(0, seq.hp - line.amount); hpSet(); floatText(app, 'enemy', '−' + line.amount); }
-          else if (line.key === 'heal') floatText(app, 'heal', '＋' + line.amount);
+          if (line.key === 'heal') floatText(app, 'heal', '＋' + line.amount);
           S.message = logText(line); setMessage(app); S.actLines.push(logText(line)); refreshPanel(app);
           seq.index++; later(400, step);
         });
