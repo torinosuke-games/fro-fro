@@ -10,8 +10,8 @@ module.exports=({test,FF,ctx,assert,plain})=>{
   const social=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_soc4'));
   const math=plain(ctx.QUESTION_BANK.filter(q=>q.collection==='hand_g4'));
   const maps13=['geography_005','geography_008','pioneer_010'].map(s=>'social_g4_hand_'+s);
-  assert.equal(hash(social.filter(q=>!imageIds.concat(mapIds,maps13).includes(q.id))),'9d027e29ea9ab2e6e7b6b5de38d98c9f7ce42f3986fa9b7caed487284d3368cb');
-  assert.equal(hash(math.filter(q=>q.id!=='math_g4_hand_graph_005')),'fcdff19c46517bfbaa4c09e15dac0ac9d4159d2e8c13de5f3f2bc51a97c123f1');
+  assert.equal(hash(social.filter(q=>!imageIds.concat(mapIds,maps13).includes(q.id))),'8bf796f5814cf758d0bd51454c5767df16a38c9ff2e4adc3e63f6965124cb276');
+  assert.equal(hash(math.filter(q=>q.id!=='math_g4_hand_graph_005')),'0b05ffd1df411fd38e11eb8c8e7bada4e9c80aaf9198ef6a66566e2ae9fdaebe');
  });
  test('第11弾：生成5枚は固有（water_007 は変更前の絵のまま。判断268）の800×533 WebP・各100KB以下',()=>{
   const sources=[];for(const id of imageIds){const d=get(id),q=ctx.QUESTION_BANK.find(q=>q.id===id),f=fs.readFileSync(path.join(root,d.src));

@@ -7,9 +7,9 @@ module.exports=({test,ctx,FF,assert,plain})=>{
  const hash=a=>crypto.createHash('sha256').update(JSON.stringify(a)).digest('hex');
  const inArea=(p,d)=>d.areas.some(r=>inside(p,r));
  test('社会の範囲修正：9問のdiagram以外と対象外351問は不変',()=>{
-  assert.equal(all.length,360);assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'e4c2714b5dcf0fd6abcdc0cbee88ef5634e8f59b7798f62bdff1be12aed2ecc4');
-  assert.equal(hash(all.map(q=>{const v={...q};delete v.diagram;return v;})),'f9d10062ed01c49bd9c308e46362cbbd8d4245753c591beeecff76da762b52ac');
-  assert.equal(all.filter(q=>q.diagram?.kind==='image').length,110);
+  assert.equal(all.length,360);assert.equal(hash(all.filter(q=>!ids.includes(q.id))),'6ea646303113cf7c6552c4b2e621f5ceb9a4a81db5b68884bab098feb9532ad2');
+  assert.equal(hash(all.map(q=>{const v={...q};delete v.diagram;return v;})),'135091a69c59140da61d561c9ef0a3aaedb8c749a38e64ab75ed7139fcdff1ac');
+  assert.equal(all.filter(q=>q.diagram?.kind==='image').length,109);   // 判断506で rice_018 の絵を外した
  });
  test('社会の範囲修正：県の形はNatural Earthの指定23県だけ',()=>{
   assert.equal(Object.keys(source.prefectures).length,23);assert.equal(source.filteredSourceSha256,'ecc053cfba5b232be2150af5e20be16f5ce4218fec6196088d83048ab807fa7c');

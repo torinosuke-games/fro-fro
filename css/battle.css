@@ -53,6 +53,7 @@
 .bt-shadow{position:absolute;width:75%;height:12%;left:13%;bottom:-2%;background:radial-gradient(ellipse,#29485a60,transparent 70%);border-radius:50%;pointer-events:none}
 .bt-enemy-figure{position:absolute;right:10%;bottom:19%;height:53%;width:35%;transform-origin:center bottom;z-index:2}
 .bt-enemy-figure svg{display:block;width:100%;height:100%}
+.bt-enemy-gauge{display:none}
 .bt-enemy-figure.defeated{opacity:.25;transform:translateY(6px);transition:opacity .3s}
 .bt-enemy-figure.is-hit{animation:bt-hit .42s}
 @keyframes bt-hit{0%,100%{transform:none;filter:none}20%{transform:translateX(-8px);filter:brightness(1.6)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
@@ -190,6 +191,76 @@
   .bt-party{height:52px;gap:4px}.bt-member{padding:3px 5px 2px}.bt-member-top{margin-bottom:1px}.bt-order{display:none}
   .bt-stage{min-height:100px}
 }
+/* 低い横画面のスマホ：戦場の絵を画面いっぱいに広げ、仲間（左下）・操作パネル（右）・帯（上）を、その上に重ねる（判断510）。
+   戦場の絵に、仲間と敵は、左・中央に寄せて置く。パネルを「戦場」ボタンでたたむと、戦場ぜんたいが見える。 */
+@media(max-width:999px) and (orientation:landscape) and (max-height:520px){
+  .bt-app{padding:0}
+  .bt-inner{position:static;max-width:none;margin:0;display:block}
+  .bt-layout{display:block;position:static}
+  .bt-scene{display:contents}
+  .bt-stage{position:absolute;inset:0;height:auto;flex:none;min-height:0;border-radius:0;z-index:0}
+  .bt-wash{background:linear-gradient(180deg,#1d404344 0,transparent 22%,transparent 70%,#1d404333)}
+  .bt-bar{position:absolute;z-index:6;left:0;right:0;top:0;margin:0;min-height:0;padding:max(4px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) 0 max(8px,env(safe-area-inset-left));pointer-events:none}
+  .bt-bar>*{pointer-events:auto}
+  .bt-flow{background:#f6faf1e0;border-radius:10px;padding:5px 10px}
+  .bt-tools button{height:30px;background:#f6faf1e6}
+  /* 仲間：左に縦に4人（小さな札） */
+  .bt-party{position:absolute;z-index:4;left:max(8px,env(safe-area-inset-left));bottom:max(6px,env(safe-area-inset-bottom));width:132px;height:auto;display:flex;flex-direction:column;gap:3px}
+  .bt-member{padding:3px 6px 3px;background:#f7faf4e8;display:grid;grid-template-columns:20px 1fr;grid-template-rows:auto auto;column-gap:5px;align-items:center}
+  .bt-member[aria-pressed=true]{padding:2px 5px 2px}
+  .bt-member-top{display:contents}.bt-portrait{width:20px;height:20px;grid-row:1/3}
+  .bt-member-name{grid-column:2;font-size:10px;line-height:1.1}
+  .bt-vitals{grid-column:2;margin:0;font-size:8px;line-height:1.1}
+  .bt-member .bt-meter{grid-column:1/3;height:3px;margin-top:2px}
+  .bt-order{display:none}
+  /* 作戦を選ぶあいだだけ、仲間の札に、選んだ行動を出す（問題に進むと消える） */
+  .bt-app[data-phase=commands] .bt-order{display:block;grid-column:1/3;margin:2px 0 0;min-height:0;font-size:8px;line-height:1.2}
+  .bt-dmg{top:1px}
+  /* 戦場の中の置きなおし：仲間は左（札のとなり）、敵は中央、右はパネル */
+  .bt-auto{top:46px;left:max(8px,env(safe-area-inset-left));width:104px;min-height:34px;padding:3px 8px}
+  .bt-speed{bottom:auto;right:auto;top:86px;left:max(8px,env(safe-area-inset-left));height:28px}
+  .bt-enemy-status{display:none}
+  /* 敵のHP：足元に、細いゲージだけ */
+  .bt-enemy-figure{display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+  .bt-enemy-figure svg{height:auto;max-height:calc(100% - 9px);aspect-ratio:1;flex:0 1 auto}
+  .bt-enemy-gauge{display:block;flex:0 0 auto;width:72%;height:6px;margin-top:3px;border-radius:6px;background:#263d4440;box-shadow:0 0 0 1px #fffc;overflow:hidden}
+  .bt-enemy-gauge i{display:block;height:100%;width:100%;border-radius:6px;background:linear-gradient(90deg,#a97b53,#d5b579);transition:width .22s}
+  /* 「仲間とともに…」のひとこと：上の帯の、TURN のとなりに */
+  .bt-message{top:max(4px,env(safe-area-inset-top));bottom:auto;left:calc(max(8px,env(safe-area-inset-left)) + 196px);right:calc(max(8px,env(safe-area-inset-right)) + 306px);padding:3px 8px;font-size:10px;line-height:1.35;min-height:30px;display:flex;align-items:center;z-index:7}
+  .bt-fighter{width:11%}
+  .bt-fighter[data-slot="0"]{left:28%;bottom:19%;height:33%}
+  .bt-fighter[data-slot="1"]{left:20%;bottom:19%;height:31%}
+  .bt-fighter[data-slot="2"]{left:24.5%;bottom:34%;height:28%}
+  .bt-fighter[data-slot="3"]{left:18%;bottom:33%;height:26%}
+  .bt-enemy-figure{right:auto;left:45%;bottom:20%;height:54%;width:20%}
+  .bt-enemy-figure[data-enemy=boss]{left:42%;bottom:17%;height:64%;width:24%}
+  .bt-float.enemy{right:auto;left:55%;top:40%}.bt-float.heal{left:30%}
+  /* 操作パネル：右に重ねる（すこし透ける） */
+  .bt-console{position:absolute;z-index:5;right:max(8px,env(safe-area-inset-right));top:46px;bottom:max(8px,env(safe-area-inset-bottom));width:40%;min-width:280px;height:auto;background:#f8faf6f6;box-shadow:0 4px 22px #1d40434d}
+  /* 作戦を選ぶとき・行動を見るときは、パネルを小さく、右下に（敵や仲間を、おおってしまわないように）。問題・解答のときだけ、大きく出す */
+  .bt-app[data-phase=commands] .bt-console{top:auto;width:33%;min-width:250px;height:auto;max-height:calc(100% - 52px)}
+  .bt-app[data-phase=commands] .bt-panel{height:auto}
+  .bt-app[data-phase=commands] .bt-body{padding:6px 10px;overflow:visible}
+  .bt-app[data-phase=commands] .bt-selhead{margin-bottom:4px}
+  .bt-app[data-phase=commands] .bt-commands{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  .bt-app[data-phase=commands] .bt-command{min-height:50px;padding:4px 2px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1px}
+  .bt-app[data-phase=commands] .bt-command-icon{font-size:17px;grid-row:auto;margin:0}
+  .bt-app[data-phase=commands] .bt-command strong{font-size:9.5px;line-height:1.15}
+  .bt-app[data-phase=commands] .bt-command.active:after{top:2px;right:4px;font-size:9px}
+  .bt-app[data-phase=commands] .bt-command small,.bt-app[data-phase=commands] .bt-info{display:none}
+  .bt-app[data-phase=commands] .bt-plan{margin-top:5px;gap:5px}
+  .bt-app[data-phase=commands] .bt-secondary{min-height:30px;padding:3px 6px;font-size:10px}
+  .bt-app[data-phase=commands] .bt-foot{padding:5px 10px 7px}
+  .bt-app[data-phase=commands] .bt-primary{min-height:34px;font-size:11px}
+  /* 行動の再生中は、パネルを出さない（戦場で、敵がダメージを受ける動きだけ見せる） */
+  .bt-app[data-phase=acting] .bt-console,.bt-app[data-acting="1"] .bt-console{display:none}
+  .bt-app.peek .bt-console{display:none}
+  .bt-app.peek .bt-enemy-figure{left:56%}.bt-app.peek .bt-enemy-figure[data-enemy=boss]{left:54%}
+  .bt-app.peek .bt-fighter[data-slot="0"]{left:40%}.bt-app.peek .bt-fighter[data-slot="1"]{left:31%}.bt-app.peek .bt-fighter[data-slot="2"]{left:36%}.bt-app.peek .bt-fighter[data-slot="3"]{left:27.5%}
+  .bt-tools .bt-stage-toggle{display:inline-flex;border-radius:10px;padding:0 10px;font-size:10px;font-weight:500;color:#2f5560}
+  .bt-tools .bt-stage-toggle[aria-pressed=true]{background:#335e64;color:#fff9e9;border-color:#335e64}
+}
+.bt-stage-toggle{display:none}
 @media(max-width:359px){.bt-app{padding-left:8px;padding-right:8px}.bt-member-name{font-size:9px}.bt-portrait{display:none}.bt-question{font-size:15px}}
 @media(max-width:999px) and (max-height:650px) and (orientation:portrait){.bt-app{--stage:clamp(90px,calc(100dvh - 470px),140px)}.bt-portrait{display:none}.bt-party{height:58px}.bt-note{display:none}}
 @media(prefers-reduced-motion:reduce){.bt-app *{transition:none!important;animation:none!important}}
