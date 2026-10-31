@@ -372,7 +372,7 @@
     var party = E('div', { class: 'bt-party', attrs: { 'aria-label': U.plain(T.party) } }), con = E('section', { class: 'bt-console', attrs: { 'aria-label': '戦闘の操作' } });
     inner.appendChild(bar); inner.appendChild(E('div', { class: 'bt-layout' }, [E('section', { class: 'bt-scene' }, [stage, party]), con]));
     app.appendChild(inner);
-    var fig = stage.querySelector('.bt-enemy-figure'); fig.appendChild(scene.enemy(p().battle.enemy));
+    var fig = stage.querySelector('.bt-enemy-figure'); fig.setAttribute('data-enemy', p().battle.enemy); fig.appendChild(scene.enemy(p().battle.enemy));
     stage.querySelector('.bt-enemy-name').textContent = U.plain(T.enemies[p().battle.enemy].name);
     app.btParty = p().party.join(',');
     p().party.forEach(function (id, i) { stage.querySelector('.bt-formation').appendChild(E('div', { class: 'bt-fighter', attrs: { 'data-slot': i, 'data-fighter': id } }, [E('span', { class: 'bt-shadow' }), sprite(id)])); });
