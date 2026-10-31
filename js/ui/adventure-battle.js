@@ -415,6 +415,7 @@
   function refreshPanel(app) {
     var n = p(), b = n.battle, con = app.querySelector('.bt-console'), seq = S.sequence;
     U.clear(con);
+    app.setAttribute('data-acting', seq ? '1' : '0');   // 行動の再生中（勝敗が決まっていても、再生が終わるまで）
     var panel;
     if (seq) panel = actingPanel(app, BT.actingTitle);
     else if (b.phase === 'commands') panel = n.auto && n.auto.on ? autoPanel() : commandsPanel();

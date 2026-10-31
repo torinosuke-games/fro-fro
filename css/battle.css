@@ -247,7 +247,7 @@
   .bt-app[data-phase=commands] .bt-foot{padding:5px 10px 7px}
   .bt-app[data-phase=commands] .bt-primary{min-height:34px;font-size:11px}
   /* 行動の再生中は、パネルを出さない（戦場で、敵がダメージを受ける動きだけ見せる） */
-  .bt-app[data-phase=acting] .bt-console{display:none}
+  .bt-app[data-phase=acting] .bt-console,.bt-app[data-acting="1"] .bt-console{display:none}
   .bt-app.peek .bt-console{display:none}
   .bt-app.peek .bt-enemy-figure{left:56%}.bt-app.peek .bt-enemy-figure[data-enemy=boss]{left:54%}
   .bt-app.peek .bt-fighter[data-slot="0"]{left:40%}.bt-app.peek .bt-fighter[data-slot="1"]{left:31%}.bt-app.peek .bt-fighter[data-slot="2"]{left:36%}.bt-app.peek .bt-fighter[data-slot="3"]{left:27.5%}
