@@ -290,10 +290,11 @@
         if (!ok()) return;
         if (line.key === 'hit') swordSound(line);
         if (line.key === 'hit' && !reduced()) fig.classList.add('is-hit');
+        // ダメージの数字とHPゲージは、敵がゆれ始めるのと同時に出す（判断511）
+        if (line.key === 'hit') { seq.hp = Math.max(0, seq.hp - line.amount); hpSet(); floatText(app, 'enemy', '−' + line.amount); }
         later(line.key === 'hit' ? 460 : 150, function () {
           if (!ok()) return;
-          if (line.key === 'hit') { seq.hp = Math.max(0, seq.hp - line.amount); hpSet(); floatText(app, 'enemy', '−' + line.amount); }
-          else if (line.key === 'heal') floatText(app, 'heal', '＋' + line.amount);
+          if (line.key === 'heal') floatText(app, 'heal', '＋' + line.amount);
           S.message = logText(line); setMessage(app); S.actLines.push(logText(line)); refreshPanel(app);
           seq.index++; later(400, step);
         });
@@ -354,6 +355,7 @@
     var bar = E('header', { class: 'bt-bar' }, [
       E('nav', { class: 'bt-flow', attrs: { 'aria-label': 'このターンの進み方' } }, [E('span', { class: 'bt-turn' }), E('ol', {}, BT.flow.map(function (f) { return E('li', { rich: f }); }))]),
       E('div', { class: 'bt-tools' }, [
+        E('button', { class: 'bt-stage-toggle', attrs: { type: 'button', 'aria-pressed': 'false' }, text: '戦場を見る', on: { click: function (ev) { var on = app.classList.toggle('peek'); ev.currentTarget.setAttribute('aria-pressed', on ? 'true' : 'false'); } } }),
         U.display ? U.display.button('bt-fs') : null,
         E('button', { class: 'bt-log', attrs: { type: 'button', 'aria-label': U.plain(BT.logTitle) }, rich: BT.log, on: { click: openLog } }),
         E('button', { class: 'bt-help', attrs: { type: 'button', 'aria-label': U.plain(BT.helpTitle) }, text: BT.help, on: { click: openHelp } }),
@@ -371,7 +373,7 @@
     var party = E('div', { class: 'bt-party', attrs: { 'aria-label': U.plain(T.party) } }), con = E('section', { class: 'bt-console', attrs: { 'aria-label': '戦闘の操作' } });
     inner.appendChild(bar); inner.appendChild(E('div', { class: 'bt-layout' }, [E('section', { class: 'bt-scene' }, [stage, party]), con]));
     app.appendChild(inner);
-    var fig = stage.querySelector('.bt-enemy-figure'); fig.appendChild(scene.enemy(p().battle.enemy));
+    var fig = stage.querySelector('.bt-enemy-figure'); fig.setAttribute('data-enemy', p().battle.enemy); fig.appendChild(scene.enemy(p().battle.enemy)); fig.appendChild(E('span', { class: 'bt-enemy-gauge', attrs: { 'aria-hidden': 'true' } }, E('i')));
     stage.querySelector('.bt-enemy-name').textContent = U.plain(T.enemies[p().battle.enemy].name);
     app.btParty = p().party.join(',');
     p().party.forEach(function (id, i) { stage.querySelector('.bt-formation').appendChild(E('div', { class: 'bt-fighter', attrs: { 'data-slot': i, 'data-fighter': id } }, [E('span', { class: 'bt-shadow' }), sprite(id)])); });
@@ -385,6 +387,7 @@
     app.querySelector('.bt-enemy-num').textContent = hp + ' / ' + max;
     bar.setAttribute('aria-valuenow', hp); bar.setAttribute('aria-valuemax', max); bar.firstChild.style.width = (hp / max * 100) + '%';
     app.querySelector('.bt-enemy-note').textContent = U.plain(hp === 0 ? BT.enemyNoteDone : hp < max * .3 ? BT.enemyNoteLow : BT.enemyNote);
+    var gauge = app.querySelector('.bt-enemy-gauge i'); if (gauge) gauge.style.width = (hp / max * 100) + '%';   // 重ね表示のときの、敵の足元の細いゲージ
     app.querySelector('.bt-enemy-figure').classList.toggle('defeated', hp === 0);
   }
   function renderParty(app) {
@@ -414,6 +417,7 @@
   function refreshPanel(app) {
     var n = p(), b = n.battle, con = app.querySelector('.bt-console'), seq = S.sequence;
     U.clear(con);
+    app.setAttribute('data-acting', seq ? '1' : '0');   // 行動の再生中（勝敗が決まっていても、再生が終わるまで）
     var panel;
     if (seq) panel = actingPanel(app, BT.actingTitle);
     else if (b.phase === 'commands') panel = n.auto && n.auto.on ? autoPanel() : commandsPanel();
