@@ -350,7 +350,7 @@
       var msg=adv0.notice,place0=M.places.find(function(p){return p.id===(adv0.lastTown==='town'?'town':'home');}),n1=FF.util.clone(adv0);n1.notice='';
       if(msg==='rescued'){state.region='field';state.x=place0.x;state.y=place0.y;hero={x:state.x,y:state.y};camera={x:state.x,y:state.y};save();}
       commitAdv(n1);
-      var text={rescued:TX.notices.rescued,retreated:TX.notices.retreated,victory:'戦いに勝った！ 道が少し、安全になった。',passOpen:'大獣を倒した！ 封印図書館の入口が、ひらいた。'}[msg];
+      var text={rescued:TX.notices.rescued,retreated:TX.notices.retreated,passOpen:'大獣を倒した！ 封印図書館の入口が、ひらいた。'}[msg];
       root.setTimeout(function(){if(!dead&&text){modal=true;U.modal({title:msg==='rescued'?'街で目を覚ました':'報告',body:text,buttons:[{label:'旅を続ける',class:'primary',onClick:function(){modal=false;}}]});}},200);
     }
     paintParty();
