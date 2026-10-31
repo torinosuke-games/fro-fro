@@ -67,6 +67,10 @@
     var from = app.settingsFrom && U.screens[app.settingsFrom.screen] ? app.settingsFrom : { screen: 'base', params: {} };
     main.appendChild(U.el('button', { class: 'text-button settings-back', text: '‹ もどる', attrs: { 'aria-label': 'もとのページにもどる' }, on: { click: function () { U.show(from.screen, from.params); } } }));
 
+    // 画面いっぱいの表示（判断507）：全画面・横向き。使える端末（Android など）だけ
+    var fsBtn = U.display && U.display.button('btn small');
+    if (fsBtn) main.appendChild(U.el('div', { class: 'panel stack' }, [U.R('h3', '', '画面'), U.el('div', { class: 'small muted', text: U.display.text.help }), U.el('div', { class: 'row' }, [fsBtn])]));
+
     // 名前
     var ni = U.nameInput(s.player.name, changeName);
     main.appendChild(U.el('div', { class: 'panel stack' }, [

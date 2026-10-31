@@ -55,6 +55,7 @@
     guideToggle.setAttribute('aria-expanded','false');guideToggle.setAttribute('aria-controls',side.id);
     viewport.querySelector('.journey-tools').appendChild(guideToggle);
     viewport.querySelector('.journey-tools').appendChild(button('現在地へ',function(){manualCamera=null;draw();}));
+    var fsBtn=U.display&&U.display.button('btn');if(fsBtn)viewport.querySelector('.journey-tools').appendChild(fsBtn);
     side.prepend(button('閉じる',function(){side.hidden=true;guideToggle.setAttribute('aria-expanded','false');guideToggle.focus({preventScroll:true});},'journey-guide-close'));
     layout.appendChild(side);
   var PAD_DIRS = [[0, -1, '↑', '北へ'], [-1, 0, '←', '西へ'], [0, 1, '↓', '南へ'], [1, 0, '→', '東へ']];
