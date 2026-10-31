@@ -377,3 +377,18 @@ body[data-screen="adventure"] main#screen.journey-screen{padding-bottom:0}
 .journey-viewport .journey-party-tools select{min-height:28px;padding:2px 4px;font-size:11px;max-width:84px}
 /* 問題の画面は、上の帯（masthead）の内側の幅に左右をそろえ、それ以上は広げない（判断503） */
 @media(min-width:961px){body[data-screen="quiz"] main#screen{max-width:none;padding-inline:max(28px,calc((100vw - 1384px)/2))}}
+
+/* 横向きのスマホ：見出しと目標をフィールドの上に重ね、画面いっぱいにフィールドを広げる（判断507） */
+@media(orientation:landscape) and (max-height:520px){
+ body[data-screen="adventure"] #screen.journey-screen{padding:0}
+ .journey-shell{position:relative;height:100dvh;min-height:0}
+ .journey-heading{position:absolute;right:8px;top:8px;z-index:6;margin:0}
+ .journey-heading>div{display:none}
+ .journey-heading .btn{min-height:34px;padding:5px 12px;font-size:12px}
+ .journey-mission{position:absolute;left:8px;bottom:8px;z-index:4;margin:0;max-width:40%;padding:4px 10px;gap:8px;font-size:11px;pointer-events:none;background:#fffdf5e6}
+ .journey-mission *{font-size:11px;margin:0}
+ .journey-layout{height:100%}
+ .journey-viewport{border-radius:0;border-width:0}
+ .journey-guide{top:52px;bottom:8px}
+}
+.bt-tools .bt-fs{border-radius:10px;padding:0 9px;font-size:10px;font-weight:500;color:#2f5560;background:#e9f4f6}
