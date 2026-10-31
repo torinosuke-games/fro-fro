@@ -281,7 +281,7 @@
   sn('school','advanced','We have English on Wednesdays.','毎週 水曜日に 英語が あります',['毎日 英語が あります','水曜日に 英語を 習いたいです','水曜日は 英語が きらいです'],'「Wednesdays」と 複数形に なっているよ。','「on Wednesdays」は「毎週 水曜日に」だよ。');
   qa('school','advanced','「What time is it? It\'s time for lunch.」の「time for lunch」は どういう 意味かな。','給食の 時間',['休み時間','算数の 時間','帰る 時間'],'「lunch」は「昼ごはん」だよ。','「time for ～」は「～の 時間」だよ。','「time for lunch」は「昼ごはんの時間」、学校では「給食の時間」です。');
   qa('school','advanced','「What\'s your favorite subject?」「My favorite subject is science. I like experiments.」の 答えから わかる ことは どれかな。','理科が 一番 好きで、実験が すき',['算数が 一番 好きで、実験が きらい','理科が きらいで、実験が すき','国語が 一番 好き'],'「favorite subject」は「一番 好きな 教科」だよ。','「experiments」は「実験」だよ。','「My favorite subject is science.」は「一番好きな教科は理科です。」、「I like experiments.」は「実験が好きです。」です。');
-  qa('school','advanced','「We have music, art, and P.E. on Fridays.」で、金曜日に ない 教科は どれかな。','算数',['音楽','図工','体育'],'「music」は「音楽」、「art」は「図工」だよ。','文の 中に 出て こない 教科を えらぼう。','金曜日には「music（音楽）」「art（図工）」「P.E.（体育）」があり、「算数」は出てきません。');
+  qa('school','advanced','「We have music, art, and P.E. on Fridays.」に 出て こない 教科は どれかな。','算数',['音楽','図工','体育'],'「music」は「音楽」、「art」は「図工」だよ。','文の 中に 出て こない 教科を えらぼう。','金曜日には「music（音楽）」「art（図工）」「P.E.（体育）」があり、「算数」は出てきません。');
 
   // ---- 読んでみよう：基礎6・標準9・発展7。短い英語の文章（問題文の「…」）を読んで、日本語の選択肢で答える ----
   function rd(diff,passage,ask,answer,wrong,h1,h2,expl){
@@ -306,7 +306,7 @@
   var R4='This is my town. There is a big park near my house. The library is next to the park. The station is on the left. I go to the library on Saturdays.';
   rd('basic',R4,'家の 近くに あるのは 何かな。','大きな 公園',['大きな 駅','大きな 学校','大きな 病院'],'「near my house」は「家の 近く」だよ。','「park」は「公園」だよ。','「There is a big park near my house.」は「家の近くに大きな公園があります。」です。');
   rd('standard',R4,'図書館は どこに あるかな。','公園の となり',['公園の 中','駅の となり','学校の 前'],'「library」は「図書館」だよ。','「next to」は「～の となり」だよ。','「The library is next to the park.」は「図書館は公園のとなりにあります。」です。');
-  rd('standard',R4,'駅は どちらがわに あるかな。','左がわ',['右がわ','前','うしろ'],'「station」は「駅」だよ。','「on the left」は「左がわに」だよ。','「The station is on the left.」は「駅は左がわにあります。」です。');
+  rd('standard',R4,'駅は どちらがわに あると 書いて あるかな。','左がわ',['右がわ','前','うしろ'],'「station」は「駅」だよ。','「on the left」は「左がわに」だよ。','「The station is on the left.」は「駅は左がわにあります。」です。');
   rd('advanced',R4,'この 人は いつ 図書館へ 行くかな。','毎週 土曜日',['毎日','毎週 日曜日','毎週 金曜日'],'「on Saturdays」に 注目しよう。','「Saturdays」と 複数形に なっているよ。','「I go to the library on Saturdays.」は「毎週土曜日に図書館へ行きます。」です。');
   var R5='A: Hello. How much is this cap? B: It is five hundred yen. A: I want it. Here you are. B: Thank you.';
   rd('standard',R5,'ぼうしは いくらかな。','500円',['50円','550円','5000円'],'「How much」は ねだんを たずねる 言葉だよ。','「five hundred」は「500」だよ。','「It is five hundred yen.」は「500円です。」です。');

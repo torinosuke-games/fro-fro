@@ -22,9 +22,9 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  }
  test('手作りの図：468問のdiagram以外の全項目と対象外の図は不変',()=>{   // 手作りの問題の本文・確認済みの印を直したら、下の2つのハッシュも更新する（判断241）
   assert.strictEqual(all.length,468);
-  assert.strictEqual(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'a8b09ef8fcebedd25ab295542dc43b89263121e5bf9b569f2609a9d34f534554');
+  assert.strictEqual(hash(all.map(q=>{const v=plain(q);delete v.diagram;return v;})),'95cb66cfd17544aa972dae9c56f37ffc87332b95ea50278b6e0a2d292803579d');
   // 第11弾でgraph_005にだけ追加した任意の補助線指定を除き、旧データと一致。
-  assert.strictEqual(hash(all.filter(q=>!ids.includes(q.id)).map(q=>{const v=plain(q);if(v.id==='math_g4_hand_graph_005')delete v.diagram.minorStep;return v;})),'a1bb05ac823f8d2d72b574addcc0d3b7e6035db97715b8de732331dc50cf87a6');
+  assert.strictEqual(hash(all.filter(q=>!ids.includes(q.id)).map(q=>{const v=plain(q);if(v.id==='math_g4_hand_graph_005')delete v.diagram.minorStep;return v;})),'8f5380c501b041f11305e49643dbb60e6f4560976d162afb7d6fc730bab9d3bb');
  });
  test('手作りの図：依頼17問の網羅・caption・reviewed false・書き問題継承・除外2問',()=>{
   assert.strictEqual(ids.length,17);assert.strictEqual(qs.length,17);const bank=FF.learning.createBank(ctx.QUESTION_BANK);
