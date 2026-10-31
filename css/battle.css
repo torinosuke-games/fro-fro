@@ -232,8 +232,8 @@
   /* 操作パネル：右に重ねる（すこし透ける） */
   .bt-console{position:absolute;z-index:5;right:max(8px,env(safe-area-inset-right));top:46px;bottom:max(8px,env(safe-area-inset-bottom));width:40%;min-width:280px;height:auto;background:#f8faf6f6;box-shadow:0 4px 22px #1d40434d}
   /* 作戦を選ぶとき・行動を見るときは、パネルを小さく、右下に（敵や仲間を、おおってしまわないように）。問題・解答のときだけ、大きく出す */
-  .bt-app[data-phase=commands] .bt-console,.bt-app[data-phase=acting] .bt-console{top:auto;width:33%;min-width:250px;height:auto;max-height:calc(100% - 52px)}
-  .bt-app[data-phase=commands] .bt-panel,.bt-app[data-phase=acting] .bt-panel{height:auto}
+  .bt-app[data-phase=commands] .bt-console{top:auto;width:33%;min-width:250px;height:auto;max-height:calc(100% - 52px)}
+  .bt-app[data-phase=commands] .bt-panel{height:auto}
   .bt-app[data-phase=commands] .bt-body{padding:6px 10px;overflow:visible}
   .bt-app[data-phase=commands] .bt-selhead{margin-bottom:4px}
   .bt-app[data-phase=commands] .bt-commands{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
@@ -246,7 +246,8 @@
   .bt-app[data-phase=commands] .bt-secondary{min-height:30px;padding:3px 6px;font-size:10px}
   .bt-app[data-phase=commands] .bt-foot{padding:5px 10px 7px}
   .bt-app[data-phase=commands] .bt-primary{min-height:34px;font-size:11px}
-  .bt-app[data-phase=acting] .bt-body{max-height:130px}
+  /* 行動の再生中は、パネルを出さない（戦場で、敵がダメージを受ける動きだけ見せる） */
+  .bt-app[data-phase=acting] .bt-console{display:none}
   .bt-app.peek .bt-console{display:none}
   .bt-app.peek .bt-enemy-figure{left:56%}.bt-app.peek .bt-enemy-figure[data-enemy=boss]{left:54%}
   .bt-app.peek .bt-fighter[data-slot="0"]{left:40%}.bt-app.peek .bt-fighter[data-slot="1"]{left:31%}.bt-app.peek .bt-fighter[data-slot="2"]{left:36%}.bt-app.peek .bt-fighter[data-slot="3"]{left:27.5%}
