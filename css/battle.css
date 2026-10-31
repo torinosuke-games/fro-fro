@@ -53,6 +53,7 @@
 .bt-shadow{position:absolute;width:75%;height:12%;left:13%;bottom:-2%;background:radial-gradient(ellipse,#29485a60,transparent 70%);border-radius:50%;pointer-events:none}
 .bt-enemy-figure{position:absolute;right:10%;bottom:19%;height:53%;width:35%;transform-origin:center bottom;z-index:2}
 .bt-enemy-figure svg{display:block;width:100%;height:100%}
+.bt-enemy-gauge{display:none}
 .bt-enemy-figure.defeated{opacity:.25;transform:translateY(6px);transition:opacity .3s}
 .bt-enemy-figure.is-hit{animation:bt-hit .42s}
 @keyframes bt-hit{0%,100%{transform:none;filter:none}20%{transform:translateX(-8px);filter:brightness(1.6)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
@@ -219,6 +220,11 @@
   .bt-auto{top:46px;left:max(8px,env(safe-area-inset-left));width:104px;min-height:34px;padding:3px 8px}
   .bt-speed{bottom:auto;right:auto;top:86px;left:max(8px,env(safe-area-inset-left));height:28px}
   .bt-enemy-status{display:none}
+  /* 敵のHP：足元に、細いゲージだけ */
+  .bt-enemy-figure{display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+  .bt-enemy-figure svg{height:auto;max-height:calc(100% - 9px);aspect-ratio:1;flex:0 1 auto}
+  .bt-enemy-gauge{display:block;flex:0 0 auto;width:72%;height:6px;margin-top:3px;border-radius:6px;background:#263d4440;box-shadow:0 0 0 1px #fffc;overflow:hidden}
+  .bt-enemy-gauge i{display:block;height:100%;width:100%;border-radius:6px;background:linear-gradient(90deg,#a97b53,#d5b579);transition:width .22s}
   /* 「仲間とともに…」のひとこと：上の帯の、TURN のとなりに */
   .bt-message{top:max(4px,env(safe-area-inset-top));bottom:auto;left:calc(max(8px,env(safe-area-inset-left)) + 196px);right:calc(max(8px,env(safe-area-inset-right)) + 306px);padding:3px 8px;font-size:10px;line-height:1.35;min-height:30px;display:flex;align-items:center;z-index:7}
   .bt-fighter{width:11%}

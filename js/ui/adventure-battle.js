@@ -372,7 +372,7 @@
     var party = E('div', { class: 'bt-party', attrs: { 'aria-label': U.plain(T.party) } }), con = E('section', { class: 'bt-console', attrs: { 'aria-label': '戦闘の操作' } });
     inner.appendChild(bar); inner.appendChild(E('div', { class: 'bt-layout' }, [E('section', { class: 'bt-scene' }, [stage, party]), con]));
     app.appendChild(inner);
-    var fig = stage.querySelector('.bt-enemy-figure'); fig.setAttribute('data-enemy', p().battle.enemy); fig.appendChild(scene.enemy(p().battle.enemy));
+    var fig = stage.querySelector('.bt-enemy-figure'); fig.setAttribute('data-enemy', p().battle.enemy); fig.appendChild(scene.enemy(p().battle.enemy)); fig.appendChild(E('span', { class: 'bt-enemy-gauge', attrs: { 'aria-hidden': 'true' } }, E('i')));
     stage.querySelector('.bt-enemy-name').textContent = U.plain(T.enemies[p().battle.enemy].name);
     app.btParty = p().party.join(',');
     p().party.forEach(function (id, i) { stage.querySelector('.bt-formation').appendChild(E('div', { class: 'bt-fighter', attrs: { 'data-slot': i, 'data-fighter': id } }, [E('span', { class: 'bt-shadow' }), sprite(id)])); });
@@ -386,6 +386,7 @@
     app.querySelector('.bt-enemy-num').textContent = hp + ' / ' + max;
     bar.setAttribute('aria-valuenow', hp); bar.setAttribute('aria-valuemax', max); bar.firstChild.style.width = (hp / max * 100) + '%';
     app.querySelector('.bt-enemy-note').textContent = U.plain(hp === 0 ? BT.enemyNoteDone : hp < max * .3 ? BT.enemyNoteLow : BT.enemyNote);
+    var gauge = app.querySelector('.bt-enemy-gauge i'); if (gauge) gauge.style.width = (hp / max * 100) + '%';   // 重ね表示のときの、敵の足元の細いゲージ
     app.querySelector('.bt-enemy-figure').classList.toggle('defeated', hp === 0);
   }
   function renderParty(app) {
