@@ -1344,7 +1344,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_001', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_001', subject: 'social', gradeLevel: 6, unit: 'asuka_nara',
     difficulty: 'basic', answerType: 'input',
     question: '{聖徳太子|しょうとくたいし}が {定|さだ}めた、「{和|わ}を {以|もっ}て {貴|とうと}しと なす」で {始|はじ}まる {役人|やくにん}の {心|こころ}がまえを しめした きまりを {何|なん}と いうかな。',
     answer: '十七条の憲法', acceptedAnswers: ['十七条憲法', 'じゅうしちじょうのけんぽう', 'じゅうしちじょうけんぽう'], validationMode: 'kana-insensitive',
@@ -1353,7 +1353,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_002', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_002', subject: 'social', gradeLevel: 6, unit: 'kamakura',
     difficulty: 'standard', answerType: 'input',
     question: '{平氏|へいし}を たおした あと、{鎌倉|かまくら}に {幕府|ばくふ}を ひらき、{征夷大将軍|せいいたいしょうぐん}に なった {人物|じんぶつ}は だれかな。',
     answer: '源頼朝', acceptedAnswers: ['みなもとのよりとも', 'みなもとよりとも'], validationMode: 'kana-insensitive',
@@ -1371,7 +1371,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_003', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_003', subject: 'social', gradeLevel: 6, unit: 'edo',
     difficulty: 'standard', answerType: 'input',
     question: '{関ヶ原|せきがはら}の たたかいに {勝|か}ち、{江戸|えど}に {幕府|ばくふ}を ひらいた {人物|じんぶつ}は だれかな。',
     answer: '徳川家康', acceptedAnswers: ['とくがわいえやす'], validationMode: 'kana-insensitive',
@@ -1380,7 +1380,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_004', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_004', subject: 'social', gradeLevel: 6, unit: 'asuka_nara',
     difficulty: 'standard', answerType: 'choice',
     question: '{奈良|なら}の {東大寺|とうだいじ}に {大仏|だいぶつ}を つくらせた {天皇|てんのう}は だれかな。',
     choices: ['{聖武天皇|しょうむてんのう}', '{天智天皇|てんじてんのう}', '{桓武天皇|かんむてんのう}', '{推古天皇|すいこてんのう}'],
@@ -1391,7 +1391,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_005', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_005', subject: 'social', gradeLevel: 6, unit: 'prehistoric',
     difficulty: 'standard', answerType: 'choice',
     question: '{縄文時代|じょうもんじだい}の {人々|ひとびと}が、{食|た}べた {貝|かい}の からなどを すてた あとを {何|なん}と いうかな。',
     choices: ['{貝塚|かいづか}', '{古墳|こふん}', '{高床倉庫|たかゆかそうこ}', 'たて{穴住居|あなじゅうきょ}'],
@@ -1402,7 +1402,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_006', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_006', subject: 'social', gradeLevel: 6, unit: 'meiji',
     difficulty: 'advanced', answerType: 'input',
     question: '{江戸幕府|えどばくふ}が たおれた あと、{明治|めいじ}の {新|あたら}しい {政府|せいふ}が すすめた、{政治|せいじ}や {社会|しゃかい}の {大|おお}きな {改革|かいかく}を {何|なん}と いうかな。',
     answer: '明治維新', acceptedAnswers: ['めいじいしん'], validationMode: 'kana-insensitive',
@@ -1422,7 +1422,7 @@ window.QUESTION_BANK.push(
   },
   // --- v0.3 で追加（B案：各学年27問） ---
   {
-    id: 'social_g6_history_007', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_007', subject: 'social', gradeLevel: 6, unit: 'prehistoric',
     difficulty: 'basic', answerType: 'choice',
     question: '{大陸|たいりく}から {米|こめ}づくりが {伝|つた}わって {広|ひろ}まり、むらや くにが できて いった {時代|じだい}は どれかな。',
     choices: ['{弥生時代|やよいじだい}', '{縄文時代|じょうもんじだい}', '{古墳時代|こふんじだい}', '{奈良時代|ならじだい}'],
@@ -1444,7 +1444,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_008', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_008', subject: 'social', gradeLevel: 6, unit: 'heian',
     difficulty: 'basic', answerType: 'input',
     question: '{平安時代|へいあんじだい}に、かな{文字|もじ}を {使|つか}って『{源氏物語|げんじものがたり}』を {書|か}いた {女性|じょせい}は だれかな。',
     answer: '紫式部', answerDisplay: '{紫式部|むらさきしきぶ}', acceptedAnswers: ['むらさきしきぶ'], validationMode: 'kana-insensitive',
@@ -1462,7 +1462,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_009', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_009', subject: 'social', gradeLevel: 6, unit: 'muromachi_sengoku',
     difficulty: 'standard', answerType: 'input',
     question: '{京都|きょうと}の {北山|きたやま}に {金閣|きんかく}を {建|た}てた、{室町幕府|むろまちばくふ}の 3{代将軍|だいしょうぐん}は だれかな。',
     answer: '足利義満', answerDisplay: '{足利義満|あしかがよしみつ}', acceptedAnswers: ['あしかがよしみつ'], validationMode: 'kana-insensitive',
@@ -1471,7 +1471,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_010', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_010', subject: 'social', gradeLevel: 6, unit: 'muromachi_sengoku',
     difficulty: 'standard', answerType: 'input',
     question: '{全国|ぜんこく}の {田畑|たはた}の {広|ひろ}さや よしあしを {調|しら}べる {検地|けんち}や、{百姓|ひゃくしょう}から {武器|ぶき}を {取|と}り{上|あ}げる {刀狩|かたながり}を {行|おこな}い、{全国|ぜんこく}を {統一|とういつ}した {人物|じんぶつ}は だれかな。',
     answer: '豊臣秀吉', acceptedAnswers: ['とよとみひでよし', '羽柴秀吉'], validationMode: 'kana-insensitive',
@@ -1480,7 +1480,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_011', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_011', subject: 'social', gradeLevel: 6, unit: 'prehistoric',
     difficulty: 'standard', answerType: 'input',
     question: '{大王|おおきみ}や {豪族|ごうぞく}の {墓|はか}として つくられた、{土|つち}を {高|たか}く もり{上|あ}げた {大|おお}きな {墓|はか}を {何|なん}と いうかな。',
     answer: '古墳', acceptedAnswers: ['こふん'], validationMode: 'kana-insensitive',
@@ -1489,7 +1489,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_politics_004', subject: 'social', gradeLevel: 6, unit: 'politics',
+    id: 'social_g6_politics_004', subject: 'social', gradeLevel: 6, unit: 'local_tax',
     difficulty: 'standard', answerType: 'input',
     question: '{国|くに}や {都道府県|とどうふけん}・{市|し}などが、{学校|がっこう}や {道路|どうろ}、{消防|しょうぼう}など みんなの ための {仕事|しごと}に {使|つか}う ために、{国民|こくみん}から {集|あつ}める お{金|かね}を {何|なん}と いうかな。',
     answer: '税金', acceptedAnswers: ['ぜいきん', '税', 'ぜい'], validationMode: 'kana-insensitive',
@@ -1498,7 +1498,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_012', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_012', subject: 'social', gradeLevel: 6, unit: 'muromachi_sengoku',
     difficulty: 'standard', answerType: 'input',
     question: '{長篠|ながしの}の たたかいで {鉄砲|てっぽう}を {効果的|こうかてき}に {使|つか}い、{安土城|あづちじょう}を きずいて {天下統一|てんかとういつ}を めざした {戦国大名|せんごくだいみょう}は だれかな。',
     answer: '織田信長', acceptedAnswers: ['おだのぶなが'], validationMode: 'kana-insensitive',
@@ -1516,7 +1516,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_013', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_013', subject: 'social', gradeLevel: 6, unit: 'heian',
     difficulty: 'standard', answerType: 'choice',
     question: '{平安時代|へいあんじだい}、{娘|むすめ}を {天皇|てんのう}の きさきに して {力|ちから}を のばし、「この{世|よ}をば わが{世|よ}とぞ{思|おも}ふ」という {歌|うた}を よんだ {人物|じんぶつ}は だれかな。',
     choices: ['{藤原道長|ふじわらのみちなが}', '{聖徳太子|しょうとくたいし}', '{源頼朝|みなもとのよりとも}', '{足利尊氏|あしかがたかうじ}'],
@@ -1527,7 +1527,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_014', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_014', subject: 'social', gradeLevel: 6, unit: 'edo',
     difficulty: 'standard', answerType: 'choice',
     question: '{江戸時代|えどじだい}、{大名|だいみょう}に 1{年|ねん}おきに {江戸|えど}と {自分|じぶん}の {領地|りょうち}を {行|い}き{来|き}させた {制度|せいど}は どれかな。',
     choices: ['{参勤交代|さんきんこうたい}', '{鎖国|さこく}', '{刀狩|かたながり}', '{楽市楽座|らくいちらくざ}'],
@@ -1549,7 +1549,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_015', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_015', subject: 'social', gradeLevel: 6, unit: 'modern',
     difficulty: 'standard', answerType: 'choice',
     question: '1945{年|ねん}8{月|がつ}6{日|か}に、{世界|せかい}で はじめて {原子爆弾|げんしばくだん}が {投下|とうか}された {都市|とし}は どこかな。',
     choices: ['{広島|ひろしま}', '{長崎|ながさき}', '{東京|とうきょう}', '{那覇|なは}'],
@@ -1560,7 +1560,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_016', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_016', subject: 'social', gradeLevel: 6, unit: 'meiji',
     difficulty: 'advanced', answerType: 'input',
     question: '{明治時代|めいじじだい}の はじめ、れんがづくりの {建物|たてもの}や ガス{灯|とう}、{洋服|ようふく}など、{西洋|せいよう}の {文化|ぶんか}が {取|と}り{入|い}れられて くらしが {大|おお}きく {変|か}わった ことを {何|なん}と いうかな。',
     answer: '文明開化', acceptedAnswers: ['ぶんめいかいか'], validationMode: 'kana-insensitive',
@@ -1569,7 +1569,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_politics_006', subject: 'social', gradeLevel: 6, unit: 'politics',
+    id: 'social_g6_politics_006', subject: 'social', gradeLevel: 6, unit: 'local_tax',
     difficulty: 'advanced', answerType: 'input',
     question: '{都道府県|とどうふけん}の {政治|せいじ}の {中心|ちゅうしん}と なる {人|ひと}で、{住民|じゅうみん}の {選挙|せんきょ}で えらばれる {人|ひと}を {何|なん}と いうかな。',
     answer: '知事', acceptedAnswers: ['ちじ', '都道府県知事', 'とどうふけんちじ'], validationMode: 'kana-insensitive',
@@ -1578,7 +1578,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_017', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_017', subject: 'social', gradeLevel: 6, unit: 'muromachi_sengoku',
     difficulty: 'advanced', answerType: 'choice',
     question: '{室町時代|むろまちじだい}に {観阿弥|かんあみ}・{世阿弥|ぜあみ}の {親子|おやこ}が {大成|たいせい}し、{今|いま}に {受|う}けつがれて いる {芸能|げいのう}は どれかな。',
     choices: ['{能|のう}', '{歌舞伎|かぶき}', '{人形浄瑠璃|にんぎょうじょうるり}', '{落語|らくご}'],
@@ -1589,7 +1589,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'social_g6_history_018', subject: 'social', gradeLevel: 6, unit: 'history',
+    id: 'social_g6_history_018', subject: 'social', gradeLevel: 6, unit: 'modern',
     difficulty: 'advanced', answerType: 'choice',
     question: '1964{年|ねん}、{東海道新幹線|とうかいどうしんかんせん}の {開通|かいつう}と {同|おな}じ {年|とし}に、{日本|にほん}で はじめて {開|ひら}かれた {国際的|こくさいてき}な スポーツ{大会|たいかい}は どれかな。',
     choices: ['{東京|とうきょう}オリンピック', '{大阪|おおさか}{万国博覧会|ばんこくはくらんかい}', '{長野|ながの}オリンピック', 'サッカーの ワールドカップ'],
