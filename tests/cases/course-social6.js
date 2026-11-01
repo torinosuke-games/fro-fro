@@ -2,9 +2,9 @@
 const L=require('../lib/loader');
 module.exports=({test,assert})=>{
  const c=L.load(L.LOGIC_FILES_WITH_FIXES),U=c.FF.util,all=c.QUESTION_BANK,qs=all.filter(q=>q.collection==='course_so6_1');
- test('小6社会第1回：8単元224問、各基礎8・標準12・発展8、未レビュー・図なし',()=>{
-  assert.equal(qs.length,224);
-  for(const unit of ['prehistoric','asuka_nara','heian','kamakura','muromachi_sengoku','edo','meiji','modern'])for(const [d,n] of [['basic',8],['standard',12],['advanced',8]])assert.equal(qs.filter(q=>q.unit===unit&&q.difficulty===d).length,n,unit+d);
+ test('小6社会第1回：10単元280問、各基礎8・標準12・発展8、未レビュー・図なし',()=>{
+  assert.equal(qs.length,280);
+  for(const unit of ['prehistoric','asuka_nara','heian','kamakura','muromachi_sengoku','edo','meiji','modern','constitution','politics'])for(const [d,n] of [['basic',8],['standard',12],['advanced',8]])assert.equal(qs.filter(q=>q.unit===unit&&q.difficulty===d).length,n,unit+d);
   qs.forEach(q=>{assert.equal(q.reviewed,false);assert.ok(!q.diagram);assert.deepStrictEqual(Array.from(c.FF.learning.validateQuestion(q)),[],q.id);});
  });
  test('小6社会第1回：重複IDなし・4択・ヒント1〜2・全誤答解説・答えの漏れなし',()=>{
@@ -22,7 +22,8 @@ module.exports=({test,assert})=>{
  });
  test('小6社会改訂：極端・時代違いの誤答と難語を再導入しない',()=>{
   qs.forEach(q=>{
-   q.choices.filter(a=>a!==q.answer).forEach(a=>assert.ok(!/必ず|全員|全く|すべて|一日で|蒸気機関車|国会議員|鎌倉幕府|江戸幕府/.test(U.plainText(a)),q.id+a));
+   q.choices.filter(a=>a!==q.answer).forEach(a=>assert.ok(!/必ず|全員|全く|すべて|一日で|蒸気機関車|鎌倉幕府|江戸幕府/.test(U.plainText(a)),q.id+a));
+   if(!['meiji','modern','constitution','politics'].includes(q.unit))q.choices.filter(a=>a!==q.answer).forEach(a=>assert.ok(!/国会議員/.test(U.plainText(a)),q.id+a));
    assert.ok(!/慎重|造立|照らし合わせ/.test(U.plainText([q.question,...q.hints,q.explanation].join(''))),q.id);
   });
   const q=qs.find(q=>q.id==='social_g6_prehistoric_027');
@@ -67,6 +68,24 @@ module.exports=({test,assert})=>{
   for(const data of [types,links])assert.deepStrictEqual(Object.keys(data).sort(),Array.from(adv,q=>q.id).sort());
   const counts={};Object.values(types).forEach(t=>counts[t]=(counts[t]||0)+1);Object.values(counts).forEach(n=>assert.ok(n<=3));
   Object.entries(links).forEach(([id,facts])=>{assert.equal(facts.length,2,id);assert.equal(new Set(facts).size,2,id);facts.forEach(s=>assert.ok(typeof s==='string'&&s.length>0,id));});
+ });
+
+ test('小6社会第5回：指定3問の修正と追加発展の配分',()=>{
+  const get=id=>qs.find(q=>q.id==='social_g6_'+id);
+  assert.ok(U.plainText(get('modern_021').question).startsWith('明治の衆議院議員選挙'));
+  assert.ok(!/[0-9０-９]/.test(U.plainText(get('modern_017').question)));
+  assert.equal(U.plainText(get('modern_017').answer),'9');
+  assert.ok(get('modern_001').choices.some(s=>U.plainText(s)==='昭和三陸地震'));
+  assert.ok(!U.plainText(get('modern_001').explanation).includes('東海地方の地震災害'));
+  const types=require('../fixtures/social6-advanced-types-5.json');
+  const links=require('../fixtures/social6-advanced-connections-5.json');
+  const adv=qs.filter(q=>['constitution','politics'].includes(q.unit)&&q.difficulty==='advanced');
+  assert.equal(adv.length,16);
+  for(const data of [types,links])assert.deepStrictEqual(Object.keys(data).sort(),Array.from(adv,q=>q.id).sort());
+  const counts={};Object.values(types).forEach(t=>counts[t]=(counts[t]||0)+1);Object.values(counts).forEach(n=>assert.ok(n<=3));
+  Object.entries(links).forEach(([id,facts])=>{assert.equal(facts.length,2,id);assert.equal(new Set(facts).size,2,id);});
+  const names={constitution_004:['人権','じんけん'],politics_010:['首相','しゅしょう','総理大臣'],politics_016:['法案','ほうあん']};
+  Object.entries(names).forEach(([id,answers])=>{const v=c.FF.learning.inputVariant(get(id));answers.forEach(a=>assert.ok(c.FF.answer.judge(v,a).correct,id+a));});
  });
 
 };
