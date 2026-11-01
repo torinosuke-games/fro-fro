@@ -20,4 +20,18 @@ module.exports=({test,assert})=>{
   assert.deepStrictEqual(Array.from(legacy,q=>q.id).sort(),ids.sort());
   legacy.concat(qs).forEach(q=>assert.ok(units.some(u=>u.id===q.unit),q.id));
  });
+ test('小6社会改訂：極端・時代違いの誤答と難語を再導入しない',()=>{
+  qs.forEach(q=>{
+   q.choices.filter(a=>a!==q.answer).forEach(a=>assert.ok(!/必ず|全員|全く|すべて|一日で|蒸気機関車|国会議員|鎌倉幕府|江戸幕府/.test(U.plainText(a)),q.id+a));
+   assert.ok(!/慎重|造立|照らし合わせ/.test(U.plainText([q.question,...q.hints,q.explanation].join(''))),q.id);
+  });
+  const q=qs.find(q=>q.id==='social_g6_prehistoric_027');
+  assert.equal(U.plainText(q.question),'古墳の大きさから、何が考えられますか。');
+ });
+ test('小6社会改訂：書き問題の別名が実際に正解になる',()=>{
+  const names={social_g6_prehistoric_017:['ヤマト政権','大和王権','ヤマト王権','やまとおうけん'],social_g6_prehistoric_003:['竪穴式住居','たて穴式住居'],social_g6_asuka_nara_003:['十七条憲法','じゅうしちじょうけんぽう']};
+  Object.entries(names).forEach(([id,answers])=>{const q=c.FF.learning.inputVariant(qs.find(q=>q.id===id));answers.forEach(a=>assert.ok(c.FF.answer.judge(q,a).correct,id+a));});
+  qs.filter(q=>q.inputForm).forEach(q=>{const v=c.FF.learning.inputVariant(q);assert.deepStrictEqual(Array.from(c.FF.learning.validateQuestion(v)),[],q.id);});
+ });
+
 };

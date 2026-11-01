@@ -1,7 +1,7 @@
 # 小6社会 第1回（最初の2単元）
 
 依頼範囲：単元登録、既存問題のunit整理、新作56問。図は0枚・diagramなし。
-新作はすべて collection: course_so6_1、reviewed: false。ヒント各1個、正解の理由と全誤答の解説を問題内に記載。30問にinputFormあり。
+新作はすべて collection: course_so6_1、reviewed: false。ヒント各1個、正解の理由と全誤答の解説を問題内に記載。初版は30問にinputFormあり。改訂版は28問（REPORT_SOCIAL6_REVISION.md参照）。
 
 | 単元 | 新作 基礎 | 新作 標準 | 新作 発展 | 新作計 | 既存を含む計 |
 |---|---:|---:|---:|---:|---:|
