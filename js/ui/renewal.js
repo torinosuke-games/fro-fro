@@ -268,7 +268,7 @@
    else if(q.answerType!=='choice')card.appendChild(button(R.checkAnswer,submit,'rn-button primary check-answer'));
    if(q.answerType==='choice'&&FF.tickets.recoverTickets(a.state.tickets,a.now()).count<1){var rnd=s.sel.unit==='all'&&s.sel.difficulty==='random';card.appendChild(E('div',{class:'no-ticket-box'},[E('p',{text:R.noTickets}),E('p',{class:'no-ticket-streak',text:rnd?R.noTicketStreak:R.noTicketNeedRandom}),button(R.switchInput,function(){changeFilter('answerType','input');},'rn-button')]));}
   }else if(it.outcome){
-   var good=it.outcome.status==='correct',fb=E('div',{class:'answer-feedback '+(good?'good':'review'),attrs:{role:'status',tabindex:'-1'}},[
+   var good=it.outcome.status==='correct',fb=!good?null:E('div',{class:'answer-feedback '+(good?'good':'review'),attrs:{role:'status',tabindex:'-1'}},[
     E('strong',{text:good?'✓ '+R.correct:R.review}),
     good?E('div',{class:'reward-gains'},[
      E('div',{class:'reward-gain reward-resource'},[U.resIcon(U.resDef(it.resource)),E('strong',{text:'+'+it.outcome.reward}),E('span',{text:U.plain(U.resDef(it.resource).name)})]),
@@ -276,7 +276,7 @@
     ]):E('span',{text:R.reviewNote})
    ]);
    if(good&&it.outcome.streak>=2)fb.appendChild(E('div',{class:'streak-note',text:(it.outcome.noTicket?R.noTicketStreakNow.replace('{mult}',String(Math.round(it.outcome.streakMult*100))):R.ticketStreakNow).replace('{n}',it.outcome.streak)}));
-   card.appendChild(fb);
+   if(fb)card.appendChild(fb);
    var det=E('details',{class:'reward-details'},[E('summary',{text:R.rewardDetails})]);
    if(good){var bd=it.outcome.breakdown;det.appendChild(E('p',{text:R.rewardFormula.replace('{accuracy}',String(Math.round(bd.accuracy*100))).replace('{repeat}',String(Math.round(bd.repeat*100))).replace('{hint}',String(Math.round(bd.hint*100)))}));}
    else det.appendChild(E('p',{text:R.noReward}));

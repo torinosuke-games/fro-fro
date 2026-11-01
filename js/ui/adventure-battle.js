@@ -189,6 +189,7 @@
     var before = p(); S.last = { text: value === UNKNOWN ? null : value };
     var next = A.answer(before, value, FF.app.now());
     if (next === before) return;
+    if (next.battle && next.battle.correct && FF.sound) FF.sound.correct();   // 正解の音：学習のページと同じ（設定の「正解の音」・音の種類に従う。判断513）
     host.change(next);
   }
   function quizPanel() {

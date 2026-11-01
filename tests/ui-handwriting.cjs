@@ -62,7 +62,7 @@ const { chromium } = require(process.env.FF_PLAYWRIGHT_MODULE || 'playwright');
   await page.getByRole('button', { name: 'お手本を見る' }).click();
   const b2 = await page.evaluate(() => FF.app.state.studyPoints);
   await page.locator('.hw-ng').click();
-  await page.waitForSelector('.answer-feedback.review');
+  await page.waitForSelector('.reward-details');   // 不正解のときは、メッセージの枠は出さない（判断513）
   assert.equal(await page.evaluate(() => FF.app.state.studyPoints), b2);
   // キーボードで入力にも、切りかえられる（書く前）
   await show('japanese_g4_hand_kanji_write_010#input');
