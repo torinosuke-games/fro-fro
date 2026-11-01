@@ -2,9 +2,9 @@
 const L=require('../lib/loader');
 module.exports=({test,assert})=>{
  const c=L.load(L.LOGIC_FILES_WITH_FIXES),U=c.FF.util,all=c.QUESTION_BANK,qs=all.filter(q=>q.collection==='course_so6_1');
- test('小6社会第1回：6単元168問、各基礎8・標準12・発展8、未レビュー・図なし',()=>{
-  assert.equal(qs.length,168);
-  for(const unit of ['prehistoric','asuka_nara','heian','kamakura','muromachi_sengoku','edo'])for(const [d,n] of [['basic',8],['standard',12],['advanced',8]])assert.equal(qs.filter(q=>q.unit===unit&&q.difficulty===d).length,n,unit+d);
+ test('小6社会第1回：8単元224問、各基礎8・標準12・発展8、未レビュー・図なし',()=>{
+  assert.equal(qs.length,224);
+  for(const unit of ['prehistoric','asuka_nara','heian','kamakura','muromachi_sengoku','edo','meiji','modern'])for(const [d,n] of [['basic',8],['standard',12],['advanced',8]])assert.equal(qs.filter(q=>q.unit===unit&&q.difficulty===d).length,n,unit+d);
   qs.forEach(q=>{assert.equal(q.reviewed,false);assert.ok(!q.diagram);assert.deepStrictEqual(Array.from(c.FF.learning.validateQuestion(q)),[],q.id);});
  });
  test('小6社会第1回：重複IDなし・4択・ヒント1〜2・全誤答解説・答えの漏れなし',()=>{
@@ -57,6 +57,16 @@ module.exports=({test,assert})=>{
   const counts={};Object.values(types).forEach(t=>counts[t]=(counts[t]||0)+1);Object.values(counts).forEach(n=>assert.ok(n<=3));
   const old=['kamakura_010','kamakura_012','kamakura_015','kamakura_016','kamakura_017','kamakura_018','kamakura_019','heian_017','heian_022','heian_026'];
   old.forEach(id=>assert.ok(qs.some(q=>q.id==='social_g6_'+id),id));
+ });
+
+ test('小6社会第4回：発展16問は各型3問以下、結び付ける二つの事項を記録',()=>{
+  const types=require('../fixtures/social6-advanced-types-4.json');
+  const links=require('../fixtures/social6-advanced-connections-4.json');
+  const adv=qs.filter(q=>['meiji','modern'].includes(q.unit)&&q.difficulty==='advanced');
+  assert.equal(adv.length,16);
+  for(const data of [types,links])assert.deepStrictEqual(Object.keys(data).sort(),Array.from(adv,q=>q.id).sort());
+  const counts={};Object.values(types).forEach(t=>counts[t]=(counts[t]||0)+1);Object.values(counts).forEach(n=>assert.ok(n<=3));
+  Object.entries(links).forEach(([id,facts])=>{assert.equal(facts.length,2,id);assert.equal(new Set(facts).size,2,id);facts.forEach(s=>assert.ok(typeof s==='string'&&s.length>0,id));});
  });
 
 };

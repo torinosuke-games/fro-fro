@@ -320,3 +320,7 @@ AI が作成した問題のうち、人が事実関係・表現を確認すべ�
 ## 小6社会 第1回（Codex、reviewed:false）
 新作 social_g6_prehistoric_001〜028、social_g6_asuka_nara_001〜028。
 重点確認IDと観点はルートの QUESTION_REVIEW_1.md に記録。
+
+## 小6社会 第4回（Codex、reviewed:false）
+新作social_g6_meiji_001〜028、social_g6_modern_001〜028。
+条約改正、選挙権、植民地支配、戦争・原爆被害、戦後制度・沖縄復帰の事実確認と、小6の教科書範囲・発展の難易度の確認はQUESTION_REVIEW_1.md「第4回」を参照。外部資料照合・専門家レビューは未実施。
