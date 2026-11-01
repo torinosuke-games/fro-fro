@@ -2,9 +2,9 @@
 const L=require('../lib/loader');
 module.exports=({test,assert})=>{
  const c=L.load(L.LOGIC_FILES_WITH_FIXES),U=c.FF.util,all=c.QUESTION_BANK,qs=all.filter(q=>q.collection==='course_so6_1');
- test('小6社会第1回：4単元112問、各基礎8・標準12・発展8、未レビュー・図なし',()=>{
-  assert.equal(qs.length,112);
-  for(const unit of ['prehistoric','asuka_nara','heian','kamakura'])for(const [d,n] of [['basic',8],['standard',12],['advanced',8]])assert.equal(qs.filter(q=>q.unit===unit&&q.difficulty===d).length,n,unit+d);
+ test('小6社会第1回：6単元168問、各基礎8・標準12・発展8、未レビュー・図なし',()=>{
+  assert.equal(qs.length,168);
+  for(const unit of ['prehistoric','asuka_nara','heian','kamakura','muromachi_sengoku','edo'])for(const [d,n] of [['basic',8],['standard',12],['advanced',8]])assert.equal(qs.filter(q=>q.unit===unit&&q.difficulty===d).length,n,unit+d);
   qs.forEach(q=>{assert.equal(q.reviewed,false);assert.ok(!q.diagram);assert.deepStrictEqual(Array.from(c.FF.learning.validateQuestion(q)),[],q.id);});
  });
  test('小6社会第1回：重複IDなし・4択・ヒント1〜2・全誤答解説・答えの漏れなし',()=>{
@@ -46,6 +46,17 @@ module.exports=({test,assert})=>{
   const adv=qs.filter(q=>['heian','kamakura'].includes(q.unit)&&q.difficulty==='advanced');
   assert.equal(adv.length,16);assert.deepStrictEqual(Object.keys(types).sort(),Array.from(adv,q=>q.id).sort());
   const counts={};Object.values(types).forEach(t=>counts[t]=(counts[t]||0)+1);Object.values(counts).forEach(n=>assert.ok(n<=3));
+ });
+
+ test('小6社会第3回：指定の範囲外用語を新作から除き、追加発展は各型3問以下',()=>{
+  const excluded=/公領|国衙|康慶|定朝|湛慶|政所|問注所|侍所|雑徭|院政|六波羅探題|二毛作|定期市|禅宗|題目|快慶/;
+  qs.forEach(q=>assert.ok(!excluded.test(U.plainText(JSON.stringify(q))),q.id));
+  const types=require('../fixtures/social6-advanced-types-3.json');
+  const adv=qs.filter(q=>['muromachi_sengoku','edo'].includes(q.unit)&&q.difficulty==='advanced');
+  assert.equal(adv.length,16);assert.deepStrictEqual(Object.keys(types).sort(),Array.from(adv,q=>q.id).sort());
+  const counts={};Object.values(types).forEach(t=>counts[t]=(counts[t]||0)+1);Object.values(counts).forEach(n=>assert.ok(n<=3));
+  const old=['kamakura_010','kamakura_012','kamakura_015','kamakura_016','kamakura_017','kamakura_018','kamakura_019','heian_017','heian_022','heian_026'];
+  old.forEach(id=>assert.ok(qs.some(q=>q.id==='social_g6_'+id),id));
  });
 
 };
