@@ -1,4 +1,4 @@
-// 小6社会 第1回：56問。誤答・発展問題を改訂。全問レビュー待ち。
+// 小6社会：4単元112問。全問レビュー待ち。
 window.QUESTION_BANK.push(
 {
   "id": "social_g6_prehistoric_001",
@@ -79,10 +79,6 @@ window.QUESTION_BANK.push(
     "validationMode": "kana-insensitive",
     "acceptedAnswers": [
       "たてあなじゅうきょ",
-      "竪穴住居",
-      "竪穴式住居",
-      "たて穴式住居",
-      "たてあなしきじゅうきょ",
       "竪穴住居",
       "竪穴式住居",
       "たて穴式住居",
@@ -175,8 +171,6 @@ window.QUESTION_BANK.push(
   "inputForm": {
     "validationMode": "kana-insensitive",
     "acceptedAnswers": [
-      "はにわ",
-      "埴輪",
       "埴輪"
     ],
     "reviewed": false,
@@ -270,7 +264,7 @@ window.QUESTION_BANK.push(
   "collection": "course_so6_1",
   "difficulty": "standard",
   "answerType": "choice",
-  "question": "縄文の住まいのあとから、火で焼いたあとがある魚の骨が、食べ残しとして見つかりました。どのような使われ方が考えられますか。",
+  "question": "縄文の住まいのあとから、火で焼いたあとがある魚の骨が見つかりました。どのような使われ方が考えられますか。",
   "choices": [
     "魚を焼いて食べたあとの骨だった",
     "魚をとるための針だった",
@@ -281,7 +275,7 @@ window.QUESTION_BANK.push(
   "hints": [
     "加工された道具なのか、食べ物の残りなのか考えよう。"
   ],
-  "explanation": "魚の骨に焼いたあとがあり、食べ残しとして出ていることは、魚を加熱して食べた手がかりになります。\n\nほかの 選択肢\n・「魚をとるための針だった」…細い骨を道具に加工した例はありますが、資料では食べ残しとして見つかっています。\n・「魚を運ぶためのかごだった」…かごは植物のつるなどを編んだ道具です。\n・「木の実をすりつぶす石皿だった」…石皿は植物の食料の加工に使う石の道具です。",
+  "explanation": "魚の骨に火で焼いたあとがあることは、魚を加熱して食べたことを考える手がかりになります。\n\nほかの 選択肢\n・「魚をとるための針だった」…骨を針に加工した形やあとがあるか調べる必要があります。\n・「魚を運ぶためのかごだった」…かごは植物のつるなどを編んだ道具です。\n・「木の実をすりつぶす石皿だった」…石皿は植物の食料の加工に使う石の道具です。",
   "reviewed": false
 },
 {
@@ -472,10 +466,6 @@ window.QUESTION_BANK.push(
       "ヤマト政権",
       "大和王権",
       "ヤマト王権",
-      "やまとおうけん",
-      "ヤマト政権",
-      "大和王権",
-      "ヤマト王権",
       "やまとおうけん"
     ],
     "reviewed": false,
@@ -641,18 +631,18 @@ window.QUESTION_BANK.push(
   "collection": "course_so6_1",
   "difficulty": "advanced",
   "answerType": "choice",
-  "question": "地層の上下が{入れ替わ|いれかわ}っていない遺跡です。下の層に{狩り|かり}の道具、中の層に農具、上の層に大型の古墳がありました。古い順はどれですか。",
+  "question": "地層の上下が{入れ替わ|いれかわ}っていない遺跡です。下の層に{狩り|かり}の道具、中の層に農具、上の層にはにわのかけらがありました。古い順はどれですか。",
   "choices": [
-    "{狩り|かり}の道具→農具→大型の古墳",
-    "農具→{狩り|かり}の道具→大型の古墳",
-    "大型の古墳→農具→{狩り|かり}の道具",
-    "{狩り|かり}の道具→大型の古墳→農具"
+    "{狩り|かり}の道具→農具→はにわのかけら",
+    "農具→{狩り|かり}の道具→はにわのかけら",
+    "はにわのかけら→農具→{狩り|かり}の道具",
+    "{狩り|かり}の道具→はにわのかけら→農具"
   ],
-  "answer": "{狩り|かり}の道具→農具→大型の古墳",
+  "answer": "{狩り|かり}の道具→農具→はにわのかけら",
   "hints": [
     "下の層から順に読み取ろう。"
   ],
-  "explanation": "地層の順序が変わっていなければ、下の層ほど先にできたものです。この遺跡の変化を下から読み取ります。\n\nほかの 選択肢\n・「農具→{狩り|かり}の道具→大型の古墳」…資料では{狩り|かり}の道具が多い層の方が古いという順序を逆にしています。\n・「大型の古墳→農具→{狩り|かり}の道具」…古墳をいちばん古く置き、資料の順序と逆になっています。\n・「{狩り|かり}の道具→大型の古墳→農具」…資料では農具の多い層が古墳のある層より古いことを入れ替えています。",
+  "explanation": "地層の順序が変わっていなければ、下の層ほど先にできたものです。この遺跡の変化を下から読み取ります。\n\nほかの 選択肢\n・「農具→{狩り|かり}の道具→はにわのかけら」…資料では{狩り|かり}の道具が多い層の方が古いという順序を逆にしています。\n・「はにわのかけら→農具→{狩り|かり}の道具」…はにわのかけらをいちばん古く置き、資料の順序と逆になっています。\n・「{狩り|かり}の道具→はにわのかけら→農具」…資料では農具の多い層がはにわのかけらがある層より古いことを入れ替えています。",
   "reviewed": false
 },
 {
@@ -834,17 +824,12 @@ window.QUESTION_BANK.push(
     "acceptedAnswers": [
       "じゅうしちじょうのけんぽう",
       "十七条憲法",
-      "じゅうしちじょうけんぽう",
-      "十七条の憲法",
-      "十七条憲法",
-      "じゅうしちじょうけんぽう",
-      "十七条の憲法"
+      "じゅうしちじょうけんぽう"
     ],
     "reviewed": false,
     "answerAlso": [
       "十七条憲法",
-      "じゅうしちじょうけんぽう",
-      "十七条の憲法"
+      "じゅうしちじょうけんぽう"
     ]
   }
 },
@@ -1514,7 +1499,7 @@ window.QUESTION_BANK.push(
   "collection": "course_so6_1",
   "difficulty": "advanced",
   "answerType": "choice",
-  "question": "大化の改新は645年、平城京に都を移したのは710年、{墾田永年私財法|こんでんえいねんしざいほう}は743年です。国づくりの動きを古い順に並べたものはどれですか。",
+  "question": "大化の改新、平城京へ都を移すこと、{墾田永年私財法|こんでんえいねんしざいほう}。これらを古い順に並べたものはどれですか。",
   "choices": [
     "大化の改新→平城京への{遷都|せんと}→{墾田永年私財法|こんでんえいねんしざいほう}",
     "平城京への{遷都|せんと}→大化の改新→{墾田永年私財法|こんでんえいねんしざいほう}",
@@ -1523,9 +1508,1555 @@ window.QUESTION_BANK.push(
   ],
   "answer": "大化の改新→平城京への{遷都|せんと}→{墾田永年私財法|こんでんえいねんしざいほう}",
   "hints": [
-    "三つの年を小さい順に並べよう。"
+    "政治改革のあとに都が整えられ、奈良時代に新しい田の私有を認める法令が出たよ。"
   ],
   "explanation": "年の数を比べると645年、710年、743年の順です。政治改革、都の整備、新しい田の私有を認める法令へと進みました。\n\nほかの 選択肢\n・「平城京への{遷都|せんと}→大化の改新→{墾田永年私財法|こんでんえいねんしざいほう}」…645年と710年の出来事の順を逆にしています。\n・「大化の改新→{墾田永年私財法|こんでんえいねんしざいほう}→平城京への{遷都|せんと}」…710年と743年の出来事の順を逆にしています。\n・「{墾田永年私財法|こんでんえいねんしざいほう}→大化の改新→平城京への{遷都|せんと}」…743年の法令を645年より前に置いています。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_001",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 1,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "794年に京都へ都を移した天皇はだれですか。",
+  "choices": [
+    "{桓武天皇|かんむてんのう}",
+    "聖武天皇",
+    "天智天皇",
+    "推古天皇"
+  ],
+  "answer": "{桓武天皇|かんむてんのう}",
+  "hints": [
+    "奈良時代の次の時代の始まりを考えよう。"
+  ],
+  "explanation": "{桓武天皇|かんむてんのう}は政治を立て直すため、平安京へ都を移しました。\n\nほかの 選択肢\n・「聖武天皇」…奈良時代に大仏づくりなどを進めた天皇です。\n・「天智天皇」…飛鳥時代の政治を進めた天皇です。\n・「推古天皇」…聖徳太子が政治を助けた飛鳥時代の天皇です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "かんむてんのう"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_002",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 2,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "794年に京都に置かれ、その後長く政治や文化の中心となった都は何ですか。",
+  "choices": [
+    "平安京",
+    "平城京",
+    "長岡京",
+    "藤原京"
+  ],
+  "answer": "平安京",
+  "hints": [
+    "奈良の都と区別しよう。"
+  ],
+  "explanation": "京都に置かれた平安京は、天皇や{貴族|きぞく}が暮らす政治と文化の中心でした。\n\nほかの 選択肢\n・「平城京」…710年に奈良に置かれた都です。\n・「長岡京」…平安京へ移る前に都が置かれた場所です。\n・「藤原京」…平城京より前の飛鳥時代の都です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "へいあんきょう"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_003",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 3,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "平安時代に、天皇のそばで政治を行い、都で豊かな暮らしをした身分の人々を何といいますか。",
+  "choices": [
+    "{貴族|きぞく}",
+    "武士",
+    "農民",
+    "{僧|そう}"
+  ],
+  "answer": "{貴族|きぞく}",
+  "hints": [
+    "地方で武芸を身に付けた武士と比べよう。"
+  ],
+  "explanation": "{貴族|きぞく}は朝廷の役職に就き、都を中心に政治や文化を担いました。\n\nほかの 選択肢\n・「武士」…武芸を身に付け、土地などを守った人々です。\n・「農民」…田畑を耕し、税などを納めた人々です。\n・「{僧|そう}」…仏教を学び、教えを伝えた人です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "きぞく"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_004",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 4,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "幼い天皇に代わって政治を行う役職を何といいますか。",
+  "choices": [
+    "{摂政|せっしょう}",
+    "{関白|かんぱく}",
+    "国司",
+    "太政大臣"
+  ],
+  "answer": "{摂政|せっしょう}",
+  "hints": [
+    "成人した天皇を補佐する役職と区別しよう。"
+  ],
+  "explanation": "天皇が幼いときなどに、代わって政治を行う役職です。\n\nほかの 選択肢\n・「{関白|かんぱく}」…成人した天皇の政治を助ける役職です。\n・「国司」…地方の国を治める役人です。\n・「太政大臣」…朝廷の高い役職で、幼い天皇に代わる役職の{名称|めいしょう}とは異なります。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "せっしょう"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_005",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 5,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "成人した天皇を助けて政治を行う役職を何といいますか。",
+  "choices": [
+    "{関白|かんぱく}",
+    "{摂政|せっしょう}",
+    "国司",
+    "太政大臣"
+  ],
+  "answer": "{関白|かんぱく}",
+  "hints": [
+    "天皇が幼いときの役職とは名前が{違う|ちがう}よ。"
+  ],
+  "explanation": "天皇を補佐する役職で、藤原氏が政治で力を持つしくみと関わりました。\n\nほかの 選択肢\n・「{摂政|せっしょう}」…幼い天皇などに代わって政治を行う役職です。\n・「国司」…地方の国を治める役人です。\n・「太政大臣」…朝廷の高い役職ですが、成人した天皇を補佐する{関白|かんぱく}とは別の役職です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "かんぱく"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_006",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 6,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "漢字をもとに生まれ、日本語を書き表しやすくした文字を何といいますか。",
+  "choices": [
+    "かな文字",
+    "漢字",
+    "和歌",
+    "絵巻物"
+  ],
+  "answer": "かな文字",
+  "hints": [
+    "ひらがなやカタカナをまとめた呼び方だよ。"
+  ],
+  "explanation": "日本語の音に合わせて表現しやすくなり、文学の発達を支えました。\n\nほかの 選択肢\n・「漢字」…中国から伝わり、意味と音を表す文字です。\n・「和歌」…五・七・五・七・七を基本とする歌です。\n・「絵巻物」…絵や文章を巻物にして物語などを表すものです。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "かなもじ",
+      "仮名文字"
+    ],
+    "reviewed": false,
+    "answerAlso": [
+      "仮名文字"
+    ]
+  }
+},
+{
+  "id": "social_g6_heian_007",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 7,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "『{枕草子|まくらのそうし}』で季節や宮中の暮らしなどを書いた人物はだれですか。",
+  "choices": [
+    "{清少納言|せいしょうなごん}",
+    "紫式部",
+    "{紀貫之|きのつらゆき}",
+    "{菅原道真|すがわらのみちざね}"
+  ],
+  "answer": "{清少納言|せいしょうなごん}",
+  "hints": [
+    "長い物語ではなく、感じたことなどをつづった作品だよ。"
+  ],
+  "explanation": "{清少納言|せいしょうなごん}は、身近な出来事や自然についての感じ方を文章に残しました。\n\nほかの 選択肢\n・「紫式部」…『源氏物語』を書いた人物です。\n・「{紀貫之|きのつらゆき}」…和歌や『土佐日記』に関わる人物です。\n・「{菅原道真|すがわらのみちざね}」…学問や政治で活躍した人物です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "せいしょうなごん"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_008",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 8,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "地方で土地を守るために武芸を身に付け、やがて政治でも力を持った人々を何といいますか。",
+  "choices": [
+    "武士",
+    "{貴族|きぞく}",
+    "国司",
+    "{僧|そう}"
+  ],
+  "answer": "武士",
+  "hints": [
+    "弓や馬などの技術を身に付けた人々だよ。"
+  ],
+  "explanation": "土地を守る戦いなどを通じて力を付け、集団を作るようになりました。\n\nほかの 選択肢\n・「{貴族|きぞく}」…都の朝廷を中心に政治や文化を担った人々です。\n・「国司」…地方の国を治める役職の名前です。\n・「{僧|そう}」…仏教の教えを学び伝える人です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ぶし"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_009",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 9,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "藤原氏が{摂政|せっしょう}や{関白|かんぱく}として力を持つうえで、天皇の家との間で進めたことはどれですか。",
+  "choices": [
+    "娘を天皇のきさきにし、天皇の親族になる",
+    "国司として地方に住み、都の仕事を{離れ|はなれ}る",
+    "天皇を退いた本人が、院で政治を行う",
+    "寺の住職となり、仏教の教えを広める"
+  ],
+  "answer": "娘を天皇のきさきにし、天皇の親族になる",
+  "hints": [
+    "役職だけでなく、家族のつながりにも注目しよう。"
+  ],
+  "explanation": "天皇の母方の親族となることが、政治を助ける立場を得ることにつながりました。\n\nほかの 選択肢\n・「国司として地方に住み、都の仕事を{離れ|はなれ}る」…地方の国を治める役職と、天皇のそばで力を持つしくみを取り{違え|ちがえ}ています。\n・「天皇を退いた本人が、院で政治を行う」…これは上皇が行う院政のしくみです。\n・「寺の住職となり、仏教の教えを広める」…{僧|そう}としての活動と、天皇の親族としての政治を取り{違え|ちがえ}ています。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_010",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 10,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "中国の文化を取り入れながら、日本の風土や暮らしに合う形で発達した平安時代の文化を何といいますか。",
+  "choices": [
+    "国風文化",
+    "天平文化",
+    "{唐風|とうふう}の文化",
+    "武士の文化"
+  ],
+  "answer": "国風文化",
+  "hints": [
+    "文化がどの土地の暮らしに合うようになったか考えよう。"
+  ],
+  "explanation": "かな文字を使う文学など、日本の暮らしに合った文化が発達しました。\n\nほかの 選択肢\n・「天平文化」…奈良時代に栄えた、大陸の影響が強い文化です。\n・「{唐風|とうふう}の文化」…唐の文化を手本とする面を強調した呼び方です。\n・「武士の文化」…武芸や武士の暮らしなどと結び付いた文化です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "こくふうぶんか"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_011",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 11,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "{比叡山|ひえいざん}に{延暦寺|えんりゃくじ}を開き、日本に{天台宗|てんだいしゅう}を広めた{僧|そう}はだれですか。",
+  "choices": [
+    "{最澄|さいちょう}",
+    "{空海|くうかい}",
+    "{鑑真|がんじん}",
+    "行基"
+  ],
+  "answer": "{最澄|さいちょう}",
+  "hints": [
+    "{空海|くうかい}と活動の場所を区別しよう。"
+  ],
+  "explanation": "{最澄|さいちょう}は唐で学んだ仏教をもとに、{比叡山|ひえいざん}を中心として教えを広めました。\n\nほかの 選択肢\n・「{空海|くうかい}」…高野山を中心に{真言宗|しんごんしゅう}を広めた{僧|そう}です。\n・「{鑑真|がんじん}」…奈良時代に唐から来て{戒律|かいりつ}を伝えた{僧|そう}です。\n・「行基」…奈良時代に民衆への{布教|ふきょう}や橋づくりなどに関わった{僧|そう}です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "さいちょう"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_012",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 12,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "高野山を中心に、日本に{真言宗|しんごんしゅう}を広めた{僧|そう}はだれですか。",
+  "choices": [
+    "{空海|くうかい}",
+    "{最澄|さいちょう}",
+    "{鑑真|がんじん}",
+    "行基"
+  ],
+  "answer": "{空海|くうかい}",
+  "hints": [
+    "{比叡山|ひえいざん}を中心に活動した{僧|そう}と区別しよう。"
+  ],
+  "explanation": "{空海|くうかい}は唐で学び、{真言宗|しんごんしゅう}の教えを広めました。\n\nほかの 選択肢\n・「{最澄|さいちょう}」…{比叡山|ひえいざん}に{延暦寺|えんりゃくじ}を開いた{僧|そう}です。\n・「{鑑真|がんじん}」…奈良時代に仏教の{戒律|かいりつ}を伝えた{僧|そう}です。\n・「行基」…奈良時代に民衆への{布教|ふきょう}や社会のための仕事をした{僧|そう}です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "くうかい"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_013",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 13,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "894年に{遣唐使|けんとうし}を送ることの中止を提案した人物はだれですか。",
+  "choices": [
+    "{菅原道真|すがわらのみちざね}",
+    "{紀貫之|きのつらゆき}",
+    "{藤原頼通|ふじわらのよりみち}",
+    "{平清盛|たいらのきよもり}"
+  ],
+  "answer": "{菅原道真|すがわらのみちざね}",
+  "hints": [
+    "学問の面でも知られる政治家だよ。"
+  ],
+  "explanation": "唐の国情や航海の危険などを考え、使いを送ることの中止を提案しました。\n\nほかの 選択肢\n・「{紀貫之|きのつらゆき}」…和歌や日記の文学で知られる人物です。\n・「{藤原頼通|ふじわらのよりみち}」…{平等院鳳凰堂|びょうどういんほうおうどう}を建てた人物です。\n・「{平清盛|たいらのきよもり}」…平安時代末に政治や日{宋|そう}貿易で力を持った人物です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "すがわらのみちざね"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_014",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 14,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "平安時代の後半に広がった、{貴族|きぞく}や寺院などが持つ私有地を何といいますか。",
+  "choices": [
+    "{荘園|しょうえん}",
+    "{口分田|くぶんでん}",
+    "公領",
+    "{国衙|こくが}"
+  ],
+  "answer": "{荘園|しょうえん}",
+  "hints": [
+    "国が人々に分け与える田と区別しよう。"
+  ],
+  "explanation": "地方の土地が{貴族|きぞく}や寺院に{寄進|きしん}されるなどして、私有地が広がりました。\n\nほかの 選択肢\n・「{口分田|くぶんでん}」…古代に国が人々に分け与えた田です。\n・「公領」…国司が管理する土地です。\n・「{国衙|こくが}」…国司が地方の政治を行う役所です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "しょうえん"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_015",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 15,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "{貴族|きぞく}の暮らしで、五・七・五・七・七の音を基本に気持ちを表したものを何といいますか。",
+  "choices": [
+    "和歌",
+    "かな文字",
+    "絵巻物",
+    "漢詩"
+  ],
+  "answer": "和歌",
+  "hints": [
+    "文字の種類ではなく、歌の形の名前だよ。"
+  ],
+  "explanation": "自然や{恋|こい}などへの思いを表し、{贈り|おくり}合うこともありました。\n\nほかの 選択肢\n・「かな文字」…日本語の音を表しやすくした文字です。\n・「絵巻物」…絵と文章で物語などを表す巻物です。\n・「漢詩」…漢字を使い、中国の詩のきまりに沿って作る詩です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "わか"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_016",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 16,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "宇治の{平等院鳳凰堂|びょうどういんほうおうどう}を建て、{極楽浄土|ごくらくじょうど}への願いを表した藤原氏の人物はだれですか。",
+  "choices": [
+    "{藤原頼通|ふじわらのよりみち}",
+    "{藤原道長|ふじわらのみちなが}",
+    "{菅原道真|すがわらのみちざね}",
+    "{平清盛|たいらのきよもり}"
+  ],
+  "answer": "{藤原頼通|ふじわらのよりみち}",
+  "hints": [
+    "{藤原道長|ふじわらのみちなが}の子にあたる人物だよ。"
+  ],
+  "explanation": "{藤原頼通|ふじわらのよりみち}は{阿弥陀|あみだ}仏をまつる{鳳凰堂|ほうおうどう}を建て、{極楽浄土|ごくらくじょうど}への願いを表しました。\n\nほかの 選択肢\n・「{藤原道長|ふじわらのみちなが}」…{頼通|よりみち}の父で、{摂関政治|せっかんせいじ}で大きな力を持った人物です。\n・「{菅原道真|すがわらのみちざね}」…学問や政治で知られる人物です。\n・「{平清盛|たいらのきよもり}」…平安時代末に力を持った平氏の武士です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ふじわらのよりみち"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_017",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 17,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "天皇が位をゆずった後、上皇として政治を行うしくみを何といいますか。",
+  "choices": [
+    "院政",
+    "{摂関政治|せっかんせいじ}",
+    "国司による政治",
+    "武士による政治"
+  ],
+  "answer": "院政",
+  "hints": [
+    "天皇の親族が補佐する政治との{違い|ちがい}を考えよう。"
+  ],
+  "explanation": "上皇が自分のもとで政治を進め、{摂関家|せっかんけ}とは別の政治の中心となりました。\n\nほかの 選択肢\n・「{摂関政治|せっかんせいじ}」…{摂政|せっしょう}や{関白|かんぱく}が天皇を助けて政治を行うしくみです。\n・「国司による政治」…地方の国を治める役人による政治です。\n・「武士による政治」…武士が力を持って行う政治です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "いんせい"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_heian_018",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 18,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "{平清盛|たいらのきよもり}が力を入れた日{宋|そう}貿易では、{宋|そう}との間で何が行われましたか。",
+  "choices": [
+    "船で品物や{銭|ぜに}などを運び、取引した",
+    "国司を{宋|そう}へ送って現地の税を集めた",
+    "{宋|そう}の役人が日本の{荘園|しょうえん}を配った",
+    "{宋|そう}から京都まで陸路で品物を運んだ"
+  ],
+  "answer": "船で品物や{銭|ぜに}などを運び、取引した",
+  "hints": [
+    "外交の使いや国内の税の運搬と区別しよう。"
+  ],
+  "explanation": "日本と{宋|そう}の間で船による取引が行われ、品物や{銭|ぜに}などが行き来しました。\n\nほかの 選択肢\n・「国司を{宋|そう}へ送って現地の税を集めた」…国司は国内の地方の役人で、外国の税を集める役ではありません。\n・「{宋|そう}の役人が日本の{荘園|しょうえん}を配った」…貿易と、日本国内の土地の所有を取り{違え|ちがえ}ています。\n・「{宋|そう}から京都まで陸路で品物を運んだ」…日本と{宋|そう}の間には海があり、船を使いました。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_019",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 19,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "都の{貴族|きぞく}の{屋敷|やしき}で、広い庭や池を設け、中心の建物と周りの建物を{渡り廊下|わたりろうか}でつないだ造りを何といいますか。",
+  "choices": [
+    "{寝殿造|しんでんづくり}",
+    "高床倉庫",
+    "たて穴住居",
+    "{鳳凰堂|ほうおうどう}"
+  ],
+  "answer": "{寝殿造|しんでんづくり}",
+  "hints": [
+    "寺や農民の住まいではなく、{貴族|きぞく}の{屋敷|やしき}だよ。"
+  ],
+  "explanation": "{貴族|きぞく}の住まいに見られる造りで、行事や庭を楽しむ暮らしと結び付きました。\n\nほかの 選択肢\n・「高床倉庫」…穀物などを保存するため床を高くした建物です。\n・「たて穴住居」…地面をほり下げて作る住まいです。\n・「{鳳凰堂|ほうおうどう}」…{阿弥陀|あみだ}仏をまつる平等院の建物です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "しんでんづくり",
+      "寝殿づくり"
+    ],
+    "reviewed": false,
+    "answerAlso": [
+      "寝殿づくり"
+    ]
+  }
+},
+{
+  "id": "social_g6_heian_020",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 20,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "平安時代の末、平氏が政治で大きな力を持つようになったことは、どのような変化を示しますか。",
+  "choices": [
+    "武士が中央の政治にも進出した",
+    "天皇の親族であることだけが政治参加の条件になった",
+    "地方を治める国司の仕事がなくなった",
+    "上皇に代わって{僧|そう}が軍事を担当する制度になった"
+  ],
+  "answer": "武士が中央の政治にも進出した",
+  "hints": [
+    "政治の中心に加わった人々の身分に注目しよう。"
+  ],
+  "explanation": "地方で力を付けた武士が、都の争いなどを通じて中央の政治でも力を持つようになりました。\n\nほかの 選択肢\n・「天皇の親族であることだけが政治参加の条件になった」…平氏は武士として力を付けて中央政治へ進みました。\n・「地方を治める国司の仕事がなくなった」…武士の進出と国司の仕事の{消滅|しょうめつ}は同じではありません。\n・「上皇に代わって{僧|そう}が軍事を担当する制度になった」…中央で力を持った平氏は武士の一族です。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_021",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 21,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "かな文字が使われるようになったことは、文学にどのような影響を与えましたか。",
+  "choices": [
+    "日本語で細かな気持ちや日常を書き表しやすくなった",
+    "和歌の音の数を変え、漢詩と同じ形にした",
+    "漢字の意味を使い、日本語を中国語の語順にそろえた",
+    "絵を文字の代わりにし、文章を使わず物語を表した"
+  ],
+  "answer": "日本語で細かな気持ちや日常を書き表しやすくなった",
+  "hints": [
+    "話している日本語を文字にするときのことを考えよう。"
+  ],
+  "explanation": "日本語の音に合う文字によって、物語や日記などの表現が豊かになりました。\n\nほかの 選択肢\n・「和歌の音の数を変え、漢詩と同じ形にした」…かな文字の発達は、和歌を漢詩の形に変えることではありません。\n・「漢字の意味を使い、日本語を中国語の語順にそろえた」…かな文字は日本語の音に合わせて書きやすくする文字です。\n・「絵を文字の代わりにし、文章を使わず物語を表した」…かな文字を使う物語や日記では文章による表現が発達しました。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_022",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 22,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "Aは幼い天皇に代わって政治をし、Bは位をゆずった天皇が政治をしています。AとBの組み合わせはどれですか。",
+  "choices": [
+    "Aは{摂政|せっしょう}、Bは上皇",
+    "Aは上皇、Bは{摂政|せっしょう}",
+    "Aは{関白|かんぱく}、Bは国司",
+    "Aは国司、Bは{関白|かんぱく}"
+  ],
+  "answer": "Aは{摂政|せっしょう}、Bは上皇",
+  "hints": [
+    "役職と、{退位|たいい}した天皇の立場を区別しよう。"
+  ],
+  "explanation": "{摂政|せっしょう}は天皇に代わる役職、上皇は位をゆずった天皇の呼び方です。\n\nほかの 選択肢\n・「Aは上皇、Bは{摂政|せっしょう}」…二つの立場を逆にしています。\n・「Aは{関白|かんぱく}、Bは国司」…{関白|かんぱく}は成人した天皇を助け、国司は地方を治めます。\n・「Aは国司、Bは{関白|かんぱく}」…国司は地方の役人で、{関白|かんぱく}は{退位|たいい}した天皇の呼び方ではありません。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_023",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 23,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "ある記録には「都の{貴族|きぞく}へ土地を{寄進|きしん}し、その力で土地を守ってもらう」とあります。地方の土地の持ち主が期待したことはどれですか。",
+  "choices": [
+    "有力な{貴族|きぞく}とのつながりで土地を守る",
+    "土地を国へ返し、{口分田|くぶんでん}として受け直す",
+    "{貴族|きぞく}を国司に任命し、自分が都へ移る",
+    "土地を売って代金を得ることだけを求める"
+  ],
+  "answer": "有力な{貴族|きぞく}とのつながりで土地を守る",
+  "hints": [
+    "土地をゆずる側が何を求めたか読もう。"
+  ],
+  "explanation": "有力者の保護を求めて土地を{寄進|きしん}することが、{荘園|しょうえん}の広がりにつながりました。\n\nほかの 選択肢\n・「土地を国へ返し、{口分田|くぶんでん}として受け直す」…国へ返すしくみと{貴族|きぞく}への{寄進|きしん}は別です。\n・「{貴族|きぞく}を国司に任命し、自分が都へ移る」…{寄進|きしん}による保護と、国司を任命する権限を取り{違え|ちがえ}ています。\n・「土地を売って代金を得ることだけを求める」…資料は代金ではなく有力者による土地の保護を求めています。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_024",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 24,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "平安時代の{貴族|きぞく}が、受け取った歌に自分の気持ちを歌で返そうとしています。この場面で生かす文化はどれですか。",
+  "choices": [
+    "かな文字で和歌を書く",
+    "漢字だけで中国の詩の形にそろえる",
+    "物語の場面を絵にして巻物を作る",
+    "日記に出来事を記し、相手へは送らない"
+  ],
+  "answer": "かな文字で和歌を書く",
+  "hints": [
+    "気持ちを歌にして返す方法を選ぼう。"
+  ],
+  "explanation": "かな文字と和歌は、思いを伝え合う{貴族|きぞく}の暮らしと結び付いていました。\n\nほかの 選択肢\n・「漢字だけで中国の詩の形にそろえる」…漢詩の表現であり、日本語の和歌を返す方法とは異なります。\n・「物語の場面を絵にして巻物を作る」…絵巻物の表現で、歌による返事とは異なります。\n・「日記に出来事を記し、相手へは送らない」…自分の記録と、歌を{贈り|おくり}返す行いを区別します。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_025",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 25,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "平安京への{遷都|せんと}、{遣唐使|けんとうし}の停止、{平清盛|たいらのきよもり}による政治。この三つを古い順に並べたものはどれですか。",
+  "choices": [
+    "平安京への{遷都|せんと}→{遣唐使|けんとうし}の停止→{平清盛|たいらのきよもり}による政治",
+    "{遣唐使|けんとうし}の停止→平安京への{遷都|せんと}→{平清盛|たいらのきよもり}による政治",
+    "{平清盛|たいらのきよもり}による政治→{遣唐使|けんとうし}の停止→平安京への{遷都|せんと}",
+    "平安京への{遷都|せんと}→{平清盛|たいらのきよもり}による政治→{遣唐使|けんとうし}の停止"
+  ],
+  "answer": "平安京への{遷都|せんと}→{遣唐使|けんとうし}の停止→{平清盛|たいらのきよもり}による政治",
+  "hints": [
+    "平安時代の始まりと、末の武士の進出を考えよう。"
+  ],
+  "explanation": "平安京への{遷都|せんと}は794年、{遣唐使|けんとうし}の停止は894年、{平清盛|たいらのきよもり}が力を持つのは12世紀です。\n\nほかの 選択肢\n・「{遣唐使|けんとうし}の停止→平安京への{遷都|せんと}→{平清盛|たいらのきよもり}による政治」…都の移動と使いの停止の順が逆です。\n・「{平清盛|たいらのきよもり}による政治→{遣唐使|けんとうし}の停止→平安京への{遷都|せんと}」…平安時代末の武士の政治を最初に置いています。\n・「平安京への{遷都|せんと}→{平清盛|たいらのきよもり}による政治→{遣唐使|けんとうし}の停止」…{遣唐使|けんとうし}の停止より後に{平清盛|たいらのきよもり}が力を持ちました。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_026",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 26,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "「院政とは、藤原氏が天皇の母方の親族として政治を助けることだ」とまとめました。直すべき点はどれですか。",
+  "choices": [
+    "院政の中心を、位をゆずった天皇に直す",
+    "院政の中心を、地方へ送られた国司に直す",
+    "院政の中心を、唐へ送られた使いに直す",
+    "院政の中心を、田畑を耕す農民に直す"
+  ],
+  "answer": "院政の中心を、位をゆずった天皇に直す",
+  "hints": [
+    "誰が政治の中心かを確かめよう。"
+  ],
+  "explanation": "院政は上皇が行う政治です。藤原氏が親族として力を持った{摂関政治|せっかんせいじ}と区別します。\n\nほかの 選択肢\n・「院政の中心を、地方へ送られた国司に直す」…国司は地方の国を治める役人です。\n・「院政の中心を、唐へ送られた使いに直す」…外国への使いと上皇の政治を取り{違え|ちがえ}ています。\n・「院政の中心を、田畑を耕す農民に直す」…農民は院政を行う立場の呼び方ではありません。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_027",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 27,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "寺院への願いを記した資料Aには「死後に極楽へ」、資料Bには「作物が実り、病気が治るように」とあります。願いの{違い|ちがい}はどれですか。",
+  "choices": [
+    "Aは死後の世界、Bは今の生活への願い",
+    "Aは今の生活、Bは死後の世界への願い",
+    "AもBも今の生活への願い",
+    "AもBも死後の世界への願い"
+  ],
+  "answer": "Aは死後の世界、Bは今の生活への願い",
+  "hints": [
+    "願いがいつの暮らしに向けられているか考えよう。"
+  ],
+  "explanation": "仏教への願いには、死後の安らぎと現世の生活に関するものがありました。\n\nほかの 選択肢\n・「Aは今の生活、Bは死後の世界への願い」…二つの願いを逆にしています。\n・「AもBも今の生活への願い」…Aの「死後に」という言葉を見落としています。\n・「AもBも死後の世界への願い」…Bの作物や病気の願いは今の生活に向いています。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_heian_028",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "heian",
+  "number": 28,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "{荘園|しょうえん}の土地をめぐる争いが増えることは、武士の成長とどのように結び付きますか。",
+  "choices": [
+    "武芸で土地を守る人々の力が必要になった",
+    "{荘園|しょうえん}の所有者が軍事をやめて国司へ土地を返した",
+    "地方の武芸より都での和歌の成績が土地を決めた",
+    "武士が農作業の代わりに寺で教えを広めるようになった"
+  ],
+  "answer": "武芸で土地を守る人々の力が必要になった",
+  "hints": [
+    "土地の争いを解決するときに求められた力を考えよう。"
+  ],
+  "explanation": "土地を守る力を持つ人々が結び付き、武士の集団が成長しました。\n\nほかの 選択肢\n・「{荘園|しょうえん}の所有者が軍事をやめて国司へ土地を返した」…土地を守る力が求められたことと逆の説明です。\n・「地方の武芸より都での和歌の成績が土地を決めた」…土地の争いで求められた実力と文学の評価を混同しています。\n・「武士が農作業の代わりに寺で教えを広めるようになった」…武士の土地防衛と{僧|そう}の活動を取り{違え|ちがえ}ています。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_001",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 1,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "{鎌倉幕府|かまくらばくふ}の将軍と{主従|しゅじゅう}関係を結んだ武士を何といいますか。",
+  "choices": [
+    "{御家人|ごけにん}",
+    "国司",
+    "上皇",
+    "{公家|くげ}"
+  ],
+  "answer": "{御家人|ごけにん}",
+  "hints": [
+    "将軍に仕える武士の呼び名だよ。"
+  ],
+  "explanation": "{御家人|ごけにん}は将軍から土地を守ってもらうなどの恩を受け、その代わりに務めを果たしました。\n\nほかの 選択肢\n・「国司」…朝廷から地方へ送られる役人です。\n・「上皇」…天皇の位をゆずった人です。\n・「{公家|くげ}」…朝廷に仕える{貴族|きぞく}の呼び名です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ごけにん"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_002",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 2,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "{鎌倉幕府|かまくらばくふ}の将軍が{御家人|ごけにん}の土地を認めたり、新たな土地を与えたりすることを何といいますか。",
+  "choices": [
+    "{御恩|ごおん}",
+    "{奉公|ほうこう}",
+    "年貢",
+    "{念仏|ねんぶつ}"
+  ],
+  "answer": "{御恩|ごおん}",
+  "hints": [
+    "将軍から{御家人|ごけにん}へ与えるものだよ。"
+  ],
+  "explanation": "土地を守り認めることや、働きに応じて土地を与えることが将軍の{御恩|ごおん}です。\n\nほかの 選択肢\n・「{奉公|ほうこう}」…{御家人|ごけにん}が将軍のために果たす務めです。\n・「年貢」…土地の収穫から納める米などです。\n・「{念仏|ねんぶつ}」…仏の名を唱える宗教上の行いです。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ごおん"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_003",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 3,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "{鎌倉|かまくら}時代に{御家人|ごけにん}が戦いに参加したり、京都などの守りについたりする務めを何といいますか。",
+  "choices": [
+    "{奉公|ほうこう}",
+    "{御恩|ごおん}",
+    "年貢",
+    "{寄進|きしん}"
+  ],
+  "answer": "{奉公|ほうこう}",
+  "hints": [
+    "{御家人|ごけにん}から将軍へ果たす務めだよ。"
+  ],
+  "explanation": "{御家人|ごけにん}は{御恩|ごおん}に応え、戦いや警備などの務めを果たしました。\n\nほかの 選択肢\n・「{御恩|ごおん}」…将軍が土地を認めるなどして{御家人|ごけにん}に与えるものです。\n・「年貢」…土地の収穫などから納めるものです。\n・「{寄進|きしん}」…土地や物を寺院や有力者などにゆずることです。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ほうこう"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_004",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 4,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "{鎌倉幕府|かまくらばくふ}が国ごとに置き、{御家人|ごけにん}をまとめたり軍事・警察の仕事をしたりした役職は何ですか。",
+  "choices": [
+    "守護",
+    "地頭",
+    "{執権|しっけん}",
+    "{関白|かんぱく}"
+  ],
+  "answer": "守護",
+  "hints": [
+    "{荘園|しょうえん}などの土地ごとに置かれる役職と比べよう。"
+  ],
+  "explanation": "守護は国単位で{御家人|ごけにん}を動かすなど、軍事・警察に関わる仕事をしました。\n\nほかの 選択肢\n・「地頭」…{荘園|しょうえん}や公領で土地の管理や年貢の取り立てなどをしました。\n・「{執権|しっけん}」…将軍を助け、{幕府|ばくふ}の政治を進めた役職です。\n・「{関白|かんぱく}」…成人した天皇の政治を助ける役職です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "しゅご"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_005",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 5,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "{鎌倉幕府|かまくらばくふ}が{荘園|しょうえん}や公領に置き、年貢の取り立てや土地の管理などをさせた役職は何ですか。",
+  "choices": [
+    "地頭",
+    "守護",
+    "{執権|しっけん}",
+    "{摂政|せっしょう}"
+  ],
+  "answer": "地頭",
+  "hints": [
+    "国全体の軍事の役職と区別しよう。"
+  ],
+  "explanation": "地頭は土地の現場で管理などを行い、武士の支配が広がることにつながりました。\n\nほかの 選択肢\n・「守護」…国単位で軍事・警察の仕事をする役職です。\n・「{執権|しっけん}」…将軍を助ける{幕府|ばくふ}の役職です。\n・「{摂政|せっしょう}」…幼い天皇などに代わって政治を行う役職です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "じとう"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_006",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 6,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "{北条|ほうじょう}氏が就き、将軍を助けて{鎌倉幕府|かまくらばくふ}の政治を進めた役職を何といいますか。",
+  "choices": [
+    "{執権|しっけん}",
+    "守護",
+    "地頭",
+    "{関白|かんぱく}"
+  ],
+  "answer": "{執権|しっけん}",
+  "hints": [
+    "{幕府|ばくふ}の中央で将軍を助ける役職だよ。"
+  ],
+  "explanation": "{北条|ほうじょう}氏は{執権|しっけん}として{幕府|ばくふ}の政治で大きな力を持ちました。\n\nほかの 選択肢\n・「守護」…各国で軍事・警察の仕事を担当しました。\n・「地頭」…土地の管理や年貢の取り立てなどを担当しました。\n・「{関白|かんぱく}」…朝廷で天皇の政治を助けました。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "しっけん"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_007",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 7,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "{鎌倉|かまくら}時代に日本へ二度大軍を送った、中国を中心に広い地域を支配した国はどこですか。",
+  "choices": [
+    "元",
+    "{宋|そう}",
+    "{高麗|こうらい}",
+    "唐"
+  ],
+  "answer": "元",
+  "hints": [
+    "{宋|そう}の後に中国を支配した国だよ。"
+  ],
+  "explanation": "元は日本に{服属|ふくぞく}を求めた後、二度にわたって軍を送りました。\n\nほかの 選択肢\n・「{宋|そう}」…元が勢力を広げる前、中国にあった国です。\n・「{高麗|こうらい}」…朝鮮半島の国で、元の日本{遠征|えんせい}に動員されました。\n・「唐」…奈良・平安時代に日本が使いを送った国です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "げん"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_008",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 8,
+  "collection": "course_so6_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "{鎌倉|かまくら}時代の武士の裁判の基準として、{北条|ほうじょう}{泰時|やすとき}が定めたきまりを何といいますか。",
+  "choices": [
+    "{御成敗式目|ごせいばいしきもく}",
+    "大宝律令",
+    "十七条の憲法",
+    "{墾田永年私財法|こんでんえいねんしざいほう}"
+  ],
+  "answer": "{御成敗式目|ごせいばいしきもく}",
+  "hints": [
+    "武士の社会に合う裁判の基準だよ。"
+  ],
+  "explanation": "武士の{慣習|かんしゅう}などをもとに、裁判を進める基準をまとめました。\n\nほかの 選択肢\n・「大宝律令」…古代の国家の法律をまとめたものです。\n・「十七条の憲法」…古代の役人の心構えを示したものです。\n・「{墾田永年私財法|こんでんえいねんしざいほう}」…新しく開いた田の永久私有を認めた法令です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ごせいばいしきもく",
+      "貞永式目",
+      "じょうえいしきもく"
+    ],
+    "reviewed": false,
+    "answerAlso": [
+      "貞永式目",
+      "じょうえいしきもく"
+    ]
+  }
+},
+{
+  "id": "social_g6_kamakura_009",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 9,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "{御家人|ごけにん}にとって、将軍から先祖伝来の土地を認めてもらうことが重要だった理由はどれですか。",
+  "choices": [
+    "土地からの収穫が暮らしや軍備を支えたから",
+    "土地を認めてもらうと国司の役職も与えられたから",
+    "田を持てば警備の務めをしなくてよくなったから",
+    "土地の収穫を{幕府|ばくふ}へ納めると{貴族|きぞく}になれたから"
+  ],
+  "answer": "土地からの収穫が暮らしや軍備を支えたから",
+  "hints": [
+    "田から得られるものが何に使われたか考えよう。"
+  ],
+  "explanation": "土地は生活のもとであり、武士としての備えにもつながりました。\n\nほかの 選択肢\n・「土地を認めてもらうと国司の役職も与えられたから」…{御家人|ごけにん}の土地の権利と朝廷の地方役職は別です。\n・「田を持てば警備の務めをしなくてよくなったから」…土地への{御恩|ごおん}に対し、{御家人|ごけにん}は警備などの{奉公|ほうこう}をしました。\n・「土地の収穫を{幕府|ばくふ}へ納めると{貴族|きぞく}になれたから」…土地を持つ武士と朝廷の{貴族|きぞく}の立場を混同しています。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_010",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 10,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "1221年に{後鳥羽上皇|ごとばじょうこう}が{幕府|ばくふ}を{倒そう|たおそう}として起こし、{幕府|ばくふ}側が勝った戦いを何といいますか。",
+  "choices": [
+    "{承久|じょうきゅう}の乱",
+    "{文永|ぶんえい}の役",
+    "{弘安|こうあん}の役",
+    "{壇ノ浦|だんのうら}の戦い"
+  ],
+  "answer": "{承久|じょうきゅう}の乱",
+  "hints": [
+    "元との戦いではなく、国内の朝廷との戦いだよ。"
+  ],
+  "explanation": "朝廷と{幕府|ばくふ}の戦いで、{幕府|ばくふ}が勝った後に支配の力を広げました。\n\nほかの 選択肢\n・「{文永|ぶんえい}の役」…1274年の元の{襲来|しゅうらい}です。\n・「{弘安|こうあん}の役」…1281年の元の{襲来|しゅうらい}です。\n・「{壇ノ浦|だんのうら}の戦い」…1185年に平氏が敗れた戦いです。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "じょうきゅうのらん"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_011",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 11,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "{承久|じょうきゅう}の乱のとき、頼朝から受けた恩を思い出させて{御家人|ごけにん}の結束を{促し|うながし}た人物はだれですか。",
+  "choices": [
+    "{北条|ほうじょう}{政子|まさこ}",
+    "{後鳥羽上皇|ごとばじょうこう}",
+    "{北条|ほうじょう}{時宗|ときむね}",
+    "{平清盛|たいらのきよもり}"
+  ],
+  "answer": "{北条|ほうじょう}{政子|まさこ}",
+  "hints": [
+    "頼朝の妻だった人物だよ。"
+  ],
+  "explanation": "{北条|ほうじょう}{政子|まさこ}は{御家人|ごけにん}に頼朝以来の恩を説き、{幕府|ばくふ}側で戦うよう{促し|うながし}ました。\n\nほかの 選択肢\n・「{後鳥羽上皇|ごとばじょうこう}」…この戦いで{幕府|ばくふ}を{倒そう|たおそう}とした朝廷側の人物です。\n・「{北条|ほうじょう}{時宗|ときむね}」…後の元の{襲来|しゅうらい}の時期に{執権|しっけん}だった人物です。\n・「{平清盛|たいらのきよもり}」…平安時代末に力を持った平氏の人物です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ほうじょうまさこ"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_012",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 12,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "{承久|じょうきゅう}の乱の後、{幕府|ばくふ}が京都に置いて朝廷の動きなどを見張った機関を何といいますか。",
+  "choices": [
+    "{六波羅探題|ろくはらたんだい}",
+    "{政所|まんどころ}",
+    "{問注所|もんちゅうじょ}",
+    "{侍所|さむらいどころ}"
+  ],
+  "answer": "{六波羅探題|ろくはらたんだい}",
+  "hints": [
+    "{鎌倉|かまくら}ではなく京都に置かれた機関だよ。"
+  ],
+  "explanation": "京都で朝廷の{監視|かんし}や西国の{御家人|ごけにん}への対応などを行いました。\n\nほかの 選択肢\n・「{政所|まんどころ}」…{幕府|ばくふ}の政治や財政などを{扱っ|あつかっ}た機関です。\n・「{問注所|もんちゅうじょ}」…{幕府|ばくふ}で裁判に関わる仕事をした機関です。\n・「{侍所|さむらいどころ}」…{御家人|ごけにん}の{統率|とうそつ}などを担った{幕府|ばくふ}の機関です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ろくはらたんだい"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_013",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 13,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "元の{襲来|しゅうらい}に備え、九州の博多湾沿いに築いたものはどれですか。",
+  "choices": [
+    "石を積んだ{防塁|ぼうるい}",
+    "年貢を納める倉",
+    "馬を走らせる{稽古|けいこ}場",
+    "港で品物を売る市"
+  ],
+  "answer": "石を積んだ{防塁|ぼうるい}",
+  "hints": [
+    "敵が海から来ることへの備えだよ。"
+  ],
+  "explanation": "元の軍が上陸しにくくするため、海岸に石の防御施設を築きました。\n\nほかの 選択肢\n・「年貢を納める倉」…収穫物などを保存する施設です。\n・「馬を走らせる{稽古|けいこ}場」…武芸を練習する場所です。\n・「港で品物を売る市」…物の交換や売買をする場所です。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_014",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 14,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "元の二度の{襲来|しゅうらい}の時期に、{幕府|ばくふ}の政治を指導した{執権|しっけん}はだれですか。",
+  "choices": [
+    "{北条|ほうじょう}{時宗|ときむね}",
+    "{北条|ほうじょう}{泰時|やすとき}",
+    "{北条|ほうじょう}{義時|よしとき}",
+    "{後鳥羽上皇|ごとばじょうこう}"
+  ],
+  "answer": "{北条|ほうじょう}{時宗|ときむね}",
+  "hints": [
+    "{御成敗式目|ごせいばいしきもく}を定めた人物より後の時代だよ。"
+  ],
+  "explanation": "{北条|ほうじょう}{時宗|ときむね}のもとで、{幕府|ばくふ}は九州の{御家人|ごけにん}などを動かして防衛にあたりました。\n\nほかの 選択肢\n・「{北条|ほうじょう}{泰時|やすとき}」…{御成敗式目|ごせいばいしきもく}を定めた{執権|しっけん}です。\n・「{北条|ほうじょう}{義時|よしとき}」…{承久|じょうきゅう}の乱の時期に{幕府|ばくふ}を率いた人物です。\n・「{後鳥羽上皇|ごとばじょうこう}」…{承久|じょうきゅう}の乱で{幕府|ばくふ}を{倒そう|たおそう}とした人物です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ほうじょうときむね"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_015",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 15,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "同じ田畑で一年に米と麦などを順に作り、収穫を増やす方法を何といいますか。",
+  "choices": [
+    "{二毛作|にもうさく}",
+    "開墾",
+    "田植え",
+    "{灌漑|かんがい}"
+  ],
+  "answer": "{二毛作|にもうさく}",
+  "hints": [
+    "場所を分けるのではなく、一年の中で順に作るよ。"
+  ],
+  "explanation": "一つの土地を季節に応じて二種類の作物に使う方法です。\n\nほかの 選択肢\n・「開墾」…新しく田畑を開くことです。\n・「田植え」…育てた稲の苗を田へ植える作業です。\n・「{灌漑|かんがい}」…田畑に必要な水を引くことです。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "にもうさく"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_016",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 16,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "{鎌倉|かまくら}時代に決まった日に開かれ、農産物や手工業品を売買した場所を何といいますか。",
+  "choices": [
+    "定期市",
+    "{荘園|しょうえん}",
+    "{政所|まんどころ}",
+    "{国衙|こくが}"
+  ],
+  "answer": "定期市",
+  "hints": [
+    "毎日ではなく、決まった日に人が集まる場所だよ。"
+  ],
+  "explanation": "人々は定期市で生活に必要な品物を交換・売買しました。\n\nほかの 選択肢\n・「{荘園|しょうえん}」…{貴族|きぞく}や寺院などの私有地です。\n・「{政所|まんどころ}」…{幕府|ばくふ}の政治や財政に関わる機関です。\n・「{国衙|こくが}」…国の政治を行う地方の役所です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ていきいち",
+      "市",
+      "いち"
+    ],
+    "reviewed": false,
+    "answerAlso": [
+      "市",
+      "いち"
+    ]
+  }
+},
+{
+  "id": "social_g6_kamakura_017",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 17,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "{法然|ほうねん}が広めた{浄土宗|じょうどしゅう}で、極楽{往生|おうじょう}を願う人々に{勧め|すすめ}た行いはどれですか。",
+  "choices": [
+    "{南無阿弥陀仏|なむあみだぶつ}と{念仏|ねんぶつ}を唱える",
+    "{南無妙法蓮華経|なむみょうほうれんげきょう}と題目を唱える",
+    "{座禅|ざぜん}によって心を整える",
+    "山で密教の{修行|しゅぎょう}を中心に行う"
+  ],
+  "answer": "{南無阿弥陀仏|なむあみだぶつ}と{念仏|ねんぶつ}を唱える",
+  "hints": [
+    "{阿弥陀|あみだ}仏に願う言葉に注目しよう。"
+  ],
+  "explanation": "{法然|ほうねん}は{念仏|ねんぶつ}によって救われるという教えを広めました。\n\nほかの 選択肢\n・「{南無妙法蓮華経|なむみょうほうれんげきょう}と題目を唱える」…{日蓮|にちれん}の教えと関わる行いです。\n・「{座禅|ざぜん}によって心を整える」…{禅宗|ぜんしゅう}で大切にする{修行|しゅぎょう}です。\n・「山で密教の{修行|しゅぎょう}を中心に行う」…古くからの仏教の{修行|しゅぎょう}と、{念仏|ねんぶつ}を{勧め|すすめ}た{法然|ほうねん}の教えを区別します。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_018",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 18,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "{座禅|ざぜん}による{修行|しゅぎょう}を重んじ、武士の間にも広がった仏教を何といいますか。",
+  "choices": [
+    "{禅宗|ぜんしゅう}",
+    "{浄土宗|じょうどしゅう}",
+    "{浄土真宗|じょうどしんしゅう}",
+    "{日蓮|にちれん}宗"
+  ],
+  "answer": "{禅宗|ぜんしゅう}",
+  "hints": [
+    "{念仏|ねんぶつ}や題目を唱える教えと比べよう。"
+  ],
+  "explanation": "{座禅|ざぜん}を大切にする教えは、精神を{鍛え|きたえ}ようとする武士にも受け入れられました。\n\nほかの 選択肢\n・「{浄土宗|じょうどしゅう}」…{法然|ほうねん}が広め、{念仏|ねんぶつ}を{勧め|すすめ}た教えです。\n・「{浄土真宗|じょうどしんしゅう}」…{親鸞|しんらん}が広めた教えです。\n・「{日蓮|にちれん}宗」…{日蓮|にちれん}の教えを{受け継ぐ|うけつぐ}宗派です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "ぜんしゅう"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_019",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 19,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "東大寺南大門の{金剛力士像|こんごうりきしぞう}など、力強く写実的な像づくりで知られる{運慶|うんけい}と並ぶ仏師はだれですか。",
+  "choices": [
+    "{快慶|かいけい}",
+    "{康慶|こうけい}",
+    "{定朝|じょうちょう}",
+    "{湛慶|たんけい}"
+  ],
+  "answer": "{快慶|かいけい}",
+  "hints": [
+    "{僧|そう}ではなく、像を作る職人だよ。"
+  ],
+  "explanation": "{運慶|うんけい}や{快慶|かいけい}らは、体つきや動きを力強く表した仏像を作りました。\n\nほかの 選択肢\n・「{康慶|こうけい}」…{運慶|うんけい}の父で、{慶派|けいは}の仏師として知られます。\n・「{定朝|じょうちょう}」…平安時代の仏師で、平等院の{阿弥陀|あみだ}{如来像|にょらいぞう}で知られます。\n・「{湛慶|たんけい}」…{運慶|うんけい}の子で、{鎌倉|かまくら}時代の仏像づくりで知られます。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "かいけい"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_020",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 20,
+  "collection": "course_so6_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "平氏の栄えと滅びを語り、{琵琶法師|びわほうし}によって人々に伝えられた作品は何ですか。",
+  "choices": [
+    "平家物語",
+    "{方丈記|ほうじょうき}",
+    "{新古今和歌集|しんこきんわかしゅう}",
+    "{吾妻鏡|あづまかがみ}"
+  ],
+  "answer": "平家物語",
+  "hints": [
+    "平氏を中心に戦いや人の運命を語る作品だよ。"
+  ],
+  "explanation": "平氏の歩みを中心とした物語が、{琵琶|びわ}の演奏と語りによっても広まりました。\n\nほかの 選択肢\n・「{方丈記|ほうじょうき}」…{鴨長明|かものちょうめい}が災害や自らの暮らしなどを記した作品です。\n・「{新古今和歌集|しんこきんわかしゅう}」…{鎌倉|かまくら}時代の初めにまとめられた和歌集です。\n・「{吾妻鏡|あづまかがみ}」…{鎌倉幕府|かまくらばくふ}の出来事を記した歴史書です。",
+  "reviewed": false,
+  "inputForm": {
+    "validationMode": "kana-insensitive",
+    "acceptedAnswers": [
+      "へいけものがたり"
+    ],
+    "reviewed": false
+  }
+},
+{
+  "id": "social_g6_kamakura_021",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 21,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "{承久|じょうきゅう}の乱の後に{幕府|ばくふ}が力を広げたのはなぜですか。",
+  "choices": [
+    "朝廷側の土地を取り上げ、{御家人|ごけにん}を地頭に置いたから",
+    "元から九州の土地を新しく受け取ったから",
+    "{御家人|ごけにん}の土地を朝廷へ返して守護を減らしたから",
+    "{幕府|ばくふ}の裁判をやめ、朝廷の判断に任せたから"
+  ],
+  "answer": "朝廷側の土地を取り上げ、{御家人|ごけにん}を地頭に置いたから",
+  "hints": [
+    "戦いの後に土地を誰が管理したか考えよう。"
+  ],
+  "explanation": "{幕府|ばくふ}の勝利後、朝廷側の土地に地頭を置くなどして西国にも支配を広げました。\n\nほかの 選択肢\n・「元から九州の土地を新しく受け取ったから」…{承久|じょうきゅう}の乱は朝廷との国内の戦いで、元との戦いではありません。\n・「{御家人|ごけにん}の土地を朝廷へ返して守護を減らしたから」…{幕府|ばくふ}は勝利を利用して支配を強めました。\n・「{幕府|ばくふ}の裁判をやめ、朝廷の判断に任せたから」…{幕府|ばくふ}が土地や{御家人|ごけにん}への支配を強めた動きと逆です。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_022",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 22,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "資料Aは「国の{御家人|ごけにん}を集めて警備を命じる」、資料Bは「{荘園|しょうえん}で年貢を取り立てる」です。役職の組み合わせはどれですか。",
+  "choices": [
+    "Aは守護、Bは地頭",
+    "Aは地頭、Bは守護",
+    "Aは{関白|かんぱく}、Bは上皇",
+    "Aは国司、Bは{執権|しっけん}"
+  ],
+  "answer": "Aは守護、Bは地頭",
+  "hints": [
+    "仕事をする範囲と内容の両方を比べよう。"
+  ],
+  "explanation": "守護は国単位の軍事・警察、地頭は土地の管理や年貢の取り立てなどを担当しました。\n\nほかの 選択肢\n・「Aは地頭、Bは守護」…二つの役職の主な仕事を逆にしています。\n・「Aは{関白|かんぱく}、Bは上皇」…朝廷での役職や立場と、{幕府|ばくふ}の地方支配の役職を取り{違え|ちがえ}ています。\n・「Aは国司、Bは{執権|しっけん}」…{執権|しっけん}は将軍を助ける{幕府|ばくふ}中央の役職です。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_023",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 23,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "ある{御家人|ごけにん}は元との戦いで費用を使い、戦後に新しい土地を十分にもらえませんでした。不満の背景として考えられるのはどれですか。",
+  "choices": [
+    "防衛の戦いで、新しく配る土地が得にくかった",
+    "国内の敵から得た土地を配る手続きだけが遅れた",
+    "元へ使いを送った{貴族|きぞく}だけが費用を使った",
+    "{御家人|ごけにん}は警備をやめてよい代わりに土地を求めなかった"
+  ],
+  "answer": "防衛の戦いで、新しく配る土地が得にくかった",
+  "hints": [
+    "戦いで新たな領地を手に入れたか考えよう。"
+  ],
+  "explanation": "国内の敵を倒して土地を取り上げる戦いと{違い|ちがい}、防衛戦では恩賞にする土地が得にくくなりました。\n\nほかの 選択肢\n・「国内の敵から得た土地を配る手続きだけが遅れた」…防衛戦では新しく取り上げて配る土地自体が得にくかったのです。\n・「元へ使いを送った{貴族|きぞく}だけが費用を使った」…資料の{御家人|ごけにん}は防衛の戦いで費用を使っています。\n・「{御家人|ごけにん}は警備をやめてよい代わりに土地を求めなかった」…戦後も備えは続き、恩賞の不足は不満につながりました。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_024",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 24,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "{御家人|ごけにん}が土地の境界をめぐって争い、{幕府|ばくふ}が裁判をします。裁判の基準として使うものはどれですか。",
+  "choices": [
+    "{御成敗式目|ごせいばいしきもく}",
+    "一方の{御家人|ごけにん}から届いた{訴え|うったえ}だけ",
+    "土地の収穫量を記した帳面だけ",
+    "家に伝わる土地の文書だけ"
+  ],
+  "answer": "{御成敗式目|ごせいばいしきもく}",
+  "hints": [
+    "武士の土地の問題を判断するきまりだよ。"
+  ],
+  "explanation": "武士の社会の{慣習|かんしゅう}などをもとにした基準に従い、土地などの争いを裁きました。\n\nほかの 選択肢\n・「一方の{御家人|ごけにん}から届いた{訴え|うったえ}だけ」…{訴え|うったえ}を比べ、判断の基準に沿って裁く必要があります。\n・「土地の収穫量を記した帳面だけ」…土地の情報は資料になりますが、裁判の共通の基準とは異なります。\n・「家に伝わる土地の文書だけ」…権利を調べる証拠と、裁判の基準となるきまりは役割が異なります。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_025",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 25,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "{承久|じょうきゅう}の乱、{御成敗式目|ごせいばいしきもく}の制定、元の{襲来|しゅうらい}を古い順に並べたものはどれですか。",
+  "choices": [
+    "{承久|じょうきゅう}の乱→{御成敗式目|ごせいばいしきもく}の制定→元の{襲来|しゅうらい}",
+    "{御成敗式目|ごせいばいしきもく}の制定→{承久|じょうきゅう}の乱→元の{襲来|しゅうらい}",
+    "元の{襲来|しゅうらい}→{承久|じょうきゅう}の乱→{御成敗式目|ごせいばいしきもく}の制定",
+    "{承久|じょうきゅう}の乱→元の{襲来|しゅうらい}→{御成敗式目|ごせいばいしきもく}の制定"
+  ],
+  "answer": "{承久|じょうきゅう}の乱→{御成敗式目|ごせいばいしきもく}の制定→元の{襲来|しゅうらい}",
+  "hints": [
+    "朝廷との戦いの後に武士の裁判の基準ができ、元との戦いはその後だよ。"
+  ],
+  "explanation": "{承久|じょうきゅう}の乱は1221年、{御成敗式目|ごせいばいしきもく}は1232年、元の{襲来|しゅうらい}は1274年と1281年です。\n\nほかの 選択肢\n・「{御成敗式目|ごせいばいしきもく}の制定→{承久|じょうきゅう}の乱→元の{襲来|しゅうらい}」…裁判の基準ができたのは{承久|じょうきゅう}の乱より後です。\n・「元の{襲来|しゅうらい}→{承久|じょうきゅう}の乱→{御成敗式目|ごせいばいしきもく}の制定」…元の{襲来|しゅうらい}を早く置いています。\n・「{承久|じょうきゅう}の乱→元の{襲来|しゅうらい}→{御成敗式目|ごせいばいしきもく}の制定」…{御成敗式目|ごせいばいしきもく}は元の{襲来|しゅうらい}より前に定められました。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_026",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 26,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "「{御恩|ごおん}とは{御家人|ごけにん}が将軍を守ること、{奉公|ほうこう}とは将軍が土地を認めること」とまとめました。どのように直しますか。",
+  "choices": [
+    "{御恩|ごおん}と{奉公|ほうこう}の説明を入れ替える",
+    "{御恩|ごおん}を年貢に、{奉公|ほうこう}を{念仏|ねんぶつ}に{言い換え|いいかえ}る",
+    "将軍を上皇に、{御家人|ごけにん}を国司に{言い換え|いいかえ}る",
+    "土地を認めることを地頭の裁判だけに直す"
+  ],
+  "answer": "{御恩|ごおん}と{奉公|ほうこう}の説明を入れ替える",
+  "hints": [
+    "誰から誰への働きかを確かめよう。"
+  ],
+  "explanation": "土地を認めるなど将軍が与えるものが{御恩|ごおん}で、{御家人|ごけにん}が戦いや警備で果たす務めが{奉公|ほうこう}です。\n\nほかの 選択肢\n・「{御恩|ごおん}を年貢に、{奉公|ほうこう}を{念仏|ねんぶつ}に{言い換え|いいかえ}る」…税や宗教の行いと、将軍と{御家人|ごけにん}の関係は異なります。\n・「将軍を上皇に、{御家人|ごけにん}を国司に{言い換え|いいかえ}る」…{幕府|ばくふ}の{主従|しゅじゅう}関係の説明を朝廷の立場に変えてしまいます。\n・「土地を認めることを地頭の裁判だけに直す」…{御恩|ごおん}は将軍が{御家人|ごけにん}に与えるもので、地頭の仕事だけを指しません。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_027",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 27,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "{貴族|きぞく}がかな文字で日記を書いたことと、{琵琶法師|びわほうし}が物語を語ったことを比べます。伝え方の{違い|ちがい}はどれですか。",
+  "choices": [
+    "前者は文章を読み、後者は演奏と語りを聞く",
+    "前者は語りを聞き、後者は文章を読む",
+    "前者も後者も、絵だけで出来事を伝える",
+    "前者も後者も、漢詩のきまりに合わせて作る"
+  ],
+  "answer": "前者は文章を読み、後者は演奏と語りを聞く",
+  "hints": [
+    "読む人と聞く人を考えよう。"
+  ],
+  "explanation": "文字で読む文学と、音や語りで聞く文学は、それぞれ{違う|ちがう}方法で人々に伝わりました。\n\nほかの 選択肢\n・「前者は語りを聞き、後者は文章を読む」…資料に示された主な伝え方を逆にしています。\n・「前者も後者も、絵だけで出来事を伝える」…どちらにも言葉による表現があります。\n・「前者も後者も、漢詩のきまりに合わせて作る」…日記や{琵琶|びわ}による物語の語りを、漢詩と混同しています。",
+  "reviewed": false
+},
+{
+  "id": "social_g6_kamakura_028",
+  "subject": "social",
+  "gradeLevel": 6,
+  "unit": "kamakura",
+  "number": 28,
+  "collection": "course_so6_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "元が二度目に攻めてきたときには、博多湾沿いに石の{防塁|ぼうるい}がありました。出来事の順として適切なのはどれですか。",
+  "choices": [
+    "一度目の{襲来|しゅうらい}→{防塁|ぼうるい}を築く→二度目の{襲来|しゅうらい}",
+    "{防塁|ぼうるい}を築く→二度目の{襲来|しゅうらい}→一度目の{襲来|しゅうらい}",
+    "一度目の{襲来|しゅうらい}→二度目の{襲来|しゅうらい}→{防塁|ぼうるい}を築く",
+    "二度目の{襲来|しゅうらい}→{防塁|ぼうるい}を築く→一度目の{襲来|しゅうらい}"
+  ],
+  "answer": "一度目の{襲来|しゅうらい}→{防塁|ぼうるい}を築く→二度目の{襲来|しゅうらい}",
+  "hints": [
+    "次の攻撃に備える工事の位置を考えよう。"
+  ],
+  "explanation": "一度目の{襲来|しゅうらい}の後、次の攻撃への備えとして{防塁|ぼうるい}を築きました。\n\nほかの 選択肢\n・「{防塁|ぼうるい}を築く→二度目の{襲来|しゅうらい}→一度目の{襲来|しゅうらい}」…一度目と二度目の順が逆です。\n・「一度目の{襲来|しゅうらい}→二度目の{襲来|しゅうらい}→{防塁|ぼうるい}を築く」…二度目には{防塁|ぼうるい}があったという条件と合いません。\n・「二度目の{襲来|しゅうらい}→{防塁|ぼうるい}を築く→一度目の{襲来|しゅうらい}」…{襲来|しゅうらい}の前後関係と、{防塁|ぼうるい}を築いた時期を逆にしています。",
   "reviewed": false
 }
 );
