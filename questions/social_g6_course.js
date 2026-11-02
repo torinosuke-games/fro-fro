@@ -1832,6 +1832,13 @@ window.QUESTION_BANK.push(
       "きぞく"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_001.webp",
+    "alt": "庭と池の周りに、廊下でつながる木の建物がある。",
+    "caption": "庭や池のある住まい",
+    "study": true
   }
 },
 {
@@ -1986,6 +1993,13 @@ window.QUESTION_BANK.push(
       "ぶし"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_002.webp",
+    "alt": "田畑の境目に立ち、弓を持つ人の後ろ姿。",
+    "caption": "田畑の境目の様子",
+    "study": true
   }
 },
 {
@@ -2159,6 +2173,13 @@ window.QUESTION_BANK.push(
       "しょうえん"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_003.webp",
+    "alt": "地方の耕地と都の建物を、離れた二つの場面で示している。",
+    "caption": "田畑と都の住まい",
+    "study": true
   }
 },
 {
@@ -2189,6 +2210,13 @@ window.QUESTION_BANK.push(
       "わか"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_004.webp",
+    "alt": "紙を受け取る人の後ろ姿と、筆を用意した机。紙の文字は省略している。",
+    "caption": "紙を受け取る場面",
+    "study": true
   }
 },
 {
@@ -2255,6 +2283,13 @@ window.QUESTION_BANK.push(
       "絵巻",
       "えまき"
     ]
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_005.webp",
+    "alt": "横長の紙に暮らしの小さな場面が続き、両端が巻かれている。文章部分は省略している。",
+    "caption": "横に広げた巻物",
+    "study": true
   }
 },
 {
@@ -2278,7 +2313,14 @@ window.QUESTION_BANK.push(
     "外交の使いや国内の税の運搬と区別しよう。"
   ],
   "explanation": "日本と{宋|そう}の間で船による取引が行われ、品物や{銭|ぜに}などが行き来しました。\n\nほかの 選択肢\n・「国司を{宋|そう}へ送って現地の税を集めた」…国司は国内の地方の役人で、外国の税を集める役ではありません。\n・「{宋|そう}の役人が日本の{荘園|しょうえん}を配った」…貿易と、日本国内の土地の所有を取り{違え|ちがえ}ています。\n・「{宋|そう}から京都まで陸路で品物を運んだ」…日本と{宋|そう}の間には海があり、船を使いました。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_006.webp",
+    "alt": "港の船、器や布の荷物、中央に穴のある銭を示している。",
+    "caption": "港の船と荷物",
+    "study": true
+  }
 },
 {
   "id": "social_g6_heian_019",
@@ -2312,6 +2354,13 @@ window.QUESTION_BANK.push(
     "answerAlso": [
       "寝殿づくり"
     ]
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_001.webp",
+    "alt": "庭と池の周りに、廊下でつながる木の建物がある。",
+    "caption": "庭や池のある住まい",
+    "study": true
   }
 },
 {
@@ -2381,7 +2430,14 @@ window.QUESTION_BANK.push(
     "何をする場面かを比べよう。"
   ],
   "explanation": "武士は武芸によって土地などを守り、都の{貴族|きぞく}は歌などの文化を楽しみました。\n\nほかの 選択肢\n・「Aは{貴族|きぞく}、Bは武士」…資料の二つの特徴を逆にしています。\n・「Aは{僧|そう}、Bは農民」…仏教の{修行|しゅぎょう}や田畑の仕事を表した資料ではありません。\n・「Aは農民、Bは{僧|そう}」…農作業や仏教の教えではなく、武芸と{貴族|きぞく}の文化の資料です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_007.webp",
+    "alt": "Aは田畑のそばで弓を練習する人、Bは住まいで紙を交わす人。文字は省略している。",
+    "caption": "資料A・Bの暮らしの場面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_heian_023",
@@ -2404,7 +2460,14 @@ window.QUESTION_BANK.push(
     "土地をゆずる側が何を求めたか読もう。"
   ],
   "explanation": "有力者の保護を求めて土地を{寄進|きしん}することが、{荘園|しょうえん}の広がりにつながりました。\n\nほかの 選択肢\n・「土地を国へ返し、{口分田|くぶんでん}として受け直す」…国へ返すしくみと{貴族|きぞく}への{寄進|きしん}は別です。\n・「{貴族|きぞく}を国司に任命し、自分が都へ移る」…{寄進|きしん}による保護と、国司を任命する権限を取り{違え|ちがえ}ています。\n・「土地を売って代金を得ることだけを求める」…資料は代金ではなく有力者による土地の保護を求めています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_003.webp",
+    "alt": "地方の耕地と都の建物を、離れた二つの場面で示している。",
+    "caption": "田畑と都の住まい",
+    "study": true
+  }
 },
 {
   "id": "social_g6_heian_024",
@@ -2427,7 +2490,14 @@ window.QUESTION_BANK.push(
     "気持ちを歌にして返す方法を選ぼう。"
   ],
   "explanation": "かな文字と和歌は、思いを伝え合う{貴族|きぞく}の暮らしと結び付いていました。\n\nほかの 選択肢\n・「漢字だけで中国の詩の形にそろえる」…漢詩の表現であり、日本語の和歌を返す方法とは異なります。\n・「物語の場面を絵にして巻物を作る」…絵巻物の表現で、歌による返事とは異なります。\n・「日記に出来事を記し、相手へは送らない」…自分の記録と、歌を{贈り|おくり}返す行いを区別します。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_004.webp",
+    "alt": "紙を受け取る人の後ろ姿と、筆を用意した机。紙の文字は省略している。",
+    "caption": "紙を受け取る場面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_heian_025",
@@ -2519,7 +2589,14 @@ window.QUESTION_BANK.push(
     "土地の争いを解決するときに求められた力を考えよう。"
   ],
   "explanation": "土地を守る力を持つ人々が結び付き、武士の集団が成長しました。\n\nほかの 選択肢\n・「{荘園|しょうえん}の所有者が軍事をやめて国司へ土地を返した」…土地を守る力が求められたことと逆の説明です。\n・「地方の武芸より都での和歌の成績が土地を決めた」…土地の争いで求められた実力と文学の評価を混同しています。\n・「武士が農作業の代わりに寺で教えを広めるようになった」…武士の土地防衛と{僧|そう}の活動を取り{違え|ちがえ}ています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_heian_002.webp",
+    "alt": "田畑の境目に立ち、弓を持つ人の後ろ姿。",
+    "caption": "田畑の境目の様子",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_001",
@@ -2579,6 +2656,13 @@ window.QUESTION_BANK.push(
       "ごおん"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_001.webp",
+    "alt": "建物に座る人、弓を持って集まる人々、区切られた田畑を別々に示している。",
+    "caption": "人々と田畑の三つの場面",
+    "study": true
   }
 },
 {
@@ -2609,6 +2693,13 @@ window.QUESTION_BANK.push(
       "ほうこう"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_001.webp",
+    "alt": "建物に座る人、弓を持って集まる人々、区切られた田畑を別々に示している。",
+    "caption": "人々と田畑の三つの場面",
+    "study": true
   }
 },
 {
@@ -2639,6 +2730,13 @@ window.QUESTION_BANK.push(
       "しゅご"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_002.webp",
+    "alt": "建物の前に人々が集まる場面と、稲の束を確かめる場面。",
+    "caption": "集まりと収穫の場面",
+    "study": true
   }
 },
 {
@@ -2669,6 +2767,13 @@ window.QUESTION_BANK.push(
       "じとう"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_002.webp",
+    "alt": "建物の前に人々が集まる場面と、稲の束を確かめる場面。",
+    "caption": "集まりと収穫の場面",
+    "study": true
   }
 },
 {
@@ -2788,7 +2893,14 @@ window.QUESTION_BANK.push(
     "田から得られるものが何に使われたか考えよう。"
   ],
   "explanation": "土地は生活のもとであり、武士としての備えにもつながりました。\n\nほかの 選択肢\n・「土地を認めてもらうと国司の役職も与えられたから」…{御家人|ごけにん}の土地の権利と朝廷の地方役職は別です。\n・「田を持てば警備の務めをしなくてよくなったから」…土地への{御恩|ごおん}に対し、{御家人|ごけにん}は警備などの{奉公|ほうこう}をしました。\n・「土地の収穫を{幕府|ばくふ}へ{納め|おさめ}ると{貴族|きぞく}になれたから」…土地を持つ武士と朝廷の{貴族|きぞく}の立場を混同しています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_003.webp",
+    "alt": "田畑、収穫した稲と米、よろいや弓を別々に示している。",
+    "caption": "田畑・収穫・武具",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_010",
@@ -2811,7 +2923,14 @@ window.QUESTION_BANK.push(
     "{御恩|ごおん}に対して果たす仕事も考えよう。"
   ],
   "explanation": "武士は土地を守り、将軍のために戦う務めを果たすため武芸をみがきました。\n\nほかの 選択肢\n・「{年貢|ねんぐ}の米の重さを正しく量るため」…米の計量と、弓や馬の技術は別の仕事です。\n・「{貴族|きぞく}の歌の会で役職を得るため」…武芸の練習と、和歌の評価を取り{違え|ちがえ}ています。\n・「仏像の木を細かく{彫る|ほる}ため」…仏像を作る技術と武芸は異なります。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_004.webp",
+    "alt": "馬に乗り、弓を構える人の後ろ姿。離れた場所に的がある。",
+    "caption": "馬と弓の練習",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_011",
@@ -2864,7 +2983,14 @@ window.QUESTION_BANK.push(
     "新しい政治の中心ができても、古い中心がなくなるとは限らないね。"
   ],
   "explanation": "武士の{幕府|ばくふ}ができた後も朝廷は京都にあり、二つの政治の中心がありました。\n\nほかの 選択肢\n・「朝廷の役所がそのまま{鎌倉|かまくら}へ移った」…朝廷と{幕府|ばくふ}は同じ役所が移転したものではありません。\n・「{鎌倉|かまくら}の{幕府|ばくふ}は京都の寺を管理するためだけの役所だった」…{幕府|ばくふ}は武士をまとめて政治を行う政権です。\n・「天皇の住まいと将軍の住まいが同じ建物になった」…天皇のいる京都と将軍のいる{鎌倉|かまくら}は別の場所でした。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_005.webp",
+    "alt": "上が北の地図。左の点が京都、右の点が鎌倉の位置を示している。",
+    "caption": "京都と鎌倉の位置（概略）",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_013",
@@ -2887,7 +3013,14 @@ window.QUESTION_BANK.push(
     "敵が海から来ることへの備えだよ。"
   ],
   "explanation": "元の軍が上陸しにくくするため、海岸に石の防御施設を築きました。\n\nほかの 選択肢\n・「{年貢|ねんぐ}を{納め|おさめ}る倉」…収穫物などを保存する施設です。\n・「馬を走らせる{稽古|けいこ}場」…武芸を練習する場所です。\n・「港で品物を売る市」…物の交換や売買をする場所です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_006.webp",
+    "alt": "砂浜に沿って、石を重ねた壁が続く様子。",
+    "caption": "博多湾沿いの海岸",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_014",
@@ -2940,7 +3073,14 @@ window.QUESTION_BANK.push(
     "働く人の食料や、武士の備えを考えよう。"
   ],
   "explanation": "土地から得る収入は暮らしと戦いへの備えを支え、土地を守ることが重要でした。\n\nほかの 選択肢\n・「土地の広さを測る道具として使った」…米は収穫物で、測量の道具ではありません。\n・「弓や馬の練習をする代わりになった」…収入があっても武芸の練習は必要です。\n・「将軍の役職を交代する順番を示した」…収穫物と将軍の地位を{継ぐ|つぐ}しくみは別です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_003.webp",
+    "alt": "田畑、収穫した稲と米、よろいや弓を別々に示している。",
+    "caption": "田畑・収穫・武具",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_016",
@@ -2970,6 +3110,13 @@ window.QUESTION_BANK.push(
       "ねんぐ"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_003.webp",
+    "alt": "田畑、収穫した稲と米、よろいや弓を別々に示している。",
+    "caption": "田畑・収穫・武具",
+    "study": true
   }
 },
 {
@@ -3069,6 +3216,13 @@ window.QUESTION_BANK.push(
       "へいけものがたり"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_009.webp",
+    "alt": "文字を省略した本を持つ手元と、琵琶を持つ人の後ろ姿を並べている。",
+    "caption": "読む場面と語る場面",
+    "study": true
   }
 },
 {
@@ -3115,7 +3269,14 @@ window.QUESTION_BANK.push(
     "仕事をする範囲と内容の両方を比べよう。"
   ],
   "explanation": "守護は国単位の軍事・警察、地頭は土地の管理や{年貢|ねんぐ}の取り立てなどを担当しました。\n\nほかの 選択肢\n・「Aは地頭、Bは守護」…二つの役職の主な仕事を逆にしています。\n・「Aは{関白|かんぱく}、Bは上皇」…朝廷での役職や立場と、{幕府|ばくふ}の地方支配の役職を取り{違え|ちがえ}ています。\n・「Aは国司、Bは{執権|しっけん}」…{執権|しっけん}は将軍を助ける{幕府|ばくふ}中央の役職です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_002.webp",
+    "alt": "建物の前に人々が集まる場面と、稲の束を確かめる場面。",
+    "caption": "集まりと収穫の場面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_023",
@@ -3138,7 +3299,14 @@ window.QUESTION_BANK.push(
     "戦いで新たな領地を手に入れたか考えよう。"
   ],
   "explanation": "国内の敵を倒して土地を取り上げる戦いと{違い|ちがい}、防衛戦では恩賞にする土地が得にくくなりました。\n\nほかの 選択肢\n・「国内の敵から得た土地を配る手続きだけが遅れた」…防衛戦では新しく取り上げて配る土地自体が得にくかったのです。\n・「元へ使いを送った{貴族|きぞく}だけが費用を使った」…資料の{御家人|ごけにん}は防衛の戦いで費用を使っています。\n・「{御家人|ごけにん}は警備をやめてよい代わりに土地を求めなかった」…戦後も備えは続き、恩賞の不足は不満につながりました。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_010.webp",
+    "alt": "家のそばに武具や食料の包み、少量の銭を置き、人が荷物を準備している。",
+    "caption": "海岸の警備に向けた準備",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_024",
@@ -3161,7 +3329,14 @@ window.QUESTION_BANK.push(
     "武士の土地の問題を判断するきまりだよ。"
   ],
   "explanation": "武士の社会の{慣習|かんしゅう}などをもとにした基準に従い、土地などの争いを裁きました。\n\nほかの 選択肢\n・「一方の{御家人|ごけにん}から届いた{訴え|うったえ}だけ」…{訴え|うったえ}を比べ、判断の基準に沿って裁く必要があります。\n・「土地の収穫量を記した帳面だけ」…土地の情報は資料になりますが、裁判の共通の基準とは異なります。\n・「家に伝わる土地の文書だけ」…権利を調べる証拠と、裁判の基準となるきまりは役割が異なります。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_011.webp",
+    "alt": "田の境目で二人が相談する後ろ姿。別の場所に文字を省略した巻物を置いている。",
+    "caption": "田の境目で相談する場面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_025",
@@ -3207,7 +3382,14 @@ window.QUESTION_BANK.push(
     "誰から誰への働きかを確かめよう。"
   ],
   "explanation": "土地を認めるなど将軍が与えるものが{御恩|ごおん}で、{御家人|ごけにん}が戦いや警備で果たす務めが{奉公|ほうこう}です。\n\nほかの 選択肢\n・「{御恩|ごおん}を{年貢|ねんぐ}に、{奉公|ほうこう}を{念仏|ねんぶつ}に{言い換え|いいかえ}る」…税や宗教の行いと、将軍と{御家人|ごけにん}の関係は異なります。\n・「将軍を上皇に、{御家人|ごけにん}を国司に{言い換え|いいかえ}る」…{幕府|ばくふ}の{主従|しゅじゅう}関係の説明を朝廷の立場に変えてしまいます。\n・「土地を認めることを地頭の裁判だけに直す」…{御恩|ごおん}は将軍が{御家人|ごけにん}に与えるもので、地頭の仕事だけを指しません。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_001.webp",
+    "alt": "建物に座る人、弓を持って集まる人々、区切られた田畑を別々に示している。",
+    "caption": "人々と田畑の三つの場面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_027",
@@ -3230,7 +3412,14 @@ window.QUESTION_BANK.push(
     "読む人と聞く人を考えよう。"
   ],
   "explanation": "文字で読む文学と、音や語りで聞く文学は、それぞれ{違う|ちがう}方法で人々に伝わりました。\n\nほかの 選択肢\n・「前者は語りを聞き、後者は文章を読む」…資料に示された主な伝え方を逆にしています。\n・「前者も後者も、絵だけで出来事を伝える」…どちらにも言葉による表現があります。\n・「前者も後者も、漢詩のきまりに合わせて作る」…日記や{琵琶|びわ}による物語の語りを、漢詩と混同しています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_009.webp",
+    "alt": "文字を省略した本を持つ手元と、琵琶を持つ人の後ろ姿を並べている。",
+    "caption": "読む場面と語る場面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_kamakura_028",
@@ -3253,7 +3442,14 @@ window.QUESTION_BANK.push(
     "次の攻撃に備える工事の位置を考えよう。"
   ],
   "explanation": "一度目の{襲来|しゅうらい}の後、次の攻撃への備えとして{防塁|ぼうるい}を築きました。\n\nほかの 選択肢\n・「{防塁|ぼうるい}を築く→二度目の{襲来|しゅうらい}→一度目の{襲来|しゅうらい}」…一度目と二度目の順が逆です。\n・「一度目の{襲来|しゅうらい}→二度目の{襲来|しゅうらい}→{防塁|ぼうるい}を築く」…二度目には{防塁|ぼうるい}があったという条件と合いません。\n・「二度目の{襲来|しゅうらい}→{防塁|ぼうるい}を築く→一度目の{襲来|しゅうらい}」…{襲来|しゅうらい}の前後関係と、{防塁|ぼうるい}を築いた時期を逆にしています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_kamakura_006.webp",
+    "alt": "砂浜に沿って、石を重ねた壁が続く様子。",
+    "caption": "博多湾沿いの海岸",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_001",

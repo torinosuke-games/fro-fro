@@ -1,4 +1,8 @@
-# 小6社会 第1回 画像制作記録
+# 小6社会 画像制作記録
+
+第1回の履歴と、第2回の変更・保留事項を記録する。現状は末尾の第2回を参照。
+
+# 第1回 画像制作記録
 
 ブランチ：`codex/social6-questions`。作業日：2026-11-02。
 
@@ -455,3 +459,406 @@ Create one original educational illustration for a Japanese grade-six history qu
 - 390px幅・昼テーマの実際の問題画面で対象33問を表示し、画像の読み込みとdecode完了を待って全画面を撮影。21枚の390px縮小一覧と代表的な問題画面を目視確認した。A/Bと10日/30日の記号・文字が読め、説明文が画像の下に表示されることを確認。撮影は `/tmp/so6-pictures/screens/`（作業時の確認用、リポジトリには含めない）。
 - WebPの最小104,716・最大199,662バイト。全21枚で1200×800を確認。
 - diagramを取り除いた問題データを変更前と比較し、全336問の内容が同一であることを確認。
+
+
+# 第2回（2026-11-02）：修正2枚・新規16枚、古墳の写真照合は保留
+
+- 登録済み：縄文土器001・魚骨007の2枚を差し替え。平安7枚・鎌倉9枚（場面14・教科書の図2）を28問へ新規登録。合計37枚・61問。全336問のID・本文・正解・難易度・reviewedは変更していない。
+- 未完了：prehistoric_006の候補画像はできたが、要求された実物空撮との目視比較ができていない。現行画像・対象IDは変更していない。後述の保留記録を参照。
+- 見送り：kamakura_008は実物写真で腕・体幹の形を確認できなかったため、利用者の指示に従い計画から削除。対象019は図なし。
+- 新規場面は画像生成、地図も地理データから作った参照図を画像生成ツールに渡して仕上げた。SVGは使用しない。元画像は保持し、採用画像を1200×800に縮小してWebP化。200,000バイト以下。
+- 資料の説明文・地理データの確認と、実物写真の目視確認を区別する。以下の史料URLは、特記しない限り説明文を確認したもの。写真は確認済みと書かない。
+- 前の第1回記録のバイト数・プロンプトは当時の履歴。今回の変更2枚については以下が現行の記録。
+
+## 第2回の登録一覧
+
+| ファイル名 | 対象問題ID | 内容 | bytes |
+|---|---|---|---:|
+| soc6_prehistoric_001.webp | social_g6_prehistoric_001<br>social_g6_prehistoric_009 | 火のそばの容器と木の実 | 197252 |
+| soc6_prehistoric_007.webp | social_g6_prehistoric_010 | 住まいのあとから出た骨 | 195530 |
+| soc6_heian_001.webp | social_g6_heian_003<br>social_g6_heian_019 | 庭や池のある住まい | 199308 |
+| soc6_heian_002.webp | social_g6_heian_008<br>social_g6_heian_028 | 田畑の境目の様子 | 189198 |
+| soc6_heian_003.webp | social_g6_heian_014<br>social_g6_heian_023 | 田畑と都の住まい | 182054 |
+| soc6_heian_004.webp | social_g6_heian_015<br>social_g6_heian_024 | 紙を受け取る場面 | 196990 |
+| soc6_heian_005.webp | social_g6_heian_017 | 横に広げた巻物 | 188438 |
+| soc6_heian_006.webp | social_g6_heian_018 | 港の船と荷物 | 179994 |
+| soc6_heian_007.webp | social_g6_heian_022 | 資料A・Bの暮らしの場面 | 192686 |
+| soc6_kamakura_001.webp | social_g6_kamakura_002<br>social_g6_kamakura_003<br>social_g6_kamakura_026 | 人々と田畑の三つの場面 | 198454 |
+| soc6_kamakura_002.webp | social_g6_kamakura_004<br>social_g6_kamakura_005<br>social_g6_kamakura_022 | 集まりと収穫の場面 | 194178 |
+| soc6_kamakura_003.webp | social_g6_kamakura_009<br>social_g6_kamakura_015<br>social_g6_kamakura_016 | 田畑・収穫・武具 | 198158 |
+| soc6_kamakura_004.webp | social_g6_kamakura_010 | 馬と弓の練習 | 179892 |
+| soc6_kamakura_006.webp | social_g6_kamakura_013<br>social_g6_kamakura_028 | 博多湾沿いの海岸 | 186338 |
+| soc6_kamakura_009.webp | social_g6_kamakura_020<br>social_g6_kamakura_027 | 読む場面と語る場面 | 182096 |
+| soc6_kamakura_010.webp | social_g6_kamakura_023 | 海岸の警備に向けた準備 | 189394 |
+| soc6_kamakura_011.webp | social_g6_kamakura_024 | 田の境目で相談する場面 | 195818 |
+| soc6_kamakura_005.webp | social_g6_kamakura_012 | 京都と鎌倉の位置（概略） | 59994 |
+
+### 第2回：soc6_prehistoric_001.webp
+
+- 対象：`social_g6_prehistoric_001`、`social_g6_prehistoric_009`
+- 種類：場面イラスト
+- caption：火のそばの容器と木の実
+- alt：土を焼いた深い容器と、まだ加工していない木の実が火のそばにある。
+- 出力：1200×800、197252 bytes、WebP quality 79
+- 確認した資料・条件：
+  - [京都国立博物館「縄目に注目してみると」](https://www.kyohaku.go.jp/jp/learn/home/dictio/kouko/232/)の説明文：縄を転がす・押し付けることで粘土に文様を付ける。利用者の深鉢の指定をもとに、広口・深い胴に変更した。写真を目視したとは扱わない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+- 作り直し理由：丸いつぼ状の形を深鉢に変更。最初の修正版の縄目は実際の縄を貼ったように見えたため、浅いくぼみの連続模様へ再修正した。木の実・かご・火は保持。
+
+採用プロンプト（全文）：
+
+```text
+Edit only the pot surface in this image, preserve its deep open bowl shape, wide mouth, almost straight deep walls, basket and nuts, fire and surroundings. The current surface looks covered in actual woven thick rope and is WRONG. Replace that texture with fired reddish-brown clay covered in SMALL SHALLOW INDENTED impressions left by rolling a thin twisted cord over wet clay. Fine recessed dotted diagonal grooves only, no actual rope, no woven basket texture, no raised rope coils, no bands. Unglazed rough clay with subtle scorch tint near bottom. Keep rim plain and slightly irregular. Absolutely no text or labels. Landscape3:2.
+```
+
+### 第2回：soc6_prehistoric_007.webp
+
+- 対象：`social_g6_prehistoric_010`
+- 種類：場面イラスト
+- caption：住まいのあとから出た骨
+- alt：土の中から出た魚の骨。いくつかの先が黒くなっている。
+- 出力：1200×800、195530 bytes、WebP quality 49
+- 確認した資料・条件：
+  - 利用者の修正指定（小さな円盤状の背骨・細い小骨・あご・うろこ・一部の焦げ）と問題本文の出土状況。第1回に記録した三内丸山遺跡の出土物の説明を引き継ぐ。今回の魚種や特定発掘資料を同定した図ではない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+- 作り直し理由：太い獣骨に見えた部分を、細い魚骨・小さな背骨・あご・うろこへ変更し、一部の黒い焦げは残した。
+
+採用プロンプト（全文）：
+
+```text
+Edit this archaeological illustration preserving the soil and excavated small remains composition. Replace all thick vertebrae and ribs with unmistakably SMALL FISH remains: a short linked chain of tiny disk/spool shaped vertebral centra, a few detached small disk centra, fine needle-like fish bones, one delicate fish jaw fragment and a few small fish scales. Thin fragile anatomy, not mammalian ribs, not dinosaur bones, no large pelvis or heavy curved bones. Some fragments are blackened by burning, others pale tan. Clear close-up educational scientific watercolor rendering. No intact flesh, no cooking scene, no person, no text, no numbers, no labels. Landscape 3:2.
+```
+
+### 第2回：soc6_heian_001.webp
+
+- 対象：`social_g6_heian_003`、`social_g6_heian_019`
+- 種類：場面イラスト
+- caption：庭や池のある住まい
+- alt：庭と池の周りに、廊下でつながる木の建物がある。
+- 出力：1200×800、199308 bytes、WebP quality 58
+- 確認した資料・条件：
+  - [コトバンク「寝殿造」](https://kotobank.jp/word/%E5%AF%9D%E6%AE%BF%E9%80%A0-82294)の説明文：建物・渡殿・御簾などの構成を確認。特定の邸宅の実測復元ではない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Heian-period Japanese aristocratic residence around 1000 CE, high oblique view of timber shinden-style main hall and smaller flanking buildings linked by covered wooden corridors. Broad cypress-bark roofs, open wooden verandas with reed blinds, plank floors and loose mats, no full modern tatami grids or modern shoji. South garden has a pond with small natural island, shrubs and gravel. Composition clearly shows garden, pond and connecting corridors. No people necessary. Not a temple or castle, not Chinese tiled palace.
+```
+
+### 第2回：soc6_heian_002.webp
+
+- 対象：`social_g6_heian_008`、`social_g6_heian_028`
+- 種類：場面イラスト
+- caption：田畑の境目の様子
+- alt：田畑の境目に立ち、弓を持つ人の後ろ姿。
+- 出力：1200×800、189198 bytes、WebP quality 76
+- 確認した資料・条件：
+  - [コトバンク「大鎧」](https://kotobank.jp/word/%E5%A4%A7%E9%8E%A7-39672)の説明文：平安・鎌倉期の大鎧、大袖と札を糸でつなぐ構造。[文化遺産データベース「白絲威鎧」](https://online.bunka.go.jp/db/heritages/detail/188936)の年代説明。特定の現存甲冑の複製ではない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Late Heian rural Japan, a few rice paddies and dry cultivated plots separated by low earthen boundaries. A small distant anonymous warrior seen from behind quietly stands beside an uncertain land boundary. Plain late-Heian lamellar armor with broad shoulder guards, long asymmetrical bow, no elaborate horned helmet or katana pair. No opponent, no battle, no conquest or outcome. Landscape occupies most of image, warrior small.
+```
+
+### 第2回：soc6_heian_003.webp
+
+- 対象：`social_g6_heian_014`、`social_g6_heian_023`
+- 種類：場面イラスト
+- caption：田畑と都の住まい
+- alt：地方の耕地と都の建物を、離れた二つの場面で示している。
+- 出力：1200×800、182054 bytes、WebP quality 76
+- 確認した資料・条件：
+  - [コトバンク「寝殿造」](https://kotobank.jp/word/%E5%AF%9D%E6%AE%BF%E9%80%A0-82294)の説明文：建物・渡殿・御簾などの構成を確認。特定の邸宅の実測復元ではない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Two separated balanced vignette scenes on a pale parchment background with no connection arrows: left rural Heian-period cultivated fields and simple farmhouse; right a Heian capital aristocrat timber residence with cypress-bark roof, open wooden veranda and reed blinds, garden. Views at similar visual prominence, large neutral gap between. No people, no ownership colors, no giving of land, no protection outcome.
+```
+
+### 第2回：soc6_heian_004.webp
+
+- 対象：`social_g6_heian_015`、`social_g6_heian_024`
+- 種類：場面イラスト
+- caption：紙を受け取る場面
+- alt：紙を受け取る人の後ろ姿と、筆を用意した机。紙の文字は省略している。
+- 出力：1200×800、196990 bytes、WebP quality 79
+- 確認した資料・条件：
+  - [コトバンク「寝殿造」](https://kotobank.jp/word/%E5%AF%9D%E6%AE%BF%E9%80%A0-82294)の説明文：建物・渡殿・御簾などの構成を確認。特定の邸宅の実測復元ではない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Heian Japan around1000 CE: anonymous adult court noble seen only from behind sitting on a loose mat on a wooden veranda, receiving a small completely blank folded sheet from another anonymous person's hand at frame edge. Nearby low writing desk with inkstone, brush, and blank paper ready for response. Court eboshi cap and loose layered robe. Reed blinds, simple wooden interior, no wall text. Absolutely no marks on paper. No face, no emotions or poem words.
+```
+
+### 第2回：soc6_heian_005.webp
+
+- 対象：`social_g6_heian_017`
+- 種類：場面イラスト
+- caption：横に広げた巻物
+- alt：横長の紙に暮らしの小さな場面が続き、両端が巻かれている。文章部分は省略している。
+- 出力：1200×800、188438 bytes、WebP quality 85
+- 確認した資料・条件：
+  - [藤田美術館「そもそも絵巻ってなんですか？」](https://fujita-museum.or.jp/topics/2020/03/13/708/)の説明文：紙を横につないだ巻物。既存作品は複製せず、文章欄は空白にした。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Object study: partially unrolled long horizontal Japanese handscroll on a plain wooden surface, wooden roller at each end. Alternating entirely blank cream text spaces and small painted daily-life vignettes of late Heian Japan: people carrying baskets on path, a wooden residence with garden, rear-view person on veranda. All tiny painted people faces hidden. Original compositions not copying existing art. No text or pseudo-writing on scroll or anywhere. Make the continuous rolled format clear.
+```
+
+### 第2回：soc6_heian_006.webp
+
+- 対象：`social_g6_heian_018`
+- 種類：場面イラスト
+- caption：港の船と荷物
+- alt：港の船、器や布の荷物、中央に穴のある銭を示している。
+- 出力：1200×800、179994 bytes、WebP quality 76
+- 確認した資料・条件：
+  - [ジャパンサーチ「福岡県博多遺跡群出土品」](https://jpsearch.go.jp/item/bunka-294910)の説明文：中世貿易拠点の陶磁器・宋人商人。中世全体の資料と12世紀の場面を混同しないよう、試作の青花を無地の青磁・白磁・褐色の器へ変更した。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+- 作り直し理由：初稿の青い絵付けを無地の青磁・白磁・褐色の器に変更。銭の文字も除去。
+
+採用プロンプト（全文）：
+
+```text
+Correct this late12th-century Japanese-Song trading harbor illustration. Keep layout, boat, cargo, rear-view anonymous merchants and cloth. Replace ALL blue-and-white painted ceramic jars (anachronistic here) with plain undecorated muted green celadon vessels, pale ivory white ware, and brown stoneware. No blue painted decorations anywhere. Remove ALL lettering, pseudocharacters and decorative markings from coins: small worn plain copper disks with square central holes, visible only as simple shapes, no inscriptions. Keep no text on packages or boat. No faces. No modern objects. Original educational warm watercolor, landscape3:2.
+```
+
+### 第2回：soc6_heian_007.webp
+
+- 対象：`social_g6_heian_022`
+- 種類：教科書の図
+- caption：資料A・Bの暮らしの場面
+- alt：Aは田畑のそばで弓を練習する人、Bは住まいで紙を交わす人。文字は省略している。
+- 出力：1200×800、192686 bytes、WebP quality 76
+- 確認した資料・条件：
+  - [コトバンク「寝殿造」](https://kotobank.jp/word/%E5%AF%9D%E6%AE%BF%E9%80%A0-82294)の説明文：建物・渡殿・御簾などの構成を確認。特定の邸宅の実測復元ではない。
+  - [コトバンク「大鎧」](https://kotobank.jp/word/%E5%A4%A7%E9%8E%A7-39672)の説明文：平安・鎌倉期の大鎧、大袖と札を糸でつなぐ構造。[文化遺産データベース「白絲威鎧」](https://online.bunka.go.jp/db/heritages/detail/188936)の年代説明。特定の現存甲冑の複製ではない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Two equal-width textbook scene panels, with ONLY large simple Latin capital A above left and B above right. A: late-Heian small rear-view warrior practicing longbow toward a plain unmarked straw target beside cultivated fields, no battle. B: Heian courtly wooden residence, two anonymous rear-view court nobles exchange completely blank papers beside low writing desk and brush. Period robes and eboshi, faces entirely hidden. No words except A and B; no additional symbols, no ranking, no decorative text.
+```
+
+### 第2回：soc6_kamakura_001.webp
+
+- 対象：`social_g6_kamakura_002`、`social_g6_kamakura_003`、`social_g6_kamakura_026`
+- 種類：場面イラスト
+- caption：人々と田畑の三つの場面
+- alt：建物に座る人、弓を持って集まる人々、区切られた田畑を別々に示している。
+- 出力：1200×800、198454 bytes、WebP quality 85
+- 確認した資料・条件：
+  - [コトバンク「寝殿造」](https://kotobank.jp/word/%E5%AF%9D%E6%AE%BF%E9%80%A0-82294)の説明文：建物・渡殿・御簾などの構成を確認。特定の邸宅の実測復元ではない。
+  - [コトバンク「大鎧」](https://kotobank.jp/word/%E5%A4%A7%E9%8E%A7-39672)の説明文：平安・鎌倉期の大鎧、大袖と札を糸でつなぐ構造。[文化遺産データベース「白絲威鎧」](https://online.bunka.go.jp/db/heritages/detail/188936)の年代説明。特定の現存甲冑の複製ではない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Three equally weighted isolated vignettes in a horizontal composition, separated by blank parchment gaps, no connecting lines: an anonymous seated shogun viewed entirely from behind in a modest Kamakura timber residence, a small rear-view group of Kamakura warriors with broad boxy o-yoroi shoulder guards and long bows, and bounded cultivated rice fields. No kneeling before another person, no gifts or transfer of land, no ownership colors, no arrows, no family crests.
+```
+
+### 第2回：soc6_kamakura_002.webp
+
+- 対象：`social_g6_kamakura_004`、`social_g6_kamakura_005`、`social_g6_kamakura_022`
+- 種類：場面イラスト
+- caption：集まりと収穫の場面
+- alt：建物の前に人々が集まる場面と、稲の束を確かめる場面。
+- 出力：1200×800、194178 bytes、WebP quality 61
+- 確認した資料・条件：
+  - [コトバンク「大鎧」](https://kotobank.jp/word/%E5%A4%A7%E9%8E%A7-39672)の説明文：平安・鎌倉期の大鎧、大袖と札を糸でつなぐ構造。[文化遺産データベース「白絲威鎧」](https://online.bunka.go.jp/db/heritages/detail/188936)の年代説明。特定の現存甲冑の複製ではない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Two equally weighted separate vignettes of Kamakura Japan13th century. Left: several small rear-view warriors gathering quietly outside simple timber hall with shingle roof, broad rectangular o-yoroi shoulder guards, longbows. Right: anonymous rear-view people inspecting bundled harvested rice at rice field edge. No money or tax handover, no command diagram, no A/B labels, no family crests, no visible faces. Clearly different activities without specifying official titles.
+```
+
+### 第2回：soc6_kamakura_003.webp
+
+- 対象：`social_g6_kamakura_009`、`social_g6_kamakura_015`、`social_g6_kamakura_016`
+- 種類：場面イラスト
+- caption：田畑・収穫・武具
+- alt：田畑、収穫した稲と米、よろいや弓を別々に示している。
+- 出力：1200×800、198158 bytes、WebP quality 82
+- 確認した資料・条件：
+  - [コトバンク「大鎧」](https://kotobank.jp/word/%E5%A4%A7%E9%8E%A7-39672)の説明文：平安・鎌倉期の大鎧、大袖と札を糸でつなぐ構造。[文化遺産データベース「白絲威鎧」](https://online.bunka.go.jp/db/heritages/detail/188936)の年代説明。特定の現存甲冑の複製ではない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Three isolated original object/landscape vignettes, same visual prominence, generous blank parchment gaps, NO arrows: left a Kamakura rice field; center a few tied rice sheaves and woven basket of harvested rice; right medieval13th-century Japanese o-yoroi with large square shoulder guards on plain wooden support, long asymmetrical bow and quiver nearby. No human needed. No Edo katana pair, no gun, no helmet with extravagant horns, no transfer/tax/payment result.
+```
+
+### 第2回：soc6_kamakura_004.webp
+
+- 対象：`social_g6_kamakura_010`
+- 種類：場面イラスト
+- caption：馬と弓の練習
+- alt：馬に乗り、弓を構える人の後ろ姿。離れた場所に的がある。
+- 出力：1200×800、179892 bytes、WebP quality 76
+- 確認した資料・条件：
+  - [コトバンク「大鎧」](https://kotobank.jp/word/%E5%A4%A7%E9%8E%A7-39672)の説明文：平安・鎌倉期の大鎧、大袖と札を糸でつなぐ構造。[文化遺産データベース「白絲威鎧」](https://online.bunka.go.jp/db/heritages/detail/188936)の年代説明。特定の現存甲冑の複製ではない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Wide landscape of a Kamakura13th-century countryside practice ground. A small distant anonymous warrior seen entirely from behind practices riding a small sturdy horse and handling a Japanese asymmetrical long bow. Period broad o-yoroi shoulder guards, simple helmet, no elaborate crest. Plain straw target on ground far away, NO hit arrow or outcome, no opponent, no battle, no flags, no prizes. Quiet broad country landscape and basic wooden fence.
+```
+
+### 第2回：soc6_kamakura_006.webp
+
+- 対象：`social_g6_kamakura_013`、`social_g6_kamakura_028`
+- 種類：場面イラスト
+- caption：博多湾沿いの海岸
+- alt：砂浜に沿って、石を重ねた壁が続く様子。
+- 出力：1200×800、186338 bytes、WebP quality 76
+- 確認した資料・条件：
+  - [福岡市の文化財「今津地区」](https://bunkazai.city.fukuoka.lg.jp/sp/cultural_properties/detail/38)の説明文：海に向いた砂丘の斜面の石積みと砂の構造。[福岡市「今津元寇防塁」](https://www.city.fukuoka.lg.jp/nishiku/c-shinko/charm/nisikunotakara/genkoborui_imadu.html)の位置・高さの説明。特定区間の写真復元ではなく、海岸と石積みの関係を示す再構成。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Quiet empty Hakata Bay coastal landscape in late13th-century Japan, oblique landward view shows a continuous roughly2-3m high stone barrier parallel to sandy shoreline. Sea-facing surface built of uneven local stone, wide top, slightly battered trapezoid profile, sandy earth behind. Not a European battlement, no crenellations or towers, no cement or cut ashlar, no torii. Coastal pines behind, calm water and distant hills, no ships, people, war, timeline, year or result. Material and relation to shoreline clearly visible.
+```
+
+### 第2回：soc6_kamakura_009.webp
+
+- 対象：`social_g6_kamakura_020`、`social_g6_kamakura_027`
+- 種類：場面イラスト
+- caption：読む場面と語る場面
+- alt：文字を省略した本を持つ手元と、琵琶を持つ人の後ろ姿を並べている。
+- 出力：1200×800、182096 bytes、WebP quality 85
+- 確認した資料・条件：
+  - [国立公文書館「平家物語――妖しくも美しき――」](https://www.archives.go.jp/exhibition/digital/heikemonogatari/contents/09.html)の説明文：琵琶法師の語りと写本による伝承。[京都大学貴重資料デジタルアーカイブ](https://rmda.kulib.kyoto-u.ac.jp/item/rb00000086/explanation/heike)の説明文：僧侶による弾き語り。人物は匿名の後ろ姿にした。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+- 作り直し理由：初稿の華やかな衣服と烏帽子を、簡素な僧衣と剃髪の後ろ姿に変更。
+
+採用プロンプト（全文）：
+
+```text
+Edit only the RIGHT panel of this educational comparison. The storyteller must be an anonymous medieval Japanese BIWA HOSHI, not a noble court musician: entirely rear view with shaved head, NO eboshi hat, plain modest gray-brown Buddhist robe with no brocade patterns, sitting on simple mat near humble wooden building, no ornate palace behind. Preserve plausible pear-shaped four-string biwa lute and large plectrum, no face, no text, no speech notes. Listener backs may remain small. LEFT panel reading hands and completely blank diary should remain unchanged. Warm clear textbook watercolor, landscape3:2.
+```
+
+### 第2回：soc6_kamakura_010.webp
+
+- 対象：`social_g6_kamakura_023`
+- 種類：場面イラスト
+- caption：海岸の警備に向けた準備
+- alt：家のそばに武具や食料の包み、少量の銭を置き、人が荷物を準備している。
+- 出力：1200×800、189394 bytes、WebP quality 76
+- 確認した資料・条件：
+  - [コトバンク「大鎧」](https://kotobank.jp/word/%E5%A4%A7%E9%8E%A7-39672)の説明文：平安・鎌倉期の大鎧、大袖と札を糸でつなぐ構造。[文化遺産データベース「白絲威鎧」](https://online.bunka.go.jp/db/heritages/detail/188936)の年代説明。特定の現存甲冑の複製ではない。
+  - [福岡市の文化財「今津地区」](https://bunkazai.city.fukuoka.lg.jp/sp/cultural_properties/detail/38)の説明文：海に向いた砂丘の斜面の石積みと砂の構造。[福岡市「今津元寇防塁」](https://www.city.fukuoka.lg.jp/nishiku/c-shinko/charm/nisikunotakara/genkoborui_imadu.html)の位置・高さの説明。特定区間の写真復元ではなく、海岸と石積みの関係を示す再構成。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Quiet13th-century Kamakura warrior household preparing provisions and equipment for guarding the coast. Low wooden house veranda, small anonymous rear-view person preparing simple woven food bundles beside an o-yoroi armor with broad shoulder guards, long bow, arrows, and a small cloth with a few plain copper coins with square holes and absolutely NO inscriptions. No empty purse or explicit poverty outcome, no numbers, no battle, no new land depiction. No late-period armor or guns.
+```
+
+### 第2回：soc6_kamakura_011.webp
+
+- 対象：`social_g6_kamakura_024`
+- 種類：場面イラスト
+- caption：田の境目で相談する場面
+- alt：田の境目で二人が相談する後ろ姿。別の場所に文字を省略した巻物を置いている。
+- 出力：1200×800、195818 bytes、WebP quality 76
+- 確認した資料・条件：
+  - [藤田美術館「そもそも絵巻ってなんですか？」](https://fujita-museum.or.jp/topics/2020/03/13/708/)の説明文：紙を横につないだ巻物。既存作品は複製せず、文章欄は空白にした。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+
+採用プロンプト（全文）：
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Kamakura Japan13th-century: two very small anonymous people seen entirely from behind calmly discussing an unclear earthen boundary between adjacent rice fields. Identical muted clothing to avoid ownership clues, neither points at the other. Separate small vignette in foreground has an entirely blank partly rolled paper scroll on a low wood stand. No linking arrows, boundary colors, legal words, verdict, court labels, faces or fighting. Focus on uncertain boundary and undecided consultation.
+```
+
+### 第2回：soc6_kamakura_005.webp
+
+- 対象：`social_g6_kamakura_012`
+- 種類：教科書の図
+- caption：京都と鎌倉の位置（概略）
+- alt：上が北の地図。左の点が京都、右の点が鎌倉の位置を示している。
+- 出力：1200×800、59994 bytes、WebP quality 88
+- 確認した資料・条件：
+  - [Natural Earthの公開地理データ](https://github.com/nvkelso/natural-earth-vector)（ne_10m_land.geojson、ne_10m_lakes.geojson、public domain）を取得し、海岸線と湖を描いた位置図を参照画像に使用。[京都付近の位置](https://geoshape.ex.nii.ac.jp/nrct/resource/27/270000332600.html)と[鎌倉の位置](https://geolod.thibetanus.com/resource/wNAifR)の座標説明を確認。点は概略で京都135.75E/35.02N、鎌倉139.55E/35.32N。現代の地形の概略を位置の手がかりに使い、当時の海岸線・行政境界・支配範囲は示さない。
+  - 対象設問の本文と正解・誤答を照合。場面・素材を示し、用途・制度・結論のラベルや答えの矢印は加えない。
+- 作り直し理由：初稿は伊豆半島などの海岸線が崩れたため不採用。地理データの参照図を使って再生成。最終画像と参照図の陸地マスクIoUは0.995、二点の位置を目視確認。小縮尺の概略図であり、厳密な距離測定には使わない。
+
+採用プロンプト（全文）：
+
+```text
+Finish this accurate geographic reference as a restrained educational watercolor map. It is ESSENTIAL to preserve exactly the reference coastline, lake outline, island shapes, aspect ratio, and the exact positions and equal sizes of the two black dots. Do NOT redraw or reinterpret geography. Add only a very subtle light warm paper wash within the pale land and subtle pale blue wash in sea, keep crisp thin coastlines. No shading implying terrain, no new features. No text, labels, letters, numbers, routes, arrows, symbols, borders, title, compass, buildings, labels or hierarchy. Keep same3:2 composition and all outlines in same position. This is a school historical location aid with no political interpretation.
+```
+
+## 第2回の不採用初稿（修正履歴）
+
+### soc6_prehistoric_001.webp の不採用初稿
+
+```text
+Edit this educational illustration. Keep the basket of nuts, the small fire, and surrounding natural setting/composition. Replace the clay vessel with an archaeologically plausible Jomon DEEP BOWL (fukabachi): broad OPEN mouth, deep almost straight slightly tapering sides, small flat base, height greater than width at the bottom, rough low-fired reddish brown clay with dense clearly visible rolled twisted-cord impressions across surface. Simple slightly irregular rim, no elaborate invented ornament. NOT a round smooth jar, NOT a narrow neck, NOT glazed. Preserve the warm clear textbook illustration style, landscape 3:2, no text, no labels, no numbers, no people, no cooked finished food or outcome.
+```
+
+### soc6_heian_006.webp の不採用初稿
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Late12th-century Japanese harbor during trade with Song China. Wooden seagoing cargo vessel at quiet wooden wharf; packed ceramic vessels, folded fabric bundles, and a few cast copper round coins with square holes on small mat, coins too small for lettering and shown without inscriptions. Two small anonymous people in simple period robes and eboshi seen from behind examining cargo and coins, no completed handshake or handover. Curved wooden hull and furled period sail, no modern cranes, currency, dock signs or route arrows.
+```
+
+### soc6_kamakura_009.webp の不採用初稿
+
+```text
+Create one original educational historical illustration for Japanese grade 6. Landscape 3:2, intended 1200x800. Warm restrained watercolor and fine ink, clear large shapes readable on a phone, realistic material and architecture, no fantasy. ALL people are small and seen strictly from behind, faces entirely hidden, anonymous, no portraits. No words, labels, signatures, arrows, numbers, kanji, writing or decorative pseudo-text anywhere unless explicitly allowed below. No battles, blood, injuries or violence. No modern objects. No Edo/Sengoku armor, guns, stone castle keeps, katana pair, modern paved roads. Medieval Japanese clothing and materials only. Keep scene observational; no answer, outcome, relationship arrows or didactic conclusion. Two distinct equal-sized scenes on a light parchment background. Left: close cropped hands holding open an entirely blank personal diary made of Japanese paper on a wooden floor, inkbrush nearby; no writing of any kind. Right: anonymous Kamakura13th-century robed biwa storyteller strictly seen from behind at three-quarter rear so a pear-shaped wooden lute, four strings, short bent neck and large plectrum can be seen to side. NO visible face, no audience faces. Plain surroundings, no music notes, speech bubbles, titles or superiority symbols.
+```
+
+### soc6_kamakura_005.webp の不採用初稿
+
+```text
+Create a rigorously geographically correct SIMPLE TEXTBOOK LOCATION MAP of central and western Honshu Japan. Landscape3:2 intended1200x800. North up, orthographic flat overhead, NO perspective, coastlines accurately based on real geography, include Lake Biwa and the Kii, Izu, Miura and Boso peninsulas recognizable, show part of Shikoku at bottom left if within frame. Pale cream land and pale blue sea, thin subtle gray coastline, no stylized mountains, buildings or people. Put ONLY TWO small equal dark circular dots: Kyoto at35.02N135.75E (inland west/southwest of Lake Biwa) and Kamakura at35.32N139.55E (on north coast of Sagami Bay, immediately WEST of Miura peninsula, NOT Tokyo). Do not print these coordinates or any names. Focus view 133.5E to141E and33N to37.4N, consistent scale throughout. Absolutely NO words, numbers, letters, labels, arrows, borders, routes, grids, compass, title, legend, politics, division, relationship line or ownership coloring. Neither dot emphasized over other. This is a location aid, no answer or hierarchy.
+```
+
+## 写真確認の制約と残作業
+
+- 東大寺公式の[南大門](https://www.todaiji.or.jp/information/nandaimon/)の説明文と阿形・吽形の写真リンクを確認。阿形写真URLは https://www.todaiji.or.jp/wp-content/uploads/2022/01/kongo-rikishi.jpg 。画像取得はHTTP 403で拒否され、Web検索ツールの応答にも目視できる画像データが含まれなかった。別の像から推測で生成せず、soc6_kamakura_008.webpを計画から除外した。
+- 古墳は[大仙陵古墳の2007年空撮資料](https://commons.wikimedia.org/wiki/File:NintokuTomb_Aerial_photograph_2007.jpg)の説明・国土地理院空撮の出典を確認。原画像URLは https://upload.wikimedia.org/wikipedia/commons/c/c3/NintokuTomb_Aerial_photograph_2007.jpg 。こちらも通信制限でHTTP 403となり、写真本体を目視できなかった。
+- 古墳候補は、利用者の指定どおり大小二つ、全周の堀、前方部にも草木とゆるやかな段を描いて生成した。実物写真との照合前なので正式ファイルには反映していない。対象のsocial_g6_prehistoric_008・025・027と既存画像は維持。
+- 残作業は、空撮写真を目視して候補を必要なら再修正し、同名WebPで置換、テスト、commit・push。写真の添付、または環境設定で資料サイトへのアクセスを許可してから再開できる。次の単元には進まない。
+
+保留中の古墳候補プロンプト：
+
+```text
+Correct this educational aerial view of TWO DIFFERENTLY SIZED Japanese keyhole burial mounds. Preserve two mounds of different sizes side by side seen from same high oblique angle, warm detailed natural textbook style. CRITICAL geometry: EACH mound is ONE CONTINUOUS KEYHOLE SHAPED ISLAND consisting of circular rear joined through narrowed waist to a flared rectangular front. A CONTINUOUS WATER-FILLED MOAT must encircle the ENTIRE KEYHOLE perimeter, around BOTH circle AND all sides of rectangular front. NO land causeway, NO front protruding outside water, NO moat only around circle. The rectangular front is ALSO A GREEN EARTHEN HILL, with gently sloping rounded low terraced contours, grass, shrubs, and scattered trees like the rear mound. No stone steps, no pyramidal stone structure, no sharp white masonry edges, no stairs. Entire mound contours readable beneath patchy vegetation. Large and small mound have same basic keyhole shape; no connecting lines, no people, no tomb labels, no words, no numbers, no modern buildings or roads. Landscape3:2.
+```
+
+作業環境内の候補原画（未登録）：`/workspace/generated_images/exec-587c8ea1-9e97-4803-9ddf-91ff03a117f0.png`。
+
+## 第2回の地図参照データ
+
+- 海岸線・湖：Natural Earth 1:10mの現代地形を概略位置の参考に使用。歴史的な支配範囲や当時の海岸線の復元ではない。
+- land10.geojson SHA-256：`1ac90796408bc6ad6911d69448485d3c4dbf2190370080368a09976e1c9f7416`
+- lakes.geojson SHA-256：`2d036f53dedec578001c5c30c2959ee7d4eebc1306900fa4367c49929ec8f2d9`
+- 投影用の縦横比：緯度35度のcos補正。表示範囲：経度133.8–141.2、緯度32.95–36.99。記号・数値は画像に印字しない。最終仕上げは上記の画像生成プロンプト。
+
+## 第2回の検査結果
+
+- `node tests/run.js`：908件成功・0件失敗。
+- `tests/fixtures/social6-images-2.json`に16枚・28問の対応を追加。第1回の21枚・33問と合わせて37枚・61問を検査。画像の存在、WebP実体・拡張子、1200×800、200,000バイト以下、alt/captionの空欄・正解文字列混入を確認。
+- 変更前後をdiagram以外の全フィールドで比較し、336問の内容が同一であることを確認。
+- 新規28問と修正2枚の対象3問を、390px幅の実際の問題画面で表示し、画像のdecode完了を待って31問を撮影。18枚の縮小一覧と、A/B・地図・魚骨・琵琶の代表画面を目視。A/Bの判読とcaptionの表示を確認。作業時の撮影先は `/tmp/so6-round2/screens/`。
+- 古墳候補・金剛力士像は上記検査の完成対象に含めない。
