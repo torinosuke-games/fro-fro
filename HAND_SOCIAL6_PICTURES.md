@@ -1,6 +1,6 @@
 # 小6社会 画像制作記録
 
-第1回・第2回の履歴と、第3回の制作内容を記録する。古墳の保留は利用者提供写真との照合で解消済み。現状は末尾の追補を参照。
+第1回〜第4回の制作内容を記録する。古墳の保留は利用者提供写真との照合で解消済み。現状は末尾の追補を参照。
 
 # 第1回 画像制作記録
 
@@ -1109,3 +1109,216 @@ Create ONE original Japanese grade6 history educational illustration, landscape3
 - 390px幅で新規32問と地図1問を実際の問題画面に表示して画像読み込みを確認。各原画と代表画面を目視確認。地図は文字拡大後にも再撮影。室内比較の撮影1件は描画待ちが短く画像が写らなかったため、待機時間を延ばして該当2問を再撮影し、正常表示を確認した。
 - そろばんは上2珠・下5珠の安定した表現が得られず、誤った構造を載せることを避け、手習いの筆と帳面へ構図を変更。ばれんの初稿も修正済み。
 - 測量は縄・杭・竹の目印の範囲で採用。特定測量器の精密な形、特定の城・港の復元精度を保証する図ではない。問題の答え・制度の結論は描き加えていない。
+
+# 第4回 画像制作記録（2026-11-03）
+
+ブランチ：`codex/social6-questions`。既存1枚の修正、明治8枚・近現代8枚の新規16枚（21問）。累計70枚・114問。憲法以降は未制作。
+
+全17枚を画像生成ツールで制作・編集し、原画を目視確認した。Pillowは1200×800への縮小とWebP変換のみに使用。全て200,000バイト以下。場面内に文字を入れず、modern_007だけ問題文にあるA・Bを表示。設問の本文・選択肢・正解・ID・難易度・reviewedは変更しない。以下の資料確認は説明文・検索抜粋によるもので、取得できなかった実物写真を見たとは扱わない。
+
+|ファイル|対象問題|バイト数|
+|---|---|---:|
+|soc6_muromachi_sengoku_009.webp|social_g6_muromachi_sengoku_028|180950|
+|soc6_meiji_001.webp|social_g6_meiji_004, social_g6_meiji_022, social_g6_meiji_027|199724|
+|soc6_meiji_002.webp|social_g6_meiji_005, social_g6_meiji_009|179224|
+|soc6_meiji_003.webp|social_g6_meiji_016|192178|
+|soc6_meiji_004.webp|social_g6_meiji_017|199098|
+|soc6_meiji_005.webp|social_g6_meiji_023|187212|
+|soc6_meiji_006.webp|social_g6_meiji_024|181234|
+|soc6_meiji_007.webp|social_g6_meiji_025|180864|
+|soc6_meiji_008.webp|social_g6_meiji_028|194478|
+|soc6_modern_002.webp|social_g6_modern_004, social_g6_modern_014|181600|
+|soc6_modern_003.webp|social_g6_modern_012|197258|
+|soc6_modern_004.webp|social_g6_modern_015|182034|
+|soc6_modern_005.webp|social_g6_modern_019, social_g6_modern_025|184410|
+|soc6_modern_006.webp|social_g6_modern_022|182186|
+|soc6_modern_007.webp|social_g6_modern_023|189880|
+|soc6_modern_008.webp|social_g6_modern_026|175642|
+|soc6_modern_009.webp|social_g6_modern_027|198050|
+
+### 第4回：soc6_muromachi_sengoku_009.webp
+
+- 対象問題：social_g6_muromachi_sengoku_028
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：新城市設楽原歴史資料館「種子島銃」https://www.city.shinshiro.lg.jp/mokuteki/shisetu/shiryokan/shitaragahara/tanegashima.html の説明文。写真本体へのアクセスは403で取得できず、形の目視照合はできなかった。旧画像の床尾・用心金・撃鉄の誤りを直すため、利用者指定の代案に従い銃本体と台を除去。道具と荷物だけにした。
+- 使用プロンプト：
+```text
+Edit this exact watercolor educational historical illustration. REMOVE the entire gun/rifle completely, including its barrel, stock, lock and trigger. REMOVE its empty wooden display rack as well. Keep the unlit coiled match cord at lower left, closed dark powder flask, tied cloth ball pouch, folded dark cloth parcel and straw-wrapped cargo at right in the same basic arrangement. Recompose slightly to fill the vacated tabletop naturally, with plain empty wood behind these objects; no gun or weapon anywhere. Preserve the period timber room and distant Japanese castle, no people, no combat, no smoke, no loose gunpowder or ammunition, no instructions, numbers, text, logos or labels. Warm clear watercolor and ink, landscape3:2. Only accessories and packed supplies.
+```
+
+### 第4回：soc6_meiji_001.webp
+
+- 対象問題：social_g6_meiji_004, social_g6_meiji_022, social_g6_meiji_027
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：対象設問と画像計画の場面指定。特定の実物・日時・人物を復元する資料画ではなく、衣服・建物・生活道具を簡略化した教育用の場面。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Early Meiji Japanese rural life: three separate equally important vignettes of rice field with tiny rear-view farmer in plain work kimono, harvested straw rice bundles with sacks, and modest rice-selling shop with a blank ledger and closed coin pouch. No actual currency markings/numbers, tax collector, money transfer arrow, before-after harvest comparison, hardship expression. Timber and thatch farm buildings, unpaved ground, no machines.
+```
+
+### 第4回：soc6_meiji_002.webp
+
+- 対象問題：social_g6_meiji_005, social_g6_meiji_009
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：農林水産省「明治150年・製糸」https://www.maff.go.jp/j/meiji150/you/03.html の説明（鉄製本体、真ちゅうの台、銅製の釜）、岡谷蚕糸博物館 https://silkfact.jp/blog/フランス式繰糸機の実演/ （1872年輸入のフランス式）、富岡製糸場公式 https://www.tomioka-silk.jp/_tomioka-silk-mill/point/ （木骨れんが造・繰糸場）の説明文を参照。特定の機械の写真の細部を目視確認したものではない。
+- 作り直し理由：初稿の大きな糸巻き・回転機構の形に確信が持てず、確認した釜・台・細い糸を中心にし、上部の機構は画面外へ省いた。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Early Meiji1870s mechanized silk-reeling workshop, not weaving loom. Show a SHORT section with TWO copper reeling basins on a brass horizontal table supported by iron frame, fine silk threads rising via simple guides toward overhead wooden winding reels, modest belt-driven shaft in background. Basket of white silkworm cocoons and neatly wound off-white raw silk hank in foreground. Architecture: tall timber trusses, brick infill walls, repeated high windows, no company sign or identifiable building front. Tiny rear-view workers in plain kimono and hakama, sleeves tied back, not modern uniforms. Based on early French reeling machine materials: iron body, brass table,copper pans. No automated1950s machines, no giant textile looms, no electronic controls, no text or numbers, no exact factory reconstruction claim.
+```
+- 修正プロンプト：
+```text
+Revise this early Meiji silk REELING illustration to avoid imaginary oversized textile machinery. Keep foreground basket of cocoons and raw silk hank, timber-truss brick workshop and anonymous rear-view women in kimono. Remove the enormous overhead cylindrical spools and giant flywheel completely. Show a close view of the TWO small copper cocoon basins on the brass reeling table and simple iron supports only; fine threads gather from several cocoons into just TWO thin strands per basin through small guides and lead out of frame upward. Upper part of winding mechanism is cropped out, not invented. No fan of parallel weaving threads, no fabric sheet, no huge wheels, no modern controls, no labels, text, numbers or recognizable faces. Educational observed materials scene rather than complete technical reconstruction.
+```
+
+### 第4回：soc6_meiji_003.webp
+
+- 対象問題：social_g6_meiji_016
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：対象設問と画像計画の場面指定。特定の実物・日時・人物を復元する資料画ではなく、衣服・建物・生活道具を簡略化した教育用の場面。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Two separate equal vignettes of early Meiji Japan: one modest wooden primary school classroom, plain timber double desks and benches, blank small slates/notebooks, tiny rear-view children in simple kimono; no sailor uniform or modern schoolbag. Other vignette rural family tending field beside thatched house, tiny rear-view figures. No attendance outcome, empty desks emphasis, money amounts, crying, judgment or arrows.
+```
+
+### 第4回：soc6_meiji_004.webp
+
+- 対象問題：social_g6_meiji_017
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：広島市交通科学館の資料 https://www.vehicle.city.hiroshima.jp/hyperbook_web/model/detail?id=31571 の1871年製小型タンク式機関車の説明と、コトバンク「一号機関車」https://kotobank.jp/word/一号機関車-3143129 の1Bタンク式という説明を参照。後代の大型機関車や炭水車は描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Two equal separate scenes of early Meiji transport before departure: left a small1870s British-style Japanese steam TANK locomotive standing by a low timber platform, short boiler, tall plain chimney, side water tanks, one small leading wheel and TWO larger coupled driving wheels visible on side, small open cab, NO separate tender, no giant twentieth-century engine, no headlight modern shape, no numbers or railway logos. Right a wooden postal sorting counter with plain blank envelopes and cloth mailbags, tiny rear-view clerk in plain dark Meiji tunic. No postal mark, text, delivery arrows or destination outcomes.
+```
+
+### 第4回：soc6_meiji_005.webp
+
+- 対象問題：social_g6_meiji_023
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：農林水産省「明治150年・製糸」https://www.maff.go.jp/j/meiji150/you/03.html の説明（鉄製本体、真ちゅうの台、銅製の釜）、岡谷蚕糸博物館 https://silkfact.jp/blog/フランス式繰糸機の実演/ （1872年輸入のフランス式）、富岡製糸場公式 https://www.tomioka-silk.jp/_tomioka-silk-mill/point/ （木骨れんが造・繰糸場）の説明文を参照。特定の機械の写真の細部を目視確認したものではない。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Meiji Japan factory and distant port as two separate large vignettes without connecting route: left timber/brick workshop warehouse with wrapped raw silk hanks and cloth parcels stacked awaiting shipment; right a distant nineteenth-century harbor with wooden ships and modest brick/timber warehouses. In between leave pale neutral gap, no railway or arrows or roadway solving transport question, no production totals, no export result. Small anonymous rear-view workers in period work kimono.
+```
+
+### 第4回：soc6_meiji_006.webp
+
+- 対象問題：social_g6_meiji_024
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：国立国会図書館 https://www.ndl.go.jp/landmarks/column/national_diet_building と参議院 https://www.sangiin.go.jp/japanese/70/70-1.html の仮議事堂の説明文（木造）を参照。現在の国会議事堂の外観は使わない。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Late Meiji1890s two separate vignettes: left interior of a modest wood-built Western-style parliamentary debating chamber with tiers of dark wood desks and central lectern, viewed from rear so all people are tiny backs in plain dark frock coats; no microphones, modern concrete National Diet building, flags or insignia. Right a few anonymous rear-view adults in mixed plain kimono/hakama and dark period suits walking toward a low timber civic hall entrance, no voter lists, exclusion barriers, counts, vote results or eligibility labels. Do not make a before/after or victory scene.
+```
+
+### 第4回：soc6_meiji_007.webp
+
+- 対象問題：social_g6_meiji_025
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：博物館明治村「宮津裁判所法廷」https://www.meijimura.com/sight/宮津裁判所法廷/ の木造・和洋折衷の説明文を参照。特定法廷の精密復元ではなく、木の机・いすを使った場面。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Meiji1890s two equal observational vignettes: left an unoccupied wood-built Japanese-Western courtroom, high wood bench, simple desks and railing, plain white walls, tall windows, NO gavel, wig, scales, national flags or modern microphone. Right a wooden harbor cargo-inspection counter with closed crates and cloth bales, rear-view workers in Meiji work clothes examining blank papers. No customs percentage, country ownership, legal sovereignty arrows, handcuffs or accused person.
+```
+
+### 第4回：soc6_meiji_008.webp
+
+- 対象問題：social_g6_meiji_028
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：農林水産省「明治150年・製糸」https://www.maff.go.jp/j/meiji150/you/03.html の説明（鉄製本体、真ちゅうの台、銅製の釜）、岡谷蚕糸博物館 https://silkfact.jp/blog/フランス式繰糸機の実演/ （1872年輸入のフランス式）、富岡製糸場公式 https://www.tomioka-silk.jp/_tomioka-silk-mill/point/ （木骨れんが造・繰糸場）の説明文を参照。特定の機械の写真の細部を目視確認したものではない。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Meiji-era harbor quay with TWO equally prominent groups of goods, no arrows: bundles of ivory raw silk hanks wrapped in plain cloth at left, a nineteenth-century cast-iron belt-driven workshop machine with exposed large flywheel and plain wooden shipping crate at right. Industrial machine is partly crated so only simple verified cast-iron frame, flywheel and belt pulley visible, no precision invented controls. Background small wooden merchant steamship/sailship and timber warehouse. No country flags, export/import labels, money, modern crane or containers.
+```
+
+### 第4回：soc6_modern_002.webp
+
+- 対象問題：social_g6_modern_004, social_g6_modern_014
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：対象設問と画像計画の場面指定。特定の実物・日時・人物を復元する資料画ではなく、衣服・建物・生活道具を簡略化した教育用の場面。
+- 作り直し理由：初稿では家の場面にも子どもがおり、移動後の到着と読み違えやすいため、下の場面を家にいる大人一人に変更した。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Japan1944 civilian evacuation, two quiet separated vignettes: small rear-view children in plain cotton shirts and short trousers or simple monpe, carrying small cloth bundles, walking away from distant low urban houses toward rural lodging with rear-view adult guide; other vignette a simple home interior with low table, folded bedding and rear-view adult. No arrows, written destination, military clothing, weapons, destroyed city, aircraft, bombs, smoke, tears, expressions or joyful reunion. Do not show outcomes or deprivation. No modern backpack.
+```
+- 修正プロンプト：
+```text
+Edit only LOWER panel of this history illustration. Upper panel with children traveling and adult guide stays unchanged. Lower panel must be a DIFFERENT family home, not arrival of the same group: remove ALL children in lower panel. Keep ONE anonymous adult rear-view quietly seated at low table with blank paper, plain domestic room and folded bedding. No crying, distress, dramatic loneliness, happy reunion, gestures or expressions, only ordinary calm home interior. This separates children away from home and family home, no connecting arrows, labels, text, military objects, injury or numbers. Keep3:2.
+```
+
+### 第4回：soc6_modern_003.webp
+
+- 対象問題：social_g6_modern_012
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：対象設問と画像計画の場面指定。特定の実物・日時・人物を復元する資料画ではなく、衣服・建物・生活道具を簡略化した教育用の場面。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Okinawan village around1945 shown as calm distant landscape only: low wooden houses with Okinawan red-tile hip roofs held by pale mortar, some thatched cottages, low limestone boundary walls, fields and vegetation, a small natural limestone cave entrance set near the settlement. No military structures, soldiers, weapons, flags, explosions, smoke, rubble with casualties or suffering. No modern concrete apartment houses or Okinawan tourist castle. Just civilian living spaces and nearby possible shelter, no labels or arrows.
+```
+
+### 第4回：soc6_modern_004.webp
+
+- 対象問題：social_g6_modern_015
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：対象設問と画像計画の場面指定。特定の実物・日時・人物を復元する資料画ではなく、衣服・建物・生活道具を簡略化した教育用の場面。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Japanese town shortly after1945, quiet far-distance view of an empty road through sparsely standing low timber structures, some damaged roof beams and cleared brick/wood fragments, small intact area with bundled household bedding, bucket and plain pots. Tiny anonymous rear-view civilians only far away, calm neutral posture. No smoke, flames, ongoing attack, weapons, planes, corpses, wounds, sad faces, radiation imagery. Do not show completed recovery, abundant relief goods or step-by-step rebuilding instructions.
+```
+
+### 第4回：soc6_modern_005.webp
+
+- 対象問題：social_g6_modern_019, social_g6_modern_025
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：対象設問と画像計画の場面指定。特定の実物・日時・人物を復元する資料画ではなく、衣服・建物・生活道具を簡略化した教育用の場面。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Japan during1950s-1960s industrial growth, medium-distance river landscape with a modest factory compound of low sawtooth-roof buildings, a few plain tall chimneys, nearby low timber residential houses and riverbank. River subdued ordinary blue-gray, NOT black toxic sludge, no bright green liquid, dead fish, sick people, exaggerated smoke, causal arrows, outfall highlighting or solution machinery. Show proximity of workplace, river and homes neutrally. No modern cars, pylons or plastic.
+```
+
+### 第4回：soc6_modern_006.webp
+
+- 対象問題：social_g6_modern_022
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：対象設問と画像計画の場面指定。特定の実物・日時・人物を復元する資料画ではなく、衣服・建物・生活道具を簡略化した教育用の場面。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Japanese wartime civilian household1940s, two related quiet areas: small vegetable plot beside simple timber house and a low table with a modest cloth-wrapped food parcel and bowl. One tiny rear-view adult in plain monpe tending plants. No comparisons of people missing, no soldier, ration coupon text, numbers, distress, empty starving plates, military flag, weapon or bomb. No dramatization or outcome; simple observational household materials.
+```
+
+### 第4回：soc6_modern_007.webp
+
+- 対象問題：social_g6_modern_023
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：対象設問と画像計画の場面指定。特定の実物・日時・人物を復元する資料画ではなく、衣服・建物・生活道具を簡略化した教育用の場面。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Two equal panels for a Japanese history textbook, only labels A and B allowed. Large clean bold dark letter A in top-left of LEFT panel, B in top-left of RIGHT panel, each at least7percent of full image height. LEFT: distant civilian town reconstruction after1945 with timber house frames and small rear-view workers, no flames, rubble casualties, heavy modern cranes or completed prosperity. RIGHT: quiet1950s community health consultation room with low plain wooden desk, anonymous rear-view adult visitor and rear-view doctor in white coat looking at BLANK papers, no instruments touching body, no illness, pain or medical injury imagery. Both calm neutral. No other letters, numbers, crosses, labels, charts, radiation symbols, military objects, arrows linking panels or recovery-complete marks.
+```
+
+### 第4回：soc6_modern_008.webp
+
+- 対象問題：social_g6_modern_026
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：群馬県立歴史博物館「電気洗濯機」https://jmapps.ne.jp/grekisi_ed/det.html?data_id=5371 、北海道博物館 https://www.hm.pref.hokkaido.lg.jp/exhibition/permanent/theme-04/ 、科学技術館 https://www2.jsf.or.jp/industry50/mamechishiki/mamechishiki07-1.html 、杉並区立郷土博物館所蔵品紹介 https://suginamigaku.org/2014/10/tool-sentakuki.html の説明文を参照。一槽式・上下二本のローラー・手回しハンドルによる絞りを確認。写真の画素を取得して形を目視照合したとは扱わない。メーカー固有の製品の精密復元ではなく、確認できた構成で描いた。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Two equal prominent objects side by side on plain uncluttered Japanese domestic floor: LEFT a wooden wash tub and wooden washboard with small folded cotton cloth. RIGHT a1955-era Japanese electric single-tub wringer washing machine based on museum descriptions: cream enamel upright rounded-rectangle metal cabinet on short feet, OPEN top showing ONE wash tub, no hinged top lid and no second spin tub. Along one SIDE upper edge is an external metal U-shaped frame holding exactly TWO horizontal rubber rollers stacked vertically, with a hand crank projecting sideways from roller axle. Rollers are ABOVE and beside tub opening, not a lid; hand crank clear. Very plain period rotary control knob with NO numbers, brand or text. No modern plastic console, digital display, full automatic machine, front-loading door or modern appliance. No people, clocks, speed arrows, labels or claims of saved time. Emphasize shapes of manual tub and early machine.
+```
+
+### 第4回：soc6_modern_009.webp
+
+- 対象問題：social_g6_modern_027
+- 確認：対象設問の問題文・選択肢・解説と、画像計画の対応行を照合。特定人物の顔、戦闘・負傷・苦痛、正解を示す結論や文字は描かない。
+- 資料：対象設問と画像計画の場面指定。特定の実物・日時・人物を復元する資料画ではなく、衣服・建物・生活道具を簡略化した教育用の場面。
+- 使用プロンプト：
+```text
+Create ONE original educational history illustration for Japanese grade6. Landscape3:2, intended1200x800. Warm restrained watercolor, clear fine ink outlines, readable large shapes at smartphone width, simple uncluttered backgrounds. No text, letters, numbers, labels, logos, signatures, pseudo-writing, signs, flags or captions anywhere unless explicitly allowed below. Books/papers/envelopes totally blank. Anonymous people ONLY small rear views, no recognizable real person's face, no frontal faces. Calm observational everyday scene, no dramatic emotions or implied outcome. No combat, weapons, military flags, bombs, bombers, mushroom clouds, injury, dead people, suffering or distressed expressions. No modern cars, concrete utility poles, plastic products, neon, screens or contemporary machinery. Correct Japanese period clothing and architecture; no fantasy or stereotypes. Contemporary rural Japan as a simple educational setting, but no cars or modern utility poles: modest empty roadside bus-stop shelter with a completely blank round sign, two tiny rear-view older adults in simple neutral coats (no stereotype posture), a distant small plain clinic building across fields. No bus timetable text, hospital name, logos, medical cross, service bus, route arrows, count percentages or solutions. Calm daytime, no distress; show distance between waiting place and clinic.
+```
+
+## 第4回の検証
+
+- `node tests/run.js`：成功908、失敗0。画像の実在、WebP実体、1200×800、200,000バイト以下、alt/captionの非空と正解の混入、fixtureとの対応を検査。
+- 336問のdiagram以外のデータが作業前と一致することを確認。
+- 写真未照合の火縄銃本体は除去。建築・工場機械・洗濯機は説明文で確認した範囲の再構成であり、個別の実物の精密復元ではない。
+- 390px幅の実際の問題画面で対象22問を撮影し、画像の読み込みを確認。火縄の道具、製糸工場、鉄道、A/Bの比較図、ローラー付き洗濯機の代表画面を目視確認した。
