@@ -2,9 +2,9 @@
 const L=require('../lib/loader');
 module.exports=({test,assert})=>{
  const c=L.load(L.LOGIC_FILES_WITH_FIXES),U=c.FF.util,all=c.QUESTION_BANK,qs=all.filter(q=>q.collection==='course_so6_1');
- test('小6社会第1回：10単元280問、各基礎8・標準12・発展8、未レビュー・図なし',()=>{
-  assert.equal(qs.length,280);
-  for(const unit of ['prehistoric','asuka_nara','heian','kamakura','muromachi_sengoku','edo','meiji','modern','constitution','politics'])for(const [d,n] of [['basic',8],['standard',12],['advanced',8]])assert.equal(qs.filter(q=>q.unit===unit&&q.difficulty===d).length,n,unit+d);
+ test('小6社会第1回：12単元336問、各基礎8・標準12・発展8、未レビュー・図なし',()=>{
+  assert.equal(qs.length,336);
+  for(const unit of ['prehistoric','asuka_nara','heian','kamakura','muromachi_sengoku','edo','meiji','modern','constitution','politics','local_tax','international'])for(const [d,n] of [['basic',8],['standard',12],['advanced',8]])assert.equal(qs.filter(q=>q.unit===unit&&q.difficulty===d).length,n,unit+d);
   qs.forEach(q=>{assert.equal(q.reviewed,false);assert.ok(!q.diagram);assert.deepStrictEqual(Array.from(c.FF.learning.validateQuestion(q)),[],q.id);});
  });
  test('小6社会第1回：重複IDなし・4択・ヒント1〜2・全誤答解説・答えの漏れなし',()=>{
@@ -86,6 +86,25 @@ module.exports=({test,assert})=>{
   Object.entries(links).forEach(([id,facts])=>{assert.equal(facts.length,2,id);assert.equal(new Set(facts).size,2,id);});
   const names={constitution_004:['人権','じんけん'],politics_010:['首相','しゅしょう','総理大臣'],politics_016:['法案','ほうあん']};
   Object.entries(names).forEach(([id,answers])=>{const v=c.FF.learning.inputVariant(get(id));answers.forEach(a=>assert.ok(c.FF.answer.judge(v,a).correct,id+a));});
+ });
+
+ test('小6社会第6回：指定29問の正解・ID保持、誤答点検、新規2単元の発展配分',()=>{
+  const review=require('../fixtures/social6-distractor-review-6.json');
+  const preserved=require('../fixtures/social6-preserved-6.json');
+  assert.equal(Object.keys(review).length,29);
+  Object.entries(preserved).forEach(([id,fields])=>{const q=qs.find(q=>q.id===id);assert.ok(q,id);Object.entries(fields).forEach(([k,v])=>assert.equal(q[k],v,id+k));
+   if(Array.isArray(review[id]))assert.deepStrictEqual(Array.from(q.choices.filter(a=>a!==q.answer),U.plainText),review[id],id);
+   assert.ok(!/一人で複数回投票|罪が軽くなる|その場で憲法を変更|裁判所が予算案を作る|天皇が事業を進める/.test(U.plainText(q.explanation)),id);
+  });
+  const types=require('../fixtures/social6-advanced-types-6.json');
+  const links=require('../fixtures/social6-advanced-connections-6.json');
+  const adv=qs.filter(q=>['local_tax','international'].includes(q.unit)&&q.difficulty==='advanced');
+  assert.equal(adv.length,16);
+  for(const data of [types,links])assert.deepStrictEqual(Object.keys(data).sort(),Array.from(adv,q=>q.id).sort());
+  const counts={};Object.values(types).forEach(t=>counts[t]=(counts[t]||0)+1);Object.values(counts).forEach(n=>assert.ok(n<=3));
+  Object.entries(links).forEach(([id,facts])=>{assert.equal(facts.length,2,id);assert.equal(new Set(facts).size,2,id);});
+  const names={social_g6_international_006:['UNICEF','国連児童基金'],social_g6_international_007:['UNESCO','国連教育科学文化機関']};
+  Object.entries(names).forEach(([id,answers])=>{const v=c.FF.learning.inputVariant(qs.find(q=>q.id===id));answers.forEach(a=>assert.ok(c.FF.answer.judge(v,a).correct,id+a));});
  });
 
 };

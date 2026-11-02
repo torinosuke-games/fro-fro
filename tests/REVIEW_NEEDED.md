@@ -328,3 +328,8 @@ AI が作成した問題のうち、人が事実関係・表現を確認すべ�
 ## 小6社会 第5回（Codex、reviewed:false）
 新作social_g6_constitution_003〜030、social_g6_politics_007〜034と、修正modern_001・017・021。
 事実と教科書範囲の確認事項はQUESTION_REVIEW_1.md「第5回」。象徴天皇、教育・勤労の義務と権利、無償の範囲、選挙権、国会・内閣・裁判所の関係、裁判の例外・条件を重点確認する。外部資料照合・専門家レビューは未実施。
+
+## 小6社会 第6回（Codex、reviewed:false）
+点検・修正：constitution_017〜030、politics_020〜034（すべてsocial_g6_から始まるID）。
+新作：social_g6_local_tax_001〜028、social_g6_international_002〜029。
+地方自治と税、国際機関と支援、難民・環境・教育の説明などの最終確認事項はQUESTION_REVIEW_1.md「第6回」。外部資料照合・専門家レビューは未実施。全12単元の教材レビュー前のため未レビューを維持。
