@@ -2987,7 +2987,7 @@ window.QUESTION_BANK.push(
   "diagram": {
     "kind": "image",
     "src": "img/diagrams/soc6_kamakura_005.webp",
-    "alt": "上が北の地図。左の点が京都、右の点が鎌倉の位置を示している。",
+    "alt": "上が北の地図。京都と鎌倉の位置に点がある。",
     "caption": "京都と鎌倉の位置（概略）",
     "study": true
   }
@@ -3539,6 +3539,13 @@ window.QUESTION_BANK.push(
       "すいぼくが"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_001.webp",
+    "alt": "墨の濃淡で表した山と川。そばに筆とすずりがある。",
+    "caption": "山と川を表す絵の材料",
+    "study": true
   }
 },
 {
@@ -3659,6 +3666,13 @@ window.QUESTION_BANK.push(
       "じょうかまち"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_002.webp",
+    "alt": "城の周囲に店や作業場、通りが広がる町。",
+    "caption": "城と周囲の町",
+    "study": true
   }
 },
 {
@@ -3772,7 +3786,14 @@ window.QUESTION_BANK.push(
     "今の和室とつながる室内の工夫だよ。"
   ],
   "explanation": "{畳|たたみ}や{床の間|とこのま}などを備える住まいの文化は、今の和室にも{受け継|うけつ}がれています。\n\nほかの 選択肢\n・「床をほり下げ、地面の下を住まいにする」…たて穴住居の特徴です。\n・「床を高くし、米をしまう倉にする」…高床倉庫の特徴です。\n・「海岸に石を積み、上陸を防ぐ」…防御施設の特徴で、住まいの造りとは異なります。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_003.webp",
+    "alt": "畳や飾りの空間がある昔の室内と現代の和室。",
+    "caption": "二つの室内の比較",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_012",
@@ -3795,7 +3816,14 @@ window.QUESTION_BANK.push(
     "飲み物の量だけでなく、客への心配りを考えよう。"
   ],
   "explanation": "茶だけでなく、道具や空間も心を{込め|こめ}て整えて客を{迎え|むかえ}ます。\n\nほかの 選択肢\n・「茶の値段を客どうしで競わせるため」…客へのもてなしと、品物の値段を競う商売は異なります。\n・「道具の多さで武士の領地を決めるため」…茶会の準備は土地の支配を決める制度ではありません。\n・「茶を保存する量をできるだけ増やすため」…保管のためではなく、客を{迎え|むかえ}る空間を整える工夫です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_004.webp",
+    "alt": "茶わんや道具、花を用意した室内。",
+    "caption": "客を迎える部屋の様子",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_013",
@@ -3818,7 +3846,14 @@ window.QUESTION_BANK.push(
     "田畑の収穫と、領地の収入の関係を考えよう。"
   ],
   "explanation": "洪水の被害を減らし、収穫を安定させることは領地を治めるうえで重要でした。\n\nほかの 選択肢\n・「川を使う船の荷物を陸へ移す」…{堤防|ていぼう}は主に洪水から土地を守るためのものです。\n・「田畑を城の{堀|ほり}に変える」…田畑を守ることと、城の防御を混同しています。\n・「外国の船を港へ集める」…港の整備と川の洪水対策はねらいが異なります。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_005.webp",
+    "alt": "川のそばに土の堤と田畑がある風景。",
+    "caption": "川と田畑の位置関係",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_014",
@@ -3875,7 +3910,14 @@ window.QUESTION_BANK.push(
     "調べた土地から、何がどれだけとれるか考えよう。"
   ],
   "explanation": "土地の広さや収穫を調べることで、{年貢|ねんぐ}を{納め|おさめ}る基準を整えました。\n\nほかの 選択肢\n・「城下町の店で売る品物の値段」…店の品物の価格と、田畑の収穫から決める{年貢|ねんぐ}は別です。\n・「外国と取引する船の数」…貿易の管理と国内の田畑の調査は異なります。\n・「武士が戦いに出る日の順番」…土地の調査と戦いの日程は別の仕事です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_006.webp",
+    "alt": "田畑を測る人の後ろ姿と、置かれた武器の二場面。",
+    "caption": "田畑での作業と集められた道具",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_016",
@@ -3928,6 +3970,13 @@ window.QUESTION_BANK.push(
       "なんばんぼうえき"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_007.webp",
+    "alt": "帆船のある港で荷物を見ながら話す人々の後ろ姿。",
+    "caption": "港での品物のやり取り",
+    "study": true
   }
 },
 {
@@ -3951,7 +4000,14 @@ window.QUESTION_BANK.push(
     "城を見る人にどのような印象を与えるか考えよう。"
   ],
   "explanation": "大きな城は政治の中心でもあり、築いた人の力を表しました。\n\nほかの 選択肢\n・「城下の商人を遠ざけ、町を小さくする」…城を中心に政治や商売に関わる人々が集まりました。\n・「自分の領地を周りの大名へ分ける」…城で力を示すことと、領地を分けることは異なります。\n・「{年貢|ねんぐ}を{納め|おさめ}るしくみをなくす」…支配の中心となる城を築いても、{年貢|ねんぐ}のしくみがなくなるわけではありません。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_008.webp",
+    "alt": "町の向こうに高い建物と石垣が見える遠景。",
+    "caption": "大きな建物と周囲の町",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_019",
@@ -3997,7 +4053,14 @@ window.QUESTION_BANK.push(
     "家や部屋で客を{迎え|むかえ}るときの文化だよ。"
   ],
   "explanation": "茶や花を通したもてなしの文化が発達し、今にも{受け継|うけつ}がれています。\n\nほかの 選択肢\n・「{検地|けんち}と{刀狩|かたながり}」…土地と武器を管理する政策です。\n・「弓とやり」…戦いに使う武器です。\n・「金閣と銀閣」…今にも残る建物ですが、家庭で花や茶を通して客を{迎え|むかえ}る文化を指す問いとは異なります。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_004.webp",
+    "alt": "茶わんや道具、花を用意した室内。",
+    "caption": "客を迎える部屋の様子",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_021",
@@ -4020,7 +4083,14 @@ window.QUESTION_BANK.push(
     "過去と今の部屋の共通点を考えよう。"
   ],
   "explanation": "{室町|むろまち}時代の住まいの文化の一部は、今の和室にも見ることができます。\n\nほかの 選択肢\n・「庭の池が、そのまま台所の井戸として{受け継|うけつ}がれた」…池と井戸は造りや役割が異なります。\n・「{畳|たたみ}が、米を保存する倉の代わりになった」…住まいの床と食料の保存施設を取り{違え|ちがえ}ています。\n・「{床の間|とこのま}が、客のための台所として広がった」…{床の間|とこのま}は{飾り|かざり}などを置く空間で、調理する場所とは異なります。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_003.webp",
+    "alt": "畳や飾りの空間がある昔の室内と現代の和室。",
+    "caption": "二つの室内の比較",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_022",
@@ -4043,7 +4113,14 @@ window.QUESTION_BANK.push(
     "商人と品物が集まる利点を考えよう。"
   ],
   "explanation": "人や品物の行き来が増えることで、商売が盛んになり領地の力にもつながりました。\n\nほかの 選択肢\n・「品物が増えるほど、町での取引を減らせる」…商人を集める政策は取引を活発にする方向です。\n・「田畑を調べずに米の収穫量が決まる」…商売の活発化と土地の収穫量の調査は別です。\n・「城へ集めた武器を農民へ分ける」…商売の政策と武器の管理を取り{違え|ちがえ}ています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_002.webp",
+    "alt": "城の周囲に店や作業場、通りが広がる町。",
+    "caption": "城と周囲の町",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_023",
@@ -4066,7 +4143,14 @@ window.QUESTION_BANK.push(
     "何を調べ、何を取り上げるか区別しよう。"
   ],
   "explanation": "{検地|けんち}は土地と{年貢|ねんぐ}の管理、{刀狩|かたながり}は武器を取り上げて支配を固める政策です。\n\nほかの 選択肢\n・「Aは{刀狩|かたながり}、Bは{検地|けんち}」…二つの政策の内容が逆です。\n・「Aは{南蛮貿易|なんばんぼうえき}、Bは{楽市・楽座|らくいち・らくざ}」…外国との取引や商売の自由化とは内容が{違います|ちがいます}。\n・「Aは{楽市・楽座|らくいち・らくざ}、Bは{南蛮貿易|なんばんぼうえき}」…国内の商売と外国との取引を土地や武器の政策と混同しています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_006.webp",
+    "alt": "田畑を測る人の後ろ姿と、置かれた武器の二場面。",
+    "caption": "田畑での作業と集められた道具",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_024",
@@ -4158,7 +4242,14 @@ window.QUESTION_BANK.push(
     "物の移動と、教えの広がりを合わせて考えよう。"
   ],
   "explanation": "{鉄砲|てっぽう}などの品物や技術に加え、キリスト教なども伝わり社会に影響を与えました。\n\nほかの 選択肢\n・「外国の品物が増えたので、日本の田畑の所有者も外国人になった」…貿易の増加と土地の所有の移り変わりは別です。\n・「武器が伝わったことで、外国との宗教の交流は終わった」…資料では武器と宗教の両方が伝わっています。\n・「宗教は日本から伝え、武器だけを外国から受け取った」…この資料では宗教も外国から日本へ伝わっています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_007.webp",
+    "alt": "帆船のある港で荷物を見ながら話す人々の後ろ姿。",
+    "caption": "港での品物のやり取り",
+    "study": true
+  }
 },
 {
   "id": "social_g6_muromachi_sengoku_028",
@@ -4181,7 +4272,14 @@ window.QUESTION_BANK.push(
     "戦いの前にそろえるものを考えよう。"
   ],
   "explanation": "新しい武器を使うには、武器や火薬などを手に入れる力も必要でした。\n\nほかの 選択肢\n・「弓ややりと同じ材料だけで{弾|たま}を{補充|ほじゅう}できた」…{鉄砲|てっぽう}には火薬や{弾|たま}の用意が必要です。\n・「武器を買う代わりに田畑の広さを測ればよかった」…{検地|けんち}と武器の調達は別の仕事です。\n・「兵士が持つ刀の数を増やせば火薬の代わりになった」…刀と、{鉄砲|てっぽう}を使う火薬とは役割が{違います|ちがいます}。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_muromachi_sengoku_009.webp",
+    "alt": "木の台に置いた未使用の銃と、そばの資材。",
+    "caption": "道具と用意する物",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_001",
@@ -4264,7 +4362,14 @@ window.QUESTION_BANK.push(
     "町で品物を作る人と売る人を考えよう。"
   ],
   "explanation": "町では商人が品物を売買し、職人が品物を作るなどして暮らしました。\n\nほかの 選択肢\n・「将軍と大名」…武士の政治を担う立場です。\n・「天皇と{公家|くげ}」…京都の朝廷に関わる立場です。\n・「{僧|そう}と{神職|しんしょく}」…寺や神社に関わる立場です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_001.webp",
+    "alt": "店先で品物を扱う人と、田で稲を束ねる人の後ろ姿。",
+    "caption": "二つの仕事の場面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_004",
@@ -4294,6 +4399,13 @@ window.QUESTION_BANK.push(
       "てらこや"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_002.webp",
+    "alt": "低い机で筆と帳面を使う子どもたちの後ろ姿。",
+    "caption": "子どもたちの学びの様子",
+    "study": true
   }
 },
 {
@@ -4354,6 +4466,13 @@ window.QUESTION_BANK.push(
       "うきよえ"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_005.webp",
+    "alt": "木の板と紙、色を付ける道具が並ぶ作業台。",
+    "caption": "絵を刷るための材料",
+    "study": true
   }
 },
 {
@@ -4435,7 +4554,14 @@ window.QUESTION_BANK.push(
     "大名を治める側のねらいを考えよう。"
   ],
   "explanation": "大名の行動や家族を{幕府|ばくふ}の近くに置き、支配を強めるしくみでした。\n\nほかの 選択肢\n・「大名に領地を{離れ|はなれ}させ、農民へ領主の役目を任せるため」…{参勤交代|さんきんこうたい}は大名の支配をなくして農民に任せる制度ではありません。\n・「大名を交代で将軍にするため」…江戸へ出向くことと、将軍の地位を交代することは別です。\n・「大名の旅費を{幕府|ばくふ}が{負担|ふたん}して財力を増やすため」…大名には移動などの大きな出費がかかりました。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_003.webp",
+    "alt": "道沿いの宿や荷物、歩く旅人と旅の一行。",
+    "caption": "街道沿いの様子",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_010",
@@ -4458,7 +4584,14 @@ window.QUESTION_BANK.push(
     "長い旅で必要になる仕事を考えよう。"
   ],
   "explanation": "人や荷物の往来が増え、{宿泊|しゅくはく}や運送を支える場所が必要になりました。\n\nほかの 選択肢\n・「農民が田を手放して城へ住むため」…旅人を支える宿場の仕事と、住まいを城へ移すことは別です。\n・「領地の田畑を測り直すため」…土地の調査と旅の{宿泊|しゅくはく}・運送は別です。\n・「外国の船との取引を陸の道だけで行うため」…宿場は街道の交通を支え、船との取引は港が窓口です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_003.webp",
+    "alt": "道沿いの宿や荷物、歩く旅人と旅の一行。",
+    "caption": "街道沿いの様子",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_011",
@@ -4488,6 +4621,13 @@ window.QUESTION_BANK.push(
       "てんかのだいどころ"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_004.webp",
+    "alt": "木造の船が停泊し、米俵や荷物が倉の前に並ぶ港。",
+    "caption": "港と倉に集まる荷物",
+    "study": true
   }
 },
 {
@@ -4571,6 +4711,13 @@ window.QUESTION_BANK.push(
       "らんがく"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_006.webp",
+    "alt": "開いた書物を見比べる机。紙の一つに人の体の輪郭がある。",
+    "caption": "書物を調べる場面",
+    "study": true
   }
 },
 {
@@ -4601,6 +4748,13 @@ window.QUESTION_BANK.push(
       "かいたいしんしょ"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_006.webp",
+    "alt": "開いた書物を見比べる机。紙の一つに人の体の輪郭がある。",
+    "caption": "書物を調べる場面",
+    "study": true
   }
 },
 {
@@ -4661,6 +4815,13 @@ window.QUESTION_BANK.push(
       "いのうただたか"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_007.webp",
+    "alt": "道で杭の間に縄を張る人の後ろ姿。遠くに竹の目印がある。",
+    "caption": "道で距離を調べる場面",
+    "study": true
   }
 },
 {
@@ -4727,6 +4888,13 @@ window.QUESTION_BANK.push(
       "一揆",
       "いっき"
     ]
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_008.webp",
+    "alt": "村の建物の前で、紙を持って静かに集まる人々の後ろ姿。",
+    "caption": "村人が集まる場面",
+    "study": true
   }
 },
 {
@@ -4750,7 +4918,14 @@ window.QUESTION_BANK.push(
     "以前の限られた窓口との{違い|ちがい}を考えよう。"
   ],
   "explanation": "外国との条約によって港が開かれ、取引や交流の範囲が変わりました。\n\nほかの 選択肢\n・「外国との取引の窓口を長崎一か所へ戻した」…開国は新たな港を開く方向の変化です。\n・「日本人が外国の品物を使うことをやめた」…取引が広がり、外国の品物との関わりも増えました。\n・「大名の江戸往復が貿易そのものになった」…{参勤交代|さんきんこうたい}と外国との貿易は別です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_004.webp",
+    "alt": "木造の船が停泊し、米俵や荷物が倉の前に並ぶ港。",
+    "caption": "港と倉に集まる荷物",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_021",
@@ -4773,7 +4948,14 @@ window.QUESTION_BANK.push(
     "代金を受け取る取引か、{納め|おさめ}る{負担|ふたん}か考えよう。"
   ],
   "explanation": "商売は品物の取引で、{年貢|ねんぐ}は土地を支配する側への{負担|ふたん}です。\n\nほかの 選択肢\n・「Aは{年貢|ねんぐ}、Bは商売」…二つのやり取りの内容が逆です。\n・「Aは{参勤交代|さんきんこうたい}、Bは貿易」…大名の往復と外国との取引は資料の仕事と{違います|ちがいます}。\n・「Aは{検地|けんち}、Bは{刀狩|かたながり}」…土地の調査と武器の取り上げは資料のやり取りと{違います|ちがいます}。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_001.webp",
+    "alt": "店先で品物を扱う人と、田で稲を束ねる人の後ろ姿。",
+    "caption": "二つの仕事の場面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_022",
@@ -4796,7 +4978,14 @@ window.QUESTION_BANK.push(
     "旅の途中で必要になるものを読み取ろう。"
   ],
   "explanation": "人と荷物の往来が、道沿いの{宿泊|しゅくはく}や運送の仕事を支えました。\n\nほかの 選択肢\n・「海を渡る貿易だけ」…資料は陸の道を通る人々の話です。\n・「田畑の収穫を調べる{検地|けんち}」…資料は土地調査ではなく旅人や荷物の動きです。\n・「城を包囲するための武器づくり」…資料は{宿泊|しゅくはく}や運送を中心としています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_003.webp",
+    "alt": "道沿いの宿や荷物、歩く旅人と旅の一行。",
+    "caption": "街道沿いの様子",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_023",
@@ -4819,7 +5008,14 @@ window.QUESTION_BANK.push(
     "一枚ずつ{描く|えがく}場合と比べよう。"
   ],
   "explanation": "{版木|はんぎ}から{繰り返|くりかえ}し刷ることで、多くの人に絵を届けやすくなりました。\n\nほかの 選択肢\n・「刷るたびに絵師が同じ絵を一から{描く|えがく}必要がある」…{版木|はんぎ}を利用するため、一枚ずつ{描き|えがき}直す方法とは異なります。\n・「{版木|はんぎ}を使うと一枚の絵しか作れなくなる」…同じ{版木|はんぎ}から{繰り返|くりかえ}し刷れる点を逆にしています。\n・「{版画|はんが}は品物として売ることができなくなる」…{版画|はんが}として多く刷られ、販売されることで人々に広まりました。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_005.webp",
+    "alt": "木の板と紙、色を付ける道具が並ぶ作業台。",
+    "caption": "絵を刷るための材料",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_024",
@@ -4842,7 +5038,14 @@ window.QUESTION_BANK.push(
     "必要な力を教える場所を考えよう。"
   ],
   "explanation": "読み書きや計算は、暮らしや商売にも役立ちました。\n\nほかの 選択肢\n・「{歌舞伎|かぶき}の{芝居|しばい}小屋」…演劇を楽しむ場所で、読み書きや計算を教える場とは{違います|ちがいます}。\n・「港の荷物置き場」…運送を支える場所で、学ぶための教室とは異なります。\n・「街道の宿屋」…旅人が{泊ま|とま}る場所で、子どもの学びの場とは{違います|ちがいます}。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_002.webp",
+    "alt": "低い机で筆と帳面を使う子どもたちの後ろ姿。",
+    "caption": "子どもたちの学びの様子",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_025",
@@ -4888,7 +5091,14 @@ window.QUESTION_BANK.push(
     "交流を制限することと、交流がないことは同じかな。"
   ],
   "explanation": "長崎での貿易などが続き、外国の情報や学問も伝わりました。\n\nほかの 選択肢\n・「大名がそれぞれ制限なく外国と条約を結んだ」…外国との関係は{幕府|ばくふ}が管理しました。\n・「外国との取引は、{参勤交代|さんきんこうたい}で江戸へ運ぶ米だけだった」…国内の大名の移動と外国との貿易を混同しています。\n・「江戸だけで外国との貿易を行った」…長崎などに交流の窓口がありました。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_004.webp",
+    "alt": "木造の船が停泊し、米俵や荷物が倉の前に並ぶ港。",
+    "caption": "港と倉に集まる荷物",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_027",
@@ -4911,7 +5121,14 @@ window.QUESTION_BANK.push(
     "何を手がかりに研究しているか比べよう。"
   ],
   "explanation": "国学は日本の古い書物など、{蘭学|らんがく}はオランダを通した西洋の知識を研究しました。\n\nほかの 選択肢\n・「Aは{蘭学|らんがく}、Bは国学」…学ぶ資料と学問の組み合わせが逆です。\n・「AもBも{俳句|はいく}」…どちらも短い詩を作る活動の説明ではありません。\n・「AもBも測量」…土地の距離や方角を測る活動とは内容が異なります。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_006.webp",
+    "alt": "開いた書物を見比べる机。紙の一つに人の体の輪郭がある。",
+    "caption": "書物を調べる場面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_edo_028",
@@ -4934,7 +5151,14 @@ window.QUESTION_BANK.push(
     "美しい景色の表現と、正確な位置の記録を区別しよう。"
   ],
   "explanation": "{伊能忠敬|いのうただたか}は測量によって各地の位置や形を調べました。名所を{描く|えがく}{浮世絵|うきよえ}と目的が異なります。\n\nほかの 選択肢\n・「各地の風景を{俳句|はいく}にまとめるためだった」…{松尾芭蕉|まつおばしょう}らの文芸の旅と、測量の旅を取り{違え|ちがえ}ています。\n・「古い物語の言葉を調べるためだった」…国学などの古典研究と測量は異なります。\n・「西洋の人体の図を訳すためだった」…医学書の{翻訳|ほんやく}と、日本各地の測量を取り{違え|ちがえ}ています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_edo_007.webp",
+    "alt": "道で杭の間に縄を張る人の後ろ姿。遠くに竹の目印がある。",
+    "caption": "道で距離を調べる場面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_meiji_001",

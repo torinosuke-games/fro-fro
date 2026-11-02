@@ -1,6 +1,6 @@
 # 小6社会 画像制作記録
 
-第1回の履歴と、第2回の変更・保留事項を記録する。古墳の保留は利用者提供写真との照合で解消済み。現状は末尾の追補を参照。
+第1回・第2回の履歴と、第3回の制作内容を記録する。古墳の保留は利用者提供写真との照合で解消済み。現状は末尾の追補を参照。
 
 # 第1回 画像制作記録
 
@@ -875,3 +875,237 @@ Correct this educational aerial view of TWO DIFFERENTLY SIZED Japanese keyhole b
 - 第2回の最終反映：修正3枚（prehistoric_001・006・007）、新規16枚（heian7・kamakura9）。金剛力士像008は前節の理由で見送りを継続。合計37枚・61問、画像計画96枚・161問の集計は変わらない。
 - 前節の「古墳の照合待ち」「未登録」「残作業」はこの追補で解消した過去の記録。次の単元には進まない。
 - 差し替え後の検査：`node tests/run.js` は908件成功・0件失敗。対象3問を390px幅で撮影し、全周の堀・前方部・大小の違い・captionの表示を目視確認した（`/tmp/so6-round2/kofun-screens/`）。
+
+# 第3回 画像制作記録（2026-11-02）
+
+ブランチ：`codex/social6-questions`。京都・鎌倉の地図1枚を修正し、室町・戦国9枚／江戸8枚を新規登録。新規対象は32問（14・18）、累計54枚／93問。次の単元は制作していない。
+
+画像生成ツールで制作・修正後、Pillowは1200×800への縮小とWebP変換のみに使用。全18枚は200,000バイト以下。場面画像に文字は入れず、地図だけ利用者が許可した「京都」「鎌倉」を表示。全336問のdiagram以外のデータは変更せず、reviewed:falseを保持。
+
+資料の説明文を読んで確認した事項と、写真そのものの目視確認は区別する。今回の外部資料は説明文を参照しており、取得できない実物写真を見たとは扱わない。測量の絵は確認できた単純な道具に限定した。
+
+## 第3回一覧
+
+| ファイル名 | 対象問題 | 内容 | バイト数 |
+|---|---|---|---:|
+| soc6_kamakura_005.webp（修正） | social_g6_kamakura_012 | 京都・鎌倉の地名を追加・拡大 | 47912 |
+| soc6_muromachi_sengoku_001.webp | social_g6_muromachi_sengoku_003 | 墨の濃淡による山・川の小さな風景画と筆。表現の材料と技法を観察する。 | 184904 |
+| soc6_muromachi_sengoku_002.webp | social_g6_muromachi_sengoku_007<br>social_g6_muromachi_sengoku_022 | 城と町の俯瞰。商いの場・職人の作業場を同じ大きさで示し、人々が集まる配置を観察。 | 199314 |
+| soc6_muromachi_sengoku_003.webp | social_g6_muromachi_sengoku_011<br>social_g6_muromachi_sengoku_021 | 畳と床の間のある歴史的な室内と、同じ要素を持つ現代の和室。共通点を観察。 | 192700 |
+| soc6_muromachi_sengoku_004.webp | social_g6_muromachi_sengoku_012<br>social_g6_muromachi_sengoku_020 | 茶器と花を用意した客を迎える室内。配置と道具を観察。 | 179084 |
+| soc6_muromachi_sengoku_005.webp | social_g6_muromachi_sengoku_013 | 領地の川・堤防・近くの田畑。水と土地の位置関係を観察。 | 198200 |
+| soc6_muromachi_sengoku_006.webp | social_g6_muromachi_sengoku_015<br>social_g6_muromachi_sengoku_023 | 田畑を測る小さな後ろ姿と、集められた武器を同じ大きさの二場面にする。 | 184816 |
+| soc6_muromachi_sengoku_007.webp | social_g6_muromachi_sengoku_017<br>social_g6_muromachi_sengoku_027 | 帆船の停泊する港で、品物を確認し会話する人々。交流の入口を想像する。 | 191058 |
+| soc6_muromachi_sengoku_008.webp | social_g6_muromachi_sengoku_018 | 大きな城と周囲の町の遠景。城の規模と目立ち方を観察する。 | 193630 |
+| soc6_muromachi_sengoku_009.webp | social_g6_muromachi_sengoku_028 | 未使用の火縄銃の道具一式と、整理前の資材。武器を用意する状況を考える。 | 193466 |
+| soc6_edo_001.webp | social_g6_edo_003<br>social_g6_edo_021 | 店先で品物を扱う商人と、収穫米を束ねる農民を同じ大きさに並べる。仕事の場面の比較。 | 199686 |
+| soc6_edo_002.webp | social_g6_edo_004<br>social_g6_edo_024 | 子どもが机で無地の帳面とそろばんを使う教室。学習と実生活の関係を考える。 | 185910 |
+| soc6_edo_003.webp | social_g6_edo_009<br>social_g6_edo_010<br>social_g6_edo_022 | 街道、宿、荷を置く場所、旅の一行。移動に伴う必要を考える資料。 | 199050 |
+| soc6_edo_004.webp | social_g6_edo_011<br>social_g6_edo_020<br>social_g6_edo_026 | 米俵などの荷物が並ぶ港と倉。品物が集まる場面を観察する。 | 182308 |
+| soc6_edo_005.webp | social_g6_edo_006<br>social_g6_edo_023 | 木版、刷り紙、色を載せる道具を横並びにする。版画の材料を観察する。 | 184966 |
+| soc6_edo_006.webp | social_g6_edo_014<br>social_g6_edo_015<br>social_g6_edo_027 | 書物を見比べる机と、人体のごく簡単な輪郭の図。書物の対象の違いを考える。 | 179032 |
+| soc6_edo_007.webp | social_g6_edo_017<br>social_g6_edo_028 | 道の上で測量道具を扱う小さな後ろ姿。景色を描くこととの違いを考える。 | 198026 |
+| soc6_edo_008.webp | social_g6_edo_019 | 農民が無地の紙を持って集まる静かな場面。集団で訴える状況を具体化。 | 181790 |
+
+## 地図の修正
+
+- 対象：social_g6_kamakura_012。海岸線・点の位置を保持し、点の上側に京都・鎌倉を配置。初回の追加文字は390px画面で小さかったため再拡大。文字と点・海岸線の間隔を目視確認。altは「上が北の地図。京都と鎌倉の位置に点がある。」に変更。
+- 資料：第2回のNatural Earth参照地図・既存画像（出典は第2回記録参照）、利用者の今回の文字追加指示。新しい地理情報は加えていない。
+- 初回プロンプト：
+```text
+Edit this exact textbook map by adding ONLY TWO Japanese place labels, preserving all coastlines, lake shapes, dots, colors and composition exactly. Label the LEFT dot 「京都」 and RIGHT dot 「鎌倉」. Use large clean bold dark Japanese print type, each kanji at least 7% of image HEIGHT so legible when map is displayed at330px wide. Put 京都 in open land immediately ABOVE-LEFT of the left dot (not on Lake Biwa, not touching dot or coastline), and 鎌倉 in open land immediately ABOVE-LEFT of right dot (not touching Tokyo/Sagami coastlines or dot). About15px breathing space from labels to dots at1200px size. No connecting arrows or new symbols. Correct exact characters 京都 and 鎌倉. No other text. Keep3:2 landscape.
+```
+- 拡大修正プロンプト：
+```text
+Edit only typography on this exact map. Preserve original coastlines, lakes, point positions, colors, scale and framing precisely. Existing 京都 and 鎌倉 text is too small. Replace BOTH labels with bold clean Japanese labels 1.65 TIMES current height and width (each character around 60 pixels high in1200x800). Place 京都 immediately ABOVE-LEFT of left dot, moved slightly left to avoid touching Lake Biwa. Place 鎌倉 ABOVE-LEFT of right dot, moved upward to open land so label never overlaps coastline. Maintain clear breathing room around point and shoreline. Exact text 京都 and 鎌倉 only, no other words, arrows, symbols or decorations. Labels must remain readable on330px displayed map.
+```
+
+### 第3回：soc6_muromachi_sengoku_001.webp
+
+- 対象問題：social_g6_muromachi_sengoku_003
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. On a low wooden work surface in Muromachi Japan, a small loose sheet showing an ORIGINAL modest monochrome ink landscape of mountains and winding river, washes ranging from pale gray to black, a brush and inkstone nearby. Do not copy any Sesshu artwork or famous composition. No signature, seal, poem or calligraphy. No person. Observational study of paper, ink tones and tools.
+```
+
+### 第3回：soc6_muromachi_sengoku_002.webp
+
+- 対象問題：social_g6_muromachi_sengoku_007, social_g6_muromachi_sengoku_022
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Bird's-eye view of a late16th-century Japanese castle and surrounding castle town, modest timber plaster watchtowers with dark tiled roofs above rough stone base, streets below lined with wooden tile/shingle roof shops and workshops. A few tiny anonymous rear-view merchants handling fabric/baskets and woodworkers working at a bench, both equally prominent. No signage, clan emblems or flags, no army, no destruction, no outcome arrows. Not19th-century city or elaborate modern tourist reconstruction.
+```
+
+### 第3回：soc6_muromachi_sengoku_003.webp
+
+- 対象問題：social_g6_muromachi_sengoku_011, social_g6_muromachi_sengoku_021
+- 確認した資料・条件：京都市「寝殿造から書院造へ」の説明（https://www2.city.kyoto.lg.jp/somu/rekishi/fm/nenpyou/htmlsheet/bunka06.html）、福井市立郷土歴史博物館の調べ学習ページ（https://history-museum.city.fukui.lg.jp/gakko/for_students/medieval/shoin.html）。畳・床の間・障子・棚という要素と現代へのつながりを確認。特定建物の復元ではない。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Two equally sized separated interior vignettes with NO labels. Left: late Muromachi shoin-style room, plain timber posts, tatami mat floor, modest recessed alcove with empty vase and completely blank hanging scroll, built-in low desk beside paper-screen window, simple staggered shelves. Not a lavish Edo palace or exact reproduction of Ginkakuji. Right: a present-day plain Japanese-style room with tatami and modest alcove, same features clearly visible but different viewpoint. The right panel deliberately compares a modern room, with no electronics or modern gadgets needed. No person, no highlighted links, no arrows or names.
+```
+
+### 第3回：soc6_muromachi_sengoku_004.webp
+
+- 対象問題：social_g6_muromachi_sengoku_012, social_g6_muromachi_sengoku_020
+- 確認した資料・条件：書院造の説明（https://kotobank.jp/word/書院造り-291732）と対象設問・計画の茶器／花の条件。茶室の床の間は形式に幅があることを確認。特定の茶室・茶人の再現ではない。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Late Muromachi to Momoyama modest tea-room interior prepared to receive a guest: low doorway, simple timber and paper screens, tatami, an unadorned ceramic tea bowl, small lidded tea container, bamboo whisk and scoop, kettle near hearth, modest flower arrangement with a single natural branch in plain vase. No guest face, no host portrait, no calligraphy or visible writing. No modern tea set, handles or cups. Calm prepared room, no outcome or emotional result.
+```
+
+### 第3回：soc6_muromachi_sengoku_005.webp
+
+- 対象問題：social_g6_muromachi_sengoku_013
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Sengoku16th-century countryside landscape: river bends beside rice fields, broad gently sloping EARTHEN embankment separating river and plots, some stones and vegetation but no concrete. Clear spatial relation of river, embankment and cultivation. Tiny thatched farm buildings in distance. Normal water level, no flood disaster or before/after good harvest, no ruler or name, no modern machinery.
+```
+
+### 第3回：soc6_muromachi_sengoku_006.webp
+
+- 対象問題：social_g6_muromachi_sengoku_015, social_g6_muromachi_sengoku_023
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Two equal separate vignettes from late16th-century Japan, no labels A/B or any text. Left: two tiny rear-view survey workers in plain period robes measure a field with a straight wooden measuring rod and cord, blank rolled record sheet at side, no measurements or numbers. Right: a few collected sheathed swords and polearms lying quietly on a wooden support in simple storehouse, no person seizing them, no raised weapons or threat. No completed tax calculation, no ownership colors or causal arrows.
+```
+
+### 第3回：soc6_muromachi_sengoku_007.webp
+
+- 対象問題：social_g6_muromachi_sengoku_017, social_g6_muromachi_sengoku_027
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Late16th-century Japanese trading harbor, wooden cargo ship with European ocean-going sailing rig at anchor in distance, furled square sails, NO crosses, flags or writing. On shore small anonymous rear-view visitors in period Portuguese doublet/cape and Japanese merchants in kosode quietly discuss plain bundled cargo, fabric and ceramic vessels equally visible. No missionaries with religious symbols, no rifles emphasized, no modern dock/crane, no forced exchange, no outcome.
+```
+
+### 第3回：soc6_muromachi_sengoku_008.webp
+
+- 対象問題：social_g6_muromachi_sengoku_018
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Distant wide view of a large late16th-century Japanese castle on rough stone base, timber and plaster multiple tiers with tiled roofs above a surrounding town of simple timber houses. Neutral daylight, no dramatic heroic rays, no victory flags, no army, no battle. Main visual cue is castle size relative to town. Original plausible design not exact modern Himeji/Osaka reconstruction, no modern buildings, power wires, tourist signs or names.
+```
+
+### 第3回：soc6_muromachi_sengoku_009.webp
+
+- 対象問題：social_g6_muromachi_sengoku_028
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Quiet museum-like still life of an UNUSED Japanese16th-century matchlock musket laid horizontally on a plain wood rack, long iron barrel and traditional short curved wooden stock, unlit match cord coiled separately, simple closed powder flask and a few plain material bundles nearby. No loaded or firing weapon, no person aiming it, no functional assembly directions, no exploded diagram, no amount/count/price labels. Main cue is historical objects and supplies, not combat or demonstrated effectiveness. No percussion cap, bolt action, modern gun or cartridge.
+```
+
+### 第3回：soc6_edo_001.webp
+
+- 対象問題：social_g6_edo_003, social_g6_edo_021
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Two equally sized scenes in Edo Japan: left a wooden town shop with cloth goods, pottery and a modest craftsman's workbench; rear-view merchant arranging goods. Right a rear-view farm worker tying harvested rice bundles beside rice stacks, not handing anything to an official. No labels, arrows, A/B, tax delivery, outcomes. Straw sandals, plain kosode, wood and thatch.
+```
+
+### 第3回：soc6_edo_002.webp
+
+- 対象問題：social_g6_edo_004, social_g6_edo_024
+- 確認した資料・条件：江戸東京博物館友の会会報119号の寺子屋・手習いの説明（https://www.edo-tomo.jp/edotomo/r03%282021%29/edotomo-No119.pdf）、天神机の説明（https://bs.tbs.co.jp/edo/ooedo/backnumber/05.html）。水巻町歴史資料館「そろばん」（https://www.town.mizumaki.lg.jp/museum/040/020/050/570/1289.html）で上2珠・下5珠の構造を確認。生成では珠数が安定しないため、そろばんを省き筆と帳面の手習いに変更した。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Edo-period children's learning room, rear view only of three children in plain kosode kneeling at individual LOW wooden writing desks on tatami. Entirely blank Japanese stitch-bound notebook, inkstone and brush on desk. One simple early soroban clearly visible with EXACTLY TWO beads above divider and FIVE below on every rod, all beads away from divider; wooden frame bamboo rods, never modern one-above-four-below. No teacher portrait, signs, lettering or modern school furniture.
+```
+- 修正プロンプト：
+```text
+Edit this image only to correct all abacuses to Edo-period 2:5 bead structure. Keep the children, room, desks, blank notebooks unchanged. Remove the abacuses on left and right desk (replace with plain closed blank-cover notebooks). On CENTER desk show ONE large old wooden abacus, viewed enough from above to count: exactly two beads on each rod in upper compartment, exactly FIVE beads on same rod in lower compartment, separated by a single wooden horizontal bar. Use only five rods to simplify. Every rod has 2 upper beads and 5 lower beads. No writing or digits anywhere. Do not use modern 1:4 structure.
+```
+- 修正プロンプト：
+```text
+Edit ONLY the wooden abacus on center desk: remove it completely and replace it with a small rectangular dark inkstone and a plain unmarked bamboo brush rest. Keep every other part unchanged: three children rear-view at low desks with blank bound notebooks, Edo room. No abacus anywhere, no writing, numbers or symbols. This image illustrates writing practice; do not add calculation tools.
+```
+
+### 第3回：soc6_edo_003.webp
+
+- 対象問題：social_g6_edo_009, social_g6_edo_010, social_g6_edo_022
+- 確認した資料・条件：国土交通省「宿場とはどういうところだったのでしょう？」（https://www.ktr.mlit.go.jp/yokohama/tokaido/02_tokaido/04_qa/index2/a0201.htm）。宿泊・休息、公用荷物の継送という役割を説明文で確認。特定宿場の復元ではない。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Edo-period unpaved highway entering a modest post town, low timber and plaster inns with tiled or wooden roofs, blank awnings, tied bundles and packhorse at a resting place. Small rear-view travelers and a distant dignified traveling party with one closed palanquin, no insignia, swords sheathed, no coercion or military action. Show road, lodging and cargo storage clearly with no conclusions or signs.
+```
+
+### 第3回：soc6_edo_004.webp
+
+- 対象問題：social_g6_edo_011, social_g6_edo_020, social_g6_edo_026
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Edo-period calm Japanese trading port with low timber warehouses and plaster fireproof storehouse, rice straw bales and cloth-wrapped cargo on wooden quay, traditional Japanese wooden cargo sailboats with single large furled sail, tiny rear-view porters. No named port, maps, flags, numbers, labels, arrows or import/export direction. No steamship, cranes, electric equipment or brick factories.
+```
+
+### 第3回：soc6_edo_005.webp
+
+- 対象問題：social_g6_edo_006, social_g6_edo_023
+- 確認した資料・条件：アダチ版画研究所の道具・技法の説明（https://store.adachi-hanga.com/pages/quality 、https://store.adachi-hanga.com/pages/craftmanship）、武蔵野美術大学「バレン」（https://zokeifile.musabi.ac.jp/バレン/）。版木・和紙・刷毛・竹皮で包んだばれんを確認。初稿のかご状のばれんを描き直し、刷り紙は未使用の無地にして反転関係の誤表現を除いた。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Edo woodblock printing materials on low wood workbench, close view: a wood block with shallow original simple landscape carving, ONE unfinished print on washi (no famous artwork), small pigment dishes, horsehair wooden-handled brush, round bamboo-sheath baren with twisted handle. Objects side by side, no arrows or sequence numbers, no piles of identical completed prints, no title, characters or writing. No metal roller, synthetic paint or modern tools.
+```
+- 修正プロンプト：
+```text
+Correct this Edo woodblock-printing illustration. Keep artisan hands, inked carved wood block, pigment bowls and period room. Make the single paper sheet at lower left completely blank, with NO printed landscape (it is unused paper). Replace the basket-like tool lower right with an authentic flat round baren: very thin circular disk fully wrapped in smooth overlapped bamboo sheath, the two twisted ends joined into one low handle on top. NOT a woven basket, no radial ribs or raised rim. No text or modern tools.
+```
+
+### 第3回：soc6_edo_006.webp
+
+- 対象問題：social_g6_edo_014, social_g6_edo_015, social_g6_edo_027
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Edo study desk viewed from above at slight angle, a few open and closed Japanese thread-bound books with blank pages, one page with very simple non-detailed human silhouette outline only, brush and inkstone, anonymous rear-view scholar small at far edge comparing pages. Books neutral plain covers, no writing, foreign script, title, organ details, body specimen, modern medical equipment or recognizable scholar.
+```
+
+### 第3回：soc6_edo_007.webp
+
+- 対象問題：social_g6_edo_017, social_g6_edo_028
+- 確認した資料・条件：千葉県公式観光サイト・伊能忠敬記念館学芸員への取材記事（https://maruchiba.jp/feature/detail_286.html）の導線法の説明で、梵天を目印に間縄／鉄鎖で距離を測ることを確認。福島町教育委員会「福島町と伊能忠敬全国測量」（https://www.town.fukushima.hokkaido.jp/kyouiku/福島町の文化財/福島町と伊能忠敬全国測量/）で梵天を竹の棒と説明。台東区の国立科学博物館探訪（https://www.culture.city.taito.lg.jp/bunkatanbou/culture/kahaku/japanese/page_05.html）で間縄等の距離測定と光学器械を使わない点を確認。資料の説明文に基づく単純な縄・杭・竹の目印だけを採用し、彎窠羅鍼等の精密な形を未確認のまま描かない。伊能隊の特定日の実景・測量器の実測図ではない。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Edo early19th-century land survey on country road, based on documented simple tools: two small anonymous rear-view workers in plain kosode/hakama/straw sandals stretch a natural-fiber measuring cord STRAIGHT between two short wooden stakes along the road. A simple tall thin bamboo marker pole at far endpoint, with small plain white cloth tuft, no characters. Cord is taut near ground, knots visible but no numeric measurements. Blank paper notebook near worker. No telescope, no optical instrument, no modern tripod/theodolite, no completed map, no named or recognizable Ino Tadataka face. Calm coastline in far background, focus on measuring distance with cord and stakes.
+```
+
+### 第3回：soc6_edo_008.webp
+
+- 対象問題：social_g6_edo_019
+- 確認した資料・条件：対象設問の問題文・選択肢・解説、PICTURE_PLAN_SOCIAL6.mdの対応行を照合。特定人物・建物・実物資料の精密復元ではなく、設問の既知の場面を再構成した教育用イラスト。
+- 採用時の確認：文字・正解名・実在人物の顔・戦闘／負傷描写を入れない。建物・道具の表現を問題と照合。
+- 使用プロンプト：
+```text
+Create ONE original Japanese grade6 history educational illustration, landscape3:2 intended1200x800. Warm restrained watercolor and clear fine ink outlines, large readable objects at smartphone size, light simple surroundings. No text, kanji, letters, numbers, signatures, seals, logos, labels, pseudo-writing, arrows, diagram captions anywhere. Papers/books/flags/signboards entirely blank or omit them. All people anonymous, small or strictly rear views or only hands, no real historical person's face. Calm observational scene; no combat, blood, injuries, victory, outcomes or moral conclusion. Period-appropriate Japanese materials/clothing only; no electricity, cars, railways, modern machines, modern school furniture or modern weapons. Edo-period farmers gathering quietly beside a rural wooden meeting house, five anonymous adults in plain work kosode, straw sandals, rear views only. One holds a blank folded sheet at waist height while others stand calmly together. No raised fists, placards, weapons, violence, crying, officials granting requests, victory or outcome, no text. Modest rural thatched buildings and fields, not a modern demonstration.
+```
+
+## 第3回の検査
+
+- tests/fixtures/social6-images-3.jsonに17枚・32問の対応を追加。course-social6.jsの対象を6単元・54枚・93問へ更新。既存のWebP実体／サイズ／寸法／alt・caption／正解文字列検査を全画像問題へ適用。
+- node tests/run.js：908件成功・0件失敗（地名の最終拡大後にも再実行）。
+- 390px幅で新規32問と地図1問を実際の問題画面に表示して画像読み込みを確認。各原画と代表画面を目視確認。地図は文字拡大後にも再撮影。室内比較の撮影1件は描画待ちが短く画像が写らなかったため、待機時間を延ばして該当2問を再撮影し、正常表示を確認した。
+- そろばんは上2珠・下5珠の安定した表現が得られず、誤った構造を載せることを避け、手習いの筆と帳面へ構図を変更。ばれんの初稿も修正済み。
+- 測量は縄・杭・竹の目印の範囲で採用。特定測量器の精密な形、特定の城・港の復元精度を保証する図ではない。問題の答え・制度の結論は描き加えていない。
