@@ -107,4 +107,15 @@ module.exports=({test,assert})=>{
   Object.entries(names).forEach(([id,answers])=>{const v=c.FF.learning.inputVariant(qs.find(q=>q.id===id));answers.forEach(a=>assert.ok(c.FF.answer.judge(v,a).correct,id+a));});
  });
 
+ test('小6社会第7回：答えの分解表示を除き、国別の学習と協力隊を追加',()=>{
+  const get=id=>qs.find(q=>q.id==='social_g6_'+id);
+  assert.ok(!/都.?道.?府.?県/.test(U.plainText(get('local_tax_003').question)));
+  assert.ok(!/[市町村]/.test(U.plainText(get('local_tax_004').question)));
+  const keys=['005','008','009','010','011','012','013','014'];
+  assert.equal(keys.length,8);
+  keys.forEach(n=>assert.equal(get('international_'+n).difficulty,Number(n)<=9?'basic':'standard'));
+  const answers={international_005:['アメリカ','米国'],international_009:['せいねんかいがいきょうりょくたい'],international_010:['原油','石油'],international_014:['にっけいじん']};
+  Object.entries(answers).forEach(([id,names])=>{const v=c.FF.learning.inputVariant(get(id));names.forEach(a=>assert.ok(c.FF.answer.judge(v,a).correct,id+a));});
+ });
+
 };

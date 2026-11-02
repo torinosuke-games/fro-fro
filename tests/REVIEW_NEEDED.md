@@ -333,3 +333,6 @@ AI が作成した問題のうち、人が事実関係・表現を確認すべ�
 点検・修正：constitution_017〜030、politics_020〜034（すべてsocial_g6_から始まるID）。
 新作：social_g6_local_tax_001〜028、social_g6_international_002〜029。
 地方自治と税、国際機関と支援、難民・環境・教育の説明などの最終確認事項はQUESTION_REVIEW_1.md「第6回」。外部資料照合・専門家レビューは未実施。全12単元の教材レビュー前のため未レビューを維持。
+
+## 小6社会 第7回（国別の内容への入れ替え）
+local_tax_003・004の問い方を修正。international_005・008〜014を国別の文化・貿易・移住と青年海外協力隊に入れ替えた。事実の重点確認事項はQUESTION_REVIEW_1.md「第7回」。全問reviewed:falseを維持。
