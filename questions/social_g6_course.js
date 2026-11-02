@@ -28,6 +28,13 @@ window.QUESTION_BANK.push(
       "どき"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_001.webp",
+    "alt": "土を焼いた深い容器と、まだ加工していない木の実が火のそばにある。",
+    "caption": "火のそばの容器と木の実",
+    "study": true
   }
 },
 {
@@ -91,6 +98,13 @@ window.QUESTION_BANK.push(
       "たて穴式住居",
       "たてあなしきじゅうきょ"
     ]
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_002.webp",
+    "alt": "屋根の下の床が周りの地面より低くなっている住まいの断面。",
+    "caption": "住まいと地面の断面",
+    "study": true
   }
 },
 {
@@ -121,6 +135,13 @@ window.QUESTION_BANK.push(
       "いなさく"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_003.webp",
+    "alt": "小さな川と、少し離れた田。間には地面が続いている。",
+    "caption": "川と田の位置",
+    "study": true
   }
 },
 {
@@ -144,7 +165,14 @@ window.QUESTION_BANK.push(
     "長く保存するときに困ることを考えよう。"
   ],
   "explanation": "床を地面から{離す|はなす}ことは、収穫した米を{湿気|しっけ}などから守る工夫でした。\n\nほかの 選択肢\n・「{湿気|しっけ}をためて米をやわらかくするため」…米を保存するときは{湿気|しっけ}を{避ける|さける}工夫が必要です。\n・「室内で稲を育てるため」…稲を育てる水田と米をしまう場所は役割が異なります。\n・「土器を焼く火を床下でたくため」…米の保存用の建物を、土器を焼く場所と取り{違え|ちがえ}ています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_004.webp",
+    "alt": "木の柱で床を高くした建物。床の下に地面とのすき間がある。",
+    "caption": "建物の床と地面",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_006",
@@ -177,6 +205,13 @@ window.QUESTION_BANK.push(
     "answerAlso": [
       "埴輪"
     ]
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_005.webp",
+    "alt": "筒・人・馬の形をした、赤茶色の土製品が並んでいる。",
+    "caption": "焼いた土で作られたもの",
+    "study": true
   }
 },
 {
@@ -230,6 +265,13 @@ window.QUESTION_BANK.push(
       "ぜんぽうこうえんふん"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_006.webp",
+    "alt": "丸い部分に四角く広がる部分がつながる、大きさの異なる二つの丘。",
+    "caption": "二つの丘の形と大きさ",
+    "study": true
   }
 },
 {
@@ -253,7 +295,14 @@ window.QUESTION_BANK.push(
     "取った食べ物をすぐ食べられるとは限らないね。"
   ],
   "explanation": "木の実には{あく抜き|あくぬき}などが必要なものもあり、調理が食生活を支えました。\n\nほかの 選択肢\n・「木の実をひもで持ち運びやすくする」…運ぶときの工夫で、にる働きとは異なります。\n・「木の実をくだかずに粉にする」…粉にするには石皿などですりつぶす作業が必要です。\n・「木の実の産地を見分ける」…産地の調査と食べやすくする調理を混同しています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_001.webp",
+    "alt": "土を焼いた深い容器と、まだ加工していない木の実が火のそばにある。",
+    "caption": "火のそばの容器と木の実",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_010",
@@ -276,7 +325,14 @@ window.QUESTION_BANK.push(
     "加工された道具なのか、食べ物の残りなのか考えよう。"
   ],
   "explanation": "魚の骨に火で焼いたあとがあることは、魚を加熱して食べたことを考える手がかりになります。\n\nほかの 選択肢\n・「魚をとるための針だった」…骨を針に加工した形やあとがあるか調べる必要があります。\n・「魚を運ぶためのかごだった」…かごは植物のつるなどを編んだ道具です。\n・「木の実をすりつぶす石皿だった」…石皿は植物の食料の加工に使う石の道具です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_007.webp",
+    "alt": "土の中から出た魚の骨。いくつかの先が黒くなっている。",
+    "caption": "住まいのあとから出た骨",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_011",
@@ -299,7 +355,14 @@ window.QUESTION_BANK.push(
     "水田に欠かせないものを考えよう。"
   ],
   "explanation": "水田に必要な水を確保するため、共同作業が重要になりました。\n\nほかの 選択肢\n・「収穫した稲の穂を石包丁でつむ」…収穫の作業です。水路を作る共同作業とは役割が異なります。\n・「収穫した米を倉庫へ入れる」…収穫後の保存の作業です。\n・「木の実を石皿ですりつぶす」…木の実を食べやすくする作業です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_003.webp",
+    "alt": "小さな川と、少し離れた田。間には地面が続いている。",
+    "caption": "川と田の位置",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_012",
@@ -322,7 +385,14 @@ window.QUESTION_BANK.push(
     "みんなの収穫や所有量は同じかな。"
   ],
   "explanation": "保存できる食料は財産にもなり、富の差が広がる要因になりました。\n\nほかの 選択肢\n・「たくわえの多いむらほど、田を守る必要が小さくなる」…たくわえとそのもとになる田を守ることも重要になりました。\n・「米の量より、土器の大きさだけが豊かさを決める」…入れ物の大きさと、実際の食料や土地の量は別です。\n・「次の収穫まで米を残さず食べるようになる」…保存できる米は、次の収穫まで食料を確保する役割も持ちました。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_008.webp",
+    "alt": "似た大きさの住まいや倉、田、川のあるむらの様子。",
+    "caption": "むらの建物と周りの土地",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_013",
@@ -375,6 +445,13 @@ window.QUESTION_BANK.push(
       "いしぼうちょう"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_009.webp",
+    "alt": "穴のある半月形の石の道具と、上に輪がある金属製のもの。",
+    "caption": "石と金属で作られた道具",
+    "study": true
   }
 },
 {
@@ -405,6 +482,13 @@ window.QUESTION_BANK.push(
       "どうたく"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_009.webp",
+    "alt": "穴のある半月形の石の道具と、上に輪がある金属製のもの。",
+    "caption": "石と金属で作られた道具",
+    "study": true
   }
 },
 {
@@ -498,7 +582,14 @@ window.QUESTION_BANK.push(
     "大きな土の山を人の力で作る様子を考えよう。"
   ],
   "explanation": "土を運び工事を進める人々と、その生活を支える食料が必要でした。\n\nほかの 選択肢\n・「{墓|はか}に{納め|おさめ}る品物を集める仕事」…品物の準備も必要ですが、土を運ぶ工事そのものを支える条件とは区別します。\n・「収穫した穂をつみ取る道具」…収穫の道具と、土を運ぶ人々の労働や食料は別の条件です。\n・「むらの周りを守るほり」…防御施設と、{墓|はか}の工事に必要な人手や食料を取り{違え|ちがえ}ています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_010.webp",
+    "alt": "段を付けて土を積み上げている途中の大きな丘と、その周りの土。",
+    "caption": "工事中の大きな丘",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_019",
@@ -551,7 +642,14 @@ window.QUESTION_BANK.push(
     "出土品が何のための道具か考えよう。"
   ],
   "explanation": "くらやくつわなどは、馬を使う技術を調べる資料になります。\n\nほかの 選択肢\n・「米を収穫する方法」…石包丁などの農具から調べる内容です。\n・「土器で調理する方法」…土器の形や使用のあとから調べる内容です。\n・「木を切る方法」…おのなどの道具から調べる内容です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_011.webp",
+    "alt": "さびた金属の輪や棒、輪の形をした道具のかけら。",
+    "caption": "土の中から出た金属の道具",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_021",
@@ -574,7 +672,14 @@ window.QUESTION_BANK.push(
     "石がある場所と、見つかった場所を比べよう。"
   ],
   "explanation": "産地とむらの間に海があるため、石か加工した道具が海をこえて運ばれたと考えられます。\n\nほかの 選択肢\n・「島から米づくりの方法が伝わった」…石の産地の資料と、稲作の技術の広がりを取り{違え|ちがえ}ています。\n・「むらの近くで同じ石を採った」…資料では、その石の産地は海の向こうの島だと分かっています。\n・「島の住居の形がむらに伝わった」…石の移動は住居の形の伝わり方を直接示しません。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_012.webp",
+    "alt": "左は海に囲まれた島の黒い石。右は別の場所のむらと、黒い石で作られた道具。",
+    "caption": "島の石とむらで見つかったもの",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_022",
@@ -597,7 +702,14 @@ window.QUESTION_BANK.push(
     "食料が得られる場所を考えよう。"
   ],
   "explanation": "食料の残りと周りの自然を比べると、どのような場所から食料を得たか考えられます。\n\nほかの 選択肢\n・「Aで木の実の利用、Bで魚の利用を中心に調べる」…出土品から多く使われたと考えられる食料を逆にしています。\n・「Aで稲の収穫、Bで米の保存を中心に調べる」…資料で示された魚・貝や木の実・シカとは対象が異なります。\n・「AとBで{墓|はか}の形を比べ、食料の種類を決める」…食料の利用は食べ物の残りや周辺環境と比べて考えます。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_013.webp",
+    "alt": "Aには貝がらと魚の骨。Bには木の実とシカの骨が並んでいる。",
+    "caption": "AとBから出たもの",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_023",
@@ -620,7 +732,14 @@ window.QUESTION_BANK.push(
     "争われたものと米づくりの関係を考えよう。"
   ],
   "explanation": "田と水を確保することは、食料や富を得ることにつながりました。\n\nほかの 選択肢\n・「保存した米が田に使う水を吸い取ったから」…倉庫の米と、水田へ流れる水の関係を取り{違え|ちがえ}ています。\n・「田を広げると米を保存できなくなったから」…田の拡大は収穫やたくわえを増やすことにつながります。\n・「米を作るむらは{狩り|かり}の道具を使わなくなったから」…争いの原因として問うのは、田や水を確保する重要性です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_008.webp",
+    "alt": "似た大きさの住まいや倉、田、川のあるむらの様子。",
+    "caption": "むらの建物と周りの土地",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_024",
@@ -643,7 +762,14 @@ window.QUESTION_BANK.push(
     "下の層から順に読み取ろう。"
   ],
   "explanation": "地層の順序が変わっていなければ、下の層ほど先にできたものです。この遺跡の変化を下から読み取ります。\n\nほかの 選択肢\n・「農具→{狩り|かり}の道具→はにわのかけら」…資料では{狩り|かり}の道具が多い層の方が古いという順序を逆にしています。\n・「はにわのかけら→農具→{狩り|かり}の道具」…はにわのかけらをいちばん古く置き、資料の順序と逆になっています。\n・「{狩り|かり}の道具→はにわのかけら→農具」…資料では農具の多い層がはにわのかけらがある層より古いことを入れ替えています。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_014.webp",
+    "alt": "上の層に土製品のかけら、中の層に木製の道具、下の層に石の道具がある。",
+    "caption": "三つの地層から出たもの",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_025",
@@ -666,7 +792,14 @@ window.QUESTION_BANK.push(
     "{離れ|はなれ}た地域の有力者どうしの関係を考えよう。"
   ],
   "explanation": "共通した{墓|はか}の形や作り方は、地域の有力者が政治的なつながりを持ったことを考える手がかりです。\n\nほかの 選択肢\n・「地域の有力者が同じ田の面積を持っていた」…共通する{墓|はか}の形と、それぞれの田の面積を同じものとして考えています。\n・「各地が同じ種類の石を使うため{墓|はか}の形も似た」…材料の種類だけでは共通する形や作り方の広がりを説明できません。\n・「有力者の{墓|はか}を米の倉庫へ変える方法が広がった」…古墳は有力者をほうむる{墓|はか}で、米の倉庫とは役割が{違います|ちがいます}。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_006.webp",
+    "alt": "丸い部分に四角く広がる部分がつながる、大きさの異なる二つの丘。",
+    "caption": "二つの丘の形と大きさ",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_026",
@@ -712,7 +845,14 @@ window.QUESTION_BANK.push(
     "大きな{墓|はか}を作るために必要なものを考えよう。"
   ],
   "explanation": "大きな古墳には多くの人手や食料が必要です。人々を集めて工事を進められる、有力者の力が考えられます。\n\nほかの 選択肢\n・「周りのむらより人口が多かったと分かる」…広い地域から人を集める場合もあり、近くのむらの人口だけでは{墓|はか}の大きさを説明できません。\n・「ほうむられた人が長生きしたと分かる」…大きさは工事に集められた力の手がかりで、{寿命|じゅみょう}を直接示しません。\n・「{墓|はか}に{納め|おさめ}た品物の種類が多いと分かる」…品物の種類は{墓|はか}の内部の調査で確かめる必要があります。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_prehistoric_006.webp",
+    "alt": "丸い部分に四角く広がる部分がつながる、大きさの異なる二つの丘。",
+    "caption": "二つの丘の形と大きさ",
+    "study": true
+  }
 },
 {
   "id": "social_g6_prehistoric_028",
@@ -795,6 +935,13 @@ window.QUESTION_BANK.push(
       "かんいじゅうにかい"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_001.webp",
+    "alt": "違う色のかぶり物を着けた二人の後ろ姿と、文字を省いた巻物。",
+    "caption": "役人のかぶり物と文書",
+    "study": true
   }
 },
 {
@@ -1004,7 +1151,14 @@ window.QUESTION_BANK.push(
     "使いとともに学びに行った人々にも注目しよう。"
   ],
   "explanation": "外交とともに、国づくりに役立つ知識や技術を取り入れました。\n\nほかの 選択肢\n・「{戸籍|こせき}を作り国内の人々を調べる」…国内の人数や土地・税を管理する仕事です。\n・「地方に役人を送って税を集める」…国内の地方政治の仕事です。\n・「各地に寺を建てて国の安定を願う」…国内で仏教によって国を守ろうとする政治の取り組みです。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_002.webp",
+    "alt": "木の船と帆、荷物を運ぶ人々の小さな後ろ姿。旗や文字はない。",
+    "caption": "大陸の港に着いた船",
+    "study": true
+  }
 },
 {
   "id": "social_g6_asuka_nara_010",
@@ -1064,6 +1218,13 @@ window.QUESTION_BANK.push(
       "こせき"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_003.webp",
+    "alt": "文字を省いた巻物を置いた机と、あぜで区切られた田。",
+    "caption": "古代の文書と田",
+    "study": true
   }
 },
 {
@@ -1094,6 +1255,13 @@ window.QUESTION_BANK.push(
       "くぶんでん"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_003.webp",
+    "alt": "文字を省いた巻物を置いた机と、あぜで区切られた田。",
+    "caption": "古代の文書と田",
+    "study": true
   }
 },
 {
@@ -1124,6 +1292,13 @@ window.QUESTION_BANK.push(
       "そ"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_004.webp",
+    "alt": "稲の束、折りたたんだ布、海そうなどの品物を並べた様子。",
+    "caption": "古代の人々が運んだ品物",
+    "study": true
   }
 },
 {
@@ -1154,6 +1329,13 @@ window.QUESTION_BANK.push(
       "ちょう"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_004.webp",
+    "alt": "稲の束、折りたたんだ布、海そうなどの品物を並べた様子。",
+    "caption": "古代の人々が運んだ品物",
+    "study": true
   }
 },
 {
@@ -1184,6 +1366,13 @@ window.QUESTION_BANK.push(
       "さきもり"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_005.webp",
+    "alt": "左は海を見渡す見張り場。右は別の土地の住まいと家族の後ろ姿。",
+    "caption": "海辺の見張り場と離れた住まい",
+    "study": true
   }
 },
 {
@@ -1244,6 +1433,13 @@ window.QUESTION_BANK.push(
       "こんでんえいねんしざいほう"
     ],
     "reviewed": false
+  },
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_006.webp",
+    "alt": "草や切り株が残る土地と、その近くの小さな田。",
+    "caption": "田を開く途中の土地",
+    "study": true
   }
 },
 {
@@ -1350,7 +1546,14 @@ window.QUESTION_BANK.push(
     "二つの名前の順に説明を並べよう。"
   ],
   "explanation": "{冠位十二階|かんいじゅうにかい}は役人の位を示す制度、{十七条の憲法|じゅうしちじょうのけんぽう}は政治を行う役人の心構えです。\n\nほかの 選択肢\n・「役人の心構えと、役人の位」…二つのきまりの役割を逆にしています。\n・「田の分配と、新しい田の私有」…{班田収授法|はんでんしゅうじゅほう}と{墾田永年私財法|こんでんえいねんしざいほう}の内容です。\n・「税として{納め|おさめ}る稲と、布や特産物」…{租|そ}と調の区別です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_001.webp",
+    "alt": "違う色のかぶり物を着けた二人の後ろ姿と、文字を省いた巻物。",
+    "caption": "役人のかぶり物と文書",
+    "study": true
+  }
 },
 {
   "id": "social_g6_asuka_nara_022",
@@ -1373,7 +1576,14 @@ window.QUESTION_BANK.push(
     "荷物に書かれた出発地と中身を考えよう。"
   ],
   "explanation": "荷札の地名や産物名は、地方から都へ物が運ばれたことを調べる資料になります。\n\nほかの 選択肢\n・「都から地方へ税の産物を配った」…地方名を出発地としている荷物の向きを逆にしています。\n・「都の役人が地方へ{贈り物|おくりもの}を送った」…地方から届いた税の荷物と、都から送る{贈り物|おくりもの}を取り{違え|ちがえ}ています。\n・「地方から届いた荷物は田を返す代わりだった」…産物を{納め|おさめ}る税と、人の死後に{口分田|くぶんでん}を返すしくみは別です。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_004.webp",
+    "alt": "稲の束、折りたたんだ布、海そうなどの品物を並べた様子。",
+    "caption": "古代の人々が運んだ品物",
+    "study": true
+  }
 },
 {
   "id": "social_g6_asuka_nara_023",
@@ -1396,7 +1606,14 @@ window.QUESTION_BANK.push(
     "家を{離れ|はなれ}る日数を比べよう。"
   ],
   "explanation": "BはAより20日長く家を{離れ|はなれ}ます。その分、旅の食料が必要になり、農作業の時間にも影響します。\n\nほかの 選択肢\n・「Bの方が田畑の作業に使える日数が長い」…家を{離れ|はなれ}る日数が長いほど、田畑で働ける時間は少なくなります。\n・「AとBの{違い|ちがい}は{納め|おさめ}る米の種類である」…資料では米の種類の{違い|ちがい}を示していません。\n・「Bの方が都で受け取る{口分田|くぶんでん}が広い」…{口分田|くぶんでん}は旅の日数で都から支給されるものではありません。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_008.webp",
+    "alt": "Aは10日、Bは30日。同じ大きさの荷物を一つずつ示している。",
+    "caption": "二つの村の荷物と日数",
+    "study": true
+  }
 },
 {
   "id": "social_g6_asuka_nara_024",
@@ -1419,7 +1636,14 @@ window.QUESTION_BANK.push(
     "法律だけでなく、開墾する力の差も考えよう。"
   ],
   "explanation": "開墾には労力が必要で、大きな力を持つ寺院や{貴族|きぞく}が土地を広げました。\n\nほかの 選択肢\n・「開いた田も持ち主の死後に国へ返すことになったから」…{口分田|くぶんでん}を返すしくみと、新しく開いた田の永久私有を取り{違え|ちがえ}ています。\n・「土地を広げるより都へ産物を運ぶことが認められたから」…新田の所有を認める法令と、税の運搬を取り{違え|ちがえ}ています。\n・「国が配る田を受け取る年齢を引き下げたから」…法令は新しく開いた田の所有についてのもので、{口分田|くぶんでん}を受け取る年齢の変更ではありません。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_006.webp",
+    "alt": "草や切り株が残る土地と、その近くの小さな田。",
+    "caption": "田を開く途中の土地",
+    "study": true
+  }
 },
 {
   "id": "social_g6_asuka_nara_025",
@@ -1488,7 +1712,14 @@ window.QUESTION_BANK.push(
     "兵士としてどのような仕事をしたか考えよう。"
   ],
   "explanation": "防人は九州北部などの守りにつきました。家族から{離れ|はなれ}ることは、兵士や家族にとって大きな{負担|ふたん}でした。\n\nほかの 選択肢\n・「{租|そ}として稲を{納め|おさめ}るため」…稲を{納め|おさめ}る税と、海辺を守る役目は異なります。\n・「{遣唐使|けんとうし}として唐で学ぶため」…外国で学ぶ使いと、国内の守りにつく兵士は異なります。\n・「国司として地方の政治を行うため」…役人として国を治める仕事と、兵士の仕事は異なります。",
-  "reviewed": false
+  "reviewed": false,
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_asuka_nara_005.webp",
+    "alt": "左は海を見渡す見張り場。右は別の土地の住まいと家族の後ろ姿。",
+    "caption": "海辺の見張り場と離れた住まい",
+    "study": true
+  }
 },
 {
   "id": "social_g6_asuka_nara_028",

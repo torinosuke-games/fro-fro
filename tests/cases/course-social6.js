@@ -1,11 +1,40 @@
 'use strict';
 const L=require('../lib/loader');
+const fs=require('node:fs'),path=require('node:path');
+const imagePlan=require('../fixtures/social6-images-1.json');
 module.exports=({test,assert})=>{
  const c=L.load(L.LOGIC_FILES_WITH_FIXES),U=c.FF.util,all=c.QUESTION_BANK,qs=all.filter(q=>q.collection==='course_so6_1');
- test('小6社会第1回：12単元336問、各基礎8・標準12・発展8、未レビュー・図なし',()=>{
+ test('小6社会第1回：12単元336問、各基礎8・標準12・発展8、未レビュー・指定問題だけ画像',()=>{
   assert.equal(qs.length,336);
   for(const unit of ['prehistoric','asuka_nara','heian','kamakura','muromachi_sengoku','edo','meiji','modern','constitution','politics','local_tax','international'])for(const [d,n] of [['basic',8],['standard',12],['advanced',8]])assert.equal(qs.filter(q=>q.unit===unit&&q.difficulty===d).length,n,unit+d);
-  qs.forEach(q=>{assert.equal(q.reviewed,false);assert.ok(!q.diagram);assert.deepStrictEqual(Array.from(c.FF.learning.validateQuestion(q)),[],q.id);});
+  const planned=new Map(Object.entries(imagePlan).flatMap(([file,ids])=>ids.map(id=>[id,file])));
+  assert.equal(Object.keys(imagePlan).length,21);assert.equal(planned.size,33);
+  qs.forEach(q=>{assert.equal(q.reviewed,false);if(planned.has(q.id)){assert.ok(q.diagram,q.id);assert.equal(q.diagram.kind,'image');assert.equal(q.diagram.src,'img/diagrams/'+planned.get(q.id));assert.equal(q.diagram.study,true);}else assert.ok(!q.diagram,q.id);assert.deepStrictEqual(Array.from(c.FF.learning.validateQuestion(q)),[],q.id);});
+ });
+ test('小6社会画像：WebP実体・1200×800・200KB以下・説明文に答えを含めない',()=>{
+  qs.filter(q=>q.diagram&&q.diagram.kind==='image').forEach(q=>{
+   const d=q.diagram;
+   assert.ok(/^img\/diagrams\/soc6_(prehistoric|asuka_nara)_\d{3}\.webp$/.test(d.src),q.id);
+   const file=path.resolve(__dirname,'../..',d.src);
+   assert.ok(fs.existsSync(file),q.id+' file');assert.equal(path.extname(file),'.webp');
+   const b=fs.readFileSync(file);assert.ok(b.length>0&&b.length<=200000,q.id+' bytes');
+   assert.equal(b.toString('ascii',0,4),'RIFF');assert.equal(b.toString('ascii',8,12),'WEBP');
+   let width,height;
+   for(let offset=12;offset+8<=b.length;){
+    const kind=b.toString('ascii',offset,offset+4),size=b.readUInt32LE(offset+4),start=offset+8;
+    assert.ok(start+size<=b.length,q.id+' chunk');
+    if(kind==='VP8X'){width=1+b.readUIntLE(start+4,3);height=1+b.readUIntLE(start+7,3);break;}
+    if(kind==='VP8 '){assert.equal(b.toString('hex',start+3,start+6),'9d012a');width=b.readUInt16LE(start+6)&0x3fff;height=b.readUInt16LE(start+8)&0x3fff;break;}
+    if(kind==='VP8L'){const bits=b.readUInt32LE(start+1);width=1+(bits&0x3fff);height=1+((bits>>>14)&0x3fff);break;}
+    offset=start+size+(size%2);
+   }
+   assert.equal(width,1200,q.id+' width');assert.equal(height,800,q.id+' height');
+   for(const field of ['alt','caption']){
+    assert.ok(typeof d[field]==='string'&&d[field].trim(),q.id+' '+field);
+    const text=U.plainText(d[field]);
+    for(const a of [q.answer,...(q.inputForm&&q.inputForm.answer?[q.inputForm.answer]:[])])assert.ok(!text.includes(U.plainText(a)),q.id+' '+field+' answer');
+   }
+  });
  });
  test('小6社会第1回：重複IDなし・4択・ヒント1〜2・全誤答解説・答えの漏れなし',()=>{
   assert.equal(new Set(all.map(q=>q.id)).size,all.length);
