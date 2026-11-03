@@ -1,6 +1,6 @@
 # 小6社会 画像制作記録
 
-第1回〜第4回の制作内容を記録する。古墳の保留は利用者提供写真との照合で解消済み。現状は末尾の追補を参照。
+第1回〜第5回の制作内容を記録する。古墳の保留は利用者提供写真との照合で解消済み。現状は末尾の追補を参照。
 
 # 第1回 画像制作記録
 
@@ -1322,3 +1322,258 @@ Create ONE original educational history illustration for Japanese grade6. Landsc
 - 336問のdiagram以外のデータが作業前と一致することを確認。
 - 写真未照合の火縄銃本体は除去。建築・工場機械・洗濯機は説明文で確認した範囲の再構成であり、個別の実物の精密復元ではない。
 - 390px幅の実際の問題画面で対象22問を撮影し、画像の読み込みを確認。火縄の道具、製糸工場、鉄道、A/Bの比較図、ローラー付き洗濯機の代表画面を目視確認した。
+
+
+# 第5回 画像制作記録（2026-11-03）
+
+constitution 5枚・politics 5枚・local_tax 7枚、計17枚を28問へ登録。全問 reviewed:false のまま。international は対象外。各画像を個別に生成し、縦横比を保って1200×800へ縮小、WebPへ変換。画像への描き足しや文字の後付けはしていない。
+
+法廷の配置は名古屋地方裁判所「法廷の配席図」掲載資料 https://www.courts.go.jp/nagoya/vc-files/nagoya/2020/hounohikikaku_shougakusei_kaitou.pdf と裁判所の検索結果を参照。中央3席・両側各3席、書記官席・当事者席・傍聴席の関係を確認。議場は衆議院「国会施設案内」 https://www.shugiin.go.jp/internet/itdb_annai.nsf/html/statics/kokkai/sisetu.htm の議長席・大臣席の説明を参照。特定人物や実際の事件・会議を再現する絵ではない。
+
+|ファイル名|対象問題|説明|bytes|
+|---|---|---|---:|
+|soc6_constitution_001.webp|social_g6_constitution_008<br>social_g6_constitution_011<br>social_g6_constitution_025|学ぶ子どもと教材を見る保護者|144180|
+|soc6_constitution_002.webp|social_g6_constitution_012|学校と家庭で使うもの|153816|
+|soc6_constitution_003.webp|social_g6_constitution_013<br>social_g6_constitution_024|掲示板の前の子ども|140172|
+|soc6_constitution_005.webp|social_g6_constitution_023|公園の入口|162590|
+|soc6_constitution_006.webp|social_g6_constitution_028|大きさの異なる学習用紙|93766|
+|soc6_politics_001.webp|social_g6_politics_017|法廷に並ぶ席|155428|
+|soc6_politics_002.webp|social_g6_politics_018<br>social_g6_politics_019|学校・研究・診療・仕事の場|187024|
+|soc6_politics_003.webp|social_g6_politics_022|法廷と傍聴席|137608|
+|soc6_politics_004.webp|social_g6_politics_024|投票の記載台|128142|
+|soc6_politics_005.webp|social_g6_politics_025<br>social_g6_politics_032|議場と法廷|160100|
+|soc6_local_tax_001.webp|social_g6_local_tax_008<br>social_g6_local_tax_013<br>social_g6_local_tax_025|図書館・道路・体育館|174450|
+|soc6_local_tax_003.webp|social_g6_local_tax_014|集積所・収集車・処理施設|168314|
+|soc6_local_tax_004.webp|social_g6_local_tax_016<br>social_g6_local_tax_026|資料を囲んで話す人々|199396|
+|soc6_local_tax_005.webp|social_g6_local_tax_017<br>social_g6_local_tax_027|建物の入口と廊下|173212|
+|soc6_local_tax_006.webp|social_g6_local_tax_018<br>social_g6_local_tax_023|雨のあとの道路と建物|181924|
+|soc6_local_tax_007.webp|social_g6_local_tax_021<br>social_g6_local_tax_024|施設の利用と床・手すり|169802|
+|soc6_local_tax_008.webp|social_g6_local_tax_022|停留所と離れた建物|194942|
+
+### 第5回：soc6_constitution_001.webp
+
+- 対象：social_g6_constitution_008, social_g6_constitution_011, social_g6_constitution_025
+- caption：学ぶ子どもと教材を見る保護者
+- alt：机で学ぶ子どもと、別の机で教材を見ている保護者の後ろ姿。
+- 出力：1200×800、144180 bytes、WebP quality 88
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：権利・義務の割り当て、援助を受けた結果、家庭の貧困の記号化を描かない。
+- 使用プロンプト：
+```text
+Create one original educational illustration landscape 3:2 for Japanese grade6, warm restrained watercolor and fine clear outlines, simple pale background. Contemporary Japan. Two equal vignettes: child seen from behind studying at a modern desk with blank book; separate vignette parent from behind examining blank teaching materials at table. No text letters numbers logos symbols or pseudo-writing anywhere. No answer or labels about rights duties costs poverty or success. All paper blank. Natural calm rear-view people. Save output to local file if supported, intended filename soc6_constitution_001.png.
+```
+
+### 第5回：soc6_constitution_002.webp
+
+- 対象：social_g6_constitution_012
+- caption：学校と家庭で使うもの
+- alt：授業の場、給食、家庭の机、筆記用具を並べた四つの場面。
+- 出力：1200×800、153816 bytes、WebP quality 82
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：無料/有料のマーク、金額、自治体の支援の有無、答え項目の強調を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Four equally sized vignettes, same emphasis: present-day Japanese elementary classroom with rear-view pupils facing blank blackboard; Japanese school lunch tray with rice soup and side dish; home study desk; pencils eraser pencil case. No costs money or free/paid markings.
+```
+
+### 第5回：soc6_constitution_003.webp
+
+- 対象：social_g6_constitution_013, social_g6_constitution_024
+- caption：掲示板の前の子ども
+- alt：白い紙を持って掲示板に向かう子どもの後ろ姿。
+- 出力：1200×800、140172 bytes、WebP quality 88
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：文章・住所・名前、消した正解例、公開後の結果を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Rear-view child holding a completely blank sheet beside empty school bulletin board, preparing to post paper, no other people or visible writing.
+```
+
+### 第5回：soc6_constitution_005.webp
+
+- 対象：social_g6_constitution_023
+- caption：公園の入口
+- alt：階段のある公園入口と、車いすを使う人の後ろ姿。
+- 出力：1200×800、162590 bytes、WebP quality 76
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：解決済みのスロープ、多数決の票数、賛否を示す記号を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Contemporary Japanese park entrance with three ordinary concrete steps, trees beyond, adult wheelchair user seen naturally from behind on flat pavement facing entrance at comfortable distance. No distress, exaggerated helplessness, ramps, accessibility symbols or solution.
+```
+
+### 第5回：soc6_constitution_006.webp
+
+- 対象：social_g6_constitution_028
+- caption：大きさの異なる学習用紙
+- alt：机の上に並んだ、大きさの異なる二枚の白い用紙。
+- 出力：1200×800、93766 bytes、WebP quality 88
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：文章や答え、大きい方に正解印、児童の能力差や成績の表現を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Two completely blank white learning sheets on a pale wooden desk side by side, one ordinary size and one proportionally enlarged size, identical portrait proportions. No writing drawings marks comparison arrows or preferred choice. Minimal stationery off to side.
+```
+
+### 第5回：soc6_politics_001.webp
+
+- 対象：social_g6_politics_017
+- caption：法廷に並ぶ席
+- alt：中央とその両側に人が座る法廷を、席の後ろから見た様子。
+- 出力：1200×800、155428 bytes、WebP quality 82
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：裁判員・裁判官のラベル、評決、人数による法制度の誤表現、法服で答えだけを強調を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Japanese saiban-in courtroom seen from BEHIND raised judicial bench looking toward courtroom. Exactly NINE seated adults in ONE straight row in foreground, backs only: three plain dark-robed judges in center, three civilians on each side (six civilians total). Modest neutral clothing, no emphasis on robes. Below bench clerk desk in center, opposing counsel tables left and right, witness table center farther ahead, spectators far back beyond low barrier. No jury box at side, gavel, wigs, flags, emblems, verdict, nameplates.
+```
+
+### 第5回：soc6_politics_002.webp
+
+- 対象：social_g6_politics_018, social_g6_politics_019
+- caption：学校・研究・診療・仕事の場
+- alt：学校、研究室、診療の場、働く場を並べた四つの場面。
+- 出力：1200×800、187024 bytes、WebP quality 82
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：省名、正解への括り線、看板・ロゴ、担当省を示す色分けを描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Four equally prominent separate vignettes: Japanese modern school exterior; science research lab with microscope; quiet medical consultation desk rear-view adults; ordinary workplace with rear-view adults. No grouping lines, ministry labels, medical crosses or illness.
+```
+
+### 第5回：soc6_politics_003.webp
+
+- 対象：social_g6_politics_022
+- caption：法廷と傍聴席
+- alt：後方の傍聴席と、柵の向こうに配置された机や椅子。
+- 出力：1200×800、137608 bytes、WebP quality 82
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：公正であるという結論、見学者の投票、判決、裁判を受ける人の特定を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Japanese courtroom from rear public gallery. Foreground rows of spectator seats with small rear-view visitors, low rail separates proceedings. At far end elevated wooden bench three EMPTY judge chairs, clerk desk immediately below center, facing counsel tables on left and right, central witness stand. No jury box, gavel, wig, flags, seals, nameplates or verdict. Focus layout, proceedings seats empty so no frontal faces.
+```
+
+### 第5回：soc6_politics_004.webp
+
+- 対象：social_g6_politics_024
+- caption：投票の記載台
+- alt：仕切りのある記載台に向かう人の後ろ姿。手元は見えない。
+- 出力：1200×800、128142 bytes、WebP quality 88
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：候補者名、投票内容、秘密の効果の説明、投票者の性別等による権利の制限を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Japanese polling station in present-day school gym, waist-high silver voting writing booths facing wall, each has tall opaque side partitions. One ordinary voter seen directly from behind, body and partitions fully hide hands paper and writing surface. Empty neighboring booth. No election posters names candidate lists text voting choice or logos.
+```
+
+### 第5回：soc6_politics_005.webp
+
+- 対象：social_g6_politics_025, social_g6_politics_032
+- caption：議場と法廷
+- alt：席が並ぶ議場と、机で資料を見る法廷の二つの場面。
+- 出力：1200×800、160100 bytes、WebP quality 76
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：機関名、A/Bの正解割り当て、質問や判決の文字、実在政治家の顔を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Two equal separate vignettes. LEFT Japanese Diet chamber viewed diagonally from behind front speaker, fan-shaped curved rows of wooden desks facing raised central presiding chair with tall back; podium below it, two rows of minister benches on each side. Tiny rear-view person at podium speaking, another rear-view member near seat with hand modestly raised, no front faces. RIGHT Japanese courtroom oblique view behind judicial bench with three rear-view adults examining completely blank papers, clerk desk below and opposing counsel desks across room. No wigs gavels flags emblems nameplates party symbols labels or decisions.
+```
+
+### 第5回：soc6_local_tax_001.webp
+
+- 対象：social_g6_local_tax_008, social_g6_local_tax_013, social_g6_local_tax_025
+- caption：図書館・道路・体育館
+- alt：本棚のある室内、道路、体育館を並べた三つの場面。
+- 出力：1200×800、174450 bytes、WebP quality 82
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：税と料金の割り当て、金額、無料/有料、利用者数の効果を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Three equal vignettes: public library interior shelves of blank-spined books; ordinary Japanese paved neighborhood road with sidewalks and no vehicles; school-style community gym interior wooden floor and basketball hoop. No charges money free symbols.
+```
+
+### 第5回：soc6_local_tax_003.webp
+
+- 対象：social_g6_local_tax_014
+- caption：集積所・収集車・処理施設
+- alt：ごみの集積所、収集車、処理施設の外観。
+- 出力：1200×800、168314 bytes、WebP quality 76
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：健康になった結果、正解の因果矢印、分別の答え、自治体名を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Three independent equally sized vignettes, no connecting arrows: Japanese neighborhood garbage collection area with tied plain translucent bags under green net; small Japanese rear-loading garbage truck with blank numberplate, no text; modern municipal waste treatment building exterior with chimney but no smoke. No outcomes or sorting instruction.
+```
+
+### 第5回：soc6_local_tax_004.webp
+
+- 対象：social_g6_local_tax_016, social_g6_local_tax_026
+- caption：資料を囲んで話す人々
+- alt：白い資料を置いた机を囲み、話し合っている人々。
+- 出力：1200×800、199396 bytes、WebP quality 88
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：案の文字、賛否数、予算の手続きの順序、完成した改善案を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Modern Japanese community meeting room, small group ordinary residents seen from behind gathered at table considering completely blank large planning papers. Neutral discussion, no voting hand counts, completed park design, writing, charts or arrows.
+```
+
+### 第5回：soc6_local_tax_005.webp
+
+- 対象：social_g6_local_tax_017, social_g6_local_tax_027
+- caption：建物の入口と廊下
+- alt：段差のない入口の奥に、複数の廊下が続いている。
+- 出力：1200×800、173212 bytes、WebP quality 88
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：バリアフリーの名、文字の案内、正解の改善表示、誘導矢印を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Modern Japanese municipal office entrance, sliding glass doors with flush level threshold. Through entrance see lobby branching into two ordinary corridors. Blank wall notice boards. No arrows, accessibility marks, text, ramps, labels or highlighted solution. No people needed.
+```
+
+### 第5回：soc6_local_tax_006.webp
+
+- 対象：social_g6_local_tax_018, social_g6_local_tax_023
+- caption：雨のあとの道路と建物
+- alt：雨のあとにぬれた道路、体育館、箱や毛布を置いた場所。
+- 出力：1200×800、181924 bytes、WebP quality 70
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：県・市の役割の割り当て、物資の調整矢印、浸水深や被害の創作値を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Quiet distant wide landscape of contemporary Japanese neighborhood after heavy rain. Wet road with shallow puddles and mud patches, community school gym used as shelter with entrance open and modest mats visible, separate covered storage area with plain boxes and bundled blankets. No people in distress, injury, dramatic flood, water depth markers, role labels, connecting arrows, rescue action or completed reconstruction. No text or symbols.
+```
+
+### 第5回：soc6_local_tax_007.webp
+
+- 対象：social_g6_local_tax_021, social_g6_local_tax_024
+- caption：施設の利用と床・手すり
+- alt：本棚のある施設や公園を使う人々と、擦れた床や手すり。
+- 出力：1200×800、169802 bytes、WebP quality 82
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：修理という正解作業、予算額、危険の誇張、建設後の成果の比較を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Three balanced vignettes: public library with blank-spined books and rear-view reader; park walkway with ordinary rear-view users; close view of moderately scuffed floor surface and worn handrail paint. Natural minor wear, no broken dangerous structures, repairs, tools, cost figures or before-after comparison.
+```
+
+### 第5回：soc6_local_tax_008.webp
+
+- 対象：social_g6_local_tax_022
+- caption：停留所と離れた建物
+- alt：停留所で待つ人の後ろ姿と、離れた場所にある建物。
+- 出力：1200×800、194942 bytes、WebP quality 82
+- 確認：問題文・選択肢との対応、文字・答え・結論を描かないことを確認。390px幅相当で目視確認。
+- 個別条件：高齢者割合や便数の創作値、新しいバス路線の正解、時刻表文字を描かない。
+- 使用プロンプト：
+```text
+Create ONE original educational illustration, landscape 3:2, warm restrained watercolor fine clear outlines, contemporary Japan, simple pale uncluttered backgrounds. No text letters numbers labels logos signs symbols arrows or pseudo-writing. All papers and signs completely blank. Anonymous people small natural rear views only, no recognizable faces. Calm observational scene, do not show inferred answers or successful solutions. Contemporary rural Japanese roadside bus shelter with entirely blank round sign and blank timetable panel; two older adults standing naturally viewed from behind waiting calmly. Farther away separate plain small clinic and modest neighborhood shop exterior. No logos medical cross, text, route lines, vehicles, schedules, demographic percentages or service solutions.
+```
+
+## 第5回の検証
+
+- `node tests/run.js`：成功908、失敗0（環境停止前に完了）。
+- 336問についてdiagram以外の全データが変更前と一致することを確認。
+- 17枚を390px幅相当で目視確認。WebP実体・1200×800・200,000バイト以下・対応表・alt/captionを既存テストで検査。
+- 環境再接続後、HTTP配信した実際の問題画面で対象28問を390px幅で撮影し、全画像の読み込みと元画像幅1200pxを確認。法廷と災害の代表画面を目視確認した。

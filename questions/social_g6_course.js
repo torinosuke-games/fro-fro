@@ -6960,6 +6960,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_constitution_008",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_constitution_001.webp",
+    "alt": "机で学ぶ子どもと、別の机で教材を見ている保護者の後ろ姿。",
+    "caption": "学ぶ子どもと教材を見る保護者",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "constitution",
@@ -7050,6 +7057,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_constitution_011",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_constitution_001.webp",
+    "alt": "机で学ぶ子どもと、別の机で教材を見ている保護者の後ろ姿。",
+    "caption": "学ぶ子どもと教材を見る保護者",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "constitution",
@@ -7073,6 +7087,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_constitution_012",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_constitution_002.webp",
+    "alt": "授業の場、給食、家庭の机、筆記用具を並べた四つの場面。",
+    "caption": "学校と家庭で使うもの",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "constitution",
@@ -7096,6 +7117,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_constitution_013",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_constitution_003.webp",
+    "alt": "白い紙を持って掲示板に向かう子どもの後ろ姿。",
+    "caption": "掲示板の前の子ども",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "constitution",
@@ -7366,6 +7394,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_constitution_023",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_constitution_005.webp",
+    "alt": "階段のある公園入口と、車いすを使う人の後ろ姿。",
+    "caption": "公園の入口",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "constitution",
@@ -7389,6 +7424,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_constitution_024",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_constitution_003.webp",
+    "alt": "白い紙を持って掲示板に向かう子どもの後ろ姿。",
+    "caption": "掲示板の前の子ども",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "constitution",
@@ -7412,6 +7454,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_constitution_025",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_constitution_001.webp",
+    "alt": "机で学ぶ子どもと、別の机で教材を見ている保護者の後ろ姿。",
+    "caption": "学ぶ子どもと教材を見る保護者",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "constitution",
@@ -7481,6 +7530,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_constitution_028",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_constitution_006.webp",
+    "alt": "机の上に並んだ、大きさの異なる二枚の白い用紙。",
+    "caption": "大きさの異なる学習用紙",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "constitution",
@@ -7866,6 +7922,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_politics_017",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_politics_001.webp",
+    "alt": "中央とその両側に人が座る法廷を、席の後ろから見た様子。",
+    "caption": "法廷に並ぶ席",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "politics",
@@ -7896,6 +7959,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_politics_018",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_politics_002.webp",
+    "alt": "学校、研究室、診療の場、働く場を並べた四つの場面。",
+    "caption": "学校・研究・診療・仕事の場",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "politics",
@@ -7926,6 +7996,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_politics_019",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_politics_002.webp",
+    "alt": "学校、研究室、診療の場、働く場を並べた四つの場面。",
+    "caption": "学校・研究・診療・仕事の場",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "politics",
@@ -8002,6 +8079,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_politics_022",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_politics_003.webp",
+    "alt": "後方の傍聴席と、柵の向こうに配置された机や椅子。",
+    "caption": "法廷と傍聴席",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "politics",
@@ -8048,6 +8132,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_politics_024",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_politics_004.webp",
+    "alt": "仕切りのある記載台に向かう人の後ろ姿。手元は見えない。",
+    "caption": "投票の記載台",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "politics",
@@ -8071,6 +8162,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_politics_025",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_politics_005.webp",
+    "alt": "席が並ぶ議場と、机で資料を見る法廷の二つの場面。",
+    "caption": "議場と法廷",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "politics",
@@ -8232,6 +8330,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_politics_032",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_politics_005.webp",
+    "alt": "席が並ぶ議場と、机で資料を見る法廷の二つの場面。",
+    "caption": "議場と法廷",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "politics",
@@ -8511,6 +8616,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_008",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_001.webp",
+    "alt": "本棚のある室内、道路、体育館を並べた三つの場面。",
+    "caption": "図書館・道路・体育館",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8661,6 +8773,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_013",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_001.webp",
+    "alt": "本棚のある室内、道路、体育館を並べた三つの場面。",
+    "caption": "図書館・道路・体育館",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8684,6 +8803,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_014",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_003.webp",
+    "alt": "ごみの集積所、収集車、処理施設の外観。",
+    "caption": "集積所・収集車・処理施設",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8730,6 +8856,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_016",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_004.webp",
+    "alt": "白い資料を置いた机を囲み、話し合っている人々。",
+    "caption": "資料を囲んで話す人々",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8753,6 +8886,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_017",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_005.webp",
+    "alt": "段差のない入口の奥に、複数の廊下が続いている。",
+    "caption": "建物の入口と廊下",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8781,6 +8921,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_018",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_006.webp",
+    "alt": "雨のあとにぬれた道路、体育館、箱や毛布を置いた場所。",
+    "caption": "雨のあとの道路と建物",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8850,6 +8997,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_021",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_007.webp",
+    "alt": "本棚のある施設や公園を使う人々と、擦れた床や手すり。",
+    "caption": "施設の利用と床・手すり",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8873,6 +9027,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_022",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_008.webp",
+    "alt": "停留所で待つ人の後ろ姿と、離れた場所にある建物。",
+    "caption": "停留所と離れた建物",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8896,6 +9057,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_023",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_006.webp",
+    "alt": "雨のあとにぬれた道路、体育館、箱や毛布を置いた場所。",
+    "caption": "雨のあとの道路と建物",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8919,6 +9087,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_024",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_007.webp",
+    "alt": "本棚のある施設や公園を使う人々と、擦れた床や手すり。",
+    "caption": "施設の利用と床・手すり",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8942,6 +9117,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_025",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_001.webp",
+    "alt": "本棚のある室内、道路、体育館を並べた三つの場面。",
+    "caption": "図書館・道路・体育館",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8965,6 +9147,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_026",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_004.webp",
+    "alt": "白い資料を置いた机を囲み、話し合っている人々。",
+    "caption": "資料を囲んで話す人々",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
@@ -8988,6 +9177,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_local_tax_027",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_local_tax_005.webp",
+    "alt": "段差のない入口の奥に、複数の廊下が続いている。",
+    "caption": "建物の入口と廊下",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "local_tax",
