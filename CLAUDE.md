@@ -9,7 +9,7 @@
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
 - 仕様：`SPEC_tower.md`（夜の防衛戦＝タワーディフェンス。判断442・443。T-1 仕様書・T-2 ロジック〔`js/tower.js`・`tests/cases/tower.js`・`tests/tools/tower-sim.js`〕は完了。絵と効果音〔ChatGPT。`img/adventure/tower/`・`js/ui/tower-sound.js`。判断444〕は取り込み済み。T-3〔戦場の画面 `js/ui/tower.js`・判断445〕・T-4〔問題で灯・今夜の襲撃と報酬・判断446〕・T-5〔依頼「防衛」・手動確認 18l・判断449〕は完了。完成報告は `REPORT_tower.md`（ブランチ `claude/tower-art`、実機で確認待ち）。依頼書：`TOWER_ART_REQUESTS_1.md`）、`SPEC_quest_trust.md`（住民の信頼と特別な依頼。判断440）、`SPEC_quest.md`（住民の依頼クエスト＝酒場。判断434〜438。Q-1〜Q-4 すべて完了（ロジック `js/quests.js`・酒場の画面 `js/ui/quest.js`・`js/quest-texts.js`・学習と戦闘とのつながり・手動確認 `tests/MANUAL.md` 18j）。完成報告は `REPORT_quest.md`。ブランチ `claude/quests`、実機で確認待ち）、`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 531。514〜530 は ChatGPT（Codex）の小6社会、206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 532。514〜530 は ChatGPT（Codex）の小6社会、206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題の作成を ChatGPT に頼むときの依頼書（小6社会・英語、中1〜中3の5教科。単元・数・図の決まり・指示文）：`QUESTION_REQUESTS_1.md`
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
 - リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`。算数の文章題55問への図（判断223）：`MATH_WORD_DIAGRAMS.md`（図の種類・使った問題）、依頼の記録は `DIAGRAM_REQUESTS.md`（完了）
@@ -78,6 +78,7 @@
 - バランス計算：`node tests/simulate.js`（目標外があれば終了コード1）
 - 画面の確認：`index.html` を開く。テスト操作は `index.html?debug=1` のデバッグ画面。手順は `tests/MANUAL.md`
 - スマホの確認ページ（Artifact）：ふつう https://claude.ai/artifact/XLuEepmTkNsku4cPPTfqCF 、デバッグ用 https://claude.ai/artifact/4V4WJ32ByTk6YAk7GzfuuW （index.html に `window.FF_DEBUG = true` を足したもの。判断188。`db` の機能付きで、問題のレビューの記録が `reviews` コレクションに入る＝判断202。`ArtifactData` の list で読む。再公開では capabilities を省いて機能を保つ）。変えたファイルを両方に送る。**確認ページは、ファイル数の上限（511）のため、JS・問題データを `node tests/tools/build-artifact-stage.cjs <出力フォルダ> [--debug]` で12個ほどのかたまり（bundle-N.js）にして送る**（判断500。個別の js/・questions/ のファイルは null で消してある。画像・css は、いままでどおり個別）
+- **小6社会（PR #188）からは、確認ページに送らない**（ファイル数の上限。判断531）。新しい問題・絵は、main に入れたあと公開ページ（`?debug=1`）で確かめる
 - 問題データの確認済みの数（`tests/cases/questions.js`）は 1072
 
 ## ファイル構成の要約
