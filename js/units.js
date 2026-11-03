@@ -141,6 +141,20 @@
         { id: 'industry', name: '工業生産と自動車', description: '工業地域・中小工場・自動車・貿易', icon: '🏭' },
         { id: 'info', name: '情報と産業', description: '放送・新聞・インターネット・情報の生かし方', icon: '📡' },
         { id: 'environment', name: '森林と環境', description: '森林・公害・環境を守る', icon: '🌲' }
+      ],
+      6: [
+        {"id": "prehistoric", "name": "縄文〜古墳", "description": "くらしの変化と国の成立", "icon": "史"},
+        {"id": "asuka_nara", "name": "飛鳥・奈良", "description": "天皇中心の国づくりと大陸との交流", "icon": "史"},
+        {"id": "heian", "name": "平安", "description": "貴族の政治と文化", "icon": "史"},
+        {"id": "kamakura", "name": "鎌倉", "description": "武士の政治", "icon": "史"},
+        {"id": "muromachi_sengoku", "name": "室町・戦国", "description": "文化と全国統一", "icon": "史"},
+        {"id": "edo", "name": "江戸", "description": "幕府の政治と人々のくらし", "icon": "史"},
+        {"id": "meiji", "name": "明治", "description": "近代の国づくり", "icon": "史"},
+        {"id": "modern", "name": "大正・昭和・戦後・現代", "description": "戦争と平和・戦後の社会", "icon": "史"},
+        {"id": "constitution", "name": "日本国憲法", "description": "憲法の三つの原則", "icon": "公"},
+        {"id": "politics", "name": "国会・内閣・裁判所", "description": "国の政治のしくみ", "icon": "公"},
+        {"id": "local_tax", "name": "くらしと税金・地方自治", "description": "公共の仕事と住民の参加", "icon": "公"},
+        {"id": "international", "name": "世界の中の日本", "description": "国際協力とSDGs", "icon": "公"}
       ]
     },
     english: {

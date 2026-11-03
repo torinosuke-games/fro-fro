@@ -316,3 +316,23 @@ AI が作成した問題のうち、人が事実関係・表現を確認すべ�
 ## リニューアル100問（2026-10-03）
 
 `math_g4_frontier_*`：小4算数18単元100問。計算、図の範囲、選択肢の構造、入力変換、ふりがなを検証。人による最終的な教材レビューは未実施のため `reviewed: false`。`QUESTIONS_100.md` に番号・問題・答え・単元を掲載。確認観点：学年配置、図の伝わりやすさ、語彙、ヒントの段階、誤答選択肢の妥当性。
+
+## 小6社会 第1回（Codex、reviewed:false）
+新作 social_g6_prehistoric_001〜028、social_g6_asuka_nara_001〜028。
+重点確認IDと観点はルートの QUESTION_REVIEW_1.md に記録。
+
+## 小6社会 第4回（Codex、reviewed:false）
+新作social_g6_meiji_001〜028、social_g6_modern_001〜028。
+条約改正、選挙権、植民地支配、戦争・原爆被害、戦後制度・沖縄復帰の事実確認と、小6の教科書範囲・発展の難易度の確認はQUESTION_REVIEW_1.md「第4回」を参照。外部資料照合・専門家レビューは未実施。
+
+## 小6社会 第5回（Codex、reviewed:false）
+新作social_g6_constitution_003〜030、social_g6_politics_007〜034と、修正modern_001・017・021。
+事実と教科書範囲の確認事項はQUESTION_REVIEW_1.md「第5回」。象徴天皇、教育・勤労の義務と権利、無償の範囲、選挙権、国会・内閣・裁判所の関係、裁判の例外・条件を重点確認する。外部資料照合・専門家レビューは未実施。
+
+## 小6社会 第6回（Codex、reviewed:false）
+点検・修正：constitution_017〜030、politics_020〜034（すべてsocial_g6_から始まるID）。
+新作：social_g6_local_tax_001〜028、social_g6_international_002〜029。
+地方自治と税、国際機関と支援、難民・環境・教育の説明などの最終確認事項はQUESTION_REVIEW_1.md「第6回」。外部資料照合・専門家レビューは未実施。全12単元の教材レビュー前のため未レビューを維持。
+
+## 小6社会 第7回（国別の内容への入れ替え）
+local_tax_003・004の問い方を修正。international_005・008〜014を国別の文化・貿易・移住と青年海外協力隊に入れ替えた。事実の重点確認事項はQUESTION_REVIEW_1.md「第7回」。全問reviewed:falseを維持。

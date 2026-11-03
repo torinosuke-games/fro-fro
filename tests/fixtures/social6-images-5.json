@@ -1,0 +1,64 @@
+{
+  "soc6_constitution_001.webp": [
+    "social_g6_constitution_008",
+    "social_g6_constitution_011",
+    "social_g6_constitution_025"
+  ],
+  "soc6_constitution_002.webp": [
+    "social_g6_constitution_012"
+  ],
+  "soc6_constitution_003.webp": [
+    "social_g6_constitution_013",
+    "social_g6_constitution_024"
+  ],
+  "soc6_constitution_005.webp": [
+    "social_g6_constitution_023"
+  ],
+  "soc6_constitution_006.webp": [
+    "social_g6_constitution_028"
+  ],
+  "soc6_politics_001.webp": [
+    "social_g6_politics_017"
+  ],
+  "soc6_politics_002.webp": [
+    "social_g6_politics_018",
+    "social_g6_politics_019"
+  ],
+  "soc6_politics_003.webp": [
+    "social_g6_politics_022"
+  ],
+  "soc6_politics_004.webp": [
+    "social_g6_politics_024"
+  ],
+  "soc6_politics_005.webp": [
+    "social_g6_politics_025",
+    "social_g6_politics_032"
+  ],
+  "soc6_local_tax_001.webp": [
+    "social_g6_local_tax_008",
+    "social_g6_local_tax_013",
+    "social_g6_local_tax_025"
+  ],
+  "soc6_local_tax_003.webp": [
+    "social_g6_local_tax_014"
+  ],
+  "soc6_local_tax_004.webp": [
+    "social_g6_local_tax_016",
+    "social_g6_local_tax_026"
+  ],
+  "soc6_local_tax_005.webp": [
+    "social_g6_local_tax_017",
+    "social_g6_local_tax_027"
+  ],
+  "soc6_local_tax_006.webp": [
+    "social_g6_local_tax_018",
+    "social_g6_local_tax_023"
+  ],
+  "soc6_local_tax_007.webp": [
+    "social_g6_local_tax_021",
+    "social_g6_local_tax_024"
+  ],
+  "soc6_local_tax_008.webp": [
+    "social_g6_local_tax_022"
+  ]
+}
