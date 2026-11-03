@@ -1,20 +1,20 @@
 'use strict';
 const L=require('../lib/loader');
 const fs=require('node:fs'),path=require('node:path');
-const imagePlan={...require('../fixtures/social6-images-1.json'),...require('../fixtures/social6-images-2.json'),...require('../fixtures/social6-images-3.json'),...require('../fixtures/social6-images-4.json'),...require('../fixtures/social6-images-5.json')};
+const imagePlan={...require('../fixtures/social6-images-1.json'),...require('../fixtures/social6-images-2.json'),...require('../fixtures/social6-images-3.json'),...require('../fixtures/social6-images-4.json'),...require('../fixtures/social6-images-5.json'),...require('../fixtures/social6-images-6.json')};
 module.exports=({test,assert})=>{
  const c=L.load(L.LOGIC_FILES_WITH_FIXES),U=c.FF.util,all=c.QUESTION_BANK,qs=all.filter(q=>q.collection==='course_so6_1');
  test('小6社会第1回：12単元336問、各基礎8・標準12・発展8、未レビュー・指定問題だけ画像',()=>{
   assert.equal(qs.length,336);
   for(const unit of ['prehistoric','asuka_nara','heian','kamakura','muromachi_sengoku','edo','meiji','modern','constitution','politics','local_tax','international'])for(const [d,n] of [['basic',8],['standard',12],['advanced',8]])assert.equal(qs.filter(q=>q.unit===unit&&q.difficulty===d).length,n,unit+d);
   const planned=new Map(Object.entries(imagePlan).flatMap(([file,ids])=>ids.map(id=>[id,file])));
-  assert.equal(Object.keys(imagePlan).length,87);assert.equal(planned.size,142);
+  assert.equal(Object.keys(imagePlan).length,96);assert.equal(planned.size,161);
   qs.forEach(q=>{assert.equal(q.reviewed,false);if(planned.has(q.id)){assert.ok(q.diagram,q.id);assert.equal(q.diagram.kind,'image');assert.equal(q.diagram.src,'img/diagrams/'+planned.get(q.id));assert.equal(q.diagram.study,true);}else assert.ok(!q.diagram,q.id);assert.deepStrictEqual(Array.from(c.FF.learning.validateQuestion(q)),[],q.id);});
  });
  test('小6社会画像：WebP実体・1200×800・200KB以下・説明文に答えを含めない',()=>{
   qs.filter(q=>q.diagram&&q.diagram.kind==='image').forEach(q=>{
    const d=q.diagram;
-   assert.ok(/^img\/diagrams\/soc6_(prehistoric|asuka_nara|heian|kamakura|muromachi_sengoku|edo|meiji|modern|constitution|politics|local_tax)_\d{3}\.webp$/.test(d.src),q.id);
+   assert.ok(/^img\/diagrams\/soc6_(prehistoric|asuka_nara|heian|kamakura|muromachi_sengoku|edo|meiji|modern|constitution|politics|local_tax|international)_\d{3}\.webp$/.test(d.src),q.id);
    const file=path.resolve(__dirname,'../..',d.src);
    assert.ok(fs.existsSync(file),q.id+' file');assert.equal(path.extname(file),'.webp');
    const b=fs.readFileSync(file);assert.ok(b.length>0&&b.length<=200000,q.id+' bytes');

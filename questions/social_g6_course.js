@@ -9230,6 +9230,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_002",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_001.webp",
+    "alt": "二つの港と、衣服や製品が並ぶ店の場面。",
+    "caption": "港と店にある品物",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9260,6 +9267,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_003",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_001.webp",
+    "alt": "二つの港と、衣服や製品が並ぶ店の場面。",
+    "caption": "港と店にある品物",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9290,6 +9304,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_004",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_001.webp",
+    "alt": "二つの港と、衣服や製品が並ぶ店の場面。",
+    "caption": "港と店にある品物",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9320,6 +9341,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_005",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_002.webp",
+    "alt": "同じ色の陸地と海を示した世界の位置図。国境や地名は表示していない。",
+    "caption": "世界の陸地と海（概略）",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9434,6 +9462,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_008",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_002.webp",
+    "alt": "同じ色の陸地と海を示した世界の位置図。国境や地名は表示していない。",
+    "caption": "世界の陸地と海（概略）",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9462,6 +9497,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_009",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_003.webp",
+    "alt": "水の設備の前で二人が並び、工具と部品を一緒に確かめている。",
+    "caption": "水の設備を一緒に確かめる人々",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9492,6 +9534,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_010",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_004.webp",
+    "alt": "船、円筒形の貯蔵施設、工場を別々の場面に示している。",
+    "caption": "船・貯蔵施設・工場",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9528,6 +9577,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_011",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_001.webp",
+    "alt": "二つの港と、衣服や製品が並ぶ店の場面。",
+    "caption": "港と店にある品物",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9551,6 +9607,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_012",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_005.webp",
+    "alt": "ご飯、葉の入った汁物、白菜や野菜のおかずが器に盛られている。",
+    "caption": "ご飯・汁物・野菜の食卓",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9574,6 +9637,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_013",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_006.webp",
+    "alt": "野球場で話したり練習したりする人々。",
+    "caption": "野球場の人々",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9627,6 +9697,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_015",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_007.webp",
+    "alt": "診療の相談をする人々と、自分たちで蛇口から水をくむ人々。",
+    "caption": "診療と水をくむ場面",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9703,6 +9780,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_018",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_008.webp",
+    "alt": "電気を使う家庭、集められた廃材、製品を作る場を並べている。",
+    "caption": "家庭・廃材・製造の場",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9779,6 +9863,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_021",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_009.webp",
+    "alt": "学校へ向かう人々、通学路、学用品、食事の四つの場面。",
+    "caption": "学校と通学路・学用品・食事",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9802,6 +9893,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_022",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_004.webp",
+    "alt": "船、円筒形の貯蔵施設、工場を別々の場面に示している。",
+    "caption": "船・貯蔵施設・工場",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9825,6 +9923,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_023",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_007.webp",
+    "alt": "診療の相談をする人々と、自分たちで蛇口から水をくむ人々。",
+    "caption": "診療と水をくむ場面",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9848,6 +9953,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_024",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_009.webp",
+    "alt": "学校へ向かう人々、通学路、学用品、食事の四つの場面。",
+    "caption": "学校と通学路・学用品・食事",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9871,6 +9983,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_025",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_003.webp",
+    "alt": "水の設備の前で二人が並び、工具と部品を一緒に確かめている。",
+    "caption": "水の設備を一緒に確かめる人々",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9917,6 +10036,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_027",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_008.webp",
+    "alt": "電気を使う家庭、集められた廃材、製品を作る場を並べている。",
+    "caption": "家庭・廃材・製造の場",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",
@@ -9963,6 +10089,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "social_g6_international_029",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/soc6_international_009.webp",
+    "alt": "学校へ向かう人々、通学路、学用品、食事の四つの場面。",
+    "caption": "学校と通学路・学用品・食事",
+    "study": true
+  },
   "subject": "social",
   "gradeLevel": 6,
   "unit": "international",

@@ -1,6 +1,6 @@
 # 小6社会 画像制作記録
 
-第1回〜第5回の制作内容を記録する。古墳の保留は利用者提供写真との照合で解消済み。現状は末尾の追補を参照。
+第1回〜第6回の制作内容を記録する。古墳の保留は利用者提供写真との照合で解消済み。現状は末尾の追補を参照。
 
 # 第1回 画像制作記録
 
@@ -1577,3 +1577,155 @@ Create ONE original educational illustration, landscape 3:2, warm restrained wat
 - 336問についてdiagram以外の全データが変更前と一致することを確認。
 - 17枚を390px幅相当で目視確認。WebP実体・1200×800・200,000バイト以下・対応表・alt/captionを既存テストで検査。
 - 環境再接続後、HTTP配信した実際の問題画面で対象28問を390px幅で撮影し、全画像の読み込みと元画像幅1200pxを確認。法廷と災害の代表画面を目視確認した。
+
+
+# 第6回 画像制作記録（2026-11-03）
+
+international 9枚を19問へ登録。場面8枚は個別に画像生成、位置図1枚はNatural Earthの実データを直接描画した。全て1200×800、200,000バイト以下。全問reviewed:falseを保持。
+
+|ファイル名|対象問題|説明|bytes|
+|---|---|---|---:|
+|soc6_international_001.webp|social_g6_international_002<br>social_g6_international_003<br>social_g6_international_004<br>social_g6_international_011|港と店にある品物|184832|
+|soc6_international_002.webp|social_g6_international_005<br>social_g6_international_008|世界の陸地と海（概略）|20412|
+|soc6_international_003.webp|social_g6_international_009<br>social_g6_international_025|水の設備を一緒に確かめる人々|189392|
+|soc6_international_004.webp|social_g6_international_010<br>social_g6_international_022|船・貯蔵施設・工場|155124|
+|soc6_international_005.webp|social_g6_international_012|ご飯・汁物・野菜の食卓|181242|
+|soc6_international_006.webp|social_g6_international_013|野球場の人々|170704|
+|soc6_international_007.webp|social_g6_international_015<br>social_g6_international_023|診療と水をくむ場面|161252|
+|soc6_international_008.webp|social_g6_international_018<br>social_g6_international_027|家庭・廃材・製造の場|169922|
+|soc6_international_009.webp|social_g6_international_021<br>social_g6_international_024<br>social_g6_international_029|学校と通学路・学用品・食事|183330|
+
+### 第6回：soc6_international_001.webp
+
+- 対象：social_g6_international_002, social_g6_international_003, social_g6_international_004, social_g6_international_011
+- caption：港と店にある品物
+- alt：二つの港と、衣服や製品が並ぶ店の場面。
+- 個別確認：輸出入名、国旗、原産国ラベル、正解の物流方向を描かない。
+- 出力：1200×800、184832 bytes。
+
+個別生成後、縦横比を維持して縮小・WebP変換。quality 76。
+
+```text
+Create ONE original Japanese grade-six educational illustration landscape 3:2, warm restrained watercolor fine clear outlines, contemporary ordinary settings, readable at smartphone size. Absolutely no text letters numbers labels flags logos brands signs or pseudo-writing. All papers, packages, books, uniforms, signs blank. People anonymous small natural rear views, ordinary contemporary clothes, no exaggerated ethnic appearance or nationality encoded by skin or dress. Equal agency and dignity. No distress poverty stereotypes illness injuries or savior hierarchy. No arrows, answer labels or inferred outcomes. Four balanced vignettes: two different ordinary commercial seaports each with a plain cargo ship and warehouse; stacks of plain clothing and generic boxed electrical products; shop shelves with those generic goods. No arrows or export/import direction, flags or names.
+```
+
+### 第6回：soc6_international_002.webp
+
+- 対象：social_g6_international_005, social_g6_international_008
+- caption：世界の陸地と海（概略）
+- alt：同じ色の陸地と海を示した世界の位置図。国境や地名は表示していない。
+- 個別確認：国名・首都・国旗、正解国だけの着色、産物や文字のマークを描かない。
+- 出力：1200×800、20412 bytes。
+
+Natural Earth ne_110m_land.geojson（public domain）を直接描画。正距円筒図法、経度-30〜330・緯度-90〜90。国境・地名・国旗・特定国の強調なし。生成画像の海岸線は使わない。再現スクリプト：tests/tools/social6-world-map.py。
+
+出典：https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_land.geojson
+
+元データSHA256：9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9
+
+### 第6回：soc6_international_003.webp
+
+- 対象：social_g6_international_009, social_g6_international_025
+- caption：水の設備を一緒に確かめる人々
+- alt：水の設備の前で二人が並び、工具と部品を一緒に確かめている。
+- 個別確認：青年海外協力隊・JICAの文字やロゴ、支援者が上位になる構図、完成後の自立という結論を描かない。
+- 出力：1200×800、189392 bytes。
+
+個別生成後、縦横比を維持して縮小・WebP変換。quality 76。
+
+```text
+Create ONE original Japanese grade-six educational illustration landscape 3:2, warm restrained watercolor fine clear outlines, contemporary ordinary settings, readable at smartphone size. Absolutely no text letters numbers labels flags logos brands signs or pseudo-writing. All papers, packages, books, uniforms, signs blank. People anonymous small natural rear views, ordinary contemporary clothes, no exaggerated ethnic appearance or nationality encoded by skin or dress. Equal agency and dignity. No distress poverty stereotypes illness injuries or savior hierarchy. No arrows, answer labels or inferred outcomes. At a modest village water pump, two adult colleagues in ordinary work shirts seen from behind at equal height both checking a pipe fitting and simple tools together. Local worker actively holding tool and visiting colleague holding another part; neither directing or looming over other. Pump service inspection only, no completed success scene, no step sequence.
+```
+
+### 第6回：soc6_international_004.webp
+
+- 対象：social_g6_international_010, social_g6_international_022
+- caption：船・貯蔵施設・工場
+- alt：船、円筒形の貯蔵施設、工場を別々の場面に示している。
+- 個別確認：原油のラベル、価格変化、主な輸入国の強調、正解の因果矢印を描かない。
+- 出力：1200×800、155124 bytes。
+
+個別生成後、縦横比を維持して縮小・WebP変換。quality 76。
+
+```text
+Create ONE original Japanese grade-six educational illustration landscape 3:2, warm restrained watercolor fine clear outlines, contemporary ordinary settings, readable at smartphone size. Absolutely no text letters numbers labels flags logos brands signs or pseudo-writing. All papers, packages, books, uniforms, signs blank. People anonymous small natural rear views, ordinary contemporary clothes, no exaggerated ethnic appearance or nationality encoded by skin or dress. Equal agency and dignity. No distress poverty stereotypes illness injuries or savior hierarchy. No arrows, answer labels or inferred outcomes. Three equal vignettes: modern oil tanker with long low deck pipes and superstructure at stern, no container stacks; plain cylindrical storage tanks; generic industrial factory exterior. Ship registration areas blank, no flags or company. No labels indicating resource, arrows, pollution, price marks or dramatic smoke.
+```
+
+### 第6回：soc6_international_005.webp
+
+- 対象：social_g6_international_012
+- caption：ご飯・汁物・野菜の食卓
+- alt：ご飯、葉の入った汁物、白菜や野菜のおかずが器に盛られている。
+- 個別確認：スプーン・箸・フォークなど選択肢の食具、国旗、食事作法の正解、文字を描かない。
+- 出力：1200×800、181242 bytes。
+
+個別生成後、縦横比を維持して縮小・WebP変換。quality 82。
+
+```text
+Create ONE original Japanese grade-six educational illustration landscape 3:2, warm restrained watercolor fine clear outlines, contemporary ordinary settings, readable at smartphone size. Absolutely no text letters numbers labels flags logos brands signs or pseudo-writing. All papers, packages, books, uniforms, signs blank. People anonymous small natural rear views, ordinary contemporary clothes, no exaggerated ethnic appearance or nationality encoded by skin or dress. Equal agency and dignity. No distress poverty stereotypes illness injuries or savior hierarchy. No arrows, answer labels or inferred outcomes. Overhead view of modest contemporary Korean home meal on plain wooden table. White steamed short-grain rice in plain bowl on left; clear seaweed soup in separate bowl on right; small dish of sliced napa cabbage kimchi with recognizable layered white ribs green leaf edges and red seasoning, and two small vegetable side dishes. Based on ordinary Korean rice soup banchan table. NO utensils whatsoever: no spoon chopsticks forks knives ladles tongs or cutlery rests. No people, text flags logos, exaggerated feast.
+```
+
+資料：韓国観光公社 https://english.visitkorea.or.kr/svc/contents/contentsView.do?menuSn=460&vcontsId=140727 の米飯・汁物・キムチ・副菜の説明を参照。特定の写真の複製ではない。食具は描かない。
+
+### 第6回：soc6_international_006.webp
+
+- 対象：social_g6_international_013
+- caption：野球場の人々
+- alt：野球場で話したり練習したりする人々。
+- 個別確認：国籍を外見で決め付ける服装、有名選手、チーム名、交流の方向の正解矢印を描かない。
+- 出力：1200×800、170704 bytes。
+
+個別生成後、縦横比を維持して縮小・WebP変換。quality 76。
+
+```text
+Create ONE original Japanese grade-six educational illustration landscape 3:2, warm restrained watercolor fine clear outlines, contemporary ordinary settings, readable at smartphone size. Absolutely no text letters numbers labels flags logos brands signs or pseudo-writing. All papers, packages, books, uniforms, signs blank. People anonymous small natural rear views, ordinary contemporary clothes, no exaggerated ethnic appearance or nationality encoded by skin or dress. Equal agency and dignity. No distress poverty stereotypes illness injuries or savior hierarchy. No arrows, answer labels or inferred outcomes. Ordinary baseball field, small group of adult players seen from behind chatting and practicing together near base line. Plain unmarked baseball uniforms and caps, gloves, no letters numbers team logos flags famous athletes or nationality coding. No arrows or winners.
+```
+
+### 第6回：soc6_international_007.webp
+
+- 対象：social_g6_international_015, social_g6_international_023
+- caption：診療と水をくむ場面
+- alt：診療の相談をする人々と、自分たちで蛇口から水をくむ人々。
+- 個別確認：感染予防の正解矢印、治療済みの結果、病名・薬品名、苦痛の強調を描かない。
+- 出力：1200×800、161252 bytes。
+
+個別生成後、縦横比を維持して縮小・WebP変換。quality 76。
+
+```text
+Create ONE original Japanese grade-six educational illustration landscape 3:2, warm restrained watercolor fine clear outlines, contemporary ordinary settings, readable at smartphone size. Absolutely no text letters numbers labels flags logos brands signs or pseudo-writing. All papers, packages, books, uniforms, signs blank. People anonymous small natural rear views, ordinary contemporary clothes, no exaggerated ethnic appearance or nationality encoded by skin or dress. Equal agency and dignity. No distress poverty stereotypes illness injuries or savior hierarchy. No arrows, answer labels or inferred outcomes. Two equally sized separate vignettes in contemporary community: a local clinician actively consulting with a seated adult and child in clean ordinary clinic, all rear views, blank papers, no injections or pain; residents themselves operating a communal tap and filling clean plain containers. No foreign rescuer, no medical cross, disease marks or causal arrows.
+```
+
+### 第6回：soc6_international_008.webp
+
+- 対象：social_g6_international_018, social_g6_international_027
+- caption：家庭・廃材・製造の場
+- alt：電気を使う家庭、集められた廃材、製品を作る場を並べている。
+- 個別確認：節約の正解行動、排出量、削減の結果、国内外への結論線を描かない。
+- 出力：1200×800、169922 bytes。
+
+個別生成後、縦横比を維持して縮小・WebP変換。quality 76。
+
+```text
+Create ONE original Japanese grade-six educational illustration landscape 3:2, warm restrained watercolor fine clear outlines, contemporary ordinary settings, readable at smartphone size. Absolutely no text letters numbers labels flags logos brands signs or pseudo-writing. All papers, packages, books, uniforms, signs blank. People anonymous small natural rear views, ordinary contemporary clothes, no exaggerated ethnic appearance or nationality encoded by skin or dress. Equal agency and dignity. No distress poverty stereotypes illness injuries or savior hierarchy. No arrows, answer labels or inferred outcomes. Three equal vignettes without connecting arrows: ordinary home lamp and refrigerator in use; modest collection of discarded plain cardboard metal and glass materials; generic manufacturing workshop with equipment and rear-view worker. No recycling icon, switch-off action, waste reduction advice, smoke or numerical claims.
+```
+
+### 第6回：soc6_international_009.webp
+
+- 対象：social_g6_international_021, social_g6_international_024, social_g6_international_029
+- caption：学校と通学路・学用品・食事
+- alt：学校へ向かう人々、通学路、学用品、食事の四つの場面。
+- 個別確認：通学率や人数、支援が成功した結果、難民を外見で識別する描写を描かない。
+- 出力：1200×800、183330 bytes。
+
+個別生成後、縦横比を維持して縮小・WebP変換。quality 70。
+
+```text
+Create ONE original Japanese grade-six educational illustration landscape 3:2, warm restrained watercolor fine clear outlines, contemporary ordinary settings, readable at smartphone size. Absolutely no text letters numbers labels flags logos brands signs or pseudo-writing. All papers, packages, books, uniforms, signs blank. People anonymous small natural rear views, ordinary contemporary clothes, no exaggerated ethnic appearance or nationality encoded by skin or dress. Equal agency and dignity. No distress poverty stereotypes illness injuries or savior hierarchy. No arrows, answer labels or inferred outcomes. Four equal vignettes showing ordinary community conditions: modest well-maintained school exterior with children entering and local teacher rear view; separate school walking path; blank notebooks pencils and plain schoolbag; simple everyday rice vegetable meal. Children actively learning or walking naturally, no poverty caricatures, war, suffering, aid handout, refugee labels, text or completion claims.
+```
+
+## 第6回の検証・最終集計
+
+- `node tests/run.js`：908件成功、0件失敗。
+- 全336問でdiagram以外のデータが制作前と一致。
+- 19問の実際の問題画面を390px幅で撮影し、全画像の読み込み・元画像幅1200pxを確認。世界位置図と韓国の食卓の代表画面を目視確認。画像一覧でも場面の文字・食具・人物表現を確認。
+- 最終96枚・161問／336問（47.9%）。場面89枚・教科書の図7枚。見送り8枚の内訳と理由はPICTURE_PLAN_SOCIAL6.md末尾。第6回は9枚すべて採用。
