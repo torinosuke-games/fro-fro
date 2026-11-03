@@ -1729,3 +1729,35 @@ Create ONE original Japanese grade-six educational illustration landscape 3:2, w
 - 全336問でdiagram以外のデータが制作前と一致。
 - 19問の実際の問題画面を390px幅で撮影し、全画像の読み込み・元画像幅1200pxを確認。世界位置図と韓国の食卓の代表画面を目視確認。画像一覧でも場面の文字・食具・人物表現を確認。
 - 最終96枚・161問／336問（47.9%）。場面89枚・教科書の図7枚。見送り8枚の内訳と理由はPICTURE_PLAN_SOCIAL6.md末尾。第6回は9枚すべて採用。
+
+
+# 第6回修正：international_007・009（判断530、2026-11-03）
+
+旧稿は問題が扱う日本以外の地域に対し、日本の住宅地・学校・流し台・和食を描いていたため不採用として差し替え。特定国の実景の復元ではなく、日本以外の農村地域を想定した教育用場面。人物の服装・顔立ちで国籍を示さず、健康な子どもと自ら活動する住民を描く。
+
+## soc6_international_007.webp 修正版
+
+- ファイル名・対象問題は保持。caption：テントの診療所と共同ポンプ
+- alt：テントの中で看護師と話す子どもと保護者。別の場面では住民が共同ポンプを動かし、ポリタンクに水をくんでいる。
+- 1200×800、197890 bytes、WebP quality 76。
+- 文字・国旗・ロゴ・注射場面・苦痛の誇張なし。009にはランドセル・日本式校舎・和食・はしを描かない。007には日本の診察室・石の流し台を描かない。
+- 修正プロンプト全文：
+```text
+Redraw this educational illustration with entirely NEW setting as specified. Preserve warm restrained watercolor and fine outlines, landscape 3:2. NO text, numbers, flags, logos, brands, labels, pseudo-writing or answer symbols anywhere. Plain blank papers. People natural healthy proportions, ordinary clean everyday clothes, diverse natural skin tones without ethnic stereotypes, mostly rear or side-rear views. No distressed faces, emaciation, torn clothes, suffering, injury or war. Two equal panels in an unnamed rural warm-climate region OUTSIDE JAPAN. LEFT: simple canvas medical tent with rolled-up flap on dry earth, nurse in plain scrubs sitting at simple folding table talking with a healthy child and parent seated on folding chairs, all involved naturally. Plain supply box and blank clipboard, no computer or Japanese clinic furniture, no injections or syringe or medical cross. RIGHT: residents operating a communal hand pump on a low concrete well apron, one adult actively moving handle and another positioning a plastic jerrycan under spout. More plain jerrycans nearby. Background modest single-story plaster block building with corrugated metal roof, dry dirt path and sparse green trees. No Japanese houses, tiled roofs, stone sink, wall-mounted Japanese tap or paved suburban street. Residents do the work themselves, no outside rescuer.
+```
+
+## soc6_international_009.webp 修正版
+
+- ファイル名・対象問題は保持。caption：平屋の学校と土の通学路・学用品・食事
+- alt：平屋の教室で学ぶ子どもと土の道を通う子ども、布かばんとノート・鉛筆、穀物と豆・野菜の食事。
+- 1200×800、181710 bytes、WebP quality 70。
+- 文字・国旗・ロゴ・注射場面・苦痛の誇張なし。009にはランドセル・日本式校舎・和食・はしを描かない。007には日本の診察室・石の流し台を描かない。
+- 修正プロンプト全文：
+```text
+Redraw this educational illustration with entirely NEW setting as specified. Preserve warm restrained watercolor and fine outlines, landscape 3:2. NO text, numbers, flags, logos, brands, labels, pseudo-writing or answer symbols anywhere. Plain blank papers. People natural healthy proportions, ordinary clean everyday clothes, diverse natural skin tones without ethnic stereotypes, mostly rear or side-rear views. No distressed faces, emaciation, torn clothes, suffering, injury or war. Four equal panels in an unnamed rural warm-climate community OUTSIDE JAPAN. TOP LEFT: simple one-story plaster-block school with corrugated metal roof and open doorway, inside children actively studying at plain wooden desks with local teacher; healthy children entering with soft cloth shoulder bags. TOP RIGHT: energetic children walking along dry earth path toward small one-story school, low grasses and sparse trees, soft cloth bags. BOTTOM LEFT: plain cloth shoulder bag, blank notebook and pencils on simple table. BOTTOM RIGHT: modest meal of cooked grains and bean stew with vegetables in simple plain shallow bowls on wood table, NO chopsticks, no miso soup, no Japanese crockery, no utensils needed. Absolutely NO Japanese randoseru rigid backpacks, Japanese multi-story school, Japanese houses, tiled roofs, Japanese paved residential street or metal sidewalk guardrails. Children lively and learning, community dignified, no stereotyped costumes or facial features.
+```
+
+### 判断530の検証
+- node tests/run.js：908件成功・失敗0。
+- 336問のdiagram以外の内容が変更前と一致。ファイル名・対象問題のfixture対応は維持。
+- 390px幅の実画面5問で画像の読み込みを確認。international_023・029の代表画面を目視確認。

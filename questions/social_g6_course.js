@@ -9700,8 +9700,8 @@ window.QUESTION_BANK.push(
   "diagram": {
     "kind": "image",
     "src": "img/diagrams/soc6_international_007.webp",
-    "alt": "診療の相談をする人々と、自分たちで蛇口から水をくむ人々。",
-    "caption": "診療と水をくむ場面",
+    "alt": "テントの中で看護師と話す子どもと保護者。別の場面では住民が共同ポンプを動かし、ポリタンクに水をくんでいる。",
+    "caption": "テントの診療所と共同ポンプ",
     "study": true
   },
   "subject": "social",
@@ -9866,8 +9866,8 @@ window.QUESTION_BANK.push(
   "diagram": {
     "kind": "image",
     "src": "img/diagrams/soc6_international_009.webp",
-    "alt": "学校へ向かう人々、通学路、学用品、食事の四つの場面。",
-    "caption": "学校と通学路・学用品・食事",
+    "alt": "平屋の教室で学ぶ子どもと土の道を通う子ども、布かばんとノート・鉛筆、穀物と豆・野菜の食事。",
+    "caption": "平屋の学校と土の通学路・学用品・食事",
     "study": true
   },
   "subject": "social",
@@ -9926,8 +9926,8 @@ window.QUESTION_BANK.push(
   "diagram": {
     "kind": "image",
     "src": "img/diagrams/soc6_international_007.webp",
-    "alt": "診療の相談をする人々と、自分たちで蛇口から水をくむ人々。",
-    "caption": "診療と水をくむ場面",
+    "alt": "テントの中で看護師と話す子どもと保護者。別の場面では住民が共同ポンプを動かし、ポリタンクに水をくんでいる。",
+    "caption": "テントの診療所と共同ポンプ",
     "study": true
   },
   "subject": "social",
@@ -9956,8 +9956,8 @@ window.QUESTION_BANK.push(
   "diagram": {
     "kind": "image",
     "src": "img/diagrams/soc6_international_009.webp",
-    "alt": "学校へ向かう人々、通学路、学用品、食事の四つの場面。",
-    "caption": "学校と通学路・学用品・食事",
+    "alt": "平屋の教室で学ぶ子どもと土の道を通う子ども、布かばんとノート・鉛筆、穀物と豆・野菜の食事。",
+    "caption": "平屋の学校と土の通学路・学用品・食事",
     "study": true
   },
   "subject": "social",
@@ -10092,8 +10092,8 @@ window.QUESTION_BANK.push(
   "diagram": {
     "kind": "image",
     "src": "img/diagrams/soc6_international_009.webp",
-    "alt": "学校へ向かう人々、通学路、学用品、食事の四つの場面。",
-    "caption": "学校と通学路・学用品・食事",
+    "alt": "平屋の教室で学ぶ子どもと土の道を通う子ども、布かばんとノート・鉛筆、穀物と豆・野菜の食事。",
+    "caption": "平屋の学校と土の通学路・学用品・食事",
     "study": true
   },
   "subject": "social",
