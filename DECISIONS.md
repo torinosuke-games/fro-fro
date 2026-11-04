@@ -2483,3 +2483,11 @@
 - 既存SVGの自動目盛・ラベル・曲線の挙動を確認。table・numberline・circle・solid3dの利用予定と必要な拡張、mathAxes・mathGeometry・quantityBars・spatialFigure・sectorFigure・histogramの新設候補を区別。今回は登録・実装しない。
 - 制作表112行の対象IDの存在・重複なし・単元別集計・絵3枚の一致を照合。問題データ・SVG・画像は変更せず、画面変更がないためブラウザ確認は対象外。node tests/run.jsは925件成功・失敗0。
 - codex/math7-questionsへ計画をcommit・pushして停止。利用者の確認前には図・絵を作らない。
+
+
+## 538. 中1数学：図の計画修正と第1回の種類・見本（Codex）
+- 普通の目盛り・原点O・x/yの軸名を許可。答えの点だけの印・ラベル・色付けは不可。proportion_014・015・024・025・026・028はグラフを許可し、答えのy値・範囲の色・求める点は描かない。反比例は0と表示範囲外で線を分割。形・象限を問う010・012は図なし。
+- expression_006・016、data_006・014を除外。proportion_019・029の歯車1枚を共用。計画はSVG105図・絵2枚の107図、108問／280問（38.6%）。
+- coordinate、numberline、circleは明示的なmath7設定、solid3d円柱はdimensionLabels・viewDirectionsを拡張。既存の必須設定と描画は維持。新設はmathGeometry・quantityBars・spatialFigureの3種類に削減し、理由を計画に記載。
+- 問題には未登録。7種類各2〜3点、計20点を実際の条件で描画し、390px幅の問題画面で撮影。docs/math7-diagram-samples/SAMPLES.mdに対象ID・本文・答え・画像の一覧、samples.jsonに設定、inspection.jsonに文字の検査結果を保存。全20点を目視確認し、座標ラベル・角度と直径線・高さラベルの配置を調整。
+- 回帰検査で既存997問の描画構造を変更前95fb9bfと照合。新設定の座標・数直線・扇形・寸法・作図途中・未知量の模式表示、計画の集計と除外を検査。node tests/run.jsは935件成功・失敗0、390px見本20点の横はみ出し・文字見切れなし。git diff --check成功。codex/math7-questionsへcommit・pushして停止。

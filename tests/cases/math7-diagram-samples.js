@@ -1,0 +1,57 @@
+'use strict';
+module.exports=({test,assert})=>{
+ const fs=require('fs'),path=require('path'),crypto=require('crypto');
+ const root=path.resolve(__dirname,'../..'),{renderer}=require('../lib/diagram-dom');
+ const render=renderer(fs.readFileSync(path.join(root,'js/svg/learning.js'),'utf8'));
+ const samples=require('../../docs/math7-diagram-samples/samples.json');
+ const {load,LOGIC_FILES_WITH_FIXES}=require('../lib/loader'),c=load(LOGIC_FILES_WITH_FIXES);
+ const texts=n=>n.querySelectorAll('text').map(t=>t.textContent),svg=n=>n.querySelectorAll('svg')[0];
+ test('中1図：7種類・各2〜3見本、問題本文と登録は未変更',()=>{
+  const counts={};for(const s of samples){counts[s.diagram.kind]=(counts[s.diagram.kind]||0)+1;const q=c.QUESTION_BANK.find(q=>q.id===s.id);assert.ok(q);assert.ok(!q.diagram);assert.deepEqual(Array.from(c.FF.learning.validateQuestion({...q,diagram:s.diagram})),[],s.id);assert.ok(svg(render(s.diagram)));}
+  assert.equal(Object.keys(counts).length,7);Object.values(counts).forEach(n=>assert.ok(n>=2&&n<=3));
+  assert.equal(c.QUESTION_BANK.filter(q=>q.collection==='course_ma7_1'&&q.diagram).length,0);
+ });
+ test('中1図：反比例は0の前後・範囲外をまたがず等縮尺、点のみも可能',()=>{
+  const d=samples.find(s=>s.id.endsWith('proportion_024')).diagram,n=render(d),lines=n.querySelectorAll('polyline');assert.equal(lines.length,2);
+  for(const line of lines){const ps=line.attrs.points.split(' ').map(p=>p.split(',').map(Number));const xs=ps.map(p=>(p[0]-100)/20-8);assert.ok(xs.every(x=>x<0)||xs.every(x=>x>0));for(const p of ps){const x=(p[0]-100)/20-8,y=(370-p[1])/20-8;assert.ok(Math.abs(x*y+12)<1e-8);}}
+  const point=render(samples.find(s=>s.id.endsWith('proportion_005')).diagram);assert.equal(point.querySelectorAll('polyline').length,0);assert.equal(point.querySelectorAll('circle').length,1);
+  const pn=point.querySelectorAll('circle')[0];assert.ok(Math.abs(pn.attrs.cx-(100+2*320/12))<1e-8);assert.equal(pn.attrs.cy,130);
+ });
+ test('中1図：数直線の分数位置・縦向き・選択ラベルが正確',()=>{
+  const n=render(samples[2].diagram),ps=n.querySelectorAll('circle').map(n=>n.attrs.cx);assert.deepEqual(ps,[157.5,260,362.5]);assert.ok(!texts(n).includes(-.5));
+  const v=render(samples[0].diagram),p=v.querySelectorAll('circle')[0];assert.equal(p.attrs.cx,240);assert.equal(p.attrs.cy,308);assert.ok(!texts(v).includes('-12'));
+ });
+ test('中1図：直径指定は半径値を表示しない、扇形の端点と角度',()=>{
+  const n=render(samples.find(s=>s.id.endsWith('plane_027')).diagram);assert.ok(texts(n).includes('直径 12cm'));assert.ok(!n.textContent.includes('6cm'));assert.ok(texts(n).includes('150°'));
+  const d=n.querySelectorAll('path')[0].attrs.d,nums=d.match(/-?\d+(?:\.\d+)?/g).map(Number);assert.ok(d.includes(' A115,115 '));assert.ok(Math.abs(nums[2]-(260+115*Math.cos(75*Math.PI/180)))<1e-8);
+ });
+ test('中1図：円柱は本文の寸法だけ、円錐母線問題は高さを追加しない',()=>{
+  const d=samples.find(s=>s.id.endsWith('space_010')).diagram,n=render(d);assert.deepEqual(texts(n),['3cm','5cm']);assert.equal(n.querySelectorAll('ellipse').length,1);
+  const cone=render(samples.find(s=>s.id.endsWith('space_016')).diagram);assert.deepEqual(texts(cone),['3cm','5cm']);assert.ok(!cone.textContent.includes('4cm'));
+ });
+ test('中1図：作図途中にPQや直角印を足さず4:5・円弧の交点を保持',()=>{
+  const s=samples.find(s=>s.id.endsWith('plane_003')).diagram,a=s.segments[1],b=s.segments[2];assert.equal(Math.hypot(a[2]-a[0],a[3]-a[1])/Math.hypot(b[2]-b[0],b[3]-b[1]),4/5);
+  const d=samples.find(s=>s.id.endsWith('plane_018')).diagram,n=render(d);assert.equal(n.querySelectorAll('line').length,1);const q=d.points[3];for(const x of [180,340])assert.ok(Math.abs(Math.hypot(q[0]-x,q[1]-260)-125)<1e-8);assert.equal(n.querySelectorAll('path').length,2);
+ });
+ test('中1図：未知量は等幅で答えの式を追加しない',()=>{
+  const d=samples.find(s=>s.id.endsWith('expression_021')).diagram,n=render(d),bs=n.querySelectorAll('rect');assert.equal(bs[0].attrs.width,bs[1].attrs.width);assert.ok(!n.textContent.includes('＝'));
+ });
+ test('中1図：新設の錐・柱・球・平面と直線、複数立体と既知割合も描画できる',()=>{
+  for(const shape of ['prism','pyramid','sphere','hemisphere','cone','planeLine']){const n=render({kind:'spatialFigure',shape,sides:5,radius:2,heightValue:3});assert.ok(!JSON.stringify(n).includes('NaN'));assert.ok(n.querySelectorAll('*').length>2);}
+  const group=render({kind:'spatialFigure',shape:'group',solids:[{kind:'spatialFigure',shape:'cone',radius:3,heightValue:8},{kind:'solid3d',study:true,shape:'cylinder',dimensions:[6,6,4],vertices:[]}]});assert.equal(group.querySelectorAll('g').length,2);
+  const bars=render({kind:'quantityBars',rows:[{cells:['',''],parts:[1,4]}]}).querySelectorAll('rect');assert.equal(bars[1].attrs.width/bars[0].attrs.width,4);
+  const cyl=render({kind:'solid3d',study:true,shape:'cylinder',dimensions:[6,6,5],vertices:[],viewDirections:['真上','正面']});assert.deepEqual(texts(cyl),['真上','正面']);
+ });
+ test('中1図：計画は107図・108問、除外4問・歯車共用と一致',()=>{
+  const plan=fs.readFileSync(path.join(root,'PICTURE_PLAN_MATH7.md'),'utf8'),rows=plan.split('\n').filter(l=>l.startsWith('|M7-'));
+  assert.equal(rows.length,107);const ids=rows.flatMap(l=>[...l.matchAll(/`(math_g7_\w+)`/g)].map(m=>m[1]));assert.equal(ids.length,108);assert.equal(new Set(ids).size,108);
+  for(const id of ids)assert.ok(c.QUESTION_BANK.some(q=>q.id===id),id);
+  for(const id of ['expression_006','expression_016','data_006','data_014'])assert.ok(!ids.includes('math_g7_'+id));
+  assert.equal(rows.filter(l=>l.includes('生成した絵')).length,2);assert.equal(rows.filter(l=>l.includes('SVG・')).length,105);
+ });
+ test('中1図：既存全図のSVG・表・画像構造は拡張前と同一',()=>{
+  const qs=c.QUESTION_BANK.filter(q=>q.diagram),baseline=require('../fixtures/math7-diagram-baseline.json');
+  const digest=crypto.createHash('sha256').update(JSON.stringify(qs.map(q=>[q.id,render(q.diagram)]))).digest('hex');
+  assert.equal(qs.length,baseline.count);assert.equal(digest,baseline.sha256);
+ });
+};

@@ -39,7 +39,78 @@
     else if(item==='bread')add(S('rect',{x:x-14,y:y-12,width:28,height:24,rx:9,fill:pale,stroke:blue,'stroke-width':2}),line(x-4,y-6,x-7,y+4),line(x+5,y-6,x+2,y+4));
     else add(circle(x,y,9,orange),path('M'+(x-9)+','+y+' l-7,-7 v14 Z M'+(x+9)+','+y+' l7,-7 v14 Z',pale));
    }
-   if(['japanMap','earthScene','terrain','facility','disaster','culture','industry'].indexOf(d.kind)>=0){
+   // 中1の見本用。明示した条件だけを描き、補助線や解答は生成しない。
+   if(d.kind==='mathGeometry'){
+    h=d.height||320;
+    (d.segments||[]).forEach(function(e){add(line(e[0],e[1],e[2],e[3],blue,e[4]));});
+    (d.circles||[]).forEach(function(c){add(circle(c[0],c[1],c[2],'none'));});
+    (d.arcs||[]).forEach(function(a){var p=point(a[0],a[1],a[2],a[3]),q=point(a[0],a[1],a[2],a[4]);add(path('M'+p.join(',')+' A'+a[2]+','+a[2]+' 0 '+(Math.abs(a[4]-a[3])>180?1:0)+' '+(a[4]>a[3]?0:1)+' '+q.join(',')));});
+    (d.points||[]).forEach(function(p){add(circle(p[0],p[1],4,ink));});
+    (d.labels||[]).forEach(function(t){add(text(t[0],t[1],t[2],t[3]||24,t[4]));});
+   }else if(d.kind==='quantityBars'){
+    // 各区分は同じ幅。未知量に数値を割り当てない。割合を示す場合だけ parts を明示。
+    h=65+d.rows.reduce(function(n,r){return n+110+(r.notes||[]).length*38;},0);var top=40;
+    d.rows.forEach(function(r){
+     if(r.label)add(text(260,top,r.label,24));top+=20;
+     var parts=r.parts||r.cells.map(function(){return 1;}),total=parts.reduce(function(a,b){return a+b;},0),x=55;
+     r.cells.forEach(function(t,i){var w=410*parts[i]/total;add(box(x,top,w,40,'#fff'));if(t)add(text(x+w/2,top+29,t,23));x+=w;});top+=80;
+     (r.notes||[]).forEach(function(t){add(text(260,top,t,23));top+=38;});top+=10;
+    });
+   }else if(d.kind==='spatialFigure'){
+    // 投影の長さは radius / height / slant に比例。面積指定や未知量は模式図。
+    h=355;var cx=245,baseY=245,r=95,ry=30;
+    if(d.solids){
+     d.solids.forEach(function(s,i){var sub=render(s),sv=sub.querySelector('svg');if(sv)add(S('g',{transform:'translate('+(i*260)+',0) scale(.5)'},Array.prototype.slice.call(sv.childNodes)));});
+     h=220;
+    }else if(d.shape==='sphere'||d.shape==='hemisphere'){
+     if(d.shape==='sphere')add(circle(cx,165,r,'none'));
+     else add(path('M'+(cx-r)+',165 A'+r+','+r+' 0 0 1 '+(cx+r)+',165'));
+     add(S('ellipse',{cx:cx,cy:165,rx:r,ry:ry,fill:'none',stroke:blue,'stroke-width':3,'stroke-dasharray':d.shape==='sphere'?'6 6':null}),line(cx,165,cx+r,165));
+     if(d.radiusLabel)add(text(cx+55,153,d.radiusLabel,24));
+    }else if(d.shape==='cone'){
+     var radius=d.radius||1,ht=d.heightValue|| (d.slant?Math.sqrt(d.slant*d.slant-radius*radius):radius*1.8),sc=Math.min(95/radius,180/ht);r=radius*sc;ry=r*.32;var apex=baseY-ht*sc;
+     add(path('M'+(cx-r)+','+baseY+' L'+cx+','+apex+' L'+(cx+r)+','+baseY),path('M'+(cx-r)+','+baseY+' A'+r+','+ry+' 0 0 0 '+(cx+r)+','+baseY),path('M'+(cx-r)+','+baseY+' A'+r+','+ry+' 0 0 1 '+(cx+r)+','+baseY,'none',blue,'6 6'));
+     if(d.radiusLabel)add(line(cx,baseY,cx+r,baseY),text(cx+r/2,baseY+38,d.radiusLabel,24));
+     if(d.heightLabel)add(line(cx,apex,cx,baseY,blue,'6 6'),clearText(cx-r-18,(apex+baseY)/2,'高さ '+d.heightLabel,24,'end'));
+     if(d.slantLabel)add(text(cx+r/2+22,(apex+baseY)/2,d.slantLabel,24,'start'));
+    }else if(d.shape==='prism'||d.shape==='pyramid'){
+     var n=d.sides||4,ps=Array.from({length:n},function(_,i){var a=(90+i*360/n)*Math.PI/180;return [cx+105*Math.cos(a),245+40*Math.sin(a)];}),topY=70;
+     ps.forEach(function(p,i){var q=ps[(i+1)%n];add(line(p[0],p[1],q[0],q[1],blue,i>=Math.floor(n/2)?'6 6':null));});
+     ps.forEach(function(p,i){var q=d.shape==='prism'?[p[0],p[1]-150]:[cx,topY];add(line(p[0],p[1],q[0],q[1],blue,i>n/2?'6 6':null));});
+     if(d.shape==='prism')add(path('M'+ps.map(function(p){return [p[0],p[1]-150].join(',');}).join(' L')+' Z'));
+    }else if(d.shape==='planeLine'){
+     add(path('M100,210 L340,210 L420,140 L180,140 Z'),line(260,50,260,175),line(260,175,260,290,blue,'6 6'),circle(260,175,4,ink));
+    }
+    (d.labels||[]).forEach(function(t){add(text(t[0],t[1],t[2],24));});
+    (d.notes||[]).forEach(function(t,i){add(text(260,320+i*38,t,23));h=355+i*38;});
+   }else if(d.kind==='coordinate'&&d.math7){
+    h=450;var xr=d.xRange,yr=d.yRange,scale=Math.min(360/(xr[1]-xr[0]),320/(yr[1]-yr[0]));
+    var left=(520-(xr[1]-xr[0])*scale)/2,bottom=370;
+    function mx(x){return left+(x-xr[0])*scale;}function my(y){return bottom-(y-yr[0])*scale;}
+    var tick=d.tickStep||1;
+    for(var x=xr[0];x<=xr[1]+1e-8;x+=tick){add(line(mx(x),my(yr[0]),mx(x),my(yr[1]),'#dcedf6'));if(x!==0)add(text(mx(x),my(0)+26,String(x).replace('-','−'),19));}
+    for(var y=yr[0];y<=yr[1]+1e-8;y+=tick){add(line(mx(xr[0]),my(y),mx(xr[1]),my(y),'#dcedf6'));if(y!==0)add(text(mx(0)-13,my(y)+6,String(y).replace('-','−'),19,'end'));}
+    add(line(mx(xr[0]),my(0),mx(xr[1]),my(0)),line(mx(0),my(yr[0]),mx(0),my(yr[1])),text(mx(xr[1])+20,my(0)+8,'x',24),text(mx(0),my(yr[1])-15,'y',24),text(mx(0)-16,my(0)+26,'O',20));
+    // クリップ外・不連続点で必ず分割。x=0 をまたぐ反比例は独立した線にする。
+    (d.curves||[]).forEach(function(c){var ps=[],prev=null;function flush(){if(ps.length>1)add(S('polyline',{points:ps.join(' '),fill:'none',stroke:blue,'stroke-width':3}));ps=[];}
+     for(var i=0;i<=800;i++){var x=xr[0]+(xr[1]-xr[0])*i/800,y=c.power===-1?c.a/x:c.a*x+(c.b||0);if(!Number.isFinite(y)||y<yr[0]||y>yr[1]||c.power===-1&&prev!==null&&prev*x<=0)flush();if(Number.isFinite(y)&&y>=yr[0]&&y<=yr[1])ps.push(mx(x)+','+my(y));prev=x;}flush();
+    });
+    (d.points||[]).forEach(function(p){add(circle(mx(p.x),my(p.y),4,ink));if(p.label)add(text(mx(p.x)+(p.dx||12),my(p.y)+(p.dy||-13),p.label,23,p.anchor||'start'));});
+    (d.notes||[]).forEach(function(t,i){add(text(260,415+i*36,t,23));h=450+i*36;});
+   }else if(d.kind==='numberline'&&d.math7){
+    var vertical=d.vertical,span=d.end-d.start;h=vertical?430:240;
+    function np(v){return vertical?350-(v-d.start)/span*280:55+(v-d.start)/span*410;}
+    add(vertical?line(240,70,240,350):line(55,110,465,110));
+    for(var v=d.start;v<=d.end+1e-8;v+=d.step){var p=np(v);add(vertical?line(232,p,248,p):line(p,102,p,118));if(!d.labelValues||d.labelValues.indexOf(v)>=0)add(vertical?text(215,p+7,String(v).replace('-','−'),24,'end'):text(p,151,String(v).replace('-','−'),24));}
+    (d.marks||[]).forEach(function(v,i){var p=np(v);add(vertical?circle(240,p,4,ink):circle(p,110,4,ink));var t=d.markLabels?d.markLabels[i]:v;if(t!=='')add(vertical?text(270,p+7,t,24,'start'):text(p,76,t,24));});
+    (d.notes||[]).forEach(function(t,i){add(text(260,(vertical?395:205)+i*36,t,23));h=(vertical?430:240)+i*36;});
+   }else if(d.kind==='circle'&&d.math7){
+    h=350;var cx=260,cy=175,r=115,angle=d.angle;
+    if(angle){var start=-angle/2,end=angle/2,p=point(cx,cy,r,start),q=point(cx,cy,r,end);add(path('M'+cx+','+cy+' L'+p.join(',')+' A'+r+','+r+' 0 '+(angle>180?1:0)+' 0 '+q.join(',')+' Z','none'),text(cx+62,cy+(d.diameter?-18:7),angle+'°',24));}
+    else add(circle(cx,cy,r,'none'));
+    if(d.diameter){if(angle)add(S('circle',{cx:cx,cy:cy,r:r,fill:'none',stroke:blue,'stroke-width':2,'stroke-dasharray':'6 6'}));add(line(cx-r,cy,cx+r,cy,blue,'6 6'),text(260,325,'直径 '+d.diameter+d.unit,25));}
+    else{var a=angle?-angle/2:0,p=point(cx,cy,r,a);if(!angle)add(line(cx,cy,p[0],p[1]));add(text(260,325,'半径 '+d.radius+d.unit,25));}
+   }else if(['japanMap' ,'earthScene','terrain','facility','disaster','culture','industry'].indexOf(d.kind)>=0){
     // 社会の共通線画。地名・施設名・答えの語、結果の矢印は表示しない。
     h=400;
     function poly(ps,fill,color){return S('polygon',{points:ps.map(function(p){return p.join(',');}).join(' '),fill:fill||pale,stroke:color||blue,'stroke-width':3,'stroke-linejoin':'round'});}
@@ -509,6 +580,8 @@
      if(d.water!==undefined){var level=d.water+(d.rise||0);face3([[0,0,level],[w,0,level],[w,dep,level],[0,dep,level]],pale);face3([[0,0,0],[w,0,0],[w,0,level],[0,0,level]],pale);if(d.rise)edge3([0,0,d.water],[w,0,d.water],'6 6',orange);edge3([0,0,0],[0,0,ht]);edge3([w,0,0],[w,0,ht]);if(d.stone){var p=xyz(w*.55,dep*.1,level*.35);add(S('ellipse',{cx:p[0],cy:p[1],rx:18,ry:13,fill:orange,stroke:ink,'stroke-width':2}));}}
      if(d.block){var x=405,y=225,a=32;add(path('M'+x+','+y+' h'+a+' l20,-12 v-'+a+' h-'+a+' l-20,12 Z',pale),path('M'+x+','+(y-a)+' h'+a+' v'+a+' M'+(x+a)+','+(y-a)+' l20,-12'));}
     }
+    if(d.shape==='cylinder'&&d.viewDirections){add(line(center[0],32,center[0],ty-10),text(center[0]+20,30,d.viewDirections[0],23,'start'),line(440,center[1]-30,center[0]+rx+10,center[1]-30),text(440,center[1]+5,d.viewDirections[1],23));}
+    if(d.shape==='cylinder'&&d.dimensionLabels){if(d.dimensionLabels.radius)add(line(center[0],ty,center[0]+rx,ty),text(center[0]+rx/2,ty-22,d.dimensionLabels.radius,24));if(d.dimensionLabels.height)add(text(center[0]+rx+18,(ty+center[1])/2,d.dimensionLabels.height,24,'start'));}
     (d.notes||[]).forEach(function(t,i){add(text(260,282+i*42,t,25));});
    }else if(d.kind==='band'&&d.rows){
     h=d.rows.reduce(function(sum,r){return sum+110+r.labels.filter(Boolean).length*42;},10);var yy=20;
@@ -786,13 +859,13 @@
     if(d.directions)add(text(55,183,d.directions[0],25),text(465,183,d.directions[1],25));
    }
    // 新しい図も昼のテーマの共通色を使う。既存の図の配色は変えない。
-   if(d.study||['gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0){
+   if(d.math7||['mathGeometry','quantityBars','spatialFigure'].indexOf(d.kind)>=0||d.study||['gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0){
     var paints={};paints[blue]='var(--rn-blue, '+blue+')';paints[ink]='var(--rn-navy, '+ink+')';paints[pale]='var(--rn-pale, '+pale+')';paints[orange]='var(--rn-warm, '+orange+')';
     nodes.forEach(function(n){var all=[n].concat(Array.prototype.slice.call(n.querySelectorAll('*')));all.forEach(function(el){['fill','stroke'].forEach(function(a){var v=el.getAttribute(a);if(paints[v])el.setAttribute(a,paints[v]);});});});
    }
    var svg=S('svg',{viewBox:'0 0 520 '+h,role:'img','aria-label':d.caption||'問題を考えるための図'},[S('title',{},d.caption||'学習の図')].concat(nodes));
    // 個数が多い図は高さを制限すると絵と文字が小さくなるため、自然な縦横比で表示。
-   if(d.study||d.kind==='graph'&&d.minorStep||['objects','tape','measure','gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0)svg.style.maxHeight='none';
+   if(d.math7||['mathGeometry','quantityBars','spatialFigure'].indexOf(d.kind)>=0||d.study||d.kind==='graph'&&d.minorStep||['objects','tape','measure','gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0)svg.style.maxHeight='none';
    fig.appendChild(svg);
   }
   if(d.caption)fig.appendChild(U.el('figcaption',{text:d.caption}));

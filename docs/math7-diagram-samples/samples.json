@@ -1,0 +1,521 @@
+[
+  {
+    "id": "math_g7_signed_numbers_001",
+    "diagram": {
+      "kind": "numberline",
+      "math7": true,
+      "vertical": true,
+      "start": -15,
+      "end": 5,
+      "step": 5,
+      "labelValues": [
+        0
+      ],
+      "marks": [
+        -12
+      ],
+      "markLabels": [
+        "海面より12m下"
+      ],
+      "notes": [
+        "海面を基準"
+      ],
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_signed_numbers_012",
+    "diagram": {
+      "kind": "numberline",
+      "math7": true,
+      "start": -6,
+      "end": 3,
+      "step": 1,
+      "labelValues": [
+        0
+      ],
+      "marks": [
+        -5,
+        2
+      ],
+      "markLabels": [
+        "−5",
+        "＋2"
+      ],
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_signed_numbers_019",
+    "diagram": {
+      "kind": "numberline",
+      "math7": true,
+      "start": -1,
+      "end": 0,
+      "step": 0.25,
+      "labelValues": [
+        -1,
+        0
+      ],
+      "marks": [
+        -0.75,
+        -0.5,
+        -0.25
+      ],
+      "markLabels": [
+        "−3/4",
+        "−1/2",
+        "−1/4"
+      ],
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_proportion_005",
+    "diagram": {
+      "kind": "coordinate",
+      "math7": true,
+      "xRange": [
+        -6,
+        6
+      ],
+      "yRange": [
+        -6,
+        6
+      ],
+      "tickStep": 2,
+      "points": [
+        {
+          "x": -4,
+          "y": 3,
+          "label": "A（−4，3）",
+          "dx": -12,
+          "dy": -14,
+          "anchor": "end"
+        }
+      ],
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_proportion_024",
+    "diagram": {
+      "kind": "coordinate",
+      "math7": true,
+      "xRange": [
+        -8,
+        8
+      ],
+      "yRange": [
+        -8,
+        8
+      ],
+      "tickStep": 2,
+      "curves": [
+        {
+          "a": -12,
+          "power": -1
+        }
+      ],
+      "notes": [
+        "y＝−12/x",
+        "−6≦x≦−2"
+      ],
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_proportion_026",
+    "diagram": {
+      "kind": "coordinate",
+      "math7": true,
+      "xRange": [
+        -6,
+        6
+      ],
+      "yRange": [
+        -8,
+        8
+      ],
+      "tickStep": 2,
+      "curves": [
+        {
+          "a": 3,
+          "power": 1
+        },
+        {
+          "a": 12,
+          "power": -1
+        }
+      ],
+      "points": [
+        {
+          "x": 2,
+          "y": 6,
+          "label": "（2，6）"
+        }
+      ],
+      "notes": [
+        "比例と反比例　x＝4"
+      ],
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_plane_015",
+    "diagram": {
+      "kind": "circle",
+      "math7": true,
+      "radius": 6,
+      "angle": 120,
+      "unit": "cm",
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_plane_025",
+    "diagram": {
+      "kind": "circle",
+      "math7": true,
+      "radius": 8,
+      "angle": 135,
+      "unit": "cm",
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_plane_027",
+    "diagram": {
+      "kind": "circle",
+      "math7": true,
+      "diameter": 12,
+      "angle": 150,
+      "unit": "cm",
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_space_010",
+    "diagram": {
+      "kind": "solid3d",
+      "study": true,
+      "shape": "cylinder",
+      "vertices": [],
+      "dimensions": [
+        6,
+        6,
+        5
+      ],
+      "dimensionLabels": {
+        "radius": "3cm",
+        "height": "5cm"
+      },
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_space_014",
+    "diagram": {
+      "kind": "solid3d",
+      "study": true,
+      "shape": "cylinder",
+      "vertices": [],
+      "dimensions": [
+        6,
+        6,
+        4
+      ],
+      "dimensionLabels": {
+        "radius": "3cm",
+        "height": "4cm"
+      },
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_plane_003",
+    "diagram": {
+      "kind": "mathGeometry",
+      "segments": [
+        [
+          60,
+          250,
+          460,
+          250
+        ],
+        [
+          180,
+          90,
+          180,
+          250
+        ],
+        [
+          180,
+          90,
+          300,
+          250
+        ]
+      ],
+      "points": [
+        [
+          180,
+          90
+        ]
+      ],
+      "labels": [
+        [
+          163,
+          74,
+          "P"
+        ],
+        [
+          470,
+          258,
+          "l"
+        ],
+        [
+          147,
+          174,
+          "4cm"
+        ],
+        [
+          273,
+          158,
+          "5cm"
+        ]
+      ],
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_plane_013",
+    "diagram": {
+      "kind": "mathGeometry",
+      "circles": [
+        [
+          230,
+          160,
+          100
+        ]
+      ],
+      "segments": [
+        [
+          230,
+          160,
+          330,
+          160
+        ],
+        [
+          330,
+          40,
+          330,
+          285
+        ]
+      ],
+      "points": [
+        [
+          230,
+          160
+        ],
+        [
+          330,
+          160
+        ]
+      ],
+      "labels": [
+        [
+          210,
+          151,
+          "O"
+        ],
+        [
+          350,
+          180,
+          "A"
+        ],
+        [
+          350,
+          48,
+          "l"
+        ],
+        [
+          278,
+          146,
+          "6cm"
+        ]
+      ],
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_plane_018",
+    "diagram": {
+      "kind": "mathGeometry",
+      "height": 340,
+      "segments": [
+        [
+          55,
+          260,
+          465,
+          260
+        ]
+      ],
+      "arcs": [
+        [
+          180,
+          260,
+          125,
+          30,
+          80
+        ],
+        [
+          340,
+          260,
+          125,
+          100,
+          150
+        ]
+      ],
+      "points": [
+        [
+          180,
+          260
+        ],
+        [
+          260,
+          260
+        ],
+        [
+          340,
+          260
+        ],
+        [
+          260,
+          163.95313643850727
+        ]
+      ],
+      "labels": [
+        [
+          180,
+          293,
+          "A"
+        ],
+        [
+          260,
+          293,
+          "P"
+        ],
+        [
+          340,
+          293,
+          "B"
+        ],
+        [
+          260,
+          145,
+          "Q"
+        ],
+        [
+          470,
+          267,
+          "l"
+        ]
+      ],
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_expression_009",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量は模式図",
+      "rows": [
+        {
+          "cells": [
+            "b円",
+            "b円"
+          ],
+          "notes": [
+            "袋代10円"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_021",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量は模式図",
+      "rows": [
+        {
+          "label": "全体 a cm",
+          "cells": [
+            "7cm",
+            "b cm"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_025",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "人数・冊数の配置は模式図",
+      "rows": [
+        {
+          "label": "4冊ずつ",
+          "cells": [
+            "…"
+          ],
+          "notes": [
+            "6冊不足"
+          ]
+        },
+        {
+          "label": "3冊ずつ",
+          "cells": [
+            "…"
+          ],
+          "notes": [
+            "9冊余る"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_011",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "cone",
+      "radius": 3,
+      "heightValue": 4,
+      "radiusLabel": "3cm",
+      "heightLabel": "4cm",
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_space_016",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "cone",
+      "radius": 3,
+      "slant": 5,
+      "radiusLabel": "3cm",
+      "slantLabel": "5cm",
+      "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_space_028",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "hemisphere",
+      "radiusLabel": "3cm",
+      "caption": "問題文の条件を表した図"
+    }
+  }
+]

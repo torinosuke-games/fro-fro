@@ -41,6 +41,7 @@
     // 図（省略できる。判断221）。種類と、種類ごとの必須の項目
     if (q.diagram !== undefined) {
       var d = q.diagram, need = d && typeof d === 'object' && defs.DIAGRAM_KINDS[d.kind];
+      if (need && d.math7 && defs.DIAGRAM_MATH7_KINDS[d.kind]) need = defs.DIAGRAM_MATH7_KINDS[d.kind];
       if (!need) e.push('diagram.kind が不正: ' + (d && d.kind));
       else {
         if (!str(d.caption)) e.push('diagram.caption がない');

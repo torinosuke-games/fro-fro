@@ -1,0 +1,828 @@
+[
+  {
+    "id": "math_g7_signed_numbers_001",
+    "diagram": {
+      "kind": "numberline",
+      "math7": true,
+      "vertical": true,
+      "start": -15,
+      "end": 5,
+      "step": 5,
+      "labelValues": [
+        0
+      ],
+      "marks": [
+        -12
+      ],
+      "markLabels": [
+        "海面より12m下"
+      ],
+      "notes": [
+        "海面を基準"
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "海面を基準に、上を正とします。海面より12m下の位置を符号付きの数で表しなさい。単位は不要です。",
+    "answer": "−12",
+    "file": "01-math_g7_signed_numbers_001.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "0",
+        "海面より12m下",
+        "海面を基準"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_signed_numbers_012",
+    "diagram": {
+      "kind": "numberline",
+      "math7": true,
+      "start": -6,
+      "end": 3,
+      "step": 1,
+      "labelValues": [
+        0
+      ],
+      "marks": [
+        -5,
+        2
+      ],
+      "markLabels": [
+        "−5",
+        "＋2"
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "数直線上の−5と＋2の間の距離を答えなさい。",
+    "answer": "7",
+    "file": "02-math_g7_signed_numbers_012.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "0",
+        "−5",
+        "＋2"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_signed_numbers_019",
+    "diagram": {
+      "kind": "numberline",
+      "math7": true,
+      "start": -1,
+      "end": 0,
+      "step": 0.25,
+      "labelValues": [
+        -1,
+        0
+      ],
+      "marks": [
+        -0.75,
+        -0.5,
+        -0.25
+      ],
+      "markLabels": [
+        "−3/4",
+        "−1/2",
+        "−1/4"
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "−1/2、−3/4、−1/4を小さい順に並べたとき、中央の数を分数で答えなさい。",
+    "answer": "−1/2",
+    "file": "03-math_g7_signed_numbers_019.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "−1",
+        "0",
+        "−3/4",
+        "−1/2",
+        "−1/4"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_proportion_005",
+    "diagram": {
+      "kind": "coordinate",
+      "math7": true,
+      "xRange": [
+        -6,
+        6
+      ],
+      "yRange": [
+        -6,
+        6
+      ],
+      "tickStep": 2,
+      "points": [
+        {
+          "x": -4,
+          "y": 3,
+          "label": "A（−4，3）",
+          "dx": -12,
+          "dy": -14,
+          "anchor": "end"
+        }
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "点Aの座標は（−4，3）です。x座標を答えなさい。",
+    "answer": "-4",
+    "file": "04-math_g7_proportion_005.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "−6",
+        "−4",
+        "−2",
+        "2",
+        "4",
+        "6",
+        "−6",
+        "−4",
+        "−2",
+        "2",
+        "4",
+        "6",
+        "x",
+        "y",
+        "O",
+        "A（−4，3）"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_proportion_024",
+    "diagram": {
+      "kind": "coordinate",
+      "math7": true,
+      "xRange": [
+        -8,
+        8
+      ],
+      "yRange": [
+        -8,
+        8
+      ],
+      "tickStep": 2,
+      "curves": [
+        {
+          "a": -12,
+          "power": -1
+        }
+      ],
+      "notes": [
+        "y＝−12/x",
+        "−6≦x≦−2"
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "y＝−12/xで、−6≦x≦−2のときのyの変域はどれですか。",
+    "answer": "2≦y≦6",
+    "file": "05-math_g7_proportion_024.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "−8",
+        "−6",
+        "−4",
+        "−2",
+        "2",
+        "4",
+        "6",
+        "8",
+        "−8",
+        "−6",
+        "−4",
+        "−2",
+        "2",
+        "4",
+        "6",
+        "8",
+        "x",
+        "y",
+        "O",
+        "y＝−12/x",
+        "−6≦x≦−2"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_proportion_026",
+    "diagram": {
+      "kind": "coordinate",
+      "math7": true,
+      "xRange": [
+        -6,
+        6
+      ],
+      "yRange": [
+        -8,
+        8
+      ],
+      "tickStep": 2,
+      "curves": [
+        {
+          "a": 3,
+          "power": 1
+        },
+        {
+          "a": 12,
+          "power": -1
+        }
+      ],
+      "points": [
+        {
+          "x": 2,
+          "y": 6,
+          "label": "（2，6）"
+        }
+      ],
+      "notes": [
+        "比例と反比例　x＝4"
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "比例と反比例のグラフがともに点（2，6）を通ります。x＝4のときのyについて正しいものはどれですか。",
+    "answer": "比例は12、反比例は3",
+    "file": "06-math_g7_proportion_026.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "−6",
+        "−4",
+        "−2",
+        "2",
+        "4",
+        "6",
+        "−8",
+        "−6",
+        "−4",
+        "−2",
+        "2",
+        "4",
+        "6",
+        "8",
+        "x",
+        "y",
+        "O",
+        "（2，6）",
+        "比例と反比例　x＝4"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_plane_015",
+    "diagram": {
+      "kind": "circle",
+      "math7": true,
+      "radius": 6,
+      "angle": 120,
+      "unit": "cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "半径6cm、中心角120°のおうぎ形の弧の長さを、πを使い単位なしで答えなさい。",
+    "answer": "4π",
+    "file": "07-math_g7_plane_015.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "120°",
+        "半径 6cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_plane_025",
+    "diagram": {
+      "kind": "circle",
+      "math7": true,
+      "radius": 8,
+      "angle": 135,
+      "unit": "cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "半径8cm、中心角135°のおうぎ形の面積を、πを使い単位なしで答えなさい。",
+    "answer": "24π",
+    "file": "08-math_g7_plane_025.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "135°",
+        "半径 8cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_plane_027",
+    "diagram": {
+      "kind": "circle",
+      "math7": true,
+      "diameter": 12,
+      "angle": 150,
+      "unit": "cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "直径12cmの円から、中心角150°のおうぎ形を切り取ります。このおうぎ形の面積を、πを使い単位なしで答えなさい。",
+    "answer": "15π",
+    "file": "09-math_g7_plane_027.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "150°",
+        "直径 12cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_010",
+    "diagram": {
+      "kind": "solid3d",
+      "study": true,
+      "shape": "cylinder",
+      "vertices": [],
+      "dimensions": [
+        6,
+        6,
+        5
+      ],
+      "dimensionLabels": {
+        "radius": "3cm",
+        "height": "5cm"
+      },
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "半径3cm、高さ5cmの円柱の体積を、πを使い単位なしで答えなさい。",
+    "answer": "45π",
+    "file": "10-math_g7_space_010.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm",
+        "5cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_014",
+    "diagram": {
+      "kind": "solid3d",
+      "study": true,
+      "shape": "cylinder",
+      "vertices": [],
+      "dimensions": [
+        6,
+        6,
+        4
+      ],
+      "dimensionLabels": {
+        "radius": "3cm",
+        "height": "4cm"
+      },
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "半径3cm、高さ4cmの円柱の表面積を、πを使い単位なしで答えなさい。",
+    "answer": "42π",
+    "file": "11-math_g7_space_014.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm",
+        "4cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_plane_003",
+    "diagram": {
+      "kind": "mathGeometry",
+      "segments": [
+        [
+          60,
+          250,
+          460,
+          250
+        ],
+        [
+          180,
+          90,
+          180,
+          250
+        ],
+        [
+          180,
+          90,
+          300,
+          250
+        ]
+      ],
+      "points": [
+        [
+          180,
+          90
+        ]
+      ],
+      "labels": [
+        [
+          163,
+          74,
+          "P"
+        ],
+        [
+          470,
+          258,
+          "l"
+        ],
+        [
+          147,
+          174,
+          "4cm"
+        ],
+        [
+          273,
+          158,
+          "5cm"
+        ]
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "点Pから直線lへの垂線の長さは4cm、別の斜めの線分の長さは5cmです。点Pと直線lの距離を、cmを付けずに答えなさい。",
+    "answer": "4",
+    "file": "12-math_g7_plane_003.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "P",
+        "l",
+        "4cm",
+        "5cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_plane_013",
+    "diagram": {
+      "kind": "mathGeometry",
+      "circles": [
+        [
+          230,
+          160,
+          100
+        ]
+      ],
+      "segments": [
+        [
+          230,
+          160,
+          330,
+          160
+        ],
+        [
+          330,
+          40,
+          330,
+          285
+        ]
+      ],
+      "points": [
+        [
+          230,
+          160
+        ],
+        [
+          330,
+          160
+        ]
+      ],
+      "labels": [
+        [
+          210,
+          151,
+          "O"
+        ],
+        [
+          350,
+          180,
+          "A"
+        ],
+        [
+          350,
+          48,
+          "l"
+        ],
+        [
+          278,
+          146,
+          "6cm"
+        ]
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "中心O、半径6cmの円に点Aで接する直線lがあります。半径OAと直線lのなす角を度数だけで答えなさい。",
+    "answer": "90",
+    "file": "13-math_g7_plane_013.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "O",
+        "A",
+        "l",
+        "6cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_plane_018",
+    "diagram": {
+      "kind": "mathGeometry",
+      "height": 340,
+      "segments": [
+        [
+          55,
+          260,
+          465,
+          260
+        ]
+      ],
+      "arcs": [
+        [
+          180,
+          260,
+          125,
+          30,
+          80
+        ],
+        [
+          340,
+          260,
+          125,
+          100,
+          150
+        ]
+      ],
+      "points": [
+        [
+          180,
+          260
+        ],
+        [
+          260,
+          260
+        ],
+        [
+          340,
+          260
+        ],
+        [
+          260,
+          163.95313643850727
+        ]
+      ],
+      "labels": [
+        [
+          180,
+          293,
+          "A"
+        ],
+        [
+          260,
+          293,
+          "P"
+        ],
+        [
+          340,
+          293,
+          "B"
+        ],
+        [
+          260,
+          145,
+          "Q"
+        ],
+        [
+          470,
+          267,
+          "l"
+        ]
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "直線l上の点Pに垂線を作図します。l上でPA＝PBとなる点A、Bを取り、A、Bから同じ半径の円弧で交点Qを作った後はどうしますか。",
+    "answer": "PとQを結ぶ",
+    "file": "14-math_g7_plane_018.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "A",
+        "P",
+        "B",
+        "Q",
+        "l"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_009",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量は模式図",
+      "rows": [
+        {
+          "cells": [
+            "b円",
+            "b円"
+          ],
+          "notes": [
+            "袋代10円"
+          ]
+        }
+      ]
+    },
+    "question": "1個b円の品物を2個買い、袋代10円を加えます。合計を表す式はどれですか。",
+    "answer": "2b＋10",
+    "file": "15-math_g7_expression_009.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "b円",
+        "b円",
+        "袋代10円"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_021",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量は模式図",
+      "rows": [
+        {
+          "label": "全体 a cm",
+          "cells": [
+            "7cm",
+            "b cm"
+          ]
+        }
+      ]
+    },
+    "question": "長さa cmのひもから7cm切った残りがb cmです。関係を表す等式はどれですか。",
+    "answer": "a−7＝b",
+    "file": "16-math_g7_expression_021.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "全体 a cm",
+        "7cm",
+        "b cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_025",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "人数・冊数の配置は模式図",
+      "rows": [
+        {
+          "label": "4冊ずつ",
+          "cells": [
+            "…"
+          ],
+          "notes": [
+            "6冊不足"
+          ]
+        },
+        {
+          "label": "3冊ずつ",
+          "cells": [
+            "…"
+          ],
+          "notes": [
+            "9冊余る"
+          ]
+        }
+      ]
+    },
+    "question": "同じノートを1人4冊ずつ配ると6冊足りず、3冊ずつなら9冊余ります。人数をx人とした方程式はどれですか。",
+    "answer": "4x−6＝3x＋9",
+    "file": "17-math_g7_equation_025.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "4冊ずつ",
+        "…",
+        "6冊不足",
+        "3冊ずつ",
+        "…",
+        "9冊余る"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_011",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "cone",
+      "radius": 3,
+      "heightValue": 4,
+      "radiusLabel": "3cm",
+      "heightLabel": "4cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "底面の半径3cm、高さ4cmの円{錐|すい}の体積はどれですか。",
+    "answer": "12π",
+    "file": "18-math_g7_space_011.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm",
+        "高さ 4cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_016",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "cone",
+      "radius": 3,
+      "slant": 5,
+      "radiusLabel": "3cm",
+      "slantLabel": "5cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "底面の半径3cm、母線5cmの円{錐|すい}の表面積を、πを使い単位なしで答えなさい。",
+    "answer": "24π",
+    "file": "19-math_g7_space_016.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm",
+        "5cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_028",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "hemisphere",
+      "radiusLabel": "3cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "半径3cmの半球を切り口の円も含めて囲む表面積を、πを使い単位なしで答えなさい。",
+    "answer": "27π",
+    "file": "20-math_g7_space_028.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm"
+      ]
+    }
+  }
+]
