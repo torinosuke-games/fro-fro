@@ -9,7 +9,7 @@
 - 物語とコンセプト：`STORY.md`（文言・絵・新しい機能を考えるときに読む）
 - 仕様：`SPEC_tower.md`（夜の防衛戦＝タワーディフェンス。判断442・443。T-1 仕様書・T-2 ロジック〔`js/tower.js`・`tests/cases/tower.js`・`tests/tools/tower-sim.js`〕は完了。絵と効果音〔ChatGPT。`img/adventure/tower/`・`js/ui/tower-sound.js`。判断444〕は取り込み済み。T-3〔戦場の画面 `js/ui/tower.js`・判断445〕・T-4〔問題で灯・今夜の襲撃と報酬・判断446〕・T-5〔依頼「防衛」・手動確認 18l・判断449〕は完了。完成報告は `REPORT_tower.md`（ブランチ `claude/tower-art`、実機で確認待ち）。依頼書：`TOWER_ART_REQUESTS_1.md`）、`SPEC_quest_trust.md`（住民の信頼と特別な依頼。判断440）、`SPEC_quest.md`（住民の依頼クエスト＝酒場。判断434〜438。Q-1〜Q-4 すべて完了（ロジック `js/quests.js`・酒場の画面 `js/ui/quest.js`・`js/quest-texts.js`・学習と戦闘とのつながり・手動確認 `tests/MANUAL.md` 18j）。完成報告は `REPORT_quest.md`。ブランチ `claude/quests`、実機で確認待ち）、`SPEC.md`（v0.1＋v0.4 の勉強量ポイントと引換所）、`SPEC_v0.2.md`（探索。矛盾したらこちらが優先）、`SPEC_save_integrity.md`、`SPEC_theme.md`、`SPEC_theme_default_day.md`、`SPEC_v0.3.md`、`SPEC_v0.3_battle.md`
 - 設計：`DESIGN.md`（v0.2 は第12章、v0.3 戦闘は第13章、v0.4 は第14章）
-- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 531。514〜530 は ChatGPT（Codex）の小6社会、206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
+- **判断した点（19〜）と進捗の詳細：`DECISIONS.md`**。仕様にない判断をしたら、その末尾に番号を続けて追記する（次は 537。514〜530 は ChatGPT（Codex）の小6社会、531〜535 は中1数学、206〜220 は ChatGPT（Codex）のリニューアル、223 は ChatGPT の算数文章題の図）。関係する機能を変える前に、該当する判断を検索して読む
 - 問題の作成を ChatGPT に頼むときの依頼書（小6社会・英語、中1〜中3の5教科。単元・数・図の決まり・指示文）：`QUESTION_REQUESTS_1.md`
 - 問題データの書き方：`QUESTIONS_GUIDE.md`（`questions/*.js` を作る・直す前に必ず読む。単元と図の形式は「単元と図」＝判断221）
 - リニューアル（ChatGPT で作った学習画面・小4算数の図解100問）：`RENEWAL.md`、`QUESTIONS_100.md`。算数の文章題55問への図（判断223）：`MATH_WORD_DIAGRAMS.md`（図の種類・使った問題）、依頼の記録は `DIAGRAM_REQUESTS.md`（完了）
@@ -70,7 +70,8 @@
 - データの保存（サーバー同期。判断299〜310、`SPEC_sync.md`、`REPORT_sync.md`）：Supabase。ログインはプレイヤーコード＝1人に1つ（メール・本名なし。判断307）。S-1〜S-7 完了（設計・SQL（`supabase/1〜4_*.sql`は実行済み）・通信とセーブの同期・競合の画面・コードの印刷と引き継ぎ・学習の履歴の送信・保護者の記録画面・手動確認の手順と完成報告）。設定の「データの保存」は、ふつうの画面に出る（判断310。`config.SYNC.ENABLED: true`）が、同期は、おうちの方が同意してオンにした端末だけが行う（既定はオフ）。ここだけは `fetch` を使う（オフなら通信ゼロ）。結合テストの道具：`node tests/tools/sync-e2e-pg.cjs`（Postgres 16 が要る）。Supabase の一時停止の対策：`.github/workflows/supabase-keepalive.yml`（判断309）
 - ChatGPT の試作（ブランチ `codex/homepage-replica`。トップ・町・広い雪原・小6算数500問・小6理科100問）を本体へ統合した（判断500。ブランチ `claude/integrate-chatgpt`、実機で確認待ち）。`js/ui/homepage-design.js`・`css/homepage.css`・`js/ui/village-map.js`・`js/ui/snow-journey*.js`・`questions/*_g6_course.js`・`img/homepage/`。経過は `codex-prototypes/homepage/統合済み.md`・`HANDOFF_CLAUDE_CODE.md`・`README.md`
 - 小6社会（判断514〜530。ChatGPT（Codex）が作成し、Claude が回ごとにレビュー）：単元を12登録し（`js/units.js`）、336問を `questions/social_g6_course.js` に書いた（reviewed: false。原作と合わせて363問）。絵96枚（`img/diagrams/soc6_*.webp`）を161問に付けた。計画は `PICTURE_PLAN_SOCIAL6.md`、プロンプトと照合の記録は `HAND_SOCIAL6_PICTURES.md`。見送った8枚の理由もそこにある。依頼書は `QUESTION_REQUESTS_1.md`（次は小6英語・中1〜中3）
-- 自動テスト 908件すべて成功、`node tests/simulate.js` はすべて目標内。小5の図118問（第3〜5弾）は `HAND_G5_DIAGRAMS.md`。小4理科87問（第6・7弾）は判断250・`HAND_SCI4_DIAGRAMS.md`、図を追加してPRでレビュー待ち。
+- 中1数学（判断531〜535。ChatGPT（Codex）が作成し、Claude が回ごとにレビュー）：単元を10登録し、280問を `questions/math_g7_course.js` に書いた（reviewed: false。各単元28問。見本と合わせて290問）。分数の入力（`number` で「−3/4」を読む）と、式の答えの判定 `formula`（空白・負号・×・累乗の表記をそろえる）を `js/answer.js` に足した。報告は `REPORT_MATH7_1〜5.md`。図はまだ（計画は `PICTURE_PLAN_MATH7.md`、これから）
+- 自動テスト 925件すべて成功、`node tests/simulate.js` はすべて目標内。小5の図118問（第3〜5弾）は `HAND_G5_DIAGRAMS.md`。小4理科87問（第6・7弾）は判断250・`HAND_SCI4_DIAGRAMS.md`、図を追加してPRでレビュー待ち。
 
 ## テストの実行方法
 
@@ -78,6 +79,7 @@
 - バランス計算：`node tests/simulate.js`（目標外があれば終了コード1）
 - 画面の確認：`index.html` を開く。テスト操作は `index.html?debug=1` のデバッグ画面。手順は `tests/MANUAL.md`
 - スマホの確認ページ（Artifact）：ふつう https://claude.ai/artifact/XLuEepmTkNsku4cPPTfqCF 、デバッグ用 https://claude.ai/artifact/4V4WJ32ByTk6YAk7GzfuuW （index.html に `window.FF_DEBUG = true` を足したもの。判断188。`db` の機能付きで、問題のレビューの記録が `reviews` コレクションに入る＝判断202。`ArtifactData` の list で読む。再公開では capabilities を省いて機能を保つ）。変えたファイルを両方に送る。**確認ページは、ファイル数の上限（511）のため、JS・問題データを `node tests/tools/build-artifact-stage.cjs <出力フォルダ> [--debug]` で12個ほどのかたまり（bundle-N.js）にして送る**（判断500。個別の js/・questions/ のファイルは null で消してある。画像・css は、いままでどおり個別）
+- **小6社会（PR #188）からは、確認ページに送らない**（ファイル数の上限。判断536）。新しい問題・絵は、main に入れたあと公開ページ（`?debug=1`）で確かめる
 - 問題データの確認済みの数（`tests/cases/questions.js`）は 1072
 
 ## ファイル構成の要約
