@@ -254,7 +254,7 @@
   }else{
    var hwOn=L.canHandwrite(q)&&it.mode!=='key';
    if(hwOn){answers.appendChild(handwriteView(it,q,done));}else{
-   var input=E('input',{class:'renewal-input',value:it.typed,disabled:done,attrs:{type:'text',inputmode:q.validationMode==='number'?'decimal':'text',autocomplete:'off',placeholder:R.inputPlaceholder,'aria-label':R.inputPlaceholder},on:{input:function(e){it.typed=e.target.value;},keydown:function(e){if(e.key==='Enter'&&!e.isComposing)submit();}}});
+   var input=E('input',{class:'renewal-input',value:it.typed,disabled:done,attrs:{type:'text',inputmode:FF.answer.inputMode(q),autocomplete:'off',placeholder:R.inputPlaceholder,'aria-label':R.inputPlaceholder},on:{input:function(e){it.typed=e.target.value;},keydown:function(e){if(e.key==='Enter'&&!e.isComposing)submit();}}});
    answers.appendChild(E('label',{class:'input-label'},[E('span',{text:R.yourAnswer}),input]));
    U.keepInView(input);
    if(L.canHandwrite(q)&&!done)answers.appendChild(button(R.hwUsePen,function(){it.mode='pen';it.error=null;U.rerender();},'rn-button hw-switch'));

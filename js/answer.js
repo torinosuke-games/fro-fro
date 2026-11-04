@@ -21,13 +21,30 @@
     });
   }
 
-  // 数値として読む。読めなければ NaN。
+  // 数値・単純な分数として読む。読めない形やゼロ除算は NaN。
   // 「.5」「+3」、3桁ごとのカンマ（1,000）、マイナス記号の異体字（− ‐ ー など）を許容する。
   function parseNumber(s) {
-    var t = normalize(s).replace(/\s/g, '').replace(/^[−‐‑‒–—ーｰ]/, '-');
-    if (/^[+-]?\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)) t = t.replace(/,/g, '');
-    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return NaN;
-    return Number(t);
+    var t = normalize(s).replace(/\s/g, '').replace(/[−‐‑‒–—ーｰ]/g, '-');
+    // 分子・分母は符号付きの数だけ。式の評価や再帰的な分数は行わない。
+    function scalar(value, allowParens) {
+      if (allowParens && /^\([^()]+\)$/.test(value)) value = value.slice(1, -1);
+      if (/^[+-]?\d{1,3}(,\d{3})+(\.\d+)?$/.test(value)) value = value.replace(/,/g, '');
+      if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(value)) return NaN;
+      var n = Number(value);
+      return isFinite(n) ? n : NaN;
+    }
+    var parts = t.split('/');
+    if (parts.length === 1) return scalar(t, false);
+    if (parts.length !== 2) return NaN;
+    var numerator = scalar(parts[0], true), denominator = scalar(parts[1], true);
+    if (isNaN(numerator) || isNaN(denominator) || denominator === 0) return NaN;
+    var result = numerator / denominator;
+    return isFinite(result) ? result : NaN;
+  }
+
+  // 分数解ではスマートフォンでも / を入力できる文字キーボードを使う。
+  function inputMode(q) {
+    return q && q.validationMode === 'number' && String(q.answer).indexOf('/') < 0 ? 'decimal' : 'text';
   }
 
   function numberEquals(a, b) {
@@ -77,6 +94,7 @@
     normalize: normalize,
     toHiragana: toHiragana,
     parseNumber: parseNumber,
+    inputMode: inputMode,
     judgeInput: judgeInput,
     judgeChoice: judgeChoice,
     judge: judge
