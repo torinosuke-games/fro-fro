@@ -1,4 +1,4 @@
-// 中1数学 第1〜3回：6単元168問、図なし・レビュー待ち。
+// 中1数学 第1〜4回：8単元224問、図なし・レビュー待ち。
 window.QUESTION_BANK.push(
 {
   "id": "math_g7_signed_numbers_001",
@@ -10,7 +10,7 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "input",
   "question": "海面を基準に、上を正とします。海面より12m下の位置を符号付きの数で表しなさい。単位は不要です。",
-  "answer": "-12",
+  "answer": "−12",
   "validationMode": "number",
   "hints": [
     "海面を0として、下の位置に付ける符号を考えよう。"
@@ -28,7 +28,7 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "input",
   "question": "入金を正の数で表します。口座から650円を引き出した記録を数で表しなさい。",
-  "answer": "-650",
+  "answer": "−650",
   "validationMode": "number",
   "hints": [
     "入金と引き出しは、残高に対して反対の働きをするよ。"
@@ -64,7 +64,7 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "input",
   "question": "数直線上で、原点から左へ7進んだ点の数を答えなさい。",
-  "answer": "-7",
+  "answer": "−7",
   "validationMode": "number",
   "hints": [
     "数直線では右向きが正、左向きが負だよ。"
@@ -146,7 +146,7 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "input",
   "question": "気温が零下5℃のとき、温度計の値を数で答えなさい。",
-  "answer": "-5",
+  "answer": "−5",
   "validationMode": "number",
   "hints": [
     "零下とは0℃より低い温度のことだよ。"
@@ -164,7 +164,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "−2.6と−2.06のうち、大きい方の数を答えなさい。",
-  "answer": "-2.06",
+  "answer": "−2.06",
   "validationMode": "number",
   "hints": [
     "小数の位をそろえて絶対値を比べよう。"
@@ -236,7 +236,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "数直線上の−8と−2のちょうど中間にある数を答えなさい。",
-  "answer": "-5",
+  "answer": "−5",
   "validationMode": "number",
   "hints": [
     "二点の距離を半分にして、一方の点から進もう。"
@@ -275,7 +275,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "基準の重さより18g軽い荷物があります。基準より重い分を正とした記録を数で答えなさい。",
-  "answer": "-18",
+  "answer": "−18",
   "validationMode": "number",
   "hints": [
     "基準より軽いことは、重いことと反対だよ。"
@@ -352,7 +352,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "−1/2、−3/4、−1/4を小さい順に並べたとき、中央の数を分数で答えなさい。",
-  "answer": "-1/2",
+  "answer": "−1/2",
   "validationMode": "number",
   "hints": [
     "分母をそろえてから、負の数の大小を比べよう。"
@@ -544,7 +544,7 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "input",
   "question": "図書室で本が12冊返却され、17冊貸し出されました。冊数の増加を正として、前後の増減を数で答えなさい。",
-  "answer": "-5",
+  "answer": "−5",
   "validationMode": "number",
   "hints": [
     "返却で増える分と、貸出で減る分を符号で区別しよう。"
@@ -562,7 +562,7 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "input",
   "question": "（−7）＋（＋4）を計算しなさい。",
-  "answer": "-3",
+  "answer": "−3",
   "validationMode": "number",
   "hints": [
     "異符号の和は絶対値の差を使い、大きい絶対値の側の符号を付けよう。"
@@ -580,7 +580,7 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "input",
   "question": "（−3）＋（−8）を計算しなさい。",
-  "answer": "-11",
+  "answer": "−11",
   "validationMode": "number",
   "hints": [
     "負の数同士の和は、絶対値を足してから符号を考えよう。"
@@ -616,7 +616,7 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "input",
   "question": "（−4）−9を計算しなさい。",
-  "answer": "-13",
+  "answer": "−13",
   "validationMode": "number",
   "hints": [
     "正の数を引くことは、その反対の数を足すことだよ。"
@@ -675,7 +675,7 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "input",
   "question": "（−24）÷6を計算しなさい。",
-  "answer": "-4",
+  "answer": "−4",
   "validationMode": "number",
   "hints": [
     "商の符号を決め、絶対値を割ろう。"
@@ -716,7 +716,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "（−2/3）＋（1/4）を計算し、分数で答えなさい。",
-  "answer": "-5/12",
+  "answer": "−5/12",
   "validationMode": "number",
   "hints": [
     "共通の分母にそろえ、分子の符号に注意しよう。"
@@ -734,7 +734,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "（−3/4）−（−1/6）を計算し、分数で答えなさい。",
-  "answer": "-7/12",
+  "answer": "−7/12",
   "validationMode": "number",
   "hints": [
     "引く分数の符号を変えてから、通分しよう。"
@@ -788,7 +788,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "（−7/9）÷（14/3）を計算し、分数で答えなさい。",
-  "answer": "-1/6",
+  "answer": "−1/6",
   "validationMode": "number",
   "hints": [
     "割る分数を逆数にして、かけ算に直そう。"
@@ -806,7 +806,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "−4/7の逆数を分数で答えなさい。",
-  "answer": "-7/4",
+  "answer": "−7/4",
   "validationMode": "number",
   "hints": [
     "かけると1になる数なので、符号を保って分子と分母を入れ替えよう。"
@@ -824,7 +824,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "18÷（−3）×2を計算しなさい。",
-  "answer": "-12",
+  "answer": "−12",
   "validationMode": "number",
   "hints": [
     "かけ算と割り算は、左から順に計算しよう。"
@@ -842,7 +842,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "4＋（−3）×5を計算しなさい。",
-  "answer": "-11",
+  "answer": "−11",
   "validationMode": "number",
   "hints": [
     "足し算よりもかけ算を先に計算しよう。"
@@ -1029,7 +1029,7 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "input",
   "question": "（−2/3）÷（4/5）＋（1/6）を計算し、分数で答えなさい。",
-  "answer": "-2/3",
+  "answer": "−2/3",
   "validationMode": "number",
   "hints": [
     "分数の割り算を先にしてから、残った分数を足そう。"
@@ -1070,7 +1070,7 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "input",
   "question": "−1と2/3（負の帯分数）の逆数を分数で答えなさい。",
-  "answer": "-3/5",
+  "answer": "−3/5",
   "validationMode": "number",
   "hints": [
     "全体に負の符号が付いた分数の逆数を考えよう。"
@@ -1234,7 +1234,7 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "input",
   "question": "x＝−3のとき、2xの値を求めなさい。",
-  "answer": "-6",
+  "answer": "−6",
   "validationMode": "number",
   "hints": [
     "負の数を代入するときは、かっこを付けよう。"
@@ -1521,15 +1521,15 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "input",
   "question": "文化祭で1個a円の材料を3個買います。材料代の合計が1000円以上なら送料は無料、それより少なければ送料120円がかかります。材料代が1000円未満のとき、支払額と1000円との差（1000円から支払額を引いた額）を式で表しなさい。",
-  "answer": "880-3a",
+  "answer": "880−3a",
   "validationMode": "formula",
   "hints": [
     "送料を含む支払額全体を、1000から引こう。"
   ],
-  "explanation": "支払額は3a+120円。差は1000−(3a+120)＝880−3a円です。",
+  "explanation": "支払額は3a＋120円。差は1000−(3a＋120)＝880−3a円です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "-3a+880"
+    "−3a＋880"
   ]
 },
 {
@@ -1606,7 +1606,7 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "input",
   "question": "a分の動画と、それより4分長い動画を1本ずつ見ます。合計時間を、同じ文字をまとめた式で答えなさい。単位は不要です。",
-  "answer": "2a+4",
+  "answer": "2a＋4",
   "validationMode": "formula",
   "hints": [
     "もう一方の長さをaを使って表し、二本分を足そう。"
@@ -1614,7 +1614,7 @@ window.QUESTION_BANK.push(
   "explanation": "a＋（a＋4）＝2a＋4分です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "4+2a"
+    "4＋2a"
   ]
 },
 {
@@ -1627,17 +1627,17 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "choice",
   "question": "長さa cmのひもを5本つなぎます。つなぎ目は4か所で、それぞれ2 cmずつ重ねます。つないだ全体の長さを表す式はどれですか。",
-  "answer": "5a-8",
+  "answer": "5a−8",
   "hints": [
     "ひもの本数と、つなぎ目の数は同じではないよ。"
   ],
-  "explanation": "もとの長さの合計は5a。重なり4×2＝8を引くので5a−8です。\n\nほかの 選択肢\n・「5(a-2)」…つなぎ目を5か所と数えています。\n・「5a-4」…重ねる長さ2 cmをかけていません。\n・「5a+8」…重なりは全体の長さを短くします。",
+  "explanation": "もとの長さの合計は5a。重なり4×2＝8を引くので5a−8です。\n\nほかの 選択肢\n・「5(a−2)」…つなぎ目を5か所と数えています。\n・「5a−4」…重ねる長さ2 cmをかけていません。\n・「5a＋8」…重なりは全体の長さを短くします。",
   "reviewed": false,
   "choices": [
-    "5a-8",
-    "5(a-2)",
-    "5a-4",
-    "5a+8"
+    "5a−8",
+    "5(a−2)",
+    "5a−4",
+    "5a＋8"
   ]
 },
 {
@@ -1650,7 +1650,7 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "input",
   "question": "図書カード500円分から、1冊a円のノートを2冊買います。残額からさらに、その残額の半分を使いました。最後の残額を式で表しなさい。",
-  "answer": "250-a",
+  "answer": "250−a",
   "validationMode": "formula",
   "hints": [
     "最初の買い物の残額を求め、その全体を半分にしよう。"
@@ -1658,8 +1658,8 @@ window.QUESTION_BANK.push(
   "explanation": "最初の残額は500−2a。最後は(500−2a)÷2＝250−a円です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "-a+250",
-    "(500-2a)/2"
+    "−a＋250",
+    "(500−2a)/2"
   ]
 },
 {
@@ -1671,12 +1671,12 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "choice",
-  "question": "ある施設の料金は、大人1人a円、中学生1人は大人より200円安いとします。式5a-600が表す人数の組合せはどれですか。",
+  "question": "ある施設の料金は、大人1人a円、中学生1人は大人より200円安いとします。式5a−600が表す人数の組合せはどれですか。",
   "answer": "大人2人と中学生3人",
   "hints": [
     "全員が大人とした代金から、何人分の値引きを引いたか考えよう。"
   ],
-  "explanation": "2a+3(a−200)＝5a−600。全5人のうち3人が中学生です。\n\nほかの 選択肢\n・「大人3人と中学生2人」…値引きは400円になります。\n・「大人5人と中学生3人」…合計8人なので係数が8になります。\n・「中学生5人」…値引きは1000円になります。",
+  "explanation": "2a＋3(a−200)＝5a−600。全5人のうち3人が中学生です。\n\nほかの 選択肢\n・「大人3人と中学生2人」…値引きは400円になります。\n・「大人5人と中学生3人」…合計8人なので係数が8になります。\n・「中学生5人」…値引きは1000円になります。",
   "reviewed": false,
   "choices": [
     "大人2人と中学生3人",
@@ -1777,7 +1777,7 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "input",
   "question": "（−2x）×3を計算しなさい。",
-  "answer": "-6x",
+  "answer": "−6x",
   "validationMode": "formula",
   "hints": [
     "数の部分だけをかけ、文字を残そう。"
@@ -1859,7 +1859,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "（3a＋2）＋（5a−7）を計算しなさい。",
-  "answer": "8a-5",
+  "answer": "8a−5",
   "validationMode": "formula",
   "hints": [
     "文字の項同士、数だけの項同士を合わせよう。"
@@ -1867,7 +1867,7 @@ window.QUESTION_BANK.push(
   "explanation": "3a＋5a＋2−7＝8a−5です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "-5+8a"
+    "−5＋8a"
   ]
 },
 {
@@ -1903,7 +1903,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "（−4a＋6）＋（a−9）を計算しなさい。",
-  "answer": "-3a-3",
+  "answer": "−3a−3",
   "validationMode": "formula",
   "hints": [
     "aの係数を1と考え、符号付きの係数を足そう。"
@@ -1911,7 +1911,7 @@ window.QUESTION_BANK.push(
   "explanation": "（−4＋1）a＋6−9＝−3a−3です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "-3-3a"
+    "−3−3a"
   ]
 },
 {
@@ -1947,7 +1947,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "−2（3a＋4）を計算しなさい。",
-  "answer": "-6a-8",
+  "answer": "−6a−8",
   "validationMode": "formula",
   "hints": [
     "負の数を二つの項それぞれにかけよう。"
@@ -1955,7 +1955,7 @@ window.QUESTION_BANK.push(
   "explanation": "（−2）×3a＋（−2）×4＝−6a−8です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "-8-6a"
+    "−8−6a"
   ]
 },
 {
@@ -1991,7 +1991,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "（−15a＋10）÷（−5）を計算しなさい。",
-  "answer": "3a-2",
+  "answer": "3a−2",
   "validationMode": "formula",
   "hints": [
     "割る数が負なので、各項の符号の変化に注意しよう。"
@@ -1999,7 +1999,7 @@ window.QUESTION_BANK.push(
   "explanation": "（−15a）÷（−5）＋10÷（−5）＝3a−2です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "-2+3a"
+    "−2＋3a"
   ]
 },
 {
@@ -2076,7 +2076,7 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "input",
   "question": "2（x＋3）−（x−4）を計算しなさい。",
-  "answer": "x+10",
+  "answer": "x＋10",
   "validationMode": "formula",
   "hints": [
     "最初の分配と、引くかっこの符号変更を別々にしよう。"
@@ -2084,7 +2084,7 @@ window.QUESTION_BANK.push(
   "explanation": "2x＋6−x＋4＝x＋10です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "10+x"
+    "10＋x"
   ]
 },
 {
@@ -2120,7 +2120,7 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "input",
   "question": "縦がa cm、横が（a＋3）cmの長方形があります。周の長さを、同類項をまとめた式で答えなさい。単位は不要です。",
-  "answer": "4a+6",
+  "answer": "4a＋6",
   "validationMode": "formula",
   "hints": [
     "縦も横も二本ずつあるよ。"
@@ -2128,7 +2128,7 @@ window.QUESTION_BANK.push(
   "explanation": "2a＋2（a＋3）＝2a＋2a＋6＝4a＋6cmです。",
   "reviewed": false,
   "acceptedAnswers": [
-    "6+4a"
+    "6＋4a"
   ]
 },
 {
@@ -2164,7 +2164,7 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "input",
   "question": "同じ長さa cmのひも3本から、それぞれ2cmずつ切ります。残りの合計を文字式で答えなさい。単位は不要です。",
-  "answer": "3a-6",
+  "answer": "3a−6",
   "validationMode": "formula",
   "hints": [
     "一本ごとの残りを求めてから三本分にしよう。"
@@ -2172,7 +2172,7 @@ window.QUESTION_BANK.push(
   "explanation": "3（a−2）＝3a−6cmです。",
   "reviewed": false,
   "acceptedAnswers": [
-    "-6+3a"
+    "−6＋3a"
   ]
 },
 {
@@ -2208,7 +2208,7 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "input",
   "question": "3（2x−1）−2（x＋4）を簡単にしてから、x＝−2のときの値を求めなさい。",
-  "answer": "-19",
+  "answer": "−19",
   "validationMode": "number",
   "hints": [
     "二つのかっこを外し、同類項をまとめてから代入しよう。"
@@ -2249,7 +2249,7 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "input",
   "question": "（6x−9）÷3−（x−5）を計算しなさい。",
-  "answer": "x+2",
+  "answer": "x＋2",
   "validationMode": "formula",
   "hints": [
     "各項を割った後、引くかっこの中の符号を変えよう。"
@@ -2257,7 +2257,7 @@ window.QUESTION_BANK.push(
   "explanation": "2x−3−x＋5＝x＋2です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "2+x"
+    "2＋x"
   ]
 },
 {
@@ -2292,7 +2292,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "choice",
-  "question": "方程式x+5＝12の解である数はどれですか。",
+  "question": "方程式x＋5＝12の解である数はどれですか。",
   "answer": "7",
   "hints": [
     "左右に代入して、等しくなる数を探そう。"
@@ -2301,10 +2301,10 @@ window.QUESTION_BANK.push(
   "choices": [
     "7",
     "17",
-    "-7",
+    "−7",
     "5"
   ],
-  "explanation": "7+5＝12で両辺が一致します。\n\nほかの 選択肢\n・「17」…17+5＝22です。\n・「-7」…−7+5＝−2です。\n・「5」…5+5＝10です。"
+  "explanation": "7＋5＝12で両辺が一致します。\n\nほかの 選択肢\n・「17」…17＋5＝22です。\n・「−7」…−7＋5＝−2です。\n・「5」…5＋5＝10です。"
 },
 {
   "id": "math_g7_equation_006",
@@ -2315,14 +2315,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "input",
-  "question": "x＝3は方程式2x+1＝7の解です。左辺に代入した値を答えなさい。",
+  "question": "x＝3は方程式2x＋1＝7の解です。左辺に代入した値を答えなさい。",
   "answer": "7",
   "hints": [
     "2倍してから1を足そう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "2×3+1＝7で右辺に一致します。"
+  "explanation": "2×3＋1＝7で右辺に一致します。"
 },
 {
   "id": "math_g7_equation_007",
@@ -2334,18 +2334,18 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "choice",
   "question": "等式a＝bの両辺に同じ3を加えた等式はどれですか。",
-  "answer": "a+3＝b+3",
+  "answer": "a＋3＝b＋3",
   "hints": [
     "等号の両側に同じ操作をしよう。"
   ],
   "reviewed": false,
   "choices": [
-    "a+3＝b+3",
-    "a+3＝b",
-    "3a＝b+3",
-    "a-3＝b+3"
+    "a＋3＝b＋3",
+    "a＋3＝b",
+    "3a＝b＋3",
+    "a−3＝b＋3"
   ],
-  "explanation": "両辺に3を加えるので等しさが保たれます。\n\nほかの 選択肢\n・「a+3＝b」…右辺にも3を加えます。\n・「3a＝b+3」…左辺は加法でなく乗法です。\n・「a-3＝b+3」…左右で操作の符号が異なります。"
+  "explanation": "両辺に3を加えるので等しさが保たれます。\n\nほかの 選択肢\n・「a＋3＝b」…右辺にも3を加えます。\n・「3a＝b＋3」…左辺は加法でなく乗法です。\n・「a−3＝b＋3」…左右で操作の符号が異なります。"
 },
 {
   "id": "math_g7_equation_008",
@@ -2356,14 +2356,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "input",
-  "question": "x-4＝9を満たすxの値を答えなさい。",
+  "question": "x−4＝9を満たすxの値を答えなさい。",
   "answer": "13",
   "hints": [
     "両辺に4を加えよう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "x＝9+4＝13。"
+  "explanation": "x＝9＋4＝13。"
 },
 {
   "id": "math_g7_equation_009",
@@ -2397,8 +2397,8 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "input",
-  "question": "x/4＝-2を満たすxの値を答えなさい。",
-  "answer": "-8",
+  "question": "x/4＝−2を満たすxの値を答えなさい。",
+  "answer": "−8",
   "hints": [
     "両辺を4倍しよう。"
   ],
@@ -2416,18 +2416,18 @@ window.QUESTION_BANK.push(
   "difficulty": "basic",
   "answerType": "choice",
   "question": "1冊x円のノート3冊と120円のペンで合計600円です。方程式はどれですか。",
-  "answer": "3x+120＝600",
+  "answer": "3x＋120＝600",
   "hints": [
     "ペンを買うのは1本だけだよ。"
   ],
   "reviewed": false,
   "choices": [
-    "3x+120＝600",
-    "3(x+120)＝600",
-    "x+120＝600",
-    "3x＝600+120"
+    "3x＋120＝600",
+    "3(x＋120)＝600",
+    "x＋120＝600",
+    "3x＝600＋120"
   ],
-  "explanation": "ノート代3xにペン代120を加えます。\n\nほかの 選択肢\n・「3(x+120)＝600」…ペン代まで3倍しています。\n・「x+120＝600」…ノート3冊分になっていません。\n・「3x＝600+120」…ペン代を差し引く向きが逆です。"
+  "explanation": "ノート代3xにペン代120を加えます。\n\nほかの 選択肢\n・「3(x＋120)＝600」…ペン代まで3倍しています。\n・「x＋120＝600」…ノート3冊分になっていません。\n・「3x＝600＋120」…ペン代を差し引く向きが逆です。"
 },
 {
   "id": "math_g7_equation_012",
@@ -2438,8 +2438,8 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "input",
-  "question": "x+8＝3を満たすxの値を答えなさい。",
-  "answer": "-5",
+  "question": "x＋8＝3を満たすxの値を答えなさい。",
+  "answer": "−5",
   "hints": [
     "両辺から8を引こう。"
   ],
@@ -2456,19 +2456,19 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "choice",
-  "question": "5x-7＝2x+8でxの項を左辺へ、数の項を右辺へ移した式はどれですか。",
-  "answer": "5x-2x＝8+7",
+  "question": "5x−7＝2x＋8でxの項を左辺へ、数の項を右辺へ移した式はどれですか。",
+  "answer": "5x−2x＝8＋7",
   "hints": [
     "移項した項だけ符号が変わるよ。"
   ],
   "reviewed": false,
   "choices": [
-    "5x-2x＝8+7",
-    "5x+2x＝8+7",
-    "5x-2x＝8-7",
-    "5x+2x＝8-7"
+    "5x−2x＝8＋7",
+    "5x＋2x＝8＋7",
+    "5x−2x＝8−7",
+    "5x＋2x＝8−7"
   ],
-  "explanation": "2xは−2xに、−7は+7になります。\n\nほかの 選択肢\n・「5x+2x＝8+7」…2xの移項の符号が逆です。\n・「5x-2x＝8-7」…−7の移項の符号が逆です。\n・「5x+2x＝8-7」…両方の移項の符号が逆です。"
+  "explanation": "2xは−2xに、−7は＋7になります。\n\nほかの 選択肢\n・「5x＋2x＝8＋7」…2xの移項の符号が逆です。\n・「5x−2x＝8−7」…−7の移項の符号が逆です。\n・「5x＋2x＝8−7」…両方の移項の符号が逆です。"
 },
 {
   "id": "math_g7_equation_014",
@@ -2479,7 +2479,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "input",
-  "question": "4x+3＝19を満たすxの値を答えなさい。",
+  "question": "4x＋3＝19を満たすxの値を答えなさい。",
   "answer": "4",
   "hints": [
     "まず定数項3を移項しよう。"
@@ -2497,19 +2497,19 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "choice",
-  "question": "x/2+1＝5の両辺を2倍した式はどれですか。",
-  "answer": "x+2＝10",
+  "question": "x/2＋1＝5の両辺を2倍した式はどれですか。",
+  "answer": "x＋2＝10",
   "hints": [
     "定数項も右辺も、全部2倍しよう。"
   ],
   "reviewed": false,
   "choices": [
-    "x+2＝10",
-    "x+1＝10",
-    "x+2＝5",
-    "2x+2＝10"
+    "x＋2＝10",
+    "x＋1＝10",
+    "x＋2＝5",
+    "2x＋2＝10"
   ],
-  "explanation": "すべての項を2倍するとx+2＝10です。\n\nほかの 選択肢\n・「x+1＝10」…左辺の1を2倍していません。\n・「x+2＝5」…右辺を2倍していません。\n・「2x+2＝10」…x/2の2倍はxです。"
+  "explanation": "すべての項を2倍するとx＋2＝10です。\n\nほかの 選択肢\n・「x＋1＝10」…左辺の1を2倍していません。\n・「x＋2＝5」…右辺を2倍していません。\n・「2x＋2＝10」…x/2の2倍はxです。"
 },
 {
   "id": "math_g7_equation_016",
@@ -2520,14 +2520,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "input",
-  "question": "2(x+3)＝14を満たすxの値を答えなさい。",
+  "question": "2(x＋3)＝14を満たすxの値を答えなさい。",
   "answer": "4",
   "hints": [
     "両辺を2で割ってから考えよう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "x+3＝7、x＝4。"
+  "explanation": "x＋3＝7、x＝4。"
 },
 {
   "id": "math_g7_equation_017",
@@ -2561,7 +2561,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "input",
-  "question": "0.4x+1＝3を満たすxの値を答えなさい。",
+  "question": "0.4x＋1＝3を満たすxの値を答えなさい。",
   "answer": "5",
   "hints": [
     "1を移項し、0.4で割ろう。"
@@ -2580,18 +2580,18 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "choice",
   "question": "生徒に鉛筆を1人3本ずつ配ると5本余ります。生徒x人、鉛筆41本のときの方程式はどれですか。",
-  "answer": "3x+5＝41",
+  "answer": "3x＋5＝41",
   "hints": [
     "配った本数と余った本数の和が全体だよ。"
   ],
   "reviewed": false,
   "choices": [
-    "3x+5＝41",
-    "3x-5＝41",
-    "5x+3＝41",
-    "3(x+5)＝41"
+    "3x＋5＝41",
+    "3x−5＝41",
+    "5x＋3＝41",
+    "3(x＋5)＝41"
   ],
-  "explanation": "配った3x本に余り5本を足します。\n\nほかの 選択肢\n・「3x-5＝41」…余った本数を引いています。\n・「5x+3＝41」…1人分と余りを取り違えています。\n・「3(x+5)＝41」…余り5本を人数に加えています。"
+  "explanation": "配った3x本に余り5本を足します。\n\nほかの 選択肢\n・「3x−5＝41」…余った本数を引いています。\n・「5x＋3＝41」…1人分と余りを取り違えています。\n・「3(x＋5)＝41」…余り5本を人数に加えています。"
 },
 {
   "id": "math_g7_equation_020",
@@ -2602,14 +2602,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "input",
-  "question": "3x-2＝x+8を満たすxの値を答えなさい。",
+  "question": "3x−2＝x＋8を満たすxの値を答えなさい。",
   "answer": "5",
   "hints": [
     "xの項と数の項を別々の側に集めよう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "3x−x＝8+2、2x＝10、x＝5。"
+  "explanation": "3x−x＝8＋2、2x＝10、x＝5。"
 },
 {
   "id": "math_g7_equation_021",
@@ -2630,9 +2630,9 @@ window.QUESTION_BANK.push(
     "4x＝6",
     "x/4＝6",
     "4/x＝6",
-    "x+4＝6"
+    "x＋4＝6"
   ],
-  "explanation": "距離＝速さ×時間より4x＝6です。\n\nほかの 選択肢\n・「x/4＝6」…距離を求める際に速さで割っていません。\n・「4/x＝6」…時間で割る式ではありません。\n・「x+4＝6」…速さと時間は足せません。"
+  "explanation": "距離＝速さ×時間より4x＝6です。\n\nほかの 選択肢\n・「x/4＝6」…距離を求める際に速さで割っていません。\n・「4/x＝6」…時間で割る式ではありません。\n・「x＋4＝6」…速さと時間は足せません。"
 },
 {
   "id": "math_g7_equation_022",
@@ -2662,18 +2662,18 @@ window.QUESTION_BANK.push(
   "difficulty": "standard",
   "answerType": "choice",
   "question": "今12歳の妹と今x歳の兄がいます。4年後に兄は妹の年齢の1.5倍です。方程式はどれですか。",
-  "answer": "x+4＝1.5(12+4)",
+  "answer": "x＋4＝1.5(12＋4)",
   "hints": [
     "4年後は二人とも4歳増えているよ。"
   ],
   "reviewed": false,
   "choices": [
-    "x+4＝1.5(12+4)",
-    "x+4＝1.5×12",
-    "x＝1.5(12+4)",
-    "x+4＝1.5×12+4"
+    "x＋4＝1.5(12＋4)",
+    "x＋4＝1.5×12",
+    "x＝1.5(12＋4)",
+    "x＋4＝1.5×12＋4"
   ],
-  "explanation": "4年後の妹の年齢全体を1.5倍します。\n\nほかの 選択肢\n・「x+4＝1.5×12」…妹の年齢が今のままです。\n・「x＝1.5(12+4)」…兄の年齢が今のままです。\n・「x+4＝1.5×12+4」…妹の増えた4歳も1.5倍の対象です。"
+  "explanation": "4年後の妹の年齢全体を1.5倍します。\n\nほかの 選択肢\n・「x＋4＝1.5×12」…妹の年齢が今のままです。\n・「x＝1.5(12＋4)」…兄の年齢が今のままです。\n・「x＋4＝1.5×12＋4」…妹の増えた4歳も1.5倍の対象です。"
 },
 {
   "id": "math_g7_equation_024",
@@ -2703,18 +2703,18 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "choice",
   "question": "同じノートを1人4冊ずつ配ると6冊足りず、3冊ずつなら9冊余ります。人数をx人とした方程式はどれですか。",
-  "answer": "4x-6＝3x+9",
+  "answer": "4x−6＝3x＋9",
   "hints": [
     "二通りに表したノートの総数を等しくしよう。"
   ],
   "reviewed": false,
   "choices": [
-    "4x-6＝3x+9",
-    "4x+6＝3x-9",
-    "4x-6＝3x-9",
-    "4x+6＝3x+9"
+    "4x−6＝3x＋9",
+    "4x＋6＝3x−9",
+    "4x−6＝3x−9",
+    "4x＋6＝3x＋9"
   ],
-  "explanation": "総数は4xより6少なく、3xより9多いのでこの式です。\n\nほかの 選択肢\n・「4x+6＝3x-9」…不足と余りの符号が両方逆です。\n・「4x-6＝3x-9」…余り9冊を引いています。\n・「4x+6＝3x+9」…不足6冊を足しています。"
+  "explanation": "総数は4xより6少なく、3xより9多いのでこの式です。\n\nほかの 選択肢\n・「4x＋6＝3x−9」…不足と余りの符号が両方逆です。\n・「4x−6＝3x−9」…余り9冊を引いています。\n・「4x＋6＝3x＋9」…不足6冊を足しています。"
 },
 {
   "id": "math_g7_equation_026",
@@ -2732,7 +2732,7 @@ window.QUESTION_BANK.push(
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "5x+2＝6x−4、2+4＝x、x＝6。"
+  "explanation": "5x＋2＝6x−4、2＋4＝x、x＝6。"
 },
 {
   "id": "math_g7_equation_027",
@@ -2744,18 +2744,18 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "choice",
   "question": "弟が毎分60mで出発し、5分後に兄が毎分80mで同じ道を追います。兄が出発してx分後に追いつく式はどれですか。",
-  "answer": "80x＝60(x+5)",
+  "answer": "80x＝60(x＋5)",
   "hints": [
     "弟が歩いた時間は兄より5分長いよ。"
   ],
   "reviewed": false,
   "choices": [
-    "80x＝60(x+5)",
-    "80(x+5)＝60x",
-    "80x＝60x+5",
-    "80x＝60(x-5)"
+    "80x＝60(x＋5)",
+    "80(x＋5)＝60x",
+    "80x＝60x＋5",
+    "80x＝60(x−5)"
   ],
-  "explanation": "兄の距離80xと弟の距離60(x+5)を等しくします。\n\nほかの 選択肢\n・「80(x+5)＝60x」…先に出た人が逆です。\n・「80x＝60x+5」…5分に速さをかけていません。\n・「80x＝60(x-5)」…弟の時間を短くしています。"
+  "explanation": "兄の距離80xと弟の距離60(x＋5)を等しくします。\n\nほかの 選択肢\n・「80(x＋5)＝60x」…先に出た人が逆です。\n・「80x＝60x＋5」…5分に速さをかけていません。\n・「80x＝60(x−5)」…弟の時間を短くしています。"
 },
 {
   "id": "math_g7_equation_028",
@@ -2773,7 +2773,7 @@ window.QUESTION_BANK.push(
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "42+x＝3(12+x)、42+x＝36+3x、6＝2x、x＝3。"
+  "explanation": "42＋x＝3(12＋x)、42＋x＝36＋3x、6＝2x、x＝3。"
 },
 {
   "id": "math_g7_equation_029",
@@ -2784,14 +2784,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "choice",
-  "question": "方程式2(x-3)＝x+4を、2x-3＝x+4と変形しました。指摘として正しいものはどれですか。",
-  "answer": "2を-3にもかける必要がある",
+  "question": "方程式2(x−3)＝x＋4を、2x−3＝x＋4と変形しました。指摘として正しいものはどれですか。",
+  "answer": "2を−3にもかける必要がある",
   "hints": [
     "分配法則でかける対象を確認しよう。"
   ],
   "reviewed": false,
   "choices": [
-    "2を-3にもかける必要がある",
+    "2を−3にもかける必要がある",
     "右辺にも2をかける必要がある",
     "xを移項する前に両辺を2で割れない",
     "2xをx²にする必要がある"
@@ -2814,7 +2814,7 @@ window.QUESTION_BANK.push(
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "x/3+4+x/2＝x。6倍して2x+24+3x＝6x、x＝24。"
+  "explanation": "x/3＋4＋x/2＝x。6倍して2x＋24＋3x＝6x、x＝24。"
 },
 {
   "id": "math_g7_equation_031",
@@ -2825,7 +2825,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "choice",
-  "question": "方程式2x+3＝2(x+4)について正しい説明はどれですか。",
+  "question": "方程式2x＋3＝2(x＋4)について正しい説明はどれですか。",
   "answer": "解はない",
   "hints": [
     "両辺から2xを引くと何が残るかな。"
@@ -2837,7 +2837,7 @@ window.QUESTION_BANK.push(
     "すべての数が解",
     "x＝5が解"
   ],
-  "explanation": "2x+3＝2x+8より3＝8となり、成り立つxはありません。\n\nほかの 選択肢\n・「x＝0が解」…0を代入すると3と8で一致しません。\n・「すべての数が解」…定数項が異なるので恒等的には成立しません。\n・「x＝5が解」…5を代入すると13と18で一致しません。"
+  "explanation": "2x＋3＝2x＋8より3＝8となり、成り立つxはありません。\n\nほかの 選択肢\n・「x＝0が解」…0を代入すると3と8で一致しません。\n・「すべての数が解」…定数項が異なるので恒等的には成立しません。\n・「x＝5が解」…5を代入すると13と18で一致しません。"
 },
 {
   "id": "math_g7_equation_032",
@@ -2848,14 +2848,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "input",
-  "question": "ある数xに3を足して2倍するところを、3倍して2を足しました。二つの結果の差は、正しい結果から誤った結果を引くと-5でした。xの値を答えなさい。",
+  "question": "ある数xに3を足して2倍するところを、3倍して2を足しました。二つの結果の差は、正しい結果から誤った結果を引くと−5でした。xの値を答えなさい。",
   "answer": "9",
   "hints": [
     "正しい結果全体から誤った結果全体を引こう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "2(x+3)−(3x+2)＝−5、−x+4＝−5、x＝9。"
+  "explanation": "2(x＋3)−(3x＋2)＝−5、−x＋4＝−5、x＝9。"
 },
 {
   "id": "math_g7_equation_calc_001",
@@ -2866,7 +2866,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "input",
-  "question": "x+9＝14を満たすxの値を答えなさい。",
+  "question": "x＋9＝14を満たすxの値を答えなさい。",
   "answer": "5",
   "hints": [
     "左辺の9を取り除こう。"
@@ -2884,7 +2884,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "choice",
-  "question": "x-6＝-2の解はどれですか。",
+  "question": "x−6＝−2の解はどれですか。",
   "answer": "4",
   "hints": [
     "両辺に6を加えよう。"
@@ -2892,11 +2892,11 @@ window.QUESTION_BANK.push(
   "reviewed": false,
   "choices": [
     "4",
-    "-8",
+    "−8",
     "8",
-    "-4"
+    "−4"
   ],
-  "explanation": "x＝−2+6＝4です。\n\nほかの 選択肢\n・「-8」…移項時の符号を変えていません。\n・「8」…−2を+2として足しています。\n・「-4」…正しい解の符号を逆にしています。"
+  "explanation": "x＝−2＋6＝4です。\n\nほかの 選択肢\n・「−8」…移項時の符号を変えていません。\n・「8」…−2を＋2として足しています。\n・「−4」…正しい解の符号を逆にしています。"
 },
 {
   "id": "math_g7_equation_calc_003",
@@ -2907,8 +2907,8 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "input",
-  "question": "-3x＝18を満たすxの値を答えなさい。",
-  "answer": "-6",
+  "question": "−3x＝18を満たすxの値を答えなさい。",
+  "answer": "−6",
   "hints": [
     "負の係数で両辺を割ろう。"
   ],
@@ -2948,8 +2948,8 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "input",
-  "question": "7x＝-2を満たすxの値を答えなさい。",
-  "answer": "-2/7",
+  "question": "7x＝−2を満たすxの値を答えなさい。",
+  "answer": "−2/7",
   "hints": [
     "割り切れない商は分数にしよう。"
   ],
@@ -2966,19 +2966,19 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "choice",
-  "question": "2x+5＝11の最初の変形として正しいものはどれですか。",
-  "answer": "2x＝11-5",
+  "question": "2x＋5＝11の最初の変形として正しいものはどれですか。",
+  "answer": "2x＝11−5",
   "hints": [
     "まず足されている5を移項しよう。"
   ],
   "reviewed": false,
   "choices": [
-    "2x＝11-5",
-    "2x＝11+5",
-    "x＝11-5",
+    "2x＝11−5",
+    "2x＝11＋5",
+    "x＝11−5",
     "2x＝11/5"
   ],
-  "explanation": "5を移項すると−5になります。\n\nほかの 選択肢\n・「2x＝11+5」…移項時の符号を変えていません。\n・「x＝11-5」…係数2を消してしまっています。\n・「2x＝11/5」…足し算を除法で取り除こうとしています。"
+  "explanation": "5を移項すると−5になります。\n\nほかの 選択肢\n・「2x＝11＋5」…移項時の符号を変えていません。\n・「x＝11−5」…係数2を消してしまっています。\n・「2x＝11/5」…足し算を除法で取り除こうとしています。"
 },
 {
   "id": "math_g7_equation_calc_007",
@@ -2989,8 +2989,8 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "basic",
   "answerType": "input",
-  "question": "8-x＝11を満たすxの値を答えなさい。",
-  "answer": "-3",
+  "question": "8−x＝11を満たすxの値を答えなさい。",
+  "answer": "−3",
   "hints": [
     "xの係数が負であることに注意しよう。"
   ],
@@ -3017,9 +3017,9 @@ window.QUESTION_BANK.push(
     "0",
     "4",
     "1/4",
-    "-4"
+    "−4"
   ],
-  "explanation": "両辺を4で割るとx＝0です。\n\nほかの 選択肢\n・「4」…係数をそのまま解にしています。\n・「1/4」…右辺を1と取り違えています。\n・「-4」…係数の符号を変えても解にはなりません。"
+  "explanation": "両辺を4で割るとx＝0です。\n\nほかの 選択肢\n・「4」…係数をそのまま解にしています。\n・「1/4」…右辺を1と取り違えています。\n・「−4」…係数の符号を変えても解にはなりません。"
 },
 {
   "id": "math_g7_equation_calc_009",
@@ -3030,7 +3030,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "input",
-  "question": "7x-4＝3x+12を満たすxの値を答えなさい。",
+  "question": "7x−4＝3x＋12を満たすxの値を答えなさい。",
   "answer": "4",
   "hints": [
     "両辺から3xを引こう。"
@@ -3048,19 +3048,19 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "choice",
-  "question": "3(x-2)＝12を展開した式はどれですか。",
-  "answer": "3x-6＝12",
+  "question": "3(x−2)＝12を展開した式はどれですか。",
+  "answer": "3x−6＝12",
   "hints": [
     "かっこの中の両方に3をかけよう。"
   ],
   "reviewed": false,
   "choices": [
-    "3x-6＝12",
-    "3x-2＝12",
-    "3x+6＝12",
-    "x-6＝12"
+    "3x−6＝12",
+    "3x−2＝12",
+    "3x＋6＝12",
+    "x−6＝12"
   ],
-  "explanation": "3×x−3×2＝3x−6です。\n\nほかの 選択肢\n・「3x-2＝12」…2を3倍していません。\n・「3x+6＝12」…負の符号が変わっています。\n・「x-6＝12」…xを3倍していません。"
+  "explanation": "3×x−3×2＝3x−6です。\n\nほかの 選択肢\n・「3x−2＝12」…2を3倍していません。\n・「3x＋6＝12」…負の符号が変わっています。\n・「x−6＝12」…xを3倍していません。"
 },
 {
   "id": "math_g7_equation_calc_011",
@@ -3071,8 +3071,8 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "input",
-  "question": "5-2(x+1)＝9を満たすxの値を答えなさい。",
-  "answer": "-3",
+  "question": "5−2(x＋1)＝9を満たすxの値を答えなさい。",
+  "answer": "−3",
   "hints": [
     "かっこの前の負の符号も分配しよう。"
   ],
@@ -3089,19 +3089,19 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "choice",
-  "question": "0.3x-0.2＝0.7の両辺を10倍した式はどれですか。",
-  "answer": "3x-2＝7",
+  "question": "0.3x−0.2＝0.7の両辺を10倍した式はどれですか。",
+  "answer": "3x−2＝7",
   "hints": [
     "小数のある項をすべて同じ倍率で変えよう。"
   ],
   "reviewed": false,
   "choices": [
-    "3x-2＝7",
-    "3x-0.2＝7",
-    "3x-2＝0.7",
-    "30x-2＝7"
+    "3x−2＝7",
+    "3x−0.2＝7",
+    "3x−2＝0.7",
+    "30x−2＝7"
   ],
-  "explanation": "全項を10倍すると3x−2＝7です。\n\nほかの 選択肢\n・「3x-0.2＝7」…定数−0.2を10倍していません。\n・「3x-2＝0.7」…右辺を10倍していません。\n・「30x-2＝7」…0.3を100倍しています。"
+  "explanation": "全項を10倍すると3x−2＝7です。\n\nほかの 選択肢\n・「3x−0.2＝7」…定数−0.2を10倍していません。\n・「3x−2＝0.7」…右辺を10倍していません。\n・「30x−2＝7」…0.3を100倍しています。"
 },
 {
   "id": "math_g7_equation_calc_013",
@@ -3112,14 +3112,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "input",
-  "question": "0.6x+1.2＝0.3xを満たすxの値を答えなさい。",
-  "answer": "-4",
+  "question": "0.6x＋1.2＝0.3xを満たすxの値を答えなさい。",
+  "answer": "−4",
   "hints": [
     "10倍して小数をなくそう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "6x+12＝3x、3x＝−12、x＝−4。"
+  "explanation": "6x＋12＝3x、3x＝−12、x＝−4。"
 },
 {
   "id": "math_g7_equation_calc_014",
@@ -3130,19 +3130,19 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "choice",
-  "question": "x/3-2＝x/6の両辺を6倍した式はどれですか。",
-  "answer": "2x-12＝x",
+  "question": "x/3−2＝x/6の両辺を6倍した式はどれですか。",
+  "answer": "2x−12＝x",
   "hints": [
     "分数でない項にも6をかけよう。"
   ],
   "reviewed": false,
   "choices": [
-    "2x-12＝x",
-    "2x-2＝x",
-    "2x-12＝6x",
-    "x-12＝x"
+    "2x−12＝x",
+    "2x−2＝x",
+    "2x−12＝6x",
+    "x−12＝x"
   ],
-  "explanation": "6×x/3−6×2＝6×x/6です。\n\nほかの 選択肢\n・「2x-2＝x」…定数2を6倍していません。\n・「2x-12＝6x」…x/6を6倍するとxです。\n・「x-12＝x」…x/3を6倍すると2xです。"
+  "explanation": "6×x/3−6×2＝6×x/6です。\n\nほかの 選択肢\n・「2x−2＝x」…定数2を6倍していません。\n・「2x−12＝6x」…x/6を6倍するとxです。\n・「x−12＝x」…x/3を6倍すると2xです。"
 },
 {
   "id": "math_g7_equation_calc_015",
@@ -3153,14 +3153,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "input",
-  "question": "(x-1)/4＝(x+3)/6を満たすxの値を答えなさい。",
+  "question": "(x−1)/4＝(x＋3)/6を満たすxの値を答えなさい。",
   "answer": "9",
   "hints": [
     "両辺を12倍すると分母を払えるよ。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "3(x−1)＝2(x+3)、3x−3＝2x+6、x＝9。"
+  "explanation": "3(x−1)＝2(x＋3)、3x−3＝2x＋6、x＝9。"
 },
 {
   "id": "math_g7_equation_calc_016",
@@ -3194,14 +3194,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "input",
-  "question": "2(x+4)-3(x-1)＝6を満たすxの値を答えなさい。",
+  "question": "2(x＋4)−3(x−1)＝6を満たすxの値を答えなさい。",
   "answer": "5",
   "hints": [
     "後ろのかっこは−3を分配しよう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "2x+8−3x+3＝6、−x＝−5、x＝5。"
+  "explanation": "2x＋8−3x＋3＝6、−x＝−5、x＝5。"
 },
 {
   "id": "math_g7_equation_calc_018",
@@ -3212,7 +3212,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "choice",
-  "question": "方程式-2x+7＝3x-8の解はどれですか。",
+  "question": "方程式−2x＋7＝3x−8の解はどれですか。",
   "answer": "3",
   "hints": [
     "xの項を右辺に集めてもよいよ。"
@@ -3220,11 +3220,11 @@ window.QUESTION_BANK.push(
   "reviewed": false,
   "choices": [
     "3",
-    "-3",
+    "−3",
     "15",
-    "-1/5"
+    "−1/5"
   ],
-  "explanation": "7+8＝3x+2xより15＝5x、x＝3です。\n\nほかの 選択肢\n・「-3」…最後の符号が逆です。\n・「15」…係数5で割っていません。\n・「-1/5」…移項で8を引き、係数の符号も取り違えています。"
+  "explanation": "7＋8＝3x＋2xより15＝5x、x＝3です。\n\nほかの 選択肢\n・「−3」…最後の符号が逆です。\n・「15」…係数5で割っていません。\n・「−1/5」…移項で8を引き、係数の符号も取り違えています。"
 },
 {
   "id": "math_g7_equation_calc_019",
@@ -3235,14 +3235,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "input",
-  "question": "x/2+x/3＝-5を満たすxの値を答えなさい。",
-  "answer": "-6",
+  "question": "x/2＋x/3＝−5を満たすxの値を答えなさい。",
+  "answer": "−6",
   "hints": [
     "2と3の公倍数を両辺にかけよう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "3x+2x＝−30、5x＝−30、x＝−6。"
+  "explanation": "3x＋2x＝−30、5x＝−30、x＝−6。"
 },
 {
   "id": "math_g7_equation_calc_020",
@@ -3253,7 +3253,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "standard",
   "answerType": "choice",
-  "question": "4(x-1)＝2(x+5)の解はどれですか。",
+  "question": "4(x−1)＝2(x＋5)の解はどれですか。",
   "answer": "7",
   "hints": [
     "両方のかっこを展開してから移項しよう。"
@@ -3262,10 +3262,10 @@ window.QUESTION_BANK.push(
   "choices": [
     "7",
     "3",
-    "-7",
+    "−7",
     "14"
   ],
-  "explanation": "4x−4＝2x+10、2x＝14よりx＝7です。\n\nほかの 選択肢\n・「3」…−4を右辺に移す符号が逆です。\n・「-7」…解の符号が逆です。\n・「14」…係数2で割っていません。"
+  "explanation": "4x−4＝2x＋10、2x＝14よりx＝7です。\n\nほかの 選択肢\n・「3」…−4を右辺に移す符号が逆です。\n・「−7」…解の符号が逆です。\n・「14」…係数2で割っていません。"
 },
 {
   "id": "math_g7_equation_calc_021",
@@ -3276,14 +3276,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "input",
-  "question": "(2x-1)/3-(x+2)/4＝1を満たすxの値を答えなさい。",
+  "question": "(2x−1)/3−(x＋2)/4＝1を満たすxの値を答えなさい。",
   "answer": "22/5",
   "hints": [
     "引き算の後ろの分子全体に注意しよう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "4(2x−1)−3(x+2)＝12、8x−4−3x−6＝12、5x＝22、x＝22/5。"
+  "explanation": "4(2x−1)−3(x＋2)＝12、8x−4−3x−6＝12、5x＝22、x＝22/5。"
 },
 {
   "id": "math_g7_equation_calc_022",
@@ -3294,7 +3294,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "choice",
-  "question": "方程式(x+2)/3＝x-1で「x+2＝x-3」としました。直すべき点はどれですか。",
+  "question": "方程式(x＋2)/3＝x−1で「x＋2＝x−3」としました。直すべき点はどれですか。",
   "answer": "右辺のxも3倍する",
   "hints": [
     "分母を払うときは右辺全体を3倍するよ。"
@@ -3303,10 +3303,10 @@ window.QUESTION_BANK.push(
   "choices": [
     "右辺のxも3倍する",
     "左辺の2も3倍する",
-    "右辺の-1を3倍しない",
+    "右辺の−1を3倍しない",
     "左辺のxを3倍する"
   ],
-  "explanation": "正しくはx+2＝3x−3です。\n\nほかの 選択肢\n・「左辺の2も3倍する」…左辺は分母の3が消え、分子はそのままです。\n・「右辺の-1を3倍しない」…右辺の−1も3倍が必要です。\n・「左辺のxを3倍する」…左辺は分子をさらに3倍しません。"
+  "explanation": "正しくはx＋2＝3x−3です。\n\nほかの 選択肢\n・「左辺の2も3倍する」…左辺は分母の3が消え、分子はそのままです。\n・「右辺の−1を3倍しない」…右辺の−1も3倍が必要です。\n・「左辺のxを3倍する」…左辺は分子をさらに3倍しません。"
 },
 {
   "id": "math_g7_equation_calc_023",
@@ -3317,14 +3317,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "input",
-  "question": "0.2(x-3)+0.5＝0.3(x+1)を満たすxの値を答えなさい。",
-  "answer": "-4",
+  "question": "0.2(x−3)＋0.5＝0.3(x＋1)を満たすxの値を答えなさい。",
+  "answer": "−4",
   "hints": [
     "10倍してからかっこを展開しよう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "2(x−3)+5＝3(x+1)、2x−1＝3x+3、x＝−4。"
+  "explanation": "2(x−3)＋5＝3(x＋1)、2x−1＝3x＋3、x＝−4。"
 },
 {
   "id": "math_g7_equation_calc_024",
@@ -3335,7 +3335,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "choice",
-  "question": "方程式3(2x-1)-2(x+4)＝5の解はどれですか。",
+  "question": "方程式3(2x−1)−2(x＋4)＝5の解はどれですか。",
   "answer": "4",
   "hints": [
     "−2をxにも4にもかけよう。"
@@ -3345,9 +3345,9 @@ window.QUESTION_BANK.push(
     "4",
     "5/2",
     "3",
-    "-4"
+    "−4"
   ],
-  "explanation": "6x−3−2x−8＝5、4x＝16、x＝4です。\n\nほかの 選択肢\n・「5/2」…定数−3の移項を誤ると4x＝10になります。\n・「3」…かっこの中の4に2をかけないと定数項を誤ります。\n・「-4」…最後の移項の符号が逆です。"
+  "explanation": "6x−3−2x−8＝5、4x＝16、x＝4です。\n\nほかの 選択肢\n・「5/2」…定数−3の移項を誤ると4x＝10になります。\n・「3」…かっこの中の4に2をかけないと定数項を誤ります。\n・「−4」…最後の移項の符号が逆です。"
 },
 {
   "id": "math_g7_equation_calc_025",
@@ -3358,14 +3358,14 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "input",
-  "question": "(x+1):(2x-1)＝2:3を満たすxの値を答えなさい。",
+  "question": "(x＋1):(2x−1)＝2:3を満たすxの値を答えなさい。",
   "answer": "5",
   "hints": [
     "比例式を積の等式にしてから展開しよう。"
   ],
   "reviewed": false,
   "validationMode": "number",
-  "explanation": "3(x+1)＝2(2x−1)、3x+3＝4x−2、x＝5。分母2x−1＝9も0ではありません。"
+  "explanation": "3(x＋1)＝2(2x−1)、3x＋3＝4x−2、x＝5。分母2x−1＝9も0ではありません。"
 },
 {
   "id": "math_g7_equation_calc_026",
@@ -3377,18 +3377,18 @@ window.QUESTION_BANK.push(
   "difficulty": "advanced",
   "answerType": "choice",
   "question": "兄と弟の所持金は合計1800円。兄が弟に200円渡すと同額です。兄の初めの所持金をx円とした式はどれですか。",
-  "answer": "x-200＝1800-x+200",
+  "answer": "x−200＝1800−x＋200",
   "hints": [
     "弟の初めの所持金もxで表そう。"
   ],
   "reviewed": false,
   "choices": [
-    "x-200＝1800-x+200",
-    "x-200＝1800-x-200",
-    "x+200＝1800-x-200",
-    "x-200＝1800+x+200"
+    "x−200＝1800−x＋200",
+    "x−200＝1800−x−200",
+    "x＋200＝1800−x−200",
+    "x−200＝1800＋x＋200"
   ],
-  "explanation": "兄はx−200、弟は1800−x+200です。\n\nほかの 選択肢\n・「x-200＝1800-x-200」…弟は受け取るので200を足します。\n・「x+200＝1800-x-200」…渡す側と受け取る側の増減が逆です。\n・「x-200＝1800+x+200」…弟の初めの所持金は合計から兄の分を引きます。"
+  "explanation": "兄はx−200、弟は1800−x＋200です。\n\nほかの 選択肢\n・「x−200＝1800−x−200」…弟は受け取るので200を足します。\n・「x＋200＝1800−x−200」…渡す側と受け取る側の増減が逆です。\n・「x−200＝1800＋x＋200」…弟の初めの所持金は合計から兄の分を引きます。"
 },
 {
   "id": "math_g7_equation_calc_027",
@@ -3417,7 +3417,7 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "choice",
-  "question": "2(x+3)-x＝x+6という方程式の解について正しいものはどれですか。",
+  "question": "2(x＋3)−x＝x＋6という方程式の解について正しいものはどれですか。",
   "answer": "すべての数が解",
   "hints": [
     "左辺を整理して、右辺と比べよう。"
@@ -3429,6 +3429,1157 @@ window.QUESTION_BANK.push(
     "x＝0だけが解",
     "x＝6だけが解"
   ],
-  "explanation": "左辺はx+6で右辺と常に一致します。\n\nほかの 選択肢\n・「解はない」…両辺は同じ式なので矛盾しません。\n・「x＝0だけが解」…0以外を代入しても一致します。\n・「x＝6だけが解」…6以外を代入しても一致します。"
+  "explanation": "左辺はx＋6で右辺と常に一致します。\n\nほかの 選択肢\n・「解はない」…両辺は同じ式なので矛盾しません。\n・「x＝0だけが解」…0以外を代入しても一致します。\n・「x＝6だけが解」…6以外を代入しても一致します。"
+},
+{
+  "id": "math_g7_proportion_002",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 1,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "xの値を決めるとyの値がただ1つ決まる関係はどれですか。",
+  "answer": "正方形の一辺x cmと面積y cm²",
+  "hints": [
+    "同じxから異なるyが出ないか考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "正方形の一辺x cmと面積y cm²",
+    "面積x cm²の長方形の横の長さy cm",
+    "身長x cmの人の年齢y歳",
+    "周囲の長さx cmの三角形の一辺y cm"
+  ],
+  "explanation": "正方形では一辺が決まれば面積も1つに決まります。\n\nほかの 選択肢\n・「面積x cm²の長方形の横の長さy cm」…長方形は縦の長さによって横が変わります。\n・「身長x cmの人の年齢y歳」…同じ身長でも年齢は異なります。\n・「周囲の長さx cmの三角形の一辺y cm」…周囲が同じでも辺の組合せは変わります。"
+},
+{
+  "id": "math_g7_proportion_003",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 2,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "y＝−3xで、x＝4のときのyの値を答えなさい。",
+  "answer": "-12",
+  "hints": [
+    "負の比例定数とxをかけよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "y＝(−3)×4＝−12。"
+},
+{
+  "id": "math_g7_proportion_004",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 3,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "yがxに比例し、x＝2のときy＝6です。比例定数はどれですか。",
+  "answer": "3",
+  "hints": [
+    "yをxで割ると比例定数になるよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "3",
+    "1/3",
+    "12",
+    "4"
+  ],
+  "explanation": "a＝6÷2＝3です。\n\nほかの 選択肢\n・「1/3」…x/yを求めています。\n・「12」…xとyをかけています。\n・「4」…yとxの差を求めています。"
+},
+{
+  "id": "math_g7_proportion_005",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 4,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "点Aの座標は（−4，3）です。x座標を答えなさい。",
+  "answer": "-4",
+  "hints": [
+    "座標は横、縦の順に書くよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "最初の数がx座標なので−4です。"
+},
+{
+  "id": "math_g7_proportion_006",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 5,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "点（−2，−5）がある象限はどれですか。",
+  "answer": "第3象限",
+  "hints": [
+    "横も縦も負の側にあるよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "第3象限",
+    "第1象限",
+    "第2象限",
+    "第4象限"
+  ],
+  "explanation": "xもyも負なので第3象限です。\n\nほかの 選択肢\n・「第1象限」…両方が正の範囲です。\n・「第2象限」…xが負、yが正の範囲です。\n・「第4象限」…xが正、yが負の範囲です。"
+},
+{
+  "id": "math_g7_proportion_007",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 6,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "y＝12/xで、x＝−3のときのyの値を答えなさい。",
+  "answer": "-4",
+  "hints": [
+    "12をxの値で割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "y＝12÷(−3)＝−4。"
+},
+{
+  "id": "math_g7_proportion_008",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 7,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "反比例y＝a/xで、常にaと等しいものはどれですか。",
+  "answer": "xy",
+  "hints": [
+    "両辺にxをかけてみよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "xy",
+    "y/x",
+    "x/y",
+    "x＋y"
+  ],
+  "explanation": "y＝a/xよりxy＝aです。\n\nほかの 選択肢\n・「y/x」…比例の定数を求める式です。\n・「x/y」…積ではなく商を求めています。\n・「x＋y」…和は一定とは限りません。"
+},
+{
+  "id": "math_g7_proportion_009",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 8,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "原点と点（6，−3）を通る比例のグラフの比例定数を答えなさい。",
+  "answer": "-1/2",
+  "hints": [
+    "点のy座標をx座標で割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "a＝−3/6＝−1/2。"
+},
+{
+  "id": "math_g7_proportion_010",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 9,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "y＝−2xのグラフについて正しいものはどれですか。",
+  "answer": "第2・第4象限を通る直線",
+  "hints": [
+    "xが正のときと負のときのyの符号を調べよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "第2・第4象限を通る直線",
+    "第1・第3象限を通る直線",
+    "第2・第4象限を通る双曲線",
+    "原点を通らない直線"
+  ],
+  "explanation": "比例のグラフは原点を通り、xとyの符号が逆です。\n\nほかの 選択肢\n・「第1・第3象限を通る直線」…正の比例定数の場合です。\n・「第2・第4象限を通る双曲線」…反比例と取り違えています。\n・「原点を通らない直線」…比例のグラフは原点を通ります。"
+},
+{
+  "id": "math_g7_proportion_011",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 10,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "yがxに反比例し、x＝−4のときy＝3です。x＝6のときのyの値を答えなさい。",
+  "answer": "-2",
+  "hints": [
+    "先にxyの一定値を求めよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "a＝−4×3＝−12、y＝−12/6＝−2。"
+},
+{
+  "id": "math_g7_proportion_012",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 11,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "y＝8/xのグラフについて正しいものはどれですか。",
+  "answer": "第1・第3象限にある双曲線",
+  "hints": [
+    "xがどちらの符号のときも、yの符号を確かめよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "第1・第3象限にある双曲線",
+    "原点を通る直線",
+    "第2・第4象限にある双曲線",
+    "x軸と交わる曲線"
+  ],
+  "explanation": "積が正なので同符号となり、第1・第3象限です。\n\nほかの 選択肢\n・「原点を通る直線」…比例のグラフと取り違えています。\n・「第2・第4象限にある双曲線」…比例定数が負の場合です。\n・「x軸と交わる曲線」…8/xは0にならず、x軸とは交わりません。"
+},
+{
+  "id": "math_g7_proportion_013",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 12,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "y＝−(2/3)xで、x＝−9のときのyの値を答えなさい。",
+  "answer": "6",
+  "hints": [
+    "負の数同士の積と約分を考えよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "y＝(−2/3)×(−9)＝6。"
+},
+{
+  "id": "math_g7_proportion_014",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 13,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "y＝−3xで、1≦x≦4のときのyの変域はどれですか。",
+  "answer": "−12≦y≦−3",
+  "hints": [
+    "両端で計算し、小さい値を左に置こう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "−12≦y≦−3",
+    "−3≦y≦−12",
+    "3≦y≦12",
+    "−12≦y≦3"
+  ],
+  "explanation": "x＝1で−3、x＝4で−12なのでこの範囲です。\n\nほかの 選択肢\n・「−3≦y≦−12」…数の大小と不等号の向きが合っていません。\n・「3≦y≦12」…負の符号を落としています。\n・「−12≦y≦3」…x＝1での値の符号が違います。"
+},
+{
+  "id": "math_g7_proportion_015",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 14,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "y＝18/xで、2≦x≦6のとき、yの最小値を答えなさい。",
+  "answer": "3",
+  "hints": [
+    "正の範囲では分母が大きいほど商は小さくなるよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "x＝6のとき最小で、y＝18/6＝3。"
+},
+{
+  "id": "math_g7_proportion_016",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 15,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "表でx＝1，2，3に対しy＝6，3，2です。表に合う関係はどれですか。",
+  "answer": "y＝6/x",
+  "hints": [
+    "各組の積と商を比べてみよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "y＝6/x",
+    "y＝6x",
+    "y＝x/6",
+    "y＝3/x"
+  ],
+  "explanation": "どの組もxy＝6です。\n\nほかの 選択肢\n・「y＝6x」…x＝2ならy＝12となり合いません。\n・「y＝x/6」…x＝1ならy＝1/6となり合いません。\n・「y＝3/x」…x＝1ならy＝3となり合いません。"
+},
+{
+  "id": "math_g7_proportion_017",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 16,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "毎分70mで歩きます。歩いた時間x分と道のりy mが比例するとき、y＝axのaの値を答えなさい。",
+  "answer": "70",
+  "hints": [
+    "1分間あたりの道のりを考えよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "y＝70xなのでa＝70。"
+},
+{
+  "id": "math_g7_proportion_018",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 17,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "一定の道のり1200mを毎分x mで歩く時間をy分とします。関係式はどれですか。",
+  "answer": "y＝1200/x",
+  "hints": [
+    "道のりを速さで割ると時間になるよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "y＝1200/x",
+    "y＝1200x",
+    "y＝x/1200",
+    "y＝1200−x"
+  ],
+  "explanation": "時間＝道のり÷速さよりy＝1200/xです。\n\nほかの 選択肢\n・「y＝1200x」…速さをかけてしまっています。\n・「y＝x/1200」…割る数と割られる数が逆です。\n・「y＝1200−x」…速さと道のりを引くことはできません。"
+},
+{
+  "id": "math_g7_proportion_019",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 18,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "歯数24の歯車が毎分15回転します。かみ合う歯数40の歯車は毎分何回転しますか。回転数だけ答えなさい。",
+  "answer": "9",
+  "hints": [
+    "同じ時間にかみ合う歯の数は等しいよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "24×15＝40y、y＝360/40＝9回転。"
+},
+{
+  "id": "math_g7_proportion_020",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 19,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "比例の表で、x＝−2，1，4に対しy＝6，−3，□です。□に入る値はどれですか。",
+  "answer": "−12",
+  "hints": [
+    "既知の組からy/xを求めよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "−12",
+    "12",
+    "−3/4",
+    "−6"
+  ],
+  "explanation": "比例定数は−3なのでy＝−3×4＝−12です。\n\nほかの 選択肢\n・「12」…負の符号が抜けています。\n・「−3/4」…反比例として求めています。\n・「−6」…xが変わったことを反映していません。"
+},
+{
+  "id": "math_g7_proportion_021",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 20,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "yがxに反比例し、x＝3のときy＝−8です。y＝6となるxの値を答えなさい。",
+  "answer": "-4",
+  "hints": [
+    "積xyを一定に保とう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "xy＝−24なので6x＝−24、x＝−4。"
+},
+{
+  "id": "math_g7_proportion_022",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 21,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "「xが2増えるとyが6増えるから必ず比例だ」という説明の問題点はどれですか。",
+  "answer": "増え方だけでなくy/xが一定か確かめる必要がある",
+  "hints": [
+    "原点を通る関係かどうかも必要だよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "増え方だけでなくy/xが一定か確かめる必要がある",
+    "比例ではxが増えるとyは必ず減る",
+    "比例ではyが負になれない",
+    "比例では比例定数は整数に限る"
+  ],
+  "explanation": "同じ増え方でも比例とは限らず、商が一定かが必要です。\n\nほかの 選択肢\n・「比例ではxが増えるとyは必ず減る」…正の比例定数なら両方増えます。\n・「比例ではyが負になれない」…比例でも負の値をとります。\n・「比例では比例定数は整数に限る」…比例定数は分数でもよいです。"
+},
+{
+  "id": "math_g7_proportion_023",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 22,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "同じ仕事を同じ能率で行うと、人数と日数は反比例します。6人で8日かかる仕事を4人で行うと何日ですか。",
+  "answer": "12",
+  "hints": [
+    "必要な人数×日数を一定にしよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "6×8＝48、48÷4＝12日。"
+},
+{
+  "id": "math_g7_proportion_024",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 23,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "y＝−12/xで、−6≦x≦−2のときのyの変域はどれですか。",
+  "answer": "2≦y≦6",
+  "hints": [
+    "負の分母で割るときの符号と両端の値を見よう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "2≦y≦6",
+    "−6≦y≦−2",
+    "−2≦y≦6",
+    "6≦y≦2"
+  ],
+  "explanation": "x＝−6で2、x＝−2で6です。\n\nほかの 選択肢\n・「−6≦y≦−2」…負÷負は正になります。\n・「−2≦y≦6」…一方の端の符号を誤っています。\n・「6≦y≦2」…小さい方から不等号で並べます。"
+},
+{
+  "id": "math_g7_proportion_025",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 24,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "比例y＝axのグラフは点（−3，2）を通ります。同じグラフ上でy＝−5となるxの値を答えなさい。",
+  "answer": "15/2",
+  "hints": [
+    "比例定数を分数で求め、式にyを代入しよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "a＝−2/3。−5＝(−2/3)xよりx＝15/2。"
+},
+{
+  "id": "math_g7_proportion_026",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 25,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "比例と反比例のグラフがともに点（2，6）を通ります。x＝4のときのyについて正しいものはどれですか。",
+  "answer": "比例は12、反比例は3",
+  "hints": [
+    "xが2倍になると、それぞれのyはどう変わるかな。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "比例は12、反比例は3",
+    "比例は3、反比例は12",
+    "どちらも12",
+    "どちらも3"
+  ],
+  "explanation": "比例では2倍、反比例では1/2倍になります。\n\nほかの 選択肢\n・「比例は3、反比例は12」…比例と反比例の変化が逆です。\n・「どちらも12」…反比例のyは2倍になりません。\n・「どちらも3」…比例のyは半分になりません。"
+},
+{
+  "id": "math_g7_proportion_027",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 26,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "毎分一定量ずつ水を入れます。空の水槽が12分で18Lになりました。同じ割合で30Lになるまで、18Lの時点からさらに何分必要ですか。",
+  "answer": "8",
+  "hints": [
+    "追加する水量を、毎分の量で割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "毎分18÷12＝1.5L。追加は12Lなので12÷1.5＝8分。"
+},
+{
+  "id": "math_g7_proportion_028",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 27,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "y＝6/xで、xの変域が−2≦x≦3（ただしx≠0）です。「−3≦y≦2」とする説明はなぜ誤りですか。",
+  "answer": "xが0に近づくとyの絶対値は端の値より大きくなる",
+  "hints": [
+    "区間の途中で式が定義できない点に注意しよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "xが0に近づくとyの絶対値は端の値より大きくなる",
+    "反比例ではyは必ず正になる",
+    "x＝0ではy＝0になる",
+    "負のxは反比例で使えない"
+  ],
+  "explanation": "例えばx＝1/2ならy＝12で、端の値の間に収まりません。\n\nほかの 選択肢\n・「反比例ではyは必ず正になる」…負のxならyも負になります。\n・「x＝0ではy＝0になる」…0で割ることはできません。\n・「負のxは反比例で使えない」…0以外の負の数も使えます。"
+},
+{
+  "id": "math_g7_proportion_029",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "proportion",
+  "number": 28,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "かみ合う歯車A・Bの歯数はそれぞれ18と30です。Aが10回転した間にBが回転した数を答えなさい。",
+  "answer": "6",
+  "hints": [
+    "通過する歯の総数を両方の歯車で等しくしよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "18×10＝30y、y＝6回転。"
+},
+{
+  "id": "math_g7_plane_002",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 1,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "異なる2点A、Bを通り、両側へ限りなくのびるものはどれですか。",
+  "answer": "直線AB",
+  "hints": [
+    "両端があるか、どこまでのびるかに注目しよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "直線AB",
+    "線分AB",
+    "半直線AB",
+    "円AB"
+  ],
+  "explanation": "両側へ限りなくのびるのが直線です。\n\nほかの 選択肢\n・「線分AB」…線分は両端で止まります。\n・「半直線AB」…半直線は一方だけにのびます。\n・「円AB」…2点を通る直線を円とは呼びません。"
+},
+{
+  "id": "math_g7_plane_003",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 2,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "点Pから直線lへの垂線の長さは4cm、別の斜めの線分の長さは5cmです。点Pと直線lの距離を、cmを付けずに答えなさい。",
+  "answer": "4",
+  "hints": [
+    "距離は最も短い線分の長さだよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "点と直線の距離は垂線の長さなので4cm。"
+},
+{
+  "id": "math_g7_plane_004",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 3,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "同じ平面内で交わらない2直線の関係はどれですか。",
+  "answer": "平行",
+  "hints": [
+    "2本が別々の直線であることを考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "平行",
+    "垂直",
+    "一致する",
+    "対称"
+  ],
+  "explanation": "同じ平面で交わらない2直線を平行といいます。\n\nほかの 選択肢\n・「垂直」…垂直な直線は交わります。\n・「一致する」…一致すれば共通の点を持ちます。\n・「対称」…交わらないことだけから対称とはいいません。"
+},
+{
+  "id": "math_g7_plane_005",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 4,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "垂直な2直線がつくる角の大きさを度数だけで答えなさい。",
+  "answer": "90",
+  "hints": [
+    "直角の大きさを思い出そう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "垂直に交わる直線の角は90°です。"
+},
+{
+  "id": "math_g7_plane_006",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 5,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "点Aを始点としてBの方向へ限りなくのびるものはどれですか。",
+  "answer": "半直線AB",
+  "hints": [
+    "最初に書く点が始点になるよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "半直線AB",
+    "半直線BA",
+    "線分AB",
+    "直線AB"
+  ],
+  "explanation": "Aが始点でBの側へ進むのは半直線ABです。\n\nほかの 選択肢\n・「半直線BA」…始点がBになります。\n・「線分AB」…Bで止まってしまいます。\n・「直線AB」…Aの反対側にも続いてしまいます。"
+},
+{
+  "id": "math_g7_plane_007",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 6,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "半径5cmの円の直径を、単位なしで答えなさい。",
+  "answer": "10",
+  "hints": [
+    "直径は中心を通って円の両端を結ぶよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "直径は半径の2倍なので5×2＝10cm。"
+},
+{
+  "id": "math_g7_plane_008",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 7,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "図形を同じ方向へ同じ距離だけ動かす移動はどれですか。",
+  "answer": "平行移動",
+  "hints": [
+    "図形の向きを変えるかどうか考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "平行移動",
+    "回転移動",
+    "対称移動",
+    "拡大"
+  ],
+  "explanation": "すべての点を同じ方向へ同じ距離だけ動かします。\n\nほかの 選択肢\n・「回転移動」…中心のまわりに回す移動です。\n・「対称移動」…直線を折り目に裏返す移動です。\n・「拡大」…長さが変わる操作です。"
+},
+{
+  "id": "math_g7_plane_009",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 8,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "点（2，−1）を右へ3、上へ4だけ平行移動しました。移動後のy座標を答えなさい。",
+  "answer": "3",
+  "hints": [
+    "上への移動だけがy座標に関係するよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "y座標は−1＋4＝3。"
+},
+{
+  "id": "math_g7_plane_010",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 9,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "線分ABの垂直二等分線上にある点Pについて、必ず成り立つ関係はどれですか。",
+  "answer": "PA＝PB",
+  "hints": [
+    "AとBから等しい距離にある点の集まりだよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "PA＝PB",
+    "PA＝AB",
+    "PB＝AB",
+    "PA＋PB＝AB"
+  ],
+  "explanation": "垂直二等分線上の点は両端から等距離です。\n\nほかの 選択肢\n・「PA＝AB」…ABと等しいとは限りません。\n・「PB＝AB」…PBもABと等しいとは限りません。\n・「PA＋PB＝AB」…Pが線分上にあるとは限りません。"
+},
+{
+  "id": "math_g7_plane_011",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 10,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "点（3，2）をy軸について対称移動しました。移動後のx座標を答えなさい。",
+  "answer": "-3",
+  "hints": [
+    "y軸の左右だけが入れ替わるよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "（3，2）は（−3，2）に移るので−3。"
+},
+{
+  "id": "math_g7_plane_012",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 11,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "角の内部で、2辺からの距離が等しい点の集まりはどれですか。",
+  "answer": "角の二等分線",
+  "hints": [
+    "辺からの距離はそれぞれ垂線で測るよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "角の二等分線",
+    "一方の辺の垂直二等分線",
+    "角の頂点を通る任意の直線",
+    "2辺に平行な直線"
+  ],
+  "explanation": "角の二等分線上では両辺からの距離が等しくなります。\n\nほかの 選択肢\n・「一方の辺の垂直二等分線」…辺の両端からの距離とは異なります。\n・「角の頂点を通る任意の直線」…任意の方向では等距離になりません。\n・「2辺に平行な直線」…交わる2辺の両方に平行な直線はありません。"
+},
+{
+  "id": "math_g7_plane_013",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 12,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "中心O、半径6cmの円に点Aで接する直線lがあります。半径OAと直線lのなす角を度数だけで答えなさい。",
+  "answer": "90",
+  "hints": [
+    "接点で半径と接線がつくる関係を考えよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "接線は接点を通る半径に垂直なので90°。"
+},
+{
+  "id": "math_g7_plane_014",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 13,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "垂直二等分線の作図で、AとBを中心に同じ半径の円弧を描きます。半径の条件として正しいものはどれですか。",
+  "answer": "ABの半分より大きくする",
+  "hints": [
+    "円弧が2か所で交わる必要があるよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "ABの半分より大きくする",
+    "必ずABの半分にする",
+    "ABの半分より小さくする",
+    "AとBで異なる半径にする"
+  ],
+  "explanation": "AB/2より大きい同じ半径なら交点が2つできます。\n\nほかの 選択肢\n・「必ずABの半分にする」…交点が1つしかできません。\n・「ABの半分より小さくする」…2つの円弧が交わりません。\n・「AとBで異なる半径にする」…交点がAとBから等距離でなくなります。"
+},
+{
+  "id": "math_g7_plane_015",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 14,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "半径6cm、中心角120°のおうぎ形の弧の長さを、πを使い単位なしで答えなさい。",
+  "answer": "4π",
+  "hints": [
+    "円周のうち中心角の割合だけを取ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "2π×6×120/360＝4π cm。"
+},
+{
+  "id": "math_g7_plane_016",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 15,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "中心Oのまわりに図形を回転移動するとき、点Aと移動後の点A′で必ず等しい長さはどれですか。",
+  "answer": "OAとOA′",
+  "hints": [
+    "回転中に中心からの距離は変わるかな。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "OAとOA′",
+    "OAとAA′",
+    "AA′と任意の辺",
+    "OAとすべての辺"
+  ],
+  "explanation": "回転では中心からの距離が保たれます。\n\nほかの 選択肢\n・「OAとAA′」…AA′は回転角によって変わります。\n・「AA′と任意の辺」…点の移動距離と辺の長さは別です。\n・「OAとすべての辺」…中心からの距離と辺の長さは一致するとは限りません。"
+},
+{
+  "id": "math_g7_plane_017",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 16,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "半径4cm、中心角90°のおうぎ形の面積を、πを使い単位なしで答えなさい。",
+  "answer": "4π",
+  "hints": [
+    "円の面積に中心角の割合をかけよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "π×4²×90/360＝4π cm²。"
+},
+{
+  "id": "math_g7_plane_018",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 17,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "直線l上の点Pに垂線を作図します。l上でPA＝PBとなる点A、Bを取り、A、Bから同じ半径の円弧で交点Qを作った後はどうしますか。",
+  "answer": "PとQを結ぶ",
+  "hints": [
+    "PはABの中点で、Qは両端から等距離だよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "PとQを結ぶ",
+    "AとQを結ぶ",
+    "AとBを結ぶ",
+    "PとAを結ぶ"
+  ],
+  "explanation": "PQはABの垂直二等分線となり、lに垂直です。\n\nほかの 選択肢\n・「AとQを結ぶ」…AQだけではlに垂直とは限りません。\n・「AとBを結ぶ」…ABはもとの直線lです。\n・「PとAを結ぶ」…PAもl上にあります。"
+},
+{
+  "id": "math_g7_plane_019",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 18,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "点（4，−3）を原点のまわりに180°回転移動しました。移動後のy座標を答えなさい。",
+  "answer": "3",
+  "hints": [
+    "原点をはさんで反対側の点に移るよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "（4，−3）は（−4，3）に移るのでy座標は3。"
+},
+{
+  "id": "math_g7_plane_020",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 19,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "角の二等分線の作図で、頂点Oから同じ距離の点A、Bを2辺上に取ります。A、Bから同じ半径の円弧を描き交点Pを取った後、どこを結びますか。",
+  "answer": "OとP",
+  "hints": [
+    "作る半直線は角の頂点から出るよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "OとP",
+    "AとB",
+    "AとP",
+    "OとA"
+  ],
+  "explanation": "OA＝OB、PA＝PBを利用してOPが角を二等分します。\n\nほかの 選択肢\n・「AとB」…ABは頂点を通りません。\n・「AとP」…APは角の頂点から出ていません。\n・「OとA」…OAは元の角の一辺です。"
+},
+{
+  "id": "math_g7_plane_021",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 20,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "半径9cmのおうぎ形の弧の長さが6π cmです。中心角を度数だけで答えなさい。",
+  "answer": "120",
+  "hints": [
+    "弧が円周の何分のいくつか調べよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "円周は18π。6π/18π＝1/3なので360×1/3＝120°。"
+},
+{
+  "id": "math_g7_plane_022",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 21,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "点（2，1）をx軸について対称移動し、次にy軸について対称移動します。同じ結果になる移動はどれですか。",
+  "answer": "原点のまわりの180°回転移動",
+  "hints": [
+    "2回の移動後の座標を順に求めよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "原点のまわりの180°回転移動",
+    "右へ4の平行移動",
+    "原点のまわりの90°回転移動",
+    "y軸についての対称移動1回"
+  ],
+  "explanation": "（2，1）→（2，−1）→（−2，−1）で180°回転と同じです。\n\nほかの 選択肢\n・「右へ4の平行移動」…右への平行移動では（6，1）です。\n・「原点のまわりの90°回転移動」…90°回転では両座標の符号反転にはなりません。\n・「y軸についての対称移動1回」…y軸だけなら（−2，1）です。"
+},
+{
+  "id": "math_g7_plane_023",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 22,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "半径6cm、中心角120°のおうぎ形の周の長さを、πを使い単位なしで答えなさい。",
+  "answer": "12＋4π",
+  "hints": [
+    "周には弧のほかに2本の半径も含むよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "弧は4π、2本の半径は12なので12＋4π cm。",
+  "acceptedAnswers": [
+    "4π＋12"
+  ]
+},
+{
+  "id": "math_g7_plane_024",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 23,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "線分ABの垂直二等分線と、線分BCの垂直二等分線が点Pで交わりました。必ず成り立つものはどれですか。",
+  "answer": "PA＝PB＝PC",
+  "hints": [
+    "それぞれの垂直二等分線が保証する等しさをつなげよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "PA＝PB＝PC",
+    "PA＋PB＝PC",
+    "PA＝ABかつPB＝BC",
+    "Pは必ず線分AC上にある"
+  ],
+  "explanation": "PA＝PBとPB＝PCより3つの距離は等しいです。\n\nほかの 選択肢\n・「PA＋PB＝PC」…距離が等しい性質から和の関係は出ません。\n・「PA＝ABかつPB＝BC」…辺の長さと等しいわけではありません。\n・「Pは必ず線分AC上にある」…2本の交点がAC上とは限りません。"
+},
+{
+  "id": "math_g7_plane_025",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 24,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "半径8cm、中心角135°のおうぎ形の面積を、πを使い単位なしで答えなさい。",
+  "answer": "24π",
+  "hints": [
+    "135/360を約分して円全体の面積にかけよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "64π×135/360＝64π×3/8＝24π cm²。"
+},
+{
+  "id": "math_g7_plane_026",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 25,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "円の中心Oから直線lへ下ろした垂線の足をHとします。OHが円の半径と等しいとき、直線lと円の関係はどれですか。",
+  "answer": "Hで接する",
+  "hints": [
+    "中心と直線の最短距離を半径と比べよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "Hで接する",
+    "2点で交わる",
+    "共有点がない",
+    "直線lは中心Oを通る"
+  ],
+  "explanation": "距離が半径と等しいと共有点はHだけで接します。\n\nほかの 選択肢\n・「2点で交わる」…2点で交わるのは距離が半径より小さいときです。\n・「共有点がない」…共有点がないのは距離が半径より大きいときです。\n・「直線lは中心Oを通る」…中心を通れば距離は0になります。"
+},
+{
+  "id": "math_g7_plane_027",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 26,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "直径12cmの円から、中心角150°のおうぎ形を切り取ります。このおうぎ形の面積を、πを使い単位なしで答えなさい。",
+  "answer": "15π",
+  "hints": [
+    "まず直径から半径を求めよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "半径は6。36π×150/360＝36π×5/12＝15π cm²。"
+},
+{
+  "id": "math_g7_plane_028",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 27,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "同じ半径のおうぎ形A、Bで、Aの中心角はBの2倍です。正しい説明はどれですか。",
+  "answer": "Aの弧の長さも面積もBの2倍",
+  "hints": [
+    "半径が同じなら、弧も面積も中心角の割合で変わるよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "Aの弧の長さも面積もBの2倍",
+    "Aの弧の長さは2倍、面積は4倍",
+    "Aの弧の長さは同じ、面積は2倍",
+    "Aの弧の長さも面積も4倍"
+  ],
+  "explanation": "どちらも中心角/360をかけるので2倍です。\n\nほかの 選択肢\n・「Aの弧の長さは2倍、面積は4倍」…半径の変化と取り違えています。\n・「Aの弧の長さは同じ、面積は2倍」…弧の長さも中心角に比例します。\n・「Aの弧の長さも面積も4倍」…中心角を2倍しても4倍にはなりません。"
+},
+{
+  "id": "math_g7_plane_029",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "plane",
+  "number": 28,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "半径6cmのおうぎ形の面積が9π cm²です。このおうぎ形の弧の長さを、πを使い単位なしで答えなさい。",
+  "answer": "3π",
+  "hints": [
+    "まず円全体に占める割合を求めよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "面積の割合は9π/36π＝1/4。弧も円周12πの1/4なので3π cm。"
 }
 );
