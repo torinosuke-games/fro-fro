@@ -9,6 +9,68 @@
 
   var DEFS = {
     math: {
+      7: [
+  {
+    "id": "signed_numbers",
+    "name": "正負の数",
+    "description": "正負の数を学ぶ",
+    "icon": "＋"
+  },
+  {
+    "id": "signed_calc",
+    "name": "正負の数の計算",
+    "description": "正負の数の計算を学ぶ",
+    "icon": "＋"
+  },
+  {
+    "id": "expression",
+    "name": "文字と式",
+    "description": "文字と式を学ぶ",
+    "icon": "◇"
+  },
+  {
+    "id": "expression_calc",
+    "name": "文字式の計算",
+    "description": "文字式の計算を学ぶ",
+    "icon": "◇"
+  },
+  {
+    "id": "equation",
+    "name": "方程式",
+    "description": "方程式を学ぶ",
+    "icon": "◇"
+  },
+  {
+    "id": "equation_calc",
+    "name": "方程式の計算",
+    "description": "方程式の計算を学ぶ",
+    "icon": "◇"
+  },
+  {
+    "id": "proportion",
+    "name": "比例と反比例",
+    "description": "比例と反比例を学ぶ",
+    "icon": "◇"
+  },
+  {
+    "id": "plane",
+    "name": "平面図形",
+    "description": "平面図形を学ぶ",
+    "icon": "◇"
+  },
+  {
+    "id": "space",
+    "name": "空間図形",
+    "description": "空間図形を学ぶ",
+    "icon": "◇"
+  },
+  {
+    "id": "data",
+    "name": "資料の活用",
+    "description": "資料の活用を学ぶ",
+    "icon": "◇"
+  }
+],
       4: [
         { id: 'large', name: '大きな数', description: '億・兆と数のしくみ', icon: '123' },
         { id: 'round', name: 'がい数', description: '四捨五入・見積もり', icon: '≈' },
