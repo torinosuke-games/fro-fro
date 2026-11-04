@@ -425,7 +425,7 @@
         ]));
       });
     }else{
-      var input=U.el('input',{class:'renewal-input',value:done?(ses.picked||''):(ses.typed||''),disabled:done,attrs:{type:'text',inputmode:q.validationMode==='number'?'decimal':'text',autocomplete:'off',placeholder:R.inputPlaceholder,'aria-label':R.inputPlaceholder},on:{input:function(e){ses.typed=e.target.value;},keydown:function(e){if(e.key==='Enter'&&!e.isComposing)submit(ses.typed||'');}}});
+      var input=U.el('input',{class:'renewal-input',value:done?(ses.picked||''):(ses.typed||''),disabled:done,attrs:{type:'text',inputmode:FF.answer.inputMode(q),autocomplete:'off',placeholder:R.inputPlaceholder,'aria-label':R.inputPlaceholder},on:{input:function(e){ses.typed=e.target.value;},keydown:function(e){if(e.key==='Enter'&&!e.isComposing)submit(ses.typed||'');}}});
       U.keepInView(input);answers.appendChild(U.el('label',{class:'input-label'},[U.el('span',{text:R.yourAnswer}),input]));
     }
     panel.appendChild(answers);

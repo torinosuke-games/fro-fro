@@ -4,9 +4,13 @@ module.exports=({test,FF,ctx,assert,plain})=>{
  const request=fs.readFileSync(path.join(__dirname,'../../DIAGRAM_REQUESTS.md'),'utf8');
  const ids=[...request.matchAll(/^\| \d+ \| (math_\w+) \|/gm)].map(m=>m[1]);
  const qs=ctx.QUESTION_BANK.filter(q=>ids.includes(q.id));
- test('文章題の図：元の90問の全項目をdiagram以外は変更していない',()=>{
+ test('文章題の図：元の90問はdiagramと指定の単元移動以外を保持',()=>{
   const crypto=require('node:crypto');
-  const original=ctx.QUESTION_BANK.filter(q=>/^math_g\d_/.test(q.id)&&q.collection!=='frontier100'&&q.collection!=='hand_g4'&&q.collection!=='hand_g5').map(q=>{const copy=plain(q);delete copy.diagram;return copy;});
+  const original=ctx.QUESTION_BANK.filter(q=>/^math_g\d_/.test(q.id)&&q.collection!=='frontier100'&&q.collection!=='hand_g4'&&q.collection!=='hand_g5').map(q=>{const copy=plain(q);delete copy.diagram;
+   // 中1の単元登録による3件だけを検証し、旧unitへ戻して本文などの旧ハッシュを保護。
+   const moves={math_g7_integer_001:['signed_numbers','integer'],math_g7_integer_002:['signed_numbers','integer'],math_g7_sector_001:['plane','sector']};
+   if(moves[q.id]){assert.strictEqual(copy.unit,moves[q.id][0]);copy.unit=moves[q.id][1];}
+   return copy;});
   assert.strictEqual(original.length,90);
   assert.strictEqual(crypto.createHash('sha256').update(JSON.stringify(original)).digest('hex'),'1fd43fa4b4ed8120f383baf6319bdeb2022d1521d7f4ff74729a3e66d9a44384');
  });

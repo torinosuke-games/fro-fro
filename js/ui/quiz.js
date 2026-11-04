@@ -110,7 +110,7 @@
       })));
     } else {
       var input = U.el('input', {
-        attrs: { type: 'text', inputmode: q.validationMode === 'number' ? 'decimal' : 'text', autocomplete: 'off', placeholder: FF.util.plainText(U.T('inputPlaceholder')), 'aria-label': FF.util.plainText(U.T('inputPlaceholder')) },
+        attrs: { type: 'text', inputmode: FF.answer.inputMode(q), autocomplete: 'off', placeholder: FF.util.plainText(U.T('inputPlaceholder')), 'aria-label': FF.util.plainText(U.T('inputPlaceholder')) },
         disabled: done,
         value: done ? (ses.picked || '') : ''
       });

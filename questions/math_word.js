@@ -640,7 +640,7 @@ window.QUESTION_BANK.push(
 
   // ===== Lv7（中学1年）：正負の数・一次方程式 =====
   {
-    id: 'math_g7_integer_001', subject: 'math', gradeLevel: 7, unit: 'integer',
+    id: 'math_g7_integer_001', subject: 'math', gradeLevel: 7, unit: 'signed_numbers',
     diagram: {"kind":"numberline","start":-10,"end":5,"step":5,"marks":[-8,3],"markLabels":["朝 −8℃","昼 3℃"],"caption":"朝と昼の気温の位置"},
     difficulty: 'basic', answerType: 'choice',
     question: '{朝|あさ}の {気温|きおん}は −8℃、{昼|ひる}の {気温|きおん}は 3℃でした。{昼|ひる}の {気温|きおん}は {朝|あさ}より {何|なん}℃{高|たか}いですか。',
@@ -680,7 +680,7 @@ window.QUESTION_BANK.push(
   },
   // --- v0.3 で追加（B案：各学年10問） ---
   {
-    id: 'math_g7_integer_002', subject: 'math', gradeLevel: 7, unit: 'integer',
+    id: 'math_g7_integer_002', subject: 'math', gradeLevel: 7, unit: 'signed_numbers',
     diagram: {"kind":"numberline","start":-5,"end":5,"step":5,"hideNegative":true,"marks":[5],"markLabels":["＋5m"],"directions":["西","東"],"caption":"0を基準に東を正とする"},
     difficulty: 'basic', answerType: 'choice',
     question: '{東|ひがし}へ 5m {進|すす}むことを ＋5m と {表|あらわ}すとき、−5m は どのような ことを {表|あらわ}すか。',
@@ -732,7 +732,7 @@ window.QUESTION_BANK.push(
     reviewed: true
   },
   {
-    id: 'math_g7_sector_001', subject: 'math', gradeLevel: 7, unit: 'sector',
+    id: 'math_g7_sector_001', subject: 'math', gradeLevel: 7, unit: 'plane',
     diagram: {"kind":"circle","radius":6,"angle":60,"unit":"cm","caption":"半径と中心角を示したおうぎ形"},
     difficulty: 'advanced', answerType: 'input',
     question: '{半径|はんけい} 6cm、{中心角|ちゅうしんかく} 60°の おうぎ{形|がた}の {弧|こ}の {長|なが}さは {何|なん}cmか。{円周率|えんしゅうりつ}は 3.14 と して、{数|かず}で {答|こた}えなさい。',
