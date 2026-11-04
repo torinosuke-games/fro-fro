@@ -3,7 +3,7 @@
   'use strict';
   var FF = root.FF = root.FF || {};
 
-  var VALIDATION_MODES = ['exact', 'number', 'kana-insensitive', 'any-of'];
+  var VALIDATION_MODES = ['exact', 'formula', 'number', 'kana-insensitive', 'any-of'];
 
   // 全角→半角（NFKC）、前後の空白の除去、連続する空白を1つに、英字を小文字に
   function normalize(s) {
@@ -12,6 +12,13 @@
       .replace(/\s+/g, ' ')
       .trim()
       .toLowerCase();
+  }
+
+  // 式だけに適用する表記の正規化。exactの挙動は保持する。
+  function normalizeFormula(s) {
+    return normalize(String(s).replace(/²/g, '^2').replace(/³/g, '^3'))
+      .replace(/\s/g, '').replace(/[−‐‑‒–—ーｰ]/g, '-')
+      .replace(/[*·]/g, '×').replace(/\^2/g, '²').replace(/\^3/g, '³');
   }
 
   // カタカナ → ひらがな
@@ -71,7 +78,9 @@
         }
         // 数値として読めない正解候補は文字列として比較する
       }
-      if (mode === 'kana-insensitive') {
+      if (mode === 'formula') {
+        if (normalizeFormula(input) === normalizeFormula(c)) return { correct: true, empty: false };
+      } else if (mode === 'kana-insensitive') {
         if (toHiragana(inNorm) === toHiragana(normalize(c))) return { correct: true, empty: false };
       } else if (inNorm === normalize(c)) {
         return { correct: true, empty: false };

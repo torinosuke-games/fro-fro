@@ -1,4 +1,4 @@
-// 中1数学 第1〜2回：4単元112問、図なし・レビュー待ち。
+// 中1数学 第1〜3回：6単元168問、図なし・レビュー待ち。
 window.QUESTION_BANK.push(
 {
   "id": "math_g7_signed_numbers_001",
@@ -255,17 +255,14 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "60を素因数分解しなさい。累乗には ^、積には × を使って答えてよいです。",
   "answer": "2²×3×5",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "小さい素数から順に割り、同じ因数を累乗にまとめよう。"
   ],
   "explanation": "60＝2×30＝2×2×15＝2²×3×5。因数がすべて素数になるまで分解します。",
   "reviewed": false,
   "acceptedAnswers": [
-    "2^2×3×5",
-    "2×2×3×5",
-    "2^2*3*5",
-    "2*2*3*5"
+    "3×2²×5"
   ]
 },
 {
@@ -1115,7 +1112,7 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "a×5を、×を省いた文字式で表しなさい。",
   "answer": "5a",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "数の部分を文字の前に書こう。"
   ],
@@ -1156,7 +1153,7 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "1×bを、係数の1と×を省いて表しなさい。",
   "answer": "b",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "1をかけても数や文字の値は変わらないよ。"
   ],
@@ -1197,7 +1194,7 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "1冊a円のノートを3冊買います。代金を文字式で答えなさい。単位は不要です。",
   "answer": "3a",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "1冊の代金に冊数をかけよう。"
   ],
@@ -1320,7 +1317,7 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "m gの砂糖を5人で等しく分けます。1人分の重さを / を使う文字式で答えなさい。",
   "answer": "m/5",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "全体の重さを人数で割ろう。"
   ],
@@ -1402,7 +1399,7 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "1辺がs cmの正方形の周の長さを文字式で答えなさい。単位は不要です。",
   "answer": "4s",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "同じ長さの辺が何本あるか考えよう。"
   ],
@@ -1523,18 +1520,16 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "input",
-  "question": "1個a円のパンを3個と、1本120円の飲み物を1本買います。代金を文字式で答えなさい。単位は不要です。",
-  "answer": "3a+120",
-  "validationMode": "exact",
+  "question": "文化祭で1個a円の材料を3個買います。材料代の合計が1000円以上なら送料は無料、それより少なければ送料120円がかかります。材料代が1000円未満のとき、支払額と1000円との差（1000円から支払額を引いた額）を式で表しなさい。",
+  "answer": "880-3a",
+  "validationMode": "formula",
   "hints": [
-    "パンの代金と飲み物の代金を別々に表して足そう。"
+    "送料を含む支払額全体を、1000から引こう。"
   ],
-  "explanation": "パンは3a円、飲み物は120円なので3a＋120円です。",
+  "explanation": "支払額は3a+120円。差は1000−(3a+120)＝880−3a円です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "3a＋120",
-    "120+3a",
-    "120＋3a"
+    "-3a+880"
   ]
 },
 {
@@ -1612,16 +1607,14 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "a分の動画と、それより4分長い動画を1本ずつ見ます。合計時間を、同じ文字をまとめた式で答えなさい。単位は不要です。",
   "answer": "2a+4",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "もう一方の長さをaを使って表し、二本分を足そう。"
   ],
   "explanation": "a＋（a＋4）＝2a＋4分です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "2a＋4",
-    "4+2a",
-    "4＋2a"
+    "4+2a"
   ]
 },
 {
@@ -1633,18 +1626,18 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "choice",
-  "question": "「xは8より大きい」を表す式はどれですか。",
-  "answer": "x＞8",
+  "question": "長さa cmのひもを5本つなぎます。つなぎ目は4か所で、それぞれ2 cmずつ重ねます。つないだ全体の長さを表す式はどれですか。",
+  "answer": "5a-8",
   "hints": [
-    "「より大きい」は境目と等しい場合を含まないよ。"
+    "ひもの本数と、つなぎ目の数は同じではないよ。"
   ],
-  "explanation": "8を含まない大きい側なのでx＞8です。\n\nほかの 選択肢\n・「x≧8」…これは8と等しい場合も含みます。\n・「x＜8」…大小の向きが逆です。\n・「x＝8」…大きい場合ではなく等しい場合です。",
+  "explanation": "もとの長さの合計は5a。重なり4×2＝8を引くので5a−8です。\n\nほかの 選択肢\n・「5(a-2)」…つなぎ目を5か所と数えています。\n・「5a-4」…重ねる長さ2 cmをかけていません。\n・「5a+8」…重なりは全体の長さを短くします。",
   "reviewed": false,
   "choices": [
-    "x＞8",
-    "x≧8",
-    "x＜8",
-    "x＝8"
+    "5a-8",
+    "5(a-2)",
+    "5a-4",
+    "5a+8"
   ]
 },
 {
@@ -1656,19 +1649,17 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "input",
-  "question": "500円を持ち、1個a円の品物を2個買います。残金を文字式で答えなさい。単位は不要です。",
-  "answer": "500-2a",
-  "validationMode": "exact",
+  "question": "図書カード500円分から、1冊a円のノートを2冊買います。残額からさらに、その残額の半分を使いました。最後の残額を式で表しなさい。",
+  "answer": "250-a",
+  "validationMode": "formula",
   "hints": [
-    "持っている金額から、買った二個分の代金を引こう。"
+    "最初の買い物の残額を求め、その全体を半分にしよう。"
   ],
-  "explanation": "代金は2a円なので、残金は500−2a円です。",
+  "explanation": "最初の残額は500−2a。最後は(500−2a)÷2＝250−a円です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "500−2a",
-    "500－2a",
-    "-2a+500",
-    "−2a＋500"
+    "-a+250",
+    "(500-2a)/2"
   ]
 },
 {
@@ -1680,18 +1671,18 @@ window.QUESTION_BANK.push(
   "collection": "course_ma7_1",
   "difficulty": "advanced",
   "answerType": "choice",
-  "question": "a＝−2を式5−aに代入した式はどれですか。",
-  "answer": "5−（−2）",
+  "question": "ある施設の料金は、大人1人a円、中学生1人は大人より200円安いとします。式5a-600が表す人数の組合せはどれですか。",
+  "answer": "大人2人と中学生3人",
   "hints": [
-    "aの位置だけを、その値全体に置き換えよう。"
+    "全員が大人とした代金から、何人分の値引きを引いたか考えよう。"
   ],
-  "explanation": "5−（−2）＝7です。負の数を引く形を保ちます。\n\nほかの 選択肢\n・「5−2」…代入する値の負の符号を落としています。\n・「（5−2）a」…aを残し、元の式にない積を作っています。\n・「5×（−2）」…引き算をかけ算に変えています。",
+  "explanation": "2a+3(a−200)＝5a−600。全5人のうち3人が中学生です。\n\nほかの 選択肢\n・「大人3人と中学生2人」…値引きは400円になります。\n・「大人5人と中学生3人」…合計8人なので係数が8になります。\n・「中学生5人」…値引きは1000円になります。",
   "reviewed": false,
   "choices": [
-    "5−（−2）",
-    "5−2",
-    "（5−2）a",
-    "5×（−2）"
+    "大人2人と中学生3人",
+    "大人3人と中学生2人",
+    "大人5人と中学生3人",
+    "中学生5人"
   ]
 },
 {
@@ -1705,7 +1696,7 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "4a＋3aを計算しなさい。",
   "answer": "7a",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "同じ文字をもつ項では、係数同士を足そう。"
   ],
@@ -1746,7 +1737,7 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "9b−5bを計算しなさい。",
   "answer": "4b",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "文字の部分を残して、係数の差を求めよう。"
   ],
@@ -1787,16 +1778,12 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "（−2x）×3を計算しなさい。",
   "answer": "-6x",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "数の部分だけをかけ、文字を残そう。"
   ],
   "explanation": "（−2）×3×x＝−6xです。",
-  "reviewed": false,
-  "acceptedAnswers": [
-    "−6x",
-    "－6x"
-  ]
+  "reviewed": false
 },
 {
   "id": "math_g7_expression_calc_006",
@@ -1832,7 +1819,7 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "12x÷4を計算しなさい。",
   "answer": "3x",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "係数を割って、文字をそのまま残そう。"
   ],
@@ -1873,17 +1860,14 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "（3a＋2）＋（5a−7）を計算しなさい。",
   "answer": "8a-5",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "文字の項同士、数だけの項同士を合わせよう。"
   ],
   "explanation": "3a＋5a＋2−7＝8a−5です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "8a−5",
-    "8a－5",
-    "-5+8a",
-    "−5＋8a"
+    "-5+8a"
   ]
 },
 {
@@ -1920,17 +1904,14 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "（−4a＋6）＋（a−9）を計算しなさい。",
   "answer": "-3a-3",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "aの係数を1と考え、符号付きの係数を足そう。"
   ],
   "explanation": "（−4＋1）a＋6−9＝−3a−3です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "−3a−3",
-    "－3a－3",
-    "-3-3a",
-    "−3−3a"
+    "-3-3a"
   ]
 },
 {
@@ -1967,17 +1948,14 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "−2（3a＋4）を計算しなさい。",
   "answer": "-6a-8",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "負の数を二つの項それぞれにかけよう。"
   ],
   "explanation": "（−2）×3a＋（−2）×4＝−6a−8です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "−6a−8",
-    "－6a－8",
-    "-8-6a",
-    "−8−6a"
+    "-8-6a"
   ]
 },
 {
@@ -2014,17 +1992,14 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "（−15a＋10）÷（−5）を計算しなさい。",
   "answer": "3a-2",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "割る数が負なので、各項の符号の変化に注意しよう。"
   ],
   "explanation": "（−15a）÷（−5）＋10÷（−5）＝3a−2です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "3a−2",
-    "3a－2",
-    "-2+3a",
-    "−2＋3a"
+    "-2+3a"
   ]
 },
 {
@@ -2061,7 +2036,7 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "0.5a＋1.2a−0.3aを計算しなさい。",
   "answer": "1.4a",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "小数の係数だけをまとめよう。"
   ],
@@ -2102,16 +2077,14 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "2（x＋3）−（x−4）を計算しなさい。",
   "answer": "x+10",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "最初の分配と、引くかっこの符号変更を別々にしよう。"
   ],
   "explanation": "2x＋6−x＋4＝x＋10です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "x＋10",
-    "10+x",
-    "10＋x"
+    "10+x"
   ]
 },
 {
@@ -2148,16 +2121,14 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "縦がa cm、横が（a＋3）cmの長方形があります。周の長さを、同類項をまとめた式で答えなさい。単位は不要です。",
   "answer": "4a+6",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "縦も横も二本ずつあるよ。"
   ],
   "explanation": "2a＋2（a＋3）＝2a＋2a＋6＝4a＋6cmです。",
   "reviewed": false,
   "acceptedAnswers": [
-    "4a＋6",
-    "6+4a",
-    "6＋4a"
+    "6+4a"
   ]
 },
 {
@@ -2194,17 +2165,14 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "同じ長さa cmのひも3本から、それぞれ2cmずつ切ります。残りの合計を文字式で答えなさい。単位は不要です。",
   "answer": "3a-6",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "一本ごとの残りを求めてから三本分にしよう。"
   ],
   "explanation": "3（a−2）＝3a−6cmです。",
   "reviewed": false,
   "acceptedAnswers": [
-    "3a−6",
-    "3a－6",
-    "-6+3a",
-    "−6＋3a"
+    "-6+3a"
   ]
 },
 {
@@ -2282,16 +2250,14 @@ window.QUESTION_BANK.push(
   "answerType": "input",
   "question": "（6x−9）÷3−（x−5）を計算しなさい。",
   "answer": "x+2",
-  "validationMode": "exact",
+  "validationMode": "formula",
   "hints": [
     "各項を割った後、引くかっこの中の符号を変えよう。"
   ],
   "explanation": "2x−3−x＋5＝x＋2です。",
   "reviewed": false,
   "acceptedAnswers": [
-    "x＋2",
-    "2+x",
-    "2＋x"
+    "2+x"
   ]
 },
 {
@@ -2316,5 +2282,1153 @@ window.QUESTION_BANK.push(
     "4（a＋2）−4a＋8",
     "4（a−2）＋4a＋8"
   ]
+},
+{
+  "id": "math_g7_equation_005",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 1,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "方程式x+5＝12の解である数はどれですか。",
+  "answer": "7",
+  "hints": [
+    "左右に代入して、等しくなる数を探そう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "7",
+    "17",
+    "-7",
+    "5"
+  ],
+  "explanation": "7+5＝12で両辺が一致します。\n\nほかの 選択肢\n・「17」…17+5＝22です。\n・「-7」…−7+5＝−2です。\n・「5」…5+5＝10です。"
+},
+{
+  "id": "math_g7_equation_006",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 2,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "x＝3は方程式2x+1＝7の解です。左辺に代入した値を答えなさい。",
+  "answer": "7",
+  "hints": [
+    "2倍してから1を足そう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "2×3+1＝7で右辺に一致します。"
+},
+{
+  "id": "math_g7_equation_007",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 3,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "等式a＝bの両辺に同じ3を加えた等式はどれですか。",
+  "answer": "a+3＝b+3",
+  "hints": [
+    "等号の両側に同じ操作をしよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "a+3＝b+3",
+    "a+3＝b",
+    "3a＝b+3",
+    "a-3＝b+3"
+  ],
+  "explanation": "両辺に3を加えるので等しさが保たれます。\n\nほかの 選択肢\n・「a+3＝b」…右辺にも3を加えます。\n・「3a＝b+3」…左辺は加法でなく乗法です。\n・「a-3＝b+3」…左右で操作の符号が異なります。"
+},
+{
+  "id": "math_g7_equation_008",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 4,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "x-4＝9を満たすxの値を答えなさい。",
+  "answer": "13",
+  "hints": [
+    "両辺に4を加えよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "x＝9+4＝13。"
+},
+{
+  "id": "math_g7_equation_009",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 5,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "3x＝15からx＝5にする操作はどれですか。",
+  "answer": "両辺を3で割る",
+  "hints": [
+    "xにかかっている3を取り除く操作を考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "両辺を3で割る",
+    "左辺だけ3で割る",
+    "両辺から3を引く",
+    "両辺に3をかける"
+  ],
+  "explanation": "両辺を3で割るとx＝15÷3＝5です。\n\nほかの 選択肢\n・「左辺だけ3で割る」…片側だけでは等しさが保たれません。\n・「両辺から3を引く」…3x−3はxになりません。\n・「両辺に3をかける」…左辺が9xになってしまいます。"
+},
+{
+  "id": "math_g7_equation_010",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 6,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "x/4＝-2を満たすxの値を答えなさい。",
+  "answer": "-8",
+  "hints": [
+    "両辺を4倍しよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "x＝−2×4＝−8。"
+},
+{
+  "id": "math_g7_equation_011",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 7,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "1冊x円のノート3冊と120円のペンで合計600円です。方程式はどれですか。",
+  "answer": "3x+120＝600",
+  "hints": [
+    "ペンを買うのは1本だけだよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "3x+120＝600",
+    "3(x+120)＝600",
+    "x+120＝600",
+    "3x＝600+120"
+  ],
+  "explanation": "ノート代3xにペン代120を加えます。\n\nほかの 選択肢\n・「3(x+120)＝600」…ペン代まで3倍しています。\n・「x+120＝600」…ノート3冊分になっていません。\n・「3x＝600+120」…ペン代を差し引く向きが逆です。"
+},
+{
+  "id": "math_g7_equation_012",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 8,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "x+8＝3を満たすxの値を答えなさい。",
+  "answer": "-5",
+  "hints": [
+    "両辺から8を引こう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "x＝3−8＝−5。"
+},
+{
+  "id": "math_g7_equation_013",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 9,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "5x-7＝2x+8でxの項を左辺へ、数の項を右辺へ移した式はどれですか。",
+  "answer": "5x-2x＝8+7",
+  "hints": [
+    "移項した項だけ符号が変わるよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "5x-2x＝8+7",
+    "5x+2x＝8+7",
+    "5x-2x＝8-7",
+    "5x+2x＝8-7"
+  ],
+  "explanation": "2xは−2xに、−7は+7になります。\n\nほかの 選択肢\n・「5x+2x＝8+7」…2xの移項の符号が逆です。\n・「5x-2x＝8-7」…−7の移項の符号が逆です。\n・「5x+2x＝8-7」…両方の移項の符号が逆です。"
+},
+{
+  "id": "math_g7_equation_014",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 10,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "4x+3＝19を満たすxの値を答えなさい。",
+  "answer": "4",
+  "hints": [
+    "まず定数項3を移項しよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "4x＝16、x＝4。"
+},
+{
+  "id": "math_g7_equation_015",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 11,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "x/2+1＝5の両辺を2倍した式はどれですか。",
+  "answer": "x+2＝10",
+  "hints": [
+    "定数項も右辺も、全部2倍しよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "x+2＝10",
+    "x+1＝10",
+    "x+2＝5",
+    "2x+2＝10"
+  ],
+  "explanation": "すべての項を2倍するとx+2＝10です。\n\nほかの 選択肢\n・「x+1＝10」…左辺の1を2倍していません。\n・「x+2＝5」…右辺を2倍していません。\n・「2x+2＝10」…x/2の2倍はxです。"
+},
+{
+  "id": "math_g7_equation_016",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 12,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "2(x+3)＝14を満たすxの値を答えなさい。",
+  "answer": "4",
+  "hints": [
+    "両辺を2で割ってから考えよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "x+3＝7、x＝4。"
+},
+{
+  "id": "math_g7_equation_017",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 13,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "x:6＝5:3に成り立つ関係はどれですか。",
+  "answer": "3x＝30",
+  "hints": [
+    "外側同士と内側同士の積を等しくしよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "3x＝30",
+    "5x＝18",
+    "6x＝15",
+    "x＝10/3"
+  ],
+  "explanation": "外項の積3xと内項の積6×5が等しくなります。\n\nほかの 選択肢\n・「5x＝18」…隣り合う項同士をかけています。\n・「6x＝15」…左右の比の順序を無視しています。\n・「x＝10/3」…6をかける操作が抜けています。"
+},
+{
+  "id": "math_g7_equation_018",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 14,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "0.4x+1＝3を満たすxの値を答えなさい。",
+  "answer": "5",
+  "hints": [
+    "1を移項し、0.4で割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "0.4x＝2、x＝2÷0.4＝5。"
+},
+{
+  "id": "math_g7_equation_019",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 15,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "生徒に鉛筆を1人3本ずつ配ると5本余ります。生徒x人、鉛筆41本のときの方程式はどれですか。",
+  "answer": "3x+5＝41",
+  "hints": [
+    "配った本数と余った本数の和が全体だよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "3x+5＝41",
+    "3x-5＝41",
+    "5x+3＝41",
+    "3(x+5)＝41"
+  ],
+  "explanation": "配った3x本に余り5本を足します。\n\nほかの 選択肢\n・「3x-5＝41」…余った本数を引いています。\n・「5x+3＝41」…1人分と余りを取り違えています。\n・「3(x+5)＝41」…余り5本を人数に加えています。"
+},
+{
+  "id": "math_g7_equation_020",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 16,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "3x-2＝x+8を満たすxの値を答えなさい。",
+  "answer": "5",
+  "hints": [
+    "xの項と数の項を別々の側に集めよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "3x−x＝8+2、2x＝10、x＝5。"
+},
+{
+  "id": "math_g7_equation_021",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 17,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "時速4 kmでx時間歩くと6 km進みました。方程式はどれですか。",
+  "answer": "4x＝6",
+  "hints": [
+    "距離は速さと時間の積だよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "4x＝6",
+    "x/4＝6",
+    "4/x＝6",
+    "x+4＝6"
+  ],
+  "explanation": "距離＝速さ×時間より4x＝6です。\n\nほかの 選択肢\n・「x/4＝6」…距離を求める際に速さで割っていません。\n・「4/x＝6」…時間で割る式ではありません。\n・「x+4＝6」…速さと時間は足せません。"
+},
+{
+  "id": "math_g7_equation_022",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 18,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "x:8＝3:4を満たすxの値を答えなさい。",
+  "answer": "6",
+  "hints": [
+    "外項と内項の積を等しくしよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "4x＝8×3＝24、x＝6。"
+},
+{
+  "id": "math_g7_equation_023",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 19,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "今12歳の妹と今x歳の兄がいます。4年後に兄は妹の年齢の1.5倍です。方程式はどれですか。",
+  "answer": "x+4＝1.5(12+4)",
+  "hints": [
+    "4年後は二人とも4歳増えているよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "x+4＝1.5(12+4)",
+    "x+4＝1.5×12",
+    "x＝1.5(12+4)",
+    "x+4＝1.5×12+4"
+  ],
+  "explanation": "4年後の妹の年齢全体を1.5倍します。\n\nほかの 選択肢\n・「x+4＝1.5×12」…妹の年齢が今のままです。\n・「x＝1.5(12+4)」…兄の年齢が今のままです。\n・「x+4＝1.5×12+4」…妹の増えた4歳も1.5倍の対象です。"
+},
+{
+  "id": "math_g7_equation_024",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 20,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "定価x円の商品を20%引きで買うと640円です。xの値を答えなさい。",
+  "answer": "800",
+  "hints": [
+    "値引き後は定価の何割か考えよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "(1−0.2)x＝640、0.8x＝640、x＝800。"
+},
+{
+  "id": "math_g7_equation_025",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 21,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "同じノートを1人4冊ずつ配ると6冊足りず、3冊ずつなら9冊余ります。人数をx人とした方程式はどれですか。",
+  "answer": "4x-6＝3x+9",
+  "hints": [
+    "二通りに表したノートの総数を等しくしよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "4x-6＝3x+9",
+    "4x+6＝3x-9",
+    "4x-6＝3x-9",
+    "4x+6＝3x+9"
+  ],
+  "explanation": "総数は4xより6少なく、3xより9多いのでこの式です。\n\nほかの 選択肢\n・「4x+6＝3x-9」…不足と余りの符号が両方逆です。\n・「4x-6＝3x-9」…余り9冊を引いています。\n・「4x+6＝3x+9」…不足6冊を足しています。"
+},
+{
+  "id": "math_g7_equation_026",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 22,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "同じ枚数のカードを、1人5枚ずつ配ると2枚余り、6枚ずつなら4枚足りません。人数をx人として、xの値を答えなさい。",
+  "answer": "6",
+  "hints": [
+    "カードの総数を二通りの式で表そう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "5x+2＝6x−4、2+4＝x、x＝6。"
+},
+{
+  "id": "math_g7_equation_027",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 23,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "弟が毎分60mで出発し、5分後に兄が毎分80mで同じ道を追います。兄が出発してx分後に追いつく式はどれですか。",
+  "answer": "80x＝60(x+5)",
+  "hints": [
+    "弟が歩いた時間は兄より5分長いよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "80x＝60(x+5)",
+    "80(x+5)＝60x",
+    "80x＝60x+5",
+    "80x＝60(x-5)"
+  ],
+  "explanation": "兄の距離80xと弟の距離60(x+5)を等しくします。\n\nほかの 選択肢\n・「80(x+5)＝60x」…先に出た人が逆です。\n・「80x＝60x+5」…5分に速さをかけていません。\n・「80x＝60(x-5)」…弟の時間を短くしています。"
+},
+{
+  "id": "math_g7_equation_028",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 24,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "父は今42歳、子は今12歳です。x年後に父の年齢が子の年齢の3倍になります。xの値を答えなさい。",
+  "answer": "3",
+  "hints": [
+    "x年後の二人の年齢をそれぞれ式にしよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "42+x＝3(12+x)、42+x＝36+3x、6＝2x、x＝3。"
+},
+{
+  "id": "math_g7_equation_029",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 25,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "方程式2(x-3)＝x+4を、2x-3＝x+4と変形しました。指摘として正しいものはどれですか。",
+  "answer": "2を-3にもかける必要がある",
+  "hints": [
+    "分配法則でかける対象を確認しよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "2を-3にもかける必要がある",
+    "右辺にも2をかける必要がある",
+    "xを移項する前に両辺を2で割れない",
+    "2xをx²にする必要がある"
+  ],
+  "explanation": "左辺は2x−6で、定数項にも2をかけます。\n\nほかの 選択肢\n・「右辺にも2をかける必要がある」…左辺のかっこを展開するだけなら右辺はそのままです。\n・「xを移項する前に両辺を2で割れない」…両辺を同じ2で割る操作はできます。\n・「2xをx²にする必要がある」…2xはxの2倍であり二乗ではありません。"
+},
+{
+  "id": "math_g7_equation_030",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 26,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "容器にある水の1/3を使い、さらに4L使うと、初めの半分が残りました。初めの量をx Lとして、xの値を答えなさい。",
+  "answer": "24",
+  "hints": [
+    "残った量と使った量の合計を初めの量にしよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "x/3+4+x/2＝x。6倍して2x+24+3x＝6x、x＝24。"
+},
+{
+  "id": "math_g7_equation_031",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 27,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "方程式2x+3＝2(x+4)について正しい説明はどれですか。",
+  "answer": "解はない",
+  "hints": [
+    "両辺から2xを引くと何が残るかな。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "解はない",
+    "x＝0が解",
+    "すべての数が解",
+    "x＝5が解"
+  ],
+  "explanation": "2x+3＝2x+8より3＝8となり、成り立つxはありません。\n\nほかの 選択肢\n・「x＝0が解」…0を代入すると3と8で一致しません。\n・「すべての数が解」…定数項が異なるので恒等的には成立しません。\n・「x＝5が解」…5を代入すると13と18で一致しません。"
+},
+{
+  "id": "math_g7_equation_032",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation",
+  "number": 28,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "ある数xに3を足して2倍するところを、3倍して2を足しました。二つの結果の差は、正しい結果から誤った結果を引くと-5でした。xの値を答えなさい。",
+  "answer": "9",
+  "hints": [
+    "正しい結果全体から誤った結果全体を引こう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "2(x+3)−(3x+2)＝−5、−x+4＝−5、x＝9。"
+},
+{
+  "id": "math_g7_equation_calc_001",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 1,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "x+9＝14を満たすxの値を答えなさい。",
+  "answer": "5",
+  "hints": [
+    "左辺の9を取り除こう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "x＝14−9＝5。"
+},
+{
+  "id": "math_g7_equation_calc_002",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 2,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "x-6＝-2の解はどれですか。",
+  "answer": "4",
+  "hints": [
+    "両辺に6を加えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "4",
+    "-8",
+    "8",
+    "-4"
+  ],
+  "explanation": "x＝−2+6＝4です。\n\nほかの 選択肢\n・「-8」…移項時の符号を変えていません。\n・「8」…−2を+2として足しています。\n・「-4」…正しい解の符号を逆にしています。"
+},
+{
+  "id": "math_g7_equation_calc_003",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 3,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "-3x＝18を満たすxの値を答えなさい。",
+  "answer": "-6",
+  "hints": [
+    "負の係数で両辺を割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "x＝18÷(−3)＝−6。"
+},
+{
+  "id": "math_g7_equation_calc_004",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 4,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "x/5＝3の解はどれですか。",
+  "answer": "15",
+  "hints": [
+    "5で割る操作を元に戻そう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "15",
+    "3/5",
+    "5/3",
+    "8"
+  ],
+  "explanation": "両辺を5倍してx＝15です。\n\nほかの 選択肢\n・「3/5」…両辺をさらに5で割っています。\n・「5/3」…3と5の役割を取り違えています。\n・「8」…かけ算を足し算にしています。"
+},
+{
+  "id": "math_g7_equation_calc_005",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 5,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "7x＝-2を満たすxの値を答えなさい。",
+  "answer": "-2/7",
+  "hints": [
+    "割り切れない商は分数にしよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "両辺を7で割り、x＝−2/7。"
+},
+{
+  "id": "math_g7_equation_calc_006",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 6,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "2x+5＝11の最初の変形として正しいものはどれですか。",
+  "answer": "2x＝11-5",
+  "hints": [
+    "まず足されている5を移項しよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "2x＝11-5",
+    "2x＝11+5",
+    "x＝11-5",
+    "2x＝11/5"
+  ],
+  "explanation": "5を移項すると−5になります。\n\nほかの 選択肢\n・「2x＝11+5」…移項時の符号を変えていません。\n・「x＝11-5」…係数2を消してしまっています。\n・「2x＝11/5」…足し算を除法で取り除こうとしています。"
+},
+{
+  "id": "math_g7_equation_calc_007",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 7,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "8-x＝11を満たすxの値を答えなさい。",
+  "answer": "-3",
+  "hints": [
+    "xの係数が負であることに注意しよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "−x＝11−8＝3、x＝−3。"
+},
+{
+  "id": "math_g7_equation_calc_008",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 8,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "4x＝0の解はどれですか。",
+  "answer": "0",
+  "hints": [
+    "0を4で割った値を考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "0",
+    "4",
+    "1/4",
+    "-4"
+  ],
+  "explanation": "両辺を4で割るとx＝0です。\n\nほかの 選択肢\n・「4」…係数をそのまま解にしています。\n・「1/4」…右辺を1と取り違えています。\n・「-4」…係数の符号を変えても解にはなりません。"
+},
+{
+  "id": "math_g7_equation_calc_009",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 9,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "7x-4＝3x+12を満たすxの値を答えなさい。",
+  "answer": "4",
+  "hints": [
+    "両辺から3xを引こう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "4x＝16、x＝4。"
+},
+{
+  "id": "math_g7_equation_calc_010",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 10,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "3(x-2)＝12を展開した式はどれですか。",
+  "answer": "3x-6＝12",
+  "hints": [
+    "かっこの中の両方に3をかけよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "3x-6＝12",
+    "3x-2＝12",
+    "3x+6＝12",
+    "x-6＝12"
+  ],
+  "explanation": "3×x−3×2＝3x−6です。\n\nほかの 選択肢\n・「3x-2＝12」…2を3倍していません。\n・「3x+6＝12」…負の符号が変わっています。\n・「x-6＝12」…xを3倍していません。"
+},
+{
+  "id": "math_g7_equation_calc_011",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 11,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "5-2(x+1)＝9を満たすxの値を答えなさい。",
+  "answer": "-3",
+  "hints": [
+    "かっこの前の負の符号も分配しよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "5−2x−2＝9、−2x＝6、x＝−3。"
+},
+{
+  "id": "math_g7_equation_calc_012",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 12,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "0.3x-0.2＝0.7の両辺を10倍した式はどれですか。",
+  "answer": "3x-2＝7",
+  "hints": [
+    "小数のある項をすべて同じ倍率で変えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "3x-2＝7",
+    "3x-0.2＝7",
+    "3x-2＝0.7",
+    "30x-2＝7"
+  ],
+  "explanation": "全項を10倍すると3x−2＝7です。\n\nほかの 選択肢\n・「3x-0.2＝7」…定数−0.2を10倍していません。\n・「3x-2＝0.7」…右辺を10倍していません。\n・「30x-2＝7」…0.3を100倍しています。"
+},
+{
+  "id": "math_g7_equation_calc_013",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 13,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "0.6x+1.2＝0.3xを満たすxの値を答えなさい。",
+  "answer": "-4",
+  "hints": [
+    "10倍して小数をなくそう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "6x+12＝3x、3x＝−12、x＝−4。"
+},
+{
+  "id": "math_g7_equation_calc_014",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 14,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "x/3-2＝x/6の両辺を6倍した式はどれですか。",
+  "answer": "2x-12＝x",
+  "hints": [
+    "分数でない項にも6をかけよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "2x-12＝x",
+    "2x-2＝x",
+    "2x-12＝6x",
+    "x-12＝x"
+  ],
+  "explanation": "6×x/3−6×2＝6×x/6です。\n\nほかの 選択肢\n・「2x-2＝x」…定数2を6倍していません。\n・「2x-12＝6x」…x/6を6倍するとxです。\n・「x-12＝x」…x/3を6倍すると2xです。"
+},
+{
+  "id": "math_g7_equation_calc_015",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 15,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "(x-1)/4＝(x+3)/6を満たすxの値を答えなさい。",
+  "answer": "9",
+  "hints": [
+    "両辺を12倍すると分母を払えるよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "3(x−1)＝2(x+3)、3x−3＝2x+6、x＝9。"
+},
+{
+  "id": "math_g7_equation_calc_016",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 16,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "3:5＝x:20の解はどれですか。",
+  "answer": "12",
+  "hints": [
+    "3と20、5とxの積を考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "12",
+    "100/3",
+    "3/4",
+    "4/3"
+  ],
+  "explanation": "5x＝3×20＝60、x＝12です。\n\nほかの 選択肢\n・「100/3」…内項と外項を取り違えています。\n・「3/4」…20/5の倍率を逆に使っています。\n・「4/3」…外項と内項ではなく、同じ位置の項同士をかけています。"
+},
+{
+  "id": "math_g7_equation_calc_017",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 17,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "2(x+4)-3(x-1)＝6を満たすxの値を答えなさい。",
+  "answer": "5",
+  "hints": [
+    "後ろのかっこは−3を分配しよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "2x+8−3x+3＝6、−x＝−5、x＝5。"
+},
+{
+  "id": "math_g7_equation_calc_018",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 18,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "方程式-2x+7＝3x-8の解はどれですか。",
+  "answer": "3",
+  "hints": [
+    "xの項を右辺に集めてもよいよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "3",
+    "-3",
+    "15",
+    "-1/5"
+  ],
+  "explanation": "7+8＝3x+2xより15＝5x、x＝3です。\n\nほかの 選択肢\n・「-3」…最後の符号が逆です。\n・「15」…係数5で割っていません。\n・「-1/5」…移項で8を引き、係数の符号も取り違えています。"
+},
+{
+  "id": "math_g7_equation_calc_019",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 19,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "x/2+x/3＝-5を満たすxの値を答えなさい。",
+  "answer": "-6",
+  "hints": [
+    "2と3の公倍数を両辺にかけよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "3x+2x＝−30、5x＝−30、x＝−6。"
+},
+{
+  "id": "math_g7_equation_calc_020",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 20,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "4(x-1)＝2(x+5)の解はどれですか。",
+  "answer": "7",
+  "hints": [
+    "両方のかっこを展開してから移項しよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "7",
+    "3",
+    "-7",
+    "14"
+  ],
+  "explanation": "4x−4＝2x+10、2x＝14よりx＝7です。\n\nほかの 選択肢\n・「3」…−4を右辺に移す符号が逆です。\n・「-7」…解の符号が逆です。\n・「14」…係数2で割っていません。"
+},
+{
+  "id": "math_g7_equation_calc_021",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 21,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "(2x-1)/3-(x+2)/4＝1を満たすxの値を答えなさい。",
+  "answer": "22/5",
+  "hints": [
+    "引き算の後ろの分子全体に注意しよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "4(2x−1)−3(x+2)＝12、8x−4−3x−6＝12、5x＝22、x＝22/5。"
+},
+{
+  "id": "math_g7_equation_calc_022",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 22,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "方程式(x+2)/3＝x-1で「x+2＝x-3」としました。直すべき点はどれですか。",
+  "answer": "右辺のxも3倍する",
+  "hints": [
+    "分母を払うときは右辺全体を3倍するよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "右辺のxも3倍する",
+    "左辺の2も3倍する",
+    "右辺の-1を3倍しない",
+    "左辺のxを3倍する"
+  ],
+  "explanation": "正しくはx+2＝3x−3です。\n\nほかの 選択肢\n・「左辺の2も3倍する」…左辺は分母の3が消え、分子はそのままです。\n・「右辺の-1を3倍しない」…右辺の−1も3倍が必要です。\n・「左辺のxを3倍する」…左辺は分子をさらに3倍しません。"
+},
+{
+  "id": "math_g7_equation_calc_023",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 23,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "0.2(x-3)+0.5＝0.3(x+1)を満たすxの値を答えなさい。",
+  "answer": "-4",
+  "hints": [
+    "10倍してからかっこを展開しよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "2(x−3)+5＝3(x+1)、2x−1＝3x+3、x＝−4。"
+},
+{
+  "id": "math_g7_equation_calc_024",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 24,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "方程式3(2x-1)-2(x+4)＝5の解はどれですか。",
+  "answer": "4",
+  "hints": [
+    "−2をxにも4にもかけよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "4",
+    "5/2",
+    "3",
+    "-4"
+  ],
+  "explanation": "6x−3−2x−8＝5、4x＝16、x＝4です。\n\nほかの 選択肢\n・「5/2」…定数−3の移項を誤ると4x＝10になります。\n・「3」…かっこの中の4に2をかけないと定数項を誤ります。\n・「-4」…最後の移項の符号が逆です。"
+},
+{
+  "id": "math_g7_equation_calc_025",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 25,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "(x+1):(2x-1)＝2:3を満たすxの値を答えなさい。",
+  "answer": "5",
+  "hints": [
+    "比例式を積の等式にしてから展開しよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "3(x+1)＝2(2x−1)、3x+3＝4x−2、x＝5。分母2x−1＝9も0ではありません。"
+},
+{
+  "id": "math_g7_equation_calc_026",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 26,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "兄と弟の所持金は合計1800円。兄が弟に200円渡すと同額です。兄の初めの所持金をx円とした式はどれですか。",
+  "answer": "x-200＝1800-x+200",
+  "hints": [
+    "弟の初めの所持金もxで表そう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "x-200＝1800-x+200",
+    "x-200＝1800-x-200",
+    "x+200＝1800-x-200",
+    "x-200＝1800+x+200"
+  ],
+  "explanation": "兄はx−200、弟は1800−x+200です。\n\nほかの 選択肢\n・「x-200＝1800-x-200」…弟は受け取るので200を足します。\n・「x+200＝1800-x-200」…渡す側と受け取る側の増減が逆です。\n・「x-200＝1800+x+200」…弟の初めの所持金は合計から兄の分を引きます。"
+},
+{
+  "id": "math_g7_equation_calc_027",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 27,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "家から駅まで同じ道を、行きは毎分60m、帰りは毎分80mで歩くと、行きが5分長くかかりました。距離をx mとして、xの値を答えなさい。",
+  "answer": "1200",
+  "hints": [
+    "時間は距離を速さで割った式になるよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "x/60−x/80＝5。240倍して4x−3x＝1200、x＝1200。"
+},
+{
+  "id": "math_g7_equation_calc_028",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "equation_calc",
+  "number": 28,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "2(x+3)-x＝x+6という方程式の解について正しいものはどれですか。",
+  "answer": "すべての数が解",
+  "hints": [
+    "左辺を整理して、右辺と比べよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "すべての数が解",
+    "解はない",
+    "x＝0だけが解",
+    "x＝6だけが解"
+  ],
+  "explanation": "左辺はx+6で右辺と常に一致します。\n\nほかの 選択肢\n・「解はない」…両辺は同じ式なので矛盾しません。\n・「x＝0だけが解」…0以外を代入しても一致します。\n・「x＝6だけが解」…6以外を代入しても一致します。"
 }
 );
