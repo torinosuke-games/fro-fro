@@ -1,4 +1,4 @@
-// 中1数学 第1〜4回：8単元224問、図なし・レビュー待ち。
+// 中1数学 全10単元280問、図なし・レビュー待ち。
 window.QUESTION_BANK.push(
 {
   "id": "math_g7_signed_numbers_001",
@@ -4581,5 +4581,1157 @@ window.QUESTION_BANK.push(
   "reviewed": false,
   "validationMode": "formula",
   "explanation": "面積の割合は9π/36π＝1/4。弧も円周12πの1/4なので3π cm。"
+},
+{
+  "id": "math_g7_space_001",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 1,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "底面が五角形で、2つの底面が平行で合同な柱体の名前はどれですか。",
+  "answer": "五角柱",
+  "hints": [
+    "柱の名前は底面の形で決まるよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "五角柱",
+    "五角{錐|すい}",
+    "三角柱",
+    "円柱"
+  ],
+  "explanation": "五角形を底面とする柱体なので五角柱です。\n\nほかの 選択肢\n・「五角{錐|すい}」…{錐|すい}は頂点へ向かって細くなる立体です。\n・「三角柱」…三角柱の底面は三角形です。\n・「円柱」…円柱の底面は円です。"
+},
+{
+  "id": "math_g7_space_002",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 2,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "三角柱の頂点は何個ありますか。",
+  "answer": "6",
+  "hints": [
+    "上下の底面の頂点を数えよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "三角形の頂点が上下に3個ずつあるので3×2＝6個。"
+},
+{
+  "id": "math_g7_space_003",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 3,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "次のうち多面体であるものはどれですか。",
+  "answer": "四角{錐|すい}",
+  "hints": [
+    "表面が平面の多角形だけでできているか見よう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "四角{錐|すい}",
+    "円柱",
+    "円{錐|すい}",
+    "球"
+  ],
+  "explanation": "四角{錐|すい}は多角形の面だけで囲まれています。\n\nほかの 選択肢\n・「円柱」…円柱には曲面があります。\n・「円{錐|すい}」…円{錐|すい}にも曲面があります。\n・「球」…球の表面は曲面です。"
+},
+{
+  "id": "math_g7_space_004",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 4,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "正六面体の面は何枚ありますか。",
+  "answer": "6",
+  "hints": [
+    "名前にある数は面の数を表すよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "正六面体は合同な正方形6枚で囲まれています。"
+},
+{
+  "id": "math_g7_space_005",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 5,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "空間内の2直線がねじれの位置にあるとは、どの場合ですか。",
+  "answer": "同じ平面上になく、交わらず平行でもない",
+  "hints": [
+    "平行や交わる場合との違いを考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "同じ平面上になく、交わらず平行でもない",
+    "同じ平面上で交わらない",
+    "直角に交わる",
+    "同じ直線上にある"
+  ],
+  "explanation": "ねじれの位置の2直線は同一平面上にありません。\n\nほかの 選択肢\n・「同じ平面上で交わらない」…同一平面内で交わらなければ平行です。\n・「直角に交わる」…交わる直線はねじれではありません。\n・「同じ直線上にある」…一致した直線もねじれではありません。"
+},
+{
+  "id": "math_g7_space_006",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 6,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "底面積が12cm²、高さが5cmの角柱の体積を、単位なしで答えなさい。",
+  "answer": "60",
+  "hints": [
+    "柱の体積は底面積に高さをかけるよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "12×5＝60cm³。"
+},
+{
+  "id": "math_g7_space_007",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 7,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "長方形を、その1辺を軸として1回転させてできる立体はどれですか。",
+  "answer": "円柱",
+  "hints": [
+    "軸から離れた辺が描く面を想像しよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "円柱",
+    "円{錐|すい}",
+    "球",
+    "四角柱"
+  ],
+  "explanation": "長方形の辺を軸に回すと半径が一定の円柱になります。\n\nほかの 選択肢\n・「円{錐|すい}」…三角形の回転と取り違えています。\n・「球」…半円の回転と取り違えています。\n・「四角柱」…回転でできる側面は平面ではありません。"
+},
+{
+  "id": "math_g7_space_008",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 8,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "底面積が18cm²、高さが4cmの角{錐|すい}の体積を、単位なしで答えなさい。",
+  "answer": "24",
+  "hints": [
+    "同じ底面積と高さの柱の何分の一か考えよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "18×4×1/3＝24cm³。"
+},
+{
+  "id": "math_g7_space_009",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 9,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "円柱を底面が水平になるよう置きます。正面から見た立面図と真上から見た平面図の組はどれですか。",
+  "answer": "立面図は長方形、平面図は円",
+  "hints": [
+    "正面では高さ、真上では底面の形が見えるよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "立面図は長方形、平面図は円",
+    "立面図は三角形、平面図は円",
+    "立面図も平面図も円",
+    "立面図は長方形、平面図は三角形"
+  ],
+  "explanation": "正面は長方形、真上は円です。\n\nほかの 選択肢\n・「立面図は三角形、平面図は円」…円{錐|すい}の立面図と取り違えています。\n・「立面図も平面図も円」…球の投影図と取り違えています。\n・「立面図は長方形、平面図は三角形」…円柱の底面は三角形ではありません。"
+},
+{
+  "id": "math_g7_space_010",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 10,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "半径3cm、高さ5cmの円柱の体積を、πを使い単位なしで答えなさい。",
+  "answer": "45π",
+  "hints": [
+    "底面の円の面積を先に求めよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "π×3²×5＝45π cm³。"
+},
+{
+  "id": "math_g7_space_011",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 11,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "底面の半径3cm、高さ4cmの円{錐|すい}の体積はどれですか。",
+  "answer": "12π",
+  "hints": [
+    "円柱の体積を求めてから{錐|すい}の割合をかけよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "12π",
+    "36π",
+    "4π",
+    "16π"
+  ],
+  "explanation": "π×3²×4×1/3＝12πです。\n\nほかの 選択肢\n・「36π」…1/3をかけ忘れています。\n・「4π」…半径を二乗していません。\n・「16π」…高さを半径として二乗しています。"
+},
+{
+  "id": "math_g7_space_012",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 12,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "半径2cmの球の体積を、πを使い単位なしで答えなさい。",
+  "answer": "32π/3",
+  "hints": [
+    "球の体積は4/3×π×半径の三乗だよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "(4/3)×π×2³＝32π/3 cm³。",
+  "acceptedAnswers": [
+    "(32/3)π",
+    "32/3×π"
+  ]
+},
+{
+  "id": "math_g7_space_013",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 13,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "直方体ABCD−EFGHで、ABCDとEFGHが上下の面、AとE、BとF、CとG、DとHが対応する頂点です。辺ABとねじれの位置にある辺はどれですか。",
+  "answer": "CG",
+  "hints": [
+    "交わる辺と平行な辺を除こう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "CG",
+    "EF",
+    "BC",
+    "CD"
+  ],
+  "explanation": "CGはABと交わらず、平行でもありません。\n\nほかの 選択肢\n・「EF」…EFはABに平行です。\n・「BC」…BCはABとBで交わります。\n・「CD」…CDはABに平行です。"
+},
+{
+  "id": "math_g7_space_014",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 14,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "半径3cm、高さ4cmの円柱の表面積を、πを使い単位なしで答えなさい。",
+  "answer": "42π",
+  "hints": [
+    "底面2枚と側面を合わせよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "底面は2×9π＝18π、側面は2π×3×4＝24π。合計42π cm²。"
+},
+{
+  "id": "math_g7_space_015",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 15,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "ある直線が平面上の点Pを通り、その平面に垂直です。必ず成り立つものはどれですか。",
+  "answer": "平面内でPを通るすべての直線と垂直",
+  "hints": [
+    "垂直な直線と平面が交わる点に注目しよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "平面内でPを通るすべての直線と垂直",
+    "平面内の1本だけと垂直",
+    "平面内のすべての直線と交わる",
+    "平面に平行になる"
+  ],
+  "explanation": "平面に垂直な直線は、交点を通る平面内の全直線と垂直です。\n\nほかの 選択肢\n・「平面内の1本だけと垂直」…交点を通るどの方向の直線とも垂直です。\n・「平面内のすべての直線と交わる」…Pを通らない直線とは交わりません。\n・「平面に平行になる」…平面と交わるので平行ではありません。"
+},
+{
+  "id": "math_g7_space_016",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 16,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "底面の半径3cm、母線5cmの円{錐|すい}の表面積を、πを使い単位なしで答えなさい。",
+  "answer": "24π",
+  "hints": [
+    "底面の円と側面のおうぎ形を合わせよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "底面9π、側面π×3×5＝15π、合計24π cm²。"
+},
+{
+  "id": "math_g7_space_017",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 17,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "円{錐|すい}の展開図の側面のおうぎ形で、弧の長さと等しいものはどれですか。",
+  "answer": "底面の円周",
+  "hints": [
+    "側面を丸めたときに、どの縁とつながるかな。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "底面の円周",
+    "底面の直径",
+    "母線の長さ",
+    "底面の面積"
+  ],
+  "explanation": "おうぎ形の弧は底面の円周と一致します。\n\nほかの 選択肢\n・「底面の直径」…直径は底面の縁の長さではありません。\n・「母線の長さ」…母線はおうぎ形の半径です。\n・「底面の面積」…長さと面積を比べることはできません。"
+},
+{
+  "id": "math_g7_space_018",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 18,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "半径3cmの球の表面積を、πを使い単位なしで答えなさい。",
+  "answer": "36π",
+  "hints": [
+    "球の表面積は4πr²だよ。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "4×π×3²＝36π cm²。"
+},
+{
+  "id": "math_g7_space_019",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 19,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "直角三角形を、直角をはさむ1辺を軸に1回転してできる立体はどれですか。",
+  "answer": "円{錐|すい}",
+  "hints": [
+    "軸から斜辺までの距離が高さによって変わるよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "円{錐|すい}",
+    "円柱",
+    "三角{錐|すい}",
+    "球"
+  ],
+  "explanation": "頂点から円形の底面へ広がる円{錐|すい}になります。\n\nほかの 選択肢\n・「円柱」…円柱は半径が一定です。\n・「三角{錐|すい}」…回転した側面は三角形の平面ではありません。\n・「球」…球は半円を直径のまわりに回すとできます。"
+},
+{
+  "id": "math_g7_space_020",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 20,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "底面の半径2cm、母線6cmの円{錐|すい}があります。側面の展開図のおうぎ形の中心角を度数だけで答えなさい。",
+  "answer": "120",
+  "hints": [
+    "母線を半径とする円周のうち、底面の円周が占める割合を求めよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "360×(2π×2)/(2π×6)＝120°。"
+},
+{
+  "id": "math_g7_space_021",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 21,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "円柱の表面積を「底面積＋底面の円周×高さ」としました。足りないものはどれですか。",
+  "answer": "もう1枚の底面積",
+  "hints": [
+    "閉じた円柱には底面が何枚あるかな。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "もう1枚の底面積",
+    "もう1枚分の側面積",
+    "高さの1/3倍",
+    "底面の直径"
+  ],
+  "explanation": "円柱には底面が2枚あり、1枚分不足しています。\n\nほかの 選択肢\n・「もう1枚分の側面積」…側面はすでに全部数えています。\n・「高さの1/3倍」…1/3は{錐|すい}の体積で使う係数です。\n・「底面の直径」…面積に長さだけを足すことはできません。"
+},
+{
+  "id": "math_g7_space_022",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 22,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "底面が1辺6cmの正方形、高さ5cmの四角{錐|すい}の体積を、単位なしで答えなさい。",
+  "answer": "60",
+  "hints": [
+    "正方形の面積を求めてから高さと{錐|すい}の割合をかけよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "6²×5×1/3＝60cm³。"
+},
+{
+  "id": "math_g7_space_023",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 23,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "立面図が長方形だったので「この立体は必ず円柱」と判断しました。この判断が誤りである理由はどれですか。",
+  "answer": "直方体でも立面図が長方形になる",
+  "hints": [
+    "正面から見て同じ形になる別の立体を考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "直方体でも立面図が長方形になる",
+    "円柱の立面図は必ず三角形になる",
+    "立面図だけで奥行きも必ず決まる",
+    "長方形の立面図をもつ立体は存在しない"
+  ],
+  "explanation": "直方体も長方形に見えるため、立面図だけでは円柱と決められません。\n\nほかの 選択肢\n・「円柱の立面図は必ず三角形になる」…円柱を底面が水平になるよう置くと立面図は長方形です。\n・「立面図だけで奥行きも必ず決まる」…立面図だけでは奥行きの情報が不足します。\n・「長方形の立面図をもつ立体は存在しない」…直方体などが実際に長方形に見えます。"
+},
+{
+  "id": "math_g7_space_024",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 24,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "半径3cm、高さ8cmの円{錐|すい}と、底面積9π cm²の円柱の体積が等しくなりました。円柱の高さを、単位なしで答えなさい。",
+  "answer": "8/3",
+  "hints": [
+    "円{錐|すい}の体積を円柱の底面積で割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "円{錐|すい}の体積は9π×8/3＝24π。円柱の高さは24π/(9π)＝8/3 cm。"
+},
+{
+  "id": "math_g7_space_025",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 25,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "円{錐|すい}の母線は変えず、底面の半径だけを半分にしたとき、側面の展開図の中心角はどうなりますか。",
+  "answer": "半分になる",
+  "hints": [
+    "中心角は底面の半径を母線で割った値に比例するよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "半分になる",
+    "2倍になる",
+    "変わらない",
+    "1/4になる"
+  ],
+  "explanation": "中心角＝360×底面の半径/母線なので半分です。\n\nほかの 選択肢\n・「2倍になる」…比の増減を逆にしています。\n・「変わらない」…弧の長さが変わるので中心角も変わります。\n・「1/4になる」…半径を二乗する面積の変化と取り違えています。"
+},
+{
+  "id": "math_g7_space_026",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 26,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "底面が3cmと4cmの長方形、高さ6cmの直方体について、表面積を単位なしで答えなさい。",
+  "answer": "108",
+  "hints": [
+    "向かい合う同じ面を2枚ずつ数えよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "2×(3×4＋3×6＋4×6)＝2×54＝108cm²。"
+},
+{
+  "id": "math_g7_space_027",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 27,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "正多面体の説明として正しいものはどれですか。",
+  "answer": "すべての面が合同な正多角形で、各頂点に集まる面の数も等しい",
+  "hints": [
+    "面の形と、頂点の周囲のそろい方を確かめよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "すべての面が合同な正多角形で、各頂点に集まる面の数も等しい",
+    "すべての面が正多角形なら合同でなくてもよい",
+    "すべての面が合同なら正多角形でなくてもよい",
+    "底面だけが正多角形ならよい"
+  ],
+  "explanation": "正多面体は面も各頂点の集まり方もそろいます。\n\nほかの 選択肢\n・「すべての面が正多角形なら合同でなくてもよい」…面は合同な正多角形である必要があります。\n・「すべての面が合同なら正多角形でなくてもよい」…合同なだけでなく正多角形である必要があります。\n・「底面だけが正多角形ならよい」…底面だけの条件では正多面体になりません。"
+},
+{
+  "id": "math_g7_space_028",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "space",
+  "number": 28,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "半径3cmの半球を切り口の円も含めて囲む表面積を、πを使い単位なしで答えなさい。",
+  "answer": "27π",
+  "hints": [
+    "球の表面の半分と、切り口の円を合わせよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "formula",
+  "explanation": "球面部分は36π/2＝18π、切り口は9π。合計27π cm²。"
+},
+{
+  "id": "math_g7_data_002",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 1,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "度数分布表で、資料を分けた「10以上20未満」のような区間を何といいますか。",
+  "answer": "階級",
+  "hints": [
+    "区間の名前と、その中の個数を区別しよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "階級",
+    "度数",
+    "階級値",
+    "相対度数"
+  ],
+  "explanation": "値を区切った区間を階級といいます。\n\nほかの 選択肢\n・「度数」…度数はその階級に入る資料の個数です。\n・「階級値」…階級値は区間の中央の値です。\n・「相対度数」…相対度数は全体に占める割合です。"
+},
+{
+  "id": "math_g7_data_003",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 2,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "階級「20以上30未満」の階級値を答えなさい。",
+  "answer": "25",
+  "hints": [
+    "階級の両端の平均を求めよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "(20＋30)÷2＝25。"
+},
+{
+  "id": "math_g7_data_004",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 3,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "階級「10以上20未満」に含まれる値はどれですか。",
+  "answer": "10",
+  "hints": [
+    "以上は端を含み、未満は端を含まないよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "10",
+    "20",
+    "9",
+    "21"
+  ],
+  "explanation": "10は含まれ、20は含まれません。\n\nほかの 選択肢\n・「20」…20は次の階級に入ります。\n・「9」…10より小さいので入りません。\n・「21」…20以上なので入りません。"
+},
+{
+  "id": "math_g7_data_005",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 4,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "記録が4，7，5，4，9の5人です。値が4の度数を答えなさい。",
+  "answer": "2",
+  "hints": [
+    "指定された値が何回現れるか数えよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "4は2回あるので度数は2。"
+},
+{
+  "id": "math_g7_data_006",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 5,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "等しい階級の幅のヒストグラムで、横軸と縦軸の組合せはどれですか。",
+  "answer": "横軸は資料の値の区間、縦軸は度数",
+  "hints": [
+    "区間ごとの人数をどちら向きの長さで表すか思い出そう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "横軸は資料の値の区間、縦軸は度数",
+    "横軸は度数、縦軸は資料の値の区間",
+    "横軸は平均値、縦軸は中央値",
+    "横軸は人数、縦軸は階級値だけ"
+  ],
+  "explanation": "横に階級を並べ、柱の高さで度数を表します。\n\nほかの 選択肢\n・「横軸は度数、縦軸は資料の値の区間」…横軸と縦軸を取り違えています。\n・「横軸は平均値、縦軸は中央値」…代表値を並べる図ではありません。\n・「横軸は人数、縦軸は階級値だけ」…階級を横、度数を縦にとります。"
+},
+{
+  "id": "math_g7_data_007",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 6,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "資料3，5，7，9の平均値を答えなさい。",
+  "answer": "6",
+  "hints": [
+    "合計を資料の個数で割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "(3＋5＋7＋9)÷4＝24÷4＝6。"
+},
+{
+  "id": "math_g7_data_008",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 7,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "choice",
+  "question": "資料2，4，4，6，9の最頻値はどれですか。",
+  "answer": "4",
+  "hints": [
+    "最も多く現れる値を探そう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "4",
+    "5",
+    "6",
+    "9"
+  ],
+  "explanation": "4が2回で最も多いので最頻値は4です。\n\nほかの 選択肢\n・「5」…平均値と取り違えています。\n・「6」…6は1回だけです。\n・「9」…最大値は最頻値とは限りません。"
+},
+{
+  "id": "math_g7_data_009",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 8,
+  "collection": "course_ma7_1",
+  "difficulty": "basic",
+  "answerType": "input",
+  "question": "資料8，2，6，4，10の中央値を答えなさい。",
+  "answer": "6",
+  "hints": [
+    "小さい順に並べて真ん中を探そう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "2，4，6，8，10と並べると中央は6。"
+},
+{
+  "id": "math_g7_data_010",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 9,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "度数分布表が「0以上10未満：3人、10以上20未満：7人、20以上30未満：5人」です。階級の幅はどれですか。",
+  "answer": "10",
+  "hints": [
+    "隣り合う区切りの差を求めよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "10",
+    "3",
+    "7",
+    "15"
+  ],
+  "explanation": "10−0＝10で、各階級の幅は10です。\n\nほかの 選択肢\n・「3」…最初の階級の度数と取り違えています。\n・「7」…2番目の階級の度数と取り違えています。\n・「15」…総度数と取り違えています。"
+},
+{
+  "id": "math_g7_data_011",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 10,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "全40人のうち、ある階級の度数は12人です。この階級の相対度数を小数で答えなさい。",
+  "answer": "0.3",
+  "hints": [
+    "階級の度数を全体の度数で割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "12÷40＝0.3。"
+},
+{
+  "id": "math_g7_data_012",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 11,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "表が「0以上10未満：2人、10以上20未満：5人、20以上30未満：3人」です。20未満の累積度数はどれですか。",
+  "answer": "7",
+  "hints": [
+    "下の階級から、指定された境界までの人数を足そう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "7",
+    "5",
+    "10",
+    "3"
+  ],
+  "explanation": "2＋5＝7人です。\n\nほかの 選択肢\n・「5」…2番目の階級だけの度数です。\n・「10」…30未満までの全人数です。\n・「3」…20以上30未満の度数です。"
+},
+{
+  "id": "math_g7_data_013",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 12,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "20人の表で、ある階級までの累積度数は15人です。累積相対度数を小数で答えなさい。",
+  "answer": "0.75",
+  "hints": [
+    "累積した人数を総人数で割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "15÷20＝0.75。"
+},
+{
+  "id": "math_g7_data_014",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 13,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "階級の幅が等しいヒストグラムから度数折れ線を作るとき、主にどの点を結びますか。",
+  "answer": "各柱の上の辺の中点",
+  "hints": [
+    "各階級の中央の位置で度数を表す点を考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "各柱の上の辺の中点",
+    "各柱の左上の点",
+    "各柱の右下の点",
+    "各柱の底辺の中点"
+  ],
+  "explanation": "階級値と度数に対応する、柱の上辺の中点を結びます。\n\nほかの 選択肢\n・「各柱の左上の点」…階級の境界に点を置くことになります。\n・「各柱の右下の点」…度数が高さに反映されません。\n・「各柱の底辺の中点」…すべて高さ0になってしまいます。"
+},
+{
+  "id": "math_g7_data_015",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 14,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "資料12，7，15，9，11の範囲を答えなさい。",
+  "answer": "8",
+  "hints": [
+    "最大値から最小値を引こう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "最大15、最小7なので15−7＝8。"
+},
+{
+  "id": "math_g7_data_016",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 15,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "資料1，2，3，4，30について、平均値が中央値より大きくなる主な理由はどれですか。",
+  "answer": "30という大きい値が平均値を引き上げる",
+  "hints": [
+    "1つだけ離れた値が、合計と順番のどちらに大きく影響するかな。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "30という大きい値が平均値を引き上げる",
+    "中央値は必ず最小値になる",
+    "平均値は資料を並べないと求められない",
+    "最頻値がないと平均値もない"
+  ],
+  "explanation": "平均値8に対し中央値は3で、大きい値の影響が表れています。\n\nほかの 選択肢\n・「中央値は必ず最小値になる」…中央値は順に並べた中央の値です。\n・「平均値は資料を並べないと求められない」…平均値の計算に並べ替えは必須ではありません。\n・「最頻値がないと平均値もない」…平均値は合計と個数から求められます。"
+},
+{
+  "id": "math_g7_data_017",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 16,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "資料9，3，8，4，12，6の中央値を答えなさい。",
+  "answer": "7",
+  "hints": [
+    "偶数個なら、並べた後の中央2つの平均を求めよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "3，4，6，8，9，12と並べ、(6＋8)÷2＝7。"
+},
+{
+  "id": "math_g7_data_018",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 17,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "階級値5，15，25の度数がそれぞれ2，4，4です。平均値の近似値を求める式はどれですか。",
+  "answer": "(5×2＋15×4＋25×4)/10",
+  "hints": [
+    "階級値をその人数分ずつ足したと考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "(5×2＋15×4＋25×4)/10",
+    "(5＋15＋25)/3",
+    "(2＋4＋4)/3",
+    "(5×2＋15×4＋25×4)/3"
+  ],
+  "explanation": "階級値×度数の合計を総度数10で割ります。\n\nほかの 選択肢\n・「(5＋15＋25)/3」…人数の違いを無視しています。\n・「(2＋4＋4)/3」…階級値を使わず度数を平均しています。\n・「(5×2＋15×4＋25×4)/3」…階級数ではなく総度数で割ります。"
+},
+{
+  "id": "math_g7_data_019",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 18,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "階級値5，15，25、度数2，4，4の表から、平均値の近似値を答えなさい。",
+  "answer": "17",
+  "hints": [
+    "重みを付けた合計を総人数で割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "(5×2＋15×4＋25×4)÷10＝170÷10＝17。"
+},
+{
+  "id": "math_g7_data_020",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 19,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "choice",
+  "question": "さいころを多数回投げて1の目の確率を相対度数で考えます。適切な説明はどれですか。",
+  "answer": "試行回数を増やすと相対度数は一定の値に近づく傾向がある",
+  "hints": [
+    "短い試行での必然と、長い試行での傾向を区別しよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "試行回数を増やすと相対度数は一定の値に近づく傾向がある",
+    "6回投げると必ず1回は1が出る",
+    "直前に1が出なければ次は必ず1が出る",
+    "1が出た回数そのものが確率になる"
+  ],
+  "explanation": "多数回の試行での相対度数の安定を利用します。\n\nほかの 選択肢\n・「6回投げると必ず1回は1が出る」…少数回で回数が固定されるわけではありません。\n・「直前に1が出なければ次は必ず1が出る」…次の結果を必ず予言することはできません。\n・「1が出た回数そのものが確率になる」…試行回数で割った割合を使います。"
+},
+{
+  "id": "math_g7_data_021",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 20,
+  "collection": "course_ma7_1",
+  "difficulty": "standard",
+  "answerType": "input",
+  "question": "同じ方法でくじを500回引き、当たりが115回でした。当たりの相対度数を小数で答えなさい。",
+  "answer": "0.23",
+  "hints": [
+    "当たりの回数を試行の総回数で割ろう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "115÷500＝0.23。"
+},
+{
+  "id": "math_g7_data_022",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 21,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "A組20人中8人、B組30人中9人が目標を達成しました。達成した割合について正しいものはどれですか。",
+  "answer": "A組の方が高い",
+  "hints": [
+    "全人数が違うときは相対度数で比べよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "A組の方が高い",
+    "B組の方が高い",
+    "同じ",
+    "人数が違うので割合でも比べられない"
+  ],
+  "explanation": "Aは8/20＝0.4、Bは9/30＝0.3でAの方が高いです。\n\nほかの 選択肢\n・「B組の方が高い」…達成人数だけを比べています。\n・「同じ」…人数も総数も違い、割合は一致しません。\n・「人数が違うので割合でも比べられない」…割合にすれば比較できます。"
+},
+{
+  "id": "math_g7_data_023",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 22,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "ある階級までの累積相対度数は0.65、直前の階級までは0.4です。この階級だけの相対度数を小数で答えなさい。",
+  "answer": "0.25",
+  "hints": [
+    "累積した割合の増えた分を求めよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "0.65−0.4＝0.25。"
+},
+{
+  "id": "math_g7_data_024",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 23,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "階級「10以上20未満」の度数が最も大きい表があります。「最頻値はこの階級の度数」とする説明をどう直しますか。",
+  "answer": "この階級の階級値15を最頻値とする",
+  "hints": [
+    "度数分布表では最多の階級を代表する値を使うよ。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "この階級の階級値15を最頻値とする",
+    "この階級の下端10を必ず最頻値とする",
+    "この階級の上端20を必ず最頻値とする",
+    "最頻値は全階級の度数の平均である"
+  ],
+  "explanation": "度数分布表では最多階級の階級値15を最頻値とします。\n\nほかの 選択肢\n・「この階級の下端10を必ず最頻値とする」…下端ではなく階級値を使います。\n・「この階級の上端20を必ず最頻値とする」…上端ではなく階級値を使います。\n・「最頻値は全階級の度数の平均である」…人数の平均は資料の最頻値ではありません。"
+},
+{
+  "id": "math_g7_data_025",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 24,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "資料2，4，4，7，8，11に新しく6を1つ加えます。加えた後の中央値を答えなさい。",
+  "answer": "6",
+  "hints": [
+    "追加後に並べ直し、7個の中央を探そう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "2，4，4，6，7，8，11なので4番目の6です。"
+},
+{
+  "id": "math_g7_data_026",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 25,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "同じ試験を受けた2クラスは平均点が同じでした。必ず正しい判断はどれですか。",
+  "answer": "平均点だけでは点数の散らばりが同じとはいえない",
+  "hints": [
+    "同じ平均でも高低の広がりが違う例を考えよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "平均点だけでは点数の散らばりが同じとはいえない",
+    "中央値も必ず同じ",
+    "範囲も必ず同じ",
+    "全員の点数が必ず同じ"
+  ],
+  "explanation": "平均が同じでも分布や範囲は異なることがあります。\n\nほかの 選択肢\n・「中央値も必ず同じ」…平均と中央値は別の代表値です。\n・「範囲も必ず同じ」…最大値と最小値の差は平均から決まりません。\n・「全員の点数が必ず同じ」…全員同点という条件はありません。"
+},
+{
+  "id": "math_g7_data_027",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 26,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "2000回の試行で赤い面が出た相対度数が0.18でした。この割合を目安に、次の500回で赤い面が出る回数を見積もりなさい。回数だけ答えなさい。",
+  "answer": "90",
+  "hints": [
+    "総回数に、1回あたりの見込みの割合をかけよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "500×0.18＝90回程度。必ず90回になるという意味ではありません。"
+},
+{
+  "id": "math_g7_data_028",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 27,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "choice",
+  "question": "20人の度数分布表で、10未満が4人、10以上20未満が8人、20以上30未満が8人です。中央値について正しいものはどれですか。",
+  "answer": "10以上20未満の階級に入るが正確な値は決められない",
+  "hints": [
+    "20人なら何番目の2つを使うか調べよう。"
+  ],
+  "reviewed": false,
+  "choices": [
+    "10以上20未満の階級に入るが正確な値は決められない",
+    "必ず15である",
+    "20以上30未満の階級に入る",
+    "度数8そのものが中央値である"
+  ],
+  "explanation": "10番目・11番目はどちらも第2階級にあり、個々の値は不明です。\n\nほかの 選択肢\n・「必ず15である」…階級値は中央値そのものとは限りません。\n・「20以上30未満の階級に入る」…20未満が12人いるので中央2つは20未満です。\n・「度数8そのものが中央値である」…人数と資料の値を取り違えています。"
+},
+{
+  "id": "math_g7_data_029",
+  "subject": "math",
+  "gradeLevel": 7,
+  "unit": "data",
+  "number": 28,
+  "collection": "course_ma7_1",
+  "difficulty": "advanced",
+  "answerType": "input",
+  "question": "ある10人の平均記録は12、別の15人の平均記録は16でした。25人全体の平均記録を答えなさい。",
+  "answer": "14.4",
+  "hints": [
+    "それぞれの合計を復元してから合わせよう。"
+  ],
+  "reviewed": false,
+  "validationMode": "number",
+  "explanation": "合計は10×12＋15×16＝360。360÷25＝14.4。"
 }
 );

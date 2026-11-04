@@ -2,13 +2,13 @@
 const L=require('../lib/loader');
 module.exports=({test,assert})=>{
  const c=L.load(L.LOGIC_FILES_WITH_FIXES),qs=c.QUESTION_BANK.filter(q=>q.collection==='course_ma7_1');
- const units=['signed_numbers','signed_calc','expression','expression_calc','equation','equation_calc','proportion','plane'];
- test('中1数学第4回：8単元224問・各8/12/8・全難易度で選択と書きを混在',()=>{
-  assert.equal(c.FF.units.DEFS.math[7].length,10);assert.equal(qs.length,224);
+ const units=['signed_numbers','signed_calc','expression','expression_calc','equation','equation_calc','proportion','plane','space','data'];
+ test('中1数学第5回：10単元280問・各8/12/8・全難易度で選択と書きを混在',()=>{
+  assert.equal(c.FF.units.DEFS.math[7].length,10);assert.equal(qs.length,280);
   for(const unit of units)for(const [d,n]of [['basic',8],['standard',12],['advanced',8]]){const group=qs.filter(q=>q.unit===unit&&q.difficulty===d);assert.equal(group.length,n);for(const type of ['choice','input'])assert.ok(group.some(q=>q.answerType===type),unit+d+type);}
   assert.equal(new Set(c.QUESTION_BANK.map(q=>q.id)).size,c.QUESTION_BANK.length);
   for(const q of qs){assert.equal(q.reviewed,false);assert.ok(!q.diagram);assert.equal(q.gradeLevel,7);assert.equal(q.subject,'math');assert.ok(q.hints.length>=1&&q.hints.length<=2);assert.deepStrictEqual(Array.from(c.FF.learning.validateQuestion(q)),[],q.id);assert.ok(!/数の符号と、基準にしている量|定義や計算のきまりに戻って|計算の順序を確認し、符号と絶対値/.test(q.hints.join('')),q.id);}
-  const all=c.QUESTION_BANK.filter(q=>q.subject==='math'&&q.gradeLevel===7);assert.equal(all.length,234);all.forEach(q=>assert.ok(c.FF.units.DEFS.math[7].some(u=>u.id===q.unit),q.id));
+  const all=c.QUESTION_BANK.filter(q=>q.subject==='math'&&q.gradeLevel===7);assert.equal(all.length,290);all.forEach(q=>assert.ok(c.FF.units.DEFS.math[7].some(u=>u.id===q.unit),q.id));
  });
  test('中1数学：全course問題の表示に半角の加減記号を含めない',()=>{for(const q of qs)for(const value of [q.question,q.explanation,...q.choices||[],...q.hints])assert.ok(!/[-+]/.test(value),q.id+value);});
  test('中1数学：選択問題の全誤答説明と、全入力問題の正答・別表記の判定',()=>{
