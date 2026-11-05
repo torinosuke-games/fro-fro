@@ -223,8 +223,8 @@ FF.texts.renewal.dailyNote=FF.texts.renewal.dailyNote.replace('☆はランダ�
     num=num.replace(sign,'');den=den.replace(sign,'');
     var fraction=document.createElement('span');fraction.className='g6-fraction';fraction.setAttribute('role','math');fraction.setAttribute('aria-label',(neg?'マイナス':'')+den+'分の'+num);fraction.dataset.value=m[0];
     [['g6-numerator',num],['g6-fraction-slash','/'],['g6-denominator',den]].forEach(function(part){var span=document.createElement('span');span.className=part[0];span.textContent=part[1];span.setAttribute('aria-hidden','true');fraction.appendChild(span);});
-    // 符号と分数を1つにまとめ、符号を分数の横線の高さにそろえる
-    if(neg){var signed=U.el('span',{class:'g6-signed-fraction'});signed.appendChild(U.el('span',{class:'g6-fraction-sign',text:'−',attrs:{'aria-hidden':'true'}}));signed.appendChild(fraction);fraction=signed;}
+    // 負の符号は文字でなく線で描き、分数の横線と同じ高さに置く（端末のフォントで高さが変わらない。css の .is-negative）
+    if(neg)fraction.classList.add('is-negative');
     fragment.appendChild(fraction);last=re.lastIndex;
    }
    if(last){fragment.appendChild(document.createTextNode(value.slice(last)));node.replaceWith(fragment);}
