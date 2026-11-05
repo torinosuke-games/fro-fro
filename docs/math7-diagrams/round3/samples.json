@@ -44,21 +44,6 @@
     }
   },
   {
-    "id": "math_g7_equation_021",
-    "diagram": {
-      "kind": "quantityBars",
-      "rows": [
-        {
-          "label": "道のり6km",
-          "cells": [
-            "時速4kmでx時間"
-          ]
-        }
-      ],
-      "caption": "文字量の幅は模式図"
-    }
-  },
-  {
     "id": "math_g7_equation_023",
     "diagram": {
       "kind": "quantityBars",
@@ -103,7 +88,8 @@
       "discount": true,
       "totalLabel": "定価 x円",
       "paymentLabel": "支払い640円",
-      "caption": "20%引きの値引きと支払い"
+      "caption": "20%引きの値引きと支払い",
+      "subBrackets": true
     }
   },
   {
@@ -208,21 +194,22 @@
         {
           "label": "初め x L",
           "cells": [
-            "全体"
-          ]
-        },
-        {
-          "label": "使う順序",
-          "cells": [
             "1/3を使う",
-            "さらに4L"
-          ]
+            "4L",
+            "残り"
+          ],
+          "parts": [
+            3,
+            2,
+            4
+          ],
+          "underBrace": {
+            "index": 2,
+            "label": "初めの半分"
+          }
         }
       ],
-      "caption": "文字量の幅は模式図",
-      "notes": [
-        "残る水は初めの半分"
-      ]
+      "caption": "文字量の幅は模式図"
     }
   },
   {

@@ -72,33 +72,6 @@
     }
   },
   {
-    "id": "math_g7_equation_021",
-    "diagram": {
-      "kind": "quantityBars",
-      "rows": [
-        {
-          "label": "道のり6km",
-          "cells": [
-            "時速4kmでx時間"
-          ]
-        }
-      ],
-      "caption": "文字量の幅は模式図"
-    },
-    "question": "時速4 kmでx時間歩くと6 km進みました。方程式はどれですか。",
-    "answer": "4x＝6",
-    "file": "03-math_g7_equation_021.png",
-    "geometry": {
-      "width": 332,
-      "overflow": false,
-      "clipped": [],
-      "text": [
-        "道のり6km",
-        "時速4kmでx時間"
-      ]
-    }
-  },
-  {
     "id": "math_g7_equation_023",
     "diagram": {
       "kind": "quantityBars",
@@ -161,7 +134,8 @@
       "discount": true,
       "totalLabel": "定価 x円",
       "paymentLabel": "支払い640円",
-      "caption": "20%引きの値引きと支払い"
+      "caption": "20%引きの値引きと支払い",
+      "subBrackets": true
     },
     "question": "定価x円の商品を20%引きで買うと640円です。xの値を答えなさい。",
     "answer": "800",
@@ -326,21 +300,22 @@
         {
           "label": "初め x L",
           "cells": [
-            "全体"
-          ]
-        },
-        {
-          "label": "使う順序",
-          "cells": [
             "1/3を使う",
-            "さらに4L"
-          ]
+            "4L",
+            "残り"
+          ],
+          "parts": [
+            3,
+            2,
+            4
+          ],
+          "underBrace": {
+            "index": 2,
+            "label": "初めの半分"
+          }
         }
       ],
-      "caption": "文字量の幅は模式図",
-      "notes": [
-        "残る水は初めの半分"
-      ]
+      "caption": "文字量の幅は模式図"
     },
     "question": "容器にある水の1/3を使い、さらに4L使うと、初めの半分が残りました。初めの量をx Lとして、xの値を答えなさい。",
     "answer": "24",
@@ -351,11 +326,10 @@
       "clipped": [],
       "text": [
         "初め x L",
-        "全体",
-        "使う順序",
         "1/3を使う",
-        "さらに4L",
-        "残る水は初めの半分"
+        "4L",
+        "残り",
+        "初めの半分"
       ]
     }
   },

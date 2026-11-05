@@ -4,7 +4,7 @@ module.exports=({test,assert})=>{
  test('中1図の登録2：計画の文字と式12・文字式計算2のみ、種類と未登録単元',()=>{
   const added=qs.filter(q=>['expression','expression_calc'].includes(q.unit)&&q.diagram);assert.equal(added.length,13);assert.equal(added.filter(q=>q.unit==='expression').length,11);assert.equal(added.filter(q=>q.diagram.kind==='quantityBars').length,11);assert.equal(added.filter(q=>q.diagram.kind==='table').length,1);assert.equal(added.filter(q=>q.diagram.kind==='mathGeometry').length,1);
   const plan=fs.readFileSync(path.join(__dirname,'../../PICTURE_PLAN_MATH7.md'),'utf8'),ids=plan.split('\n').filter(l=>l.startsWith('|M7-')).flatMap(l=>[...l.matchAll(/`(math_g7_expression(?:_calc)?_\d+)`/g)].map(m=>m[1]));assert.deepEqual(added.map(q=>q.id).sort(),ids.sort());
-  assert.equal(qs.filter(q=>q.diagram).length,39);assert.ok(qs.filter(q=>!['signed_numbers','signed_calc','expression','expression_calc','equation','equation_calc'].includes(q.unit)).every(q=>!q.diagram));
+  assert.equal(qs.filter(q=>q.diagram).length,76);assert.ok(qs.filter(q=>!['signed_numbers','signed_calc','expression','expression_calc','equation','equation_calc','proportion','plane'].includes(q.unit)).every(q=>!q.diagram));
  });
  test('中1図の登録2：与条件の帯・全体のかっこ、答えの式は描かない',()=>{
   for(const {id,diagram} of all){const q=qs.find(q=>q.id===id);assert.equal(JSON.stringify(q.diagram),JSON.stringify(diagram));const fig=render(diagram);const text=fig.textContent.replace(/\s/g,'');assert.ok(!text.includes(q.answer.replace(/\s/g,'')),id);assert.ok(!diagram.caption.includes(q.answer));

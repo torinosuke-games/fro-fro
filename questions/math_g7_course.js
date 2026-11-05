@@ -1,4 +1,4 @@
-// 中1数学 全10単元280問、正負の数・計算と文字式に図39点を登録・レビュー待ち。
+// 中1数学 全10単元280問、正負の数・計算と文字式に図76点を登録・レビュー待ち。
 window.QUESTION_BANK.push(
 {
   "id": "math_g7_signed_numbers_001",
@@ -3072,6 +3072,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "文字量の幅は模式図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3253,6 +3254,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "文字量の幅は模式図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3294,18 +3296,7 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_021",
-  "diagram": {
-    "kind": "quantityBars",
-    "rows": [
-      {
-        "label": "道のり6km",
-        "cells": [
-          "時速4kmでx時間"
-        ]
-      }
-    ],
-    "caption": "文字量の幅は模式図"
-  },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3381,6 +3372,7 @@ window.QUESTION_BANK.push(
       "4年後の兄は妹の1.5倍"
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3410,8 +3402,10 @@ window.QUESTION_BANK.push(
     "discount": true,
     "totalLabel": "定価 x円",
     "paymentLabel": "支払い640円",
-    "caption": "20%引きの値引きと支払い"
+    "caption": "20%引きの値引きと支払い",
+    "subBrackets": true
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3455,6 +3449,7 @@ window.QUESTION_BANK.push(
     "caption": "文字量の幅は模式図",
     "comparison": true
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3511,6 +3506,7 @@ window.QUESTION_BANK.push(
     "aligned": true,
     "guide": 355
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3556,6 +3552,7 @@ window.QUESTION_BANK.push(
       "同じ道で追いつく"
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3626,22 +3623,24 @@ window.QUESTION_BANK.push(
       {
         "label": "初め x L",
         "cells": [
-          "全体"
-        ]
-      },
-      {
-        "label": "使う順序",
-        "cells": [
           "1/3を使う",
-          "さらに4L"
-        ]
+          "4L",
+          "残り"
+        ],
+        "parts": [
+          3,
+          2,
+          4
+        ],
+        "underBrace": {
+          "index": 2,
+          "label": "初めの半分"
+        }
       }
     ],
-    "caption": "文字量の幅は模式図",
-    "notes": [
-      "残る水は初めの半分"
-    ]
+    "caption": "文字量の幅は模式図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -4247,6 +4246,7 @@ window.QUESTION_BANK.push(
       "兄から弟へ200円・その後は同額"
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation_calc",
@@ -4299,6 +4299,7 @@ window.QUESTION_BANK.push(
       "同じ道の距離 x m"
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation_calc",
@@ -4404,6 +4405,30 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_005",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -6,
+      6
+    ],
+    "yRange": [
+      -6,
+      6
+    ],
+    "tickStep": 2,
+    "points": [
+      {
+        "x": -4,
+        "y": 3,
+        "label": "A（−4，3）",
+        "dx": -12,
+        "dy": -14,
+        "anchor": "end"
+      }
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4422,6 +4447,32 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_006",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -6,
+      6
+    ],
+    "yRange": [
+      -6,
+      6
+    ],
+    "tickStep": 2,
+    "points": [
+      {
+        "x": -2,
+        "y": -5,
+        "label": "（−2，−5）",
+        "dy": 30,
+        "dx": -12,
+        "anchor": "end"
+      }
+    ],
+    "curves": [],
+    "notes": [],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4486,6 +4537,31 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_009",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -8,
+      8
+    ],
+    "yRange": [
+      -6,
+      6
+    ],
+    "tickStep": 2,
+    "points": [
+      {
+        "x": 6,
+        "y": -3,
+        "label": "（6，−3）",
+        "dx": -12,
+        "anchor": "end"
+      }
+    ],
+    "curves": [],
+    "notes": [],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4527,6 +4603,22 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_011",
+  "diagram": {
+    "kind": "table",
+    "head": [
+      "x",
+      "−4",
+      "6"
+    ],
+    "rows": [
+      [
+        "y",
+        "3",
+        "□"
+      ]
+    ],
+    "caption": "本文の対応を表した表"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4586,6 +4678,31 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_014",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -16,
+      16
+    ],
+    "yRange": [
+      -16,
+      16
+    ],
+    "tickStep": 4,
+    "points": [],
+    "curves": [
+      {
+        "a": -3,
+        "power": 1
+      }
+    ],
+    "notes": [
+      "y＝−3x",
+      "1≦x≦4"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4609,6 +4726,31 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_015",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -8,
+      8
+    ],
+    "yRange": [
+      -10,
+      10
+    ],
+    "tickStep": 2,
+    "points": [],
+    "curves": [
+      {
+        "a": 18,
+        "power": -1
+      }
+    ],
+    "notes": [
+      "y＝18/x",
+      "2≦x≦6"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4627,6 +4769,24 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_016",
+  "diagram": {
+    "kind": "table",
+    "head": [
+      "x",
+      "1",
+      "2",
+      "3"
+    ],
+    "rows": [
+      [
+        "y",
+        "6",
+        "3",
+        "2"
+      ]
+    ],
+    "caption": "本文の対応を表した表"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4668,6 +4828,19 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_018",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "道のり1200m",
+        "cells": [
+          "速さ：毎分x m",
+          "時間：y分"
+        ]
+      }
+    ],
+    "caption": "道のりと速さ・時間の条件"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4691,6 +4864,12 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_019",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/math7-gears.webp",
+    "alt": "かみ合う2つの歯車",
+    "caption": "かみ合う2つの歯車"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4709,6 +4888,24 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_020",
+  "diagram": {
+    "kind": "table",
+    "head": [
+      "x",
+      "−2",
+      "1",
+      "4"
+    ],
+    "rows": [
+      [
+        "y",
+        "6",
+        "−3",
+        "□"
+      ]
+    ],
+    "caption": "本文の対応を表した表"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4732,6 +4929,22 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_021",
+  "diagram": {
+    "kind": "table",
+    "head": [
+      "x",
+      "3",
+      "□"
+    ],
+    "rows": [
+      [
+        "y",
+        "−8",
+        "6"
+      ]
+    ],
+    "caption": "本文の対応を表した表"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4791,6 +5004,30 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_024",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -8,
+      8
+    ],
+    "yRange": [
+      -8,
+      8
+    ],
+    "tickStep": 2,
+    "curves": [
+      {
+        "a": -12,
+        "power": -1
+      }
+    ],
+    "notes": [
+      "y＝−12/x",
+      "−6≦x≦−2"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4814,6 +5051,39 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_025",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -10,
+      10
+    ],
+    "yRange": [
+      -8,
+      8
+    ],
+    "tickStep": 2,
+    "points": [
+      {
+        "x": -3,
+        "y": 2,
+        "label": "（−3，2）",
+        "dx": -12,
+        "anchor": "end",
+        "dy": -100
+      }
+    ],
+    "curves": [
+      {
+        "a": -0.6666666666666666,
+        "power": 1
+      }
+    ],
+    "notes": [
+      "y＝−5のとき"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4832,6 +5102,40 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_026",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -6,
+      6
+    ],
+    "yRange": [
+      -8,
+      8
+    ],
+    "tickStep": 2,
+    "curves": [
+      {
+        "a": 3,
+        "power": 1
+      },
+      {
+        "a": 12,
+        "power": -1
+      }
+    ],
+    "points": [
+      {
+        "x": 2,
+        "y": 6,
+        "label": "（2，6）"
+      }
+    ],
+    "notes": [
+      "比例と反比例　x＝4"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4855,6 +5159,12 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_027",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/math7-water-tank.webp",
+    "alt": "水そうへ水が流れ込む場面",
+    "caption": "水そうへ水を入れる場面"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4873,6 +5183,31 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_028",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -6,
+      6
+    ],
+    "yRange": [
+      -8,
+      8
+    ],
+    "tickStep": 2,
+    "points": [],
+    "curves": [
+      {
+        "a": 6,
+        "power": -1
+      }
+    ],
+    "notes": [
+      "y＝6/x",
+      "−2≦x≦3（x≠0）"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4896,6 +5231,12 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_proportion_029",
+  "diagram": {
+    "kind": "image",
+    "src": "img/diagrams/math7-gears.webp",
+    "alt": "かみ合う2つの歯車",
+    "caption": "かみ合う2つの歯車"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "proportion",
@@ -4914,6 +5255,32 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_002",
+  "diagram": {
+    "kind": "mathGeometry",
+    "points": [
+      [
+        150,
+        170
+      ],
+      [
+        370,
+        170
+      ]
+    ],
+    "labels": [
+      [
+        150,
+        145,
+        "A"
+      ],
+      [
+        370,
+        145,
+        "B"
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -4937,6 +5304,58 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_003",
+  "diagram": {
+    "kind": "mathGeometry",
+    "segments": [
+      [
+        60,
+        250,
+        460,
+        250
+      ],
+      [
+        180,
+        90,
+        180,
+        250
+      ],
+      [
+        180,
+        90,
+        300,
+        250
+      ]
+    ],
+    "points": [
+      [
+        180,
+        90
+      ]
+    ],
+    "labels": [
+      [
+        163,
+        74,
+        "P"
+      ],
+      [
+        470,
+        258,
+        "l"
+      ],
+      [
+        147,
+        174,
+        "4cm"
+      ],
+      [
+        273,
+        158,
+        "5cm"
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -4996,6 +5415,32 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_006",
+  "diagram": {
+    "kind": "mathGeometry",
+    "points": [
+      [
+        150,
+        170
+      ],
+      [
+        370,
+        170
+      ]
+    ],
+    "labels": [
+      [
+        150,
+        145,
+        "A"
+      ],
+      [
+        370,
+        145,
+        "B"
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5019,6 +5464,13 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_007",
+  "diagram": {
+    "kind": "circle",
+    "math7": true,
+    "unit": "cm",
+    "radius": 5,
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5060,6 +5512,32 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_009",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -8,
+      8
+    ],
+    "yRange": [
+      -8,
+      8
+    ],
+    "tickStep": 4,
+    "points": [
+      {
+        "x": 2,
+        "y": -1,
+        "label": "（2，−1）",
+        "dy": 35
+      }
+    ],
+    "curves": [],
+    "notes": [
+      "右へ3、上へ4"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5078,6 +5556,55 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_010",
+  "diagram": {
+    "kind": "mathGeometry",
+    "segments": [
+      [
+        120,
+        240,
+        400,
+        240
+      ],
+      [
+        260,
+        45,
+        260,
+        285
+      ]
+    ],
+    "points": [
+      [
+        120,
+        240
+      ],
+      [
+        400,
+        240
+      ],
+      [
+        260,
+        100
+      ]
+    ],
+    "labels": [
+      [
+        120,
+        270,
+        "A"
+      ],
+      [
+        400,
+        270,
+        "B"
+      ],
+      [
+        280,
+        100,
+        "P"
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5101,6 +5628,31 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_011",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -6,
+      6
+    ],
+    "yRange": [
+      -6,
+      6
+    ],
+    "tickStep": 2,
+    "points": [
+      {
+        "x": 3,
+        "y": 2,
+        "label": "（3，2）"
+      }
+    ],
+    "curves": [],
+    "notes": [
+      "y軸について対称移動"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5119,6 +5671,30 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_012",
+  "diagram": {
+    "kind": "mathGeometry",
+    "segments": [
+      [
+        100,
+        260,
+        430,
+        260
+      ],
+      [
+        100,
+        260,
+        350,
+        65
+      ]
+    ],
+    "points": [
+      [
+        270,
+        205
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5142,6 +5718,63 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_013",
+  "diagram": {
+    "kind": "mathGeometry",
+    "circles": [
+      [
+        230,
+        160,
+        100
+      ]
+    ],
+    "segments": [
+      [
+        230,
+        160,
+        330,
+        160
+      ],
+      [
+        330,
+        40,
+        330,
+        285
+      ]
+    ],
+    "points": [
+      [
+        230,
+        160
+      ],
+      [
+        330,
+        160
+      ]
+    ],
+    "labels": [
+      [
+        210,
+        151,
+        "O"
+      ],
+      [
+        350,
+        180,
+        "A"
+      ],
+      [
+        350,
+        48,
+        "l"
+      ],
+      [
+        278,
+        146,
+        "6cm"
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5160,6 +5793,40 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_014",
+  "diagram": {
+    "kind": "mathGeometry",
+    "segments": [
+      [
+        140,
+        190,
+        380,
+        190
+      ]
+    ],
+    "points": [
+      [
+        140,
+        190
+      ],
+      [
+        380,
+        190
+      ]
+    ],
+    "labels": [
+      [
+        140,
+        165,
+        "A"
+      ],
+      [
+        380,
+        165,
+        "B"
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5183,6 +5850,14 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_015",
+  "diagram": {
+    "kind": "circle",
+    "math7": true,
+    "unit": "cm",
+    "radius": 6,
+    "angle": 120,
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5224,6 +5899,14 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_017",
+  "diagram": {
+    "kind": "circle",
+    "math7": true,
+    "unit": "cm",
+    "radius": 4,
+    "angle": 90,
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5242,6 +5925,80 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_018",
+  "diagram": {
+    "kind": "mathGeometry",
+    "height": 340,
+    "segments": [
+      [
+        55,
+        260,
+        465,
+        260
+      ]
+    ],
+    "arcs": [
+      [
+        180,
+        260,
+        125,
+        30,
+        80
+      ],
+      [
+        340,
+        260,
+        125,
+        100,
+        150
+      ]
+    ],
+    "points": [
+      [
+        180,
+        260
+      ],
+      [
+        260,
+        260
+      ],
+      [
+        340,
+        260
+      ],
+      [
+        260,
+        163.95313643850727
+      ]
+    ],
+    "labels": [
+      [
+        180,
+        293,
+        "A"
+      ],
+      [
+        260,
+        293,
+        "P"
+      ],
+      [
+        340,
+        293,
+        "B"
+      ],
+      [
+        260,
+        145,
+        "Q"
+      ],
+      [
+        470,
+        267,
+        "l"
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5265,6 +6022,34 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_019",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -6,
+      6
+    ],
+    "yRange": [
+      -6,
+      6
+    ],
+    "tickStep": 2,
+    "points": [
+      {
+        "x": 4,
+        "y": -3,
+        "label": "（4，−3）",
+        "dx": 12,
+        "anchor": "start",
+        "dy": 25
+      }
+    ],
+    "curves": [],
+    "notes": [
+      "原点のまわりに180°回転"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5283,6 +6068,81 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_020",
+  "diagram": {
+    "kind": "mathGeometry",
+    "height": 350,
+    "segments": [
+      [
+        100,
+        270,
+        450,
+        270
+      ],
+      [
+        100,
+        270,
+        240,
+        27.51288694035719
+      ]
+    ],
+    "points": [
+      [
+        100,
+        270
+      ],
+      [
+        280,
+        270
+      ],
+      [
+        190,
+        114.11542731880104
+      ],
+      [
+        316.2403840463596,
+        145.15355606116623
+      ]
+    ],
+    "arcs": [
+      [
+        280,
+        270,
+        130,
+        45,
+        105
+      ],
+      [
+        190,
+        114.11542731880104,
+        130,
+        -35,
+        25
+      ]
+    ],
+    "labels": [
+      [
+        80,
+        290,
+        "O"
+      ],
+      [
+        280,
+        300,
+        "A"
+      ],
+      [
+        175,
+        95,
+        "B"
+      ],
+      [
+        336.2403840463596,
+        133.15355606116623,
+        "P"
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5324,6 +6184,31 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_022",
+  "diagram": {
+    "kind": "coordinate",
+    "math7": true,
+    "xRange": [
+      -6,
+      6
+    ],
+    "yRange": [
+      -6,
+      6
+    ],
+    "tickStep": 2,
+    "points": [
+      {
+        "x": 2,
+        "y": 1,
+        "label": "（2，1）"
+      }
+    ],
+    "curves": [],
+    "notes": [
+      "x軸、次にy軸について対称移動"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5347,6 +6232,14 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_023",
+  "diagram": {
+    "kind": "circle",
+    "math7": true,
+    "unit": "cm",
+    "radius": 6,
+    "angle": 120,
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5368,6 +6261,77 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_024",
+  "diagram": {
+    "kind": "mathGeometry",
+    "height": 350,
+    "segments": [
+      [
+        100,
+        250,
+        380,
+        250
+      ],
+      [
+        380,
+        250,
+        380,
+        70
+      ],
+      [
+        240,
+        40,
+        240,
+        305
+      ],
+      [
+        75,
+        160,
+        450,
+        160
+      ]
+    ],
+    "points": [
+      [
+        100,
+        250
+      ],
+      [
+        380,
+        250
+      ],
+      [
+        380,
+        70
+      ],
+      [
+        240,
+        160
+      ]
+    ],
+    "labels": [
+      [
+        85,
+        280,
+        "A"
+      ],
+      [
+        400,
+        275,
+        "B"
+      ],
+      [
+        400,
+        75,
+        "C"
+      ],
+      [
+        220,
+        145,
+        "P"
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5391,6 +6355,14 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_025",
+  "diagram": {
+    "kind": "circle",
+    "math7": true,
+    "unit": "cm",
+    "radius": 8,
+    "angle": 135,
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5409,6 +6381,57 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_026",
+  "diagram": {
+    "kind": "mathGeometry",
+    "segments": [
+      [
+        65,
+        250,
+        455,
+        250
+      ],
+      [
+        260,
+        100,
+        260,
+        250
+      ]
+    ],
+    "points": [
+      [
+        260,
+        100
+      ],
+      [
+        260,
+        250
+      ]
+    ],
+    "labels": [
+      [
+        240,
+        85,
+        "O"
+      ],
+      [
+        280,
+        275,
+        "H"
+      ],
+      [
+        470,
+        260,
+        "l"
+      ],
+      [
+        385,
+        175,
+        "OHは半径と等しい",
+        21
+      ]
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
@@ -5432,6 +6455,14 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_plane_027",
+  "diagram": {
+    "kind": "circle",
+    "math7": true,
+    "unit": "cm",
+    "diameter": 12,
+    "angle": 150,
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "plane",
