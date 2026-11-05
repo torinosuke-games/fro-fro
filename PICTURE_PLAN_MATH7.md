@@ -240,3 +240,7 @@ histogramは新設しない。data_006・014の空枠は見送る。座標・数
 種類別見本・検査手順と結果は `docs/math7-diagram-samples/SAMPLES.md` を参照。問題ファイルへの登録は行わない。
 
 - signed_numbers_019：3つの分数を数直線上に並べると中央値の答えを示すため除外し、図なしとする（判断539）。線分図の見本はexpression_009・021、equation_025・019の4点。
+
+## 問題への図の登録：第1回（判断541）
+
+signed_numbersの12問・signed_calcの4問だけにdiagramを登録。数直線14図、模式的な線分図2図。signed_numbers_019は引き続き図なし。対象と390pxの実画面16点、問題文・照合用の答えは `docs/math7-diagrams/round1/LIST.md`。その他の単元には登録しない。比較の与条件であるsigned_numbers_009の2数は同じ印・大きさとし、大小の結論を付けない。

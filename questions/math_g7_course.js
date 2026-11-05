@@ -1,7 +1,26 @@
-// 中1数学 全10単元280問、図なし・レビュー待ち。
+// 中1数学 全10単元280問、正負の数・計算に図16点を登録・レビュー待ち。
 window.QUESTION_BANK.push(
 {
   "id": "math_g7_signed_numbers_001",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -15,
+    "end": 5,
+    "step": 5,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      -12
+    ],
+    "markLabels": [
+      "海面より12m下"
+    ],
+    "caption": "問題文の条件を表した図",
+    "vertical": true,
+    "zeroLabel": "海面"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -38,6 +57,23 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_003",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -10,
+    "end": 2,
+    "step": 2,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      -9
+    ],
+    "markLabels": [
+      "−9"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -56,6 +92,23 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_004",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -10,
+    "end": 10,
+    "step": 2,
+    "labelValues": [
+      0
+    ],
+    "marks": [],
+    "markLabels": [],
+    "caption": "問題文の条件を表した図",
+    "direction": "left",
+    "notes": [
+      "原点から左へ7"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -74,6 +127,23 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_005",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -8,
+    "end": 8,
+    "step": 2,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      -6
+    ],
+    "markLabels": [
+      "−6"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -156,6 +226,29 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_009",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -3,
+    "end": 0,
+    "step": 1,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      -2.6,
+      -2.06
+    ],
+    "markLabels": [
+      "−2.6",
+      "−2.06"
+    ],
+    "caption": "問題文の条件を表した図",
+    "markLabelOffsets": [
+      -20,
+      10
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -174,6 +267,25 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_010",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -4,
+    "end": 4,
+    "step": 1,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      -3,
+      2
+    ],
+    "markLabels": [
+      "−3",
+      "2"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -192,6 +304,22 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_011",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -5,
+    "end": 5,
+    "step": 1,
+    "labelValues": [
+      0
+    ],
+    "marks": [],
+    "markLabels": [],
+    "caption": "問題文の条件を表した図",
+    "notes": [
+      "原点からの距離が4未満"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -210,6 +338,25 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_012",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -6,
+    "end": 3,
+    "step": 1,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      -5,
+      2
+    ],
+    "markLabels": [
+      "−5",
+      "＋2"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -228,6 +375,25 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_013",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -10,
+    "end": 2,
+    "step": 2,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      -8,
+      -2
+    ],
+    "markLabels": [
+      "−8",
+      "−2"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -362,6 +528,27 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_020",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -6,
+    "end": 8,
+    "step": 2,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      -4,
+      6
+    ],
+    "markLabels": [
+      "B：基準より4m下",
+      "A：基準より6m上"
+    ],
+    "caption": "問題文の条件を表した図",
+    "vertical": true,
+    "zeroLabel": "基準"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -449,6 +636,25 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_024",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -1,
+    "end": 0,
+    "step": 0.1,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      -0.7,
+      -0.4
+    ],
+    "markLabels": [
+      "−0.7",
+      "−0.4"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -518,6 +724,22 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_027",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -10,
+    "end": 10,
+    "step": 2,
+    "labelValues": [
+      0
+    ],
+    "marks": [],
+    "markLabels": [],
+    "caption": "問題文の条件を表した図",
+    "notes": [
+      "原点からの距離が2より大きく7より小さい"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -554,6 +776,27 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_calc_001",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -10,
+    "end": 2,
+    "step": 2,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      -7
+    ],
+    "markLabels": [
+      "−7"
+    ],
+    "caption": "問題文の条件を表した図",
+    "direction": "right",
+    "notes": [
+      "＋4の向き"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_calc",
@@ -590,6 +833,23 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_calc_003",
+  "diagram": {
+    "kind": "numberline",
+    "math7": true,
+    "start": -2,
+    "end": 12,
+    "step": 2,
+    "labelValues": [
+      0
+    ],
+    "marks": [
+      5
+    ],
+    "markLabels": [
+      "5"
+    ],
+    "caption": "問題文の条件を表した図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_calc",
@@ -952,6 +1212,18 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_calc_022",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "変化の条件を表した模式図",
+    "rows": [
+      {
+        "label": "はじめ −3℃",
+        "cells": [
+          "5℃下がる"
+        ]
+      }
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_calc",
@@ -1039,6 +1311,30 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_calc_026",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "70点を基準とする差の模式図",
+    "rows": [
+      {
+        "label": "基準70点との差",
+        "cells": [
+          "＋6"
+        ]
+      },
+      {
+        "label": "基準70点との差",
+        "cells": [
+          "−4"
+        ]
+      },
+      {
+        "label": "基準70点との差",
+        "cells": [
+          "＋7"
+        ]
+      }
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_calc",

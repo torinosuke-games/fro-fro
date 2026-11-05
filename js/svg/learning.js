@@ -78,7 +78,7 @@
      var radius=d.radius||1,ht=d.heightValue|| (d.slant?Math.sqrt(d.slant*d.slant-radius*radius):radius*1.8),sc=Math.min(150/radius,230/ht);r=radius*sc;ry=r*.32;var apex=baseY-ht*sc;
      add(path('M'+(cx-r)+','+baseY+' L'+cx+','+apex+' L'+(cx+r)+','+baseY),path('M'+(cx-r)+','+baseY+' A'+r+','+ry+' 0 0 0 '+(cx+r)+','+baseY),path('M'+(cx-r)+','+baseY+' A'+r+','+ry+' 0 0 1 '+(cx+r)+','+baseY,'none',blue,'6 6'));
      if(d.radiusLabel)add(line(cx,baseY,cx+r,baseY),text(cx+r/2,baseY+38,d.radiusLabel,24));
-     if(d.heightLabel)add(line(cx,apex,cx,baseY,blue,'6 6'),clearText(cx+12,(apex+baseY)/2,'高さ '+d.heightLabel,26,'start'));
+     if(d.heightLabel)add(line(cx,apex,cx,baseY,blue,'6 6'),clearText(cx-12,baseY-ry-36,'高さ',22,'end'),clearText(cx-12,baseY-ry-10,d.heightLabel,22,'end'));
      if(d.slantLabel)add(text(cx+r/2+22,(apex+baseY)/2,d.slantLabel,24,'start'));
     }else if(d.shape==='prism'||d.shape==='pyramid'){
      var n=d.sides||4,ps=Array.from({length:n},function(_,i){var a=(90+i*360/n)*Math.PI/180;return [cx+105*Math.cos(a),245+40*Math.sin(a)];}),topY=70;
@@ -108,8 +108,9 @@
     var vertical=d.vertical,span=d.end-d.start;h=vertical?430:240;
     function np(v){return vertical?350-(v-d.start)/span*280:55+(v-d.start)/span*410;}
     add(vertical?line(240,70,240,350):line(55,110,465,110));
-    for(var v=d.start;v<=d.end+1e-8;v+=d.step){var p=np(v);add(vertical?line(232,p,248,p):line(p,102,p,118));if(!d.labelValues||d.labelValues.indexOf(v)>=0)add(vertical?text(215,p+7,String(v).replace('-','−'),24,'end'):text(p,151,String(v).replace('-','−'),24));}
-    (d.marks||[]).forEach(function(v,i){var p=np(v);add(vertical?circle(240,p,4,ink):circle(p,110,4,ink));var t=d.markLabels?d.markLabels[i]:v;if(t!=='')add(vertical?text(270,p+7,t,24,'start'):text(p,76,t,24));});
+    for(var v=d.start;v<=d.end+1e-8;v+=d.step){v=Number(v.toFixed(8));var p=np(v);add(vertical?line(232,p,248,p):line(p,102,p,118));if(!d.labelValues||d.labelValues.indexOf(v)>=0)add(vertical?text(215,p+7,String(v).replace('-','−'),24,'end'):text(p,151,String(v).replace('-','−'),24));}
+    (d.marks||[]).forEach(function(v,i){var p=np(v);add(vertical?circle(240,p,4,ink):circle(p,110,4,ink));var t=d.markLabels?d.markLabels[i]:v;if(t!=='')add(vertical?text(270,p+7,t,24,'start'):text(p,76+(d.markLabelOffsets?d.markLabelOffsets[i]:0),t,24));});
+    if(d.direction){var right=d.direction==='right',ax=right?415:105,bx=right?455:65;add(line(ax,48,bx,48),path('M'+(bx+(right?-10:10))+',40 L'+bx+',48 L'+(bx+(right?-10:10))+',56'));}
     if(vertical&&d.zeroLabel)add(text(270,np(0)+7,d.zeroLabel,24,'start'));
     (d.notes||[]).forEach(function(t,i){add(text(260,(vertical?395:205)+i*36,t,23));h=(vertical?430:240)+i*36;});
    }else if(d.kind==='circle'&&d.math7){
