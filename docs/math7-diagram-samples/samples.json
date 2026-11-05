@@ -17,10 +17,9 @@
       "markLabels": [
         "海面より12m下"
       ],
-      "notes": [
-        "海面を基準"
-      ],
-      "caption": "問題文の条件を表した図"
+      "notes": [],
+      "caption": "問題文の条件を表した図",
+      "zeroLabel": "海面"
     }
   },
   {
@@ -41,31 +40,6 @@
       "markLabels": [
         "−5",
         "＋2"
-      ],
-      "caption": "問題文の条件を表した図"
-    }
-  },
-  {
-    "id": "math_g7_signed_numbers_019",
-    "diagram": {
-      "kind": "numberline",
-      "math7": true,
-      "start": -1,
-      "end": 0,
-      "step": 0.25,
-      "labelValues": [
-        -1,
-        0
-      ],
-      "marks": [
-        -0.75,
-        -0.5,
-        -0.25
-      ],
-      "markLabels": [
-        "−3/4",
-        "−1/2",
-        "−1/4"
       ],
       "caption": "問題文の条件を表した図"
     }
@@ -210,7 +184,8 @@
         "radius": "3cm",
         "height": "5cm"
       },
-      "caption": "問題文の条件を表した図"
+      "caption": "問題文の条件を表した図",
+      "large": true
     }
   },
   {
@@ -229,7 +204,8 @@
         "radius": "3cm",
         "height": "4cm"
       },
-      "caption": "問題文の条件を表した図"
+      "caption": "問題文の条件を表した図",
+      "large": true
     }
   },
   {
@@ -431,12 +407,16 @@
       "caption": "文字量は模式図",
       "rows": [
         {
+          "label": "合計",
           "cells": [
             "b円",
-            "b円"
+            "b円",
+            "10円"
           ],
-          "notes": [
-            "袋代10円"
+          "parts": [
+            4,
+            4,
+            2
           ]
         }
       ]
@@ -465,24 +445,25 @@
       "caption": "人数・冊数の配置は模式図",
       "rows": [
         {
-          "label": "4冊ずつ",
+          "label": "4冊ずつ×x人",
           "cells": [
-            "…"
+            ""
           ],
           "notes": [
             "6冊不足"
           ]
         },
         {
-          "label": "3冊ずつ",
+          "label": "3冊ずつ×x人",
           "cells": [
-            "…"
+            ""
           ],
           "notes": [
-            "9冊余る"
+            "9冊余り"
           ]
         }
-      ]
+      ],
+      "comparison": true
     }
   },
   {
@@ -516,6 +497,26 @@
       "shape": "hemisphere",
       "radiusLabel": "3cm",
       "caption": "問題文の条件を表した図"
+    }
+  },
+  {
+    "id": "math_g7_equation_019",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "人数・本数の配置は模式図",
+      "rows": [
+        {
+          "label": "全体 41本",
+          "cells": [
+            "1人3本ずつ（x人）",
+            "余り5本"
+          ],
+          "parts": [
+            8,
+            3
+          ]
+        }
+      ]
     }
   }
 ]

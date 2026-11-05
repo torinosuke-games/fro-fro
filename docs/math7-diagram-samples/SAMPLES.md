@@ -8,7 +8,6 @@
 |---|---|---|---|---|
 |numberline|math_g7_signed_numbers_001|海面を基準に、上を正とします。海面より12m下の位置を符号付きの数で表しなさい。単位は不要です。|−12|[見本](01-math_g7_signed_numbers_001.png)|
 |numberline|math_g7_signed_numbers_012|数直線上の−5と＋2の間の距離を答えなさい。|7|[見本](02-math_g7_signed_numbers_012.png)|
-|numberline|math_g7_signed_numbers_019|−1/2、−3/4、−1/4を小さい順に並べたとき、中央の数を分数で答えなさい。|−1/2|[見本](03-math_g7_signed_numbers_019.png)|
 |coordinate|math_g7_proportion_005|点Aの座標は（−4，3）です。x座標を答えなさい。|-4|[見本](04-math_g7_proportion_005.png)|
 |coordinate|math_g7_proportion_024|y＝−12/xで、−6≦x≦−2のときのyの変域はどれですか。|2≦y≦6|[見本](05-math_g7_proportion_024.png)|
 |coordinate|math_g7_proportion_026|比例と反比例のグラフがともに点（2，6）を通ります。x＝4のときのyについて正しいものはどれですか。|比例は12、反比例は3|[見本](06-math_g7_proportion_026.png)|
@@ -26,5 +25,8 @@
 |spatialFigure|math_g7_space_011|底面の半径3cm、高さ4cmの円{錐\|すい}の体積はどれですか。|12π|[見本](18-math_g7_space_011.png)|
 |spatialFigure|math_g7_space_016|底面の半径3cm、母線5cmの円{錐\|すい}の表面積を、πを使い単位なしで答えなさい。|24π|[見本](19-math_g7_space_016.png)|
 |spatialFigure|math_g7_space_028|半径3cmの半球を切り口の円も含めて囲む表面積を、πを使い単位なしで答えなさい。|27π|[見本](20-math_g7_space_028.png)|
+|quantityBars|math_g7_equation_019|生徒に鉛筆を1人3本ずつ配ると5本余ります。生徒x人、鉛筆41本のときの方程式はどれですか。|3x＋5＝41|[見本](21-math_g7_equation_019.png)|
+
+判断539：03（signed_numbers_019）は答えの順序を示すため削除。既存の見本番号を維持し、21（equation_019）を追加した。線分図は15・16・17・21の4点。計画は106図・107問。origin/mainの判断540を取り込んで撮影。
 
 確認：ページの横はみ出し・SVG文字の見切れなし。全見本を目視し、文字の重なりと可読性を確認。寸法・座標・角度と答えの点を描かない条件は tests/cases/math7-diagram-samples.js でも検証する。通常の目盛りは共通制約の例外として表示する。文字量は模式図、錐の母線だけが既知の問題では高さの数値を表示しない。

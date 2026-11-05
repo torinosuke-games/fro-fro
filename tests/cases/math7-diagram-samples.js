@@ -6,9 +6,9 @@ module.exports=({test,assert})=>{
  const samples=require('../../docs/math7-diagram-samples/samples.json');
  const {load,LOGIC_FILES_WITH_FIXES}=require('../lib/loader'),c=load(LOGIC_FILES_WITH_FIXES);
  const texts=n=>n.querySelectorAll('text').map(t=>t.textContent),svg=n=>n.querySelectorAll('svg')[0];
- test('中1図：7種類・各2〜3見本、問題本文と登録は未変更',()=>{
+ test('中1図：7種類・線分図4点を含む20見本、問題本文と登録は未変更',()=>{
   const counts={};for(const s of samples){counts[s.diagram.kind]=(counts[s.diagram.kind]||0)+1;const q=c.QUESTION_BANK.find(q=>q.id===s.id);assert.ok(q);assert.ok(!q.diagram);assert.deepEqual(Array.from(c.FF.learning.validateQuestion({...q,diagram:s.diagram})),[],s.id);assert.ok(svg(render(s.diagram)));}
-  assert.equal(Object.keys(counts).length,7);Object.values(counts).forEach(n=>assert.ok(n>=2&&n<=3));
+  assert.equal(Object.keys(counts).length,7);Object.values(counts).forEach(n=>assert.ok(n>=2&&n<=4));
   assert.equal(c.QUESTION_BANK.filter(q=>q.collection==='course_ma7_1'&&q.diagram).length,0);
  });
  test('中1図：反比例は0の前後・範囲外をまたがず等縮尺、点のみも可能',()=>{
@@ -17,12 +17,12 @@ module.exports=({test,assert})=>{
   const point=render(samples.find(s=>s.id.endsWith('proportion_005')).diagram);assert.equal(point.querySelectorAll('polyline').length,0);assert.equal(point.querySelectorAll('circle').length,1);
   const pn=point.querySelectorAll('circle')[0];assert.ok(Math.abs(pn.attrs.cx-(100+2*320/12))<1e-8);assert.equal(pn.attrs.cy,130);
  });
- test('中1図：数直線の分数位置・縦向き・選択ラベルが正確',()=>{
-  const n=render(samples[2].diagram),ps=n.querySelectorAll('circle').map(n=>n.attrs.cx);assert.deepEqual(ps,[157.5,260,362.5]);assert.ok(!texts(n).includes(-.5));
+ test('中1図：分数見本の除外・縦向き・選択ラベルが正確',()=>{
+  assert.ok(!samples.some(s=>s.id.endsWith('signed_numbers_019')));
   const v=render(samples[0].diagram),p=v.querySelectorAll('circle')[0];assert.equal(p.attrs.cx,240);assert.equal(p.attrs.cy,308);assert.ok(!texts(v).includes('-12'));
  });
  test('中1図：直径指定は半径値を表示しない、扇形の端点と角度',()=>{
-  const n=render(samples.find(s=>s.id.endsWith('plane_027')).diagram);assert.ok(texts(n).includes('直径 12cm'));assert.ok(!n.textContent.includes('6cm'));assert.ok(texts(n).includes('150°'));
+  const n=render(samples.find(s=>s.id.endsWith('plane_027')).diagram);assert.ok(texts(n).includes('直径12cm'));assert.ok(!n.textContent.includes('6cm'));assert.ok(texts(n).includes('150°'));
   const d=n.querySelectorAll('path')[0].attrs.d,nums=d.match(/-?\d+(?:\.\d+)?/g).map(Number);assert.ok(d.includes(' A115,115 '));assert.ok(Math.abs(nums[2]-(260+115*Math.cos(75*Math.PI/180)))<1e-8);
  });
  test('中1図：円柱は本文の寸法だけ、円錐母線問題は高さを追加しない',()=>{
@@ -42,12 +42,20 @@ module.exports=({test,assert})=>{
   const bars=render({kind:'quantityBars',rows:[{cells:['',''],parts:[1,4]}]}).querySelectorAll('rect');assert.equal(bars[1].attrs.width/bars[0].attrs.width,4);
   const cyl=render({kind:'solid3d',study:true,shape:'cylinder',dimensions:[6,6,5],vertices:[],viewDirections:['真上','正面']});assert.deepEqual(texts(cyl),['真上','正面']);
  });
- test('中1図：計画は107図・108問、除外4問・歯車共用と一致',()=>{
+ test('中1図：計画は106図・107問、除外4問・歯車共用と一致',()=>{
   const plan=fs.readFileSync(path.join(root,'PICTURE_PLAN_MATH7.md'),'utf8'),rows=plan.split('\n').filter(l=>l.startsWith('|M7-'));
-  assert.equal(rows.length,107);const ids=rows.flatMap(l=>[...l.matchAll(/`(math_g7_\w+)`/g)].map(m=>m[1]));assert.equal(ids.length,108);assert.equal(new Set(ids).size,108);
+  assert.equal(rows.length,106);const ids=rows.flatMap(l=>[...l.matchAll(/`(math_g7_\w+)`/g)].map(m=>m[1]));assert.equal(ids.length,107);assert.equal(new Set(ids).size,107);
   for(const id of ids)assert.ok(c.QUESTION_BANK.some(q=>q.id===id),id);
   for(const id of ['expression_006','expression_016','data_006','data_014'])assert.ok(!ids.includes('math_g7_'+id));
-  assert.equal(rows.filter(l=>l.includes('生成した絵')).length,2);assert.equal(rows.filter(l=>l.includes('SVG・')).length,105);
+  assert.equal(rows.filter(l=>l.includes('生成した絵')).length,2);assert.equal(rows.filter(l=>l.includes('SVG・')).length,104);
+ });
+ test('中1図：修正した寸法ラベル・全体のかっこ・過不足の整列',()=>{
+  const by=id=>samples.find(s=>s.id.endsWith(id)).diagram;
+  assert.equal(samples.length,20);assert.equal(samples.filter(s=>s.diagram.kind==='quantityBars').length,4);
+  const sea=render(by('signed_numbers_001')).querySelectorAll('text').find(t=>t.textContent==='海面');assert.equal(sea.attrs.y,147);
+  const n=render(by('equation_025')),rects=n.querySelectorAll('rect');assert.equal(rects.length,4);assert.equal(rects[1].attrs.x,355);assert.equal(rects[3].attrs.x+rects[3].attrs.width,355);assert.equal(rects[1].attrs['stroke-dasharray'],'6 6');assert.ok(n.querySelectorAll('line').some(l=>l.attrs.x1===355&&l.attrs.x2===355));assert.ok(!n.textContent.includes('…'));
+  const sum=render(by('expression_009'));assert.deepEqual(texts(sum),['合計','b円','b円','10円']);const rs=sum.querySelectorAll('rect');assert.ok(rs[2].attrs.width<rs[0].attrs.width);assert.ok(sum.querySelectorAll('path').length);
+  for(const id of ['space_010','space_014']){const d=render(by(id));assert.ok(d.querySelectorAll('ellipse')[0].attrs.rx*2>=300);}
  });
  test('中1図：既存全図のSVG・表・画像構造は拡張前と同一',()=>{
   const qs=c.QUESTION_BANK.filter(q=>q.diagram),baseline=require('../fixtures/math7-diagram-baseline.json');

@@ -29,7 +29,7 @@ const samples=require(path.join(out,'samples.json'));
   });
   assert.equal(geometry.overflow,false,sample.id+' page overflow');assert.deepEqual(geometry.clipped,[],sample.id+' clipped');
   assert.ok(geometry.width>=300,sample.id+' diagram too narrow');
-  const file=String(i+1).padStart(2,'0')+'-'+sample.id+'.png';
+  const file=fs.readdirSync(out).find(f=>f.endsWith('-'+sample.id+'.png'))||'21-'+sample.id+'.png';
   // 問題カード全体を390px viewportの実画面で撮影（長い問題も切り取らない）。
   await page.screenshot({path:path.join(out,file),fullPage:true});
   if(process.env.FF_MATH7_CROPS){fs.mkdirSync(process.env.FF_MATH7_CROPS,{recursive:true});await fig.screenshot({path:path.join(process.env.FF_MATH7_CROPS,file)});}
@@ -39,6 +39,6 @@ const samples=require(path.join(out,'samples.json'));
  fs.writeFileSync(path.join(out,'inspection.json'),JSON.stringify(report,null,2)+'\n');
  let md='# 中1数学 第1回 図の見本\n\n390px幅・実際の問題画面。問題データは変更せず、撮影時だけ図を注入した。答えは照合用にこの一覧へ記載し、未回答の図中には追加しない。選択肢にある答えは通常の問題画面の表示。\n\n再撮影: `node tests/ui-math7-diagram-samples.cjs`（Chromium、playwright）。設定は samples.json、機械検査記録は inspection.json。\n\n|種類|問題ID|問題文|答え（照合用）|スクリーンショット|\n|---|---|---|---|---|\n';
  for(const r of report)md+='|'+[r.diagram.kind,r.id,r.question.replaceAll('|','\\|'),r.answer.replaceAll('|','\\|'),'[見本]('+r.file+')'].join('|')+'|\n';
- md+='\n確認：ページの横はみ出し・SVG文字の見切れなし。全見本を目視し、文字の重なりと可読性を確認。寸法・座標・角度と答えの点を描かない条件は tests/cases/math7-diagram-samples.js でも検証する。通常の目盛りは共通制約の例外として表示する。文字量は模式図、錐の母線だけが既知の問題では高さの数値を表示しない。\n';
+ md+='\n判断539：03（signed_numbers_019）は答えの順序を示すため削除。既存の見本番号を維持し、21（equation_019）を追加した。線分図は15・16・17・21の4点。計画は106図・107問。origin/mainの判断540を取り込んで撮影。\n\n確認：ページの横はみ出し・SVG文字の見切れなし。全見本を目視し、文字の重なりと可読性を確認。寸法・座標・角度と答えの点を描かない条件は tests/cases/math7-diagram-samples.js でも検証する。通常の目盛りは共通制約の例外として表示する。文字量は模式図、錐の母線だけが既知の問題では高さの数値を表示しない。\n';
  fs.writeFileSync(path.join(out,'SAMPLES.md'),md);console.log('PASS: '+report.length+' samples at 390px');
 })().catch(e=>{console.error(e);process.exit(1)});
