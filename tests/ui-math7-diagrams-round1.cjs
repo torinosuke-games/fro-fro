@@ -22,7 +22,7 @@ const samples=require(path.join(out,'samples.json'));
   await page.evaluate(()=>document.fonts.ready);
   const fig=page.locator('.question-card .lesson-figure');await fig.waitFor();
   const geometry=await fig.evaluate(fig=>{
-   const svg=fig.querySelector('svg'),v=svg.viewBox.baseVal;
+   const svg=fig.querySelector('svg');if(!svg)return {width:fig.getBoundingClientRect().width,overflow:document.documentElement.scrollWidth>innerWidth+1,clipped:[],text:[...fig.querySelectorAll('th,td')].map(t=>t.textContent)};const v=svg.viewBox.baseVal;
    return {width:fig.getBoundingClientRect().width,overflow:document.documentElement.scrollWidth>innerWidth+1,
     clipped:[...svg.querySelectorAll('text')].filter(t=>{const b=t.getBBox();return b.x<0||b.y<0||b.x+b.width>v.width+1||b.y+b.height>v.height+1}).map(t=>t.textContent),
     text:[...svg.querySelectorAll('text')].map(t=>t.textContent)};
@@ -37,8 +37,8 @@ const samples=require(path.join(out,'samples.json'));
  }
  assert.deepEqual(errors,[]);await browser.close();
  fs.writeFileSync(path.join(out,'inspection.json'),JSON.stringify(report,null,2)+'\n');
- let md='# 中1数学 図の登録 第1回\n\n正負の数12図・正負の数の計算4図。390px幅の実際の登録済み問題画面。答えは照合用で、図中に解答を追加しない。signed_numbers_009は比較する両方の数が与条件なので同じ印・書式で表示する。\n\n再撮影：`FF_TEST_URL=http://127.0.0.1:8765/ node tests/ui-math7-diagrams-round1.cjs`。設定はsamples.json、検査結果はinspection.json。\n\n|種類|問題ID|問題文|答え（照合用）|スクリーンショット|\n|---|---|---|---|---|\n';
+ let md='# 中1数学 図の登録 第1回\n\n正負の数11図・正負の数の計算4図。390px幅の実際の登録済み問題画面。答えは照合用で、図中に解答を追加しない。signed_numbers_009・019は図なし。\n\n再撮影：`FF_TEST_URL=http://127.0.0.1:8765/ node tests/ui-math7-diagrams-round1.cjs`。設定はsamples.json、検査結果はinspection.json。\n\n|種類|問題ID|問題文|答え（照合用）|スクリーンショット|\n|---|---|---|---|---|\n';
  for(const r of report)md+='|'+[r.diagram.kind,r.id,r.question.replaceAll('|','\\|'),r.answer.replaceAll('|','\\|'),'[図]('+r.file+')'].join('|')+'|\n';
- md+='\n全16図の目視、文字見切れ・横はみ出し、座標の条件、答えの点・結論を追加しないことを確認。\n';
+ md+='\n全15図の目視、文字見切れ・横はみ出し、座標の条件、答えの点・結論を追加しないことを確認。\n';
  fs.writeFileSync(path.join(out,'LIST.md'),md);console.log('PASS: '+report.length+' samples at 390px');
 })().catch(e=>{console.error(e);process.exit(1)});

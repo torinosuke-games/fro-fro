@@ -6,9 +6,13 @@
       "math7": true,
       "start": -15,
       "end": 5,
-      "step": 5,
+      "step": 1,
       "labelValues": [
-        0
+        -15,
+        -10,
+        -5,
+        0,
+        5
       ],
       "marks": [
         -12
@@ -28,7 +32,11 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−15",
+        "−10",
+        "−5",
         "0",
+        "5",
         "海面より12m下",
         "海面"
       ]
@@ -41,9 +49,15 @@
       "math7": true,
       "start": -10,
       "end": 2,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -10,
+        -8,
+        -6,
+        -4,
+        -2,
+        0,
+        2
       ],
       "marks": [
         -9
@@ -61,7 +75,13 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−10",
+        "−8",
+        "−6",
+        "−4",
+        "−2",
         "0",
+        "2",
         "−9"
       ]
     }
@@ -73,9 +93,13 @@
       "math7": true,
       "start": -10,
       "end": 10,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -10,
+        -5,
+        0,
+        5,
+        10
       ],
       "marks": [],
       "markLabels": [],
@@ -93,7 +117,11 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−10",
+        "−5",
         "0",
+        "5",
+        "10",
         "原点から左へ7"
       ]
     }
@@ -105,9 +133,11 @@
       "math7": true,
       "start": -8,
       "end": 8,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -5,
+        0,
+        5
       ],
       "marks": [
         -6
@@ -125,47 +155,10 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−5",
         "0",
+        "5",
         "−6"
-      ]
-    }
-  },
-  {
-    "id": "math_g7_signed_numbers_009",
-    "diagram": {
-      "kind": "numberline",
-      "math7": true,
-      "start": -3,
-      "end": 0,
-      "step": 1,
-      "labelValues": [
-        0
-      ],
-      "marks": [
-        -2.6,
-        -2.06
-      ],
-      "markLabels": [
-        "−2.6",
-        "−2.06"
-      ],
-      "caption": "問題文の条件を表した図",
-      "markLabelOffsets": [
-        -20,
-        10
-      ]
-    },
-    "question": "−2.6と−2.06のうち、大きい方の数を答えなさい。",
-    "answer": "−2.06",
-    "file": "05-math_g7_signed_numbers_009.png",
-    "geometry": {
-      "width": 332,
-      "overflow": false,
-      "clipped": [],
-      "text": [
-        "0",
-        "−2.6",
-        "−2.06"
       ]
     }
   },
@@ -178,7 +171,11 @@
       "end": 4,
       "step": 1,
       "labelValues": [
-        0
+        -4,
+        -2,
+        0,
+        2,
+        4
       ],
       "marks": [
         -3,
@@ -198,7 +195,11 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−4",
+        "−2",
         "0",
+        "2",
+        "4",
         "−3",
         "2"
       ]
@@ -213,7 +214,11 @@
       "end": 5,
       "step": 1,
       "labelValues": [
-        0
+        -4,
+        -2,
+        0,
+        2,
+        4
       ],
       "marks": [],
       "markLabels": [],
@@ -230,7 +235,11 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−4",
+        "−2",
         "0",
+        "2",
+        "4",
         "原点からの距離が4未満"
       ]
     }
@@ -244,7 +253,11 @@
       "end": 3,
       "step": 1,
       "labelValues": [
-        0
+        -6,
+        -4,
+        -2,
+        0,
+        2
       ],
       "marks": [
         -5,
@@ -264,7 +277,11 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−6",
+        "−4",
+        "−2",
         "0",
+        "2",
         "−5",
         "＋2"
       ]
@@ -277,9 +294,15 @@
       "math7": true,
       "start": -10,
       "end": 2,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -10,
+        -8,
+        -6,
+        -4,
+        -2,
+        0,
+        2
       ],
       "marks": [
         -8,
@@ -299,7 +322,13 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−10",
+        "−8",
+        "−6",
+        "−4",
+        "−2",
         "0",
+        "2",
         "−8",
         "−2"
       ]
@@ -312,9 +341,16 @@
       "math7": true,
       "start": -6,
       "end": 8,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -6,
+        -4,
+        -2,
+        0,
+        2,
+        4,
+        6,
+        8
       ],
       "marks": [
         -4,
@@ -336,7 +372,14 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−6",
+        "−4",
+        "−2",
         "0",
+        "2",
+        "4",
+        "6",
+        "8",
         "B：基準より4m下",
         "A：基準より6m上",
         "基準"
@@ -352,6 +395,11 @@
       "end": 0,
       "step": 0.1,
       "labelValues": [
+        -1,
+        -0.8,
+        -0.6,
+        -0.4,
+        -0.2,
         0
       ],
       "marks": [
@@ -372,6 +420,11 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−1",
+        "−0.8",
+        "−0.6",
+        "−0.4",
+        "−0.2",
         "0",
         "−0.7",
         "−0.4"
@@ -385,9 +438,13 @@
       "math7": true,
       "start": -10,
       "end": 10,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -10,
+        -5,
+        0,
+        5,
+        10
       ],
       "marks": [],
       "markLabels": [],
@@ -404,7 +461,11 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−10",
+        "−5",
         "0",
+        "5",
+        "10",
         "原点からの距離が2より大きく7より小さい"
       ]
     }
@@ -416,9 +477,15 @@
       "math7": true,
       "start": -10,
       "end": 2,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -10,
+        -8,
+        -6,
+        -4,
+        -2,
+        0,
+        2
       ],
       "marks": [
         -7
@@ -430,7 +497,8 @@
       "direction": "right",
       "notes": [
         "＋4の向き"
-      ]
+      ],
+      "directionStart": -7
     },
     "question": "（−7）＋（＋4）を計算しなさい。",
     "answer": "−3",
@@ -440,7 +508,13 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−10",
+        "−8",
+        "−6",
+        "−4",
+        "−2",
         "0",
+        "2",
         "−7",
         "＋4の向き"
       ]
@@ -453,9 +527,16 @@
       "math7": true,
       "start": -2,
       "end": 12,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -2,
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12
       ],
       "marks": [
         5
@@ -473,7 +554,14 @@
       "overflow": false,
       "clipped": [],
       "text": [
+        "−2",
         "0",
+        "2",
+        "4",
+        "6",
+        "8",
+        "10",
+        "12",
         "5"
       ]
     }
@@ -481,16 +569,31 @@
   {
     "id": "math_g7_signed_calc_022",
     "diagram": {
-      "kind": "quantityBars",
-      "caption": "変化の条件を表した模式図",
-      "rows": [
-        {
-          "label": "はじめ −3℃",
-          "cells": [
-            "5℃下がる"
-          ]
-        }
-      ]
+      "kind": "numberline",
+      "math7": true,
+      "start": -10,
+      "end": 2,
+      "step": 1,
+      "labelValues": [
+        -10,
+        -8,
+        -6,
+        -4,
+        -2,
+        0,
+        2
+      ],
+      "marks": [
+        -3
+      ],
+      "markLabels": [
+        "−3℃"
+      ],
+      "vertical": true,
+      "direction": "down",
+      "directionStart": -3,
+      "directionLabel": "5℃下がる",
+      "caption": "気温の変化の条件を表した図"
     },
     "question": "気温が−3℃から5℃下がりました。変化後の気温を求める式はどれですか。",
     "answer": "（−3）−5",
@@ -500,7 +603,14 @@
       "overflow": false,
       "clipped": [],
       "text": [
-        "はじめ −3℃",
+        "−10",
+        "−8",
+        "−6",
+        "−4",
+        "−2",
+        "0",
+        "2",
+        "−3℃",
         "5℃下がる"
       ]
     }
@@ -509,27 +619,13 @@
     "id": "math_g7_signed_calc_026",
     "diagram": {
       "kind": "quantityBars",
-      "caption": "70点を基準とする差の模式図",
-      "rows": [
-        {
-          "label": "基準70点との差",
-          "cells": [
-            "＋6"
-          ]
-        },
-        {
-          "label": "基準70点との差",
-          "cells": [
-            "−4"
-          ]
-        },
-        {
-          "label": "基準70点との差",
-          "cells": [
-            "＋7"
-          ]
-        }
-      ]
+      "rows": [],
+      "deviations": [
+        6,
+        -4,
+        7
+      ],
+      "caption": "70点を基準とする得点差"
     },
     "question": "小テストの得点を70点との差で記録すると、＋6、−4、＋7でした。平均点を求める式はどれですか。",
     "answer": "70＋（6−4＋7）÷3",
@@ -539,11 +635,9 @@
       "overflow": false,
       "clipped": [],
       "text": [
-        "基準70点との差",
+        "基準70点",
         "＋6",
-        "基準70点との差",
         "−4",
-        "基準70点との差",
         "＋7"
       ]
     }

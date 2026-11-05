@@ -1,0 +1,542 @@
+[
+  {
+    "id": "math_g7_expression_009",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "合計",
+          "cells": [
+            "b円",
+            "b円",
+            "10円"
+          ],
+          "parts": [
+            4,
+            4,
+            2
+          ]
+        }
+      ]
+    },
+    "question": "1個b円の品物を2個買い、袋代10円を加えます。合計を表す式はどれですか。",
+    "answer": "2b＋10",
+    "file": "01-math_g7_expression_009.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "合計",
+        "b円",
+        "b円",
+        "10円"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_011",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "道のり",
+          "cells": [
+            "時速v kmでt時間"
+          ]
+        }
+      ]
+    },
+    "question": "時速v kmでt時間進む道のりを表す式はどれですか。",
+    "answer": "vt",
+    "file": "02-math_g7_expression_011.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "道のり",
+        "時速v kmでt時間"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_012",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "全体 m g",
+          "cells": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        }
+      ],
+      "notes": [
+        "5人で等しく分ける"
+      ]
+    },
+    "question": "m gの砂糖を5人で等しく分けます。1人分の重さを / を使う文字式で答えなさい。",
+    "answer": "m/5",
+    "file": "03-math_g7_expression_012.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "全体 m g",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "5人で等しく分ける"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_013",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "定価 a円",
+          "cells": [
+            ""
+          ]
+        }
+      ],
+      "notes": [
+        "2割引き"
+      ]
+    },
+    "question": "定価a円の商品を2割引きで買います。代金を表す式はどれですか。",
+    "answer": "0.8a",
+    "file": "04-math_g7_expression_013.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "定価 a円",
+        "",
+        "2割引き"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_015",
+    "diagram": {
+      "kind": "table",
+      "head": [
+        "十の位",
+        "一の位"
+      ],
+      "rows": [
+        [
+          "a",
+          "b"
+        ]
+      ],
+      "caption": "二桁の整数の位"
+    },
+    "question": "十の位がa、一の位がbの二桁の整数を表す式はどれですか。",
+    "answer": "10a＋b",
+    "file": "05-math_g7_expression_015.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "十の位",
+        "一の位",
+        "a",
+        "b"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_017",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "全体 x冊",
+          "cells": [
+            "3冊の束の例",
+            "ほかの束",
+            "余り2冊"
+          ],
+          "parts": [
+            4,
+            3,
+            3
+          ]
+        }
+      ],
+      "notes": [
+        "束の数は示していない"
+      ]
+    },
+    "question": "x冊のノートを3冊ずつ束にすると、2冊余りました。束の数を表す式はどれですか。",
+    "answer": "（x−2）/3",
+    "file": "06-math_g7_expression_017.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "全体 x冊",
+        "3冊の束の例",
+        "ほかの束",
+        "余り2冊",
+        "束の数は示していない"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_019",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "合計500円以下",
+          "cells": [
+            "x円",
+            "150円"
+          ]
+        }
+      ]
+    },
+    "question": "x円の品物と150円の品物を買うと、合計は500円以下でした。関係を表す式はどれですか。",
+    "answer": "x＋150≦500",
+    "file": "07-math_g7_expression_019.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "合計500円以下",
+        "x円",
+        "150円"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_021",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "全体 a cm",
+          "cells": [
+            "7cm",
+            "b cm"
+          ]
+        }
+      ]
+    },
+    "question": "長さa cmのひもから7cm切った残りがb cmです。関係を表す等式はどれですか。",
+    "answer": "a−7＝b",
+    "file": "08-math_g7_expression_021.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "全体 a cm",
+        "7cm",
+        "b cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_022",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "材料代",
+          "cells": [
+            "a円",
+            "a円",
+            "a円"
+          ]
+        },
+        {
+          "label": "送料",
+          "cells": [
+            "120円"
+          ]
+        }
+      ],
+      "notes": [
+        "材料代1000円未満の場合",
+        "予算1000円"
+      ]
+    },
+    "question": "文化祭で1個a円の材料を3個買います。材料代の合計が1000円以上なら送料は無料、それより少なければ送料120円がかかります。材料代が1000円未満のとき、支払額と1000円との差（1000円から支払額を引いた額）を式で表しなさい。",
+    "answer": "880−3a",
+    "file": "09-math_g7_expression_022.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "材料代",
+        "a円",
+        "a円",
+        "a円",
+        "送料",
+        "120円",
+        "材料代1000円未満の場合",
+        "予算1000円"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_026",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "1本目",
+          "cells": [
+            "a分"
+          ],
+          "width": 300
+        },
+        {
+          "label": "2本目",
+          "cells": [
+            "a分",
+            "4分"
+          ],
+          "parts": [
+            3,
+            1
+          ],
+          "width": 400
+        }
+      ]
+    },
+    "question": "a分の動画と、それより4分長い動画を1本ずつ見ます。合計時間を、同じ文字をまとめた式で答えなさい。単位は不要です。",
+    "answer": "2a＋4",
+    "file": "10-math_g7_expression_026.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "1本目",
+        "a分",
+        "2本目",
+        "a分",
+        "4分"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_027",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [],
+      "ropeJoin": true
+    },
+    "question": "長さa cmのひもを5本つなぎます。つなぎ目は4か所で、それぞれ2 cmずつ重ねます。つないだ全体の長さを表す式はどれですか。",
+    "answer": "5a−8",
+    "file": "11-math_g7_expression_027.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "つないだひも",
+        "a cm",
+        "2cm",
+        "a cm",
+        "2cm",
+        "a cm",
+        "2cm",
+        "a cm",
+        "2cm",
+        "a cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_028",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "はじめ500円",
+          "cells": [
+            "a円",
+            "a円",
+            "残額"
+          ]
+        },
+        {
+          "label": "残額を半分使う",
+          "cells": [
+            "使う分",
+            "最後の残額"
+          ]
+        }
+      ]
+    },
+    "question": "図書カード500円分から、1冊a円のノートを2冊買います。残額からさらに、その残額の半分を使いました。最後の残額を式で表しなさい。",
+    "answer": "250−a",
+    "file": "12-math_g7_expression_028.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "はじめ500円",
+        "a円",
+        "a円",
+        "残額",
+        "残額を半分使う",
+        "使う分",
+        "最後の残額"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_calc_021",
+    "diagram": {
+      "kind": "mathGeometry",
+      "segments": [
+        [
+          120,
+          70,
+          400,
+          70
+        ],
+        [
+          400,
+          70,
+          400,
+          230
+        ],
+        [
+          400,
+          230,
+          120,
+          230
+        ],
+        [
+          120,
+          230,
+          120,
+          70
+        ]
+      ],
+      "labels": [
+        [
+          260,
+          50,
+          "（a＋3）cm"
+        ],
+        [
+          105,
+          155,
+          "a cm",
+          24,
+          "end"
+        ]
+      ],
+      "caption": "長方形の辺の文字量を表した模式図"
+    },
+    "question": "縦がa cm、横が（a＋3）cmの長方形があります。周の長さを、同類項をまとめた式で答えなさい。単位は不要です。",
+    "answer": "4a＋6",
+    "file": "13-math_g7_expression_calc_021.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "（a＋3）cm",
+        "a cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_expression_calc_023",
+    "diagram": {
+      "kind": "quantityBars",
+      "caption": "文字量の幅は模式図",
+      "rows": [
+        {
+          "label": "a cm",
+          "cells": [
+            "残り",
+            "切る2cm"
+          ],
+          "parts": [
+            3,
+            2
+          ]
+        },
+        {
+          "label": "a cm",
+          "cells": [
+            "残り",
+            "切る2cm"
+          ],
+          "parts": [
+            3,
+            2
+          ]
+        },
+        {
+          "label": "a cm",
+          "cells": [
+            "残り",
+            "切る2cm"
+          ],
+          "parts": [
+            3,
+            2
+          ]
+        }
+      ]
+    },
+    "question": "同じ長さa cmのひも3本から、それぞれ2cmずつ切ります。残りの合計を文字式で答えなさい。単位は不要です。",
+    "answer": "3a−6",
+    "file": "14-math_g7_expression_calc_023.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "a cm",
+        "残り",
+        "切る2cm",
+        "a cm",
+        "残り",
+        "切る2cm",
+        "a cm",
+        "残り",
+        "切る2cm"
+      ]
+    }
+  }
+]

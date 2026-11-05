@@ -1,4 +1,4 @@
-// 中1数学 全10単元280問、正負の数・計算に図16点を登録・レビュー待ち。
+// 中1数学 全10単元280問、正負の数・計算と文字式に図29点を登録・レビュー待ち。
 window.QUESTION_BANK.push(
 {
   "id": "math_g7_signed_numbers_001",
@@ -7,9 +7,13 @@ window.QUESTION_BANK.push(
     "math7": true,
     "start": -15,
     "end": 5,
-    "step": 5,
+    "step": 1,
     "labelValues": [
-      0
+      -15,
+      -10,
+      -5,
+      0,
+      5
     ],
     "marks": [
       -12
@@ -21,6 +25,7 @@ window.QUESTION_BANK.push(
     "vertical": true,
     "zeroLabel": "海面"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -62,9 +67,15 @@ window.QUESTION_BANK.push(
     "math7": true,
     "start": -10,
     "end": 2,
-    "step": 2,
+    "step": 1,
     "labelValues": [
-      0
+      -10,
+      -8,
+      -6,
+      -4,
+      -2,
+      0,
+      2
     ],
     "marks": [
       -9
@@ -74,6 +85,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "問題文の条件を表した図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -97,9 +109,13 @@ window.QUESTION_BANK.push(
     "math7": true,
     "start": -10,
     "end": 10,
-    "step": 2,
+    "step": 1,
     "labelValues": [
-      0
+      -10,
+      -5,
+      0,
+      5,
+      10
     ],
     "marks": [],
     "markLabels": [],
@@ -109,6 +125,7 @@ window.QUESTION_BANK.push(
       "原点から左へ7"
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -132,9 +149,11 @@ window.QUESTION_BANK.push(
     "math7": true,
     "start": -8,
     "end": 8,
-    "step": 2,
+    "step": 1,
     "labelValues": [
-      0
+      -5,
+      0,
+      5
     ],
     "marks": [
       -6
@@ -144,6 +163,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "問題文の条件を表した図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -226,29 +246,7 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_signed_numbers_009",
-  "diagram": {
-    "kind": "numberline",
-    "math7": true,
-    "start": -3,
-    "end": 0,
-    "step": 1,
-    "labelValues": [
-      0
-    ],
-    "marks": [
-      -2.6,
-      -2.06
-    ],
-    "markLabels": [
-      "−2.6",
-      "−2.06"
-    ],
-    "caption": "問題文の条件を表した図",
-    "markLabelOffsets": [
-      -20,
-      10
-    ]
-  },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -274,7 +272,11 @@ window.QUESTION_BANK.push(
     "end": 4,
     "step": 1,
     "labelValues": [
-      0
+      -4,
+      -2,
+      0,
+      2,
+      4
     ],
     "marks": [
       -3,
@@ -286,6 +288,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "問題文の条件を表した図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -311,7 +314,11 @@ window.QUESTION_BANK.push(
     "end": 5,
     "step": 1,
     "labelValues": [
-      0
+      -4,
+      -2,
+      0,
+      2,
+      4
     ],
     "marks": [],
     "markLabels": [],
@@ -320,6 +327,7 @@ window.QUESTION_BANK.push(
       "原点からの距離が4未満"
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -345,7 +353,11 @@ window.QUESTION_BANK.push(
     "end": 3,
     "step": 1,
     "labelValues": [
-      0
+      -6,
+      -4,
+      -2,
+      0,
+      2
     ],
     "marks": [
       -5,
@@ -357,6 +369,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "問題文の条件を表した図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -380,9 +393,15 @@ window.QUESTION_BANK.push(
     "math7": true,
     "start": -10,
     "end": 2,
-    "step": 2,
+    "step": 1,
     "labelValues": [
-      0
+      -10,
+      -8,
+      -6,
+      -4,
+      -2,
+      0,
+      2
     ],
     "marks": [
       -8,
@@ -394,6 +413,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "問題文の条件を表した図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -533,9 +553,16 @@ window.QUESTION_BANK.push(
     "math7": true,
     "start": -6,
     "end": 8,
-    "step": 2,
+    "step": 1,
     "labelValues": [
-      0
+      -6,
+      -4,
+      -2,
+      0,
+      2,
+      4,
+      6,
+      8
     ],
     "marks": [
       -4,
@@ -549,6 +576,7 @@ window.QUESTION_BANK.push(
     "vertical": true,
     "zeroLabel": "基準"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -643,7 +671,12 @@ window.QUESTION_BANK.push(
     "end": 0,
     "step": 0.1,
     "labelValues": [
-      0
+      -1.0,
+      -0.8,
+      -0.6,
+      -0.4,
+      -0.2,
+      0.0
     ],
     "marks": [
       -0.7,
@@ -655,6 +688,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "問題文の条件を表した図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -729,9 +763,13 @@ window.QUESTION_BANK.push(
     "math7": true,
     "start": -10,
     "end": 10,
-    "step": 2,
+    "step": 1,
     "labelValues": [
-      0
+      -10,
+      -5,
+      0,
+      5,
+      10
     ],
     "marks": [],
     "markLabels": [],
@@ -740,6 +778,7 @@ window.QUESTION_BANK.push(
       "原点からの距離が2より大きく7より小さい"
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_numbers",
@@ -781,9 +820,15 @@ window.QUESTION_BANK.push(
     "math7": true,
     "start": -10,
     "end": 2,
-    "step": 2,
+    "step": 1,
     "labelValues": [
-      0
+      -10,
+      -8,
+      -6,
+      -4,
+      -2,
+      0,
+      2
     ],
     "marks": [
       -7
@@ -795,8 +840,10 @@ window.QUESTION_BANK.push(
     "direction": "right",
     "notes": [
       "＋4の向き"
-    ]
+    ],
+    "directionStart": -7
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_calc",
@@ -838,9 +885,16 @@ window.QUESTION_BANK.push(
     "math7": true,
     "start": -2,
     "end": 12,
-    "step": 2,
+    "step": 1,
     "labelValues": [
-      0
+      -2,
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12
     ],
     "marks": [
       5
@@ -850,6 +904,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "問題文の条件を表した図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_calc",
@@ -1213,17 +1268,33 @@ window.QUESTION_BANK.push(
 {
   "id": "math_g7_signed_calc_022",
   "diagram": {
-    "kind": "quantityBars",
-    "caption": "変化の条件を表した模式図",
-    "rows": [
-      {
-        "label": "はじめ −3℃",
-        "cells": [
-          "5℃下がる"
-        ]
-      }
-    ]
+    "kind": "numberline",
+    "math7": true,
+    "start": -10,
+    "end": 2,
+    "step": 1,
+    "labelValues": [
+      -10,
+      -8,
+      -6,
+      -4,
+      -2,
+      0,
+      2
+    ],
+    "marks": [
+      -3
+    ],
+    "markLabels": [
+      "−3℃"
+    ],
+    "vertical": true,
+    "direction": "down",
+    "directionStart": -3,
+    "directionLabel": "5℃下がる",
+    "caption": "気温の変化の条件を表した図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_calc",
@@ -1313,28 +1384,15 @@ window.QUESTION_BANK.push(
   "id": "math_g7_signed_calc_026",
   "diagram": {
     "kind": "quantityBars",
-    "caption": "70点を基準とする差の模式図",
-    "rows": [
-      {
-        "label": "基準70点との差",
-        "cells": [
-          "＋6"
-        ]
-      },
-      {
-        "label": "基準70点との差",
-        "cells": [
-          "−4"
-        ]
-      },
-      {
-        "label": "基準70点との差",
-        "cells": [
-          "＋7"
-        ]
-      }
-    ]
+    "rows": [],
+    "deviations": [
+      6,
+      -4,
+      7
+    ],
+    "caption": "70点を基準とする得点差"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "signed_calc",
@@ -1540,6 +1598,25 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_009",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "合計",
+        "cells": [
+          "b円",
+          "b円",
+          "10円"
+        ],
+        "parts": [
+          4,
+          4,
+          2
+        ]
+      }
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1581,6 +1658,18 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_011",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "道のり",
+        "cells": [
+          "時速v kmでt時間"
+        ]
+      }
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1604,6 +1693,25 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_012",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "全体 m g",
+        "cells": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      }
+    ],
+    "notes": [
+      "5人で等しく分ける"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1622,6 +1730,21 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_013",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "定価 a円",
+        "cells": [
+          ""
+        ]
+      }
+    ],
+    "notes": [
+      "2割引き"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1663,6 +1786,20 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_015",
+  "diagram": {
+    "kind": "table",
+    "head": [
+      "十の位",
+      "一の位"
+    ],
+    "rows": [
+      [
+        "a",
+        "b"
+      ]
+    ],
+    "caption": "二桁の整数の位"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1704,6 +1841,28 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_017",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "全体 x冊",
+        "cells": [
+          "3冊の束の例",
+          "ほかの束",
+          "余り2冊"
+        ],
+        "parts": [
+          4,
+          3,
+          3
+        ]
+      }
+    ],
+    "notes": [
+      "束の数は示していない"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1745,6 +1904,19 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_019",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "合計500円以下",
+        "cells": [
+          "x円",
+          "150円"
+        ]
+      }
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1786,6 +1958,19 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_021",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "全体 a cm",
+        "cells": [
+          "7cm",
+          "b cm"
+        ]
+      }
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1809,6 +1994,30 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_022",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "材料代",
+        "cells": [
+          "a円",
+          "a円",
+          "a円"
+        ]
+      },
+      {
+        "label": "送料",
+        "cells": [
+          "120円"
+        ]
+      }
+    ],
+    "notes": [
+      "材料代1000円未満の場合",
+      "予算1000円"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1894,6 +2103,31 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_026",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "1本目",
+        "cells": [
+          "a分"
+        ],
+        "width": 300
+      },
+      {
+        "label": "2本目",
+        "cells": [
+          "a分",
+          "4分"
+        ],
+        "parts": [
+          3,
+          1
+        ],
+        "width": 400
+      }
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1915,6 +2149,12 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_027",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [],
+    "ropeJoin": true
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1938,6 +2178,27 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_028",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "はじめ500円",
+        "cells": [
+          "a円",
+          "a円",
+          "残額"
+        ]
+      },
+      {
+        "label": "残額を半分使う",
+        "cells": [
+          "使う分",
+          "最後の残額"
+        ]
+      }
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -2408,6 +2669,50 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_calc_021",
+  "diagram": {
+    "kind": "mathGeometry",
+    "segments": [
+      [
+        120,
+        70,
+        400,
+        70
+      ],
+      [
+        400,
+        70,
+        400,
+        230
+      ],
+      [
+        400,
+        230,
+        120,
+        230
+      ],
+      [
+        120,
+        230,
+        120,
+        70
+      ]
+    ],
+    "labels": [
+      [
+        260,
+        50,
+        "（a＋3）cm"
+      ],
+      [
+        105,
+        155,
+        "a cm",
+        24,
+        "end"
+      ]
+    ],
+    "caption": "長方形の辺の文字量を表した模式図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression_calc",
@@ -2452,6 +2757,45 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_calc_023",
+  "diagram": {
+    "kind": "quantityBars",
+    "caption": "文字量の幅は模式図",
+    "rows": [
+      {
+        "label": "a cm",
+        "cells": [
+          "残り",
+          "切る2cm"
+        ],
+        "parts": [
+          3,
+          2
+        ]
+      },
+      {
+        "label": "a cm",
+        "cells": [
+          "残り",
+          "切る2cm"
+        ],
+        "parts": [
+          3,
+          2
+        ]
+      },
+      {
+        "label": "a cm",
+        "cells": [
+          "残り",
+          "切る2cm"
+        ],
+        "parts": [
+          3,
+          2
+        ]
+      }
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression_calc",

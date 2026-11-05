@@ -51,7 +51,13 @@
     // 教科書型の帯と全体のかっこ。幅は模式的、与条件だけをラベルにする。
     function brace(x,y,w,label){add(path('M'+x+','+(y+10)+' Q'+x+','+y+' '+(x+12)+','+y+' H'+(x+w/2-12)+' Q'+(x+w/2)+','+y+' '+(x+w/2)+','+(y-12)+' Q'+(x+w/2)+','+y+' '+(x+w/2+12)+','+y+' H'+(x+w-12)+' Q'+(x+w)+','+y+' '+(x+w)+','+(y+10)),text(x+w/2,y-25,label,24));}
     h=d.comparison?340:90+d.rows.length*160;
-    if(d.comparison){
+    if(d.deviations){
+     h=360;var base=230;add(line(55,base,465,base),text(55,base+30,'基準70点',24,'start'));
+     d.deviations.forEach(function(v,i){var x=160+i*120,y=base-v*18;add(S('rect',{x:x-20,y:Math.min(base,y),width:40,height:Math.abs(v)*18,fill:pale,stroke:blue,'stroke-width':2}),text(x,v>0?y-14:y+32,(v>0?'＋':'−')+Math.abs(v),26));});
+    }else if(d.ropeJoin){
+     h=250;brace(50,65,420,'つないだひも');
+     for(var i=0;i<5;i++){var x=50+i*80;add(S('rect',{x:x,y:110,width:100,height:40,fill:'none',stroke:blue,'stroke-width':2}),text(x+50,100,'a cm',24));if(i<4)add(S('rect',{x:x+80,y:110,width:20,height:40,fill:pale,stroke:blue,'stroke-width':2}),text(x+90,190,'2cm',23));}
+    }else if(d.comparison){
      var totalX=355;brace(55,65,300,'ノートの総数');
      add(line(totalX,75,totalX,310,ink,'6 6'));
      d.rows.forEach(function(r,i){var y=110+i*135,w=i?210:300;add(S('rect',{x:55,y:y,width:w,height:38,fill:'none',stroke:blue,'stroke-width':2}),text(i?160:250,y-14,r.label,25));
@@ -59,10 +65,11 @@
      });
     }else{
      d.rows.forEach(function(r,j){var y=90+j*160,parts=r.parts||r.cells.map(function(){return 1;}),sum=parts.reduce(function(a,b){return a+b;},0),x=55;
-      brace(55,y-25,410,r.label||'合計');
-      r.cells.forEach(function(t,i){var w=410*parts[i]/sum;add(S('rect',{x:x,y:y,width:w,height:42,fill:'none',stroke:blue,'stroke-width':2}),text(x+w/2,y+29,t,24));x+=w;});
+      var width=r.width||410;brace(55,y-25,width,r.label||'合計');
+      r.cells.forEach(function(t,i){var w=width*parts[i]/sum;add(S('rect',{x:x,y:y,width:w,height:42,fill:'none',stroke:blue,'stroke-width':2}),text(x+w/2,y+29,t,24));x+=w;});
      });
     }
+    (d.notes||[]).forEach(function(t,i){add(text(260,h-12+i*38,t,23));});if(d.notes)h+=d.notes.length*38;
    }else if(d.kind==='spatialFigure'){
     // 投影の長さは radius / height / slant に比例。面積指定や未知量は模式図。
     h=420;var cx=245,baseY=315,r=150,ry=48;
@@ -110,7 +117,7 @@
     add(vertical?line(240,70,240,350):line(55,110,465,110));
     for(var v=d.start;v<=d.end+1e-8;v+=d.step){v=Number(v.toFixed(8));var p=np(v);add(vertical?line(232,p,248,p):line(p,102,p,118));if(!d.labelValues||d.labelValues.indexOf(v)>=0)add(vertical?text(215,p+7,String(v).replace('-','−'),24,'end'):text(p,151,String(v).replace('-','−'),24));}
     (d.marks||[]).forEach(function(v,i){var p=np(v);add(vertical?circle(240,p,4,ink):circle(p,110,4,ink));var t=d.markLabels?d.markLabels[i]:v;if(t!=='')add(vertical?text(270,p+7,t,24,'start'):text(p,76+(d.markLabelOffsets?d.markLabelOffsets[i]:0),t,24));});
-    if(d.direction){var right=d.direction==='right',ax=right?415:105,bx=right?455:65;add(line(ax,48,bx,48),path('M'+(bx+(right?-10:10))+',40 L'+bx+',48 L'+(bx+(right?-10:10))+',56'));}
+    if(d.direction){var start=np(d.directionStart||0);if(vertical){var end=start+42;add(line(260,start,260,end),path('M252,'+(end-10)+' L260,'+end+' L268,'+(end-10)));if(d.directionLabel)add(text(280,start+48,d.directionLabel,24,'start'));}else{var right=d.direction==='right',end=start+(right?38:-38);add(line(start,85,end,85),path('M'+(end+(right?-10:10))+',77 L'+end+',85 L'+(end+(right?-10:10))+',93'));}}
     if(vertical&&d.zeroLabel)add(text(270,np(0)+7,d.zeroLabel,24,'start'));
     (d.notes||[]).forEach(function(t,i){add(text(260,(vertical?395:205)+i*36,t,23));h=(vertical?430:240)+i*36;});
    }else if(d.kind==='circle'&&d.math7){

@@ -6,9 +6,13 @@
       "math7": true,
       "start": -15,
       "end": 5,
-      "step": 5,
+      "step": 1,
       "labelValues": [
-        0
+        -15,
+        -10,
+        -5,
+        0,
+        5
       ],
       "marks": [
         -12
@@ -28,9 +32,15 @@
       "math7": true,
       "start": -10,
       "end": 2,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -10,
+        -8,
+        -6,
+        -4,
+        -2,
+        0,
+        2
       ],
       "marks": [
         -9
@@ -48,9 +58,13 @@
       "math7": true,
       "start": -10,
       "end": 10,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -10,
+        -5,
+        0,
+        5,
+        10
       ],
       "marks": [],
       "markLabels": [],
@@ -68,9 +82,11 @@
       "math7": true,
       "start": -8,
       "end": 8,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -5,
+        0,
+        5
       ],
       "marks": [
         -6
@@ -82,32 +98,6 @@
     }
   },
   {
-    "id": "math_g7_signed_numbers_009",
-    "diagram": {
-      "kind": "numberline",
-      "math7": true,
-      "start": -3,
-      "end": 0,
-      "step": 1,
-      "labelValues": [
-        0
-      ],
-      "marks": [
-        -2.6,
-        -2.06
-      ],
-      "markLabels": [
-        "−2.6",
-        "−2.06"
-      ],
-      "caption": "問題文の条件を表した図",
-      "markLabelOffsets": [
-        -20,
-        10
-      ]
-    }
-  },
-  {
     "id": "math_g7_signed_numbers_010",
     "diagram": {
       "kind": "numberline",
@@ -116,7 +106,11 @@
       "end": 4,
       "step": 1,
       "labelValues": [
-        0
+        -4,
+        -2,
+        0,
+        2,
+        4
       ],
       "marks": [
         -3,
@@ -138,7 +132,11 @@
       "end": 5,
       "step": 1,
       "labelValues": [
-        0
+        -4,
+        -2,
+        0,
+        2,
+        4
       ],
       "marks": [],
       "markLabels": [],
@@ -157,7 +155,11 @@
       "end": 3,
       "step": 1,
       "labelValues": [
-        0
+        -6,
+        -4,
+        -2,
+        0,
+        2
       ],
       "marks": [
         -5,
@@ -177,9 +179,15 @@
       "math7": true,
       "start": -10,
       "end": 2,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -10,
+        -8,
+        -6,
+        -4,
+        -2,
+        0,
+        2
       ],
       "marks": [
         -8,
@@ -199,9 +207,16 @@
       "math7": true,
       "start": -6,
       "end": 8,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -6,
+        -4,
+        -2,
+        0,
+        2,
+        4,
+        6,
+        8
       ],
       "marks": [
         -4,
@@ -225,7 +240,12 @@
       "end": 0,
       "step": 0.1,
       "labelValues": [
-        0
+        -1.0,
+        -0.8,
+        -0.6,
+        -0.4,
+        -0.2,
+        0.0
       ],
       "marks": [
         -0.7,
@@ -245,9 +265,13 @@
       "math7": true,
       "start": -10,
       "end": 10,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -10,
+        -5,
+        0,
+        5,
+        10
       ],
       "marks": [],
       "markLabels": [],
@@ -264,9 +288,15 @@
       "math7": true,
       "start": -10,
       "end": 2,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -10,
+        -8,
+        -6,
+        -4,
+        -2,
+        0,
+        2
       ],
       "marks": [
         -7
@@ -278,7 +308,8 @@
       "direction": "right",
       "notes": [
         "＋4の向き"
-      ]
+      ],
+      "directionStart": -7
     }
   },
   {
@@ -288,9 +319,16 @@
       "math7": true,
       "start": -2,
       "end": 12,
-      "step": 2,
+      "step": 1,
       "labelValues": [
-        0
+        -2,
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12
       ],
       "marks": [
         5
@@ -304,43 +342,44 @@
   {
     "id": "math_g7_signed_calc_022",
     "diagram": {
-      "kind": "quantityBars",
-      "caption": "変化の条件を表した模式図",
-      "rows": [
-        {
-          "label": "はじめ −3℃",
-          "cells": [
-            "5℃下がる"
-          ]
-        }
-      ]
+      "kind": "numberline",
+      "math7": true,
+      "start": -10,
+      "end": 2,
+      "step": 1,
+      "labelValues": [
+        -10,
+        -8,
+        -6,
+        -4,
+        -2,
+        0,
+        2
+      ],
+      "marks": [
+        -3
+      ],
+      "markLabels": [
+        "−3℃"
+      ],
+      "vertical": true,
+      "direction": "down",
+      "directionStart": -3,
+      "directionLabel": "5℃下がる",
+      "caption": "気温の変化の条件を表した図"
     }
   },
   {
     "id": "math_g7_signed_calc_026",
     "diagram": {
       "kind": "quantityBars",
-      "caption": "70点を基準とする差の模式図",
-      "rows": [
-        {
-          "label": "基準70点との差",
-          "cells": [
-            "＋6"
-          ]
-        },
-        {
-          "label": "基準70点との差",
-          "cells": [
-            "−4"
-          ]
-        },
-        {
-          "label": "基準70点との差",
-          "cells": [
-            "＋7"
-          ]
-        }
-      ]
+      "rows": [],
+      "deviations": [
+        6,
+        -4,
+        7
+      ],
+      "caption": "70点を基準とする得点差"
     }
   }
 ]

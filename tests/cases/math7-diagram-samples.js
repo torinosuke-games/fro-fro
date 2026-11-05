@@ -7,9 +7,9 @@ module.exports=({test,assert})=>{
  const {load,LOGIC_FILES_WITH_FIXES}=require('../lib/loader'),c=load(LOGIC_FILES_WITH_FIXES);
  const texts=n=>n.querySelectorAll('text').map(t=>t.textContent),svg=n=>n.querySelectorAll('svg')[0];
  test('中1図：7種類・線分図4点を含む20見本、問題本文と登録は未変更',()=>{
-  const counts={};for(const s of samples){counts[s.diagram.kind]=(counts[s.diagram.kind]||0)+1;const q=c.QUESTION_BANK.find(q=>q.id===s.id);assert.ok(q);if(!['signed_numbers','signed_calc'].includes(q.unit))assert.ok(!q.diagram);assert.deepEqual(Array.from(c.FF.learning.validateQuestion({...q,diagram:s.diagram})),[],s.id);assert.ok(svg(render(s.diagram)));}
+  const counts={};for(const s of samples){counts[s.diagram.kind]=(counts[s.diagram.kind]||0)+1;const q=c.QUESTION_BANK.find(q=>q.id===s.id);assert.ok(q);if(!['signed_numbers','signed_calc','expression','expression_calc'].includes(q.unit))assert.ok(!q.diagram);assert.deepEqual(Array.from(c.FF.learning.validateQuestion({...q,diagram:s.diagram})),[],s.id);assert.ok(svg(render(s.diagram)));}
   assert.equal(Object.keys(counts).length,7);Object.values(counts).forEach(n=>assert.ok(n>=2&&n<=4));
-  assert.equal(c.QUESTION_BANK.filter(q=>q.collection==='course_ma7_1'&&q.diagram).length,16);
+  assert.equal(c.QUESTION_BANK.filter(q=>q.collection==='course_ma7_1'&&q.diagram).length,29);
  });
  test('中1図：反比例は0の前後・範囲外をまたがず等縮尺、点のみも可能',()=>{
   const d=samples.find(s=>s.id.endsWith('proportion_024')).diagram,n=render(d),lines=n.querySelectorAll('polyline');assert.equal(lines.length,2);
@@ -42,12 +42,12 @@ module.exports=({test,assert})=>{
   const bars=render({kind:'quantityBars',rows:[{cells:['',''],parts:[1,4]}]}).querySelectorAll('rect');assert.equal(bars[1].attrs.width/bars[0].attrs.width,4);
   const cyl=render({kind:'solid3d',study:true,shape:'cylinder',dimensions:[6,6,5],vertices:[],viewDirections:['真上','正面']});assert.deepEqual(texts(cyl),['真上','正面']);
  });
- test('中1図：計画は106図・107問、除外4問・歯車共用と一致',()=>{
+ test('中1図：計画は105図・106問、除外4問・歯車共用と一致',()=>{
   const plan=fs.readFileSync(path.join(root,'PICTURE_PLAN_MATH7.md'),'utf8'),rows=plan.split('\n').filter(l=>l.startsWith('|M7-'));
-  assert.equal(rows.length,106);const ids=rows.flatMap(l=>[...l.matchAll(/`(math_g7_\w+)`/g)].map(m=>m[1]));assert.equal(ids.length,107);assert.equal(new Set(ids).size,107);
+  assert.equal(rows.length,105);const ids=rows.flatMap(l=>[...l.matchAll(/`(math_g7_\w+)`/g)].map(m=>m[1]));assert.equal(ids.length,106);assert.equal(new Set(ids).size,106);
   for(const id of ids)assert.ok(c.QUESTION_BANK.some(q=>q.id===id),id);
   for(const id of ['expression_006','expression_016','data_006','data_014'])assert.ok(!ids.includes('math_g7_'+id));
-  assert.equal(rows.filter(l=>l.includes('生成した絵')).length,2);assert.equal(rows.filter(l=>l.includes('SVG・')).length,104);
+  assert.equal(rows.filter(l=>l.includes('生成した絵')).length,2);assert.equal(rows.filter(l=>l.includes('SVG・')).length,103);
  });
  test('中1図：修正した寸法ラベル・全体のかっこ・過不足の整列',()=>{
   const by=id=>samples.find(s=>s.id.endsWith(id)).diagram;
@@ -58,7 +58,7 @@ module.exports=({test,assert})=>{
   for(const id of ['space_010','space_014']){const d=render(by(id));assert.ok(d.querySelectorAll('ellipse')[0].attrs.rx*2>=300);}
  });
  test('中1図：既存全図のSVG・表・画像構造は拡張前と同一',()=>{
-  const ids=require('../../docs/math7-diagrams/round1/samples.json').map(s=>s.id);const qs=c.QUESTION_BANK.filter(q=>q.diagram&&!ids.includes(q.id)),baseline=require('../fixtures/math7-diagram-baseline.json');
+  const ids=[...require('../../docs/math7-diagrams/round1/samples.json'),...require('../../docs/math7-diagrams/round2/samples.json')].map(s=>s.id);const qs=c.QUESTION_BANK.filter(q=>q.diagram&&!ids.includes(q.id)),baseline=require('../fixtures/math7-diagram-baseline.json');
   const digest=crypto.createHash('sha256').update(JSON.stringify(qs.map(q=>[q.id,render(q.diagram)]))).digest('hex');
   assert.equal(qs.length,baseline.count);assert.equal(digest,baseline.sha256);
  });
