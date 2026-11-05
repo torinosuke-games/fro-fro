@@ -1,6 +1,6 @@
 # 中1数学 図の登録 第4回
 
-比例と反比例17問・平面図形21問。390px幅の実際の登録済み問題画面。答えは照合用で、図中に解答を追加しない。文字量は模式図。与条件のみを表示。
+比例と反比例16問・平面図形21問。390px幅の実際の登録済み問題画面。答えは照合用で、図中に解答を追加しない。文字量は模式図。与条件のみを表示。
 
 再撮影：`FF_TEST_URL=http://127.0.0.1:8765/ node tests/ui-math7-diagrams-round4.cjs`。設定はsamples.json、検査結果はinspection.json。
 
@@ -13,7 +13,6 @@
 |coordinate|math_g7_proportion_014|y＝−3xで、1≦x≦4のときのyの変域はどれですか。|−12≦y≦−3|[図](05-math_g7_proportion_014.png)|
 |coordinate|math_g7_proportion_015|y＝18/xで、2≦x≦6のとき、yの最小値を答えなさい。|3|[図](06-math_g7_proportion_015.png)|
 |table|math_g7_proportion_016|表でx＝1，2，3に対しy＝6，3，2です。表に合う関係はどれですか。|y＝6/x|[図](07-math_g7_proportion_016.png)|
-|quantityBars|math_g7_proportion_018|一定の道のり1200mを毎分x mで歩く時間をy分とします。関係式はどれですか。|y＝1200/x|[図](08-math_g7_proportion_018.png)|
 |image|math_g7_proportion_019|歯数24の歯車が毎分15回転します。かみ合う歯数40の歯車は毎分何回転しますか。回転数だけ答えなさい。|9|[図](09-math_g7_proportion_019.png)|
 |image|math_g7_proportion_029|かみ合う歯車A・Bの歯数はそれぞれ18と30です。Aが10回転した間にBが回転した数を答えなさい。|6|[図](10-math_g7_proportion_029.png)|
 |table|math_g7_proportion_020|比例の表で、x＝−2，1，4に対しy＝6，−3，□です。□に入る値はどれですか。|−12|[図](11-math_g7_proportion_020.png)|
@@ -45,4 +44,4 @@
 |mathGeometry|math_g7_plane_024|線分ABの垂直二等分線と、線分BCの垂直二等分線が点Pで交わりました。必ず成り立つものはどれですか。|PA＝PB＝PC|[図](37-math_g7_plane_024.png)|
 |mathGeometry|math_g7_plane_026|円の中心Oから直線lへ下ろした垂線の足をHとします。OHが円の半径と等しいとき、直線lと円の関係はどれですか。|Hで接する|[図](38-math_g7_plane_026.png)|
 
-全38問の目視、文字見切れ・横はみ出し、座標の条件、答えの点・結論を追加しないことを確認。
+全37問の目視、文字見切れ・横はみ出し、座標の条件、答えの点・結論を追加しないことを確認。

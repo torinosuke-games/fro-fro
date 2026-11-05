@@ -1,0 +1,933 @@
+[
+  {
+    "id": "math_g7_space_001",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "prism",
+      "sides": 5,
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "底面が五角形で、2つの底面が平行で合同な柱体の名前はどれですか。",
+    "answer": "五角柱",
+    "file": "01-math_g7_space_001.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": []
+    }
+  },
+  {
+    "id": "math_g7_space_002",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "prism",
+      "sides": 3,
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "三角柱の頂点は何個ありますか。",
+    "answer": "6",
+    "file": "02-math_g7_space_002.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": []
+    }
+  },
+  {
+    "id": "math_g7_space_006",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "prism",
+      "sides": 4,
+      "baseLabel": "底面積12cm²",
+      "heightLabel": "5cm",
+      "caption": "底面の辺の配置は模式図"
+    },
+    "question": "底面積が12cm²、高さが5cmの角柱の体積を、単位なしで答えなさい。",
+    "answer": "60",
+    "file": "03-math_g7_space_006.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "高さ",
+        "5cm",
+        "底面積12cm²"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_007",
+    "diagram": {
+      "kind": "mathGeometry",
+      "segments": [
+        [
+          150,
+          70,
+          150,
+          270
+        ],
+        [
+          150,
+          270,
+          390,
+          270
+        ],
+        [
+          390,
+          270,
+          390,
+          70
+        ],
+        [
+          390,
+          70,
+          150,
+          70
+        ]
+      ],
+      "labels": [
+        [
+          130,
+          180,
+          "軸",
+          24,
+          "end"
+        ]
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "長方形を、その1辺を軸として1回転させてできる立体はどれですか。",
+    "answer": "円柱",
+    "file": "04-math_g7_space_007.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "軸"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_008",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "pyramid",
+      "sides": 4,
+      "baseLabel": "底面積18cm²",
+      "heightLabel": "4cm",
+      "caption": "底面の辺の配置は模式図"
+    },
+    "question": "底面積が18cm²、高さが4cmの角{錐|すい}の体積を、単位なしで答えなさい。",
+    "answer": "24",
+    "file": "05-math_g7_space_008.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "高さ",
+        "4cm",
+        "底面積18cm²"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_009",
+    "diagram": {
+      "kind": "solid3d",
+      "study": true,
+      "large": true,
+      "shape": "cylinder",
+      "vertices": [],
+      "dimensions": [
+        6,
+        6,
+        5
+      ],
+      "viewDirections": [
+        "真上",
+        "正面"
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "円柱を底面が水平になるよう置きます。正面から見た立面図と真上から見た平面図の組はどれですか。",
+    "answer": "立面図は長方形、平面図は円",
+    "file": "06-math_g7_space_009.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "真上",
+        "正面"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_010",
+    "diagram": {
+      "kind": "solid3d",
+      "study": true,
+      "shape": "cylinder",
+      "vertices": [],
+      "dimensions": [
+        6,
+        6,
+        5
+      ],
+      "dimensionLabels": {
+        "radius": "3cm",
+        "height": "5cm"
+      },
+      "caption": "問題文の条件を表した図",
+      "large": true
+    },
+    "question": "半径3cm、高さ5cmの円柱の体積を、πを使い単位なしで答えなさい。",
+    "answer": "45π",
+    "file": "07-math_g7_space_010.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm",
+        "5cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_014",
+    "diagram": {
+      "kind": "solid3d",
+      "study": true,
+      "shape": "cylinder",
+      "vertices": [],
+      "dimensions": [
+        6,
+        6,
+        4
+      ],
+      "dimensionLabels": {
+        "radius": "3cm",
+        "height": "4cm"
+      },
+      "caption": "問題文の条件を表した図",
+      "large": true
+    },
+    "question": "半径3cm、高さ4cmの円柱の表面積を、πを使い単位なしで答えなさい。",
+    "answer": "42π",
+    "file": "08-math_g7_space_014.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm",
+        "4cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_011",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "cone",
+      "radius": 3,
+      "heightValue": 4,
+      "radiusLabel": "3cm",
+      "heightLabel": "4cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "底面の半径3cm、高さ4cmの円{錐|すい}の体積はどれですか。",
+    "answer": "12π",
+    "file": "09-math_g7_space_011.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm",
+        "高さ",
+        "4cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_012",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "sphere",
+      "radiusLabel": "2cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "半径2cmの球の体積を、πを使い単位なしで答えなさい。",
+    "answer": "32π/3",
+    "file": "10-math_g7_space_012.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "2cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_013",
+    "diagram": {
+      "kind": "solid3d",
+      "large": true,
+      "shape": "box",
+      "vertices": [
+        {
+          "vertex": "A",
+          "label": "A"
+        },
+        {
+          "vertex": "B",
+          "label": "B"
+        },
+        {
+          "vertex": "C",
+          "label": "C"
+        },
+        {
+          "vertex": "D",
+          "label": "D"
+        },
+        {
+          "vertex": "E",
+          "label": "E"
+        },
+        {
+          "vertex": "F",
+          "label": "F"
+        },
+        {
+          "vertex": "G",
+          "label": "G"
+        },
+        {
+          "vertex": "H",
+          "label": "H"
+        }
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "直方体ABCD−EFGHで、ABCDとEFGHが上下の面、AとE、BとF、CとG、DとHが対応する頂点です。辺ABとねじれの位置にある辺はどれですか。",
+    "answer": "CG",
+    "file": "11-math_g7_space_013.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_015",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "planeLine",
+      "labels": [
+        [
+          280,
+          185,
+          "P"
+        ]
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "ある直線が平面上の点Pを通り、その平面に垂直です。必ず成り立つものはどれですか。",
+    "answer": "平面内でPを通るすべての直線と垂直",
+    "file": "12-math_g7_space_015.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "P"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_016",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "cone",
+      "radius": 3,
+      "slant": 5,
+      "radiusLabel": "3cm",
+      "slantLabel": "5cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "底面の半径3cm、母線5cmの円{錐|すい}の表面積を、πを使い単位なしで答えなさい。",
+    "answer": "24π",
+    "file": "13-math_g7_space_016.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm",
+        "5cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_017",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "cone",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "円{錐|すい}の展開図の側面のおうぎ形で、弧の長さと等しいものはどれですか。",
+    "answer": "底面の円周",
+    "file": "14-math_g7_space_017.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": []
+    }
+  },
+  {
+    "id": "math_g7_space_018",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "sphere",
+      "radiusLabel": "3cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "半径3cmの球の表面積を、πを使い単位なしで答えなさい。",
+    "answer": "36π",
+    "file": "15-math_g7_space_018.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_019",
+    "diagram": {
+      "kind": "mathGeometry",
+      "segments": [
+        [
+          150,
+          65,
+          150,
+          270
+        ],
+        [
+          150,
+          270,
+          390,
+          270
+        ],
+        [
+          390,
+          270,
+          150,
+          65
+        ],
+        [
+          150,
+          250,
+          170,
+          250
+        ],
+        [
+          170,
+          250,
+          170,
+          270
+        ]
+      ],
+      "labels": [
+        [
+          130,
+          175,
+          "軸",
+          24,
+          "end"
+        ]
+      ],
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "直角三角形を、直角をはさむ1辺を軸に1回転してできる立体はどれですか。",
+    "answer": "円{錐|すい}",
+    "file": "16-math_g7_space_019.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "軸"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_020",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "cone",
+      "radius": 2,
+      "slant": 6,
+      "radiusLabel": "2cm",
+      "slantLabel": "6cm",
+      "caption": "問題文の条件を表した図",
+      "fullWidth": true
+    },
+    "question": "底面の半径2cm、母線6cmの円{錐|すい}があります。側面の展開図のおうぎ形の中心角を度数だけで答えなさい。",
+    "answer": "120",
+    "file": "17-math_g7_space_020.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "2cm",
+        "6cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_022",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "pyramid",
+      "sides": 4,
+      "baseSide": 6,
+      "heightValue": 5,
+      "heightLabel": "5cm",
+      "sideLabel": "6cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "底面が1辺6cmの正方形、高さ5cmの四角{錐|すい}の体積を、単位なしで答えなさい。",
+    "answer": "60",
+    "file": "18-math_g7_space_022.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "高さ",
+        "5cm",
+        "6cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_024",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "group",
+      "solids": [
+        {
+          "kind": "spatialFigure",
+          "shape": "cone",
+          "radius": 3,
+          "heightValue": 8,
+          "radiusLabel": "3cm",
+          "heightLabel": "8cm",
+          "fullWidth": true
+        },
+        {
+          "kind": "solid3d",
+          "study": true,
+          "large": true,
+          "shape": "cylinder",
+          "vertices": [],
+          "dimensions": [
+            6,
+            6,
+            4
+          ],
+          "notes": [
+            "底面積9π cm²"
+          ]
+        }
+      ],
+      "caption": "体積が等しい条件・未知の高さは模式図",
+      "stacked": true
+    },
+    "question": "半径3cm、高さ8cmの円{錐|すい}と、底面積9π cm²の円柱の体積が等しくなりました。円柱の高さを、単位なしで答えなさい。",
+    "answer": "8/3",
+    "file": "19-math_g7_space_024.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm",
+        "高さ",
+        "8cm",
+        "底面積9π cm²"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_026",
+    "diagram": {
+      "kind": "solid3d",
+      "shape": "box",
+      "large": true,
+      "vertices": [],
+      "dimensions": [
+        3,
+        4,
+        6
+      ],
+      "showLengths": true,
+      "unit": "cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "底面が3cmと4cmの長方形、高さ6cmの直方体について、表面積を単位なしで答えなさい。",
+    "answer": "108",
+    "file": "20-math_g7_space_026.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "横 3cm",
+        "たて 4cm",
+        "高さ",
+        "6cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_space_028",
+    "diagram": {
+      "kind": "spatialFigure",
+      "shape": "hemisphere",
+      "radiusLabel": "3cm",
+      "caption": "問題文の条件を表した図"
+    },
+    "question": "半径3cmの半球を切り口の円も含めて囲む表面積を、πを使い単位なしで答えなさい。",
+    "answer": "27π",
+    "file": "21-math_g7_space_028.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "3cm"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_data_010",
+    "diagram": {
+      "kind": "table",
+      "head": [
+        "階級",
+        "人数"
+      ],
+      "rows": [
+        [
+          "0以上10未満",
+          "3"
+        ],
+        [
+          "10以上20未満",
+          "7"
+        ],
+        [
+          "20以上30未満",
+          "5"
+        ]
+      ],
+      "caption": "問題文の資料を表した表"
+    },
+    "question": "度数分布表が「0以上10未満：3人、10以上20未満：7人、20以上30未満：5人」です。階級の幅はどれですか。",
+    "answer": "10",
+    "file": "22-math_g7_data_010.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "階級",
+        "人数",
+        "0以上10未満",
+        "3",
+        "10以上20未満",
+        "7",
+        "20以上30未満",
+        "5"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_data_012",
+    "diagram": {
+      "kind": "table",
+      "head": [
+        "階級",
+        "人数"
+      ],
+      "rows": [
+        [
+          "0以上10未満",
+          "2"
+        ],
+        [
+          "10以上20未満",
+          "5"
+        ],
+        [
+          "20以上30未満",
+          "3"
+        ]
+      ],
+      "caption": "問題文の資料を表した表"
+    },
+    "question": "表が「0以上10未満：2人、10以上20未満：5人、20以上30未満：3人」です。20未満の累積度数はどれですか。",
+    "answer": "7",
+    "file": "23-math_g7_data_012.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "階級",
+        "人数",
+        "0以上10未満",
+        "2",
+        "10以上20未満",
+        "5",
+        "20以上30未満",
+        "3"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_data_018",
+    "diagram": {
+      "kind": "table",
+      "head": [
+        "階級値",
+        "度数"
+      ],
+      "rows": [
+        [
+          "5",
+          "2"
+        ],
+        [
+          "15",
+          "4"
+        ],
+        [
+          "25",
+          "4"
+        ]
+      ],
+      "caption": "問題文の資料を表した表"
+    },
+    "question": "階級値5，15，25の度数がそれぞれ2，4，4です。平均値の近似値を求める式はどれですか。",
+    "answer": "(5×2＋15×4＋25×4)/10",
+    "file": "24-math_g7_data_018.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "階級値",
+        "度数",
+        "5",
+        "2",
+        "15",
+        "4",
+        "25",
+        "4"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_data_019",
+    "diagram": {
+      "kind": "table",
+      "head": [
+        "階級値",
+        "度数"
+      ],
+      "rows": [
+        [
+          "5",
+          "2"
+        ],
+        [
+          "15",
+          "4"
+        ],
+        [
+          "25",
+          "4"
+        ]
+      ],
+      "caption": "問題文の資料を表した表"
+    },
+    "question": "階級値5，15，25、度数2，4，4の表から、平均値の近似値を答えなさい。",
+    "answer": "17",
+    "file": "25-math_g7_data_019.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "階級値",
+        "度数",
+        "5",
+        "2",
+        "15",
+        "4",
+        "25",
+        "4"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_data_022",
+    "diagram": {
+      "kind": "table",
+      "head": [
+        "組",
+        "全体の人数",
+        "達成人数"
+      ],
+      "rows": [
+        [
+          "A",
+          "20",
+          "8"
+        ],
+        [
+          "B",
+          "30",
+          "9"
+        ]
+      ],
+      "caption": "問題文の資料を表した表"
+    },
+    "question": "A組20人中8人、B組30人中9人が目標を達成しました。達成した割合について正しいものはどれですか。",
+    "answer": "A組の方が高い",
+    "file": "26-math_g7_data_022.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "組",
+        "全体の人数",
+        "達成人数",
+        "A",
+        "20",
+        "8",
+        "B",
+        "30",
+        "9"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_data_028",
+    "diagram": {
+      "kind": "table",
+      "head": [
+        "階級",
+        "人数"
+      ],
+      "rows": [
+        [
+          "10未満",
+          "4"
+        ],
+        [
+          "10以上20未満",
+          "8"
+        ],
+        [
+          "20以上30未満",
+          "8"
+        ]
+      ],
+      "caption": "問題文の資料を表した表"
+    },
+    "question": "20人の度数分布表で、10未満が4人、10以上20未満が8人、20以上30未満が8人です。中央値について正しいものはどれですか。",
+    "answer": "10以上20未満の階級に入るが正確な値は決められない",
+    "file": "27-math_g7_data_028.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "階級",
+        "人数",
+        "10未満",
+        "4",
+        "10以上20未満",
+        "8",
+        "20以上30未満",
+        "8"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_data_029",
+    "diagram": {
+      "kind": "table",
+      "head": [
+        "人数",
+        "平均記録"
+      ],
+      "rows": [
+        [
+          "10",
+          "12"
+        ],
+        [
+          "15",
+          "16"
+        ]
+      ],
+      "caption": "問題文の資料を表した表"
+    },
+    "question": "ある10人の平均記録は12、別の15人の平均記録は16でした。25人全体の平均記録を答えなさい。",
+    "answer": "14.4",
+    "file": "28-math_g7_data_029.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "人数",
+        "平均記録",
+        "10",
+        "12",
+        "15",
+        "16"
+      ]
+    }
+  }
+]

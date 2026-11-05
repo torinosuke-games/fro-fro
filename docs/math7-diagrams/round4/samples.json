@@ -180,22 +180,6 @@
     }
   },
   {
-    "id": "math_g7_proportion_018",
-    "diagram": {
-      "kind": "quantityBars",
-      "rows": [
-        {
-          "label": "道のり1200m",
-          "cells": [
-            "速さ：毎分x m",
-            "時間：y分"
-          ]
-        }
-      ],
-      "caption": "道のりと速さ・時間の条件"
-    }
-  },
-  {
     "id": "math_g7_proportion_019",
     "diagram": {
       "kind": "image",
@@ -711,14 +695,14 @@
       "kind": "coordinate",
       "math7": true,
       "xRange": [
-        -8,
-        8
+        -6,
+        6
       ],
       "yRange": [
-        -8,
-        8
+        -6,
+        6
       ],
-      "tickStep": 4,
+      "tickStep": 2,
       "points": [
         {
           "x": 2,
@@ -731,7 +715,8 @@
       "notes": [
         "右へ3、上へ4"
       ],
-      "caption": "問題文の条件を表した図"
+      "caption": "問題文の条件を表した図",
+      "gridStep": 1
     }
   },
   {

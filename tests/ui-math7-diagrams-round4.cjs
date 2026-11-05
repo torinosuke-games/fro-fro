@@ -37,8 +37,8 @@ const samples=require(path.join(out,'samples.json'));
  }
  assert.deepEqual(errors,[]);await browser.close();
  fs.writeFileSync(path.join(out,'inspection.json'),JSON.stringify(report,null,2)+'\n');
- let md='# 中1数学 図の登録 第4回\n\n比例と反比例17問・平面図形21問。390px幅の実際の登録済み問題画面。答えは照合用で、図中に解答を追加しない。文字量は模式図。与条件のみを表示。\n\n再撮影：`FF_TEST_URL=http://127.0.0.1:8765/ node tests/ui-math7-diagrams-round4.cjs`。設定はsamples.json、検査結果はinspection.json。\n\n|種類|問題ID|問題文|答え（照合用）|スクリーンショット|\n|---|---|---|---|---|\n';
+ let md='# 中1数学 図の登録 第4回\n\n比例と反比例16問・平面図形21問。390px幅の実際の登録済み問題画面。答えは照合用で、図中に解答を追加しない。文字量は模式図。与条件のみを表示。\n\n再撮影：`FF_TEST_URL=http://127.0.0.1:8765/ node tests/ui-math7-diagrams-round4.cjs`。設定はsamples.json、検査結果はinspection.json。\n\n|種類|問題ID|問題文|答え（照合用）|スクリーンショット|\n|---|---|---|---|---|\n';
  for(const r of report)md+='|'+[r.diagram.kind,r.id,r.question.replaceAll('|','\\|'),r.answer.replaceAll('|','\\|'),'[図]('+r.file+')'].join('|')+'|\n';
- md+='\n全38問の目視、文字見切れ・横はみ出し、座標の条件、答えの点・結論を追加しないことを確認。\n';
+ md+='\n全37問の目視、文字見切れ・横はみ出し、座標の条件、答えの点・結論を追加しないことを確認。\n';
  fs.writeFileSync(path.join(out,'LIST.md'),md);console.log('PASS: '+report.length+' samples at 390px');
 })().catch(e=>{console.error(e);process.exit(1)});

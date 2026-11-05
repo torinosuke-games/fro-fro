@@ -2,10 +2,10 @@
 module.exports=({test,assert})=>{
  const fs=require('fs'),path=require('path'),{load,LOGIC_FILES_WITH_FIXES}=require('../lib/loader'),{renderer}=require('../lib/diagram-dom');const c=load(LOGIC_FILES_WITH_FIXES),qs=c.QUESTION_BANK.filter(q=>q.collection==='course_ma7_1'),all=require('../../docs/math7-diagrams/round4/samples.json'),r3=require('../../docs/math7-diagrams/round3/samples.json'),render=renderer(fs.readFileSync(path.join(__dirname,'../../js/svg/learning.js'),'utf8'));
  test('中1図の登録4：比例17・平面21、種類・計画一致、形の問題と次単元は図なし',()=>{
-  const added=qs.filter(q=>['proportion','plane'].includes(q.unit)&&q.diagram);assert.equal(added.length,38);assert.equal(added.filter(q=>q.unit==='proportion').length,17);assert.equal(added.filter(q=>q.unit==='plane').length,21);
-  const counts=added.reduce((o,q)=>(o[q.diagram.kind]=(o[q.diagram.kind]||0)+1,o),{});assert.deepEqual(counts,{coordinate:13,table:4,quantityBars:1,image:3,mathGeometry:11,circle:6});
-  const plan=fs.readFileSync(path.join(__dirname,'../../PICTURE_PLAN_MATH7.md'),'utf8'),ids=plan.split('\n').filter(l=>l.startsWith('|M7-')).flatMap(l=>[...l.matchAll(/`(math_g7_(?:proportion|plane)_\d+)`/g)].map(m=>m[1]));assert.deepEqual(added.map(q=>q.id).sort(),ids.sort());assert.equal(qs.filter(q=>q.diagram).length,76);
-  for(const n of ['010','012'])assert.ok(!qs.find(q=>q.id==='math_g7_proportion_'+n).diagram);assert.ok(qs.filter(q=>['space','data'].includes(q.unit)).every(q=>!q.diagram));
+  const added=qs.filter(q=>['proportion','plane'].includes(q.unit)&&q.diagram);assert.equal(added.length,37);assert.equal(added.filter(q=>q.unit==='proportion').length,16);assert.equal(added.filter(q=>q.unit==='plane').length,21);
+  const counts=added.reduce((o,q)=>(o[q.diagram.kind]=(o[q.diagram.kind]||0)+1,o),{});assert.deepEqual(counts,{coordinate:13,table:4,image:3,mathGeometry:11,circle:6});
+  const plan=fs.readFileSync(path.join(__dirname,'../../PICTURE_PLAN_MATH7.md'),'utf8'),ids=plan.split('\n').filter(l=>l.startsWith('|M7-')).flatMap(l=>[...l.matchAll(/`(math_g7_(?:proportion|plane)_\d+)`/g)].map(m=>m[1]));assert.deepEqual(added.map(q=>q.id).sort(),ids.sort());assert.equal(qs.filter(q=>q.diagram).length,103);
+  for(const n of ['010','012'])assert.ok(!qs.find(q=>q.id==='math_g7_proportion_'+n).diagram);
  });
  test('中1図の登録4：本文の点のみ、移動後の点・作図の最後の線・解答の式なし',()=>{
   const by=id=>all.find(s=>s.id.endsWith(id)).diagram;
