@@ -221,9 +221,10 @@ FF.texts.renewal.dailyNote=FF.texts.renewal.dailyNote.replace('☆はランダ�
     // 符号つきの分数は、教科書どおり負の符号を分数の前に出す（分子・分母の一方だけが負のとき。判断540）
     var num=m[1],den=m[2],sign=/^[−－-]/,neg=sign.test(num)!==sign.test(den);
     num=num.replace(sign,'');den=den.replace(sign,'');
-    if(neg)fragment.appendChild(U.el('span',{class:'g6-fraction-sign',text:'−'}));
     var fraction=document.createElement('span');fraction.className='g6-fraction';fraction.setAttribute('role','math');fraction.setAttribute('aria-label',(neg?'マイナス':'')+den+'分の'+num);fraction.dataset.value=m[0];
     [['g6-numerator',num],['g6-fraction-slash','/'],['g6-denominator',den]].forEach(function(part){var span=document.createElement('span');span.className=part[0];span.textContent=part[1];span.setAttribute('aria-hidden','true');fraction.appendChild(span);});
+    // 符号と分数を1つにまとめ、符号を分数の横線の高さにそろえる
+    if(neg){var signed=U.el('span',{class:'g6-signed-fraction'});signed.appendChild(U.el('span',{class:'g6-fraction-sign',text:'−',attrs:{'aria-hidden':'true'}}));signed.appendChild(fraction);fraction=signed;}
     fragment.appendChild(fraction);last=re.lastIndex;
    }
    if(last){fragment.appendChild(document.createTextNode(value.slice(last)));node.replaceWith(fragment);}
