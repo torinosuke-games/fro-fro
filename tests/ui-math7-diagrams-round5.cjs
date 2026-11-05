@@ -1,4 +1,4 @@
-// 第1回の見本だけを実行時に注入。問題ファイルは変更しない。
+// 登録済みの第5回28図を設定と照合し、390px幅の実画面で撮影する。
 const {chromium}=require(process.env.FF_PLAYWRIGHT_MODULE||'playwright');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {pathToFileURL}=require('node:url');
@@ -42,6 +42,7 @@ const samples=require(path.join(out,'samples.json'));
  fs.writeFileSync(path.join(out,'inspection.json'),JSON.stringify(report,null,2)+'\n');
  let md='# 中1数学 図の登録 第5回\n\n空間図形21問・資料の活用7問。390px幅の実際の登録済み問題画面。答えは照合用で、図中に解答を追加しない。文字量は模式図。与条件のみを表示。\n\n再撮影：`FF_TEST_URL=http://127.0.0.1:8765/ node tests/ui-math7-diagrams-round5.cjs`。設定はsamples.json、検査結果はinspection.json。\n\n|種類|問題ID|問題文|答え（照合用）|スクリーンショット|\n|---|---|---|---|---|\n';
  for(const r of report)md+='|'+[r.diagram.kind,r.id,r.question.replaceAll('|','\\|'),r.answer.replaceAll('|','\\|'),'[図]('+r.file+')'].join('|')+'|\n';
+ md+='\n判断546：回転前の辺を上下に延長した1点鎖線の軸、円柱へ向かう真上・正面の矢印、楕円内で半径線の上に置く共通の寸法ラベル、合同な正五角形の上下の面を修正。全28問を撮り直した。\n';
  md+='\n縦長の図は画面の高さを増やし、図全体を撮影。全28問の目視、文字見切れ・横はみ出し、座標の条件、答えの点・結論を追加しないことを確認。\n';
  fs.writeFileSync(path.join(out,'LIST.md'),md);console.log('PASS: '+report.length+' samples at 390px');
 })().catch(e=>{console.error(e);process.exit(1)});

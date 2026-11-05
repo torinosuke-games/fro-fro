@@ -29,6 +29,8 @@
   }else{
    var nodes=[],h=245;
    function add(){Array.prototype.forEach.call(arguments,function(n){nodes.push(n);});}
+   function drawViewArrow(x1,y1,x2,y2){var dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy),ux=dx/len,uy=dy/len;add(line(x1,y1,x2,y2),path('M'+(x2-ux*12-uy*7)+','+(y2-uy*12+ux*7)+' L'+x2+','+y2+' L'+(x2-ux*12+uy*7)+','+(y2-uy*12-ux*7)));}
+   function radiusDimension(x,y,rx,label){add(line(x,y,x+rx,y),text(x+rx*.38,y-8,label,22));}
    function clearText(x,y,t,size,anchor){var label=text(x,y,t,size,anchor);label.setAttribute('stroke','#fff');label.setAttribute('stroke-width','8');label.setAttribute('stroke-linejoin','round');label.setAttribute('paint-order','stroke');return label;}
    function circle(x,y,r,fill){return S('circle',{cx:x,cy:y,r:r,fill:fill||pale,stroke:blue,'stroke-width':2});}
    function icon(x,y,item,color){
@@ -46,6 +48,7 @@
     (d.circles||[]).forEach(function(c){add(circle(c[0],c[1],c[2],'none'));});
     (d.arcs||[]).forEach(function(a){var p=point(a[0],a[1],a[2],a[3]),q=point(a[0],a[1],a[2],a[4]);add(path('M'+p.join(',')+' A'+a[2]+','+a[2]+' 0 '+(Math.abs(a[4]-a[3])>180?1:0)+' '+(a[4]>a[3]?0:1)+' '+q.join(',')));});
     (d.points||[]).forEach(function(p){add(circle(p[0],p[1],4,ink));});
+    if(d.axis)add(line(d.axis.x,d.axis.y1,d.axis.x,d.axis.y2,ink,'12 5 2 5'),text(d.axis.x-18,(d.axis.y1+d.axis.y2)/2,'軸',24,'end'));
     (d.labels||[]).forEach(function(t){add(text(t[0],t[1],t[2],t[3]||24,t[4]));});
    }else if(d.kind==='quantityBars'){
     // 教科書型の帯と全体のかっこ。幅は模式的、与条件だけをラベルにする。
@@ -91,18 +94,18 @@
     }else if(d.shape==='sphere'||d.shape==='hemisphere'){
      if(d.shape==='sphere')add(circle(cx,205,r,'none'));
      else add(path('M'+(cx-r)+',205 A'+r+','+r+' 0 0 1 '+(cx+r)+',205'));
-     add(S('ellipse',{cx:cx,cy:205,rx:r,ry:ry,fill:'none',stroke:blue,'stroke-width':3,'stroke-dasharray':d.shape==='sphere'?'6 6':null}),line(cx,205,cx+r,205));
-     if(d.radiusLabel)add(clearText(cx+65,190,d.radiusLabel,26));
+     add(S('ellipse',{cx:cx,cy:205,rx:r,ry:ry,fill:'none',stroke:blue,'stroke-width':3,'stroke-dasharray':d.shape==='sphere'?'6 6':null}));
+     if(d.radiusLabel)radiusDimension(cx,205,r,d.radiusLabel);else add(line(cx,205,cx+r,205));
     }else if(d.shape==='cone'){
      var radius=d.radius||1,ht=d.heightValue|| (d.slant?Math.sqrt(d.slant*d.slant-radius*radius):radius*1.8),sc=Math.min(150/radius,230/ht);if(d.fullWidth){sc=150/radius;baseY=Math.max(315,ht*sc+80);h=baseY+100;}r=radius*sc;ry=r*.32;var apex=baseY-ht*sc;
      add(path('M'+(cx-r)+','+baseY+' L'+cx+','+apex+' L'+(cx+r)+','+baseY),path('M'+(cx-r)+','+baseY+' A'+r+','+ry+' 0 0 0 '+(cx+r)+','+baseY),path('M'+(cx-r)+','+baseY+' A'+r+','+ry+' 0 0 1 '+(cx+r)+','+baseY,'none',blue,'6 6'));
-     if(d.radiusLabel)add(line(cx,baseY,cx+r,baseY),text(cx+r/2,baseY+38,d.radiusLabel,24));
+     if(d.radiusLabel)radiusDimension(cx,baseY,r,d.radiusLabel);
      if(d.heightLabel)add(line(cx,apex,cx,baseY,blue,'6 6'),clearText(cx-12,baseY-ry-36,'高さ',22,'end'),clearText(cx-12,baseY-ry-10,d.heightLabel,22,'end'));
      if(d.slantLabel)add(text(cx+r/2+22,(apex+baseY)/2,d.slantLabel,24,'start'));
     }else if(d.shape==='prism'||d.shape==='pyramid'){
-     var n=d.sides||4,rr=d.shape==='pyramid'?150*Math.sqrt(2):150,topY=95,base=315;if(d.baseSide&&d.heightValue){var sc=Math.min(150*Math.sqrt(2)/(d.baseSide/Math.sqrt(2)),250/d.heightValue);rr=d.baseSide/Math.sqrt(2)*sc;topY=base-d.heightValue*sc;}var ps=Array.from({length:n},function(_,i){var a=((d.shape==='pyramid'?45:90)+i*360/n)*Math.PI/180;return [cx+rr*Math.cos(a),base+rr*.32*Math.sin(a)];});
-     ps.forEach(function(p,i){var q=ps[(i+1)%n];add(line(p[0],p[1],q[0],q[1],blue,i>=Math.floor(n/2)?'6 6':null));});
-     ps.forEach(function(p,i){var q=d.shape==='prism'?[p[0],p[1]-200]:[cx,topY];add(line(p[0],p[1],q[0],q[1],blue,i>n/2?'6 6':null));});
+     var n=d.sides||4,rr=d.shape==='pyramid'?150*Math.sqrt(2):150,topY=95,base=315;if(d.baseSide&&d.heightValue){var sc=Math.min(150*Math.sqrt(2)/(d.baseSide/Math.sqrt(2)),250/d.heightValue);rr=d.baseSide/Math.sqrt(2)*sc;topY=base-d.heightValue*sc;}var ps=Array.from({length:n},function(_,i){var a=((d.shape==='pyramid'?45:90)+i*360/n)*Math.PI/180;return [cx+rr*Math.cos(a),base+rr*(d.baseProjection||.32)*Math.sin(a)];});
+     ps.forEach(function(p,i){var q=ps[(i+1)%n];add(line(p[0],p[1],q[0],q[1],blue,(d.regularBase?(p[1]+q[1])/2<base:i>=Math.floor(n/2))?'6 6':null));});
+     ps.forEach(function(p,i){var q=d.shape==='prism'?[p[0],p[1]-200]:[cx,topY];add(line(p[0],p[1],q[0],q[1],blue,(d.regularBase?p[1]<base:i>n/2)?'6 6':null));});
      if(d.shape==='prism')add(path('M'+ps.map(function(p){return [p[0],p[1]-200].join(',');}).join(' L')+' Z'));
      if(d.heightLabel){var heightX=d.shape==='prism'?cx+170:cx;add(line(heightX,d.shape==='prism'?115:topY,heightX,base,blue,'6 6'),clearText(d.shape==='prism'?heightX+12:cx-12,base-(d.shape==='prism'?100:90),'高さ',22,d.shape==='prism'?'start':'end'),clearText(d.shape==='prism'?heightX+12:cx-12,base-(d.shape==='prism'?73:63),d.heightLabel,22,d.shape==='prism'?'start':'end'));}
      if(d.baseLabel)add(text(cx,405,d.baseLabel,24));
@@ -584,7 +587,7 @@
      edge3([x,0,0],[x,dep,0],'6 6');edge3([x,dep,0],[x+w,dep,0],'6 6');edge3([x,dep,0],[x,dep,ht],'6 6');
     }
     if(d.shape==='cylinder'){
-     if(d.large){sc=Math.min(156/(w/2),260/ht);ox=260-(w/2+dep*.3)*sc;oy=390;h=450;}
+     if(d.large){sc=Math.min(156/(w/2),260/ht);ox=260-(w/2+dep*.3)*sc;oy=d.viewArrows?500:390;h=d.viewArrows?560:450;}
      var center=xyz(w/2,dep/2,0),rx=w*sc/2,ry=dep*sc*.18,ty=center[1]-ht*sc;
      add(S('ellipse',{cx:center[0],cy:ty,rx:rx,ry:ry,fill:pale,stroke:blue,'stroke-width':3}),line(center[0]-rx,ty,center[0]-rx,center[1]),line(center[0]+rx,ty,center[0]+rx,center[1]),path('M'+(center[0]-rx)+','+center[1]+' A'+rx+','+ry+' 0 0 0 '+(center[0]+rx)+','+center[1]),path('M'+(center[0]-rx)+','+center[1]+' A'+rx+','+ry+' 0 0 1 '+(center[0]+rx)+','+center[1],'none',blue,'6 6'));
     }else if(d.shape==='prism'){
@@ -612,8 +615,9 @@
      if(d.water!==undefined){var level=d.water+(d.rise||0);face3([[0,0,level],[w,0,level],[w,dep,level],[0,dep,level]],pale);face3([[0,0,0],[w,0,0],[w,0,level],[0,0,level]],pale);if(d.rise)edge3([0,0,d.water],[w,0,d.water],'6 6',orange);edge3([0,0,0],[0,0,ht]);edge3([w,0,0],[w,0,ht]);if(d.stone){var p=xyz(w*.55,dep*.1,level*.35);add(S('ellipse',{cx:p[0],cy:p[1],rx:18,ry:13,fill:orange,stroke:ink,'stroke-width':2}));}}
      if(d.block){var x=405,y=225,a=32;add(path('M'+x+','+y+' h'+a+' l20,-12 v-'+a+' h-'+a+' l-20,12 Z',pale),path('M'+x+','+(y-a)+' h'+a+' v'+a+' M'+(x+a)+','+(y-a)+' l20,-12'));}
     }
-    if(d.shape==='cylinder'&&d.viewDirections){add(line(d.large?center[0]+rx+40:center[0],32,center[0],ty-10),text(d.large?center[0]+rx+20:center[0]+20,30,d.viewDirections[0],23,'start'),line(440,center[1]-30,center[0]+rx+10,center[1]-30),text(440,center[1]+5,d.viewDirections[1],23));}
-    if(d.shape==='cylinder'&&d.dimensionLabels){if(d.dimensionLabels.radius)add(line(center[0],ty,center[0]+rx,ty),clearText(center[0]+rx/2,ty-12,d.dimensionLabels.radius,26));if(d.dimensionLabels.height)add(text(center[0]+rx+18,(ty+center[1])/2,d.dimensionLabels.height,24,'start'));}
+    if(d.shape==='cylinder'&&d.viewArrows){var front=(ty+center[1])/2;drawViewArrow(center[0],70,center[0],ty-ry*.5);drawViewArrow(500,front,center[0]+rx+10,front);add(text(center[0],45,d.viewDirections[0],24),text(510,front-20,d.viewDirections[1],22,'end'));}
+    else if(d.shape==='cylinder'&&d.viewDirections){add(line(d.large?center[0]+rx+40:center[0],32,center[0],ty-10),text(d.large?center[0]+rx+20:center[0]+20,30,d.viewDirections[0],23,'start'),line(440,center[1]-30,center[0]+rx+10,center[1]-30),text(440,center[1]+5,d.viewDirections[1],23));}
+    if(d.shape==='cylinder'&&d.dimensionLabels){if(d.dimensionLabels.radius)radiusDimension(center[0],ty,rx,d.dimensionLabels.radius);if(d.dimensionLabels.height)add(text(center[0]+rx+18,(ty+center[1])/2,d.dimensionLabels.height,24,'start'));}
     (d.notes||[]).forEach(function(t,i){add(text(260,(d.large?h-15:282)+i*42,t,25));});
    }else if(d.kind==='band'&&d.rows){
     h=d.rows.reduce(function(sum,r){return sum+110+r.labels.filter(Boolean).length*42;},10);var yy=20;

@@ -6552,7 +6552,9 @@ window.QUESTION_BANK.push(
     "kind": "spatialFigure",
     "shape": "prism",
     "sides": 5,
-    "caption": "問題文の条件を表した図"
+    "caption": "問題文の条件を表した図",
+    "regularBase": true,
+    "baseProjection": 0.55
   },
   "subject": "math",
   "gradeLevel": 7,
@@ -6696,12 +6698,6 @@ window.QUESTION_BANK.push(
     "segments": [
       [
         150,
-        70,
-        150,
-        270
-      ],
-      [
-        150,
         270,
         390,
         270
@@ -6719,16 +6715,13 @@ window.QUESTION_BANK.push(
         70
       ]
     ],
-    "labels": [
-      [
-        130,
-        180,
-        "軸",
-        24,
-        "end"
-      ]
-    ],
-    "caption": "問題文の条件を表した図"
+    "labels": [],
+    "caption": "問題文の条件を表した図",
+    "axis": {
+      "x": 150,
+      "y1": 25,
+      "y2": 310
+    }
   },
   "subject": "math",
   "gradeLevel": 7,
@@ -6791,10 +6784,11 @@ window.QUESTION_BANK.push(
       5
     ],
     "viewDirections": [
-      "真上",
-      "正面"
+      "真上から",
+      "正面から"
     ],
-    "caption": "問題文の条件を表した図"
+    "caption": "問題文の条件を表した図",
+    "viewArrows": true
   },
   "subject": "math",
   "gradeLevel": 7,
@@ -7131,12 +7125,6 @@ window.QUESTION_BANK.push(
     "segments": [
       [
         150,
-        65,
-        150,
-        270
-      ],
-      [
-        150,
         270,
         390,
         270
@@ -7160,16 +7148,13 @@ window.QUESTION_BANK.push(
         270
       ]
     ],
-    "labels": [
-      [
-        130,
-        175,
-        "軸",
-        24,
-        "end"
-      ]
-    ],
-    "caption": "問題文の条件を表した図"
+    "labels": [],
+    "caption": "問題文の条件を表した図",
+    "axis": {
+      "x": 150,
+      "y1": 25,
+      "y2": 310
+    }
   },
   "subject": "math",
   "gradeLevel": 7,
