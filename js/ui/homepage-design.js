@@ -218,8 +218,12 @@ FF.texts.renewal.dailyNote=FF.texts.renewal.dailyNote.replace('☆はランダ�
    var value=node.nodeValue,re=/(?<![\dA-Za-z./])([−－-]?(?:[0-9０-９]+(?:[.．][0-9０-９]+)?[a-zA-Z]?|[a-zA-Z])|[（(][^()（）/\n]{1,40}[)）])\/([−－-]?(?:[1-9１-９][0-9０-９]*|[a-zA-Z])|[（(][^()（）/\n]{1,40}[)）])(?![\d/])/g,m,last=0,fragment=document.createDocumentFragment();
    while((m=re.exec(value))){
     fragment.appendChild(document.createTextNode(value.slice(last,m.index)));
-    var fraction=document.createElement('span');fraction.className='g6-fraction';fraction.setAttribute('role','math');fraction.setAttribute('aria-label',m[2]+'分の'+m[1]);fraction.dataset.value=m[0];
-    [['g6-numerator',m[1]],['g6-fraction-slash','/'],['g6-denominator',m[2]]].forEach(function(part){var span=document.createElement('span');span.className=part[0];span.textContent=part[1];span.setAttribute('aria-hidden','true');fraction.appendChild(span);});
+    // 符号つきの分数は、教科書どおり負の符号を分数の前に出す（分子・分母の一方だけが負のとき。判断540）
+    var num=m[1],den=m[2],sign=/^[−－-]/,neg=sign.test(num)!==sign.test(den);
+    num=num.replace(sign,'');den=den.replace(sign,'');
+    if(neg)fragment.appendChild(U.el('span',{class:'g6-fraction-sign',text:'−'}));
+    var fraction=document.createElement('span');fraction.className='g6-fraction';fraction.setAttribute('role','math');fraction.setAttribute('aria-label',(neg?'マイナス':'')+den+'分の'+num);fraction.dataset.value=m[0];
+    [['g6-numerator',num],['g6-fraction-slash','/'],['g6-denominator',den]].forEach(function(part){var span=document.createElement('span');span.className=part[0];span.textContent=part[1];span.setAttribute('aria-hidden','true');fraction.appendChild(span);});
     fragment.appendChild(fraction);last=re.lastIndex;
    }
    if(last){fragment.appendChild(document.createTextNode(value.slice(last)));node.replaceWith(fragment);}
