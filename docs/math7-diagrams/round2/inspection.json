@@ -36,33 +36,6 @@
     }
   },
   {
-    "id": "math_g7_expression_011",
-    "diagram": {
-      "kind": "quantityBars",
-      "caption": "文字量の幅は模式図",
-      "rows": [
-        {
-          "label": "道のり",
-          "cells": [
-            "時速v kmでt時間"
-          ]
-        }
-      ]
-    },
-    "question": "時速v kmでt時間進む道のりを表す式はどれですか。",
-    "answer": "vt",
-    "file": "02-math_g7_expression_011.png",
-    "geometry": {
-      "width": 332,
-      "overflow": false,
-      "clipped": [],
-      "text": [
-        "道のり",
-        "時速v kmでt時間"
-      ]
-    }
-  },
-  {
     "id": "math_g7_expression_012",
     "diagram": {
       "kind": "quantityBars",
@@ -105,18 +78,10 @@
     "id": "math_g7_expression_013",
     "diagram": {
       "kind": "quantityBars",
-      "caption": "文字量の幅は模式図",
-      "rows": [
-        {
-          "label": "定価 a円",
-          "cells": [
-            ""
-          ]
-        }
-      ],
-      "notes": [
-        "2割引き"
-      ]
+      "rows": [],
+      "discount": true,
+      "totalLabel": "定価 a円",
+      "caption": "定価と値引きの部分"
     },
     "question": "定価a円の商品を2割引きで買います。代金を表す式はどれですか。",
     "answer": "0.8a",
@@ -127,8 +92,7 @@
       "clipped": [],
       "text": [
         "定価 a円",
-        "",
-        "2割引き"
+        "値引き"
       ]
     }
   },
@@ -167,25 +131,24 @@
     "id": "math_g7_expression_017",
     "diagram": {
       "kind": "quantityBars",
-      "caption": "文字量の幅は模式図",
       "rows": [
         {
           "label": "全体 x冊",
           "cells": [
-            "3冊の束の例",
-            "ほかの束",
+            "3冊",
+            "3冊",
+            "…",
             "余り2冊"
           ],
           "parts": [
-            4,
-            3,
+            2,
+            2,
+            2,
             3
           ]
         }
       ],
-      "notes": [
-        "束の数は示していない"
-      ]
+      "caption": "束の配置は模式図"
     },
     "question": "x冊のノートを3冊ずつ束にすると、2冊余りました。束の数を表す式はどれですか。",
     "answer": "（x−2）/3",
@@ -196,10 +159,10 @@
       "clipped": [],
       "text": [
         "全体 x冊",
-        "3冊の束の例",
-        "ほかの束",
-        "余り2冊",
-        "束の数は示していない"
+        "3冊",
+        "3冊",
+        "…",
+        "余り2冊"
       ]
     }
   },
@@ -265,27 +228,37 @@
     "id": "math_g7_expression_022",
     "diagram": {
       "kind": "quantityBars",
-      "caption": "文字量の幅は模式図",
+      "aligned": true,
+      "guide": 465,
       "rows": [
         {
-          "label": "材料代",
+          "label": "1000円",
           "cells": [
-            "a円",
-            "a円",
-            "a円"
-          ]
+            ""
+          ],
+          "width": 410
         },
         {
-          "label": "送料",
+          "label": "支払額と差",
           "cells": [
-            "120円"
-          ]
+            "a円",
+            "a円",
+            "a円",
+            "送料120円",
+            "差"
+          ],
+          "parts": [
+            2,
+            2,
+            2,
+            3,
+            2
+          ],
+          "width": 410,
+          "dashed": 4
         }
       ],
-      "notes": [
-        "材料代1000円未満の場合",
-        "予算1000円"
-      ]
+      "caption": "長さは模式図・差の部分は点線"
     },
     "question": "文化祭で1個a円の材料を3個買います。材料代の合計が1000円以上なら送料は無料、それより少なければ送料120円がかかります。材料代が1000円未満のとき、支払額と1000円との差（1000円から支払額を引いた額）を式で表しなさい。",
     "answer": "880−3a",
@@ -295,14 +268,14 @@
       "overflow": false,
       "clipped": [],
       "text": [
-        "材料代",
+        "1000円",
+        "",
+        "支払額と差",
         "a円",
         "a円",
         "a円",
-        "送料",
-        "120円",
-        "材料代1000円未満の場合",
-        "予算1000円"
+        "送料120円",
+        "差"
       ]
     }
   },

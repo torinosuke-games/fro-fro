@@ -1,0 +1,467 @@
+[
+  {
+    "id": "math_g7_equation_011",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [
+        {
+          "label": "合計600円",
+          "cells": [
+            "x円",
+            "x円",
+            "x円",
+            "120円"
+          ],
+          "parts": [
+            2,
+            2,
+            2,
+            2
+          ]
+        }
+      ],
+      "caption": "文字量の幅は模式図"
+    },
+    "question": "1冊x円のノート3冊と120円のペンで合計600円です。方程式はどれですか。",
+    "answer": "3x＋120＝600",
+    "file": "01-math_g7_equation_011.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "合計600円",
+        "x円",
+        "x円",
+        "x円",
+        "120円"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_019",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [
+        {
+          "label": "全体41本",
+          "cells": [
+            "1人3本ずつ（x人）",
+            "余り5本"
+          ],
+          "parts": [
+            7,
+            3
+          ]
+        }
+      ],
+      "caption": "文字量の幅は模式図"
+    },
+    "question": "生徒に鉛筆を1人3本ずつ配ると5本余ります。生徒x人、鉛筆41本のときの方程式はどれですか。",
+    "answer": "3x＋5＝41",
+    "file": "02-math_g7_equation_019.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "全体41本",
+        "1人3本ずつ（x人）",
+        "余り5本"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_021",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [
+        {
+          "label": "道のり6km",
+          "cells": [
+            "時速4kmでx時間"
+          ]
+        }
+      ],
+      "caption": "文字量の幅は模式図"
+    },
+    "question": "時速4 kmでx時間歩くと6 km進みました。方程式はどれですか。",
+    "answer": "4x＝6",
+    "file": "03-math_g7_equation_021.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "道のり6km",
+        "時速4kmでx時間"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_023",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [
+        {
+          "label": "兄の4年後",
+          "cells": [
+            "今 x歳",
+            "4年分"
+          ],
+          "parts": [
+            3,
+            1
+          ]
+        },
+        {
+          "label": "妹の4年後の1.5倍",
+          "cells": [
+            "今12歳",
+            "4年分",
+            "半分"
+          ],
+          "parts": [
+            3,
+            1,
+            2
+          ]
+        }
+      ],
+      "caption": "文字量の幅は模式図",
+      "aligned": true,
+      "notes": [
+        "4年後の兄は妹の1.5倍"
+      ]
+    },
+    "question": "今12歳の妹と今x歳の兄がいます。4年後に兄は妹の年齢の1.5倍です。方程式はどれですか。",
+    "answer": "x＋4＝1.5(12＋4)",
+    "file": "04-math_g7_equation_023.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "兄の4年後",
+        "今 x歳",
+        "4年分",
+        "妹の4年後の1.5倍",
+        "今12歳",
+        "4年分",
+        "半分",
+        "4年後の兄は妹の1.5倍"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_024",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [],
+      "discount": true,
+      "totalLabel": "定価 x円",
+      "paymentLabel": "支払い640円",
+      "caption": "20%引きの値引きと支払い"
+    },
+    "question": "定価x円の商品を20%引きで買うと640円です。xの値を答えなさい。",
+    "answer": "800",
+    "file": "05-math_g7_equation_024.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "定価 x円",
+        "値引き",
+        "支払い640円"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_025",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [
+        {
+          "label": "4冊ずつ×x人",
+          "cells": [
+            ""
+          ],
+          "notes": [
+            "6冊不足"
+          ]
+        },
+        {
+          "label": "3冊ずつ×x人",
+          "cells": [
+            ""
+          ],
+          "notes": [
+            "9冊余り"
+          ]
+        }
+      ],
+      "caption": "文字量の幅は模式図",
+      "comparison": true
+    },
+    "question": "同じノートを1人4冊ずつ配ると6冊足りず、3冊ずつなら9冊余ります。人数をx人とした方程式はどれですか。",
+    "answer": "4x−6＝3x＋9",
+    "file": "06-math_g7_equation_025.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "ノートの総数",
+        "4冊ずつ×x人",
+        "6冊不足",
+        "3冊ずつ×x人",
+        "9冊余り"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_026",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [
+        {
+          "label": "5枚ずつ×x人",
+          "cells": [
+            "配る分",
+            "2枚余り"
+          ],
+          "parts": [
+            200,
+            100
+          ],
+          "width": 300
+        },
+        {
+          "label": "6枚ずつ×x人",
+          "cells": [
+            "用意してある分",
+            "4枚不足"
+          ],
+          "parts": [
+            300,
+            100
+          ],
+          "width": 400,
+          "dashed": 1
+        }
+      ],
+      "caption": "文字量の幅は模式図",
+      "aligned": true,
+      "guide": 355
+    },
+    "question": "同じ枚数のカードを、1人5枚ずつ配ると2枚余り、6枚ずつなら4枚足りません。人数をx人として、xの値を答えなさい。",
+    "answer": "6",
+    "file": "07-math_g7_equation_026.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "5枚ずつ×x人",
+        "配る分",
+        "2枚余り",
+        "6枚ずつ×x人",
+        "用意してある分",
+        "4枚不足"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_027",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [
+        {
+          "label": "弟 毎分60m",
+          "cells": [
+            "先行5分",
+            "兄の出発後 x分"
+          ],
+          "parts": [
+            1,
+            3
+          ]
+        },
+        {
+          "label": "兄 毎分80m",
+          "cells": [
+            "出発後 x分"
+          ]
+        }
+      ],
+      "caption": "文字量の幅は模式図",
+      "aligned": true,
+      "notes": [
+        "同じ道で追いつく"
+      ]
+    },
+    "question": "弟が毎分60mで出発し、5分後に兄が毎分80mで同じ道を追います。兄が出発してx分後に追いつく式はどれですか。",
+    "answer": "80x＝60(x＋5)",
+    "file": "08-math_g7_equation_027.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "弟 毎分60m",
+        "先行5分",
+        "兄の出発後 x分",
+        "兄 毎分80m",
+        "出発後 x分",
+        "同じ道で追いつく"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_030",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [
+        {
+          "label": "初め x L",
+          "cells": [
+            "全体"
+          ]
+        },
+        {
+          "label": "使う順序",
+          "cells": [
+            "1/3を使う",
+            "さらに4L"
+          ]
+        }
+      ],
+      "caption": "文字量の幅は模式図",
+      "notes": [
+        "残る水は初めの半分"
+      ]
+    },
+    "question": "容器にある水の1/3を使い、さらに4L使うと、初めの半分が残りました。初めの量をx Lとして、xの値を答えなさい。",
+    "answer": "24",
+    "file": "09-math_g7_equation_030.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "初め x L",
+        "全体",
+        "使う順序",
+        "1/3を使う",
+        "さらに4L",
+        "残る水は初めの半分"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_calc_026",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [
+        {
+          "label": "兄：はじめ x円",
+          "cells": [
+            "渡した後",
+            "200円"
+          ],
+          "parts": [
+            300,
+            80
+          ],
+          "width": 380
+        },
+        {
+          "label": "弟",
+          "cells": [
+            "はじめの所持金",
+            "200円"
+          ],
+          "parts": [
+            220,
+            80
+          ],
+          "width": 300
+        }
+      ],
+      "caption": "文字量の幅は模式図",
+      "aligned": true,
+      "guide": 355,
+      "notes": [
+        "合計1800円",
+        "兄から弟へ200円・その後は同額"
+      ]
+    },
+    "question": "兄と弟の所持金は合計1800円。兄が弟に200円渡すと同額です。兄の初めの所持金をx円とした式はどれですか。",
+    "answer": "x−200＝1800−x＋200",
+    "file": "10-math_g7_equation_calc_026.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "兄：はじめ x円",
+        "渡した後",
+        "200円",
+        "弟",
+        "はじめの所持金",
+        "200円",
+        "合計1800円",
+        "兄から弟へ200円・その後は同額"
+      ]
+    }
+  },
+  {
+    "id": "math_g7_equation_calc_027",
+    "diagram": {
+      "kind": "quantityBars",
+      "rows": [
+        {
+          "label": "行き 毎分60m",
+          "cells": [
+            "帰りと同じ時間",
+            "長い5分"
+          ],
+          "parts": [
+            3,
+            1
+          ]
+        },
+        {
+          "label": "帰り 毎分80m",
+          "cells": [
+            "帰りの時間"
+          ],
+          "width": 285
+        }
+      ],
+      "caption": "文字量の幅は模式図",
+      "aligned": true,
+      "guide": 340,
+      "notes": [
+        "同じ道の距離 x m"
+      ]
+    },
+    "question": "家から駅まで同じ道を、行きは毎分60m、帰りは毎分80mで歩くと、行きが5分長くかかりました。距離をx mとして、xの値を答えなさい。",
+    "answer": "1200",
+    "file": "11-math_g7_equation_calc_027.png",
+    "geometry": {
+      "width": 332,
+      "overflow": false,
+      "clipped": [],
+      "text": [
+        "行き 毎分60m",
+        "帰りと同じ時間",
+        "長い5分",
+        "帰り 毎分80m",
+        "帰りの時間",
+        "同じ道の距離 x m"
+      ]
+    }
+  }
+]

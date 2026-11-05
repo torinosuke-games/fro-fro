@@ -22,21 +22,6 @@
     }
   },
   {
-    "id": "math_g7_expression_011",
-    "diagram": {
-      "kind": "quantityBars",
-      "caption": "文字量の幅は模式図",
-      "rows": [
-        {
-          "label": "道のり",
-          "cells": [
-            "時速v kmでt時間"
-          ]
-        }
-      ]
-    }
-  },
-  {
     "id": "math_g7_expression_012",
     "diagram": {
       "kind": "quantityBars",
@@ -62,18 +47,10 @@
     "id": "math_g7_expression_013",
     "diagram": {
       "kind": "quantityBars",
-      "caption": "文字量の幅は模式図",
-      "rows": [
-        {
-          "label": "定価 a円",
-          "cells": [
-            ""
-          ]
-        }
-      ],
-      "notes": [
-        "2割引き"
-      ]
+      "rows": [],
+      "discount": true,
+      "totalLabel": "定価 a円",
+      "caption": "定価と値引きの部分"
     }
   },
   {
@@ -97,25 +74,24 @@
     "id": "math_g7_expression_017",
     "diagram": {
       "kind": "quantityBars",
-      "caption": "文字量の幅は模式図",
       "rows": [
         {
           "label": "全体 x冊",
           "cells": [
-            "3冊の束の例",
-            "ほかの束",
+            "3冊",
+            "3冊",
+            "…",
             "余り2冊"
           ],
           "parts": [
-            4,
-            3,
+            2,
+            2,
+            2,
             3
           ]
         }
       ],
-      "notes": [
-        "束の数は示していない"
-      ]
+      "caption": "束の配置は模式図"
     }
   },
   {
@@ -154,27 +130,37 @@
     "id": "math_g7_expression_022",
     "diagram": {
       "kind": "quantityBars",
-      "caption": "文字量の幅は模式図",
+      "aligned": true,
+      "guide": 465,
       "rows": [
         {
-          "label": "材料代",
+          "label": "1000円",
           "cells": [
-            "a円",
-            "a円",
-            "a円"
-          ]
+            ""
+          ],
+          "width": 410
         },
         {
-          "label": "送料",
+          "label": "支払額と差",
           "cells": [
-            "120円"
-          ]
+            "a円",
+            "a円",
+            "a円",
+            "送料120円",
+            "差"
+          ],
+          "parts": [
+            2,
+            2,
+            2,
+            3,
+            2
+          ],
+          "width": 410,
+          "dashed": 4
         }
       ],
-      "notes": [
-        "材料代1000円未満の場合",
-        "予算1000円"
-      ]
+      "caption": "長さは模式図・差の部分は点線"
     }
   },
   {

@@ -51,7 +51,16 @@
     // 教科書型の帯と全体のかっこ。幅は模式的、与条件だけをラベルにする。
     function brace(x,y,w,label){add(path('M'+x+','+(y+10)+' Q'+x+','+y+' '+(x+12)+','+y+' H'+(x+w/2-12)+' Q'+(x+w/2)+','+y+' '+(x+w/2)+','+(y-12)+' Q'+(x+w/2)+','+y+' '+(x+w/2+12)+','+y+' H'+(x+w-12)+' Q'+(x+w)+','+y+' '+(x+w)+','+(y+10)),text(x+w/2,y-25,label,24));}
     h=d.comparison?340:90+d.rows.length*160;
-    if(d.deviations){
+    if(d.aligned){
+     h=115+d.rows.length*160;
+     var guide=d.guide||435;add(line(guide,60,guide,h-70,ink,'6 6'));
+     d.rows.forEach(function(r,j){var y=100+j*160,x=55,parts=r.parts||r.cells.map(function(){return 1;}),sum=parts.reduce(function(a,b){return a+b;},0),width=r.width||380;
+      brace(x,y-30,width,r.label);
+      r.cells.forEach(function(t,i){var w=width*parts[i]/sum;add(S('rect',{x:x,y:y,width:w,height:42,fill:'none',stroke:blue,'stroke-width':2,'stroke-dasharray':r.dashed===i?'6 6':null}),text(x+w/2,y+29,t,23));x+=w;});
+     });
+    }else if(d.discount){
+     h=230;brace(55,65,410,d.totalLabel);for(var i=0;i<10;i++)add(S('rect',{x:55+i*41,y:100,width:41,height:42,fill:i<2?pale:'none',stroke:blue,'stroke-width':2}));add(text(96,180,'値引き',24));if(d.paymentLabel)add(text(301,180,d.paymentLabel,24));
+    }else if(d.deviations){
      h=360;var base=230;add(line(55,base,465,base),text(55,base+30,'基準70点',24,'start'));
      d.deviations.forEach(function(v,i){var x=160+i*120,y=base-v*18;add(S('rect',{x:x-20,y:Math.min(base,y),width:40,height:Math.abs(v)*18,fill:pale,stroke:blue,'stroke-width':2}),text(x,v>0?y-14:y+32,(v>0?'＋':'−')+Math.abs(v),26));});
     }else if(d.ropeJoin){

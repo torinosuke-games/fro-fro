@@ -1,4 +1,4 @@
-// 中1数学 全10単元280問、正負の数・計算と文字式に図29点を登録・レビュー待ち。
+// 中1数学 全10単元280問、正負の数・計算と文字式に図39点を登録・レビュー待ち。
 window.QUESTION_BANK.push(
 {
   "id": "math_g7_signed_numbers_001",
@@ -1617,6 +1617,7 @@ window.QUESTION_BANK.push(
       }
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1658,18 +1659,7 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_expression_011",
-  "diagram": {
-    "kind": "quantityBars",
-    "caption": "文字量の幅は模式図",
-    "rows": [
-      {
-        "label": "道のり",
-        "cells": [
-          "時速v kmでt時間"
-        ]
-      }
-    ]
-  },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1712,6 +1702,7 @@ window.QUESTION_BANK.push(
       "5人で等しく分ける"
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1732,19 +1723,12 @@ window.QUESTION_BANK.push(
   "id": "math_g7_expression_013",
   "diagram": {
     "kind": "quantityBars",
-    "caption": "文字量の幅は模式図",
-    "rows": [
-      {
-        "label": "定価 a円",
-        "cells": [
-          ""
-        ]
-      }
-    ],
-    "notes": [
-      "2割引き"
-    ]
+    "rows": [],
+    "discount": true,
+    "totalLabel": "定価 a円",
+    "caption": "定価と値引きの部分"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1800,6 +1784,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "二桁の整数の位"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1843,26 +1828,26 @@ window.QUESTION_BANK.push(
   "id": "math_g7_expression_017",
   "diagram": {
     "kind": "quantityBars",
-    "caption": "文字量の幅は模式図",
     "rows": [
       {
         "label": "全体 x冊",
         "cells": [
-          "3冊の束の例",
-          "ほかの束",
+          "3冊",
+          "3冊",
+          "…",
           "余り2冊"
         ],
         "parts": [
-          4,
-          3,
+          2,
+          2,
+          2,
           3
         ]
       }
     ],
-    "notes": [
-      "束の数は示していない"
-    ]
+    "caption": "束の配置は模式図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1917,6 +1902,7 @@ window.QUESTION_BANK.push(
       }
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1971,6 +1957,7 @@ window.QUESTION_BANK.push(
       }
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -1996,28 +1983,39 @@ window.QUESTION_BANK.push(
   "id": "math_g7_expression_022",
   "diagram": {
     "kind": "quantityBars",
-    "caption": "文字量の幅は模式図",
+    "aligned": true,
+    "guide": 465,
     "rows": [
       {
-        "label": "材料代",
+        "label": "1000円",
         "cells": [
-          "a円",
-          "a円",
-          "a円"
-        ]
+          ""
+        ],
+        "width": 410
       },
       {
-        "label": "送料",
+        "label": "支払額と差",
         "cells": [
-          "120円"
-        ]
+          "a円",
+          "a円",
+          "a円",
+          "送料120円",
+          "差"
+        ],
+        "parts": [
+          2,
+          2,
+          2,
+          3,
+          2
+        ],
+        "width": 410,
+        "dashed": 4
       }
     ],
-    "notes": [
-      "材料代1000円未満の場合",
-      "予算1000円"
-    ]
+    "caption": "長さは模式図・差の部分は点線"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -2128,6 +2126,7 @@ window.QUESTION_BANK.push(
       }
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -2155,6 +2154,7 @@ window.QUESTION_BANK.push(
     "rows": [],
     "ropeJoin": true
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -2199,6 +2199,7 @@ window.QUESTION_BANK.push(
       }
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression",
@@ -2713,6 +2714,7 @@ window.QUESTION_BANK.push(
     ],
     "caption": "長方形の辺の文字量を表した模式図"
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression_calc",
@@ -2796,6 +2798,7 @@ window.QUESTION_BANK.push(
       }
     ]
   },
+
   "subject": "math",
   "gradeLevel": 7,
   "unit": "expression_calc",
@@ -3048,6 +3051,27 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_011",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "合計600円",
+        "cells": [
+          "x円",
+          "x円",
+          "x円",
+          "120円"
+        ],
+        "parts": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    ],
+    "caption": "文字量の幅は模式図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3212,6 +3236,23 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_019",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "全体41本",
+        "cells": [
+          "1人3本ずつ（x人）",
+          "余り5本"
+        ],
+        "parts": [
+          7,
+          3
+        ]
+      }
+    ],
+    "caption": "文字量の幅は模式図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3253,6 +3294,18 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_021",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "道のり6km",
+        "cells": [
+          "時速4kmでx時間"
+        ]
+      }
+    ],
+    "caption": "文字量の幅は模式図"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3294,6 +3347,40 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_023",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "兄の4年後",
+        "cells": [
+          "今 x歳",
+          "4年分"
+        ],
+        "parts": [
+          3,
+          1
+        ]
+      },
+      {
+        "label": "妹の4年後の1.5倍",
+        "cells": [
+          "今12歳",
+          "4年分",
+          "半分"
+        ],
+        "parts": [
+          3,
+          1,
+          2
+        ]
+      }
+    ],
+    "caption": "文字量の幅は模式図",
+    "aligned": true,
+    "notes": [
+      "4年後の兄は妹の1.5倍"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3317,6 +3404,14 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_024",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [],
+    "discount": true,
+    "totalLabel": "定価 x円",
+    "paymentLabel": "支払い640円",
+    "caption": "20%引きの値引きと支払い"
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3335,6 +3430,31 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_025",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "4冊ずつ×x人",
+        "cells": [
+          ""
+        ],
+        "notes": [
+          "6冊不足"
+        ]
+      },
+      {
+        "label": "3冊ずつ×x人",
+        "cells": [
+          ""
+        ],
+        "notes": [
+          "9冊余り"
+        ]
+      }
+    ],
+    "caption": "文字量の幅は模式図",
+    "comparison": true
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3358,6 +3478,39 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_026",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "5枚ずつ×x人",
+        "cells": [
+          "配る分",
+          "2枚余り"
+        ],
+        "parts": [
+          200,
+          100
+        ],
+        "width": 300
+      },
+      {
+        "label": "6枚ずつ×x人",
+        "cells": [
+          "用意してある分",
+          "4枚不足"
+        ],
+        "parts": [
+          300,
+          100
+        ],
+        "width": 400,
+        "dashed": 1
+      }
+    ],
+    "caption": "文字量の幅は模式図",
+    "aligned": true,
+    "guide": 355
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3376,6 +3529,33 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_027",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "弟 毎分60m",
+        "cells": [
+          "先行5分",
+          "兄の出発後 x分"
+        ],
+        "parts": [
+          1,
+          3
+        ]
+      },
+      {
+        "label": "兄 毎分80m",
+        "cells": [
+          "出発後 x分"
+        ]
+      }
+    ],
+    "caption": "文字量の幅は模式図",
+    "aligned": true,
+    "notes": [
+      "同じ道で追いつく"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -3440,6 +3620,28 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_030",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "初め x L",
+        "cells": [
+          "全体"
+        ]
+      },
+      {
+        "label": "使う順序",
+        "cells": [
+          "1/3を使う",
+          "さらに4L"
+        ]
+      }
+    ],
+    "caption": "文字量の幅は模式図",
+    "notes": [
+      "残る水は初めの半分"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation",
@@ -4009,6 +4211,42 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_calc_026",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "兄：はじめ x円",
+        "cells": [
+          "渡した後",
+          "200円"
+        ],
+        "parts": [
+          300,
+          80
+        ],
+        "width": 380
+      },
+      {
+        "label": "弟",
+        "cells": [
+          "はじめの所持金",
+          "200円"
+        ],
+        "parts": [
+          220,
+          80
+        ],
+        "width": 300
+      }
+    ],
+    "caption": "文字量の幅は模式図",
+    "aligned": true,
+    "guide": 355,
+    "notes": [
+      "合計1800円",
+      "兄から弟へ200円・その後は同額"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation_calc",
@@ -4032,6 +4270,35 @@ window.QUESTION_BANK.push(
 },
 {
   "id": "math_g7_equation_calc_027",
+  "diagram": {
+    "kind": "quantityBars",
+    "rows": [
+      {
+        "label": "行き 毎分60m",
+        "cells": [
+          "帰りと同じ時間",
+          "長い5分"
+        ],
+        "parts": [
+          3,
+          1
+        ]
+      },
+      {
+        "label": "帰り 毎分80m",
+        "cells": [
+          "帰りの時間"
+        ],
+        "width": 285
+      }
+    ],
+    "caption": "文字量の幅は模式図",
+    "aligned": true,
+    "guide": 340,
+    "notes": [
+      "同じ道の距離 x m"
+    ]
+  },
   "subject": "math",
   "gradeLevel": 7,
   "unit": "equation_calc",
