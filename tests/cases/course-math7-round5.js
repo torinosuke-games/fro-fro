@@ -9,6 +9,6 @@ module.exports=({test,assert})=>{
  test('第5回：既存資料の見本を保持し、新作は各14択14書き',()=>{
  const old=c.QUESTION_BANK.filter(q=>q.subject==='math'&&q.gradeLevel===7&&q.unit==='data'&&q.collection!=='course_ma7_1');assert.equal(old.length,1);assert.equal(old[0].id,'math_g7_data_001');
  for(const u of ['space','data'])for(const type of ['choice','input'])assert.equal(qs.filter(q=>q.unit===u&&q.answerType===type).length,14);
- const names=new Set();for(const q of qs.filter(q=>['space','data'].includes(q.unit))){assert.equal(q.hints.length,1);assert.ok(!names.has(q.hints[0]),q.id);names.add(q.hints[0]);assert.ok(!q.diagram);}
+ const names=new Set();for(const q of qs.filter(q=>['space','data'].includes(q.unit))){assert.equal(q.hints.length,1);assert.ok(!names.has(q.hints[0]),q.id);names.add(q.hints[0]);}
  });
 };

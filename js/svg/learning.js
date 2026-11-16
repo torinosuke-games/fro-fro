@@ -29,6 +29,8 @@
   }else{
    var nodes=[],h=245;
    function add(){Array.prototype.forEach.call(arguments,function(n){nodes.push(n);});}
+   function drawViewArrow(x1,y1,x2,y2){var dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy),ux=dx/len,uy=dy/len;add(line(x1,y1,x2,y2),path('M'+(x2-ux*12-uy*7)+','+(y2-uy*12+ux*7)+' L'+x2+','+y2+' L'+(x2-ux*12+uy*7)+','+(y2-uy*12-ux*7)));}
+   function radiusDimension(x,y,rx,label){add(line(x,y,x+rx,y),text(x+rx*.38,y-8,label,22));}
    function clearText(x,y,t,size,anchor){var label=text(x,y,t,size,anchor);label.setAttribute('stroke','#fff');label.setAttribute('stroke-width','8');label.setAttribute('stroke-linejoin','round');label.setAttribute('paint-order','stroke');return label;}
    function circle(x,y,r,fill){return S('circle',{cx:x,cy:y,r:r,fill:fill||pale,stroke:blue,'stroke-width':2});}
    function icon(x,y,item,color){
@@ -39,7 +41,110 @@
     else if(item==='bread')add(S('rect',{x:x-14,y:y-12,width:28,height:24,rx:9,fill:pale,stroke:blue,'stroke-width':2}),line(x-4,y-6,x-7,y+4),line(x+5,y-6,x+2,y+4));
     else add(circle(x,y,9,orange),path('M'+(x-9)+','+y+' l-7,-7 v14 Z M'+(x+9)+','+y+' l7,-7 v14 Z',pale));
    }
-   if(['japanMap','earthScene','terrain','facility','disaster','culture','industry'].indexOf(d.kind)>=0){
+   // 中1の見本用。明示した条件だけを描き、補助線や解答は生成しない。
+   if(d.kind==='mathGeometry'){
+    h=d.height||320;
+    (d.segments||[]).forEach(function(e){add(line(e[0],e[1],e[2],e[3],blue,e[4]));});
+    (d.circles||[]).forEach(function(c){add(circle(c[0],c[1],c[2],'none'));});
+    (d.arcs||[]).forEach(function(a){var p=point(a[0],a[1],a[2],a[3]),q=point(a[0],a[1],a[2],a[4]);add(path('M'+p.join(',')+' A'+a[2]+','+a[2]+' 0 '+(Math.abs(a[4]-a[3])>180?1:0)+' '+(a[4]>a[3]?0:1)+' '+q.join(',')));});
+    (d.points||[]).forEach(function(p){add(circle(p[0],p[1],4,ink));});
+    if(d.axis)add(line(d.axis.x,d.axis.y1,d.axis.x,d.axis.y2,ink,'12 5 2 5'),text(d.axis.x-18,(d.axis.y1+d.axis.y2)/2,'軸',24,'end'));
+    (d.labels||[]).forEach(function(t){add(text(t[0],t[1],t[2],t[3]||24,t[4]));});
+   }else if(d.kind==='quantityBars'){
+    // 教科書型の帯と全体のかっこ。幅は模式的、与条件だけをラベルにする。
+    function brace(x,y,w,label){add(path('M'+x+','+(y+10)+' Q'+x+','+y+' '+(x+12)+','+y+' H'+(x+w/2-12)+' Q'+(x+w/2)+','+y+' '+(x+w/2)+','+(y-12)+' Q'+(x+w/2)+','+y+' '+(x+w/2+12)+','+y+' H'+(x+w-12)+' Q'+(x+w)+','+y+' '+(x+w)+','+(y+10)),text(x+w/2,y-25,label,24));}
+    function underbrace(x,y,w,label){add(path('M'+x+','+(y-10)+' Q'+x+','+y+' '+(x+12)+','+y+' H'+(x+w/2-12)+' Q'+(x+w/2)+','+y+' '+(x+w/2)+','+(y+12)+' Q'+(x+w/2)+','+y+' '+(x+w/2+12)+','+y+' H'+(x+w-12)+' Q'+(x+w)+','+y+' '+(x+w)+','+(y-10)),text(x+w/2,y+43,label,24));}
+    h=d.comparison?340:90+d.rows.length*160;
+    if(d.aligned){
+     h=115+d.rows.length*160;
+     var guide=d.guide||435;add(line(guide,60,guide,h-70,ink,'6 6'));
+     d.rows.forEach(function(r,j){var y=100+j*160,x=55,parts=r.parts||r.cells.map(function(){return 1;}),sum=parts.reduce(function(a,b){return a+b;},0),width=r.width||380;
+      brace(x,y-30,width,r.label);
+      r.cells.forEach(function(t,i){var w=width*parts[i]/sum;add(S('rect',{x:x,y:y,width:w,height:42,fill:'none',stroke:blue,'stroke-width':2,'stroke-dasharray':r.dashed===i?'6 6':null}),text(x+w/2,y+29,t,23));x+=w;});
+      if(r.underBrace){var before=parts.slice(0,r.underBrace.index).reduce(function(a,b){return a+b;},0);underbrace(55+width*before/sum,y+65,width*parts[r.underBrace.index]/sum,r.underBrace.label);}
+     });
+    }else if(d.discount){
+     h=230;brace(55,65,410,d.totalLabel);for(var i=0;i<10;i++)add(S('rect',{x:55+i*41,y:100,width:41,height:42,fill:i<2?pale:'none',stroke:blue,'stroke-width':2}));if(d.subBrackets){h=260;underbrace(55,158,82,'値引き');underbrace(137,158,328,d.paymentLabel);}else{add(text(96,180,'値引き',24));if(d.paymentLabel)add(text(301,180,d.paymentLabel,24));}
+    }else if(d.deviations){
+     h=360;var base=230;add(line(55,base,465,base),text(55,base+30,'基準70点',24,'start'));
+     d.deviations.forEach(function(v,i){var x=160+i*120,y=base-v*18;add(S('rect',{x:x-20,y:Math.min(base,y),width:40,height:Math.abs(v)*18,fill:pale,stroke:blue,'stroke-width':2}),text(x,v>0?y-14:y+32,(v>0?'＋':'−')+Math.abs(v),26));});
+    }else if(d.ropeJoin){
+     h=250;brace(50,65,420,'つないだひも');
+     for(var i=0;i<5;i++){var x=50+i*80;add(S('rect',{x:x,y:110,width:100,height:40,fill:'none',stroke:blue,'stroke-width':2}),text(x+50,100,'a cm',24));if(i<4)add(S('rect',{x:x+80,y:110,width:20,height:40,fill:pale,stroke:blue,'stroke-width':2}),text(x+90,190,'2cm',23));}
+    }else if(d.comparison){
+     var totalX=355;brace(55,65,300,'ノートの総数');
+     add(line(totalX,75,totalX,310,ink,'6 6'));
+     d.rows.forEach(function(r,i){var y=110+i*135,w=i?210:300;add(S('rect',{x:55,y:y,width:w,height:38,fill:'none',stroke:blue,'stroke-width':2}),text(i?160:250,y-14,r.label,25));
+      var from=i?265:355,to=i?355:445;add(S('rect',{x:from,y:y,width:to-from,height:38,fill:'#fff',stroke:blue,'stroke-width':2,'stroke-dasharray':i?null:'6 6'}),text((from+to)/2,y+73,r.notes[0],23));
+     });
+    }else{
+     d.rows.forEach(function(r,j){var y=90+j*160,parts=r.parts||r.cells.map(function(){return 1;}),sum=parts.reduce(function(a,b){return a+b;},0),x=55;
+      var width=r.width||410;brace(55,y-25,width,r.label||'合計');
+      r.cells.forEach(function(t,i){var w=width*parts[i]/sum;add(S('rect',{x:x,y:y,width:w,height:42,fill:'none',stroke:blue,'stroke-width':2}),text(x+w/2,y+29,t,24));x+=w;});
+      if(r.underBrace){var before=parts.slice(0,r.underBrace.index).reduce(function(a,b){return a+b;},0);underbrace(55+width*before/sum,y+65,width*parts[r.underBrace.index]/sum,r.underBrace.label);}
+     });
+    }
+    (d.notes||[]).forEach(function(t,i){add(text(260,h-12+i*38,t,23));});if(d.notes)h+=d.notes.length*38;
+   }else if(d.kind==='spatialFigure'){
+    // 投影の長さは radius / height / slant に比例。面積指定や未知量は模式図。
+    h=420;var cx=245,baseY=315,r=150,ry=48;
+    if(d.solids){
+     var offset=0;d.solids.forEach(function(s,i){var sub=render(s),sv=sub.querySelector('svg');if(sv){add(S('g',{transform:d.stacked?'translate(0,'+offset+')':'translate('+(i*260)+',0) scale(.5)'},Array.prototype.slice.call(sv.childNodes)));if(d.stacked)offset+=Number(sv.getAttribute('viewBox').split(' ')[3])+20;}});
+     h=d.stacked?offset:220;
+    }else if(d.shape==='sphere'||d.shape==='hemisphere'){
+     if(d.shape==='sphere')add(circle(cx,205,r,'none'));
+     else add(path('M'+(cx-r)+',205 A'+r+','+r+' 0 0 1 '+(cx+r)+',205'));
+     add(S('ellipse',{cx:cx,cy:205,rx:r,ry:ry,fill:'none',stroke:blue,'stroke-width':3,'stroke-dasharray':d.shape==='sphere'?'6 6':null}));
+     if(d.radiusLabel)radiusDimension(cx,205,r,d.radiusLabel);else add(line(cx,205,cx+r,205));
+    }else if(d.shape==='cone'){
+     var radius=d.radius||1,ht=d.heightValue|| (d.slant?Math.sqrt(d.slant*d.slant-radius*radius):radius*1.8),sc=Math.min(150/radius,230/ht);if(d.fullWidth){sc=150/radius;baseY=Math.max(315,ht*sc+80);h=baseY+100;}r=radius*sc;ry=r*.32;var apex=baseY-ht*sc;
+     add(path('M'+(cx-r)+','+baseY+' L'+cx+','+apex+' L'+(cx+r)+','+baseY),path('M'+(cx-r)+','+baseY+' A'+r+','+ry+' 0 0 0 '+(cx+r)+','+baseY),path('M'+(cx-r)+','+baseY+' A'+r+','+ry+' 0 0 1 '+(cx+r)+','+baseY,'none',blue,'6 6'));
+     if(d.radiusLabel)radiusDimension(cx,baseY,r,d.radiusLabel);
+     if(d.heightLabel)add(line(cx,apex,cx,baseY,blue,'6 6'),clearText(cx-12,baseY-ry-36,'高さ',22,'end'),clearText(cx-12,baseY-ry-10,d.heightLabel,22,'end'));
+     if(d.slantLabel)add(text(cx+r/2+22,(apex+baseY)/2,d.slantLabel,24,'start'));
+    }else if(d.shape==='prism'||d.shape==='pyramid'){
+     var n=d.sides||4,rr=d.shape==='pyramid'?150*Math.sqrt(2):150,topY=95,base=315;if(d.baseSide&&d.heightValue){var sc=Math.min(150*Math.sqrt(2)/(d.baseSide/Math.sqrt(2)),250/d.heightValue);rr=d.baseSide/Math.sqrt(2)*sc;topY=base-d.heightValue*sc;}var ps=Array.from({length:n},function(_,i){var a=((d.shape==='pyramid'?45:90)+i*360/n)*Math.PI/180;return [cx+rr*Math.cos(a),base+rr*(d.baseProjection||.32)*Math.sin(a)];});
+     ps.forEach(function(p,i){var q=ps[(i+1)%n];add(line(p[0],p[1],q[0],q[1],blue,(d.regularBase?(p[1]+q[1])/2<base:i>=Math.floor(n/2))?'6 6':null));});
+     ps.forEach(function(p,i){var q=d.shape==='prism'?[p[0],p[1]-200]:[cx,topY];add(line(p[0],p[1],q[0],q[1],blue,(d.regularBase?p[1]<base:i>n/2)?'6 6':null));});
+     if(d.shape==='prism')add(path('M'+ps.map(function(p){return [p[0],p[1]-200].join(',');}).join(' L')+' Z'));
+     if(d.heightLabel){var heightX=d.shape==='prism'?cx+170:cx;add(line(heightX,d.shape==='prism'?115:topY,heightX,base,blue,'6 6'),clearText(d.shape==='prism'?heightX+12:cx-12,base-(d.shape==='prism'?100:90),'高さ',22,d.shape==='prism'?'start':'end'),clearText(d.shape==='prism'?heightX+12:cx-12,base-(d.shape==='prism'?73:63),d.heightLabel,22,d.shape==='prism'?'start':'end'));}
+     if(d.baseLabel)add(text(cx,405,d.baseLabel,24));
+     if(d.sideLabel)add(text(cx,base+rr*.23+34,d.sideLabel,24));
+    }else if(d.shape==='planeLine'){
+     add(path('M100,210 L340,210 L420,140 L180,140 Z'),line(260,50,260,175),line(260,175,260,290,blue,'6 6'),circle(260,175,4,ink));
+    }
+    (d.labels||[]).forEach(function(t){add(text(t[0],t[1],t[2],24));});
+    (d.notes||[]).forEach(function(t,i){add(text(260,h-15+i*38,t,23));});if(d.notes)h+=d.notes.length*38;
+   }else if(d.kind==='coordinate'&&d.math7){
+    h=450;var xr=d.xRange,yr=d.yRange,scale=Math.min(360/(xr[1]-xr[0]),320/(yr[1]-yr[0]));
+    var left=(520-(xr[1]-xr[0])*scale)/2,bottom=370;
+    function mx(x){return left+(x-xr[0])*scale;}function my(y){return bottom-(y-yr[0])*scale;}
+    var tick=d.tickStep||1,gridTick=d.gridStep||tick;
+    for(var x=xr[0];x<=xr[1]+1e-8;x+=gridTick){add(line(mx(x),my(yr[0]),mx(x),my(yr[1]),'#dcedf6'));if(x!==0&&Math.abs(x/tick-Math.round(x/tick))<1e-7){var shift=(d.points||[]).some(function(p){return Math.abs(mx(p.x)-mx(x))<12&&Math.abs(my(p.y)-(my(0)+19))<16;})?-12:26;add(text(mx(x),my(0)+shift,String(x).replace('-','−'),19));}}
+    for(var y=yr[0];y<=yr[1]+1e-8;y+=gridTick){add(line(mx(xr[0]),my(y),mx(xr[1]),my(y),'#dcedf6'));if(y!==0&&!(y<0&&Math.abs(y)<=tick+1e-7)&&Math.abs(y/tick-Math.round(y/tick))<1e-7)add(text(mx(0)-13,my(y)+6,String(y).replace('-','−'),19,'end'));}
+    add(line(mx(xr[0]),my(0),mx(xr[1]),my(0)),line(mx(0),my(yr[0]),mx(0),my(yr[1])),text(mx(xr[1])+20,my(0)+8,'x',24),text(mx(0),my(yr[1])-15,'y',24),text(mx(0)+12,my(0)+26,'O',20));
+    // クリップ外・不連続点で必ず分割。x=0 をまたぐ反比例は独立した線にする。
+    (d.curves||[]).forEach(function(c){var ps=[],prev=null;function flush(){if(ps.length>1)add(S('polyline',{points:ps.join(' '),fill:'none',stroke:blue,'stroke-width':3}));ps=[];}
+     for(var i=0;i<=800;i++){var x=xr[0]+(xr[1]-xr[0])*i/800,y=c.power===-1?c.a/x:c.a*x+(c.b||0);if(!Number.isFinite(y)||y<yr[0]||y>yr[1]||c.power===-1&&prev!==null&&prev*x<=0)flush();if(Number.isFinite(y)&&y>=yr[0]&&y<=yr[1])ps.push(mx(x)+','+my(y));prev=x;}flush();
+    });
+    (d.points||[]).forEach(function(p){add(circle(mx(p.x),my(p.y),4,ink));if(p.label)add(text(mx(p.x)+(p.dx||12),my(p.y)+(p.dy||-13),p.label,23,p.anchor||'start'));});
+    (d.notes||[]).forEach(function(t,i){add(text(260,415+i*36,t,23));h=450+i*36;});
+   }else if(d.kind==='numberline'&&d.math7){
+    var vertical=d.vertical,span=d.end-d.start;h=vertical?430:240;
+    function np(v){return vertical?350-(v-d.start)/span*280:55+(v-d.start)/span*410;}
+    add(vertical?line(240,70,240,350):line(55,110,465,110));
+    for(var v=d.start;v<=d.end+1e-8;v+=d.step){v=Number(v.toFixed(8));var p=np(v);add(vertical?line(232,p,248,p):line(p,102,p,118));if(!d.labelValues||d.labelValues.indexOf(v)>=0)add(vertical?text(215,p+7,String(v).replace('-','−'),24,'end'):text(p,151,String(v).replace('-','−'),24));}
+    (d.marks||[]).forEach(function(v,i){var p=np(v);add(vertical?circle(240,p,4,ink):circle(p,110,4,ink));var t=d.markLabels?d.markLabels[i]:v;if(t!=='')add(vertical?text(270,p+7,t,24,'start'):text(p,76+(d.markLabelOffsets?d.markLabelOffsets[i]:0),t,24));});
+    if(d.direction){var start=np(d.directionStart||0);if(vertical){var end=start+42;add(line(260,start,260,end),path('M252,'+(end-10)+' L260,'+end+' L268,'+(end-10)));if(d.directionLabel)add(text(280,start+48,d.directionLabel,24,'start'));}else{var right=d.direction==='right',end=start+(right?38:-38);add(line(start,85,end,85),path('M'+(end+(right?-10:10))+',77 L'+end+',85 L'+(end+(right?-10:10))+',93'));}}
+    if(vertical&&d.zeroLabel)add(text(270,np(0)+7,d.zeroLabel,24,'start'));
+    (d.notes||[]).forEach(function(t,i){add(text(260,(vertical?395:205)+i*36,t,23));h=(vertical?430:240)+i*36;});
+   }else if(d.kind==='circle'&&d.math7){
+    h=350;var cx=260,cy=175,r=115,angle=d.angle;
+    if(angle){var start=-angle/2,end=angle/2,p=point(cx,cy,r,start),q=point(cx,cy,r,end);add(path('M'+cx+','+cy+' L'+p.join(',')+' A'+r+','+r+' 0 '+(angle>180?1:0)+' 0 '+q.join(',')+' Z','none'),text(cx+62,cy+(d.diameter?-18:7),angle+'°',24));}
+    else add(circle(cx,cy,r,'none'));
+    if(d.diameter){if(angle)add(S('circle',{cx:cx,cy:cy,r:r,fill:'none',stroke:blue,'stroke-width':2,'stroke-dasharray':'6 6'}));add(line(cx-r,cy,cx+r,cy),clearText(cx,cy+30,'直径'+d.diameter+d.unit,25));}
+    else{var a=angle?-angle/2:0,p=point(cx,cy,r,a);if(!angle)add(line(cx,cy,p[0],p[1]));var label=clearText(cx+(p[0]-cx)*(angle?.56:.42),cy+(p[1]-cy)*.56+(angle?28:-17),'半径 '+d.radius+d.unit,25);label.setAttribute('transform','rotate('+(-a)+' '+(cx+(p[0]-cx)*.56)+' '+(cy+(p[1]-cy)*.56+(angle?28:-17))+')');add(label);}
+   }else if(['japanMap' ,'earthScene','terrain','facility','disaster','culture','industry'].indexOf(d.kind)>=0){
     // 社会の共通線画。地名・施設名・答えの語、結果の矢印は表示しない。
     h=400;
     function poly(ps,fill,color){return S('polygon',{points:ps.map(function(p){return p.join(',');}).join(' '),fill:fill||pale,stroke:color||blue,'stroke-width':3,'stroke-linejoin':'round'});}
@@ -469,8 +574,8 @@
      p.notes.forEach(function(t,i){add(text(cx,280+i*42,t,count===1?25:23));});
     });
    }else if(d.kind==='solid3d'&&d.study){
-    var dims=d.dimensions,w=dims[0],dep=dims[1],ht=dims[2],fullW=w+(d.join?d.join[0]:0),fullH=Math.max(ht,d.join?d.join[2]:0),sc=Math.min((d.block?220:300)/(fullW+.6*dep),170/(fullH+.36*dep)),ox=d.block?65:95,oy=230;
-    h=290+(d.notes||[]).length*42;
+    var dims=d.dimensions,w=dims[0],dep=dims[1],ht=dims[2],fullW=w+(d.join?d.join[0]:0),fullH=Math.max(ht,d.join?d.join[2]:0),sc=Math.min((d.large?410:d.block?220:300)/(fullW+.6*dep),(d.large?260:170)/(fullH+.36*dep)),ox=d.block?65:95,oy=d.large?340:230;
+    h=(d.large?420:290)+(d.notes||[]).length*42;
     if(d.baseView==='front')sc=Math.min(300/(w+.55*ht),170/(dep+.3*ht));
     function xyz(x,y,z){return d.baseView==='front'?[ox+x*sc+z*sc*.55,oy-y*sc-z*sc*.3]:[ox+x*sc+y*sc*.6,oy-z*sc-y*sc*.36];}
     function face3(vs,color,dash){add(path('M'+vs.map(function(v){return xyz(v[0],v[1],v[2]).join(',');}).join(' L')+' Z',color||'none',blue,dash));}
@@ -482,6 +587,7 @@
      edge3([x,0,0],[x,dep,0],'6 6');edge3([x,dep,0],[x+w,dep,0],'6 6');edge3([x,dep,0],[x,dep,ht],'6 6');
     }
     if(d.shape==='cylinder'){
+     if(d.large){sc=Math.min(156/(w/2),260/ht);ox=260-(w/2+dep*.3)*sc;oy=d.viewArrows?500:390;h=d.viewArrows?560:450;}
      var center=xyz(w/2,dep/2,0),rx=w*sc/2,ry=dep*sc*.18,ty=center[1]-ht*sc;
      add(S('ellipse',{cx:center[0],cy:ty,rx:rx,ry:ry,fill:pale,stroke:blue,'stroke-width':3}),line(center[0]-rx,ty,center[0]-rx,center[1]),line(center[0]+rx,ty,center[0]+rx,center[1]),path('M'+(center[0]-rx)+','+center[1]+' A'+rx+','+ry+' 0 0 0 '+(center[0]+rx)+','+center[1]),path('M'+(center[0]-rx)+','+center[1]+' A'+rx+','+ry+' 0 0 1 '+(center[0]+rx)+','+center[1],'none',blue,'6 6'));
     }else if(d.shape==='prism'){
@@ -509,7 +615,10 @@
      if(d.water!==undefined){var level=d.water+(d.rise||0);face3([[0,0,level],[w,0,level],[w,dep,level],[0,dep,level]],pale);face3([[0,0,0],[w,0,0],[w,0,level],[0,0,level]],pale);if(d.rise)edge3([0,0,d.water],[w,0,d.water],'6 6',orange);edge3([0,0,0],[0,0,ht]);edge3([w,0,0],[w,0,ht]);if(d.stone){var p=xyz(w*.55,dep*.1,level*.35);add(S('ellipse',{cx:p[0],cy:p[1],rx:18,ry:13,fill:orange,stroke:ink,'stroke-width':2}));}}
      if(d.block){var x=405,y=225,a=32;add(path('M'+x+','+y+' h'+a+' l20,-12 v-'+a+' h-'+a+' l-20,12 Z',pale),path('M'+x+','+(y-a)+' h'+a+' v'+a+' M'+(x+a)+','+(y-a)+' l20,-12'));}
     }
-    (d.notes||[]).forEach(function(t,i){add(text(260,282+i*42,t,25));});
+    if(d.shape==='cylinder'&&d.viewArrows){var front=(ty+center[1])/2;drawViewArrow(center[0],70,center[0],ty-ry*.5);drawViewArrow(500,front,center[0]+rx+10,front);add(text(center[0],45,d.viewDirections[0],24),text(510,front-20,d.viewDirections[1],22,'end'));}
+    else if(d.shape==='cylinder'&&d.viewDirections){add(line(d.large?center[0]+rx+40:center[0],32,center[0],ty-10),text(d.large?center[0]+rx+20:center[0]+20,30,d.viewDirections[0],23,'start'),line(440,center[1]-30,center[0]+rx+10,center[1]-30),text(440,center[1]+5,d.viewDirections[1],23));}
+    if(d.shape==='cylinder'&&d.dimensionLabels){if(d.dimensionLabels.radius)radiusDimension(center[0],ty,rx,d.dimensionLabels.radius);if(d.dimensionLabels.height)add(text(center[0]+rx+18,(ty+center[1])/2,d.dimensionLabels.height,24,'start'));}
+    (d.notes||[]).forEach(function(t,i){add(text(260,(d.large?h-15:282)+i*42,t,25));});
    }else if(d.kind==='band'&&d.rows){
     h=d.rows.reduce(function(sum,r){return sum+110+r.labels.filter(Boolean).length*42;},10);var yy=20;
     d.rows.forEach(function(r){
@@ -557,12 +666,13 @@
    }else if(d.kind==='solid3d'){
     h=d.notes?395:320;
     var dims=d.dimensions||(d.shape==='cube'?[1,1,1]:[4,3,3]),sc=d.block?25:Math.min(180/dims[0],100/dims[1],130/dims[2]);
-    var bx=d.block?80:110,by=245,bw=dims[0]*sc,bz=dims[2]*sc,dx=dims[1]*sc*.6,dy=-dims[1]*sc*.36;
+    if(d.large){sc=310/(dims[0]+.6*dims[1]);h=Math.max(430,(dims[2]+.36*dims[1])*sc+150);}
+    var bx=d.large?90:d.block?80:110,by=d.large?h-70:245,bw=dims[0]*sc,bz=dims[2]*sc,dx=dims[1]*sc*.6,dy=-dims[1]*sc*.36;
     var vp=[[bx,by],[bx+bw,by],[bx+bw+dx,by+dy],[bx+dx,by+dy],[bx,by-bz],[bx+bw,by-bz],[bx+bw+dx,by-bz+dy],[bx+dx,by-bz+dy]],names='ABCDEFGH';
     if(d.face){var face=path('M'+d.face.split('').map(function(n){return vp[names.indexOf(n)].join(',');}).join(' L')+' Z',orange);face.setAttribute('fill-opacity','0.24');add(face);}
     [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].forEach(function(e){var a=vp[e[0]],b=vp[e[1]],hidden=e[0]===3||e[1]===3;add(line(a[0],a[1],b[0],b[1],blue,hidden?'6 6':null));});
     d.vertices.forEach(function(v){var p=vp[names.indexOf(v.vertex)],end=v.vertex==='C'||v.vertex==='G';add(circle(p[0],p[1],5,orange),clearText(p[0]+(end?13:-13),p[1]+(v.vertex==='A'||v.vertex==='B'?27:-12),v.label,24,end?'start':'end'));});
-    if(d.showLengths)add(text(bx+bw/2,283,'横 '+dims[0]+d.unit,23),text(bx+bw+dx+10,by+dy/2+18,'たて '+dims[1]+d.unit,23),text(42,by-bz/2-15,'高さ',23),text(42,by-bz/2+22,dims[2]+d.unit,23));
+    if(d.showLengths)add(text(bx+bw/2,d.large?by+42:283,'横 '+dims[0]+d.unit,23),text(bx+bw+dx+10,by+dy/2+18,'たて '+dims[1]+d.unit,23),text(42,by-bz/2-15,'高さ',23),text(42,by-bz/2+22,dims[2]+d.unit,23));
     if(d.block){var x=380,y=235,a=d.block*sc;add(path('M'+x+','+y+' h'+a+' l'+(a*.6)+','+(-a*.36)+' v'+(-a)+' h'+(-a)+' l'+(-a*.6)+','+(a*.36)+' Z',pale),path('M'+x+','+(y-a)+' h'+a+' v'+a+' M'+(x+a)+','+(y-a)+' l'+(a*.6)+','+(-a*.36)),text(x+a/2,283,d.block+d.unit,23),text(x+a/2,130,'積み木',23));}
     (d.notes||[]).forEach(function(t,i){add(text(260,310+i*44,t,25));});
    }else if(d.kind==='boxNet'){
@@ -786,13 +896,13 @@
     if(d.directions)add(text(55,183,d.directions[0],25),text(465,183,d.directions[1],25));
    }
    // 新しい図も昼のテーマの共通色を使う。既存の図の配色は変えない。
-   if(d.study||['gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0){
+   if(d.math7||['mathGeometry','quantityBars','spatialFigure'].indexOf(d.kind)>=0||d.study||['gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0){
     var paints={};paints[blue]='var(--rn-blue, '+blue+')';paints[ink]='var(--rn-navy, '+ink+')';paints[pale]='var(--rn-pale, '+pale+')';paints[orange]='var(--rn-warm, '+orange+')';
     nodes.forEach(function(n){var all=[n].concat(Array.prototype.slice.call(n.querySelectorAll('*')));all.forEach(function(el){['fill','stroke'].forEach(function(a){var v=el.getAttribute(a);if(paints[v])el.setAttribute(a,paints[v]);});});});
    }
    var svg=S('svg',{viewBox:'0 0 520 '+h,role:'img','aria-label':d.caption||'問題を考えるための図'},[S('title',{},d.caption||'学習の図')].concat(nodes));
    // 個数が多い図は高さを制限すると絵と文字が小さくなるため、自然な縦横比で表示。
-   if(d.study||d.kind==='graph'&&d.minorStep||['objects','tape','measure','gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0)svg.style.maxHeight='none';
+   if(d.math7||['mathGeometry','quantityBars','spatialFigure'].indexOf(d.kind)>=0||d.study||d.kind==='graph'&&d.minorStep||['objects','tape','measure','gridPoints','solid3d','boxNet','quadFigure'].indexOf(d.kind)>=0)svg.style.maxHeight='none';
    fig.appendChild(svg);
   }
   if(d.caption)fig.appendChild(U.el('figcaption',{text:d.caption}));

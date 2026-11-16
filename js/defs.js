@@ -52,7 +52,12 @@
 
     // 問題の図（q.diagram。省略できる。判断221）。種類ごとに必須の項目。描き方は js/svg/learning.js
     // すべての種類で caption（図の説明の文字列）も必須。書き方は QUESTIONS_GUIDE.md
+    // 明示的な math7 設定だけに適用し、既存の必須項目を保持する。
+    DIAGRAM_MATH7_KINDS: {coordinate: ['xRange', 'yRange'], circle: ['unit'], numberline: ['start', 'end', 'step']},
     DIAGRAM_KINDS: {
+      mathGeometry: [],
+      quantityBars: ['rows'],
+      spatialFigure: ['shape'],
       story: ['item', 'total', 'each'],
       table: ['head', 'rows'],
       image: ['src'],
